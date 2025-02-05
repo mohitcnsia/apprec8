@@ -3,7 +3,12 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import CategoriesScreen from "./screens/CategoriesScreen";
 
 export default function App() {
-  return <CategoriesScreen />;
+  return (
+    <>
+      <StatusBar style="light"></StatusBar>
+      <CategoriesScreen />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
