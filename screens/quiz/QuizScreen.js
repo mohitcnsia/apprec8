@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0e3b0",
   },
   loadingText: {
-    color: "white",
+    color: Colors.blackText,
     fontSize: 18,
     textAlign: "center",
   },
