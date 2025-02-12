@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import QuizNavigator from "./navigation/QuizNavigator"; // Removed MealNavigator for now
+import QuizNavigator from "./navigation/QuizNavigator";
+import MealNavigator from "./navigation/MealNavigator";
 import { Colors } from "./config/colors";
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
 
       {/* The root container with full height */}
       <View style={styles.container}>
+        {/* <QuizNavigator /> */}
         <QuizNavigator />
       </View>
     </>

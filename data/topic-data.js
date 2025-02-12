@@ -1,6 +1,5 @@
 import Category from "../models/category";
-import Meal from "../models/meal";
-import Topic from "../models/topic";
+import Topic from "../models/quiz/topic";
 
 export const CATEGORIES = [
   new Category("ieo", "IEO", "#f5428d"),
