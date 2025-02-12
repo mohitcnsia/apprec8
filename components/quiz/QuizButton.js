@@ -1,10 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-function QuizButton({ index, label, style, handlePress, isDisabled }) {
+function QuizButton({ label, style, handlePress, isDisabled }) {
   return (
     <TouchableOpacity
-      key={index}
-      label={label}
       style={[styles.button, style]}
       onPress={handlePress}
       disabled={isDisabled} // Disable buttons after submitting
@@ -18,15 +16,15 @@ export default QuizButton;
 
 const styles = StyleSheet.create({
   button: {
-    borderWidth: 2, // Border width
-    padding: 15,
-    marginBottom: 15, // Adds spacing between the options
-    borderRadius: 5,
+    // borderWidth: 2, // Border width
+    padding: 10,
+    // marginBottom: 15, // Adds spacing between the options
+    // borderRadius: 5,
     alignItems: "center",
-  },
-  optionButton: {
-    backgroundColor: "#bdc3c7", // Gray background for unselected options
-    borderColor: "#b2bbc1", // Gray border
+    borderRadius: 28,
+    margin: 4,
+    overflow: "hidden",
+    backgroundColor: "#3b0940",
   },
   selectedAnswer: {
     backgroundColor: "#3498db", // Blue for selected option
@@ -45,13 +43,6 @@ const styles = StyleSheet.create({
     borderColor: "#7f8c8d", // Darker gray border for disabled options
   },
   optionText: {
-    color: "#fff",
-    fontSize: 18,
-  },
-  nextButton: {
-    backgroundColor: "#3498db", // Blue color for Next/Submit button
-  },
-  nextButtonText: {
     color: "#fff",
     fontSize: 18,
   },

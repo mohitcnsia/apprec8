@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { IEO_QUIZ } from "../../data/ieo-quiz";
 import Question from "../../components/quiz/Question";
 import Explanation from "../../components/quiz/Explanation";
-import PrimaryButton from "../../components/PrimaryButton";
 import QuizButton from "../../components/quiz/QuizButton";
+
+// Fisher-Yates Shuffle function to randomize array
+const shuffleArray = (array) => {
+  let shuffledArray = [...array]; // Create a copy to avoid mutating the original
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Random index between 0 and i
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+  }
+  return shuffledArray;
+};
 
 const QuizScreen = ({ navigation }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false); // Track if an answer was selected
   const [selectedAnswer, setSelectedAnswer] = useState(null); // Track the selected answer
-  const [questions] = useState(IEO_QUIZ);
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    // Shuffle IEO_QUIZ and select the first 5 questions
+    const randomQuestions = shuffleArray(IEO_QUIZ).slice(0, 5);
+
+    // Shuffle options for each question
+    const shuffledQuestions = randomQuestions.map((question) => ({
+      ...question,
+      options: shuffleArray(question.options), // Shuffle the options
+    }));
+
+    setQuestions(shuffledQuestions); // Set the questions state with shuffled options
+  }, []);
 
   const handleAnswer = (answer) => {
     if (!isAnswered) {
@@ -60,12 +82,28 @@ const QuizScreen = ({ navigation }) => {
       : styles.optionButton;
   };
 
+  if (questions.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Question title={questions[questionIndex].question} />
+      {isAnswered ? (
+        questions[questionIndex].explanation ? (
+          <Explanation title={questions[questionIndex].explanation} />
+        ) : (
+          <Question title={questions[questionIndex].question} />
+        ) // If explanation is not available, render Question
+      ) : (
+        <Question title={questions[questionIndex].question} />
+      )}
       {questions[questionIndex].options.map((option, index) => (
         <QuizButton
-          index={index}
+          key={index}
           label={option}
           style={getButtonStyle(option)}
           handlePress={() => handleAnswer(option)}
@@ -78,13 +116,6 @@ const QuizScreen = ({ navigation }) => {
         handlePress={isAnswered ? handleNextQuestion : handleSubmit}
         isDisabled={!selectedAnswer}
       />
-
-      {/* Enable this on Submit button and make it scrollable
-      <Explanation
-        explanation={
-          "Dummy Text. The International English Olympiad (IEO) is an English language and Grammar competition for students of class 1 to class 12. It is conducted by Science Olympiad Foundation (SOF) in collaboration with British Council. The content of the tests is designed to focus on communication and use of English language, rather than rote learning and correct grammar only. Participants of IEO are ranked on the basis of marks obtained in 1st Level. After taking the first level of the test, students can judge themselves academically at four different levels - within the school, at city level, at state level and above all at International level."
-        }
-      /> */}
     </View>
   );
 };
@@ -94,11 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
-  },
-
-  optionButton: {
-    backgroundColor: "#bdc3c7", // Gray background for unselected options
-    borderColor: "#b2bbc1", // Gray border
   },
   selectedAnswer: {
     backgroundColor: "#3498db", // Blue for selected option
@@ -123,6 +149,7 @@ const styles = StyleSheet.create({
   nextButton: {
     backgroundColor: "#3498db", // Blue color for Next/Submit button
     borderColor: "#2980b9",
+    marginTop: 30,
   },
   nextButtonText: {
     color: "#fff",

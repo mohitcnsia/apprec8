@@ -4,15 +4,15 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StatsScreen = ({ route, navigation }) => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("Pratha");
   const { score, totalQuestions } = route.params;
 
   useEffect(() => {
     const getUsername = async () => {
       const storedUsername = await AsyncStorage.getItem("username");
-      if (storedUsername) {
-        setUsername(storedUsername);
-      }
+      // if (storedUsername) {
+      //   setUsername(storedUsername);
+      // }
     };
     getUsername();
   }, []);
