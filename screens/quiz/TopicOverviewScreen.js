@@ -1,9 +1,18 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+} from "react-native";
 import { TOPICS } from "../../data/topic-data";
 import TopicItem from "../../components/TopicItem";
 import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
+
+const { height } = Dimensions.get("window"); // Get screen height
 
 function TopicOverviewScreen({ route, navigation }) {
   const topicId = route.params.topicId;
@@ -12,37 +21,26 @@ function TopicOverviewScreen({ route, navigation }) {
     return topic.id === topicId;
   });
 
-  // function renderTopicItem(itemData) {
-  //   return (
-  //     <View>
-  //       <TopicItem
-  //         style={styles.title}
-  //         title={itemData.item.title}
-  //         description={itemData.item.description}
-  //       />
-  //       <QuizButton
-  //         label="Start Quiz"
-  //         handlePress={() => navigation.navigate("Quiz")}
-  //       />
-  //     </View>
-  //   );
-  // }
-
   function renderTopicItem(itemData) {
     return (
       <View style={styles.topicContainer}>
+        {/* Title - Fixed */}
         <Text style={styles.title}>{itemData.item.title}</Text>
 
-        {/* Scrollable Description */}
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.description}>{itemData.item.description}</Text>
-        </ScrollView>
+        {/* Scrollable Description - Takes 70% height */}
+        <View style={styles.descriptionWrapper}>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <Text style={styles.description}>{itemData.item.description}</Text>
+          </ScrollView>
+        </View>
 
-        {/* Button */}
-        <QuizButton
-          label="Start Quiz"
-          handlePress={() => navigation.navigate("Quiz")}
-        />
+        {/* Start Quiz Button - Fixed at the bottom */}
+        <View style={styles.buttonContainer}>
+          <QuizButton
+            label="Start Quiz"
+            handlePress={() => navigation.navigate("Quiz")}
+          />
+        </View>
       </View>
     );
   }
@@ -79,15 +77,27 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  scrollContainer: {
+  descriptionWrapper: {
+    height: height * 0.7, // 70% of screen height for description
+    marginBottom: 20, // Small space before button
+  },
+  scrollContent: {
     paddingBottom: 20,
+    paddingHorizontal: 10,
   },
   description: {
     fontSize: 18,
-    color: Colors.primaryBrightYellow, // Dark gray color for text
-    lineHeight: 28, // Line height for better readability
-    textAlign: "justify", // Justified text for clean blocks
-    marginBottom: 20, // Space between paragraphs
-    paddingHorizontal: 10, // Padding on sides
+    color: Colors.primaryBrightYellow,
+    lineHeight: 28,
+    textAlign: "justify",
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    position: "absolute", // Fix the button at the bottom
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingBottom: 20, // Make sure there's some padding at the bottom for the button
   },
 });

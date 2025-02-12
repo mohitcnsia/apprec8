@@ -1,4 +1,11 @@
-import { Pressable, View, Text, StyleSheet, Platform } from "react-native";
+import {
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Image,
+} from "react-native";
 
 function TopicGridTile({ title, color, onPress }) {
   return (
@@ -12,6 +19,7 @@ function TopicGridTile({ title, color, onPress }) {
         onPress={onPress}
       >
         <View style={styles.innerContainer}>
+          {/* <Image source={require("../../assets/images/ieo.png")} /> */}
           <Text style={styles.title}>{title}</Text>
         </View>
       </Pressable>
