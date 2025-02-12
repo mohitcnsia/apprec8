@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { IEO_QUIZ } from "../../data/ieo-quiz";
+import { NSO_QUIZ } from "../../data/nso-quiz";
 import Question from "../../components/quiz/Question";
 import Explanation from "../../components/quiz/Explanation";
 import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
+
+// Quiz Lists Mapping
+const QUIZ_LISTS = {
+  nso: NSO_QUIZ,
+  ieo: IEO_QUIZ,
+  // Add more quiz lists as needed
+};
 
 // Fisher-Yates Shuffle function to randomize array
 const shuffleArray = (array) => {
@@ -17,44 +25,52 @@ const shuffleArray = (array) => {
   return shuffledArray;
 };
 
-const QuizScreen = ({ navigation }) => {
+const QuizScreen = ({ route, navigation }) => {
+  const { itemId } = route.params; // Get the itemId passed from TopicOverviewScreen
+  const [questions, setQuestions] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false); // Track if an answer was selected
   const [selectedAnswer, setSelectedAnswer] = useState(null); // Track the selected answer
-  const [questions, setQuestions] = useState([]);
 
+  // Dynamically load quiz based on the passed itemId
   useEffect(() => {
-    // Shuffle IEO_QUIZ and select the first 5 questions
-    const randomQuestions = shuffleArray(IEO_QUIZ).slice(0, 2);
+    const selectedQuizList = QUIZ_LISTS[itemId];
 
-    // Shuffle options for each question
-    const shuffledQuestions = randomQuestions.map((question) => ({
-      ...question,
-      options: shuffleArray(question.options), // Shuffle the options
-    }));
+    // Check if the quiz exists for the provided itemId
+    if (selectedQuizList) {
+      const shuffledQuestions = shuffleArray(selectedQuizList).slice(0, 5); // Get the first 5 shuffled questions
+      const shuffledQuestionsWithOptions = shuffledQuestions.map(
+        (question) => ({
+          ...question,
+          options: shuffleArray(question.options),
+        })
+      );
 
-    setQuestions(shuffledQuestions); // Set the questions state with shuffled options
-  }, []);
+      setQuestions(shuffledQuestionsWithOptions);
+    } else {
+      // If no quiz matches, show an error
+      setQuestions([]);
+    }
+  }, [itemId]);
 
   const handleAnswer = (answer) => {
     if (!isAnswered) {
-      setSelectedAnswer(answer); // Update selected answer
+      setSelectedAnswer(answer);
     }
   };
 
   const handleSubmit = () => {
-    setIsAnswered(true); // Show result after submission
+    setIsAnswered(true);
   };
 
   const handleNextQuestion = () => {
-    // Check if selected answer is correct
+    // Check if the selected answer is correct
     if (selectedAnswer === questions[questionIndex].answer) {
-      // Increment score using the functional form to ensure we're using the latest score
       setScore((prevScore) => prevScore + 1);
     }
 
-    // Proceed to the next question or navigate to stats if all questions are done
+    // Proceed to the next question or navigate to stats if it's the last question
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
       setSelectedAnswer(null); // Reset selected answer for next question
@@ -84,10 +100,13 @@ const QuizScreen = ({ navigation }) => {
       : styles.optionButton;
   };
 
+  // If no quiz questions are available, display loading or error message
   if (questions.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text style={styles.loadingText}>
+          Unable to load quiz. Please try again later.
+        </Text>
       </View>
     );
   }
@@ -102,10 +121,11 @@ const QuizScreen = ({ navigation }) => {
           <Explanation title={questions[questionIndex].explanation} />
         ) : (
           <Question title={questions[questionIndex].question} />
-        ) // If explanation is not available, render Question
+        )
       ) : (
         <Question title={questions[questionIndex].question} />
       )}
+
       {questions[questionIndex].options.map((option, index) => (
         <QuizButton
           key={index}
@@ -115,6 +135,7 @@ const QuizScreen = ({ navigation }) => {
           isDisabled={isAnswered}
         />
       ))}
+
       <QuizButton
         style={styles.nextButton}
         label={isAnswered ? "Next" : "Submit"}
@@ -131,6 +152,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     backgroundColor: "#f0e3b0",
+  },
+  loadingText: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
   },
   selectedAnswer: {
     backgroundColor: "#3498db", // Blue for selected option

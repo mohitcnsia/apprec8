@@ -38,7 +38,9 @@ function TopicOverviewScreen({ route, navigation }) {
         <View style={styles.buttonContainer}>
           <QuizButton
             label="Start Quiz"
-            handlePress={() => navigation.navigate("Quiz")}
+            handlePress={() =>
+              navigation.navigate("Quiz", { itemId: itemData.item.id })
+            }
           />
         </View>
       </View>
