@@ -69,7 +69,7 @@ export const IEO_QUIZ = [
     10,
     "Antonym of Conceal? ",
     ["Prove", "Expose", "Convert", "Hide"],
-    "ConExposefuse"
+    "Expose"
   ),
 
   // new IEO(

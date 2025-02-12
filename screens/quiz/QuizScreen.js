@@ -4,6 +4,8 @@ import { IEO_QUIZ } from "../../data/ieo-quiz";
 import Question from "../../components/quiz/Question";
 import Explanation from "../../components/quiz/Explanation";
 import QuizButton from "../../components/quiz/QuizButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "../../config/colors";
 
 // Fisher-Yates Shuffle function to randomize array
 const shuffleArray = (array) => {
@@ -91,7 +93,10 @@ const QuizScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      style={styles.container}
+    >
       {isAnswered ? (
         questions[questionIndex].explanation ? (
           <Explanation title={questions[questionIndex].explanation} />
@@ -116,7 +121,7 @@ const QuizScreen = ({ navigation }) => {
         handlePress={isAnswered ? handleNextQuestion : handleSubmit}
         isDisabled={!selectedAnswer}
       />
-    </View>
+    </LinearGradient>
   );
 };
 

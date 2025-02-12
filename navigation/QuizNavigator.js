@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "../screens/quiz/LoginScreen";
 import QuizScreen from "../screens/quiz/QuizScreen";
 import StatsScreen from "../screens/quiz/StatsScreen";
+import { Colors } from "../config/colors";
 
 const Stack = createStackNavigator();
 
@@ -14,9 +15,9 @@ const QuizNavigator = () => {
         initialRouteName="Quiz"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#f0e3b0", // Set your preferred background color for the header
+            backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
           },
-          headerTintColor: "#050400be", // Change text color in the header (like the back button)
+          headerTintColor: "#ffffff", // Change text color in the header (like the back button)
           headerTitleStyle: {
             fontWeight: "bold", // Optional: you can make the title bold
           },
