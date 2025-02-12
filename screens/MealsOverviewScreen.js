@@ -13,6 +13,15 @@ function MealsOverviewScreen({ route }) {
     return <MealItem title={itemData.item.title} />;
   }
 
+  function renderTopicItem(itemData) {
+    return (
+      <TopicItem
+        title={itemData.item.title}
+        description={itemData.item.description}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
