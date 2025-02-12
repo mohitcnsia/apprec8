@@ -24,7 +24,7 @@ const QuizScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Shuffle IEO_QUIZ and select the first 5 questions
-    const randomQuestions = shuffleArray(IEO_QUIZ).slice(0, 5);
+    const randomQuestions = shuffleArray(IEO_QUIZ).slice(0, 2);
 
     // Shuffle options for each question
     const shuffledQuestions = randomQuestions.map((question) => ({
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+    backgroundColor: "#f0e3b0",
   },
   selectedAnswer: {
     backgroundColor: "#3498db", // Blue for selected option
