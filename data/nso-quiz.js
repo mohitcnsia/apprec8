@@ -15,7 +15,7 @@ export const NSO_QUIZ = [
   ),
   new Quiz(
     3,
-    "_____ is used in making kutcha hiuse.",
+    "_____ is used in making kutcha house.",
     ["Straw", "Iron Rods", "Wood", "Both Straw & Wood"],
     "Both Straw & Wood"
   ),
@@ -65,6 +65,6 @@ export const NSO_QUIZ = [
     "Which plant grows in desert and has small leaves to prevent loss through transpiration?",
     ["Mango", "Acacia", "Sugarcane", "Wolffia"],
     "Acacia",
-    ["Monago and Sugarcane prow in plains.", "Wolffia is an aquatic plant."]
+    ["Monago and Sugarcane grow in plains.", "Wolffia is an aquatic plant."]
   ),
 ];

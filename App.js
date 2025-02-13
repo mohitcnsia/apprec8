@@ -16,8 +16,8 @@ export default function App() {
 
       {/* The root container with full height */}
       <View style={styles.container}>
-        {/* <QuizNavigator /> */}
         <QuizNavigator />
+        {/* <MealNavigator /> */}
       </View>
     </>
   );

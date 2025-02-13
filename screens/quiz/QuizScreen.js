@@ -81,6 +81,7 @@ const QuizScreen = ({ route, navigation }) => {
         score:
           score + (selectedAnswer === questions[questionIndex].answer ? 1 : 0),
         totalQuestions: questions.length,
+        quizId: itemId,
       });
     }
   };

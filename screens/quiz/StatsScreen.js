@@ -8,7 +8,7 @@ import QuizButton from "../../components/quiz/QuizButton";
 
 const StatsScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("Pratha");
-  const { score, totalQuestions } = route.params;
+  const { score, totalQuestions, quizId } = route.params;
 
   useEffect(() => {
     const getUsername = async () => {
@@ -38,7 +38,7 @@ const StatsScreen = ({ route, navigation }) => {
       <QuizButton
         style={styles.nextButton}
         label={"Play Again"}
-        handlePress={() => navigation.navigate("Quiz")}
+        handlePress={() => navigation.navigate("Quiz", { itemId: quizId })}
       />
     </LinearGradient>
   );
