@@ -11,7 +11,14 @@ const MealNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Meal Categories" component={CategoriesScreen} />
-        <Stack.Screen name="Meal Overview" component={MealsOverviewScreen} />
+        <Stack.Screen
+          name="Meal Overview"
+          component={MealsOverviewScreen}
+          options={({ route }) => {
+            const catName = route.params.categoryName;
+            return { title: catName };
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

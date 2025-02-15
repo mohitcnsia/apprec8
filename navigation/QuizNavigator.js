@@ -32,7 +32,7 @@ const QuizNavigator = () => {
           }}
         >
           <Stack.Screen name="Topics" component={TopicsScreen} />
-          <Stack.Screen name="Topic Overview" component={TopicOverviewScreen} />
+          <Stack.Screen name="Overview" component={TopicOverviewScreen} />
           <Stack.Screen name="Quiz" component={QuizScreen} />
           <Stack.Screen name="Stats" component={StatsScreen} />
         </Stack.Navigator>

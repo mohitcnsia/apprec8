@@ -7,7 +7,7 @@ import { Colors } from "../../config/colors";
 function TopicsScreen({ navigation }) {
   function renderCategoryItem(itemData) {
     function pressHandler() {
-      navigation.navigate("Topic Overview", {
+      navigation.navigate("Overview", {
         topicId: itemData.item.id,
       });
     }

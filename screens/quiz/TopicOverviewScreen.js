@@ -7,7 +7,6 @@ import {
   Dimensions,
 } from "react-native";
 import { TOPICS } from "../../data/topic-data";
-import TopicItem from "../../components/TopicItem";
 import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
