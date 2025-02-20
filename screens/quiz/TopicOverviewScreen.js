@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   descriptionWrapper: {
-    height: height * 0.7, // 70% of screen height for description
+    height: height * 0.6, // 70% of screen height for description
     marginBottom: 20, // Small space before button
   },
   scrollContent: {

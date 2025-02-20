@@ -18,25 +18,23 @@ const QuizNavigator = () => {
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Topics"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
-            },
-            headerTintColor: "#ffffff", // Change text color in the header (like the back button)
-            headerTitleStyle: {
-              fontWeight: "bold", // Optional: you can make the title bold
-            },
-          }}
-        >
-          <Stack.Screen name="Topics" component={TopicsScreen} />
-          <Stack.Screen name="Overview" component={TopicOverviewScreen} />
-          <Stack.Screen name="Quiz" component={QuizScreen} />
-          <Stack.Screen name="Stats" component={StatsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Topics"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
+          },
+          headerTintColor: "#ffffff", // Change text color in the header (like the back button)
+          headerTitleStyle: {
+            fontWeight: "bold", // Optional: you can make the title bold
+          },
+        }}
+      >
+        <Stack.Screen name="Topics" component={TopicsScreen} />
+        <Stack.Screen name="Overview" component={TopicOverviewScreen} />
+        <Stack.Screen name="Quiz" component={QuizScreen} />
+        <Stack.Screen name="Stats" component={StatsScreen} />
+      </Stack.Navigator>
     </LinearGradient>
   );
 };

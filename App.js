@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import QuizNavigator from "./navigation/QuizNavigator";
 import MealNavigator from "./navigation/MealNavigator";
 import { Colors } from "./config/colors";
+import BottomTabNavigator from "./navigation/BottomTabNavigator";
 
 export default function App() {
   return (
@@ -16,8 +17,9 @@ export default function App() {
 
       {/* The root container with full height */}
       <View style={styles.container}>
-        <QuizNavigator />
+        {/* <QuizNavigator /> */}
         {/* <MealNavigator /> */}
+        <BottomTabNavigator />
       </View>
     </>
   );

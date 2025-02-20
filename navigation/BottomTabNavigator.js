@@ -3,6 +3,7 @@ import DrawerScreen from "../screens/DummyScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../config/colors";
+import QuizNavigator from "./QuizNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +29,16 @@ function BottomTabNavigator() {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
             ),
+          }}
+        />
+        <Tab.Screen
+          name="Study"
+          component={QuizNavigator}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="book" color={color} size={size} />
+            ),
+            headerShown: false,
           }}
         />
         <Tab.Screen
