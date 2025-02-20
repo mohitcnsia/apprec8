@@ -1,18 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
 
-function DrawerScreen() {
+function DummyScreen({ route }) {
   return (
     <View style={styles.questionContainer}>
       <Text
         style={[styles.questionText, { fontSize: 16 }]} // Dynamically calculated font size
       >
-        Coming Soon !!!
+        <Text style={{ color: "yellow" }}>{route.params.title}</Text> Coming
+        Soon !!!
       </Text>
     </View>
   );
 }
 
-export default DrawerScreen;
+export default DummyScreen;
 
 const styles = StyleSheet.create({
   questionText: {
