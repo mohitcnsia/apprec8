@@ -9,6 +9,7 @@ import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import { IHO_QUIZ } from "../../data/iho-quiz";
+import { IRO_QUIZ } from "../../data/iro-quiz";
 
 // Quiz Lists Mapping
 const QUIZ_LISTS = {
@@ -16,6 +17,7 @@ const QUIZ_LISTS = {
   ieo: IEO_QUIZ,
   imo: IMO_QUIZ,
   iho: IHO_QUIZ,
+  reasoning: IRO_QUIZ,
   // Add more quiz lists as needed
 };
 
