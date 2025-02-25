@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { IEO_QUIZ } from "../../data/ieo-quiz";
 import { NSO_QUIZ } from "../../data/nso-quiz";
+import { IMO_QUIZ } from "../../data/imo-quiz";
 import Question from "../../components/quiz/Question";
 import Explanation from "../../components/quiz/Explanation";
 import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
+import { IHO_QUIZ } from "../../data/iho-quiz";
 
 // Quiz Lists Mapping
 const QUIZ_LISTS = {
   nso: NSO_QUIZ,
   ieo: IEO_QUIZ,
+  imo: IMO_QUIZ,
+  iho: IHO_QUIZ,
   // Add more quiz lists as needed
 };
 
@@ -36,7 +40,6 @@ const QuizScreen = ({ route, navigation }) => {
   // Dynamically load quiz based on the passed itemId
   useEffect(() => {
     const selectedQuizList = QUIZ_LISTS[itemId];
-
     // Check if the quiz exists for the provided itemId
     if (selectedQuizList) {
       const shuffledQuestions = shuffleArray(selectedQuizList).slice(0, 5); // Get the first 5 shuffled questions
