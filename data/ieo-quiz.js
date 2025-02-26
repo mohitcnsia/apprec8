@@ -71,6 +71,94 @@ export const IEO_QUIZ = [
     ["Prove", "Expose", "Convert", "Hide"],
     "Expose"
   ),
+  new IEO(
+    11,
+    "Meaning of Colleague? ",
+    ["A. Work mate", "B. Office mate", "Both A & B", "D. Class mate"],
+    "Both A & B"
+  ),
+  new IEO(
+    12,
+    "Meaning of Colleague? ",
+    ["A. Work mate", "B. Flat mate", "Both A & B", "D. Class mate"],
+    "A. Work mate"
+  ),
+  new IEO(
+    13,
+    "Make the spelling complete C_lle_g_e? ",
+    ["o a u", "a a u", "o a a", "o a o"],
+    "o a u"
+  ),
+  new IEO(
+    14,
+    "The engine of a train is called ?",
+    ["Locomotive", "Lacomotive", "Locamotive", "Locomative"],
+    "Locomotive"
+  ),
+  new IEO(
+    15,
+    "Synonym of Crafty ?",
+    ["Naive", "Clever", "Just", "Diligent"],
+    "Clever"
+  ),
+  new IEO(
+    16,
+    "Antonym of Crafty ?",
+    ["Naive", "Clever", "Just", "Diligent"],
+    "Naive"
+  ),
+  new IEO(
+    17,
+    "My health stopped ____ as soon as I started medication?",
+    ["Decreasing", "Decomposing", "Deteriorating", "Depreciating"],
+    "Deteriorating"
+  ),
+  new IEO(
+    18,
+    "My wealth stopped ____ as soon as I hired a Chartered Accountant?",
+    ["Decreasing", "Decomposing", "Deteriorating", "Depreciating"],
+    "Depreciating"
+  ),
+  new IEO(
+    19,
+    "Meat stopped ____ as soon as I put it in the refrigerator?",
+    ["Decreasing", "Decomposing", "Deteriorating", "Depreciating"],
+    "Decomposing"
+  ),
+  new IEO(
+    20,
+    "Water levels stopped ____ as soon as I closed the tap?",
+    ["Decreasing", "Decomposing", "Deteriorating", "Depreciating"],
+    "Decreasing"
+  ),
+  new IEO(
+    21,
+    "Select Correct Spelling?",
+    ["Detariorate", "Dateriorate", "Deteriorate", "Deteriorite"],
+    "Deteriorate"
+  ),
+  new IEO(
+    22,
+    "Synonym of Defile?",
+    ["Spoil", "Damage the purity", "Desecrate", "All are correct"],
+    "All are correct",
+    ["Miscreants defiled the Statue."]
+  ),
+  new IEO(
+    23,
+    "Synonym of Flaunt?",
+    ["Show Off", "brandish", "Brag about", "All are correct"],
+    "All are correct"[
+      ("Pratha doesn't like to FLAUNT her cool smart watch.",
+      "Pratha FLAUNTED her big muscles these days.")
+    ]
+  ),
+  new IEO(
+    24,
+    "Synonym of Flaunt?",
+    ["Modest", "Brandish", "Hide", "All are correct"],
+    "Brandish"["Modest is an antonym of Flaunt"]
+  ),
 
   // new IEO(
   //   5,
