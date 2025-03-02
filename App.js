@@ -1,27 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import QuizNavigator from "./navigation/QuizNavigator";
-import MealNavigator from "./navigation/MealNavigator";
+import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "./config/colors";
-import BottomTabNavigator from "./navigation/BottomTabNavigator";
 
 export default function App() {
   return (
-    <>
-      {/* Custom StatusBar with background color */}
-      <StatusBar
-        style="dark"
-        translucent={false}
-        backgroundColor={Colors.primaryDarkMaroon}
-      />
-
-      {/* The root container with full height */}
       <View style={styles.container}>
-        {/* <QuizNavigator /> */}
-        {/* <MealNavigator /> */}
-        <BottomTabNavigator />
+        <Text style={styles.text}>Hello Dear Pratha !</Text>
       </View>
-    </>
   );
 }
 
@@ -29,5 +13,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, // Ensures the View fills the entire screen
     backgroundColor: Colors.primaryDarkMaroon, // Your desired background color
+    justifyContent: 'center'
+  },
+  text: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: Colors.primaryBrightYellow,
+    textAlign: "center",
   },
 });
