@@ -6,27 +6,61 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ManageExpenses from "./screens/ManageExpenses";
 import RecentExpenses from "./screens/RecentExpenses";
 import AllExpenses from "./screens/AllExpenses";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
 function ExpensesOverview() {
-  return <BottomTabs.Navigator>
-    <BottomTabs.Screen name="Recent Expenses" component={RecentExpenses} />
-    <BottomTabs.Screen name="AllExpenses" component={AllExpenses} />
-  </BottomTabs.Navigator>
+  return (
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: "white",
+        tabBarStyle: { backgroundColor: Colors.primary500 },
+        tabBarActiveTintColor: Colors.accent500,
+      }}
+    >
+      <BottomTabs.Screen
+        name="Recent Expenses"
+        component={RecentExpenses}
+        options={{
+          title: "Recent Expenses",
+          tabBarLabel: "Recent",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="hourglass" size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name="AllExpenses"
+        component={AllExpenses}
+        options={{
+          title: "All Expenses",
+          tabBarLabel: "All Expenses",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
+          ),
+        }}
+      />
+    </BottomTabs.Navigator>
+  );
 }
 
 export default function App() {
   return (
     <>
-    <StatusBar style='auto'/>
-    <NavigationContainer>
-      <Stack.Navigator>
-      <Stack.Screen name="Expense Overview" component={ExpensesOverview} />
-        <Stack.Screen name="ManageExpenses" component={ManageExpenses} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <StatusBar style="auto" />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Expense Overview"
+            component={ExpensesOverview}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="ManageExpenses" component={ManageExpenses} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 }
@@ -35,12 +69,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, // Ensures the View fills the entire screen
     backgroundColor: Colors.primaryDarkMaroon, // Your desired background color
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   text: {
     fontSize: 14,
     fontWeight: "bold",
     color: Colors.primaryBrightYellow,
     textAlign: "center",
+  },
+  headerLargeTitleStyle: {
+    fontFamily: "Georgia",
+    fontSize: 22,
+    fontWeight: "500",
+    color: "blue",
   },
 });
