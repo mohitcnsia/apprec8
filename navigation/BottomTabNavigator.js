@@ -5,6 +5,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../config/colors";
 import QuizNavigator from "./QuizNavigator";
 import Home from "../screens/quiz/Home";
+import ProfileScreen from "../screens/quiz/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +45,7 @@ function BottomTabNavigator() {
         />
         <Tab.Screen
           name="Profile"
-          component={DummyScreen}
+          component={ProfileScreen}
           initialParams={{ title: "Profile Screen" }}
           options={{
             tabBarIcon: ({ color, size }) => (
