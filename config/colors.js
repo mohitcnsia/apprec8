@@ -6,4 +6,5 @@ export const Colors = {
   primaryLightPink: "#f0b0f0",
   primaryOrange: "#f12b15",
   blackText: "#000000",
+  primaryWhite: "#ffffff",
 };

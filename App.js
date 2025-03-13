@@ -4,8 +4,15 @@ import QuizNavigator from "./navigation/QuizNavigator";
 import MealNavigator from "./navigation/MealNavigator";
 import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
+import { useFonts } from "expo-font";
 
 export default function App() {
+  useFonts({
+    rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
+    delius: require("./assets/fonts/Delius-Regular.ttf"),
+    pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
+  });
+
   return (
     <>
       {/* Custom StatusBar with background color */}

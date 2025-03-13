@@ -1,9 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import DrawerScreen from "../screens/DummyScreen";
+import DummyScreen from "../screens/DummyScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../config/colors";
 import QuizNavigator from "./QuizNavigator";
+import Home from "../screens/quiz/Home";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,7 @@ function BottomTabNavigator() {
       >
         <Tab.Screen
           name="Home"
-          component={DrawerScreen}
+          component={Home}
           initialParams={{ title: "Home Screen" }}
           options={{
             tabBarIcon: ({ color, size }) => (
@@ -43,7 +44,7 @@ function BottomTabNavigator() {
         />
         <Tab.Screen
           name="Profile"
-          component={DrawerScreen}
+          component={DummyScreen}
           initialParams={{ title: "Profile Screen" }}
           options={{
             tabBarIcon: ({ color, size }) => (
