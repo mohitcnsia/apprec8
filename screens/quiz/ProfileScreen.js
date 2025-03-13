@@ -22,17 +22,18 @@ const ProfileScreen = () => {
             style={styles.profileImage}
           />
           <Text style={styles.name}>Pratha Chilkoti</Text>
-          <Text style={styles.memberSince}>Member since 2025</Text>
+          <Text style={styles.memberSince}>Member since 2024</Text>
         </View>
 
         {/* Stats Section */}
         <View style={styles.statsContainer}>
           {[
-            { label: "Day Streak", value: "10" },
-            { label: "Questions", value: "300" },
-            { label: "Stars", value: "5789" },
-            { label: "Exp Level", value: "20" },
-            { label: "Global Rank", value: "200" },
+            { label: "Day Streak", value: "223" },
+            { label: "Questions", value: "3,000" },
+            { label: "Stars", value: "1,57,899" },
+            { label: "Exp Level", value: "200" },
+            { label: "Global Rank", value: "1" },
+            { label: "Hours", value: "47" },
           ].map((item, index) => (
             <View key={index} style={styles.statCard}>
               <Text style={styles.statValue}>{item.value}</Text>
@@ -69,7 +70,7 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5", padding: 16 },
+  container: { flex: 1, padding: 16 },
   scrollContainer: { flexGrow: 1, paddingBottom: 20 },
   profileSection: { alignItems: "center", marginBottom: 20 },
   profileImage: {
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: "white",
+    borderColor: Colors.primaryMaroon200,
   },
   name: {
     fontSize: 20,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: Colors.primaryWhite,
   },
-  memberSince: { color: Colors.primaryWhite },
+  memberSince: { color: Colors.primaryLightGray },
   statsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     width: "48%",
-    backgroundColor: "white",
+    backgroundColor: Colors.primaryMaroon100,
     padding: 16,
     alignItems: "center",
     borderRadius: 8,
@@ -107,9 +108,9 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 22,
     fontWeight: "bold",
-    color: Colors.primaryDarkMaroon,
+    color: Colors.primaryLightGray,
   },
-  statLabel: { color: Colors.primaryDarkMaroon },
+  statLabel: { color: Colors.primaryLightGray },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     color: Colors.primaryDarkMaroon,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: Colors.primaryMaroon100,
     padding: 16,
     borderRadius: 8,
     marginBottom: 10,
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  cardText: { color: Colors.primaryDarkMaroon },
+  cardText: { color: Colors.primaryLightGray },
   copyright: {
     textAlign: "center",
     color: "gray",
