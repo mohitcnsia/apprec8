@@ -1,22 +1,16 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import LeaderCard from "../../components/common/LeaderCard";
+import CustomListItem from "../../components/common/CustomListItem";
 
 const Tab = createMaterialTopTabNavigator();
 
 // 🔹 Mock Data for Leaderboard
 const leaderboardData = [
   { id: "1", name: "Pratha Chilkoti", points: 8000, rank: 1 },
-  { id: "2", name: "Jeffery Bezos", points: 5000, rank: 2 },
-  { id: "3", name: "Cristiano Ronaldo", points: 6000, rank: 3 },
+  { id: "2", name: "Jeffery Bezos", points: 7000, rank: 2 },
+  { id: "3", name: "Cristiano Ronaldo", points: 6500, rank: 3 },
   { id: "4", name: "Mark Zuckerberg", points: 4000, rank: 4 },
   { id: "5", name: "Jeff Bezos", points: 2400, rank: 5 },
   { id: "6", name: "Frank Muller", points: 1680, rank: 6 },
@@ -60,55 +54,16 @@ const TopThree = () => {
   );
 };
 
-// 🔹 List of Next Rank Holders
-const RankList = () => {
-  return (
-    <FlatList
-      data={leaderboardData.slice(3)} // Show ranks 4 and below
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.rankRow}>
-          <Text style={styles.rankNumber}>#{item.rank}</Text>
-          <Image
-            source={{ uri: "https://via.placeholder.com/50" }}
-            style={styles.rowImage}
-          />
-          <Text style={styles.rankName}>{item.name}</Text>
-          <Text style={styles.rankPoints}>{item.points} pts</Text>
-        </View>
-      )}
-    />
-  );
-};
-
 // 🔹 Tab Screens
-
 const CustomLeaderboard = () => {
   return (
-    <View style={styles.container}>
-      {/* Fixed Top 3 Container */}
-      <View style={styles.fixedTopThree}>
-        <TopThree />
-      </View>
-
-      {/* Scrollable Rank List */}
-      <FlatList
-        data={leaderboardData.slice(3)}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingTop: 220 }} // Space for fixed top 3
-        renderItem={({ item }) => (
-          <View style={styles.rankRow}>
-            <Text style={styles.rankNumber}>#{item.rank}</Text>
-            <Image
-              source={{ uri: "https://via.placeholder.com/50" }}
-              style={styles.rowImage}
-            />
-            <Text style={styles.rankName}>{item.name}</Text>
-            <Text style={styles.rankPoints}>{item.points} pts</Text>
-          </View>
-        )}
-      />
-    </View>
+    <FlatList
+      data={leaderboardData.slice(3)} // Ranks 4 and below
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <CustomListItem item={item} />}
+      ListHeaderComponent={<TopThree />} // ✅ Top 3 inside ListHeaderComponent
+      contentContainerStyle={{ paddingBottom: 20 }} // Space at bottom
+    />
   );
 };
 
