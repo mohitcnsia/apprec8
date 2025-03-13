@@ -22,7 +22,7 @@ const ProfileScreen = () => {
             style={styles.profileImage}
           />
           <Text style={styles.name}>Pratha Chilkoti</Text>
-          <Text style={styles.memberSince}>Member since 2024</Text>
+          <Text style={styles.memberSince}>Enrolled Jan 01, 2024</Text>
         </View>
 
         {/* Stats Section */}

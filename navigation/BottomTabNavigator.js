@@ -2,10 +2,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import DummyScreen from "../screens/DummyScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../config/colors";
 import QuizNavigator from "./QuizNavigator";
 import Home from "../screens/quiz/Home";
 import ProfileScreen from "../screens/quiz/ProfileScreen";
+import LeaderboardScreen from "../screens/quiz/LeaderboardScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,6 +43,16 @@ function BottomTabNavigator() {
               <Ionicons name="book" color={color} size={size} />
             ),
             headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Stats"
+          component={LeaderboardScreen}
+          initialParams={{ title: "Leaderboard" }}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="leaderboard" color={color} size={size} />
+            ),
           }}
         />
         <Tab.Screen
