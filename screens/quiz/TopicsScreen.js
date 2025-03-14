@@ -31,6 +31,7 @@ function TopicsScreen({ navigation }) {
         keyExtractor={(item) => item.id}
         renderItem={renderCategoryItem}
         numColumns={2}
+        showsVerticalScrollIndicator={false}
       />
     </LinearGradient>
   );

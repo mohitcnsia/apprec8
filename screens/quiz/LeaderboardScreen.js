@@ -3,6 +3,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import LeaderCard from "../../components/common/LeaderCard";
 import CustomListItem from "../../components/common/CustomListItem";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "../../config/colors";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -57,37 +59,57 @@ const TopThree = () => {
 // 🔹 Tab Screens
 const CustomLeaderboard = () => {
   return (
-    <FlatList
-      data={leaderboardData.slice(3)} // Ranks 4 and below
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <CustomListItem item={item} />}
-      ListHeaderComponent={<TopThree />} // ✅ Top 3 inside ListHeaderComponent
-      contentContainerStyle={{ paddingBottom: 20 }} // Space at bottom
-      showsVerticalScrollIndicator={false}
-    />
+    <LinearGradient
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      style={styles.container} // Ensure full-screen coverage
+    >
+      <FlatList
+        data={leaderboardData.slice(3)}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <CustomListItem item={item} />}
+        ListHeaderComponent={<TopThree />}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+      />
+    </LinearGradient>
   );
 };
 
 // 🔹 Main Leaderboard with Tabs
 const LeaderBoard = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: { backgroundColor: "#fff" },
-        tabBarIndicatorStyle: { backgroundColor: "#007AFF", height: 3 },
-        tabBarLabelStyle: { fontWeight: "bold", color: "#333" },
-      }}
+    <LinearGradient
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      style={styles.container}
     >
-      <Tab.Screen name="Daily" component={CustomLeaderboard} />
-      <Tab.Screen name="Weekly" component={CustomLeaderboard} />
-      <Tab.Screen name="Monthly" component={CustomLeaderboard} />
-    </Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { backgroundColor: "transparent" },
+          tabBarIndicatorStyle: {
+            backgroundColor: Colors.primaryWhite,
+            height: 3,
+          },
+          tabBarLabelStyle: { fontWeight: "bold", color: Colors.primaryWhite },
+        }}
+      >
+        <Tab.Screen name="Daily" component={CustomLeaderboard} />
+        <Tab.Screen name="Weekly" component={CustomLeaderboard} />
+        <Tab.Screen name="Monthly" component={CustomLeaderboard} />
+      </Tab.Navigator>
+    </LinearGradient>
   );
 };
 
 // 🔹 Styles
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: "#F7F8FA" },
+  container: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
+  gradientContainer: {
+    flex: 1,
+    backgroundColor: "transparent", // Ensures gradient visibility
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -99,7 +121,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     zIndex: 10,
-    backgroundColor: "#F7F8FA",
   },
   topThreeContainer: {
     margin: 20,
@@ -109,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     marginBottom: 5,
     borderRadius: 10,
   },
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     marginBottom: 5,
     borderRadius: 10,
   },
