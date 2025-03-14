@@ -1,14 +1,13 @@
-import React from "react";
+import React, { memo } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import LeaderCard from "../../components/common/LeaderCard";
 import CustomListItem from "../../components/common/CustomListItem";
-import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 
 const Tab = createMaterialTopTabNavigator();
 
-// 🔹 Mock Data for Leaderboard
 const leaderboardData = [
   { id: "1", name: "Pratha Chilkoti", points: 8000, rank: 1 },
   { id: "2", name: "Jeffery Bezos", points: 7000, rank: 2 },
@@ -22,152 +21,88 @@ const leaderboardData = [
   { id: "10", name: "Sundar Pichai", points: 1680, rank: 10 },
 ];
 
-// 🔹 Top 3 Cards Component
-const TopThree = () => {
-  return (
-    <View style={styles.topThreeContainer}>
-      {/* Silver - 2nd Rank */}
+// memo() prevents unnecessary re-renders by only updating the components when their props change.
+// Without memo(), every time the parent (LeaderBoard) re-renders, TopThree and CustomLeaderboard would also re-render—even if their data hasn’t changed.
+const TopThree = memo(() => (
+  <View style={styles.topThreeContainer}>
+    <LeaderCard
+      name={leaderboardData[1].name}
+      points={leaderboardData[1].points}
+      rank={2}
+      style={styles.silver}
+    />
+    <LeaderCard
+      name={leaderboardData[0].name}
+      points={leaderboardData[0].points}
+      rank={1}
+      userImageUri="https://images.pexels.com/photos/1470677/pexels-photo-1470677.jpeg"
+      style={styles.gold}
+    />
+    <LeaderCard
+      name={leaderboardData[2].name}
+      points={leaderboardData[2].points}
+      rank={3}
+      style={styles.bronze}
+    />
+  </View>
+));
 
-      <LeaderCard
-        name={leaderboardData[1].name}
-        points={leaderboardData[1].points}
-        rank={leaderboardData[1].rank}
-        style={styles.silver}
-      />
+const CustomLeaderboard = memo(() => (
+  <LinearGradient
+    colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+    style={StyleSheet.absoluteFillObject}
+  >
+    <FlatList
+      data={leaderboardData.slice(3)}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <CustomListItem item={item} />}
+      ListHeaderComponent={<TopThree />}
+      contentContainerStyle={styles.listContent}
+      // Provides precomputed layout information (height, offset, index) for each list item.
+      // Helps React Native optimize scrolling by avoiding layout recalculations.
+      getItemLayout={(data, index) => ({
+        length: 60,
+        offset: 60 * index,
+        index,
+      })}
+      initialNumToRender={7}
+      maxToRenderPerBatch={10}
+      windowSize={5}
+      style={styles.transparentBg}
+      showsVerticalScrollIndicator={false}
+    />
+  </LinearGradient>
+));
 
-      {/* Gold - 1st Rank */}
-      <LeaderCard
-        name={leaderboardData[0].name}
-        points={leaderboardData[0].points}
-        rank={leaderboardData[0].rank}
-        userImageUri="https://images.pexels.com/photos/1470677/pexels-photo-1470677.jpeg"
-        style={styles.gold}
-      />
-
-      {/* Bronze - 3rd Rank */}
-
-      <LeaderCard
-        name={leaderboardData[2].name}
-        points={leaderboardData[2].points}
-        rank={leaderboardData[2].rank}
-        style={styles.bronze}
-      />
-    </View>
-  );
-};
-
-// 🔹 Tab Screens
-const CustomLeaderboard = () => {
-  return (
-    <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-      style={styles.container} // Ensure full-screen coverage
+const LeaderBoard = () => (
+  <View style={styles.container}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: Colors.primaryDarkMaroon },
+        tabBarIndicatorStyle: { backgroundColor: "#007AFF", height: 3 },
+        tabBarLabelStyle: { fontWeight: "bold", color: Colors.primaryWhite },
+      }}
     >
-      <FlatList
-        data={leaderboardData.slice(3)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CustomListItem item={item} />}
-        ListHeaderComponent={<TopThree />}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-      />
-    </LinearGradient>
-  );
-};
+      <Tab.Screen name="Daily" component={CustomLeaderboard} />
+      <Tab.Screen name="Weekly" component={CustomLeaderboard} />
+      <Tab.Screen name="Monthly" component={CustomLeaderboard} />
+    </Tab.Navigator>
+  </View>
+);
 
-// 🔹 Main Leaderboard with Tabs
-const LeaderBoard = () => {
-  return (
-    <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-      style={styles.container}
-    >
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: { backgroundColor: "transparent" },
-          tabBarIndicatorStyle: {
-            backgroundColor: Colors.primaryWhite,
-            height: 3,
-          },
-          tabBarLabelStyle: { fontWeight: "bold", color: Colors.primaryWhite },
-        }}
-      >
-        <Tab.Screen name="Daily" component={CustomLeaderboard} />
-        <Tab.Screen name="Weekly" component={CustomLeaderboard} />
-        <Tab.Screen name="Monthly" component={CustomLeaderboard} />
-      </Tab.Navigator>
-    </LinearGradient>
-  );
-};
-
-// 🔹 Styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-  gradientContainer: {
-    flex: 1,
-    backgroundColor: "transparent", // Ensures gradient visibility
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-    textAlign: "center",
-  },
-  // Fixed Top 3
-  fixedTopThree: {
-    position: "absolute",
-    width: "100%",
-    zIndex: 10,
-  },
-  topThreeContainer: {
-    margin: 20,
-  },
-  // Leaderboard Items
-  rankRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    // backgroundColor: "#fff",
-    marginBottom: 5,
-    borderRadius: 10,
-  },
-
-  // 🎖️ Top 3 Cards
+  container: { flex: 1 },
+  transparentBg: { backgroundColor: "transparent" },
+  listContent: { paddingBottom: 20 },
   topThreeContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "flex-end",
     padding: 20,
   },
-  silver: { backgroundColor: "#C0C0C0", height: 250 }, // Silver card
-  gold: { backgroundColor: "#FFD700", height: 300 }, // Gold card (highest)
-  bronze: { backgroundColor: "#CD7F32", height: 230 }, // Bronze card (lowest)
-  userImage: { width: 60, height: 60, borderRadius: 30, marginBottom: 5 },
-  name: { fontWeight: "bold", color: "#333" },
-  points: { fontSize: 14, color: "#666" },
-  rank: { fontSize: 20, fontWeight: "bold", color: "#222", marginTop: 5 },
-
-  // 🏅 Rank List
-  rankRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    // backgroundColor: "#fff",
-    marginBottom: 5,
-    borderRadius: 10,
-  },
-  rankNumber: {
-    fontSize: 18,
-    fontWeight: "bold",
-    width: 40,
-    textAlign: "center",
-  },
-  rowImage: { width: 40, height: 40, borderRadius: 20, marginHorizontal: 10 },
-  rankName: { flex: 1, fontSize: 16, fontWeight: "500", color: "#333" },
-  rankPoints: { fontSize: 14, color: "#666" },
+  silver: { backgroundColor: "#C0C0C0", height: 250 },
+  gold: { backgroundColor: "#FFD700", height: 300 },
+  bronze: { backgroundColor: "#CD7F32", height: 230 },
 });
 
 export default LeaderBoard;
