@@ -28,7 +28,10 @@ function TopicOverviewScreen({ route, navigation }) {
 
         {/* Scrollable Description - Takes 70% height */}
         <View style={styles.descriptionWrapper}>
-          <ScrollView contentContainerStyle={styles.scrollContent}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
             <Text style={styles.description}>{itemData.item.description}</Text>
           </ScrollView>
         </View>

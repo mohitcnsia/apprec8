@@ -63,6 +63,7 @@ const CustomLeaderboard = () => {
       renderItem={({ item }) => <CustomListItem item={item} />}
       ListHeaderComponent={<TopThree />} // ✅ Top 3 inside ListHeaderComponent
       contentContainerStyle={{ paddingBottom: 20 }} // Space at bottom
+      showsVerticalScrollIndicator={false}
     />
   );
 };
@@ -70,8 +71,6 @@ const CustomLeaderboard = () => {
 // 🔹 Main Leaderboard with Tabs
 const LeaderBoard = () => {
   return (
-    // <NavigationContainer independent={true}>
-
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: { backgroundColor: "#fff" },
@@ -83,7 +82,6 @@ const LeaderBoard = () => {
       <Tab.Screen name="Weekly" component={CustomLeaderboard} />
       <Tab.Screen name="Monthly" component={CustomLeaderboard} />
     </Tab.Navigator>
-    // </NavigationContainer>
   );
 };
 

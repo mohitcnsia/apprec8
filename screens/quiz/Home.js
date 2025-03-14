@@ -17,7 +17,7 @@ function Home() {
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <KidsThoughtOfTheDay thought={getThoughtOfTheDay()} />
         <CustomCarousel title="Leaders" data={imageSet2} itemWidth={300} />
         <CustomCarousel title="Featured" data={imageSet1} loop />

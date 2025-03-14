@@ -13,7 +13,10 @@ const calculateFontSize = () => {
 function Question({ title }) {
   return (
     <View style={styles.questionContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Text
           style={[styles.questionText, { fontSize: calculateFontSize() }]} // Dynamically calculated font size
         >

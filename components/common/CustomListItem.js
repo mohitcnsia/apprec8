@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 
 export default function CustomListItem({ item }) {
@@ -33,9 +25,6 @@ export default function CustomListItem({ item }) {
     </View>
   );
 }
-
-// https://images.pexels.com/photos/289923/pexels-photo-289923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
-// https://images.pexels.com/photos/19435364/pexels-photo-19435364/free-photo-of-a-red-cat-with-a-collar-on-looking-up.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
 
 const styles = StyleSheet.create({
   customListItem: {
