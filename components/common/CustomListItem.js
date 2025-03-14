@@ -1,14 +1,17 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "../../config/colors";
 
 export default function CustomListItem({ item }) {
   return (
-    <View style={styles.customListItem}>
+    <LinearGradient
+      colors={[Colors.primaryMaroon100, Colors.primaryLightGray]}
+      style={styles.gradientBackground}
+    >
       <Pressable
         android_ripple={{ color: "#CCC" }}
-        style={({ pressed }) => {
-          pressed ? styles.buttonPressed : null;
-        }}
+        style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
       >
         <View style={styles.rankRow}>
           <Text style={styles.rankNumber}>#{item.rank}</Text>
@@ -22,18 +25,16 @@ export default function CustomListItem({ item }) {
           <Text style={styles.rankPoints}>{item.points} pts</Text>
         </View>
       </Pressable>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  customListItem: {
+  gradientBackground: {
     margin: 16,
     borderRadius: 8,
-    overflow: "scroll",
-    backgroundColor: "white",
+    overflow: "hidden",
   },
-  // 🏅 Rank List
   rankRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -46,10 +47,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     width: 40,
     textAlign: "center",
+    color: Colors.primaryDarkMaroon,
   },
   rowImage: { width: 40, height: 40, borderRadius: 20, marginHorizontal: 10 },
-  rankName: { flex: 1, fontSize: 16, fontWeight: "500", color: "#333" },
-  rankPoints: { fontSize: 14, color: "#666" },
+  rankName: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.primaryDarkMaroon,
+  },
+  rankPoints: { fontSize: 14, color: Colors.primaryDarkMaroon },
   buttonPressed: {
     opacity: 0.5,
   },
