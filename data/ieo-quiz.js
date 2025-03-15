@@ -148,16 +148,18 @@ export const IEO_QUIZ = [
     23,
     "Synonym of Flaunt?",
     ["Show Off", "brandish", "Brag about", "All are correct"],
-    "All are correct"[
+    "All are correct",
+    [
       ("Pratha doesn't like to FLAUNT her cool smart watch.",
-      "Pratha FLAUNTED her big muscles these days.")
+      "Pratha FLAUNTED her big muscles these days."),
     ]
   ),
   new IEO(
     24,
     "Synonym of Flaunt?",
     ["Modest", "Brandish", "Hide", "All are correct"],
-    "Brandish"["Modest is an antonym of Flaunt"]
+    "Brandish",
+    ["Modest is an antonym of Flaunt"]
   ),
 
   // new IEO(

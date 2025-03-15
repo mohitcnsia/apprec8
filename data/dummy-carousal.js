@@ -42,6 +42,9 @@ export const olympiad = [
     type: "Sample Paper",
     author: "Pratha Chilkoti",
   },
+];
+
+export const psychology = [
   {
     id: "psy",
     name: "Psychology",

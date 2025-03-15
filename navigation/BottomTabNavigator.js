@@ -8,6 +8,7 @@ import QuizNavigator from "./QuizNavigator";
 import Home from "../screens/quiz/Home";
 import ProfileScreen from "../screens/quiz/ProfileScreen";
 import LeaderboardScreen from "../screens/quiz/LeaderboardScreen";
+import StudyNavigator from "./StudyNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,10 +38,20 @@ function BottomTabNavigator() {
         />
         <Tab.Screen
           name="Study"
-          component={QuizNavigator}
+          component={StudyNavigator}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="book" color={color} size={size} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Topics"
+          component={QuizNavigator}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="thunderstorm" color={color} size={size} />
             ),
             headerShown: false,
           }}

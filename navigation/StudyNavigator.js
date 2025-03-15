@@ -10,10 +10,10 @@ import StudyScreen from "../screens/quiz/StudyScreen";
 
 const Stack = createStackNavigator();
 
-const QuizNavigator = () => {
+const StudyNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="TopicsScreen"
+      initialRouteName="StudyScreen"
       screenOptions={{
         headerStyle: {
           backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
@@ -24,7 +24,7 @@ const QuizNavigator = () => {
         },
       }}
     >
-      <Stack.Screen name="TopicsScreen" component={TopicsScreen} />
+      <Stack.Screen name="StudyScreen" component={StudyScreen} />
       <Stack.Screen name="Overview" component={TopicOverviewScreen} />
       <Stack.Screen name="Quiz" component={QuizScreen} />
       <Stack.Screen name="QuizResult" component={QuizResultScreen} />
@@ -32,7 +32,7 @@ const QuizNavigator = () => {
   );
 };
 
-export default QuizNavigator;
+export default StudyNavigator;
 
 const styles = StyleSheet.create({
   container: {

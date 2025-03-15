@@ -1,6 +1,11 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal";
-import { leaders, olympiad, random } from "../../data/dummy-carousal";
+import {
+  leaders,
+  olympiad,
+  psychology,
+  random,
+} from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 
@@ -19,17 +24,18 @@ function StudyScreen() {
           // viewAllScreen={true} // Enable this once View All screen is avaialble.
         />
         <CustomCarousel
+          title="My Classrooms"
+          data={psychology}
+          customWidth={40}
+          customHeight={120}
+        />
+        <CustomCarousel
           title="My Quizzes"
           data={random}
           customWidth={40}
           customHeight={120}
         />
-        <CustomCarousel
-          title="My Classrooms"
-          data={leaders}
-          customWidth={40}
-          customHeight={120}
-        />
+
         <CustomCarousel
           title="My Favourites"
           data={leaders}
