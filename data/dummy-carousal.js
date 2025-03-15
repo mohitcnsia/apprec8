@@ -20,7 +20,8 @@ export const random = [
 export const olympiad = [
   {
     name: "Mathematics",
-    image: require("../assets/images/olympiad/imo.png"),
+    image:
+      "https://media.istockphoto.com/id/495737046/vector/kids-reading-books-in-colour.jpg?s=2048x2048&w=is&k=20&c=XasE_9gSy7Psx9nIbKj0WP8F6P7_hk6BlQLZKnKltfE=",
     duration: "30 minutes",
     type: "Quiz",
     author: "Mohit Kumar Chilkoti",

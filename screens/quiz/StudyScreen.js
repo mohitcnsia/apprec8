@@ -5,7 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 
 function StudyScreen() {
-  console.log("rending Study");
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
