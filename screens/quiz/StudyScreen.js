@@ -15,25 +15,25 @@ function StudyScreen() {
           title="Olympiad"
           data={olympiad}
           customWidth={40}
-          customHeight={100}
+          customHeight={120}
         />
         <CustomCarousel
           title="My Quizzes"
           data={random}
           customWidth={40}
-          customHeight={100}
+          customHeight={120}
         />
         <CustomCarousel
           title="My Classrooms"
           data={leaders}
           customWidth={40}
-          customHeight={100}
+          customHeight={120}
         />
         <CustomCarousel
           title="My Favourites"
           data={leaders}
           customWidth={40}
-          customHeight={100}
+          customHeight={120}
         />
       </ScrollView>
     </LinearGradient>

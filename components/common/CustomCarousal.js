@@ -18,45 +18,50 @@ const getImageSource = (item) => {
   if (!item) return null;
   if (typeof item === "string") return { uri: item };
   if (typeof item === "number") return item;
-  if (item.image)
-    return typeof item.image === "number" ? item.image : { uri: item.image };
-  return null;
+  return item.image
+    ? typeof item.image === "number"
+      ? item.image
+      : { uri: item.image }
+    : null;
 };
+
+const containsMetadata = (item) =>
+  Boolean(item?.name || item?.duration || item?.type || item?.author);
 
 const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
   const imageSource = getImageSource(item);
-  const hasMetadata = item.name || item.author || item.duration || item.type;
+  const hasMetadata = containsMetadata(item);
 
   return (
-    <View style={[styles.itemContainer, { width: imageWidth }]}>
+    <View style={[styles.carousalItemContainer, { width: imageWidth }]}>
       {imageSource ? (
         <Image
           source={imageSource}
-          style={[
-            styles.imageStyle,
-            {
-              width: imageWidth,
-              height: imageHeight,
-            },
-          ]}
+          style={{
+            width: imageWidth,
+            height: imageHeight,
+            borderRadius: 10, // Ensure image has rounded corners
+            resizeMode: "cover",
+          }}
         />
       ) : (
         <View
           style={[
             styles.imagePlaceholder,
-            { width: imageWidth, height: imageHeight },
+            { width: imageWidth, height: imageHeight, borderRadius: 10 },
           ]}
         />
       )}
 
+      {/* Metadata Section Below Image */}
       {hasMetadata && (
-        <View style={styles.metadataOverlay}>
+        <View style={styles.metadataContainer}>
           {item.name && <Text style={styles.itemTitle}>{item.name}</Text>}
           <Text style={styles.metaText}>
-            {item.duration && `⏳ ${item.duration} `}
-            {item.type && `📖 ${item.type} `}
-            {item.author && `✍ ${item.author}`}
+            {item.type && `${item.type} • `}
+            {item.duration && `${item.duration}`}
           </Text>
+          {item.author && <Text style={styles.metaText}>{item.author}</Text>}
         </View>
       )}
     </View>
@@ -77,63 +82,44 @@ const CustomCarousel = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
 
-  const handleNavigation = useCallback(() => {
-    if (
-      viewAllScreen &&
-      navigation.getState().routes.every((r) => r.name !== viewAllScreen)
-    ) {
-      navigation.navigate(viewAllScreen);
-    }
-  }, [navigation, viewAllScreen]);
-
   const imageWidth = (screenWidth * customWidth) / 100;
   const imageHeight = customHeight;
 
   useEffect(() => {
     if (autoPlay && data.length > 1) {
-      const intervalId = setInterval(() => {
-        scrollToNext();
-      }, interval);
+      const intervalId = setInterval(() => scrollToNext(), interval);
       return () => clearInterval(intervalId);
     }
   }, [autoPlay, data.length, interval]);
 
   const scrollToNext = useCallback(() => {
     if (!flatListRef.current || data.length === 0) return;
-
     let nextIndex = (currentIndex + 1) % data.length;
-    flatListRef.current.scrollToIndex({
-      index: nextIndex,
-      animated: true,
-    });
+    flatListRef.current.scrollToIndex({ index: nextIndex, animated: true });
     setCurrentIndex(nextIndex);
   }, [currentIndex, data.length]);
 
   const handleScroll = useCallback(
     (event) => {
-      const contentOffsetX = event.nativeEvent.contentOffset.x;
-      const newIndex = Math.round(contentOffsetX / (imageWidth + SPACING));
-
-      if (newIndex !== currentIndex && newIndex < data.length) {
+      const newIndex = Math.round(
+        event.nativeEvent.contentOffset.x / (imageWidth + SPACING)
+      );
+      if (newIndex !== currentIndex && newIndex < data.length)
         setCurrentIndex(newIndex);
-      }
     },
     [currentIndex, data.length, imageWidth]
   );
 
   return (
     <View style={styles.carouselWrapper}>
-      {/* Title & View All */}
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         {viewAllScreen && (
-          <TouchableOpacity onPress={handleNavigation}>
+          <TouchableOpacity onPress={() => navigation.navigate(viewAllScreen)}>
             <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         )}
       </View>
-
-      {/* FlatList Carousel */}
       <FlatList
         ref={flatListRef}
         data={data}
@@ -159,17 +145,12 @@ const CustomCarousel = ({
         })}
         scrollEventThrottle={16}
       />
-
-      {/* Pagination Dots */}
       {pagination && data.length > 1 && (
         <View style={styles.paginationContainer}>
           {data.map((_, index) => (
             <View
               key={index}
-              style={[
-                styles.dot,
-                currentIndex === index ? styles.activeDot : {},
-              ]}
+              style={[styles.dot, currentIndex === index && styles.activeDot]}
             />
           ))}
         </View>
@@ -179,6 +160,24 @@ const CustomCarousel = ({
 };
 
 const styles = StyleSheet.create({
+  carousalItemContainer: {
+    marginRight: SPACING / 2,
+    borderRadius: 10, // Ensure parent container has rounded edges
+    overflow: "hidden", // This makes sure child elements don't break the border radius
+  },
+  imagePlaceholder: {
+    backgroundColor: "grey",
+  },
+  itemTitle: {
+    fontWeight: "bold",
+    color: Colors.primaryWhite,
+    fontSize: 12,
+  },
+  metaText: {
+    fontSize: 11,
+    color: Colors.primaryWhite,
+    marginTop: 2,
+  },
   carouselWrapper: {
     marginVertical: 10,
   },
@@ -189,46 +188,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 5,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.primaryWhite,
-  },
-  viewAll: {
-    fontSize: 12,
-    color: Colors.primaryWhite,
-  },
-  itemContainer: {
-    marginRight: SPACING / 2,
-    backgroundColor: "white",
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  imageStyle: {
-    width: "100%",
-    resizeMode: "cover", // Ensures image covers the area
-  },
-  imagePlaceholder: {
-    backgroundColor: "grey", // Grey background for missing images
-  },
-  metadataOverlay: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Transparent overlay
-    padding: 10,
-    alignItems: "center",
-  },
-  itemTitle: {
-    fontWeight: "bold",
-    color: "#fff",
-    fontSize: 16,
-  },
-  metaText: {
-    fontSize: 14,
-    color: "#ddd",
-    marginTop: 2,
-  },
+  title: { fontSize: 18, fontWeight: "bold", color: Colors.primaryWhite },
+  viewAll: { fontSize: 12, color: Colors.primaryWhite },
+  imagePlaceholder: { backgroundColor: "grey" },
+  metadataContainer: { padding: 5, backgroundColor: "transparent" },
   paginationContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -241,9 +204,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
     marginHorizontal: 5,
   },
-  activeDot: {
-    backgroundColor: Colors.primaryWhite,
-  },
+  activeDot: { backgroundColor: Colors.primaryWhite },
 });
 
 export default CustomCarousel;

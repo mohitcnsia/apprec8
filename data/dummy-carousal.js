@@ -20,23 +20,22 @@ export const random = [
 export const olympiad = [
   {
     name: "Mathematics",
-    image:
-      "https://media.istockphoto.com/id/495737046/vector/kids-reading-books-in-colour.jpg?s=2048x2048&w=is&k=20&c=XasE_9gSy7Psx9nIbKj0WP8F6P7_hk6BlQLZKnKltfE=",
-    duration: "30 minutes",
+    image: require("../assets/images/olympiad/imo.png"),
+    duration: "30 min",
     type: "Quiz",
     author: "Mohit Kumar Chilkoti",
   },
   {
     name: "National Science Olympiad",
     image: require("../assets/images/olympiad/nso.png"),
-    duration: "30 minutes",
+    duration: "30 min",
     type: "Study",
     author: "Pratha Chilkoti",
   },
   {
     name: "International English Olympiad",
     image: require("../assets/images/olympiad/ieo.png"),
-    duration: "60 minutes",
+    duration: "1 hr",
     type: "Sample Paper",
     author: "Pratha Chilkoti",
   },
@@ -44,7 +43,7 @@ export const olympiad = [
     name: "Psychology",
     image:
       "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
-    duration: "30 minutes",
+    duration: "30 min",
     type: "Questionnaire",
     author: "Seema Joshi",
   },
