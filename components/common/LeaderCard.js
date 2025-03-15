@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.28,
     height: windowHeight * 0.3,
     backgroundColor: Colors.primaryMaroon100,
-    borderColor: Colors.primaryLightGray,
+    borderColor: Colors.primaryDarkMaroon,
     borderWidth: 2,
     shadowColor: "black",
     shadowOpacity: 0.5,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -IMAGE_SIZE / 2 }], // Center the image
     borderRadius: IMAGE_SIZE / 2,
-    backgroundColor: Colors.primaryLightPink,
+    backgroundColor: Colors.primaryDarkMaroon,
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
     top: -IMAGE_OFFSET,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     left: "40%",
     transform: [{ translateX: -IMAGE_SIZE / 2 }], // Center the image
     borderRadius: (windowWidth * 0.2) / 2,
-    backgroundColor: Colors.primaryLightPink,
+    backgroundColor: Colors.primaryDarkMaroon,
     width: windowWidth * 0.2,
     height: windowWidth * 0.2,
     top: -IMAGE_OFFSET * 1.2,

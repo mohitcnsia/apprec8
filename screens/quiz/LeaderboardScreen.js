@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     padding: 20,
   },
-  silver: { backgroundColor: "#C0C0C0", height: 250 },
-  gold: { backgroundColor: "#FFD700", height: 300 },
-  bronze: { backgroundColor: "#CD7F32", height: 230 },
+  silver: { backgroundColor: "#5c5b5b", height: 250 },
+  gold: { backgroundColor: "#f5bd31", height: 300 },
+  bronze: { backgroundColor: "#74491e", height: 230 },
 });
 
 export default Stats;
