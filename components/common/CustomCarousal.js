@@ -35,9 +35,12 @@ const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
   const navigation = useNavigation();
 
   function pressHandler() {
-    navigation.navigate("Overview", {
-      topicId: item.id,
-    });
+    {
+      item.id &&
+        navigation.navigate("Overview", {
+          topicId: item.id,
+        });
+    }
   }
 
   return (
