@@ -1,37 +1,47 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal";
-import {
-  imageSet1,
-  imageSet2,
-  leaders,
-  random,
-} from "../../data/dummy-carousal";
-import { THOUGHTS } from "../../data/thoughts";
+import { leaders, olympiad, random } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import KidsThoughtOfTheDay from "../../components/thought/KidsThoughtOfTheDay";
-import CalmThought from "../../components/thought/CalmThough";
 
-function Home() {
-  const getThoughtOfTheDay = () => {
-    return THOUGHTS[1];
-  };
-
+function Study() {
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <KidsThoughtOfTheDay thought={getThoughtOfTheDay()} />
-        <CustomCarousel title="Leaders" data={leaders} />
-        <CustomCarousel title="Featured" data={random} />
+        <CustomCarousel
+          title="Olympiad"
+          data={olympiad}
+          customWidth={40}
+          customHeight={100}
+        />
+        <CustomCarousel
+          title="My Quizzes"
+          data={random}
+          customWidth={40}
+          customHeight={100}
+        />
+        <CustomCarousel
+          title="My Classrooms"
+          data={leaders}
+          customWidth={40}
+          customHeight={100}
+        />
+        <CustomCarousel
+          title="My Favourites"
+          data={leaders}
+          customWidth={40}
+          customHeight={100}
+        />
       </ScrollView>
     </LinearGradient>
   );
 }
 
-export default Home;
+export default Study;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -11,21 +11,27 @@ import {
 } from "react-native";
 import { Colors } from "../../config/colors";
 
-const { width } = Dimensions.get("window");
+const { width: screenWidth } = Dimensions.get("window");
+const SPACING = 20;
 
 const CustomCarousel = ({
   title,
   data,
   autoPlay = false,
   interval = 3000,
-  viewAllAcreen,
+  viewAllScreen,
+  customWidth = 100, // Percentage-based width (defaults to full screen width)
+  customHeight = 240, // Default height
 }) => {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
 
+  // Calculate image width dynamically based on percentage
+  const imageWidth = (screenWidth * customWidth) / 100 - SPACING * 2;
+
   // Auto-scroll effect
-  React.useEffect(() => {
+  useEffect(() => {
     if (autoPlay) {
       const intervalId = setInterval(() => {
         if (flatListRef.current) {
@@ -43,7 +49,9 @@ const CustomCarousel = ({
 
   // Handles manual scrolling
   const handleScroll = (event) => {
-    const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+    const newIndex = Math.round(
+      event.nativeEvent.contentOffset.x / (imageWidth + SPACING)
+    );
     setCurrentIndex(newIndex);
   };
 
@@ -62,18 +70,30 @@ const CustomCarousel = ({
           ref={flatListRef}
           data={data}
           horizontal
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
           keyExtractor={(_, index) => index.toString()}
+          contentContainerStyle={{ paddingHorizontal: SPACING }}
           renderItem={({ item }) => (
-            <TouchableOpacity activeOpacity={0.9} style={styles.slide}>
-              <Image source={{ uri: item }} style={styles.image} />
-            </TouchableOpacity>
+            <View style={{ width: imageWidth, marginRight: SPACING }}>
+              <Image
+                source={typeof item === "string" ? { uri: item } : item}
+                style={{
+                  width: "100%",
+                  height: customHeight,
+                  borderRadius: 10,
+                }}
+              />
+            </View>
           )}
+          snapToInterval={imageWidth + SPACING} // Ensures smooth scroll
+          decelerationRate="fast"
+          snapToAlignment="start"
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         />
+
         {/* Pagination Dots */}
-        <View style={styles.paginationContainer}>
+        {/* <View style={styles.paginationContainer}>
           {data.map((_, index) => (
             <View
               key={index}
@@ -83,14 +103,16 @@ const CustomCarousel = ({
               ]}
             />
           ))}
-        </View>
+        </View> */}
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  carouselWrapper: { marginVertical: 10 },
+  carouselWrapper: {
+    marginVertical: 10,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -111,16 +133,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: "center",
   },
-  slide: {
-    width,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: width * 0.9,
-    height: 200,
-    borderRadius: 10,
-  },
   paginationContainer: {
     flexDirection: "row",
     position: "absolute",
@@ -130,11 +142,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "gray",
+    backgroundColor: "white",
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.primaryDarkMaroon,
   },
 });
 
