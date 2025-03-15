@@ -1,40 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import QuizNavigator from "./navigation/QuizNavigator";
-import MealNavigator from "./navigation/MealNavigator";
-import { Colors } from "./config/colors";
-import BottomTabNavigator from "./navigation/BottomTabNavigator";
-import { useFonts } from "expo-font";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import Apprec8ReaderTester from "./screens/quiz/Apprec8ReaderTester";
+import Apprec8Reader from "./components/common/Apprec8Reader";
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  useFonts({
-    rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
-    delius: require("./assets/fonts/Delius-Regular.ttf"),
-    pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
-  });
-
   return (
-    <>
-      {/* Custom StatusBar with background color */}
-      <StatusBar
-        style="dark"
-        translucent={false}
-        backgroundColor={Colors.primaryDarkMaroon}
-      />
-
-      {/* The root container with full height */}
-      <View style={styles.container}>
-        {/* <QuizNavigator /> */}
-        {/* <MealNavigator /> */}
-        <BottomTabNavigator />
-      </View>
-    </>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Apprec8ReaderTester} />
+        <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // Ensures the View fills the entire screen
-    backgroundColor: Colors.primaryDarkMaroon, // Your desired background color
-  },
-});
