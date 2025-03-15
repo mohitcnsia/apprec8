@@ -59,7 +59,7 @@ const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
               width: imageWidth,
               height: imageHeight,
               borderRadius: 10, // Ensure image has rounded corners
-              resizeMode: "cover",
+              resizeMode: "stretch",
             }}
           />
         ) : (

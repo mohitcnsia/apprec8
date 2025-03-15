@@ -17,6 +17,68 @@ export const random = [
   "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
 ];
 
+export const bookSummaries = [
+  {
+    id: "bfg",
+    name: "The BFG",
+    image: require("../assets/images/book-summaries/bfg.png"),
+    duration: "10 min",
+    type: "Book Summary",
+    author: "Seema Joshi",
+  },
+  {
+    id: "tgwdtm",
+    name: "The Girl Who Drank The Moon",
+    image: require("../assets/images/book-summaries/girlDrankTheMoon.png"),
+    duration: "20 min",
+    type: "Book Summary",
+    author: "Mohit Chilkoti",
+  },
+  {
+    id: "harry1",
+    name: "Harry Potter & The Philosopher's Stone",
+    image: require("../assets/images/book-summaries/harry-1.png"),
+    duration: "15 min",
+    type: "Book Summary",
+    author: "Pratha Chilkoti",
+  },
+  {
+    id: "matilda",
+    name: "Matilda",
+    image: require("../assets/images/book-summaries/matilda.png"),
+    duration: "18 min",
+    type: "Book Summary",
+    author: "Pratha Chilkoti",
+  },
+];
+
+export const stories = [
+  {
+    id: "akbb1",
+    name: "Akbar Birbal",
+    image: require("../assets/images/stories/akbar-birbal1.png"),
+    duration: "5 min",
+    type: "Story",
+    author: "Raja Birbal",
+  },
+  {
+    id: "bgh1",
+    name: "Gautam Buddha - The Enlightened",
+    image: require("../assets/images/stories/buddha.png"),
+    duration: "7 min",
+    type: "Story",
+    author: "Gautam Buddha",
+  },
+  {
+    id: "pct1",
+    name: "Smart Rabbit",
+    image: require("../assets/images/stories/panchatarntar1.png"),
+    duration: "4 min",
+    type: "Story",
+    author: "Vishnu Sharma",
+  },
+];
+
 export const olympiad = [
   {
     id: "imo",
