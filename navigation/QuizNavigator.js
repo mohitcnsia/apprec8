@@ -6,7 +6,7 @@ import { Colors } from "../config/colors";
 import TopicsScreen from "../screens/quiz/TopicsScreen";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import { StyleSheet } from "react-native";
-import Study from "../screens/quiz/Study";
+import StudyScreen from "../screens/quiz/StudyScreen";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +25,7 @@ const QuizNavigator = () => {
       }}
     >
       {/* <Stack.Screen name="Topics" component={TopicsScreen} /> */}
-      <Stack.Screen name="Study" component={Study} />
+      <Stack.Screen name="Study" component={StudyScreen} />
       <Stack.Screen name="Overview" component={TopicOverviewScreen} />
       <Stack.Screen name="Quiz" component={QuizScreen} />
       <Stack.Screen name="QuizResult" component={QuizResultScreen} />

@@ -4,7 +4,8 @@ import { leaders, olympiad, random } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 
-function Study() {
+function StudyScreen() {
+  console.log("rending Study");
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
@@ -40,7 +41,7 @@ function Study() {
   );
 }
 
-export default Study;
+export default StudyScreen;
 
 const styles = StyleSheet.create({
   container: {

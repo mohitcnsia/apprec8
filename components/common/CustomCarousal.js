@@ -67,6 +67,7 @@ const CustomCarousel = ({
   viewAllScreen,
   customWidth = 80,
   customHeight = 240,
+  pagination = false,
 }) => {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -156,7 +157,7 @@ const CustomCarousel = ({
       />
 
       {/* Pagination Dots */}
-      {data.length > 1 && (
+      {pagination && data.length > 1 && (
         <View style={styles.paginationContainer}>
           {data.map((_, index) => (
             <View
