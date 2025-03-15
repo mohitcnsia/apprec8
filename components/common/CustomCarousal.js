@@ -25,10 +25,10 @@ const getImageSource = (item) => {
 
 const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
   const imageSource = getImageSource(item);
+  const hasMetadata = item.name || item.author || item.duration || item.type;
+
   return (
-    <View
-      style={[styles.itemContainer, { width: imageWidth, height: imageHeight }]}
-    >
+    <View style={[styles.itemContainer, { width: imageWidth }]}>
       {imageSource ? (
         <Image
           source={imageSource}
@@ -36,18 +36,22 @@ const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
             styles.imageStyle,
             {
               width: imageWidth,
-              height: item.name ? imageHeight * 0.75 : imageHeight,
+              height: imageHeight,
             },
           ]}
         />
       ) : (
-        <View style={[styles.placeholder, { height: imageHeight }]}>
-          <Text style={styles.placeholderText}>No Image</Text>
-        </View>
+        <View
+          style={[
+            styles.imagePlaceholder,
+            { width: imageWidth, height: imageHeight },
+          ]}
+        />
       )}
-      {item.name && (
-        <View style={styles.textContainer}>
-          <Text style={styles.itemTitle}>{item.name}</Text>
+
+      {hasMetadata && (
+        <View style={styles.metadataOverlay}>
+          {item.name && <Text style={styles.itemTitle}>{item.name}</Text>}
           <Text style={styles.metaText}>
             {item.duration && `⏳ ${item.duration} `}
             {item.type && `📖 ${item.type} `}
@@ -202,21 +206,27 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     width: "100%",
+    resizeMode: "cover", // Ensures image covers the area
   },
-  textContainer: {
+  imagePlaceholder: {
+    backgroundColor: "grey", // Grey background for missing images
+  },
+  metadataOverlay: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Transparent overlay
     padding: 10,
-    backgroundColor: "#fff",
     alignItems: "center",
-    height: "25%",
   },
   itemTitle: {
     fontWeight: "bold",
-    color: "#333",
+    color: "#fff",
     fontSize: 16,
   },
   metaText: {
     fontSize: 14,
-    color: "#666",
+    color: "#ddd",
     marginTop: 2,
   },
   paginationContainer: {
@@ -228,20 +238,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "white",
+    backgroundColor: "#ccc",
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: Colors.primaryDarkMaroon,
-  },
-  placeholder: {
-    backgroundColor: "#B0C4DE",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-  },
-  placeholderText: {
-    color: "#555",
+    backgroundColor: Colors.primaryWhite,
   },
 });
 
