@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Pressable,
 } from "react-native";
 import { Colors } from "../../config/colors";
 
@@ -31,40 +32,55 @@ const containsMetadata = (item) =>
 const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
   const imageSource = getImageSource(item);
   const hasMetadata = containsMetadata(item);
+  const navigation = useNavigation();
+
+  function pressHandler() {
+    navigation.navigate("Overview", {
+      topicId: item.id,
+    });
+  }
 
   return (
-    <View style={[styles.carousalItemContainer, { width: imageWidth }]}>
-      {imageSource ? (
-        <Image
-          source={imageSource}
-          style={{
-            width: imageWidth,
-            height: imageHeight,
-            borderRadius: 10, // Ensure image has rounded corners
-            resizeMode: "cover",
-          }}
-        />
-      ) : (
-        <View
-          style={[
-            styles.imagePlaceholder,
-            { width: imageWidth, height: imageHeight, borderRadius: 10 },
-          ]}
-        />
-      )}
+    <Pressable
+      onPress={pressHandler}
+      style={({ pressed }) => [
+        styles.viewAllButton,
+        { opacity: pressed ? 0.7 : 1 }, // Manual opacity effect
+      ]}
+    >
+      <View style={[styles.carousalItemContainer, { width: imageWidth }]}>
+        {imageSource ? (
+          <Image
+            source={imageSource}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              borderRadius: 10, // Ensure image has rounded corners
+              resizeMode: "cover",
+            }}
+          />
+        ) : (
+          <View
+            style={[
+              styles.imagePlaceholder,
+              { width: imageWidth, height: imageHeight, borderRadius: 10 },
+            ]}
+          />
+        )}
 
-      {/* Metadata Section Below Image */}
-      {hasMetadata && (
-        <View style={styles.metadataContainer}>
-          {item.name && <Text style={styles.itemTitle}>{item.name}</Text>}
-          <Text style={styles.metaText}>
-            {item.type && `${item.type} • `}
-            {item.duration && `${item.duration}`}
-          </Text>
-          {item.author && <Text style={styles.metaText}>{item.author}</Text>}
-        </View>
-      )}
-    </View>
+        {/* Metadata Section Below Image */}
+        {hasMetadata && (
+          <View style={styles.metadataContainer}>
+            {item.name && <Text style={styles.itemTitle}>{item.name}</Text>}
+            <Text style={styles.metaText}>
+              {item.type && `${item.type} • `}
+              {item.duration && `${item.duration}`}
+            </Text>
+            {item.author && <Text style={styles.metaText}>{item.author}</Text>}
+          </View>
+        )}
+      </View>
+    </Pressable>
   );
 });
 

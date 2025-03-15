@@ -16,6 +16,7 @@ function StudyScreen() {
           data={olympiad}
           customWidth={40}
           customHeight={120}
+          // viewAllScreen={true} // Enable this once View All screen is avaialble.
         />
         <CustomCarousel
           title="My Quizzes"

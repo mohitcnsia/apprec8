@@ -19,6 +19,7 @@ export const random = [
 
 export const olympiad = [
   {
+    id: "imo",
     name: "Mathematics",
     image: require("../assets/images/olympiad/imo.png"),
     duration: "30 min",
@@ -26,6 +27,7 @@ export const olympiad = [
     author: "Mohit Kumar Chilkoti",
   },
   {
+    id: "nso",
     name: "National Science Olympiad",
     image: require("../assets/images/olympiad/nso.png"),
     duration: "30 min",
@@ -33,6 +35,7 @@ export const olympiad = [
     author: "Pratha Chilkoti",
   },
   {
+    id: "ieo",
     name: "International English Olympiad",
     image: require("../assets/images/olympiad/ieo.png"),
     duration: "1 hr",
@@ -40,6 +43,7 @@ export const olympiad = [
     author: "Pratha Chilkoti",
   },
   {
+    id: "psy",
     name: "Psychology",
     image:
       "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
