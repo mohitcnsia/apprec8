@@ -18,8 +18,33 @@ export const random = [
 ];
 
 export const olympiad = [
-  require("../assets/images/olympiad/imo.png"),
-  require("../assets/images/olympiad/nso.png"),
-  require("../assets/images/olympiad/ieo.png"),
-  "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
+  {
+    name: "Mathematics",
+    image: require("../assets/images/olympiad/imo.png"),
+    duration: "30 minutes",
+    type: "Quiz",
+    author: "Mohit Kumar Chilkoti",
+  },
+  {
+    name: "National Science Olympiad",
+    image: require("../assets/images/olympiad/nso.png"),
+    duration: "30 minutes",
+    type: "Study",
+    author: "Pratha Chilkoti",
+  },
+  {
+    name: "International English Olympiad",
+    image: require("../assets/images/olympiad/ieo.png"),
+    duration: "60 minutes",
+    type: "Sample Paper",
+    author: "Pratha Chilkoti",
+  },
+  {
+    name: "Psychology",
+    image:
+      "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
+    duration: "30 minutes",
+    type: "Questionnaire",
+    author: "Seema Joshi",
+  },
 ];

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   View,
   Image,
@@ -14,86 +14,150 @@ import { Colors } from "../../config/colors";
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20;
 
+const getImageSource = (item) => {
+  if (!item) return null;
+  if (typeof item === "string") return { uri: item };
+  if (typeof item === "number") return item;
+  if (item.image)
+    return typeof item.image === "number" ? item.image : { uri: item.image };
+  return null;
+};
+
+const CarouselItem = React.memo(({ item, imageWidth, imageHeight }) => {
+  const imageSource = getImageSource(item);
+  return (
+    <View
+      style={[styles.itemContainer, { width: imageWidth, height: imageHeight }]}
+    >
+      {imageSource ? (
+        <Image
+          source={imageSource}
+          style={[
+            styles.imageStyle,
+            {
+              width: imageWidth,
+              height: item.name ? imageHeight * 0.75 : imageHeight,
+            },
+          ]}
+        />
+      ) : (
+        <View style={[styles.placeholder, { height: imageHeight }]}>
+          <Text style={styles.placeholderText}>No Image</Text>
+        </View>
+      )}
+      {item.name && (
+        <View style={styles.textContainer}>
+          <Text style={styles.itemTitle}>{item.name}</Text>
+          <Text style={styles.metaText}>
+            {item.duration && `⏳ ${item.duration} `}
+            {item.type && `📖 ${item.type} `}
+            {item.author && `✍ ${item.author}`}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+});
+
 const CustomCarousel = ({
   title,
-  data,
+  data = [],
   autoPlay = false,
   interval = 3000,
   viewAllScreen,
-  customWidth = 100, // Percentage-based width (defaults to full screen width)
-  customHeight = 240, // Default height
+  customWidth = 80,
+  customHeight = 240,
 }) => {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
 
-  // Calculate image width dynamically based on percentage
-  const imageWidth = (screenWidth * customWidth) / 100 - SPACING * 2;
+  const handleNavigation = useCallback(() => {
+    if (
+      viewAllScreen &&
+      navigation.getState().routes.every((r) => r.name !== viewAllScreen)
+    ) {
+      navigation.navigate(viewAllScreen);
+    }
+  }, [navigation, viewAllScreen]);
 
-  // Auto-scroll effect
+  const imageWidth = (screenWidth * customWidth) / 100;
+  const imageHeight = customHeight;
+
   useEffect(() => {
-    if (autoPlay) {
+    if (autoPlay && data.length > 1) {
       const intervalId = setInterval(() => {
-        if (flatListRef.current) {
-          const nextIndex = (currentIndex + 1) % data.length;
-          flatListRef.current.scrollToIndex({
-            index: nextIndex,
-            animated: true,
-          });
-          setCurrentIndex(nextIndex);
-        }
+        scrollToNext();
       }, interval);
       return () => clearInterval(intervalId);
     }
-  }, [autoPlay, currentIndex, data.length, interval]);
+  }, [autoPlay, data.length, interval]);
 
-  // Handles manual scrolling
-  const handleScroll = (event) => {
-    const newIndex = Math.round(
-      event.nativeEvent.contentOffset.x / (imageWidth + SPACING)
-    );
-    setCurrentIndex(newIndex);
-  };
+  const scrollToNext = useCallback(() => {
+    if (!flatListRef.current || data.length === 0) return;
+
+    let nextIndex = (currentIndex + 1) % data.length;
+    flatListRef.current.scrollToIndex({
+      index: nextIndex,
+      animated: true,
+    });
+    setCurrentIndex(nextIndex);
+  }, [currentIndex, data.length]);
+
+  const handleScroll = useCallback(
+    (event) => {
+      const contentOffsetX = event.nativeEvent.contentOffset.x;
+      const newIndex = Math.round(contentOffsetX / (imageWidth + SPACING));
+
+      if (newIndex !== currentIndex && newIndex < data.length) {
+        setCurrentIndex(newIndex);
+      }
+    },
+    [currentIndex, data.length, imageWidth]
+  );
 
   return (
     <View style={styles.carouselWrapper}>
-      {/* Title and View All */}
+      {/* Title & View All */}
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate(viewAllScreen)}>
-          <Text style={styles.viewAll}>View All</Text>
-        </TouchableOpacity>
+        {viewAllScreen && (
+          <TouchableOpacity onPress={handleNavigation}>
+            <Text style={styles.viewAll}>View All</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
-      <View style={styles.carouselContainer}>
-        <FlatList
-          ref={flatListRef}
-          data={data}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(_, index) => index.toString()}
-          contentContainerStyle={{ paddingHorizontal: SPACING }}
-          renderItem={({ item }) => (
-            <View style={{ width: imageWidth, marginRight: SPACING }}>
-              <Image
-                source={typeof item === "string" ? { uri: item } : item}
-                style={{
-                  width: "100%",
-                  height: customHeight,
-                  borderRadius: 10,
-                }}
-              />
-            </View>
-          )}
-          snapToInterval={imageWidth + SPACING} // Ensures smooth scroll
-          decelerationRate="fast"
-          snapToAlignment="start"
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        />
+      {/* FlatList Carousel */}
+      <FlatList
+        ref={flatListRef}
+        data={data}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingHorizontal: SPACING / 2 }}
+        renderItem={({ item }) => (
+          <CarouselItem
+            item={item}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
+          />
+        )}
+        snapToInterval={imageWidth + SPACING / 2}
+        decelerationRate="fast"
+        snapToAlignment="start"
+        onScroll={handleScroll}
+        getItemLayout={(data, index) => ({
+          length: imageWidth + SPACING / 2,
+          offset: (imageWidth + SPACING / 2) * index,
+          index,
+        })}
+        scrollEventThrottle={16}
+      />
 
-        {/* Pagination Dots */}
-        {/* <View style={styles.paginationContainer}>
+      {/* Pagination Dots */}
+      {data.length > 1 && (
+        <View style={styles.paginationContainer}>
           {data.map((_, index) => (
             <View
               key={index}
@@ -103,8 +167,8 @@ const CustomCarousel = ({
               ]}
             />
           ))}
-        </View> */}
-      </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -129,14 +193,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.primaryWhite,
   },
-  carouselContainer: {
-    marginVertical: 10,
+  itemContainer: {
+    marginRight: SPACING / 2,
+    backgroundColor: "white",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  imageStyle: {
+    width: "100%",
+  },
+  textContainer: {
+    padding: 10,
+    backgroundColor: "#fff",
     alignItems: "center",
+    height: "25%",
+  },
+  itemTitle: {
+    fontWeight: "bold",
+    color: "#333",
+    fontSize: 16,
+  },
+  metaText: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 2,
   },
   paginationContainer: {
     flexDirection: "row",
-    position: "absolute",
-    bottom: 10,
+    justifyContent: "center",
+    marginTop: 10,
   },
   dot: {
     width: 8,
@@ -147,6 +232,15 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     backgroundColor: Colors.primaryDarkMaroon,
+  },
+  placeholder: {
+    backgroundColor: "#B0C4DE",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  placeholderText: {
+    color: "#555",
   },
 });
 

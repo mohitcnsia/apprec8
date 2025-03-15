@@ -3,7 +3,6 @@ import CustomCarousel from "../../components/common/CustomCarousal";
 import { leaders, olympiad, random } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
-import KidsThoughtOfTheDay from "../../components/thought/KidsThoughtOfTheDay";
 
 function Study() {
   return (
