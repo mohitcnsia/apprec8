@@ -1,4 +1,3 @@
-// src/screens/StatsScreen.js
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -6,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import QuizButton from "../../components/quiz/QuizButton";
 
-const StatsScreen = ({ route, navigation }) => {
+const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("Pratha");
   const { score, totalQuestions, quizId } = route.params;
 
@@ -76,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StatsScreen;
+export default QuizResultScreen;

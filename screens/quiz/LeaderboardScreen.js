@@ -23,7 +23,7 @@ const leaderboardData = [
 
 // memo() prevents unnecessary re-renders by only updating the components when their props change.
 // Without memo(), every time the parent (LeaderBoard) re-renders, TopThree and CustomLeaderboard would also re-render—even if their data hasn’t changed.
-const TopThree = memo(() => (
+const TopThreeLeaders = memo(() => (
   <View style={styles.topThreeContainer}>
     <LeaderCard
       name={leaderboardData[1].name}
@@ -56,7 +56,7 @@ const CustomLeaderboard = memo(() => (
       data={leaderboardData.slice(3)}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <CustomListItem item={item} />}
-      ListHeaderComponent={<TopThree />}
+      ListHeaderComponent={<TopThreeLeaders />}
       contentContainerStyle={styles.listContent}
       // Provides precomputed layout information (height, offset, index) for each list item.
       // Helps React Native optimize scrolling by avoiding layout recalculations.
@@ -74,7 +74,7 @@ const CustomLeaderboard = memo(() => (
   </LinearGradient>
 ));
 
-const LeaderBoard = () => (
+const Stats = () => (
   <View style={styles.container}>
     <Tab.Navigator
       screenOptions={{
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   bronze: { backgroundColor: "#CD7F32", height: 230 },
 });
 
-export default LeaderBoard;
+export default Stats;

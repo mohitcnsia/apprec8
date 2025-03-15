@@ -75,14 +75,14 @@ const QuizScreen = ({ route, navigation }) => {
       setScore((prevScore) => prevScore + 1);
     }
 
-    // Proceed to the next question or navigate to stats if it's the last question
+    // Proceed to the next question or navigate to QuizResult if it's the last question
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
       setSelectedAnswer(null); // Reset selected answer for next question
       setIsAnswered(false); // Reset answer state
     } else {
-      // Navigate to the "Stats" screen with the current score
-      navigation.navigate("Stats", {
+      // Navigate to the "QuizResult" screen with the current score
+      navigation.navigate("QuizResult", {
         score:
           score + (selectedAnswer === questions[questionIndex].answer ? 1 : 0),
         totalQuestions: questions.length,

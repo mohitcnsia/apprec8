@@ -1,13 +1,10 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "../screens/quiz/LoginScreen";
 import QuizScreen from "../screens/quiz/QuizScreen";
-import StatsScreen from "../screens/quiz/StatsScreen";
+import QuizResultScreen from "../screens/quiz/QuizResultScreen";
 import { Colors } from "../config/colors";
 import TopicsScreen from "../screens/quiz/TopicsScreen";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
-import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet } from "react-native";
 
 const Stack = createStackNavigator();
@@ -29,7 +26,7 @@ const QuizNavigator = () => {
       <Stack.Screen name="Topics" component={TopicsScreen} />
       <Stack.Screen name="Overview" component={TopicOverviewScreen} />
       <Stack.Screen name="Quiz" component={QuizScreen} />
-      <Stack.Screen name="Stats" component={StatsScreen} />
+      <Stack.Screen name="QuizResult" component={QuizResultScreen} />
     </Stack.Navigator>
   );
 };
