@@ -50,11 +50,17 @@ function TopicOverviewScreen({ route, navigation }) {
   }
 
   return (
-    <FlatList
-      data={displayTopic}
-      keyExtractor={(item) => item.id}
-      renderItem={renderTopicItem}
-    />
+    <LinearGradient
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      style={styles.container}
+    >
+      <FlatList
+        data={displayTopic}
+        keyExtractor={(item) => item.id}
+        renderItem={renderTopicItem}
+        style={{ backgroundColor: "transparent" }}
+      />
+    </LinearGradient>
   );
 }
 
