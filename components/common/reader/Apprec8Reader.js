@@ -25,101 +25,104 @@ const Apprec8Reader = ({ route }) => {
   } = route.params;
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState([]);
 
+  // ✅ Fix Warning: Ensure width & height are omitted or both present
   const openImage = (imageUri) => {
     setSelectedImage([{ url: imageUri }]);
     setModalVisible(true);
   };
 
   return (
-    console.log("additionalImages:", additionalImages),
-    (
-      <View
-        style={[
-          styles.container,
-          theme === "dark" ? styles.darkBackground : styles.lightBackground,
-        ]}
-      >
-        <ScrollView>
-          <View style={styles.header}>
-            <Text
-              style={[
-                styles.title,
-                theme === "dark" ? styles.darkText : styles.lightText,
-              ]}
-            >
-              {title}
-            </Text>
-            <Text
-              style={[
-                styles.author,
-                theme === "dark"
-                  ? styles.darkTextSecondary
-                  : styles.lightTextSecondary,
-              ]}
-            >
-              By {author}
-            </Text>
-          </View>
-          {coverImage && (
-            <TouchableOpacity onPress={() => openImage(coverImage)}>
-              <Image source={{ uri: coverImage }} style={styles.coverImage} />
-            </TouchableOpacity>
-          )}
-          <Markdown
-            style={theme === "dark" ? markdownDarkTheme : markdownLightTheme}
-            rules={{
-              image: (node) => (
-                <TouchableOpacity
-                  onPress={() => openImage(node.attributes.src)}
-                >
-                  <Image
-                    source={{ uri: node.attributes.src }}
-                    style={styles.markdownImage} // NEW style for markdown images
-                  />
-                </TouchableOpacity>
-              ),
-            }}
+    <View
+      style={[
+        styles.container,
+        theme === "dark" ? styles.darkBackground : styles.lightBackground,
+      ]}
+    >
+      <ScrollView>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text
+            style={[
+              styles.title,
+              theme === "dark" ? styles.darkText : styles.lightText,
+            ]}
           >
-            {content}
-          </Markdown>
+            {title}
+          </Text>
+          <Text
+            style={[
+              styles.author,
+              theme === "dark"
+                ? styles.darkTextSecondary
+                : styles.lightTextSecondary,
+            ]}
+          >
+            By {author}
+          </Text>
+        </View>
 
-          <View style={styles.imageContainer}>
-            {additionalImages.map((img, index) => (
+        {/* Cover Image */}
+        {coverImage && (
+          <TouchableOpacity onPress={() => openImage(coverImage)}>
+            <Image source={{ uri: coverImage }} style={styles.coverImage} />
+          </TouchableOpacity>
+        )}
+
+        {/* Markdown Content */}
+        <Markdown
+          style={theme === "dark" ? markdownDarkTheme : markdownLightTheme}
+          rules={{
+            image: (node, index) => (
               <TouchableOpacity
-                key={`image-${index}-${img}`}
-                onPress={() => openImage(img)}
+                key={`markdown-image-${index}`}
+                onPress={() => openImage(node.attributes.src)}
               >
                 <Image
-                  source={{ uri: img }}
-                  style={styles.additionalImage}
-                  accessibilityLabel={`Additional image ${index + 1}`}
+                  source={{ uri: node.attributes.src }}
+                  style={styles.markdownImage}
                 />
               </TouchableOpacity>
-            ))}
-          </View>
+            ),
+          }}
+        >
+          {content}
+        </Markdown>
 
-          <Modal
-            visible={modalVisible}
-            transparent={true}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <ImageViewer
-              imageUrls={selectedImage}
-              enableSwipeDown={true}
-              onSwipeDown={() => setModalVisible(false)}
-            />
-          </Modal>
-        </ScrollView>
-      </View>
-    )
+        {/* Additional Images */}
+        <View style={styles.imageContainer}>
+          {additionalImages.map((img, index) => (
+            <TouchableOpacity
+              key={`additional-image-${index}`}
+              onPress={() => openImage(img)}
+            >
+              <Image source={{ uri: img }} style={styles.additionalImage} />
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Image Modal */}
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <ImageViewer
+            imageUrls={selectedImage}
+            enableSwipeDown={true}
+            onSwipeDown={() => setModalVisible(false)}
+          />
+        </Modal>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 16, paddingTop: 20 },
   header: { marginBottom: 20 },
+
   title: {
     fontSize: 28,
     fontWeight: "700",
