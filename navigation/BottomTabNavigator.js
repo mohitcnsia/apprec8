@@ -9,6 +9,7 @@ import Home from "../screens/quiz/Home";
 import ProfileScreen from "../screens/quiz/ProfileScreen";
 import LeaderboardScreen from "../screens/quiz/LeaderboardScreen";
 import StudyNavigator from "./StudyNavigator";
+import HomeNavigator from "./HomeNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,13 +28,19 @@ function BottomTabNavigator() {
         }}
       >
         <Tab.Screen
-          name="Home"
-          component={Home}
+          name="Apprec8"
+          component={HomeNavigator}
           initialParams={{ title: "Home Screen" }}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
             ),
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 18,
+              letterSpacing: 0.5,
+              fontFamily: "pacifico",
+            },
           }}
         />
         <Tab.Screen

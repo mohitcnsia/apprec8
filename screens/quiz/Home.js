@@ -1,17 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal";
-import {
-  bookSummaries,
-  leaders,
-  random,
-  stories,
-} from "../../data/dummy-carousal";
 import { THOUGHTS } from "../../data/thoughts";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import KidsThoughtOfTheDay from "../../components/thought/KidsThoughtOfTheDay";
+import { bookSummaryTiles, storyTiles } from "../../data/app-tiles-data";
 
-function Home() {
+function Home({ navigation }) {
   const getThoughtOfTheDay = () => {
     return THOUGHTS[1];
   };
@@ -25,13 +20,15 @@ function Home() {
         <KidsThoughtOfTheDay thought={getThoughtOfTheDay()} />
         <CustomCarousel
           title="Stories"
-          data={stories}
+          data={storyTiles}
+          navigation={navigation}
           customWidth={50}
           customHeight={180}
         />
         <CustomCarousel
           title="Book Summaries"
-          data={bookSummaries}
+          data={bookSummaryTiles}
+          navigation={navigation}
           customWidth={50}
           customHeight={180}
         />

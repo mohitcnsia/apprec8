@@ -8,8 +8,9 @@ import {
 } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
+import { myClassrooms, olympiadTiles } from "../../data/app-tiles-data";
 
-function StudyScreen() {
+function StudyScreen({ navigation }) {
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
@@ -18,20 +19,23 @@ function StudyScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <CustomCarousel
           title="Olympiad"
-          data={olympiad}
+          data={olympiadTiles}
+          navigation={navigation}
           customWidth={40}
           customHeight={120}
           // viewAllScreen={true} // Enable this once View All screen is avaialble.
         />
         <CustomCarousel
           title="My Classrooms"
-          data={psychology}
+          data={myClassrooms}
+          navigation={navigation}
           customWidth={40}
           customHeight={120}
         />
         <CustomCarousel
           title="My Quizzes"
           data={random}
+          navigation={navigation}
           customWidth={40}
           customHeight={120}
         />
@@ -39,6 +43,7 @@ function StudyScreen() {
         <CustomCarousel
           title="My Favourites"
           data={leaders}
+          navigation={navigation}
           customWidth={40}
           customHeight={120}
         />

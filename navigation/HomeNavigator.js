@@ -1,43 +1,39 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import QuizScreen from "../screens/quiz/QuizScreen";
-import QuizResultScreen from "../screens/quiz/QuizResultScreen";
 import { Colors } from "../config/colors";
-import TopicsScreen from "../screens/quiz/TopicsScreen";
-import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import { StyleSheet } from "react-native";
-import StudyScreen from "../screens/quiz/StudyScreen";
+import Home from "../screens/quiz/Home";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
+import LinksScreen from "../components/common/dummy/DummyLinksScreen";
+import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 
 const Stack = createStackNavigator();
 
-const StudyNavigator = () => {
+const HomeNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="StudyScreen"
+      initialRouteName="HomeScreen"
       screenOptions={{
         headerStyle: {
           backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
         },
-        headerTintColor: "#ffffff",
+        headerTintColor: "#ffffff", // Change text color in the header (like the back button)
         headerTitleStyle: {
-          fontSize: 18,
-          letterSpacing: 0.5,
-          fontFamily: "pacifico",
+          fontWeight: "bold", // Optional: you can make the title bold
         },
       }}
     >
+      {/* <Stack.Screen name="HomeScreen" component={Home} /> */}
       <Stack.Screen
-        name="StudyScreen"
-        component={StudyScreen}
+        name="HomeScreen"
+        component={Home}
         options={{
-          title: "Study", // The title will use the global headerTitleStyle
-          headerTitleAlign: "center",
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name="Overview"
-        component={TopicOverviewScreen}
+        name="LinksScreen"
+        component={LinksScreen}
         options={{
           headerShown: false,
         }}
@@ -50,15 +46,8 @@ const StudyNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="Quiz"
-        component={QuizScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="QuizResult"
-        component={QuizResultScreen}
+        name="Overview"
+        component={TopicOverviewScreen}
         options={{
           headerShown: false,
         }}
@@ -67,7 +56,7 @@ const StudyNavigator = () => {
   );
 };
 
-export default StudyNavigator;
+export default HomeNavigator;
 
 const styles = StyleSheet.create({
   container: {
