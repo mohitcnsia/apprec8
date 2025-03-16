@@ -13,7 +13,7 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
 
 const Apprec8Reader = ({ route }) => {
-  console.log("Received data:", route.params.data); // Debug log
+  // console.log("Received data:", route.params.data); // Debug log
   const theme = useColorScheme();
   const {
     name,
