@@ -1,8 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import Apprec8ReaderTester from "./screens/quiz/Apprec8ReaderTester";
-import Apprec8Reader from "./components/common/Apprec8Reader";
+import Apprec8ReaderTester from "./components/common/reader/Apprec8ReaderTester";
+import Apprec8Reader from "./components/common/reader/Apprec8Reader";
 
 const Stack = createStackNavigator();
 
