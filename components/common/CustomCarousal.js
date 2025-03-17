@@ -12,7 +12,10 @@ import {
 } from "react-native";
 import { Colors } from "../../config/colors";
 import DummyScreen from "../../screens/DummyScreen";
-import { systemDesignTopics } from "../../data/app-topic-data";
+import {
+  psychologyTopics,
+  systemDesignTopics,
+} from "../../data/app-topic-data";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20;
@@ -37,24 +40,33 @@ const getSystemDesignTopicData = (id) => {
   return systemDesignTopics.find((topic) => topic.id === id) || null;
 };
 
+const getPsychologyTopicData = (parentId) => {
+  // This will be a DB/Cache/Elastic-Search call ideally
+  return psychologyTopics.filter(
+    (topic) => topic.parentIds.indexOf(parentId) >= 0
+  );
+};
+
 const CarouselItem = React.memo(
   ({ item, imageWidth, imageHeight, navigation }) => {
     const imageSource = getImageSource(item);
     const hasMetadata = containsMetadata(item);
     // const navigation = useNavigation();
-    const data = getSystemDesignTopicData(item.id);
+
+    // const psychData = getPsychologyTopicData(item.id);
 
     function pressHandler() {
       // console.log("item.id - " + item.id);
       // console.log("sysDesignData - " + JSON.stringify(sysDesignData));
       if (item.id) {
         if (item.category === "STUDY") {
-          console.log("sending item to Apprec8REader - " + data);
+          let data = getSystemDesignTopicData(item.id);
           // Navigate to the CustomReader if it's a STUDY item
           navigation.navigate("Apprec8Reader", { data });
         } else if (item.category === "COMPLEX") {
+          let data = getPsychologyTopicData(item.id);
           // Navigate to the LinksScreen if it's a COMPLEX item
-          navigation.navigate("LinksScreen", { item });
+          navigation.navigate("LinkScreen", { data });
         } else {
           navigation.navigate("Overview", {
             topicId: item.id,

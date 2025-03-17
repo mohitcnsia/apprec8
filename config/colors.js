@@ -2,7 +2,7 @@ export const Colors = {
   primaryDarkMaroon: "#3b0940",
   primaryMaroon10: "#f5d2f8ff",
   primaryMaroon100: "#85508aff",
-  primaryMaroon200: "rgba(111, 63, 116, 1)",
+  primaryMaroon200: "rgba(70, 64, 71, 1)",
   primaryLightGray: "#d7d1d3",
   primaryLightYellow: "#f0e3b0",
   primaryBrightYellow: "#dcb51b",

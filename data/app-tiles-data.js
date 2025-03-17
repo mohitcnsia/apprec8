@@ -40,7 +40,7 @@ export const myClassrooms = [
     "30 min",
     "Questionnaire",
     "Seema Joshi",
-    "STUDY"
+    "COMPLEX"
   ),
   new AppTile(
     "sysd1",

@@ -10,7 +10,8 @@ class Topic {
     coverImage,
     author,
     additionaImages,
-    categoryIds
+    categoryIds,
+    parentIds
   ) {
     this.id = id;
     this.title = title;
@@ -20,6 +21,7 @@ class Topic {
     this.coverImage = coverImage;
     this.author = author;
     this.additionaImages = additionaImages;
+    this.parentIds = parentIds;
   }
 }
 

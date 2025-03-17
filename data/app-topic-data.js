@@ -23,7 +23,48 @@ export const olympiadTopics = [
   ),
 ];
 
-export const psychologyTopics = [];
+export const psychologyTopics = [
+  {
+    id: "sam-psy-1",
+    parentIds: ["psy"],
+    title: "Intro to Psychology",
+  },
+  {
+    id: "sam-psy-2",
+    parentIds: ["psy"],
+    title: "Methods of Enquiry",
+  },
+  {
+    id: "sam-psy-3",
+    parentIds: ["psy"],
+    title: "Human Development",
+  },
+  {
+    id: "sam-psy-4",
+    parentIds: ["psy"],
+    title: "Sensory, Attention and ...",
+  },
+  {
+    id: "sam-psy-5",
+    parentIds: ["psy"],
+    title: "Learning",
+  },
+  {
+    id: "sam-psy-6",
+    parentIds: ["psy"],
+    title: "Human Memory",
+  },
+  {
+    id: "sam-psy-7",
+    parentIds: ["psy"],
+    title: "Thinking",
+  },
+  {
+    id: "sam-psy-8",
+    parentIds: ["psy"],
+    title: "Motivation and Emotion",
+  },
+];
 
 export const bookSummaryTopics = [];
 
@@ -32,7 +73,7 @@ export const storyTopics = [];
 export const systemDesignTopics = [
   {
     id: "sysd1",
-    name: "System Design Bitch !!",
+    name: "Reliability, Scalability & Maintainability",
     author: "Mohit Chilkoti",
     coverImage:
       "https://media.istockphoto.com/id/495737046/vector/kids-reading-books-in-colour.jpg?s=2048x2048&w=is&k=20&c=XasE_9gSy7Psx9nIbKj0WP8F6P7_hk6BlQLZKnKltfE=",

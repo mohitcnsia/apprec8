@@ -74,7 +74,7 @@ const CustomLeaderboard = memo(() => (
   </LinearGradient>
 ));
 
-const Stats = () => (
+const StatsScreen = () => (
   <View style={styles.container}>
     <Tab.Navigator
       screenOptions={{
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   bronze: { backgroundColor: "#74491e", height: 230 },
 });
 
-export default Stats;
+export default StatsScreen;

@@ -5,6 +5,7 @@ import MealNavigator from "./navigation/MealNavigator";
 import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import { useFonts } from "expo-font";
+import AppFlatListTester from "./components/common/list/AppFlatListTester";
 
 export default function App() {
   useFonts({
@@ -27,6 +28,7 @@ export default function App() {
         {/* <QuizNavigator /> */}
         {/* <MealNavigator /> */}
         <BottomTabNavigator />
+        {/* <AppFlatListTester /> */}
       </View>
     </>
   );

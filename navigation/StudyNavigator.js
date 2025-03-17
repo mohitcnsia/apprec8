@@ -8,6 +8,7 @@ import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import { StyleSheet } from "react-native";
 import StudyScreen from "../screens/quiz/StudyScreen";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
+import LinksScreen from "../screens/LinksScreen";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,13 @@ const StudyNavigator = () => {
         options={{
           title: "Study", // The title will use the global headerTitleStyle
           headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen
+        name="LinkScreen"
+        component={LinksScreen}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen
