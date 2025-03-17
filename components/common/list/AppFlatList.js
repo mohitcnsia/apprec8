@@ -19,6 +19,7 @@ import {
  * @param {function} [renderItem] - Custom render function for list items. If not provided, a default renderer is used.
  * @param {Object} [containerStyle={}] - Custom styles for the FlatList container.
  * @param {Object} [itemStyle={}] - Custom styles for each list item.
+ * @param {Object} [textStyle={}] - Custom styles for each list item text.
  * @param {number} [activeOpacity=0.6] - Controls the opacity effect when an item is pressed (iOS only).
  *
  * @example
@@ -40,6 +41,7 @@ const AppFlatList = ({
   renderItem,
   containerStyle = {},
   itemStyle = {},
+  textStyle = {},
   activeOpacity = 0.6,
 }) => {
   // Default item rendering (if no custom render function is provided)
@@ -54,7 +56,7 @@ const AppFlatList = ({
         ]}
       >
         <View style={[styles.itemStyle, itemStyle]}>
-          <Text style={[styles.textStyle]}>{item.title}</Text>
+          <Text style={[styles.textStyle, textStyle]}>{item.title}</Text>
         </View>
       </Pressable>
     );
