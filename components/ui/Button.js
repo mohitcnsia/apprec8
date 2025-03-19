@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 4,
     padding: 8,
-    backgroundColor: Colors.primary50,
+    backgroundColor: Colors.primary500,
   },
   flat: {
     backgroundColor: "transparent",

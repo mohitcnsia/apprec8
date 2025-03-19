@@ -1,12 +1,13 @@
 import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native";
-import { Colors } from "../config/colors";
-import IconButton from "../components/ui/IconButton";
-import Button from "../components/ui/Button.js";
-import { ExpensesContext } from "../store/expenses-context.js";
 
-function ManageExpenses({ route, navigation }) {
+import Button from "../components/ui/Button";
+import IconButton from "../components/ui/IconButton";
+import { ExpensesContext } from "../store/expenses-context";
+import { Colors } from "../config/colors";
+import ExpenseForm from "../components/ManageExpenses/ExpenseForm";
+
+function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
@@ -22,21 +23,23 @@ function ManageExpenses({ route, navigation }) {
     expensesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
   }
+
   function cancelHandler() {
     navigation.goBack();
   }
+
   function confirmHandler() {
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, {
-        description: "Test !!!!",
+        description: "Test!!!!",
         amount: 29.99,
-        date: new Date("2025-03-17"),
+        date: new Date("2022-05-20"),
       });
     } else {
       expensesCtx.addExpense({
-        description: "Added Test Item",
-        amount: 29.99,
-        date: new Date("2025-03-17"),
+        description: "Test",
+        amount: 19.99,
+        date: new Date("2022-05-19"),
       });
     }
     navigation.goBack();
@@ -44,7 +47,8 @@ function ManageExpenses({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
+      <ExpenseForm />
+      <View style={styles.buttons}>
         <Button style={styles.button} mode="flat" onPress={cancelHandler}>
           Cancel
         </Button>
@@ -56,7 +60,7 @@ function ManageExpenses({ route, navigation }) {
         <View style={styles.deleteContainer}>
           <IconButton
             icon="trash"
-            color={Colors.error500}
+            color={GlobalStyles.colors.error500}
             size={36}
             onPress={deleteExpenseHandler}
           />
@@ -66,7 +70,7 @@ function ManageExpenses({ route, navigation }) {
   );
 }
 
-export default ManageExpenses;
+export default ManageExpense;
 
 const styles = StyleSheet.create({
   container: {
@@ -74,18 +78,20 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: Colors.primary800,
   },
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
+  },
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
     borderTopWidth: 2,
     borderTopColor: Colors.primary200,
     alignItems: "center",
-  },
-  button: {
-    marginHorizontal: 8,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
   },
 });
