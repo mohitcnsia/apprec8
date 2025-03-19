@@ -4,11 +4,16 @@ import Input from "./Input";
 import { Colors } from "../../config/colors";
 import Button from "../ui/Button";
 
-const ExpenseForm = ({ submitButtonLabel, onCancel, onSubmit }) => {
+const ExpenseForm = ({
+  submitButtonLabel,
+  onCancel,
+  onSubmit,
+  defaultValues,
+}) => {
   const [inputValues, setInputValues] = useState({
-    amount: "",
-    date: "",
-    description: "",
+    amount: defaultValues ? defaultValues.amount.toString() : "",
+    date: defaultValues ? defaultValues.date.toString() : "",
+    description: defaultValues ? defaultValues.description.toString() : "",
   });
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
