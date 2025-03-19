@@ -16,7 +16,7 @@ export const Colors = {
   primary800: "#200364",
   accent500: "#f7bc0c",
   error50: "#fcc4e4",
-  error500: "#9b095c",
+  error500: "#f33c64",
   gray500: "#39324a",
   gray700: "#221c30",
 };
