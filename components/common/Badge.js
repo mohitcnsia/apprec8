@@ -17,15 +17,15 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     backgroundColor: "#FF0000", // Red Color for the badge
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderTopLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderTopLeftRadius: 6,
+    borderBottomRightRadius: 6,
     zIndex: 10,
   },
   badgeText: {
     color: "#FFFFFF",
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "bold",
   },
 });
