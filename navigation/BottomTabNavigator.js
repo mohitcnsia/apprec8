@@ -8,6 +8,7 @@ import ProfileScreen from "../screens/quiz/ProfileScreen";
 import StatsScreen from "../screens/quiz/StatsScreen";
 import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
+import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -73,8 +74,8 @@ function BottomTabNavigator() {
         />
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
-          initialParams={{ title: "Profile Screen" }}
+          component={ProfileNavigator}
+          initialParams={{ title: "Profile" }}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" color={color} size={size} />

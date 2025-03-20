@@ -66,6 +66,12 @@ export const psychologyTopics = [
   },
 ];
 
+export const helpTopics = [
+  { id: "faq", title: "FAQs" },
+  { id: "cntct", title: "Contact Us" },
+  { id: "tnc", title: "Terms and Privacy Policy" },
+];
+
 export const bookSummaryTopics = [];
 
 export const storyTopics = [];

@@ -1,9 +1,24 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { Colors } from "../../config/colors";
+import { helpTopics } from "../../data/app-topic-data";
+import DummyScreen from "../DummyScreen";
+import Badge from "../../components/common/Badge";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
+  function helpPressHandler() {
+    console.log("Help Clicked");
+    navigation.navigate("LinkScreen", { data: helpTopics });
+  }
+
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
@@ -44,21 +59,45 @@ const ProfileScreen = () => {
 
         {/* Achievements Section */}
         <Text style={styles.sectionTitle}>Achievements</Text>
-        <View style={styles.card}>
+
+        <Pressable
+          onPress={() =>
+            navigation.navigate("DummyScreen", { title: "Practice Time" })
+          }
+          style={({ pressed }) => [
+            styles.card,
+            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+          ]}
+        >
+          <Badge label="Coming Soon" />
           <Text style={styles.cardText}>Practice Time</Text>
-        </View>
-        <View style={styles.card}>
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("DummyScreen", {
+              title: "Your Badges are ",
+            })
+          }
+          style={({ pressed }) => [
+            styles.card,
+            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+          ]}
+        >
           <Text style={styles.cardText}>Badge Collection</Text>
-        </View>
+        </Pressable>
 
         {/* Support Section */}
-        <Text style={styles.sectionTitle}>Support</Text>
-        <View style={styles.card}>
-          <Text style={styles.cardText}>Contact Us</Text>
-        </View>
-        <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Settings</Text>
+
+        <Pressable
+          onPress={helpPressHandler}
+          style={({ pressed }) => [
+            styles.card,
+            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+          ]}
+        >
           <Text style={styles.cardText}>Help</Text>
-        </View>
+        </Pressable>
 
         {/* Footer */}
         <Text style={styles.copyright}>
@@ -134,6 +173,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     color: Colors.primaryDarkMaroon,
+  },
+  pressedCard: {
+    opacity: 0.8,
   },
 });
 
