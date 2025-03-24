@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
-import DummyScreen from "../DummyScreen";
 import Badge from "../../components/common/Badge";
 
 const ProfileScreen = ({ navigation }) => {

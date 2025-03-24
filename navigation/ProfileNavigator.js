@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 import ProfileScreen from "../screens/quiz/ProfileScreen";
 import DummyScreen from "../screens/DummyScreen";
 import LinksScreen from "../screens/LinksScreen";
+import ContactUsForm from "../components/input/ContactUsForm";
 
 const Stack = createStackNavigator();
 
@@ -16,9 +17,11 @@ const ProfileNavigator = ({ navigation }) => {
         headerStyle: {
           backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
         },
-        headerTintColor: "#ffffff", // Change text color in the header (like the back button)
+        headerTintColor: "#ffffff",
         headerTitleStyle: {
-          fontWeight: "bold", // Optional: you can make the title bold
+          fontSize: 18,
+          letterSpacing: 0.5,
+          fontFamily: "pacifico",
         },
       }}
     >
@@ -26,7 +29,8 @@ const ProfileNavigator = ({ navigation }) => {
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
-          headerShown: false,
+          title: "Profile",
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
@@ -41,6 +45,14 @@ const ProfileNavigator = ({ navigation }) => {
         component={DummyScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="cntct"
+        component={ContactUsForm}
+        options={{
+          title: "Contact Us",
+          headerTitleAlign: "center",
         }}
       />
     </Stack.Navigator>

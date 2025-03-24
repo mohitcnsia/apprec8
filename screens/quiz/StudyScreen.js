@@ -1,11 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal";
-import {
-  leaders,
-  olympiad,
-  psychology,
-  random,
-} from "../../data/dummy-carousal";
+import { leaders, random } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import { myClassrooms, olympiadTiles } from "../../data/app-tiles-data";
