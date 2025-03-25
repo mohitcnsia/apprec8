@@ -1,28 +1,54 @@
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Input from "./Input";
 import PrimaryButton from "../../components/PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 
-const ContactUsForm = () => {
-  const [inputs, setInputs] = useState({
-    amount: {
-      value: "",
-      isValid: false,
-    },
-    date: {
-      value: "",
-      isValid: false,
-    },
-    description: {
-      value: "",
-      isValid: false,
-    },
+const ContactUsForm = ({ navigation }) => {
+  const [formData, setFormData] = useState({
+    subject: "",
+    message: "",
   });
 
+  // Update state on input change
+  const inputChangeHandler = (key, value) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   function submitHandler() {
-    console.log("Form submitted");
+    const isFormValid = validateFormData();
+    if (isFormValid) {
+      saveToDb();
+      navigation.goBack();
+      Alert.alert("Success", "Your message has been submitted!");
+    }
+  }
+
+  function validateFormData() {
+    console.log("Validating your form before submission");
+    const isSubjectValid = formData.subject.trim().length > 0;
+    const isMessageValid = formData.message.trim().length > 0;
+    if (isSubjectValid && isMessageValid) {
+      return true;
+    }
+    Alert.alert("Validation Error", "Both fields are required!"); // Do state management here and highlight the fields red
+    return false;
+  }
+
+  function saveToDb() {
+    console.log("Form submitted and saved to db");
+    console.log("Form Data:", formData);
   }
 
   return (
@@ -31,9 +57,15 @@ const ContactUsForm = () => {
       style={styles.container}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Input label="Subject:" />
         <Input
-          label="Please explain the problem you are facing or share any feedback that you may have:"
+          label="Subject:"
+          value={formData.subject}
+          onChangeText={(value) => inputChangeHandler("subject", value)}
+        />
+        <Input
+          label="Please explain the problem or share feedback:"
+          value={formData.message}
+          onChangeText={(value) => inputChangeHandler("message", value)}
           textInputConfig={{
             autoCapitalize: "sentences",
             multiline: true,
