@@ -11,16 +11,7 @@ const LinksScreen = ({ route, navigation }) => {
   };
 
   const handleLinkPress = (link) => {
-    console.log(
-      "You pressed: " +
-        link.title +
-        " . You will now navigate to athe Screen: " +
-        link.id
-    );
     const availableScreens = navigation.getState()?.routeNames || [];
-    availableScreens.map((screen) => {
-      console.log("Screen : " + screen);
-    });
     if (availableScreens.includes(link.id)) {
       // Navigate to the valid screen
       navigation.navigate(link.id, { title: link.title });
