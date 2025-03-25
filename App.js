@@ -18,7 +18,7 @@ export default function App() {
     <>
       {/* Custom StatusBar with background color */}
       <StatusBar
-        style="dark"
+        style="inverted"
         translucent={false}
         backgroundColor={Colors.primaryDarkMaroon}
       />
