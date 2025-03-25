@@ -9,6 +9,7 @@ import { StyleSheet } from "react-native";
 import StudyScreen from "../screens/quiz/StudyScreen";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import LinksScreen from "../screens/LinksScreen";
+import DummyScreen from "../screens/DummyScreen";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,13 @@ const StudyNavigator = () => {
       <Stack.Screen
         name="QuizResult"
         component={QuizResultScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="DummyScreen"
+        component={DummyScreen}
         options={{
           headerShown: false,
         }}

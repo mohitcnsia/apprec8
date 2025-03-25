@@ -5,9 +5,31 @@ const LinksScreen = ({ route, navigation }) => {
   const data = route?.params?.data || [];
   const screenTitle = route?.params?.title || "Links";
 
-  const handleLinkPress = (link) => {
+  const handleLinkPress1 = (link) => {
     console.log("You pressed: " + link.title);
     navigation.navigate(link.id, { title: link.title });
+  };
+
+  const handleLinkPress = (link) => {
+    console.log(
+      "You pressed: " +
+        link.title +
+        " . You will now navigate to athe Screen: " +
+        link.id
+    );
+    const availableScreens = navigation.getState()?.routeNames || [];
+    availableScreens.map((screen) => {
+      console.log("Screen : " + screen);
+    });
+    if (availableScreens.includes(link.id)) {
+      // Navigate to the valid screen
+      navigation.navigate(link.id, { title: link.title });
+    } else {
+      // Navigate to a fallback or dummy screen
+      navigation.navigate("DummyScreen", {
+        errorMessage: `Screen "${link.title}" not found.`,
+      });
+    }
   };
 
   return (
