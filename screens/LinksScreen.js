@@ -49,9 +49,15 @@ const LinksScreen = ({ route, navigation }) => {
         navigation.navigate("Quiz", { data: quizzes });
         break;
       default:
-        console.error(
-          "!!!!!!!!! Unsupported Activity - " + activity + " !!!!!!!!!"
-        );
+        const availableScreens = navigation.getState()?.routeNames || [];
+        if (availableScreens.includes(link.id)) {
+          navigation.navigate(link.id, { title: link.title });
+        } else {
+          // Navigate to a fallback or dummy screen
+          navigation.navigate("DummyScreen", {
+            errorMessage: `Screen "${link.title}" not found.`,
+          });
+        }
     }
   };
 
