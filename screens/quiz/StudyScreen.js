@@ -3,7 +3,13 @@ import CustomCarousel from "../../components/common/CustomCarousal";
 import { leaders, random } from "../../data/dummy-carousal";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
-import { myClassrooms, olympiadTiles } from "../../data/app-tiles-data";
+import {
+  myClassrooms,
+  myReads,
+  olympiadTiles,
+  popularQuizzes,
+  popularReads,
+} from "../../data/app-tiles-data";
 
 function StudyScreen({ navigation }) {
   return (
@@ -28,16 +34,16 @@ function StudyScreen({ navigation }) {
           customHeight={120}
         />
         <CustomCarousel
-          title="My Quizzes"
-          data={random}
+          title="Popular Reads"
+          data={popularReads}
           navigation={navigation}
           customWidth={40}
           customHeight={120}
         />
 
         <CustomCarousel
-          title="My Favourites"
-          data={leaders}
+          title="Popular Quizzes"
+          data={popularQuizzes}
           navigation={navigation}
           customWidth={40}
           customHeight={120}

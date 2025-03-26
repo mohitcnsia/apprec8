@@ -38,13 +38,16 @@ const QuizScreen = ({ route, navigation }) => {
   const [score, setScore] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false); // Track if an answer was selected
   const [selectedAnswer, setSelectedAnswer] = useState(null); // Track the selected answer
+  const data = route?.params?.data || [];
+
+  console.log("loading quizzes with itemId: " + itemId);
 
   // Dynamically load quiz based on the passed itemId
   useEffect(() => {
-    const selectedQuizList = QUIZ_LISTS[itemId];
+    const selectedQuiz = data.length > 0 ? data : QUIZ_LISTS[itemId];
     // Check if the quiz exists for the provided itemId
-    if (selectedQuizList) {
-      const shuffledQuestions = shuffleArray(selectedQuizList).slice(0, 5); // Get the first 5 shuffled questions
+    if (selectedQuiz) {
+      const shuffledQuestions = shuffleArray(selectedQuiz).slice(0, 5); // Get the first 5 shuffled questions
       const shuffledQuestionsWithOptions = shuffledQuestions.map(
         (question) => ({
           ...question,
@@ -53,9 +56,6 @@ const QuizScreen = ({ route, navigation }) => {
       );
 
       setQuestions(shuffledQuestionsWithOptions);
-    } else {
-      // If no quiz matches, show an error
-      setQuestions([]);
     }
   }, [itemId]);
 
@@ -87,6 +87,7 @@ const QuizScreen = ({ route, navigation }) => {
           score + (selectedAnswer === questions[questionIndex].answer ? 1 : 0),
         totalQuestions: questions.length,
         quizId: itemId,
+        data: data,
       });
     }
   };

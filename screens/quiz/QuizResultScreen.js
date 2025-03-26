@@ -7,7 +7,7 @@ import QuizButton from "../../components/quiz/QuizButton";
 
 const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("Pratha");
-  const { score, totalQuestions, quizId } = route.params;
+  const { score, totalQuestions, quizId, data } = route.params;
 
   useEffect(() => {
     const getUsername = async () => {
@@ -18,6 +18,14 @@ const QuizResultScreen = ({ route, navigation }) => {
     };
     getUsername();
   }, []);
+
+  const handlePlayAgain = () => {
+    if (data.length > 0) {
+      navigation.navigate("Quiz", { data });
+    } else {
+      navigation.navigate("Quiz", { itemId: quizId });
+    }
+  };
 
   return (
     <LinearGradient
@@ -37,7 +45,7 @@ const QuizResultScreen = ({ route, navigation }) => {
       <QuizButton
         style={styles.nextButton}
         label={"Play Again"}
-        handlePress={() => navigation.navigate("Quiz", { itemId: quizId })}
+        handlePress={handlePlayAgain}
       />
     </LinearGradient>
   );

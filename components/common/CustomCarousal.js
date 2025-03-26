@@ -16,6 +16,13 @@ import {
   psychologyTopics,
   systemDesignTopics,
 } from "../../data/app-topic-data";
+import { getTopicData, showToast } from "../../data/latest/app-topic-data";
+import {
+  getTileQuiz,
+  getTileStudy,
+  getTopicQuiz,
+  tileStudyData,
+} from "../../data/latest/app-topic-detail-data";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20;
@@ -32,7 +39,7 @@ const getImageSource = (item) => {
 };
 
 const containsMetadata = (item) =>
-  Boolean(item?.name || item?.duration || item?.type || item?.author);
+  Boolean(item?.title || item?.duration || item?.type || item?.author);
 
 // This looks bad. Why carousal should figure out data. It should get what is required and it should passon what it has
 const getSystemDesignTopicData = (id) => {
@@ -51,26 +58,40 @@ const CarouselItem = React.memo(
   ({ item, imageWidth, imageHeight, navigation }) => {
     const imageSource = getImageSource(item);
     const hasMetadata = containsMetadata(item);
-    // const navigation = useNavigation();
-
-    // const psychData = getPsychologyTopicData(item.id);
 
     function pressHandler() {
-      // console.log("item.id - " + item.id);
-      // console.log("sysDesignData - " + JSON.stringify(sysDesignData));
       if (item.id) {
-        if (item.category === "STUDY") {
-          let data = getSystemDesignTopicData(item.id);
-          // Navigate to the CustomReader if it's a STUDY item
-          navigation.navigate("Apprec8Reader", { data });
-        } else if (item.category === "COMPLEX") {
-          let data = getPsychologyTopicData(item.id);
-          // Navigate to the LinksScreen if it's a COMPLEX item
-          navigation.navigate("LinkScreen", { data });
-        } else {
-          navigation.navigate("Overview", {
-            topicId: item.id,
-          });
+        console.log("carousal data - " + JSON.stringify(item));
+        switch (item.type) {
+          case "STUDY":
+            const studyData =
+              typeof item.parentId === "undefined"
+                ? getTileStudy(item.id)
+                : getTopicData(item.parentId);
+            navigation.navigate("Apprec8Reader", { data: studyData });
+            break;
+          case "COURSE":
+            const data = getTopicData(item.id);
+            data.map((d) => console.log(d.title));
+            navigation.navigate("LinkScreen", { data });
+            break;
+          case "QUIZ":
+            console.log("QUIZ item parent: " + item.parentId);
+            console.log("QUIZ id: " + item.id);
+            const quizData =
+              typeof item.parentId === "undefined"
+                ? getTileQuiz(item.id)
+                : getTopicQuiz(item.parentId);
+            console.log(quizData.quizItems.map((quiz) => quiz.id));
+            navigation.navigate("Quiz", { data: quizData.quizItems });
+            // if (typeof item.parentId === "undefined") { dog-quiz-1
+            //   console.log("parentId is undefined or not declared");
+            //   const tileStudyData = getTileStudy(item.id);
+            // } else {
+            // }
+            break;
+          default:
+            console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
         }
       }
     }
@@ -106,9 +127,9 @@ const CarouselItem = React.memo(
           {/* Metadata Section Below Image */}
           {hasMetadata && (
             <View style={styles.metadataContainer}>
-              {item.name && <Text style={styles.itemTitle}>{item.name}</Text>}
+              {item.title && <Text style={styles.itemTitle}>{item.title}</Text>}
               <Text style={styles.metaText}>
-                {item.type && `${item.type} • `}
+                {item.subtitle && `${item.subtitle} • `}
                 {item.duration && `${item.duration}`}
               </Text>
               {item.author && (

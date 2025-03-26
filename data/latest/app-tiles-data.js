@@ -1,83 +1,53 @@
-import AppTile from "../models/AppTile";
+import AppTile from "../../models/AppTile";
 
 export const olympiadTiles = [
   new AppTile(
     "imo",
     "Mathematics",
-    "Course",
     require("../assets/images/olympiad/imo.png"),
     "30 min",
-    "COURSE",
+    "Quiz",
     "Mohit Kumar Chilkoti",
-    "COURSE" // stop using this - category
+    "QUIZ"
   ),
   new AppTile(
     "nso",
     "Science",
-    "Course",
     require("../assets/images/olympiad/nso.png"),
     "30 min",
-    "COURSE",
+    "Quiz",
     "Sir Issac Newton",
-    "COURSE" // stop using this - category
+    "QUIZ"
   ),
   new AppTile(
     "ieo",
     "English",
-    "Course",
     require("../assets/images/olympiad/ieo.png"),
     "30 min",
-    "COURSE",
+    "Quiz",
     "Pratha Chilkoti",
-    "COURSE" // stop using this - category
+    "QUIZ"
   ),
-  new AppTile(
-    "iho",
-    "Hindi",
-    "Course",
-    require("../assets/images/olympiad/iho.png"),
-    "60 min",
-    "COURSE",
-    "Pandit Ji",
-    "COURSE" // stop using this - category
-  ),
+  new AppTile("iho", "Hindi", null, "60 min", "Quiz", "Pandit Ji", "QUIZ"),
 ];
 
 export const myClassrooms = [
   new AppTile(
     "psy",
     "Psychology",
-    "Course",
     // "https://www.simplypsychology.org/wp-content/uploads/psychology.jpeg",
     "https://www.bolton.ac.uk/assets/Is-Psychology-a-science-Bolton-University__ResizedImageWzYwMCw0MDld.jpg",
     "30 min",
-    "COURSE",
+    "Questionnaire",
     "Seema Joshi",
-    "COURSE"
+    "COMPLEX"
   ),
-];
-
-export const popularReads = [
   new AppTile(
-    "sysd",
+    "sysd1",
     "System Design",
-    "Reading",
     "https://cdn.pixabay.com/photo/2024/04/04/10/46/ai-generated-8674827_1280.jpg",
     "30 min",
-    "STUDY",
-    "Mohit Chilkoti",
-    "STUDY"
-  ),
-];
-
-export const popularQuizzes = [
-  new AppTile(
-    "dog-quiz-1",
-    "Dogs",
-    "Quiz",
-    "https://cdn.pixabay.com/photo/2021/01/23/07/53/dogs-5941898_1280.jpg",
-    "30 min",
-    "QUIZ",
+    "Study",
     "Mohit Chilkoti",
     "STUDY"
   ),
@@ -87,30 +57,27 @@ export const storyTiles = [
   new AppTile(
     "akbb1",
     "Akbar Birbal",
-    "Story",
     require("../assets/images/stories/akbar-birbal1.png"),
     "5 min",
-    "STUDY",
+    "Story",
     "Raja Birbal",
     "STUDY"
   ),
   new AppTile(
     "bgh1",
     "Gautam Buddha - The Enlightened",
-    "Bio",
     require("../assets/images/stories/buddha.png"),
     "7 min",
-    "STUDY",
+    "Story",
     "Gautam Buddha",
     "STUDY"
   ),
   new AppTile(
     "pct1",
     "Smart Rabbit",
-    "Story",
     require("../assets/images/stories/panchatarntar1.png"),
     "4 min",
-    "STUDY",
+    "Story",
     "Seema Joshi",
     "Vishnu Sharma",
     "STUDY"
@@ -121,41 +88,37 @@ export const storyTiles = [
 export const bookSummaryTiles = [
   {
     id: "bfg",
-    title: "The BFG",
-    subtitle: "Book Summary",
+    name: "The BFG",
     image: require("../assets/images/book-summaries/bfg.png"),
     duration: "10 min",
-    type: "STUDY",
+    type: "Book Summary",
     author: "Seema Joshi",
     category: "STUDY",
   },
   {
     id: "tgwdtm",
-    title: "The Girl Who Drank The Moon",
-    subtitle: "Book Summary",
+    name: "The Girl Who Drank The Moon",
     image: require("../assets/images/book-summaries/girlDrankTheMoon.png"),
     duration: "20 min",
-    type: "STUDY",
+    type: "Book Summary",
     author: "Mohit Chilkoti",
     category: "STUDY",
   },
   {
     id: "harry1",
-    title: "Harry Potter & The Philosopher's Stone",
-    subtitle: "Book Summary",
+    name: "Harry Potter & The Philosopher's Stone",
     image: require("../assets/images/book-summaries/harry-1.png"),
     duration: "15 min",
-    type: "STUDY",
+    type: "Book Summary",
     author: "Pratha Chilkoti",
     category: "STUDY",
   },
   {
     id: "matilda",
-    title: "Matilda",
-    subtitle: "Book Summary",
+    name: "Matilda",
     image: require("../assets/images/book-summaries/matilda.png"),
     duration: "18 min",
-    type: "STUDY",
+    type: "Book Summary",
     author: "Pratha Chilkoti",
     category: "STUDY",
   },

@@ -25,6 +25,10 @@ const Apprec8Reader = ({ route }) => {
       : [],
   } = route.params.data || {}; // Default to an empty object if data is null or undefined
 
+  console.log(" Appreciate reader recieved name: " + name);
+  console.log(" Appreciate reader recieved author: " + author);
+  console.log(" Appreciate reader recieved content: " + content);
+
   // Graceful fallback if data is missing
   if (!name || !author || !content) {
     // console.error("Required data is missing:", route.params.item); // Log the missing data for the developer
