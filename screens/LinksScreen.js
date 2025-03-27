@@ -4,7 +4,7 @@ import {
   getTopicDetailData,
   getTopicQuiz,
   getTopicStudy,
-} from "../data/latest/app-topic-detail-data";
+} from "../data/app-topic-detail-data";
 
 const LinksScreen = ({ route, navigation }) => {
   const data = route?.params?.data || [];

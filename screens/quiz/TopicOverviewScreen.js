@@ -6,7 +6,6 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import { TOPICS } from "../../data/topic-data";
 import QuizButton from "../../components/quiz/QuizButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
@@ -14,11 +13,7 @@ import { Colors } from "../../config/colors";
 const { height } = Dimensions.get("window"); // Get screen height
 
 function TopicOverviewScreen({ route, navigation }) {
-  const topicId = route.params.topicId;
-
-  const displayTopic = TOPICS.filter((topic) => {
-    return topic.id === topicId;
-  });
+  const data = route.paraams.data | [];
 
   function renderTopicItem(itemData) {
     return (
@@ -55,7 +50,7 @@ function TopicOverviewScreen({ route, navigation }) {
       style={styles.container}
     >
       <FlatList
-        data={displayTopic}
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderTopicItem}
         style={{ backgroundColor: "transparent" }}

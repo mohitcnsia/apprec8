@@ -1,11 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../config/colors";
-import QuizNavigator from "./QuizNavigator";
-import ProfileScreen from "../screens/quiz/ProfileScreen";
-import StatsScreen from "../screens/quiz/StatsScreen";
 import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -52,17 +48,7 @@ function BottomTabNavigator() {
             headerShown: false,
           }}
         />
-        <Tab.Screen
-          name="Topics"
-          component={QuizNavigator}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="thunderstorm" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Stats"
           component={StatsScreen}
           initialParams={{ title: "Leaderboard" }}
@@ -71,7 +57,7 @@ function BottomTabNavigator() {
               <MaterialIcons name="leaderboard" color={color} size={size} />
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Profile"
           component={ProfileNavigator}

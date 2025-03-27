@@ -1,4 +1,4 @@
-import AppTopicQuiz from "../../models/AppTopicQuiz";
+import AppTopicQuiz from "../models/AppTopicQuiz";
 
 export const getTopicStudy = (parentId) => {
   console.log("Figuring out Study dataset for Parent Id: " + parentId);
@@ -18,7 +18,26 @@ export const getTopicStudyDataSet = (parentId) => {
       return imoStudyData;
 
     case "sam-psy-1":
+    case "sam-psy-2":
+    case "sam-psy-3":
+    case "sam-psy-4":
+    case "sam-psy-5":
+    case "sam-psy-6":
+    case "sam-psy-7":
+    case "sam-psy-8":
       return psychologyStudyData;
+    case "4-sam-rsn-1":
+    case "4-sam-rsn-2":
+    case "4-sam-rsn-3":
+    case "4-sam-rsn-4":
+    case "4-sam-rsn-5":
+    case "4-sam-rsn-6":
+    case "4-sam-rsn-7":
+    case "4-sam-rsn-8":
+    case "4-sam-rsn-9":
+    case "4-sam-rsn-10":
+    case "4-sam-rsn-11":
+      return reasoningStudyData;
     // case "sysd1":
     //   return systemDesignStudyData;
     default:
@@ -163,7 +182,7 @@ export const psychologyStudyData = [
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-2-study",
     name: "2. Methods of Enquiry",
     parentId: "sam-psy-2",
     author: "Seema Joshi",
@@ -172,7 +191,7 @@ export const psychologyStudyData = [
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-3-study",
     name: "3. Human Development",
     parentId: "sam-psy-3",
     author: "Seema Joshi",
@@ -181,7 +200,7 @@ export const psychologyStudyData = [
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-4-study",
     name: "4. Sensory Attention",
     parentId: "sam-psy-4",
     author: "Seema Joshi",
@@ -190,7 +209,7 @@ export const psychologyStudyData = [
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-5-study",
     name: "5. Learning",
     parentId: "sam-psy-5",
     author: "Seema Joshi",
@@ -199,31 +218,134 @@ export const psychologyStudyData = [
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-6-study",
     name: "6. Human Memory",
-    parentId: "sam-psy-5",
+    parentId: "sam-psy-6",
     author: "Seema Joshi",
     content: `## Introduction 
-    Everything that is useless stays in Memory foever.`,
+    Everything that is useless stays in Memory forever.`,
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-7-study",
     name: "7. Thinking",
-    parentId: "sam-psy-6",
+    parentId: "sam-psy-7",
     author: "Seema Joshi",
     content: `## Introduction 
     Garbage in Garbage out.`,
     type: "STUDY",
   },
   {
-    id: "sam-psy-1-study",
+    id: "sam-psy-8-study",
     name: "8. Motivation and Emotion",
-    parentId: "sam-psy-7",
+    parentId: "sam-psy-8",
     author: "Seema Joshi",
     content: `## Introduction 
     No motivation, all emotion`,
     type: "STUDY",
+  },
+];
+
+export const reasoningStudyData = [
+  {
+    id: "4-sam-rsn-1-study",
+    parentId: "4-sam-rsn-1",
+    name: "1. Patterns",
+    author: "Seema Joshi",
+    content: `## Introduction 
+    Patterns are everywhere.`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-2-study",
+    parentId: "4-sam-rsn-2",
+    name: "2. Alphabet Test",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-3-study",
+    parentId: "4-sam-rsn-3",
+    name: "3. Coding-Decoding",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-4-study",
+    parentId: "4-sam-rsn-4",
+    name: "4. Ranking Test",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-5-study",
+    parentId: "4-sam-rsn-5",
+    name: "5. Mirror Images",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-6-study",
+    parentId: "4-sam-rsn-6",
+    name: "6. Geometrical Shapes & Solids",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-7-study",
+    parentId: "4-sam-rsn-7",
+    name: "7. Embedded Figures",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-8-study",
+    parentId: "4-sam-rsn-8",
+    name: "Direction Sense Test",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-9-study",
+    parentId: "4-sam-rsn-9",
+    name: "9. Possible Combinations",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-10-study",
+    parentId: "4-sam-rsn-10",
+    name: "10. Analogy & Classification",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-11-study",
+    parentId: "4-sam-rsn-11",
+    name: "11. Clock & Calendar",
+    author: "Seema Joshi",
+    content: `## Introduction`,
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
 ];
 
@@ -277,56 +399,6 @@ export const ieoQuizData = [
     "4-ieo-noun"
   ),
 ];
-
-// export const systemDesignStudyData = [
-//   {
-//     id: "1-sys-d1",
-//     name: "Reliability, Scalability & Maintainability",
-//     parentId: "sysd",
-//     author: "Mohit Chilkoti",
-//     coverImage:
-//       "https://media.istockphoto.com/id/495737046/vector/kids-reading-books-in-colour.jpg?s=2048x2048&w=is&k=20&c=XasE_9gSy7Psx9nIbKj0WP8F6P7_hk6BlQLZKnKltfE=",
-//     content: `Introduction When building modern --software--, three key concerns arise: **reliability, scalability, and maintainability**.
-//   These attributes ensure that a system can handle failures, grow with demand, and be easy to evolve.
-
-//   ## Reliability
-//   A system is considered **reliable** if it continues to function correctly despite failures. Failures can be:
-//     - **Hardware Failures**: Disks crash, network outages occur.
-//     - **Software Bugs**: Memory leaks, unhandled edge cases.
-//     - **Human Errors**: Misconfigurations, accidental data deletions.
-//   Techniques for improving reliability:
-//     - **Replication**: Keeping multiple copies of data.
-//     - **Fault Isolation**: Microservices prevent cascading failures.
-//     - **Monitoring & Alerting**: Proactive failure detection.
-
-//   ![System Reliability](https://miro.medium.com/v2/resize:fit:720/format:webp/1*8u2Z2PKlXFan9sGivriTDw.jpeg)
-
-//   ## Scalability
-//   A system is **scalable** if it can handle increased load effectively. Two primary ways to scale:
-//   1. **Vertical Scaling** (Scaling Up) – Adding more resources (CPU, RAM) to a single machine.
-//   2. **Horizontal Scaling** (Scaling Out) – Adding more machines to distribute the load.
-
-//   Key scalability factors:
-//   - **Latency vs. Throughput**: Lowering response time vs. handling more requests.
-//   - **Elasticity**: Auto-scaling infrastructure like AWS Auto Scaling.
-//   - **Load Balancing**: Distributing requests among multiple nodes.
-
-//   ## Maintainability
-//   Software needs to be easy to modify and extend. This involves:
-//   - **Modularity**: Well-defined boundaries between components.
-//   - **Automation**: CI/CD pipelines for seamless deployments.
-//   - **Observability**: Logs, metrics, and distributed tracing.
-
-//   Maintaining a **data-intensive** system is even more critical as systems evolve.
-
-//   ## Conclusion
-//   Reliability, scalability, and maintainability are foundational principles in designing **data-intensive applications**. Engineers must balance trade-offs while choosing the right architecture for their systems.`,
-//     additionalImages: [
-//       "https://cdn.pixabay.com/photo/2024/05/17/11/24/foxes-8768091_1280.jpg",
-//     ],
-//     type: "STUDY",
-//   },
-// ];
 
 export const tileStudyData = [
   {

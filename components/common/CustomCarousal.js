@@ -16,13 +16,13 @@ import {
   psychologyTopics,
   systemDesignTopics,
 } from "../../data/app-topic-data";
-import { getTopicData, showToast } from "../../data/latest/app-topic-data";
+import { getTopicData, showToast } from "../../data/app-topic-data";
 import {
   getTileQuiz,
   getTileStudy,
   getTopicQuiz,
   tileStudyData,
-} from "../../data/latest/app-topic-detail-data";
+} from "../../data/app-topic-detail-data";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20;

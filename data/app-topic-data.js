@@ -1,68 +1,215 @@
-import Topic from "../models/quiz/topic";
+import AppTopic from "../models/AppTopic";
+
+export const getTopicData = (parentId) => {
+  console.log("Figuring out dataset for Id: " + parentId);
+  const dataset = getTopicDataSet(parentId);
+  return dataset
+    ? dataset.filter((record) => record.parentId === parentId)
+    : [];
+};
+
+export const getTopicDataSet = (parentId) => {
+  console.log("Looking for data with parent id: ", parentId);
+  switch (parentId) {
+    case "imo": // ideally in DB, we will compare this id to parentId and fetch records
+    case "ieo": // this is just a simulation
+    case "nso":
+    case "iho":
+      return olympiadTopics;
+    case "psy":
+      return psychologyTopics;
+    case "rsn":
+      return reasoningTopics;
+    case "sysd1":
+      return systemDesignStudyData;
+    default:
+      console.error("!! Topic:  " + parentId + " N/A !!");
+  }
+};
 
 export const olympiadTopics = [
-  new Topic(
-    "ieo",
-    "International English Olympiad",
-    "The International English Olympiad (IEO) is an English language and Grammar competition for students of class 1 to class 12. It is conducted by Science Olympiad Foundation (SOF) in collaboration with British Council. The content of the tests is designed to focus on communication and use of English language, rather than rote learning and correct grammar only. Participants of IEO are ranked on the basis of marks obtained in 1st Level. After taking the first level of the test, students can judge themselves academically at four different levels - within the school, at city level, at state level and above all at International level."
-  ),
-  new Topic(
-    "nso",
-    "International Science Olympiad",
-    "International Science Olympiad"
-  ),
-  new Topic(
-    "imo",
-    "International Mathematics Olympiad",
-    "International Mathematics Olympiad"
-  ),
-  new Topic(
-    "iho",
-    "International Hindi Olympiad",
-    "International Hindi Olympiad"
-  ),
+  new AppTopic("4-ieo-noun", "ieo", "Nouns", "ACTIVITY", {
+    study: true,
+    quiz: true,
+  }),
+  new AppTopic("4-ieo-pronoun", "ieo", "Pronouns", { study: true, quiz: true }),
+  new AppTopic("4-ieo-verb", "ieo", "Verb", { study: true, quiz: true }),
+  new AppTopic("4-ieo-adverb", "ieo", "Adverb", { study: true, quiz: true }),
+  // if meta is present then it is complext automatically
+  new AppTopic("4-ieo-adjective", "ieo", "Adjective", {
+    study: true,
+    quiz: true,
+  }),
+  // If QUIZ then directly show Quizscreen. Same for STUDY (show reader)
+  new AppTopic("4-ieo-quiz-1", "ieo", "IEO Quiz 1", "QUIZ"),
+
+  new AppTopic("4-imo-add", "imo", "Addition", "ACTIVITY", {
+    study: true,
+    quiz: true,
+  }),
+  new AppTopic("4-imo-sub", "imo", "Subtraction", "ACTIVITY", {
+    study: true,
+    quiz: true,
+  }),
+  new AppTopic("4-imo-div", "imo", "Divison", "ACTIVITY", {
+    study: true,
+    quiz: true,
+  }),
+  new AppTopic("4-imo-mul", "imo", "Multiplication", "ACTIVITY", {
+    study: true,
+    quiz: true,
+  }),
+
+  // new AppTopic("4-imo-5", "imo", "Coming Soon", null, null),
+  // new AppTopic("4-imo-6", "imo", "Comin Soon", null, null),
+
+  new AppTopic("4-nso-1", "nso", "Topic 1", "LINK"),
+  new AppTopic("4-nso-2", "nso", "Topic 2", "LINK"),
+  new AppTopic("4-nso-3", "nso", "Topic 3", "LINK"),
+  new AppTopic("4-nso-4", "nso", "Topic 4", "LINK"),
+
+  new AppTopic("4-iho-1", "iho", "Topic 1", "LINK"),
+  new AppTopic("4-iho-2", "iho", "Topic 2", "LINK"),
+  new AppTopic("4-iho-3", "iho", "Topic 3", "LINK"),
+  new AppTopic("4-iho-4", "iho", "Topic 4", "LINK"),
 ];
 
 export const psychologyTopics = [
   {
     id: "sam-psy-1",
-    parentIds: ["psy"],
-    title: "Intro to Psychology",
+    parentId: "psy",
+    title: "1. Intro to Psychology",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-2",
-    parentIds: ["psy"],
-    title: "Methods of Enquiry",
+    parentId: "psy",
+    title: "2. Methods of Enquiry",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-3",
-    parentIds: ["psy"],
-    title: "Human Development",
+    parentId: "psy",
+    title: "3. Human Development",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-4",
-    parentIds: ["psy"],
-    title: "Sensory, Attention and ...",
+    parentId: "psy",
+    title: "4. Sensory, Attention and ...",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-5",
     parentIds: ["psy"],
-    title: "Learning",
+    title: "5. Learning",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-6",
-    parentIds: ["psy"],
-    title: "Human Memory",
+    parentId: "psy",
+    title: "6. Human Memory",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-7",
-    parentIds: ["psy"],
-    title: "Thinking",
+    parentId: "psy",
+    title: "7. Thinking",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
   {
     id: "sam-psy-8",
-    parentIds: ["psy"],
-    title: "Motivation and Emotion",
+    parentId: "psy",
+    title: "8. Motivation and Emotion",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+];
+
+export const reasoningTopics = [
+  {
+    id: "4-sam-rsn-1",
+    parentId: "rsn",
+    title: "1. Patterns",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-2",
+    parentId: "rsn",
+    title: "2. Alphabet Test",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-3",
+    parentId: "rsn",
+    title: "3. Coding-Decoding",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-4",
+    parentId: "rsn",
+    title: "4. Ranking Test",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-5",
+    parentId: "rsn",
+    title: "5. Mirror Images",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-6",
+    parentId: "rsn",
+    title: "6. Geometrical Shapes & Solids",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-7",
+    parentId: "rsn",
+    title: "7. Embedded Figures",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-8",
+    parentId: "rsn",
+    title: "Direction Sense Test",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-9",
+    parentId: "rsn",
+    title: "9. Possible Combinations",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-10",
+    parentId: "rsn",
+    title: "10. Analogy & Classification",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
+  },
+  {
+    id: "4-sam-rsn-11",
+    parentId: "rsn",
+    title: "11. Clock & Calendar",
+    type: "ACTIVITY",
+    activities: { study: true, quiz: true },
   },
 ];
 
@@ -126,3 +273,5 @@ export const systemDesignTopics = [
 ];
 
 export const Topics = [];
+
+export const getCollection = (id) => {};

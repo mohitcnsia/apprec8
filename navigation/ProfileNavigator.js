@@ -9,7 +9,7 @@ import ContactUsForm from "../components/input/ContactUsForm";
 
 const Stack = createStackNavigator();
 
-const ProfileNavigator = ({ navigation }) => {
+const ProfileNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="ProfileScreen"

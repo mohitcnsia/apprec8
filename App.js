@@ -1,11 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import QuizNavigator from "./navigation/QuizNavigator";
-import MealNavigator from "./navigation/MealNavigator";
 import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import { useFonts } from "expo-font";
-import AppFlatListTester from "./components/common/list/AppFlatListTester";
 
 export default function App() {
   useFonts({

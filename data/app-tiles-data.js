@@ -50,7 +50,17 @@ export const myClassrooms = [
     "Course",
     // "https://www.simplypsychology.org/wp-content/uploads/psychology.jpeg",
     "https://www.bolton.ac.uk/assets/Is-Psychology-a-science-Bolton-University__ResizedImageWzYwMCw0MDld.jpg",
-    "30 min",
+    "20 hr",
+    "COURSE",
+    "Seema Joshi",
+    "COURSE"
+  ),
+  new AppTile(
+    "rsn",
+    "Reasoning",
+    "Course",
+    require("../assets/images/classrooms/reasoning.png"),
+    "30 hr",
     "COURSE",
     "Seema Joshi",
     "COURSE"

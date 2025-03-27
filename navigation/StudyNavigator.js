@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import QuizScreen from "../screens/quiz/QuizScreen";
 import QuizResultScreen from "../screens/quiz/QuizResultScreen";
 import { Colors } from "../config/colors";
-import TopicsScreen from "../screens/quiz/TopicsScreen";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import { StyleSheet } from "react-native";
 import StudyScreen from "../screens/quiz/StudyScreen";
