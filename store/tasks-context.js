@@ -1,24 +1,6 @@
 import { createContext, useReducer } from "react";
 import uuid from "react-native-uuid";
 
-export const DUMMY_TASKS = [
-  // remove this dummy with actual call to backend
-  {
-    id: "1",
-    title: "Dummy Task 1",
-    detail:
-      "This is a dummy task. Will add more details later. This is a dummy task. Will add more details later. This is a dummy task. Will add more details later. This is a dummy task. Will add more details later.",
-    dueAt: "2025-03-31",
-    createdAt: "2025-03-31",
-    lastUpdatedAt: "2025-03-31",
-    completed: false,
-  },
-  { id: "2", title: "Dummy Task 2" },
-  { id: "3", title: "Dummy Task 3" },
-  { id: "16", title: "Dummy Task 16" },
-  { id: "17", title: "Dummy Task 17" },
-];
-
 export const TasksContext = createContext({
   tasks: [],
   addTask: ({ title, detail, dueDate, createdAt, lastUpdatedAt }) => {},
@@ -69,7 +51,7 @@ function deleteTaskById(state, id) {
 }
 
 function TasksContextProvider({ children }) {
-  const [tasksState, dispatch] = useReducer(tasksReducer, DUMMY_TASKS);
+  const [tasksState, dispatch] = useReducer(tasksReducer, []);
 
   function addTask(taskData) {
     dispatch({ type: "ADD", payload: taskData });

@@ -25,7 +25,17 @@ const TasksScreenContent = ({ navigation }) => {
   }, [navigation]);
 
   const handleLinkPress = (link) => {
-    navigation.navigate("TaskDetails", { data: link });
+    const dueDate =
+      link.dueDate instanceof Date && !isNaN(link.dueDate)
+        ? link.dueDate.toISOString() // Convert Date to ISO string
+        : null; // Handle undefined or invalid Date
+    // Convert the dueDate to a string (ISO format) before passing it
+    navigation.navigate("TaskDetails", {
+      data: {
+        ...link,
+        dueDate: dueDate, // Serialize the Date
+      },
+    });
   };
 
   return (

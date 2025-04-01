@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useLayoutEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
@@ -8,28 +8,65 @@ import { formatDate } from "../../components/utils/date";
 import { TasksContext } from "../../store/tasks-context";
 
 const TaskDetails = ({ route, navigation }) => {
-  const data = route?.params?.data || [];
-  const { updateTask } = useContext(TasksContext); // Get update function
+  const data = route?.params?.data || {};
+  const { updateTask, deleteTask } = useContext(TasksContext);
+
+  // Convert the serialized date strings back into Date objects
+  const formattedDueDate = formatDate(new Date(data.dueDate)); // Convert from ISO string to Date
+  const formattedCreatedAt = formatDate(new Date(data.createdAt));
+  const formattedLastUpdatedAt = formatDate(new Date(data.lastUpdatedAt));
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton
-          icon="pencil"
-          size={20}
-          color={Colors.primaryWhite}
-          onPress={() => {
-            navigation.navigate("TaskEditor", { data });
-          }}
-        />
+        <View style={styles.headerView}>
+          <IconButton
+            icon="pencil"
+            size={20}
+            color={Colors.primaryWhite}
+            onPress={() =>
+              navigation.navigate("TaskEditor", {
+                data: {
+                  ...data,
+                  dueDate: data.dueDate, // Pass the serialized date as a string
+                },
+              })
+            }
+          />
+          <IconButton
+            icon="trash"
+            size={20}
+            color={Colors.primaryWhite}
+            onPress={() => {
+              Alert.alert(
+                "Confirm Deletion",
+                "Are you sure you want to delete this task?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      deleteTask(data.id);
+                      navigation.navigate("Tasks");
+                    },
+                  },
+                ],
+                { cancelable: true }
+              );
+            }}
+          />
+        </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, data, deleteTask]);
 
   const markCompletedHandler = () => {
     const updatedTask = { ...data, completed: true };
     updateTask(data.id, updatedTask);
-    navigation.navigate("Tasks"); // Navigate back to task list
+    navigation.navigate("Tasks");
   };
 
   return (
@@ -48,23 +85,22 @@ const TaskDetails = ({ route, navigation }) => {
           <Text style={styles.detailsText}>{data.detail}</Text>
         </View>
         <View style={styles.metaContainer}>
-          <Text style={styles.metaText}>
-            Due on: {formatDate(new Date(data.dueAt))}
-          </Text>
+          <Text style={styles.metaText}>Due on: {formattedDueDate}</Text>
+        </View>
+        <View style={styles.metaContainer}>
+          <Text style={styles.metaText}>Created At: {formattedCreatedAt}</Text>
         </View>
         <View style={styles.metaContainer}>
           <Text style={styles.metaText}>
-            Created At: {formatDate(new Date(data.createdAt))}
+            Last Updated At: {formattedLastUpdatedAt}
           </Text>
         </View>
-        <View style={styles.metaContainer}>
-          <Text style={styles.metaText}>
-            Last Updated At: {formatDate(new Date(data.lastUpdatedAt))}
-          </Text>
-        </View>
-        <PrimaryButton onPress={markCompletedHandler}>
-          Mark Completed
-        </PrimaryButton>
+
+        {!data.completed && (
+          <PrimaryButton onPress={markCompletedHandler}>
+            Mark Completed
+          </PrimaryButton>
+        )}
       </ScrollView>
     </LinearGradient>
   );
@@ -75,6 +111,9 @@ export default TaskDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerView: {
+    flexDirection: "row",
   },
   scrollContainer: {
     margin: 20,
@@ -95,6 +134,7 @@ const styles = StyleSheet.create({
     color: Colors.primaryWhite,
     fontFamily: "delius",
     fontSize: 16,
+    textAlign: "center",
   },
   metaContainer: {
     padding: 4,
