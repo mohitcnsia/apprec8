@@ -18,6 +18,10 @@ const ProfileScreen = ({ navigation }) => {
     navigation.navigate("LinkScreen", { data: helpTopics });
   }
 
+  function myTasksPressHandler() {
+    navigation.navigate("Tasks");
+  }
+
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
@@ -88,6 +92,15 @@ const ProfileScreen = ({ navigation }) => {
         {/* Support Section */}
         <Text style={styles.sectionTitle}>Settings</Text>
 
+        <Pressable
+          onPress={myTasksPressHandler}
+          style={({ pressed }) => [
+            styles.card,
+            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+          ]}
+        >
+          <Text style={styles.cardText}>My Tasks</Text>
+        </Pressable>
         <Pressable
           onPress={helpPressHandler}
           style={({ pressed }) => [

@@ -6,56 +6,65 @@ import ProfileScreen from "../screens/quiz/ProfileScreen";
 import DummyScreen from "../screens/DummyScreen";
 import LinksScreen from "../screens/LinksScreen";
 import ContactUsForm from "../components/input/ContactUsForm";
+import Tasks from "../screens/task/Tasks";
+import TaskDetails from "../screens/task/TaskDetails";
+import TaskEditor from "../screens/task/TaskEditor";
+import TasksContextProvider from "../store/tasks-context";
 
 const Stack = createStackNavigator();
 
 const ProfileNavigator = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="ProfileScreen"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
-        },
-        headerTintColor: "#ffffff",
-        headerTitleStyle: {
-          fontSize: 18,
-          letterSpacing: 0.5,
-          fontFamily: "pacifico",
-        },
-      }}
-    >
-      <Stack.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={{
-          title: "Profile",
-          headerTitleAlign: "center",
+    <TasksContextProvider>
+      <Stack.Navigator
+        initialRouteName="ProfileScreen"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
+          },
+          headerTintColor: "#ffffff",
+          headerTitleStyle: {
+            fontSize: 18,
+            letterSpacing: 0.5,
+            fontFamily: "pacifico",
+          },
         }}
-      />
-      <Stack.Screen
-        name="LinkScreen"
-        component={LinksScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="DummyScreen"
-        component={DummyScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="cntct"
-        component={ContactUsForm}
-        options={{
-          title: "Contact Us",
-          headerTitleAlign: "center",
-        }}
-      />
-    </Stack.Navigator>
+      >
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{
+            title: "Profile",
+            headerTitleAlign: "center",
+          }}
+        />
+        <Stack.Screen
+          name="LinkScreen"
+          component={LinksScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Tasks" component={Tasks} options={{}} />
+        <Stack.Screen name="TaskDetails" component={TaskDetails} options={{}} />
+        <Stack.Screen name="TaskEditor" component={TaskEditor} options={{}} />
+        <Stack.Screen
+          name="DummyScreen"
+          component={DummyScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="cntct"
+          component={ContactUsForm}
+          options={{
+            title: "Contact Us",
+            headerTitleAlign: "center",
+          }}
+        />
+      </Stack.Navigator>
+    </TasksContextProvider>
   );
 };
 

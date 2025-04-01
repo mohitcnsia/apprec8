@@ -8,6 +8,7 @@ export default function App() {
   useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
     delius: require("./assets/fonts/Delius-Regular.ttf"),
+    deliusBold: require("./assets/fonts/DeliusUnicase-Bold.ttf"),
     pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
   });
 
@@ -19,7 +20,6 @@ export default function App() {
         translucent={false}
         backgroundColor={Colors.primaryDarkMaroon}
       />
-
       {/* The root container with full height */}
       <View style={styles.container}>
         {/* <QuizNavigator /> */}

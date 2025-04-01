@@ -55,7 +55,12 @@ const AppFlatList = ({
           },
         ]}
       >
-        <View style={[styles.itemStyle, itemStyle]}>
+        <View
+          style={[
+            styles.itemStyle,
+            typeof itemStyle === "function" ? itemStyle(item) : itemStyle, // Support function-based styles]}>
+          ]}
+        >
           <Text style={[styles.textStyle, textStyle]}>{item.title}</Text>
         </View>
       </Pressable>
