@@ -1,75 +1,80 @@
-import { createContext, useReducer } from "react";
-import uuid from "react-native-uuid";
+import { createContext, useReducer, useEffect } from "react";
+import {
+  fetchTasks,
+  addTaskToFirestore,
+  updateTaskInFirestore,
+  deleteTaskFromFirestore,
+} from "../store/firestore-api"; // Import Firestore API functions
 
 export const TasksContext = createContext({
   tasks: [],
-  addTask: ({ title, detail, dueDate, createdAt, lastUpdatedAt }) => {},
-  deleteTask: (id) => {},
-  updateTask: (
-    id,
-    { title, detail, dueDate, createdAt, completed, lastUpdatedAt }
-  ) => {},
+  addTask: async (taskData) => {},
+  deleteTask: async (id) => {},
+  updateTask: async (id, updatedData) => {},
 });
 
 function tasksReducer(state, action) {
   switch (action.type) {
+    case "SET":
+      return action.payload; // Set initial tasks from Firestore
     case "ADD":
-      return addNewTask(state, action.payload);
+      return [action.payload, ...state];
     case "UPDATE":
-      return updateExistingTask(state, action.payload);
+      return state.map((task) =>
+        task.id === action.payload.id
+          ? { ...task, ...action.payload.data }
+          : task
+      );
     case "DELETE":
-      return deleteTaskById(state, action.payload);
+      return state.filter((task) => task.id !== action.payload);
     default:
       return state;
   }
 }
 
-function addNewTask(state, taskData) {
-  const now = new Date().toISOString();
-  return [
-    {
-      ...taskData,
-      id: uuid.v4(),
-      createdAt: now,
-      lastUpdatedAt: now,
-      completed: false,
-    },
-    ...state,
-  ];
-}
-
-function updateExistingTask(state, { id, data }) {
-  return state.map((task) =>
-    task.id === id
-      ? { ...task, ...data, lastUpdatedAt: new Date().toISOString() }
-      : task
-  );
-}
-
-function deleteTaskById(state, id) {
-  return state.filter((task) => task.id !== id);
-}
-
 function TasksContextProvider({ children }) {
   const [tasksState, dispatch] = useReducer(tasksReducer, []);
 
-  function addTask(taskData) {
-    dispatch({ type: "ADD", payload: taskData });
+  // 📌 Load tasks from Firestore on app start
+  useEffect(() => {
+    async function loadTasks() {
+      console.log("Fetching tasks from Firestore...");
+      const tasks = await fetchTasks();
+      console.log("Fetched tasks:", tasks);
+      dispatch({ type: "SET", payload: tasks });
+    }
+
+    loadTasks();
+  }, []);
+
+  // 📌 Add Task (calls Firestore API)
+  async function addTask(taskData) {
+    console.log("Going to add a new task now");
+    try {
+      const newTask = await addTaskToFirestore(taskData);
+      dispatch({ type: "ADD", payload: newTask });
+    } catch (error) {
+      console.error("Failed to add task:", error);
+    }
   }
 
-  function deleteTask(id) {
+  // 📌 Update Task (calls Firestore API)
+  async function updateTask(id, taskData) {
+    await updateTaskInFirestore(id, taskData);
+    dispatch({ type: "UPDATE", payload: { id, data: taskData } });
+  }
+
+  // 📌 Delete Task (calls Firestore API)
+  async function deleteTask(id) {
+    await deleteTaskFromFirestore(id);
     dispatch({ type: "DELETE", payload: id });
-  }
-
-  function updateTask(id, taskData) {
-    dispatch({ type: "UPDATE", payload: { id: id, data: taskData } });
   }
 
   const value = {
     tasks: tasksState,
-    addTask: addTask,
-    deleteTask: deleteTask,
-    updateTask: updateTask,
+    addTask,
+    deleteTask,
+    updateTask,
   };
 
   return (
