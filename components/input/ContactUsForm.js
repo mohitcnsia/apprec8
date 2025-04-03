@@ -47,7 +47,6 @@ const ContactUsForm = ({ navigation }) => {
   }
 
   function saveToDb() {
-    console.log("Form submitted and saved to db");
     console.log("Form Data:", formData);
   }
 

@@ -67,8 +67,6 @@ const TaskEditor = ({ route, navigation }) => {
 
   // Simulate Save to DB
   function saveToDb() {
-    console.log("Form submitted and saved to db");
-
     const newTaskData = {
       ...formData,
       dueAt: formData.dueDate.toISOString(), // Ensure date is saved correctly

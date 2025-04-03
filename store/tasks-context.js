@@ -38,9 +38,7 @@ function TasksContextProvider({ children }) {
   // 📌 Load tasks from Firestore on app start
   useEffect(() => {
     async function loadTasks() {
-      console.log("Fetching tasks from Firestore...");
       const tasks = await fetchTasks();
-      console.log("Fetched tasks:", tasks);
       dispatch({ type: "SET", payload: tasks });
     }
 
@@ -49,7 +47,6 @@ function TasksContextProvider({ children }) {
 
   // 📌 Add Task (calls Firestore API)
   async function addTask(taskData) {
-    console.log("Going to add a new task now");
     try {
       const newTask = await addTaskToFirestore(taskData);
       dispatch({ type: "ADD", payload: newTask });

@@ -28,7 +28,6 @@ export async function addTaskToFirestore(taskData) {
   try {
     const { id, ...taskDataWithoutId } = taskData;
     const docRef = await addDoc(collection(db, "tasks"), taskDataWithoutId);
-    console.log("Task successfully added with ID:", docRef.id);
     // Return Firestore-generated ID with task data
     return { id: docRef.id, ...taskDataWithoutId };
   } catch (error) {
