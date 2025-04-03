@@ -33,7 +33,16 @@ const ProfileNavigator = ({ isGuest, signoutHandler }) => {
         }}
       >
         {isGuest ? (
-          <Stack.Screen name="GuestProfile" component={GuestProfileScreen} />
+          <Stack.Screen
+            name="GuestProfile"
+            children={() => (
+              <GuestProfileScreen signoutHandler={signoutHandler} />
+            )}
+            options={{
+              title: "GuestProfile",
+              headerTitleAlign: "center",
+            }}
+          ></Stack.Screen>
         ) : (
           <Stack.Screen
             name="ProfileScreen"
@@ -48,13 +57,6 @@ const ProfileNavigator = ({ isGuest, signoutHandler }) => {
         <Stack.Screen
           name="LinkScreen"
           component={LinksScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="AuthScreen"
-          component={AuthScreen}
           options={{
             headerShown: false,
           }}

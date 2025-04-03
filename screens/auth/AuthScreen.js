@@ -13,13 +13,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
-import { CommonActions } from "@react-navigation/native";
 
-export default function AuthScreen({
-  externalError,
-  navigation,
-  onGuestLogin,
-}) {
+export default function AuthScreen({ externalError, onGuestLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);

@@ -3,12 +3,11 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "../../config/colors";
 import { LinearGradient } from "expo-linear-gradient";
-import { CommonActions } from "@react-navigation/native";
 
-const GuestProfileScreen = ({ navigation }) => {
+const GuestProfileScreen = ({ signoutHandler }) => {
   return (
     <LinearGradient
-      colors={[Colors.primaryMaroon300, Colors.primaryMaroon300]} // Dark maroon background
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]} // Dark maroon background
       style={styles.container}
     >
       {/* Card View - Contains Icons & Message */}
@@ -29,17 +28,7 @@ const GuestProfileScreen = ({ navigation }) => {
         </Text>
 
         {/* Third Row - Sign Up/Login Button */}
-        <Pressable
-          style={styles.signInButton}
-          onPress={() => {
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0, // Reset to the first screen in the stack
-                routes: [{ name: "AuthScreen" }], // Only keep AuthScreen in the stack
-              })
-            );
-          }}
-        >
+        <Pressable style={styles.signInButton} onPress={signoutHandler}>
           <MaterialIcons name="person" size={24} color={Colors.blackText} />
           <Text style={styles.buttonText}>Sign Up or Log In</Text>
         </Pressable>
