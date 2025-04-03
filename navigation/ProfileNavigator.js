@@ -11,6 +11,7 @@ import TaskDetails from "../screens/task/TaskDetails";
 import TaskEditor from "../screens/task/TaskEditor";
 import TasksContextProvider from "../store/tasks-context";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen";
+import AuthScreen from "../screens/auth/AuthScreen";
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,13 @@ const ProfileNavigator = ({ isGuest, signoutHandler }) => {
         <Stack.Screen
           name="LinkScreen"
           component={LinksScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="AuthScreen"
+          component={AuthScreen}
           options={{
             headerShown: false,
           }}

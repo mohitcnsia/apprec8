@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Pressable } from "react-native";
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Button, TextInput, Card, Text } from "react-native-paper";
 import * as Google from "expo-auth-session/providers/google";
@@ -13,8 +13,13 @@ import {
 } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
+import { CommonActions } from "@react-navigation/native";
 
-export default function AuthScreen({ externalError, onGuestLogin }) {
+export default function AuthScreen({
+  externalError,
+  navigation,
+  onGuestLogin,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);

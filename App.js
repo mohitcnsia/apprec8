@@ -81,6 +81,10 @@ export default function App() {
     }
   };
 
+  const onGuestLogin = () => {
+    setIsGuest(true); // Set guest mode
+  };
+
   return (
     <>
       <StatusBar
@@ -95,10 +99,7 @@ export default function App() {
             signoutHandler={signoutHandler}
           />
         ) : (
-          <AuthScreen
-            externalError={error}
-            onGuestLogin={() => setIsGuest(true)}
-          />
+          <AuthScreen externalError={error} onGuestLogin={onGuestLogin} />
         )}
       </View>
     </>
