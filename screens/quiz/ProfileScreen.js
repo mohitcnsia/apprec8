@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,8 +11,12 @@ import {
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
+import { Modal } from "react-native-paper";
+import ConfirmationModal from "../../components/common/ConfirmationModel";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation, signoutHandler }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   function helpPressHandler() {
     console.log("Help Clicked");
     navigation.navigate("LinkScreen", { data: helpTopics });
@@ -110,11 +114,33 @@ const ProfileScreen = ({ navigation }) => {
         >
           <Text style={styles.cardText}>Help</Text>
         </Pressable>
+        <Pressable
+          // onPress={signoutHandler}
+          onPress={() => setModalVisible(true)}
+          style={({ pressed }) => [
+            styles.card,
+            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+          ]}
+        >
+          <Text style={styles.cardText}>Sign out</Text>
+        </Pressable>
 
         {/* Footer */}
         <Text style={styles.copyright}>
           © 2025 Apprec8. All rights reserved.
         </Text>
+
+        {/* Sign-Out Confirmation Modal */}
+        {/* Reusable Confirmation Modal */}
+        <ConfirmationModal
+          visible={modalVisible}
+          title="Are you sure you want to sign out?"
+          onCancel={() => setModalVisible(false)}
+          onConfirm={() => {
+            setModalVisible(false);
+            signoutHandler();
+          }}
+        />
       </ScrollView>
     </LinearGradient>
   );

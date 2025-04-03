@@ -8,7 +8,7 @@ import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator() {
+function BottomTabNavigator({ isGuest, signoutHandler }) {
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -60,7 +60,6 @@ function BottomTabNavigator() {
         /> */}
         <Tab.Screen
           name="Profile"
-          component={ProfileNavigator}
           initialParams={{ title: "Profile" }}
           options={{
             tabBarIcon: ({ color, size }) => (
@@ -68,7 +67,14 @@ function BottomTabNavigator() {
             ),
             headerShown: false,
           }}
-        />
+        >
+          {() => (
+            <ProfileNavigator
+              isGuest={isGuest}
+              signoutHandler={signoutHandler}
+            />
+          )}
+        </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -5,13 +5,15 @@ import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AuthScreen from "./screens/auth/AuthScreen"; // Import Auth Screen
 import { auth } from "./config/firebaseConfig"; // Import Firebase auth
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFonts } from "expo-font";
 import { secureStorage } from "./config/firebaseConfig";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isGuest, setIsGuest] = useState(false); // Guest Mode
 
   useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
@@ -41,8 +43,19 @@ export default function App() {
 
     // Listen for Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-      console.log("👤 Auth State Changed");
-      setUser(authUser);
+      if (authUser) {
+        if (!authUser.emailVerified) {
+          setError("Please verify your email or explore as a Guest");
+          signOut(auth); // 🚀 Force logout if not verified
+        } else {
+          console.log("👤 Auth State Changed");
+          setError(""); // Clear error if email is verified
+          setUser(authUser);
+          setIsGuest(false); // Ensure we’re not in guest mode
+        }
+      } else {
+        setUser(null);
+      }
     });
 
     return () => unsubscribe();
@@ -56,6 +69,18 @@ export default function App() {
     );
   }
 
+  const signoutHandler = async () => {
+    try {
+      await signOut(auth);
+      await secureStorage.removeItem("user");
+      setUser(null);
+      setIsGuest(false);
+      console.log("✅ Successfully signed out");
+    } catch (error) {
+      console.error("❌ Error signing out:", error);
+    }
+  };
+
   return (
     <>
       <StatusBar
@@ -64,7 +89,17 @@ export default function App() {
         backgroundColor={Colors.primaryDarkMaroon}
       />
       <View style={styles.container}>
-        {user ? <BottomTabNavigator /> : <AuthScreen />}
+        {user || isGuest ? (
+          <BottomTabNavigator
+            isGuest={isGuest}
+            signoutHandler={signoutHandler}
+          />
+        ) : (
+          <AuthScreen
+            externalError={error}
+            onGuestLogin={() => setIsGuest(true)}
+          />
+        )}
       </View>
     </>
   );

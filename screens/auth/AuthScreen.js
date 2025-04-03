@@ -8,11 +8,13 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
 } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
-import { handleEmailPasswordAuth, mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
+import { mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
 
-export default function AuthScreen() {
+export default function AuthScreen({ externalError, onGuestLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +30,12 @@ export default function AuthScreen() {
     iosClientId: IOS_CLIENT_ID, // NEW: Use env var
     redirectUri: "apprec8://",
   });
+
+  useEffect(() => {
+    if (externalError) {
+      setError(externalError); // Sync external error with internal error state
+    }
+  }, [externalError]);
 
   useEffect(() => {
     if (response?.type === "success") {
@@ -56,9 +64,21 @@ export default function AuthScreen() {
   // NEW: Combined email/password handler
   const handleEmailPassword = () => {
     if (!isValid) return;
+
     const action = isLogin
-      ? () => signInWithEmailAndPassword(auth, email, password)
-      : () => createUserWithEmailAndPassword(auth, email, password);
+      ? () => signInWithEmailAndPassword(auth, email, password) // ✅ LOGIN
+      : async () => {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          ); // ✅ SIGNUP
+          await sendEmailVerification(userCredential.user); // ✅ Send verification email
+          setError(
+            "A verification email has been sent. Please verify before logging in"
+          );
+          await signOut(auth); // ✅ Logout until verified
+        };
 
     handleAuthAction(action);
   };
@@ -120,14 +140,18 @@ export default function AuthScreen() {
         >
           Continue with Google
         </Button>
-
-        <Button
-          mode="text"
-          onPress={() => Alert.alert("TODO: Implement password reset")}
-          style={styles.button}
-        >
-          Forgot Password?
-        </Button>
+        <View style={styles.bottomView}>
+          <Button
+            mode="text"
+            onPress={() => setError("TODO: Implement password reset")}
+            style={styles.button}
+          >
+            Forgot Password?
+          </Button>
+          <Button mode="text" onPress={onGuestLogin} style={styles.button}>
+            Continue as Guest
+          </Button>
+        </View>
       </Card>
     </View>
   );
@@ -143,5 +167,9 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 10,
     textAlign: "center",
+  },
+  bottomView: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });

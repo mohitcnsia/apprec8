@@ -10,14 +10,15 @@ import Tasks from "../screens/task/Tasks";
 import TaskDetails from "../screens/task/TaskDetails";
 import TaskEditor from "../screens/task/TaskEditor";
 import TasksContextProvider from "../store/tasks-context";
+import GuestProfileScreen from "../screens/profile/GuestProfileScreen";
 
 const Stack = createStackNavigator();
 
-const ProfileNavigator = () => {
+const ProfileNavigator = ({ isGuest, signoutHandler }) => {
   return (
     <TasksContextProvider>
       <Stack.Navigator
-        initialRouteName="ProfileScreen"
+        initialRouteName={isGuest ? "GuestProfile" : "ProfileScreen"}
         screenOptions={{
           headerStyle: {
             backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
@@ -30,14 +31,19 @@ const ProfileNavigator = () => {
           },
         }}
       >
-        <Stack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{
-            title: "Profile",
-            headerTitleAlign: "center",
-          }}
-        />
+        {isGuest ? (
+          <Stack.Screen name="GuestProfile" component={GuestProfileScreen} />
+        ) : (
+          <Stack.Screen
+            name="ProfileScreen"
+            children={() => <ProfileScreen signoutHandler={signoutHandler} />}
+            options={{
+              title: "Profile",
+              headerTitleAlign: "center",
+            }}
+          />
+        )}
+
         <Stack.Screen
           name="LinkScreen"
           component={LinksScreen}
