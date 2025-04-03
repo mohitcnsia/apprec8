@@ -3,7 +3,12 @@ import { View, StyleSheet, Alert } from "react-native";
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Button, TextInput, Card, Text } from "react-native-paper";
 import * as Google from "expo-auth-session/providers/google";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { handleEmailPasswordAuth, mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
 
@@ -38,11 +43,11 @@ export default function AuthScreen() {
   const handleAuthAction = useCallback(async (authFunction) => {
     setIsLoading(true);
     setError("");
+
     try {
-      await authFunction();
+      const userCredential = await authFunction();
     } catch (err) {
       setError(mapAuthError(err));
-      Alert.alert("Authentication Error", mapAuthError(err));
     } finally {
       setIsLoading(false);
     }
@@ -54,6 +59,7 @@ export default function AuthScreen() {
     const action = isLogin
       ? () => signInWithEmailAndPassword(auth, email, password)
       : () => createUserWithEmailAndPassword(auth, email, password);
+
     handleAuthAction(action);
   };
 

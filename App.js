@@ -1,12 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { useState, useEffect } from "react";
 import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AuthScreen from "./screens/auth/AuthScreen"; // Import Auth Screen
 import { auth } from "./config/firebaseConfig"; // Import Firebase auth
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { useFonts } from "expo-font";
+import { secureStorage } from "./config/firebaseConfig";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -19,20 +20,38 @@ export default function App() {
     pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
   });
 
+  // Restore user session when the app starts
   useEffect(() => {
-    // Listen for authentication state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
+    const restoreUser = async () => {
+      try {
+        const storedUser = await secureStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          console.log("Restored user from SecureStore");
+          setUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("Error restoring user from SecureStore:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    restoreUser();
+
+    // Listen for Firebase auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      console.log("👤 Auth State Changed");
+      setUser(authUser);
     });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color={Colors.primaryDarkMaroon} />
+        <ActivityIndicator size="large" />
       </View>
     );
   }
@@ -45,8 +64,7 @@ export default function App() {
         backgroundColor={Colors.primaryDarkMaroon}
       />
       <View style={styles.container}>
-        {/* {user ? <BottomTabNavigator /> : <AuthScreen />} */}
-        <Text style={{ color: "white", fontSize: 20 }}>App is running!</Text>
+        {user ? <BottomTabNavigator /> : <AuthScreen />}
       </View>
     </>
   );
