@@ -1,19 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
 import { Colors } from "./config/colors";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
-import AuthScreen from "./screens/auth/AuthScreen"; // Import Auth Screen
-import { auth } from "./config/firebaseConfig"; // Import Firebase auth
+import AuthScreen from "./screens/auth/AuthScreen";
+import { auth } from "./config/firebaseConfig"; // uses initializeAuth + AsyncStorage
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFonts } from "expo-font";
-import { secureStorage } from "./config/firebaseConfig";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isGuest, setIsGuest] = useState(false); // Guest Mode
+  const [isGuest, setIsGuest] = useState(false);
 
   const [fontsLoaded] = useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
@@ -22,57 +21,31 @@ export default function App() {
     pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
   });
 
-  // Restore user session when the app starts
   useEffect(() => {
-    const restoreUser = async () => {
-      try {
-        const storedUser = await secureStorage.getItem("user");
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          console.log("Restored user from SecureStore");
-          setUser(parsedUser);
-        }
-      } catch (error) {
-        console.error("Error restoring user from SecureStore:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    restoreUser();
-
-    // Listen for Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         if (!authUser.emailVerified) {
           setError("Please verify your email or explore as a Guest");
-          signOut(auth); // 🚀 Force logout if not verified
+          signOut(auth); // force logout
         } else {
-          console.log("👤 Auth State Changed");
-          setError(""); // Clear error if email is verified
+          console.log("✅ Verified user signed in");
+          setError("");
           setUser(authUser);
-          setIsGuest(false); // Ensure we’re not in guest mode
+          setIsGuest(false);
         }
       } else {
         setUser(null);
       }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  if (!fontsLoaded || loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
   const signoutHandler = async () => {
     try {
       await signOut(auth);
-      await secureStorage.removeItem("user");
       setUser(null);
       setIsGuest(false);
       console.log("✅ Successfully signed out");
@@ -82,8 +55,16 @@ export default function App() {
   };
 
   const onGuestLogin = () => {
-    setIsGuest(true); // Set guest mode
+    setIsGuest(true);
   };
+
+  if (!fontsLoaded || loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <>
