@@ -11,7 +11,6 @@ import {
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
-import { Modal } from "react-native-paper";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 
 const ProfileScreen = ({ navigation, signoutHandler }) => {

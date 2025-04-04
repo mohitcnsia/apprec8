@@ -46,7 +46,9 @@ const ProfileNavigator = ({ isGuest, signoutHandler }) => {
         ) : (
           <Stack.Screen
             name="ProfileScreen"
-            children={() => <ProfileScreen signoutHandler={signoutHandler} />}
+            children={(props) => (
+              <ProfileScreen {...props} signoutHandler={signoutHandler} />
+            )}
             options={{
               title: "Profile",
               headerTitleAlign: "center",
