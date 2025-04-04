@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Alert, Pressable } from "react-native";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { View, StyleSheet } from "react-native";
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Button, TextInput, Card, Text } from "react-native-paper";
 import * as Google from "expo-auth-session/providers/google";
@@ -12,14 +12,18 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
-import { mapAuthError } from "../auth/authService"; // NEW: Extract auth logic
+import { mapAuthError } from "../auth/authService"; // Extract auth logic
+import { Colors } from "../../config/colors";
 
 export default function AuthScreen({ externalError, onGuestLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isLogin, setIsLogin] = useState(true); // NEW: Toggle between login/register
+  const [isLogin, setIsLogin] = useState(true);
+  const [secureText, setSecureText] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
+  const shouldShowEye = isFocused || password.length === 0;
 
   // NEW: Input validation
   const isValid = email.includes("@") && password.length >= 6;
@@ -27,7 +31,7 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
   // Google Auth Setup
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     androidClientId: ANDROID_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID, // NEW: Use env var
+    iosClientId: IOS_CLIENT_ID,
     redirectUri: "apprec8://",
   });
 
@@ -36,6 +40,16 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
       setError(externalError); // Sync external error with internal error state
     }
   }, [externalError]);
+
+  useEffect(() => {
+    let timer;
+    if (!secureText) {
+      timer = setTimeout(() => {
+        setSecureText(true);
+      }, 1200);
+    }
+    return () => clearTimeout(timer);
+  }, [secureText]);
 
   useEffect(() => {
     if (response?.type === "success") {
@@ -100,17 +114,24 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
           accessibilityLabel="Email input"
           accessibilityHint="Enter your email address"
         />
-
         <TextInput
           label="Password"
           value={password}
-          secureTextEntry
           onChangeText={setPassword}
-          style={styles.input}
-          accessibilityLabel="Password input"
-          accessibilityHint="Enter your password"
+          secureTextEntry={secureText}
+          mode="flat"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          right={
+            shouldShowEye ? (
+              <TextInput.Icon
+                icon={secureText ? "eye-off" : "eye"}
+                onPress={() => setSecureText((prev) => !prev)}
+                forceTextInputFocus={false}
+              />
+            ) : null
+          }
         />
-
         <Button
           mode="contained"
           onPress={handleEmailPassword}

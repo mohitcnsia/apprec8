@@ -10,4 +10,5 @@ export const Colors = {
   primaryOrange: "#f12b15",
   blackText: "#000000",
   primaryWhite: "#ffffff",
+  primaryPink100: "#f6ebef",
 };
