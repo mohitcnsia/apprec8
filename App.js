@@ -15,7 +15,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [isGuest, setIsGuest] = useState(false); // Guest Mode
 
-  useFonts({
+  const [fontsLoaded] = useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
     delius: require("./assets/fonts/Delius-Regular.ttf"),
     deliusBold: require("./assets/fonts/DeliusUnicase-Bold.ttf"),
@@ -61,7 +61,7 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
+  if (!fontsLoaded || loading) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" />
