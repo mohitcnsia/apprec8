@@ -14,17 +14,17 @@ import {
 import Constants from "expo-constants";
 
 // Get the Web Client ID from app.config.js extra section
+// Ensure GOOGLE_WEB_CLIENT_ID is defined in .env and exposed in app.config.js extra as googleWebClientId
 const GOOGLE_WEB_CLIENT_ID = Constants.expoConfig?.extra?.googleWebClientId;
-// The iOS Client ID is configured via the plugin in app.config.js
 
 export default function useFirebaseAuth() {
   // --- State Variables ---
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Holds the authenticated Firebase user object
   const [loading, setLoading] = useState(true); // General loading state
   const [authInitializing, setAuthInitializing] = useState(true); // Tracks initial Firebase auth check
-  const [error, setError] = useState("");
-  const [isGuest, setIsGuest] = useState(false);
-  const [isGoogleConfigured, setIsGoogleConfigured] = useState(false);
+  const [error, setError] = useState(""); // Holds error messages for the UI
+  const [isGuest, setIsGuest] = useState(false); // Tracks if the user chose guest mode
+  const [isGoogleConfigured, setIsGoogleConfigured] = useState(false); // Tracks if Google Signin was configured
 
   // --- Effects ---
 
@@ -38,17 +38,15 @@ export default function useFirebaseAuth() {
       setAuthInitializing(false); // Stop loading states
       setLoading(false);
       setIsGoogleConfigured(false);
-      return;
+      return; // Stop configuration if ID is missing
     }
 
     console.log("🔧 Configuring Google Sign-In...");
     try {
       GoogleSignin.configure({
-        webClientId: GOOGLE_WEB_CLIENT_ID, // Required for idToken
-        // iosClientId is configured via the plugin/Info.plist setup
-        offlineAccess: false, // Set to true if you need server auth code
-        // accountName: '', // Optional specific account hint
-        // forceCodeForRefreshToken: true, // if using offlineAccess
+        webClientId: GOOGLE_WEB_CLIENT_ID, // Required for idToken for backend validation (like Firebase)
+        // iosClientId is usually configured via the plugin/Info.plist setup using reservedClientId
+        offlineAccess: false, // Set to true if you need server auth code for offline access
       });
       console.log("✅ Google Sign-In Configured");
       setIsGoogleConfigured(true);
@@ -73,17 +71,19 @@ export default function useFirebaseAuth() {
         );
         if (authUser) {
           setUser(authUser);
-          setIsGuest(false);
+          setIsGuest(false); // Ensure guest mode is off if logged in
         } else {
           setUser(null);
         }
-        setAuthInitializing(false);
+        setAuthInitializing(false); // Initial check complete
+        // Avoid setting loading false if just switched to guest mode
+        // as the guest state change might trigger UI updates handled elsewhere
         if (!isGuest) {
-          // Don't stop loading if we just chose guest
           setLoading(false);
         }
       },
       (authStateError) => {
+        // Handle errors during initial auth state observation
         console.error("❌ Firebase Auth State Error:", authStateError);
         setError("Failed to check authentication status.");
         setAuthInitializing(false);
@@ -96,7 +96,7 @@ export default function useFirebaseAuth() {
       console.log("Cleaning up Firebase Auth listener.");
       unsubscribe();
     };
-  }, [isGuest]); // Rerun if guest status changes maybe? Or just run once. Let's keep it simple for now.
+  }, []); // Run once
 
   // --- Action Handlers (Callbacks for UI) ---
 
@@ -111,6 +111,8 @@ export default function useFirebaseAuth() {
       return;
     }
 
+    // Define userInfo variable outside try block to potentially log it in catch
+    let userInfo = null;
     try {
       console.log("Checking Play Services (Android)...");
       await GoogleSignin.hasPlayServices({
@@ -118,18 +120,37 @@ export default function useFirebaseAuth() {
       });
 
       console.log("🚀 Prompting Google Sign-In (Native)...");
-      const userInfo = await GoogleSignin.signIn();
-      console.log("✅ Google Sign-In Success (Native):", {
-        id: userInfo.user.id,
-        email: userInfo.user.email,
+      userInfo = await GoogleSignin.signIn(); // Assign result to outer scope variable
+
+      console.log(
+        "<<< Google Sign-In RAW Result >>>:",
+        JSON.stringify(userInfo, null, 2)
+      );
+
+      // --- CORRECTED DATA ACCESS ---
+      console.log("Attempting to log user details:", {
+        id: userInfo?.data?.user?.id,
+        email: userInfo?.data?.user?.email,
       });
 
-      if (!userInfo.idToken) {
-        throw new Error("Google Sign-In succeeded but idToken was missing.");
+      // Check for idToken *inside* the data object
+      if (!userInfo || !userInfo.data || !userInfo.data.idToken) {
+        console.error(
+          "userInfo object structure was missing data or idToken:",
+          JSON.stringify(userInfo, null, 2)
+        );
+        // Throw specific error
+        throw new Error(
+          "Google Sign-In did not return valid data including idToken."
+        );
       }
 
       console.log("🔥 Creating Firebase credential with Google ID Token...");
-      const googleCredential = GoogleAuthProvider.credential(userInfo.idToken);
+      // Use the idToken from the data object
+      const googleCredential = GoogleAuthProvider.credential(
+        userInfo.data.idToken
+      );
+      // --- END CORRECTED DATA ACCESS ---
 
       console.log("🔥 Signing into Firebase with Google credential...");
       await signInWithCredential(auth, googleCredential);
@@ -138,8 +159,26 @@ export default function useFirebaseAuth() {
       );
       // User state is set by the onAuthStateChanged listener
     } catch (error) {
-      console.error("❌ Google Sign-In or Firebase Sign-In Error:", error);
-      // Handle specific Google Sign-In errors
+      // Enhanced logging in catch block
+      console.error(
+        "❌❌❌ Error caught during Google/Firebase Sign-In Process ❌❌❌"
+      );
+      console.error(
+        "userInfo value when error occurred:",
+        JSON.stringify(userInfo, null, 2)
+      );
+      try {
+        console.error(
+          "Error Object Details:",
+          JSON.stringify(error, Object.getOwnPropertyNames(error))
+        );
+      } catch (e) {
+        console.error("Error Object (could not stringify):", error);
+      }
+      console.error("Error Code:", error?.code);
+      console.error("Error Message:", error?.message || error);
+
+      // Handle specific Google Sign-In status codes
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         setError("Sign in cancelled.");
         console.log("🤷 User cancelled Google Sign-In flow.");
@@ -149,8 +188,24 @@ export default function useFirebaseAuth() {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         setError("Play Services not available or outdated.");
         console.error("❌ Play Services not available/outdated.");
+      }
+      // Check if it's the specific error we threw
+      else if (
+        error.message ===
+        "Google Sign-In did not return valid data including idToken."
+      ) {
+        setError("Failed to get necessary data from Google Sign-In.");
+      }
+      // Catch the original TypeError just in case (though less likely now)
+      else if (
+        error instanceof TypeError &&
+        error.message.includes("Cannot read property")
+      ) {
+        setError(
+          "Failed to process Google Sign-In data. Check configuration (SHA-1/Client ID)."
+        );
       } else {
-        // Handle other errors (network, configuration, Firebase credential issues)
+        // Handle other generic errors
         setError(
           `Google Sign-In failed: ${
             error.message || error.code || "Unknown error"
@@ -162,24 +217,47 @@ export default function useFirebaseAuth() {
     }
   }, [isGoogleConfigured]); // Dependency: only run if configured
 
-  // Sign Out Handler (handles both Google Sign-In and Firebase)
   const signoutHandler = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      console.log("Attempting Google Sign Out...");
-      await GoogleSignin.signOut(); // Sign out from Google SDK
-      console.log("✅ Google Signed Out");
+      // --- Replace isSignedIn() check ---
+      console.log("Checking Google Sign-In status via getCurrentUser...");
+      const currentUser = await GoogleSignin.getCurrentUser();
+
+      if (currentUser) {
+        // If getCurrentUser returns a user object, they are signed in
+        console.log(
+          "User is signed in with Google (checked via getCurrentUser). Attempting Google Sign Out..."
+        );
+        await GoogleSignin.signOut(); // Sign out from Google SDK
+        console.log("✅ Google Signed Out");
+      } else {
+        console.log(
+          "ℹ️ Not signed in with Google SDK (checked via getCurrentUser), skipping Google Sign Out."
+        );
+      }
+      // --- End replacement ---
 
       console.log("Attempting Firebase Sign Out...");
       await firebaseSignOut(auth); // Sign out from Firebase Auth
-      setUser(null); // Explicitly clear user state
+      setUser(null);
       setIsGuest(false);
       console.log("✅ Firebase Signed Out");
     } catch (error) {
+      // Keep your enhanced error logging here
       console.error("❌ Error during sign out:", error);
+      try {
+        console.error(
+          "Sign out Error Object Details:",
+          JSON.stringify(error, Object.getOwnPropertyNames(error))
+        );
+      } catch (e) {
+        console.error("Sign out Error Object (could not stringify):", error);
+      }
+      console.error("Sign out Error Code:", error?.code);
+      console.error("Sign out Error Message:", error?.message || error);
       setError(`Failed to sign out: ${error.message}`);
-      // Note: If Google Signout fails but Firebase succeeds, user might be partially logged out.
     } finally {
       setLoading(false);
     }
@@ -189,14 +267,15 @@ export default function useFirebaseAuth() {
   const onGuestLogin = useCallback(() => {
     setError("");
     setIsGuest(true);
-    setUser(null);
-    setLoading(false);
+    setUser(null); // Ensure no user object when guest
+    setLoading(false); // Ensure loading is off if switching to guest
     console.log("👤 Continuing as Guest");
   }, []);
 
   // --- Final Return Value ---
+  // Combine loading states for a simpler UI check
   const combinedLoading =
-    loading || authInitializing || (!isGoogleConfigured && !isGuest); // Add config check to loading
+    loading || authInitializing || (!isGoogleConfigured && !isGuest);
 
   return {
     user,
