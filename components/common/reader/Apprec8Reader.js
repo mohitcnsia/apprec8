@@ -13,7 +13,6 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
 
 const Apprec8Reader = ({ route }) => {
-  // console.log("Received data:", route.params.data); // Debug log
   const theme = useColorScheme();
   const {
     name,
@@ -24,10 +23,6 @@ const Apprec8Reader = ({ route }) => {
       ? route.params.additionalImages
       : [],
   } = route.params.data || {}; // Default to an empty object if data is null or undefined
-
-  console.log(" Appreciate reader recieved name: " + name);
-  console.log(" Appreciate reader recieved author: " + author);
-  console.log(" Appreciate reader recieved content: " + content);
 
   // Graceful fallback if data is missing
   if (!name || !author || !content) {

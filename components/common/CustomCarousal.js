@@ -61,7 +61,6 @@ const CarouselItem = React.memo(
 
     function pressHandler() {
       if (item.id) {
-        console.log("carousal data - " + JSON.stringify(item));
         switch (item.type) {
           case "STUDY":
             const studyData =
@@ -72,17 +71,13 @@ const CarouselItem = React.memo(
             break;
           case "COURSE":
             const data = getTopicData(item.id);
-            data.map((d) => console.log(d.title));
             navigation.navigate("LinkScreen", { data });
             break;
           case "QUIZ":
-            console.log("QUIZ item parent: " + item.parentId);
-            console.log("QUIZ id: " + item.id);
             const quizData =
               typeof item.parentId === "undefined"
                 ? getTileQuiz(item.id)
                 : getTopicQuiz(item.parentId);
-            console.log(quizData.quizItems.map((quiz) => quiz.id));
             navigation.navigate("Quiz", { data: quizData.quizItems });
             // if (typeof item.parentId === "undefined") { dog-quiz-1
             //   console.log("parentId is undefined or not declared");
