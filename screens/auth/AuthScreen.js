@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Button, TextInput, Card, Text } from "react-native-paper";
-import * as Google from "expo-auth-session/providers/google";
 import {
-  GoogleAuthProvider,
-  signInWithCredential,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signOut,
 } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
-import { mapAuthError } from "../auth/authService"; // Extract auth logic
+import { mapAuthError } from "../auth/authService";
 import { Colors } from "../../config/colors";
 
-export default function AuthScreen({ externalError, onGuestLogin }) {
+export default function AuthScreen({
+  externalError,
+  onGuestLogin,
+  onGoogleLogin,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,48 +24,23 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
   const [secureText, setSecureText] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const shouldShowEye = isFocused || password.length === 0;
-
-  // NEW: Input validation
   const isValid = email.includes("@") && password.length >= 6;
 
-  // Google Auth Setup
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID,
-    redirectUri: "apprec8://",
-  });
-
   useEffect(() => {
-    if (externalError) {
-      setError(externalError); // Sync external error with internal error state
-    }
+    if (externalError) setError(externalError);
   }, [externalError]);
 
   useEffect(() => {
     let timer;
     if (!secureText) {
-      timer = setTimeout(() => {
-        setSecureText(true);
-      }, 1200);
+      timer = setTimeout(() => setSecureText(true), 1200);
     }
     return () => clearTimeout(timer);
   }, [secureText]);
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { id_token } = response.params;
-      const credential = GoogleAuthProvider.credential(id_token);
-      handleAuthAction(() => signInWithCredential(auth, credential)); // NEW: Unified handler
-    } else if (response?.type === "error") {
-      setError(mapAuthError(response.error));
-    }
-  }, [response]);
-
-  // NEW: Unified auth handler
-  const handleAuthAction = useCallback(async (authFunction) => {
+  const handleAuthAction = async (authFunction) => {
     setIsLoading(true);
     setError("");
-
     try {
       const userCredential = await authFunction();
     } catch (err) {
@@ -73,25 +48,22 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  // NEW: Combined email/password handler
   const handleEmailPassword = () => {
     if (!isValid) return;
 
     const action = isLogin
-      ? () => signInWithEmailAndPassword(auth, email, password) // ✅ LOGIN
+      ? () => signInWithEmailAndPassword(auth, email, password)
       : async () => {
           const userCredential = await createUserWithEmailAndPassword(
             auth,
             email,
             password
-          ); // ✅ SIGNUP
-          await sendEmailVerification(userCredential.user); // ✅ Send verification email
-          setError(
-            "A verification email has been sent. Please verify before logging in"
           );
-          await signOut(auth); // ✅ Logout until verified
+          await sendEmailVerification(userCredential.user);
+          setError("Verification email sent. Please verify before logging in.");
+          await signOut(auth);
         };
 
     handleAuthAction(action);
@@ -111,15 +83,12 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
           autoCapitalize="none"
           keyboardType="email-address"
           style={styles.input}
-          accessibilityLabel="Email input"
-          accessibilityHint="Enter your email address"
         />
         <TextInput
           label="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={secureText}
-          mode="flat"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           right={
@@ -132,6 +101,7 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
             ) : null
           }
         />
+
         <Button
           mode="contained"
           onPress={handleEmailPassword}
@@ -154,22 +124,22 @@ export default function AuthScreen({ externalError, onGuestLogin }) {
         <Button
           mode="contained"
           icon="google"
-          disabled={!request || isLoading}
-          onPress={() => promptAsync()}
+          disabled={isLoading}
+          onPress={onGoogleLogin}
           style={styles.button}
           loading={isLoading}
         >
           Continue with Google
         </Button>
+
         <View style={styles.bottomView}>
           <Button
             mode="text"
             onPress={() => setError("TODO: Implement password reset")}
-            style={styles.button}
           >
             Forgot Password?
           </Button>
-          <Button mode="text" onPress={onGuestLogin} style={styles.button}>
+          <Button mode="text" onPress={onGuestLogin}>
             Continue as Guest
           </Button>
         </View>

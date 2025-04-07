@@ -6,6 +6,7 @@ import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AuthScreen from "./screens/auth/AuthScreen";
 import useFirebaseAuth from "./hooks/useFirebaseAuth"; // ✅ New hook
 import CalmLoader from "./components/common/CalmLoader";
+import { makeRedirectUri } from "expo-auth-session";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,8 +16,15 @@ export default function App() {
     pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
   });
 
-  const { user, isGuest, error, loading, onGuestLogin, signoutHandler } =
-    useFirebaseAuth();
+  const {
+    user,
+    isGuest,
+    error,
+    loading,
+    onGuestLogin,
+    signoutHandler,
+    googleLoginHandler,
+  } = useFirebaseAuth();
 
   if (!fontsLoaded || loading) {
     return <CalmLoader />;
@@ -37,7 +45,11 @@ export default function App() {
             user={user}
           />
         ) : (
-          <AuthScreen externalError={error} onGuestLogin={onGuestLogin} />
+          <AuthScreen
+            externalError={error}
+            onGuestLogin={onGuestLogin}
+            onGoogleLogin={googleLoginHandler}
+          />
         )}
       </View>
     </>
