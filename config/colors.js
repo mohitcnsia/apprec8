@@ -11,4 +11,5 @@ export const Colors = {
   blackText: "#000000",
   primaryWhite: "#ffffff",
   primaryPink100: "#f6ebef",
+  calmPurple: "#8A2BE2",
 };
