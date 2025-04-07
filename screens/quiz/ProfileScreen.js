@@ -13,8 +13,12 @@ import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 
-const ProfileScreen = ({ navigation, signoutHandler }) => {
+const ProfileScreen = ({ navigation, signoutHandler, user }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  console.log(user.email.split("@")[0]);
+  const userName = !user.displayName
+    ? user?.email?.split("@")[0]
+    : user.displayName;
 
   function helpPressHandler() {
     console.log("Help Clicked");
@@ -42,7 +46,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
             }}
             style={styles.profileImage}
           />
-          <Text style={styles.name}>Pratha Chilkoti</Text>
+          <Text style={styles.name}>{userName}</Text>
           <Text style={styles.memberSince}>Enrolled Jan 01, 2024</Text>
         </View>
 

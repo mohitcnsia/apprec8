@@ -78,6 +78,7 @@ export default function App() {
           <BottomTabNavigator
             isGuest={isGuest}
             signoutHandler={signoutHandler}
+            user={user}
           />
         ) : (
           <AuthScreen externalError={error} onGuestLogin={onGuestLogin} />

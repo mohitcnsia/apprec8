@@ -4,19 +4,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import QuizButton from "../../components/quiz/QuizButton";
+import { getAuth } from "firebase/auth";
 
 const QuizResultScreen = ({ route, navigation }) => {
-  const [username, setUsername] = useState("Pratha");
+  const [username, setUsername] = useState("User");
   const { score, totalQuestions, quizId, data } = route.params;
 
   useEffect(() => {
-    const getUsername = async () => {
-      const storedUsername = await AsyncStorage.getItem("username");
-      // if (storedUsername) {
-      //   setUsername(storedUsername);
-      // }
-    };
-    getUsername();
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser?.email) {
+      const nameFromEmail = currentUser.email.split("@")[0];
+      setUsername(nameFromEmail);
+    }
   }, []);
 
   const handlePlayAgain = () => {

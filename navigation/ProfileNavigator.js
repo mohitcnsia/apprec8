@@ -15,7 +15,7 @@ import AuthScreen from "../screens/auth/AuthScreen";
 
 const Stack = createStackNavigator();
 
-const ProfileNavigator = ({ isGuest, signoutHandler }) => {
+const ProfileNavigator = ({ isGuest, signoutHandler, user }) => {
   return (
     <TasksContextProvider>
       <Stack.Navigator
@@ -47,7 +47,11 @@ const ProfileNavigator = ({ isGuest, signoutHandler }) => {
           <Stack.Screen
             name="ProfileScreen"
             children={(props) => (
-              <ProfileScreen {...props} signoutHandler={signoutHandler} />
+              <ProfileScreen
+                {...props}
+                signoutHandler={signoutHandler}
+                user={user}
+              />
             )}
             options={{
               title: "Profile",

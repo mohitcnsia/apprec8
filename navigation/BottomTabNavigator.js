@@ -8,7 +8,7 @@ import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator({ isGuest, signoutHandler }) {
+function BottomTabNavigator({ isGuest, signoutHandler, user }) {
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -72,6 +72,7 @@ function BottomTabNavigator({ isGuest, signoutHandler }) {
             <ProfileNavigator
               isGuest={isGuest}
               signoutHandler={signoutHandler}
+              user={user}
             />
           )}
         </Tab.Screen>
