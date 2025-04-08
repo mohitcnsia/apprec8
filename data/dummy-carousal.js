@@ -21,7 +21,7 @@ export const bookSummaries = [
   {
     id: "bfg",
     name: "The BFG",
-    image: require("../assets/images/book-summaries/bfg.png"),
+    image: require("../assets/images/book-summaries/bfg.webp"),
     duration: "10 min",
     type: "Book Summary",
     author: "Seema Joshi",
@@ -29,7 +29,7 @@ export const bookSummaries = [
   {
     id: "tgwdtm",
     name: "The Girl Who Drank The Moon",
-    image: require("../assets/images/book-summaries/girlDrankTheMoon.png"),
+    image: require("../assets/images/book-summaries/girlDrankTheMoon.webp"),
     duration: "20 min",
     type: "Book Summary",
     author: "Mohit Chilkoti",
@@ -37,7 +37,7 @@ export const bookSummaries = [
   {
     id: "harry1",
     name: "Harry Potter & The Philosopher's Stone",
-    image: require("../assets/images/book-summaries/harry-1.png"),
+    image: require("../assets/images/book-summaries/harry-1.webp"),
     duration: "15 min",
     type: "Book Summary",
     author: "Pratha Chilkoti",
@@ -45,7 +45,7 @@ export const bookSummaries = [
   {
     id: "matilda",
     name: "Matilda",
-    image: require("../assets/images/book-summaries/matilda.png"),
+    image: require("../assets/images/book-summaries/matilda.webp"),
     duration: "18 min",
     type: "Book Summary",
     author: "Pratha Chilkoti",
@@ -56,7 +56,7 @@ export const stories = [
   {
     id: "akbb1",
     name: "Akbar Birbal",
-    image: require("../assets/images/stories/akbar-birbal1.png"),
+    image: require("../assets/images/stories/akbar-birbal1.webp"),
     duration: "5 min",
     type: "Story",
     author: "Raja Birbal",
@@ -64,7 +64,7 @@ export const stories = [
   {
     id: "bgh1",
     name: "Gautam Buddha - The Enlightened",
-    image: require("../assets/images/stories/buddha.png"),
+    image: require("../assets/images/stories/buddha.webp"),
     duration: "7 min",
     type: "Story",
     author: "Gautam Buddha",
@@ -72,7 +72,7 @@ export const stories = [
   {
     id: "pct1",
     name: "Smart Rabbit",
-    image: require("../assets/images/stories/panchatarntar1.png"),
+    image: require("../assets/images/stories/panchatarntar1.webp"),
     duration: "4 min",
     type: "Story",
     author: "Vishnu Sharma",
@@ -83,7 +83,7 @@ export const olympiad = [
   {
     id: "imo",
     name: "Mathematics",
-    image: require("../assets/images/olympiad/imo.png"),
+    image: require("../assets/images/olympiad/imo.webp"),
     duration: "30 min",
     type: "Quiz",
     author: "Mohit Kumar Chilkoti",
@@ -91,7 +91,7 @@ export const olympiad = [
   {
     id: "nso",
     name: "National Science Olympiad",
-    image: require("../assets/images/olympiad/nso.png"),
+    image: require("../assets/images/olympiad/nso.webp"),
     duration: "30 min",
     type: "Study",
     author: "Pratha Chilkoti",
@@ -99,7 +99,7 @@ export const olympiad = [
   {
     id: "ieo",
     name: "International English Olympiad",
-    image: require("../assets/images/olympiad/ieo.png"),
+    image: require("../assets/images/olympiad/ieo.webp"),
     duration: "1 hr",
     type: "Sample Paper",
     author: "Pratha Chilkoti",

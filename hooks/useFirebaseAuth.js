@@ -65,10 +65,6 @@ export default function useFirebaseAuth() {
     const unsubscribe = onAuthStateChanged(
       auth,
       (authUser) => {
-        console.log(
-          " Firebase Auth State Changed:",
-          authUser ? `User UID: ${authUser.uid}` : "No user"
-        );
         if (authUser) {
           setUser(authUser);
           setIsGuest(false); // Ensure guest mode is off if logged in
@@ -121,17 +117,6 @@ export default function useFirebaseAuth() {
 
       console.log("🚀 Prompting Google Sign-In (Native)...");
       userInfo = await GoogleSignin.signIn(); // Assign result to outer scope variable
-
-      console.log(
-        "<<< Google Sign-In RAW Result >>>:",
-        JSON.stringify(userInfo, null, 2)
-      );
-
-      // --- CORRECTED DATA ACCESS ---
-      console.log("Attempting to log user details:", {
-        id: userInfo?.data?.user?.id,
-        email: userInfo?.data?.user?.email,
-      });
 
       // Check for idToken *inside* the data object
       if (!userInfo || !userInfo.data || !userInfo.data.idToken) {
