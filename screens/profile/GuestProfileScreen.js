@@ -1,18 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Colors } from "../../config/colors";
+import { Colors } from "../../config/colors"; // Adjust path if needed
 import { LinearGradient } from "expo-linear-gradient";
 
-const GuestProfileScreen = ({ signoutHandler }) => {
+// Receive the correct handler as a prop named onExitGuestMode
+const GuestProfileScreen = ({ onExitGuestMode }) => {
   return (
     <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]} // Dark maroon background
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
-      {/* Card View - Contains Icons & Message */}
       <View style={styles.card}>
-        {/* Top Row - Feature Icons */}
         <View style={styles.iconRow}>
           <MaterialIcons name="schedule" size={40} color="#fff" />
           <MaterialIcons name="event" size={40} color="#fff" />
@@ -21,14 +20,13 @@ const GuestProfileScreen = ({ signoutHandler }) => {
           <MaterialIcons name="class" size={40} color="#fff" />
         </View>
 
-        {/* Second Row - Message */}
         <Text style={styles.message}>
           Create an account to save your progress, see your stats, and unlock
           the world of learning and well-being
         </Text>
 
-        {/* Third Row - Sign Up/Login Button */}
-        <Pressable style={styles.signInButton} onPress={signoutHandler}>
+        {/* Use the correct handler passed via props */}
+        <Pressable style={styles.signInButton} onPress={onExitGuestMode}>
           <MaterialIcons name="person" size={24} color={Colors.blackText} />
           <Text style={styles.buttonText}>Sign Up or Log In</Text>
         </Pressable>
@@ -45,7 +43,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: Colors.primaryDarkMaroon, // Semi-transparent maroon
+    backgroundColor: Colors.primaryDarkMaroon,
     padding: 30,
     borderRadius: 12,
     width: "95%",
@@ -63,8 +61,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fff",
     fontFamily: "delius",
-    // fontWeight: "500",
-    marginBottom: 30, // Added margin to create spacing before the button
+    marginBottom: 30,
   },
   signInButton: {
     flexDirection: "row",

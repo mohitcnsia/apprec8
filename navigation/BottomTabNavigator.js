@@ -1,6 +1,9 @@
+// navigation/BottomTabNavigator.js (Pass correct handler down)
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Ionicons from "@expo/vector-icons/Ionicons"; // Keep Ionicons if used elsewhere
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"; // Import if needed for other icons
 import { Colors } from "../config/colors";
 import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
@@ -8,24 +11,28 @@ import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator({ isGuest, signoutHandler, user }) {
+// Receive exitGuestModeHandler from App.js
+function BottomTabNavigator({
+  isGuest,
+  signoutHandler,
+  exitGuestModeHandler,
+  user,
+}) {
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
-          headerStyle: {
-            backgroundColor: Colors.primaryDarkMaroon, // Set your preferred background color for the header
-          },
-          headerTintColor: "#ffffff", // Change text color in the header (like the back button)
+          headerStyle: { backgroundColor: Colors.primaryDarkMaroon },
+          headerTintColor: "#ffffff",
           sceneContainerStyle: { backgroundColor: Colors.primaryDarkMaroon },
           tabBarActiveTintColor: Colors.primaryDarkMaroon,
           tabBarStyle: { backgroundColor: Colors.primaryLightGray },
         }}
       >
+        {/* Home Tab */}
         <Tab.Screen
           name="Apprec8"
           component={HomeNavigator}
-          initialParams={{ title: "Home Screen" }}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
@@ -38,6 +45,7 @@ function BottomTabNavigator({ isGuest, signoutHandler, user }) {
             },
           }}
         />
+        {/* Study Tab */}
         <Tab.Screen
           name="Study"
           component={StudyNavigator}
@@ -48,19 +56,10 @@ function BottomTabNavigator({ isGuest, signoutHandler, user }) {
             headerShown: false,
           }}
         />
-        {/* <Tab.Screen
-          name="Stats"
-          component={StatsScreen}
-          initialParams={{ title: "Leaderboard" }}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="leaderboard" color={color} size={size} />
-            ),
-          }}
-        /> */}
+        {/* Profile Tab */}
         <Tab.Screen
           name="Profile"
-          initialParams={{ title: "Profile" }}
+          // initialParams={{ title: "Profile" }} // Can remove if using component function
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" color={color} size={size} />
@@ -68,10 +67,13 @@ function BottomTabNavigator({ isGuest, signoutHandler, user }) {
             headerShown: false,
           }}
         >
+          {/* Use a component function to pass props down */}
           {() => (
             <ProfileNavigator
               isGuest={isGuest}
-              signoutHandler={signoutHandler}
+              // Pass the *correct* handler based on guest status
+              // Use a consistent prop name like onButtonPress or actionHandler
+              actionHandler={isGuest ? exitGuestModeHandler : signoutHandler}
               user={user}
             />
           )}

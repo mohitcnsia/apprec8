@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, Image } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Text, StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
 import QuizButton from "../../components/quiz/QuizButton";
-import { getAuth } from "firebase/auth";
+import { authInstance } from "../../config/firebaseConfig";
 
 const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("User");
   const { score, totalQuestions, quizId, data } = route.params;
 
   useEffect(() => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
+    // Use the authInstance from @react-native-firebase/auth
+    const currentUser = authInstance.currentUser;
 
     if (currentUser?.email) {
       const nameFromEmail = currentUser.email.split("@")[0];
       setUsername(nameFromEmail);
+    } else {
+      console.log(
+        "QuizResultScreen: No authenticated user found via authInstance."
+      );
+      setUsername("User"); // Keep default or handle differently
     }
+    // No dependencies needed if only checking on mount
   }, []);
 
   const handlePlayAgain = () => {

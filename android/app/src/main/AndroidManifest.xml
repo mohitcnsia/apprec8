@@ -24,9 +24,16 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="apprec8" android:host="redirect"/>
+        <data android:scheme="apprec8"/>
         <data android:scheme="com.mohitchilkoti.apprec8"/>
         <data android:scheme="exp+apprec8"/>
+      </intent-filter>
+      <intent-filter data-generated="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <data android:scheme="apprec8" android:host="redirect"/>
+        <data android:scheme="exp+apprec8"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
   </application>

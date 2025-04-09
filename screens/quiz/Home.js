@@ -1,13 +1,7 @@
 // screens/Home.js (using @react-native-firebase listeners)
 
 import React, { useState, useEffect } from "react"; // Use useEffect
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, ActivityIndicator } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal"; // Adjust path
 import { THOUGHTS } from "../../data/thoughts"; // Keep for now, maybe move to Firestore later?
 import { LinearGradient } from "expo-linear-gradient";
