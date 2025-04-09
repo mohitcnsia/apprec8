@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -16,13 +15,6 @@ import {
   psychologyTopics,
   systemDesignTopics,
 } from "../../data/app-topic-data";
-import { getTopicData, showToast } from "../../data/app-topic-data";
-import {
-  getTileQuiz,
-  getTileStudy,
-  getTopicQuiz,
-  tileStudyData,
-} from "../../data/app-topic-detail-data";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20;
@@ -62,84 +54,57 @@ const CarouselItem = React.memo(
     console.log("CarouselItem dimensions (w, h):", imageWidth, imageHeight); // <-- ADD LOG 3
     const hasMetadata = containsMetadata(item);
 
-    // function pressHandler() {
-    //   if (item.id) {
-    //     switch (item.type) {
-    //       case "STUDY":
-    //         const studyData =
-    //           typeof item.parentId === "undefined"
-    //             ? getTileStudy(item.id)
-    //             : getTopicData(item.parentId);
-    //         navigation.navigate("Apprec8Reader", { data: studyData });
-    //         break;
-    //       case "COURSE":
-    //         const data = getTopicData(item.id);
-    //         navigation.navigate("LinkScreen", { data });
-    //         break;
-    //       case "QUIZ":
-    //         const quizData =
-    //           typeof item.parentId === "undefined"
-    //             ? getTileQuiz(item.id)
-    //             : getTopicQuiz(item.parentId);
-    //         navigation.navigate("Quiz", { data: quizData.quizItems });
-    //         // if (typeof item.parentId === "undefined") { dog-quiz-1
-    //         //   console.log("parentId is undefined or not declared");
-    //         //   const tileStudyData = getTileStudy(item.id);
-    //         // } else {
-    //         // }
-    //         break;
-    //       default:
-    //         console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
-    //     }
-    //   }
-    // }
-
-    // Inside pressHandler function in CarouselItem component (in CustomCarousel.js)
-
     function pressHandler() {
-      if (item.id) {
-        switch (item.type) {
-          case "STUDY":
-            // Keep existing STUDY logic for now (uses old data sources)
-            const studyData =
-              typeof item.parentId === "undefined"
-                ? getTileStudy(item.id)
-                : getTopicData(item.parentId); // TODO: Update later
-            navigation.navigate("Apprec8Reader", { data: studyData });
-            break;
+      // 'item' here is the category object fetched from Firestore,
+      // formatted by StudyScreen/HomeScreen, e.g.:
+      // { id: "bgh1", title: "Buddha...", image: "...", type: "STUDY", ... }
+      // { id: "imo", title: "IMO...", image: "...", type: "COURSE", ... }
+      // { id: "dog-quiz-1", title: "Dogs", image: "...", type: "QUIZ", ... }
 
-          // --- START MODIFICATION ---
-          case "COURSE": // Assuming categories are mapped with type 'COURSE' or similar identifier
-            console.log(`Navigating to topics for category: ${item.id}`);
-            // Navigate to LinkScreen, passing categoryId and categoryTitle
-            navigation.navigate("LinkScreen", {
-              categoryId: item.id, // e.g., "imo"
-              categoryTitle: item.title, // e.g., "IMO Math Olympiad"
-            });
-            break;
-          // --- END MODIFICATION ---
+      if (!item || !item.id) {
+        console.warn("CarouselItem pressed with invalid item:", item);
+        return;
+      }
 
-          case "QUIZ":
-            // Keep existing QUIZ logic for now (uses old data sources)
-            const quizData =
-              typeof item.parentId === "undefined"
-                ? getTileQuiz(item.id) // TODO: Update later
-                : getTopicQuiz(item.parentId); // TODO: Update later
-            navigation.navigate("Quiz", { data: quizData.quizItems });
-            break;
+      console.log(
+        `CarouselItem pressed: ID=<span class="math-inline">\{item\.id\}, Type\=</span>{item.type}, Title=${item.title}`
+      );
 
-          default:
-            // Keep existing default logic or refine if necessary
-            console.warn(
-              `Unhandled item type in CarouselItem pressHandler: ${item.type} for ID: ${item.id}`
-            );
-            // Maybe navigate to a generic topic list screen?
-            navigation.navigate("LinkScreen", {
-              categoryId: item.id,
-              categoryTitle: item.title,
-            });
-          // console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
-        }
+      switch (
+        item.type?.toUpperCase() // Use uppercase type for reliable matching
+      ) {
+        case "STUDY":
+          // If the tile itself represents study content, navigate directly to the reader, passing the ID.
+          console.log(`Navigating to Apprec8Reader with topicId: ${item.id}`);
+          navigation.push("Apprec8Reader", { topicId: item.id }); // Use push
+          break;
+
+        case "QUIZ":
+          // If the tile itself represents a quiz, navigate directly to the quiz screen, passing the ID.
+          console.log(`Navigating to Quiz with topicId: ${item.id}`);
+          navigation.push("Quiz", { topicId: item.id }); // Use push
+          break;
+
+        case "COURSE": // Falls through
+        case "COMPLEX": // Falls through
+        case "ACTIVITY": // Assumes these types lead to a list of topics/sub-activities
+          // Navigate to LinkScreen to display child topics/activities, passing the category ID.
+          console.log(`Navigating to LinkScreen with categoryId: ${item.id}`);
+          navigation.push("LinkScreen", {
+            categoryId: item.id,
+            categoryTitle: item.title, // Pass title for the header
+          });
+          break;
+
+        default:
+          console.warn(
+            `Unhandled item type in CarouselItem pressHandler: ${item.type} for ID: ${item.id}`
+          );
+          // Navigate to a fallback screen if type is unknown or missing
+          navigation.navigate("DummyScreen", {
+            errorMessage: `Action for "${item.title}" not defined.`,
+          });
+          break;
       }
     }
 

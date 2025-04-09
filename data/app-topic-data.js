@@ -74,64 +74,64 @@ export const olympiadTopics = [
   new AppTopic("4-iho-4", "iho", "Topic 4", "LINK"),
 ];
 
-export const psychologyTopics = [
-  {
-    id: "sam-psy-1",
-    parentId: "psy",
-    title: "1. Intro to Psychology",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-2",
-    parentId: "psy",
-    title: "2. Methods of Enquiry",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-3",
-    parentId: "psy",
-    title: "3. Human Development",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-4",
-    parentId: "psy",
-    title: "4. Sensory, Attention and ...",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-5",
-    parentIds: ["psy"],
-    title: "5. Learning",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-6",
-    parentId: "psy",
-    title: "6. Human Memory",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-7",
-    parentId: "psy",
-    title: "7. Thinking",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-  {
-    id: "sam-psy-8",
-    parentId: "psy",
-    title: "8. Motivation and Emotion",
-    type: "ACTIVITY",
-    activities: { study: true, quiz: true },
-  },
-];
+// export const psychologyTopics = [
+//   {
+//     id: "sam-psy-1",
+//     parentId: "psy",
+//     title: "1. Intro to Psychology",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-2",
+//     parentId: "psy",
+//     title: "2. Methods of Enquiry",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-3",
+//     parentId: "psy",
+//     title: "3. Human Development",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-4",
+//     parentId: "psy",
+//     title: "4. Sensory, Attention and ...",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-5",
+//     parentIds: ["psy"],
+//     title: "5. Learning",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-6",
+//     parentId: "psy",
+//     title: "6. Human Memory",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-7",
+//     parentId: "psy",
+//     title: "7. Thinking",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+//   {
+//     id: "sam-psy-8",
+//     parentId: "psy",
+//     title: "8. Motivation and Emotion",
+//     type: "ACTIVITY",
+//     activities: { study: true, quiz: true },
+//   },
+// ];
 
 export const reasoningTopics = [
   {
