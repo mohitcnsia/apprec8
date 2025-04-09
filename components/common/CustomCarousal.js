@@ -56,37 +56,89 @@ const getPsychologyTopicData = (parentId) => {
 
 const CarouselItem = React.memo(
   ({ item, imageWidth, imageHeight, navigation }) => {
+    console.log("CarouselItem rendering item:", JSON.stringify(item, null, 2)); // <-- ADD LOG 1
     const imageSource = getImageSource(item);
+    console.log("CarouselItem imageSource:", imageSource); // <-- ADD LOG 2
+    console.log("CarouselItem dimensions (w, h):", imageWidth, imageHeight); // <-- ADD LOG 3
     const hasMetadata = containsMetadata(item);
+
+    // function pressHandler() {
+    //   if (item.id) {
+    //     switch (item.type) {
+    //       case "STUDY":
+    //         const studyData =
+    //           typeof item.parentId === "undefined"
+    //             ? getTileStudy(item.id)
+    //             : getTopicData(item.parentId);
+    //         navigation.navigate("Apprec8Reader", { data: studyData });
+    //         break;
+    //       case "COURSE":
+    //         const data = getTopicData(item.id);
+    //         navigation.navigate("LinkScreen", { data });
+    //         break;
+    //       case "QUIZ":
+    //         const quizData =
+    //           typeof item.parentId === "undefined"
+    //             ? getTileQuiz(item.id)
+    //             : getTopicQuiz(item.parentId);
+    //         navigation.navigate("Quiz", { data: quizData.quizItems });
+    //         // if (typeof item.parentId === "undefined") { dog-quiz-1
+    //         //   console.log("parentId is undefined or not declared");
+    //         //   const tileStudyData = getTileStudy(item.id);
+    //         // } else {
+    //         // }
+    //         break;
+    //       default:
+    //         console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
+    //     }
+    //   }
+    // }
+
+    // Inside pressHandler function in CarouselItem component (in CustomCarousel.js)
 
     function pressHandler() {
       if (item.id) {
         switch (item.type) {
           case "STUDY":
+            // Keep existing STUDY logic for now (uses old data sources)
             const studyData =
               typeof item.parentId === "undefined"
                 ? getTileStudy(item.id)
-                : getTopicData(item.parentId);
+                : getTopicData(item.parentId); // TODO: Update later
             navigation.navigate("Apprec8Reader", { data: studyData });
             break;
-          case "COURSE":
-            const data = getTopicData(item.id);
-            navigation.navigate("LinkScreen", { data });
+
+          // --- START MODIFICATION ---
+          case "COURSE": // Assuming categories are mapped with type 'COURSE' or similar identifier
+            console.log(`Navigating to topics for category: ${item.id}`);
+            // Navigate to LinkScreen, passing categoryId and categoryTitle
+            navigation.navigate("LinkScreen", {
+              categoryId: item.id, // e.g., "imo"
+              categoryTitle: item.title, // e.g., "IMO Math Olympiad"
+            });
             break;
+          // --- END MODIFICATION ---
+
           case "QUIZ":
+            // Keep existing QUIZ logic for now (uses old data sources)
             const quizData =
               typeof item.parentId === "undefined"
-                ? getTileQuiz(item.id)
-                : getTopicQuiz(item.parentId);
+                ? getTileQuiz(item.id) // TODO: Update later
+                : getTopicQuiz(item.parentId); // TODO: Update later
             navigation.navigate("Quiz", { data: quizData.quizItems });
-            // if (typeof item.parentId === "undefined") { dog-quiz-1
-            //   console.log("parentId is undefined or not declared");
-            //   const tileStudyData = getTileStudy(item.id);
-            // } else {
-            // }
             break;
+
           default:
-            console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
+            // Keep existing default logic or refine if necessary
+            console.warn(
+              `Unhandled item type in CarouselItem pressHandler: ${item.type} for ID: ${item.id}`
+            );
+            // Maybe navigate to a generic topic list screen?
+            navigation.navigate("LinkScreen", {
+              categoryId: item.id,
+              categoryTitle: item.title,
+            });
+          // console.error("!!!!! Not a Valid Type !!!!!! " + item.type);
         }
       }
     }
@@ -149,6 +201,11 @@ const CustomCarousel = ({
   customHeight = 240,
   pagination = false,
 }) => {
+  console.log(
+    `CustomCarousel "${title}" received data:`,
+    JSON.stringify(data, null, 2)
+  ); // <-- ADD THIS LOG
+
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 

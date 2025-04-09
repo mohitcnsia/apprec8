@@ -19,7 +19,7 @@ function TopicGridTile({ title, color, onPress }) {
         onPress={onPress}
       >
         <View style={styles.innerContainer}>
-          {/* <Image source={require("../../assets/images/ieo.png")} /> */}
+          {/* <Image source={require("../../assets/images/ieo.webp")} /> */}
           <Text style={styles.title}>{title}</Text>
         </View>
       </Pressable>
