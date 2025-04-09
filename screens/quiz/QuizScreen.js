@@ -1,16 +1,26 @@
-// screens/quiz/QuizScreen.js (Refactored with @r-n-firebase listener)
+// screens/quiz/QuizScreen.js (Using showFeedback state)
 
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native"; // Added ActivityIndicator
-import Question from "../../components/quiz/Question"; // Adjust path if needed
-import Explanation from "../../components/quiz/Explanation"; // Adjust path if needed
-import QuizButton from "../../components/quiz/QuizButton"; // Adjust path if needed
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+import {
+  Button,
+  Card,
+  Text as PaperText,
+  ActivityIndicator as PaperActivityIndicator,
+} from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors"; // Adjust path if needed
-import { listenToQuizQuestions } from "../../services/firestoreContentApi"; // Adjust path, import new listener
+import { Colors } from "../../config/colors";
+import { listenToQuizQuestions } from "../../services/firestoreContentApi";
+import Explanation from "../../components/quiz/Explanation";
 
-// Fisher-Yates Shuffle function (keep this utility)
 const shuffleArray = (array) => {
+  /* ... (shuffle function) ... */
   let shuffledArray = [...array];
   for (let i = shuffledArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -18,350 +28,371 @@ const shuffleArray = (array) => {
   }
   return shuffledArray;
 };
+const MAX_QUESTIONS = 5;
 
 const QuizScreen = ({ route, navigation }) => {
-  // Expect 'topicId' from navigation now, instead of 'itemId' or 'data'
   const { topicId } = route.params;
-
-  // State for quiz logic (mostly unchanged)
-  const [questions, setQuestions] = useState([]); // Will be populated from Firestore
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  // State for data fetching
+  const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  // const [isAnswered, setIsAnswered] = useState(false); // We'll derive this implicitly or use showFeedback
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [wasCorrect, setWasCorrect] = useState(null); // null | true | false
+  const [showFeedback, setShowFeedback] = useState(false); // *** NEW STATE ***
 
-  // --- NEW: useEffect to listen for Firestore quiz questions ---
+  // --- useEffect to listen for Firestore quiz questions ---
   useEffect(() => {
     if (!topicId) {
-      setError("No topic specified for quiz.");
+      setError("No topic specified...");
       setIsLoading(false);
-      setQuestions([]); // Ensure questions are empty if no topicId
       return;
     }
-
+    // Reset all state when topicId changes
     setIsLoading(true);
     setError(null);
-    setQuestions([]); // Clear previous questions
-    setQuestionIndex(0); // Reset index
-    setScore(0); // Reset score
-    setIsAnswered(false); // Reset answer state
-    setSelectedAnswer(null); // Reset selection
+    setQuestions([]);
+    setQuestionIndex(0);
+    setScore(0); //isAnswered=false implicitly via showFeedback=false
+    setSelectedAnswer(null);
+    setWasCorrect(null);
+    setShowFeedback(false);
 
-    let isMounted = true; // Prevent state updates on unmounted component
-
-    console.log(
-      `QuizScreen: Listening to quiz questions for topicId: ${topicId}`
-    );
+    let isMounted = true;
     const unsubscribe = listenToQuizQuestions(
       topicId,
       (fetchedQuestions) => {
         if (isMounted) {
           if (fetchedQuestions && fetchedQuestions.length > 0) {
-            console.log(
-              `QuizScreen: Received ${fetchedQuestions.length} questions from Firestore.`
-            );
-            // Apply your shuffling and slicing logic to the fetched data
-            const shuffledQuestions = shuffleArray(fetchedQuestions).slice(
-              0,
-              5
-            ); // Keep slice(0, 5) if desired
-            const shuffledQuestionsWithOptions = shuffledQuestions.map((q) => ({
-              ...q, // Spread the Firestore question object ({ id, topicId, question, answer, options, explanation, order })
-              options: shuffleArray(q.options || []), // Shuffle options from Firestore data
+            // ... (process questions: shuffle, slice, map options) ...
+            let shuffledQuestions = shuffleArray(fetchedQuestions);
+            const count = Math.min(shuffledQuestions.length, MAX_QUESTIONS);
+            const selectedQuestions = shuffledQuestions.slice(0, count);
+            const finalQuestions = selectedQuestions.map((q) => ({
+              ...q,
+              options: shuffleArray(q.options || []),
             }));
-            setQuestions(shuffledQuestionsWithOptions); // Set the processed questions
-            setError(null); // Clear any previous error
+            setQuestions(finalQuestions);
+            setError(null);
           } else {
-            // Handle case where listener returns empty array (no questions found)
-            console.log(
-              `QuizScreen: No quiz questions found for topicId: ${topicId}`
-            );
-            setError("No quiz questions available for this topic.");
-            setQuestions([]); // Ensure questions state is empty
+            setError("No quiz questions available...");
+            setQuestions([]);
           }
-          setIsLoading(false); // Loading finished after first data received (or error)
+          setIsLoading(false);
         }
       },
       (fetchError) => {
         if (isMounted) {
-          console.error(
-            `Error fetching quiz questions for ${topicId}:`,
-            fetchError
-          );
           setError("Could not load quiz questions.");
-          setQuestions([]); // Ensure questions state is empty on error
+          setQuestions([]);
           setIsLoading(false);
         }
       }
     );
-
-    // Cleanup listener on unmount or if topicId changes
     return () => {
-      console.log(
-        `QuizScreen: Unsubscribing from quiz questions listener for ${topicId}`
-      );
       isMounted = false;
       unsubscribe();
     };
-  }, [topicId]); // Re-run effect if topicId changes
+  }, [topicId]);
 
-  // --- Quiz Logic Handlers (Keep your existing logic) ---
-
+  // --- Handlers ---
   const handleAnswer = (answer) => {
-    if (!isAnswered) {
+    // Only allow selection if feedback isn't being shown
+    if (!showFeedback) {
       setSelectedAnswer(answer);
     }
   };
 
   const handleSubmit = () => {
-    if (selectedAnswer !== null) {
-      // Only allow submit if an answer is selected
-      setIsAnswered(true);
-    }
+    if (selectedAnswer === null) return; // No answer selected
+    console.log(">>> handleSubmit START");
+    const currentQuestion = questions[questionIndex];
+    const correct = selectedAnswer === currentQuestion?.answer;
+    setWasCorrect(correct); // Set correctness
+    setShowFeedback(true); // *** Trigger feedback display ***
+    console.log(
+      `<<< handleSubmit END - Called setShowFeedback(true), wasCorrect=${correct}`
+    );
   };
 
   const handleNextQuestion = () => {
-    // Ensure an answer was processed before moving on
-    if (!isAnswered) return;
-
-    // Check correctness based on the 'answer' field from Firestore data
-    if (selectedAnswer === questions[questionIndex]?.answer) {
+    if (!showFeedback) return; // Should only be callable when feedback is shown
+    console.log(">>> handleNextQuestion START");
+    // Update score based on the feedback shown
+    if (wasCorrect) {
       setScore((prevScore) => prevScore + 1);
     }
-
+    // Move to next question or results
     const nextIndex = questionIndex + 1;
     if (nextIndex < questions.length) {
       setQuestionIndex(nextIndex);
-      setSelectedAnswer(null); // Reset selected answer
-      setIsAnswered(false); // Reset answered state
+      // Reset state for the next question
+      setSelectedAnswer(null);
+      setWasCorrect(null);
+      setShowFeedback(false); // Hide feedback for the next question
     } else {
-      // Quiz finished: Navigate to results
-      const finalScore =
-        score + (selectedAnswer === questions[questionIndex]?.answer ? 1 : 0);
+      // Quiz finished
+      const finalScore = score + (wasCorrect ? 1 : 0); // Include last question score
       navigation.replace("QuizResult", {
-        // Use replace to prevent back navigation to quiz
         score: finalScore,
         totalQuestions: questions.length,
-        quizId: topicId, // Pass topicId instead of original itemId
-        // Pass questions if result screen needs them? Or just score/total?
-        // data: questions // Optionally pass the questions shown
+        topicId: topicId,
       });
     }
+    console.log("<<< handleNextQuestion END");
   };
 
+  // --- Dynamic Styling ---
+  // getButtonStyle depends on showFeedback now
   const getButtonStyle = (option) => {
-    // Ensure questions[questionIndex] exists
     const currentQuestion = questions[questionIndex];
-    if (!currentQuestion) return styles.optionButton; // Default style if question not loaded
-
-    if (isAnswered) {
-      if (option === currentQuestion.answer) {
-        // Check correct answer
-        return styles.correctAnswer;
-      } else if (option === selectedAnswer) {
-        // Check if it was the incorrect selected answer
-        return styles.incorrectAnswer;
-      } else {
-        // Other incorrect options
-        return styles.disabledAnswer;
-      }
+    console.log(
+      `getButtonStyle: option=<span class="math-inline">\{option\}, showFeedback\=</span>{showFeedback}, selected=<span class="math-inline">\{selectedAnswer\}, correct\=</span>{currentQuestion?.answer}`
+    );
+    if (!currentQuestion) return styles.optionButton;
+    if (showFeedback) {
+      // Check showFeedback instead of isAnswered
+      if (option === currentQuestion.answer) return styles.correctAnswerButton;
+      if (option === selectedAnswer) return styles.incorrectAnswerButton;
+      return styles.disabledAnswerButton;
+    } else {
+      return selectedAnswer === option
+        ? styles.selectedAnswerButton
+        : styles.optionButton;
     }
-    // Before submitting, highlight selected
-    return selectedAnswer === option
-      ? styles.selectedAnswer
-      : styles.optionButton;
+  };
+  // getNextButtonStyle depends on showFeedback now
+  const getNextButtonStyle = () => {
+    if (!showFeedback)
+      // Check showFeedback instead of isAnswered
+      return selectedAnswer === null
+        ? styles.submitButtonDisabled
+        : styles.submitButton;
+    else
+      return wasCorrect ? styles.nextButtonCorrect : styles.nextButtonIncorrect;
   };
 
   // --- Render Logic ---
-
   if (isLoading) {
-    return (
+    /* ... loading indicator ... */ return (
       <LinearGradient
         colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
         style={styles.centered}
       >
-        <ActivityIndicator size="large" color={Colors.primaryWhite} />
+        <PaperActivityIndicator
+          animating={true}
+          size="large"
+          color={Colors.primaryWhite}
+        />
       </LinearGradient>
     );
   }
-
   if (error) {
-    return (
+    /* ... error message ... */ return (
       <LinearGradient
         colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
         style={styles.centered}
       >
-        <Text style={styles.errorText}>{error}</Text>
+        <PaperText style={styles.errorText}>{error}</PaperText>
       </LinearGradient>
     );
   }
-
-  // Check if questions array is populated and index is valid
   if (questions.length === 0 || questionIndex >= questions.length) {
-    // This might briefly show if listener hasn't returned data yet but loading is false
-    // Or if there truly were no questions
-    return (
+    /* ... no questions message ... */ return (
       <LinearGradient
         colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
         style={styles.centered}
       >
-        <Text style={styles.loadingText}>
+        <PaperText style={styles.infoText}>
           {error ? error : "No questions available."}
-        </Text>
+        </PaperText>
       </LinearGradient>
     );
   }
 
-  // Get the current question object from state
   const currentQuestion = questions[questionIndex];
+  console.log(
+    `--- RENDER --- showFeedback=${showFeedback}, wasCorrect=${wasCorrect}, explanation=${JSON.stringify(
+      currentQuestion?.explanation
+    )}`
+  );
 
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
-      {/* Display Question or Explanation based on isAnswered state */}
-      {isAnswered && currentQuestion.explanation ? (
-        // Use 'explanation' field from Firestore data
-        <Explanation title={currentQuestion.explanation} />
-      ) : (
-        // Use 'question' field from Firestore data
-        <Question title={currentQuestion.question} />
-      )}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <PaperText style={styles.progressText}>
+          Question {questionIndex + 1} of {questions.length}
+        </PaperText>
+        <Card style={styles.card}>
+          <Card.Content>
+            {/* Always show the question, apply conditional style using showFeedback */}
+            <PaperText
+              style={[
+                styles.questionText,
+                showFeedback && styles.questionTextAnswered,
+              ]}
+            >
+              {currentQuestion.question}
+            </PaperText>
+            {/* Show Explanation using showFeedback */}
+            {showFeedback && currentQuestion.explanation ? (
+              <View style={styles.explanationContainer}>
+                <Explanation explanationText={currentQuestion.explanation} />
+              </View>
+            ) : null}
+          </Card.Content>
+        </Card>
 
-      {/* Render options using data from 'questions' state */}
-      {(currentQuestion.options || []).map((option, index) => (
-        <QuizButton
-          key={index}
-          label={option}
-          style={getButtonStyle(option)}
-          handlePress={() => handleAnswer(option)}
-          isDisabled={isAnswered} // Disable options after answering
-        />
-      ))}
-
-      {/* Submit/Next Button */}
-      <QuizButton
-        style={styles.nextButton}
-        label={isAnswered ? "Next" : "Submit"}
-        handlePress={isAnswered ? handleNextQuestion : handleSubmit}
-        // Disable Submit until an answer is selected
-        isDisabled={!isAnswered && selectedAnswer === null}
-      />
+        <View style={styles.optionsContainer}>
+          {(currentQuestion.options || []).map((option, index) => (
+            <Button
+              key={index}
+              mode="contained"
+              onPress={() => handleAnswer(option)}
+              style={[styles.baseButton, getButtonStyle(option)]} // Uses showFeedback internally now
+              labelStyle={
+                selectedAnswer === option
+                  ? styles.selectedOptionButtonText
+                  : styles.optionButtonText
+              }
+              disabled={showFeedback} // Disable options when feedback is shown
+              uppercase={false}
+            >
+              {option}
+            </Button>
+          ))}
+        </View>
+        <Button
+          mode="contained"
+          style={[
+            styles.baseButton,
+            styles.nextButtonBase,
+            getNextButtonStyle(),
+          ]} // Uses showFeedback internally now
+          labelStyle={styles.nextButtonText}
+          // Switch handlers based on showFeedback
+          onPress={showFeedback ? handleNextQuestion : handleSubmit}
+          // Disable Submit if no answer selected OR if feedback is shown (Next handles its own logic)
+          disabled={!showFeedback && selectedAnswer === null}
+          uppercase={false}
+        >
+          {/* Change text based on showFeedback */}
+          {showFeedback ? "Next" : "Submit"}
+        </Button>
+      </ScrollView>
     </LinearGradient>
   );
 };
 
-// --- Styles (Keep your existing styles) ---
+// --- Styles (Keep styles from last update) ---
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    // backgroundColor: "#f0e3b0", // Consider removing if using gradient
-  },
+  container: { flex: 1 },
+  scrollContent: { flexGrow: 1, justifyContent: "center", padding: 20 },
   centered: {
-    // Added for loading/error
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  loadingText: {
-    // Renamed, used for info/error too
-    color: Colors.primaryWhite, // Changed color for gradient
-    fontSize: 18,
-    textAlign: "center",
-  },
-  errorText: {
-    // Added specific error style
-    color: "#FF7F7F", // Lighter red for visibility on gradient
-    fontSize: 18,
-    textAlign: "center",
-  },
-  // Keep button styles - ensure colors work on gradient
-  optionButton: {
-    // Base style for options
-    backgroundColor: Colors.primaryLightGray, // Example default color
-    borderColor: Colors.primaryDarkMaroon, // Example border
-    // Add margin, padding etc.
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  selectedAnswer: {
-    backgroundColor: "#3498db",
-    borderColor: "#2980b9",
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  correctAnswer: {
-    backgroundColor: "#2ecc71",
-    borderColor: "#27ae60",
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  incorrectAnswer: {
-    backgroundColor: "#e74c3c",
-    borderColor: "#c0392b",
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  disabledAnswer: {
-    backgroundColor: "#95a5a6",
-    borderColor: "#7f8c8d",
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    opacity: 0.7, // Make disabled look different
-  },
-  optionText: {
-    // Ensure this style is used within QuizButton or applied here
-    color: "#fff", // Text color likely needs to contrast with button backgrounds
-    fontSize: 18,
-    textAlign: "center",
-  },
-  nextButton: {
-    backgroundColor: "#3498db",
-    borderColor: "#2980b9",
-    marginTop: 30,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  nextButtonText: {
-    // Ensure this style is used within QuizButton
-    color: "#fff",
-    fontSize: 18,
-    textAlign: "center",
-  },
-  // Add styles for Question and Explanation components if needed here or within those components
-  questionCount: {
-    // Added style from previous snippet
+  errorText: { color: "#FFBABA", fontSize: 16, textAlign: "center" },
+  infoText: {
+    color: Colors.primaryLightGray,
     fontSize: 16,
-    color: Colors.primaryWhite, // Adjusted color
-    marginBottom: 20,
     textAlign: "center",
+  },
+  progressText: {
+    fontSize: 16,
+    color: Colors.primaryWhite,
+    textAlign: "center",
+    marginBottom: 15,
+    fontFamily: "nunitoBold",
+  },
+  card: {
+    marginBottom: 20,
+    backgroundColor: Colors.primaryWhite100,
+    borderRadius: 12,
   },
   questionText: {
-    // Added style from previous snippet
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 30,
+    fontSize: 16,
+    lineHeight: 30,
     textAlign: "center",
-    color: Colors.primaryWhite, // Adjusted color
+    color: Colors.blackText,
+    fontFamily: "nunitoBold",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+  },
+  questionTextAnswered: { fontSize: 16, lineHeight: 24 },
+  explanationContainer: {
+    marginTop: 15,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: Colors.primaryLightGray,
+  },
+  optionsContainer: { marginVertical: 5 },
+  baseButton: {
+    borderRadius: 20,
+    marginVertical: 6,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  optionButtonText: {
+    fontSize: 16,
+    fontFamily: "nunitoBold",
+    color: Colors.blackText,
+  },
+  selectedOptionButtonText: {
+    fontSize: 16,
+    fontFamily: "nunitoBold",
+    color: Colors.primaryWhite,
+  },
+  optionButton: {
+    backgroundColor: Colors.primaryWhite100,
+    borderColor: Colors.primaryDarkMaroon,
+  },
+  selectedAnswerButton: {
+    backgroundColor: Colors.primaryDarkMaroon,
+    borderColor: Colors.primaryDarkMaroon,
+  },
+  correctAnswerButton: {
+    backgroundColor: Colors.successGreen,
+    borderColor: Colors.successGreen,
+    fontFamily: "nunitoBold",
+  },
+  incorrectAnswerButton: {
+    backgroundColor: Colors.errorRed,
+    borderColor: Colors.errorRed,
+  },
+  disabledAnswerButton: {
+    backgroundColor: Colors.mediumGray,
+    borderColor: Colors.mediumGray,
+    opacity: 0.6,
+  },
+  nextButtonBase: { marginTop: 20 },
+  submitButton: {
+    backgroundColor: Colors.primaryDarkMaroon,
+    borderColor: Colors.primaryDarkMaroon,
+  },
+  submitButtonDisabled: {
+    backgroundColor: Colors.mediumGray,
+    borderColor: Colors.mediumGray,
+    opacity: 0.6,
+  },
+  nextButtonCorrect: {
+    backgroundColor: Colors.successGreen,
+    borderColor: Colors.successGreen,
+  },
+  nextButtonIncorrect: {
+    backgroundColor: Colors.errorRed,
+    borderColor: Colors.errorRed,
+  },
+  nextButtonText: {
+    color: Colors.primaryWhite,
+    fontSize: 18,
+    fontFamily: "nunitoBold",
   },
 });
 

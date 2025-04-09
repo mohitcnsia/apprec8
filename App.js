@@ -30,6 +30,8 @@ export default function App() {
     delius: require("./assets/fonts/Delius-Regular.ttf"),
     deliusBold: require("./assets/fonts/DeliusUnicase-Bold.ttf"),
     pacifico: require("./assets/fonts/Pacifico-Regular.ttf"),
+    nunito: require("./assets/fonts/Nunito-Regular.ttf"),
+    nunitoBold: require("./assets/fonts/Nunito-Bold.ttf"),
   });
 
   const {

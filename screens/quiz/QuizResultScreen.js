@@ -1,35 +1,40 @@
+// screens/quiz/QuizResultScreen.js (Dynamic & Circular Image)
+
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, Image } from "react-native";
+// Import Dimensions
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors";
-import QuizButton from "../../components/quiz/QuizButton";
-import { authInstance } from "../../config/firebaseConfig";
+import { Colors } from "../../config/colors"; // Adjust path
+import { authInstance } from "../../config/firebaseConfig"; // Adjust path
+
+// --- Get screen width ---
+const screenWidth = Dimensions.get("window").width;
+// --- Calculate dynamic size (e.g., 40% of screen width) ---
+const imageDiameter = screenWidth * 0.7; // Adjust 0.4 (40%) as needed
 
 const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("User");
-  const { score, totalQuestions, quizId, data } = route.params;
+  const { score, totalQuestions, topicId } = route.params;
 
   useEffect(() => {
-    // Use the authInstance from @react-native-firebase/auth
     const currentUser = authInstance.currentUser;
-
     if (currentUser?.email) {
       const nameFromEmail = currentUser.email.split("@")[0];
       setUsername(nameFromEmail);
     } else {
-      console.log(
-        "QuizResultScreen: No authenticated user found via authInstance."
-      );
-      setUsername("User"); // Keep default or handle differently
+      console.log("QuizResultScreen: No authenticated user found.");
+      setUsername("User");
     }
-    // No dependencies needed if only checking on mount
   }, []);
 
   const handlePlayAgain = () => {
-    if (data.length > 0) {
-      navigation.navigate("Quiz", { data });
+    if (topicId) {
+      console.log(`Playing again for topicId: ${topicId}`);
+      navigation.replace("Quiz", { topicId: topicId });
     } else {
-      navigation.navigate("Quiz", { itemId: quizId });
+      console.error("Cannot play again: topicId is missing from route params.");
+      navigation.popToTop();
     }
   };
 
@@ -38,21 +43,33 @@ const QuizResultScreen = ({ route, navigation }) => {
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
-      <Text style={styles.header}>Quiz Over</Text>
+      <Text style={styles.header}>Quiz Over!</Text>
+      {/* Apply the updated style here */}
       <Image
         style={styles.imageContainer}
-        source={require("../../assets/images/success.png")}
+        source={require("../../assets/images/success.png")} // Ensure path is correct
       />
-      <Text style={styles.text}>Hello, {username}!</Text>
+      <Text style={styles.text}>Well done, {username}!</Text>
       <Text style={styles.text}>
         You scored <Text style={styles.highlight}>{score}</Text> out of{" "}
         <Text style={styles.highlight}>{totalQuestions}</Text>.
       </Text>
-      <QuizButton
-        style={styles.nextButton}
-        label={"Play Again"}
-        handlePress={handlePlayAgain}
-      />
+      <PaperButton
+        mode="contained"
+        style={styles.button}
+        labelStyle={styles.buttonText}
+        onPress={handlePlayAgain}
+      >
+        Play Again
+      </PaperButton>
+      <PaperButton
+        mode="outlined"
+        style={styles.button}
+        labelStyle={[styles.buttonText, { color: Colors.primaryWhite }]}
+        onPress={() => navigation.popToTop()}
+      >
+        Back to Topics / Home
+      </PaperButton>
     </LinearGradient>
   );
 };
@@ -63,29 +80,45 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f0e3b0",
   },
   header: {
-    fontSize: 24,
+    fontSize: 30,
+    fontFamily: "pacifico",
+    color: Colors.primaryWhite,
     marginBottom: 20,
     textAlign: "center",
-    color: "white",
   },
   text: {
     fontSize: 18,
     marginBottom: 10,
     textAlign: "center",
+    color: Colors.primaryWhite,
+    fontFamily: "delius",
   },
   highlight: {
-    fontFamily: "open-sans-bold",
+    fontFamily: "deliusBold",
     color: Colors.primaryOrange,
+    fontSize: 20,
   },
+  // --- Updated imageContainer Style ---
   imageContainer: {
-    borderRadius: 200,
+    height: imageDiameter, // Use calculated diameter
+    width: imageDiameter, // Use calculated diameter (makes it square)
+    borderRadius: imageDiameter / 2, // Half the diameter makes it circular
+    resizeMode: "cover", // 'cover' often looks better for circles than 'contain'
+    marginBottom: 20,
     borderWidth: 2,
-    overflow: "hidden",
-    height: "40%",
-    width: "80%",
+    borderColor: Colors.primaryWhite,
+  },
+  // --- End Update ---
+  button: {
+    marginTop: 15,
+    paddingVertical: 5,
+    width: "70%",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: "deliusBold",
   },
 });
 

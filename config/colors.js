@@ -1,5 +1,6 @@
 export const Colors = {
   primaryDarkMaroon: "#3b0940",
+  primaryDarkMaroon900: "#3d1141",
   primaryMaroon10: "#f5d2f8ff",
   primaryMaroon100: "#85508aff",
   primaryMaroon200: "rgba(70, 64, 71, 1)",
@@ -10,6 +11,9 @@ export const Colors = {
   primaryOrange: "#f12b15",
   blackText: "#000000",
   primaryWhite: "#ffffff",
+  primaryWhite100: "#d7c8c8",
   primaryPink100: "#f6ebef",
   calmPurple: "#8A2BE2",
+  successGreen: "#6dbb7e",
+  errorRed: "#c86c62",
 };
