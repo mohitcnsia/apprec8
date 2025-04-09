@@ -74,7 +74,7 @@ export default ({ config }) => {
         },
         package: "com.mohitchilkoti.apprec8", // Your Android package name
         // Point to the .json file (standard location)
-        googleServicesFile: "./android/app/google-services.json",
+        googleServicesFile: "./google-services.json",
         // Keep original intent filters if needed for other deeplinking
         intentFilters: [
           {
@@ -100,6 +100,7 @@ export default ({ config }) => {
         // If build fails again, try adding the options back:
         // ["@react-native-google-signin/google-signin", { reservedClientId: process.env.IOS_REVERSED_CLIENT_ID }]
         "@react-native-google-signin/google-signin",
+        "@react-native-firebase/app",
       ],
       extra: {
         // Expose necessary Firebase config and the Web Client ID for the hook

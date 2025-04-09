@@ -1,7 +1,6 @@
-// screens/quiz/StudyScreen.js
+// screens/quiz/StudyScreen.js (using @react-native-firebase listeners)
 
-import React, { useState, useCallback } from "react"; // Remove useEffect, Add useCallback
-import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
+import React, { useState, useEffect } from "react"; // Use useEffect for listeners
 import {
   ScrollView,
   StyleSheet,
@@ -9,73 +8,115 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
-import CustomCarousel from "../../components/common/CustomCarousal";
+import CustomCarousel from "../../components/common/CustomCarousal"; // Adjust path if needed
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors";
-import { getCategoriesByGroup } from "../../services/firestoreContentApi";
+import { Colors } from "../../config/colors"; // Adjust path if needed
+import { listenToCategoriesByGroup } from "../../services/firestoreContentApi"; // Adjust path if needed
 
+// Helper function to format data for the carousel
 const formatCategoryDataForCarousel = (category) => ({
   id: category.id,
-  title: category.title,
+  title: category.title, // Use title field
   image: category.image,
-  subtitle: category.subtitle || "",
+  subtitle: category.subtitle || "", // Use subtitle field
   duration: category.duration || "",
   author: category.author || "",
-  type: category.type || "COURSE",
-  carouselGroup: category.carouselGroup, // Keep this if needed, or remove if only used for fetching
+  type: category.type || "COURSE", // Keep original type for navigation logic
+  // No need to add carouselGroup here if only used for fetching
 });
 
 function StudyScreen({ navigation }) {
+  // Separate state for each carousel's data
   const [olympiadCategories, setOlympiadCategories] = useState([]);
   const [classroomCategories, setClassroomCategories] = useState([]);
   const [popularReadCategories, setPopularReadCategories] = useState([]);
   const [popularQuizCategories, setPopularQuizCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Start loading false initially
+
+  // Combined loading/error state for initial fetch
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- Use useFocusEffect to fetch data ---
-  useFocusEffect(
-    // Wrap the fetch logic in useCallback
-    useCallback(() => {
-      const loadAllCarouselData = async () => {
-        // Only set loading true when we actually start fetching on focus
-        setIsLoading(true);
-        setError(null);
-        console.log("StudyScreen focused, fetching data..."); // Log focus
-        try {
-          const results = await Promise.all([
-            getCategoriesByGroup("olympiad"),
-            getCategoriesByGroup("classroom"),
-            getCategoriesByGroup("popular_read"),
-            getCategoriesByGroup("popular_quiz"),
-          ]);
+  // useEffect to set up listeners on mount and clean up on unmount
+  useEffect(() => {
+    console.log("StudyScreen mounted, setting up listeners...");
+    setIsLoading(true); // Assume loading until first data arrives
+    setError(null);
+    let active = true; // Flag to prevent state updates if component unmounts during async op
 
-          setOlympiadCategories(results[0].map(formatCategoryDataForCarousel));
-          setClassroomCategories(results[1].map(formatCategoryDataForCarousel));
-          setPopularReadCategories(
-            results[2].map(formatCategoryDataForCarousel)
-          );
-          setPopularQuizCategories(
-            results[3].map(formatCategoryDataForCarousel)
-          );
-        } catch (err) {
-          console.error("Failed to load carousel data:", err);
-          setError("Could not fetch study sections.");
-        } finally {
-          setIsLoading(false);
+    // Track how many listeners have provided their first data snapshot
+    let listenersInitialized = 0;
+    const totalListeners = 4; // Update if you add/remove carousels
+
+    const handleInitialLoad = () => {
+      listenersInitialized++;
+      if (active && listenersInitialized >= totalListeners) {
+        setIsLoading(false); // Stop loading once all listeners give initial data
+        console.log("All initial listeners fired for StudyScreen.");
+      }
+    };
+
+    const handleError = (err) => {
+      if (active) {
+        setError("Could not load all study sections."); // Set a generic error
+        setIsLoading(false); // Stop loading on error
+      }
+    };
+
+    // --- Set up listeners ---
+    const unsubOlympiad = listenToCategoriesByGroup(
+      "olympiad",
+      (data) => {
+        if (active) {
+          setOlympiadCategories(data.map(formatCategoryDataForCarousel));
+          handleInitialLoad();
         }
-      };
+      },
+      handleError
+    );
+    const unsubClassroom = listenToCategoriesByGroup(
+      "classroom",
+      (data) => {
+        if (active) {
+          setClassroomCategories(data.map(formatCategoryDataForCarousel));
+          handleInitialLoad();
+        }
+      },
+      handleError
+    );
+    const unsubReads = listenToCategoriesByGroup(
+      "popular_read",
+      (data) => {
+        if (active) {
+          setPopularReadCategories(data.map(formatCategoryDataForCarousel));
+          handleInitialLoad();
+        }
+      },
+      handleError
+    );
+    const unsubQuizzes = listenToCategoriesByGroup(
+      "popular_quiz",
+      (data) => {
+        if (active) {
+          setPopularQuizCategories(data.map(formatCategoryDataForCarousel));
+          handleInitialLoad();
+        }
+      },
+      handleError
+    );
+    // --- End Listener Setup ---
 
-      loadAllCarouselData();
+    // --- Return cleanup function ---
+    return () => {
+      console.log("StudyScreen unmounting, cleaning up listeners.");
+      active = false; // Prevent state updates after unmount
+      unsubOlympiad();
+      unsubClassroom();
+      unsubReads();
+      unsubQuizzes();
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount/unmount
 
-      // Optional: Return a cleanup function if needed when screen goes out of focus
-      // return () => console.log("StudyScreen unfocused");
-    }, []) // Empty dependency array ensures it runs on first focus, like useEffect mount
-  );
-  // --- End useFocusEffect ---
-
-  // --- Render Logic (Remains mostly the same) ---
-  // Show loader ONLY when isLoading is true (which now happens on focus)
+  // --- Render Logic ---
   if (isLoading) {
     return (
       <LinearGradient
@@ -97,14 +138,13 @@ function StudyScreen({ navigation }) {
     );
   }
 
-  // Render carousels if data is available (and not loading/error)
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Only render carousel if data exists */}
+        {/* Conditionally render carousels based on data length */}
         {olympiadCategories.length > 0 && (
           <CustomCarousel
             title="Olympiad"

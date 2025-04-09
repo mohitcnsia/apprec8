@@ -6,7 +6,7 @@ import {
   doc,
   deleteDoc,
   updateDoc,
-} from "firebase/firestore";
+} from "@react-native-firebase/firestore";
 
 const TASKS_COLLECTION = "tasks"; // Firestore collection name
 

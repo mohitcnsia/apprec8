@@ -1,57 +1,35 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import {
-  initializeAuth,
-  getAuth,
-  getReactNativePersistence,
-} from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore } from "firebase/firestore";
-import Constants from "expo-constants";
+// config/firebaseConfig.js (for @react-native-firebase)
 
-// Firebase Config - Ensure these are correctly set in your .env and exposed via app.config.js extra
-const {
-  firebaseApiKey,
-  firebaseAuthDomain,
-  firebaseProjectId,
-  firebaseStorageBucket,
-  firebaseMessagingSenderId,
-  firebaseAppId,
-  // androidClientId, // This is the NATIVE Android Client ID, NOT the Web one used for expo-auth-session
-} = Constants.expoConfig?.extra ?? {};
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: firebaseApiKey,
-  authDomain: firebaseAuthDomain,
-  projectId: firebaseProjectId,
-  storageBucket: firebaseStorageBucket,
-  messagingSenderId: firebaseMessagingSenderId,
-  appId: firebaseAppId,
-  // Do NOT include androidClientId here if using initializeAuth below
-};
+// Firebase App initializes automatically via native config files + plugin
 
-let app, auth, db;
+// Get Firestore instance
+const db = firestore();
 
-if (!getApps().length) {
-  try {
-    console.log("🔥 Initializing Firebase App...");
-    app = initializeApp(firebaseConfig);
-    console.log("🔥 Initializing Firebase Auth with persistence...");
-    // Initialize Auth with persistence
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage),
-    });
-    console.log("🔥 Initializing Firestore...");
-    db = getFirestore(app);
-    console.log("✅ Firebase Initialized Successfully");
-  } catch (e) {
-    console.error("❌ Firebase initialization error", e);
-    // Handle initialization error appropriately
-  }
-} else {
-  console.log("🌲 Firebase App already exists, getting instance...");
-  app = getApp();
-  auth = getAuth(app); // Get existing auth instance
-  db = getFirestore(app); // Get existing firestore instance
-}
+// Get Auth instance
+const authInstance = auth();
 
-export { app, db, auth }; // Export auth correctly
+/*
+// Optional: Configure Firestore settings (like persistence)
+// It's best to call this EARLY and ONCE in your app's main entry point
+// (e.g., App.js or index.js) before any other Firestore usage.
+// Example for App.js:
+// import { useEffect } from 'react';
+// import firestore from '@react-native-firebase/firestore';
+//
+// function App() {
+//   useEffect(() => {
+//     firestore().settings({
+//       persistence: true, // default is true on mobile, but explicit is fine
+//       // cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED // Optional: -1 for unlimited
+//     }).then(() => console.log('Firestore persistence enabled'))
+//       .catch(err => console.error('Firestore persistence error:', err));
+//   }, []);
+//   // ... rest of App component
+// }
+*/
+
+// Export the instances for use throughout your app
+export { db, authInstance };

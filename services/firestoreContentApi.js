@@ -1,167 +1,158 @@
-// src/services/firestoreContentApi.js
+// services/firestoreContentApi.js (using @react-native-firebase)
 
-// Adjust the path '../config/firebaseConfig' to correctly point to where your 'db' instance is exported
-import { db } from "../config/firebaseConfig";
-
-// Import necessary Firestore functions from the Firebase JS SDK
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  getDoc,
-  doc,
-  limit,
-  orderBy, // Make sure orderBy is imported
-} from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 
 /**
- * Fetches all categories, ordered by the 'order' field.
- * @returns {Promise<Array<object>>} An array of category objects.
+ * Sets up a real-time listener for categories in a specific group.
+ * @param {string} groupName - The value of the 'carouselGroup' field (e.g., "olympiad").
+ * @param {function} onDataChange - Callback function: (data: Array<object>) => void
+ * @param {function} onError - Callback function: (error: Error) => void
+ * @returns {function} An unsubscribe function to detach the listener.
  */
-// export async function getCategories() {
-//   console.log("Fetching categories from Firestore");
-//   const categories = [];
-//   const categoriesCollection = collection(db, "categories");
-//   const q = query(categoriesCollection, orderBy("order")); // Assuming you added an 'order' field
+export function listenToCategoriesByGroup(groupName, onDataChange, onError) {
+  console.log(`LISTENER: Setting up for categories in group: ${groupName}`);
+  const q = firestore()
+    .collection("categories")
+    .where("carouselGroup", "==", groupName)
+    .orderBy("order");
 
-//   try {
-//     const querySnapshot = await getDocs(q);
-//     querySnapshot.forEach((doc) => {
-//       categories.push({ id: doc.id, ...doc.data() });
-//     });
-//     console.log(`Found ${categories.length} categories`);
-//     return categories;
-//   } catch (error) {
-//     console.error("Error fetching categories: ", error);
-//     throw error;
-//   }
-// }
-// In services/firestoreContentApi.js
-
-/**
- * Fetches categories belonging to a specific group, ordered by 'order'.
- * @param {string} groupName - The value of the 'carouselGroup' field to filter by (e.g., "olympiad", "classroom").
- * @returns {Promise<Array<object>>} An array of category objects for that group.
- */
-export async function getCategoriesByGroup(groupName) {
-  console.log(`Workspaceing categories from Firestore for group: ${groupName}`);
-  const categories = [];
-  const categoriesCollection = collection(db, "categories");
-  // Query where 'carouselGroup' matches the groupName, and order by 'order'
-  const q = query(
-    categoriesCollection,
-    where("carouselGroup", "==", groupName),
-    orderBy("order") // Assumes you have an 'order' field for sorting within the carousel
+  const unsubscribe = q.onSnapshot(
+    (querySnapshot) => {
+      const categories = [];
+      querySnapshot.forEach((doc) => {
+        categories.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(
+        `LISTENER: Snapshot for group ${groupName}: ${categories.length} items`
+      );
+      onDataChange(categories); // Pass data to callback
+    },
+    (error) => {
+      console.error(`LISTENER ERROR: categories group ${groupName}: `, error);
+      if (error.code.includes("failed-precondition")) {
+        console.error(
+          `Firestore index likely missing for categories query (where carouselGroup == ${groupName}, orderBy order).`
+        );
+      }
+      onError(error); // Pass error to callback
+    }
   );
+  return unsubscribe; // Return the cleanup function
+}
 
-  try {
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      categories.push({ id: doc.id, ...doc.data() });
-    });
-    console.log(`Found ${categories.length} categories for group ${groupName}`);
-    return categories;
-  } catch (error) {
-    // Check for index error specifically
-    if (error.code === "failed-precondition") {
+/**
+ * Sets up a real-time listener for topics in a specific category.
+ * @param {string} categoryId - The ID of the category (e.g., "imo").
+ * @param {function} onDataChange - Callback function: (data: Array<object>) => void
+ * @param {function} onError - Callback function: (error: Error) => void
+ * @returns {function} An unsubscribe function to detach the listener.
+ */
+export function listenToCategoryTopics(categoryId, onDataChange, onError) {
+  console.log(`LISTENER: Setting up for topics in category: ${categoryId}`);
+  const q = firestore()
+    .collection("topics")
+    .where("categoryId", "==", categoryId)
+    .orderBy("order");
+
+  const unsubscribe = q.onSnapshot(
+    (querySnapshot) => {
+      const topics = [];
+      querySnapshot.forEach((doc) => {
+        topics.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(
+        `LISTENER: Snapshot for category ${categoryId} topics: ${topics.length} items`
+      );
+      onDataChange(topics);
+    },
+    (error) => {
       console.error(
-        `Firestore index missing for categories query (where carouselGroup == ${groupName}, orderBy order): `,
+        `LISTENER ERROR: topics for category ${categoryId}: `,
         error
       );
-      // You might need to create a composite index on 'carouselGroup' and 'order'
-      // Error message will contain a link like before!
-      throw new Error(
-        `Firestore index required. Check console logs for the creation link.`
+      if (error.code.includes("failed-precondition")) {
+        console.error(
+          `Firestore index likely missing for topics query (where categoryId == ${categoryId}, orderBy order).`
+        );
+      }
+      onError(error);
+    }
+  );
+  return unsubscribe;
+}
+
+/**
+ * Sets up a real-time listener for a single study content document.
+ * Uses topicId as the document ID in 'studyContent'.
+ * @param {string} topicId - The ID of the topic/study document.
+ * @param {function} onDataChange - Callback function: (data: object | null) => void
+ * @param {function} onError - Callback function: (error: Error) => void
+ * @returns {function} An unsubscribe function to detach the listener.
+ */
+export function listenToStudyContent(topicId, onDataChange, onError) {
+  console.log(`LISTENER: Setting up for study content: ${topicId}`);
+  const docRef = firestore().collection("studyContent").doc(topicId);
+
+  const unsubscribe = docRef.onSnapshot(
+    (docSnapshot) => {
+      if (docSnapshot.exists) {
+        const studyData = { id: docSnapshot.id, ...docSnapshot.data() };
+        console.log(
+          `LISTENER: Snapshot for study content ${topicId}: Data received.`
+        );
+        onDataChange(studyData);
+      } else {
+        console.log(
+          `LISTENER: Snapshot for study content ${topicId}: Document does not exist.`
+        );
+        onDataChange(null); // Indicate not found
+      }
+    },
+    (error) => {
+      console.error(`LISTENER ERROR: study content ${topicId}: `, error);
+      onError(error);
+    }
+  );
+  return unsubscribe;
+}
+
+/**
+ * Sets up a real-time listener for quiz questions for a specific topic.
+ * @param {string} topicId - The ID of the topic.
+ * @param {function} onDataChange - Callback function: (data: Array<object>) => void
+ * @param {function} onError - Callback function: (error: Error) => void
+ * @returns {function} An unsubscribe function to detach the listener.
+ */
+export function listenToQuizQuestions(topicId, onDataChange, onError) {
+  console.log(`LISTENER: Setting up for quiz questions for topic: ${topicId}`);
+  const q = firestore()
+    .collection("quizQuestions")
+    .where("topicId", "==", topicId)
+    .orderBy("order");
+
+  const unsubscribe = q.onSnapshot(
+    (querySnapshot) => {
+      const questions = [];
+      querySnapshot.forEach((doc) => {
+        questions.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(
+        `LISTENER: Snapshot for topic ${topicId} questions: ${questions.length} items`
       );
-    } else {
+      onDataChange(questions);
+    },
+    (error) => {
       console.error(
-        `Error fetching categories for group ${groupName}: `,
+        `LISTENER ERROR: quiz questions for topic ${topicId}: `,
         error
       );
-      throw error; // Re-throw other errors
+      if (error.code.includes("failed-precondition")) {
+        console.error(
+          `Firestore index likely missing for quizQuestions query (where topicId == ${topicId}, orderBy order).`
+        );
+      }
+      onError(error);
     }
-  }
-}
-
-/**
- * Fetches topics for a specific categoryId, ordered by the 'order' field.
- * @param {string} categoryId - The ID of the category (e.g., "imo")
- * @returns {Promise<Array<object>>} An array of topic objects.
- */
-export async function getCategoryTopics(categoryId) {
-  console.log("Fetching Topics from Firestore for categoryId: ", categoryId);
-  const topics = [];
-  const topicsCollection = collection(db, "topics");
-  const q = query(
-    topicsCollection,
-    where("categoryId", "==", categoryId),
-    orderBy("order") // Assuming you added an 'order' field
   );
-
-  try {
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      topics.push({ id: doc.id, ...doc.data() });
-    });
-    console.log(`Found ${topics.length} topics for ${categoryId}`);
-    return topics;
-  } catch (error) {
-    console.error("Error fetching topics: ", error);
-    throw error;
-  }
-}
-
-/**
- * Fetches the study content document for a specific topicId.
- * Uses the topicId directly as the document ID in the 'studyContent' collection.
- * @param {string} topicId - The ID of the topic (e.g., "4-imo-div")
- * @returns {Promise<object|null>} The study data object or null if not found.
- */
-export async function getStudyContent(topicId) {
-  console.log("Fetching Study content from Firestore for topicId: ", topicId);
-  const studyDocRef = doc(db, "studyContent", topicId);
-
-  try {
-    const docSnap = await getDoc(studyDocRef);
-    if (docSnap.exists()) {
-      console.log("Found study content for:", topicId);
-      return { id: docSnap.id, ...docSnap.data() };
-    } else {
-      console.log("No study content found for topicId: ", topicId);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching study content: ", error);
-    throw error;
-  }
-}
-
-/**
- * Fetches all quiz question documents for a given topic ID, ordered by the 'order' field.
- * Remember you changed field names to 'question' and 'answer' in your data.
- * @param {string} topicId - The ID of the topic (e.g., "4-imo-div")
- * @returns {Promise<Array<object>>} An array of quiz question objects.
- */
-export async function getQuizQuestions(topicId) {
-  console.log("Fetching Quiz data from Firestore for topicId: ", topicId);
-  const questions = [];
-  const quizQuestionsCollection = collection(db, "quizQuestions");
-  const q = query(
-    quizQuestionsCollection,
-    where("topicId", "==", topicId),
-    orderBy("order") // Assuming you add an 'order' field to questions
-  );
-
-  try {
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      questions.push({ id: doc.id, ...doc.data() });
-    });
-    console.log(`Found ${questions.length} quiz questions for ${topicId}`);
-    return questions;
-  } catch (error) {
-    console.error("Error fetching quiz data: ", error);
-    throw error;
-  }
+  return unsubscribe;
 }
