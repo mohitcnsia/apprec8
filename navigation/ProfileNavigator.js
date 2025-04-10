@@ -1,29 +1,27 @@
-// navigation/ProfileNavigator.js (Receive generic handler and pass specific one)
-
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Colors } from "../config/colors";
-import ProfileScreen from "../screens/quiz/ProfileScreen"; // Adjust path
-import DummyScreen from "../screens/DummyScreen"; // Adjust path
-import LinksScreen from "../screens/LinksScreen"; // Adjust path
-import ContactUsForm from "../components/input/ContactUsForm"; // Adjust path
-import Tasks from "../screens/task/Tasks"; // Adjust path
-import TaskDetails from "../screens/task/TaskDetails"; // Adjust path
-import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
-import TasksContextProvider from "../store/tasks-context"; // Adjust path
-import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
-// Removed AuthScreen import - likely not needed here
+import ProfileScreen from "../screens/quiz/ProfileScreen";
+import DummyScreen from "../screens/DummyScreen";
+import LinksScreen from "../screens/LinksScreen";
+import ContactUsForm from "../components/input/ContactUsForm";
+import Tasks from "../screens/task/Tasks";
+import TaskDetails from "../screens/task/TaskDetails";
+import TaskEditor from "../screens/task/TaskEditor";
+import TasksContextProvider from "../store/tasks-context";
+import GuestProfileScreen from "../screens/profile/GuestProfileScreen";
+import EditProfileScreen from "../screens/profile/EditProfileScreen"; // Import the new screen
 
 const Stack = createStackNavigator();
 
-// Receive isGuest, actionHandler, user props
 const ProfileNavigator = ({ isGuest, actionHandler, user }) => {
   return (
-    // TasksContextProvider might only be needed if logged in? Decide based on your logic.
     <TasksContextProvider>
       <Stack.Navigator
+        // ... (initialRouteName logic remains the same)
         initialRouteName={isGuest ? "GuestProfile" : "ProfileScreen"}
         screenOptions={{
+          // ... (screenOptions remain the same)
           headerStyle: { backgroundColor: Colors.primaryDarkMaroon },
           headerTintColor: "#ffffff",
           headerTitleStyle: {
@@ -34,29 +32,37 @@ const ProfileNavigator = ({ isGuest, actionHandler, user }) => {
         }}
       >
         {isGuest ? (
+          // ... (GuestProfile screen remains the same)
           <Stack.Screen
             name="GuestProfile"
             options={{ title: "Guest Profile", headerTitleAlign: "center" }} // Consistent title
           >
-            {/* Pass the received actionHandler down as onExitGuestMode prop */}
             {(props) => (
               <GuestProfileScreen {...props} onExitGuestMode={actionHandler} />
             )}
           </Stack.Screen>
         ) : (
-          <Stack.Screen
-            name="ProfileScreen"
-            options={{ title: "Profile", headerTitleAlign: "center" }}
-          >
-            {/* Pass the received actionHandler down as signoutHandler prop */}
-            {(props) => (
-              <ProfileScreen
-                {...props}
-                signoutHandler={actionHandler}
-                user={user}
-              />
-            )}
-          </Stack.Screen>
+          // --- Authenticated User Screens ---
+          <>
+            <Stack.Screen
+              name="ProfileScreen"
+              options={{ title: "Profile", headerTitleAlign: "center" }}
+            >
+              {(props) => (
+                <ProfileScreen
+                  {...props}
+                  signoutHandler={actionHandler}
+                  user={user}
+                />
+              )}
+            </Stack.Screen>
+            {/* --- Add EditProfile Screen --- */}
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfileScreen}
+              options={{ title: "Edit Profile", headerTitleAlign: "center" }}
+            />
+          </>
         )}
 
         {/* Other screens reachable from Profile/Guest screens */}
@@ -84,5 +90,3 @@ const ProfileNavigator = ({ isGuest, actionHandler, user }) => {
 };
 
 export default ProfileNavigator;
-
-// Removed StyleSheet as it wasn't used here

@@ -7,18 +7,38 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  TouchableOpacity, // Use TouchableOpacity for icon button
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import icons
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 
+// --- Define Placeholder URIs ---
+// Option 1: Use a service like ui-avatars.com
+// (Generates initials-based avatars)
+const generateAvatarUrl = (name) =>
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    name || "App Rec" // Use initials from name or default
+  )}&background=random&color=fff&size=128`;
+
+// Option 2: Use local assets (make sure you have these images in your assets folder)
+// const DEFAULT_USER_AVATAR = require('../../assets/images/default-avatar.png');
+// const GUEST_AVATAR = require('../../assets/images/guest-avatar.png'); // If needed elsewhere
+
 const ProfileScreen = ({ navigation, signoutHandler, user }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(user.email.split("@")[0]);
-  const userName = !user.displayName
-    ? user?.email?.split("@")[0]
-    : user.displayName;
+
+  // --- Determine User Name ---
+  // Priority: 1. Firebase Auth displayName, 2. Email prefix
+  // Later, we can add Firestore display name as priority 1
+  const userName = user?.displayName || user?.email?.split("@")[0] || "User";
+
+  // --- Determine Profile Image URI ---
+  const profileImageUri = user?.photoURL || generateAvatarUrl(userName);
+  // If using local assets:
+  // const profileImageSource = user?.photoURL ? { uri: user.photoURL } : DEFAULT_USER_AVATAR;
 
   function helpPressHandler() {
     console.log("Help Clicked");
@@ -27,6 +47,11 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
 
   function myTasksPressHandler() {
     navigation.navigate("Tasks");
+  }
+
+  // --- Navigate to Edit Profile Screen ---
+  function editProfileHandler() {
+    navigation.navigate("EditProfile"); // Navigate to the new screen
   }
 
   return (
@@ -40,17 +65,33 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
       >
         {/* Profile Section */}
         <View style={styles.profileSection}>
-          <Image
-            source={{
-              uri: "https://images.pexels.com/photos/1470677/pexels-photo-1470677.jpeg",
-            }}
-            style={styles.profileImage}
-          />
+          <View style={styles.profileImageContainer}>
+            <Image
+              // If using local assets, use source={profileImageSource}
+              source={{ uri: profileImageUri }}
+              style={styles.profileImage}
+              // Add defaultSource for better UX while image loads (optional)
+              // defaultSource={DEFAULT_USER_AVATAR} // If using local assets
+            />
+            {/* --- Add Edit Icon Button --- */}
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={editProfileHandler} // Add onPress handler
+            >
+              <MaterialCommunityIcons
+                name="pencil-outline"
+                size={20}
+                color={Colors.primaryDarkMaroon}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.name}>{userName}</Text>
+          {/* TODO: Add dynamic enrollment date here later */}
           <Text style={styles.memberSince}>Enrolled Jan 01, 2024</Text>
         </View>
 
-        {/* Stats Section */}
+        {/* Stats Section (Keep as is for now) */}
+        {/* ... existing stats code ... */}
         <View style={styles.statsContainer}>
           {[
             { label: "Day Streak", value: "223" },
@@ -67,9 +108,9 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
           ))}
         </View>
 
-        {/* Achievements Section */}
+        {/* Achievements Section (Keep as is for now) */}
+        {/* ... existing achievements code ... */}
         <Text style={styles.sectionTitle}>Achievements</Text>
-
         <Pressable
           onPress={() =>
             navigation.navigate("DummyScreen", { title: "Practice Time" })
@@ -96,9 +137,9 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
           <Text style={styles.cardText}>Badge Collection</Text>
         </Pressable>
 
-        {/* Support Section */}
+        {/* Support Section (Keep as is for now) */}
+        {/* ... existing support code ... */}
         <Text style={styles.sectionTitle}>Settings</Text>
-
         <Pressable
           onPress={myTasksPressHandler}
           style={({ pressed }) => [
@@ -118,7 +159,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
           <Text style={styles.cardText}>Help</Text>
         </Pressable>
         <Pressable
-          // onPress={signoutHandler}
           onPress={() => setModalVisible(true)}
           style={({ pressed }) => [
             styles.card,
@@ -128,13 +168,14 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
           <Text style={styles.cardText}>Sign out</Text>
         </Pressable>
 
-        {/* Footer */}
+        {/* Footer (Keep as is for now) */}
+        {/* ... existing copyright code ... */}
         <Text style={styles.copyright}>
           © 2025 Apprec8. All rights reserved.
         </Text>
 
-        {/* Sign-Out Confirmation Modal */}
-        {/* Reusable Confirmation Modal */}
+        {/* Sign-Out Confirmation Modal (Keep as is) */}
+        {/* ... existing modal code ... */}
         <ConfirmationModal
           visible={modalVisible}
           title="Are you sure you want to sign out?"
@@ -149,16 +190,33 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
   );
 };
 
+// --- Update Styles ---
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   scrollContainer: { flexGrow: 1, paddingBottom: 20 },
   profileSection: { alignItems: "center", marginBottom: 20 },
+  profileImageContainer: {
+    // Added container for positioning edit icon
+    position: "relative",
+    marginBottom: 8, // Add some space below image container
+  },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
     borderColor: Colors.primaryMaroon200,
+  },
+  editIcon: {
+    // Style for the edit icon button
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: Colors.primaryWhite, // White background
+    borderRadius: 15, // Make it circular
+    padding: 5, // Padding around the icon
+    borderWidth: 1,
+    borderColor: Colors.primaryDarkMaroon,
   },
   name: {
     fontSize: 20,
@@ -195,7 +253,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    color: Colors.primaryDarkMaroon,
+    color: Colors.primaryDarkMaroon, // Match header style perhaps?
   },
   card: {
     backgroundColor: Colors.primaryMaroon100,
@@ -215,9 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: Colors.primaryDarkMaroon,
   },
-  pressedCard: {
-    opacity: 0.8,
-  },
+  // pressedCard style was unused, remove or implement if needed
 });
 
 export default ProfileScreen;
