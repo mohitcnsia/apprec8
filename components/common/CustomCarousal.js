@@ -33,19 +33,6 @@ const getImageSource = (item) => {
 const containsMetadata = (item) =>
   Boolean(item?.title || item?.duration || item?.type || item?.author);
 
-// This looks bad. Why carousal should figure out data. It should get what is required and it should passon what it has
-const getSystemDesignTopicData = (id) => {
-  // This will be a DB/Cache/Elastic-Search call ideally
-  return systemDesignTopics.find((topic) => topic.id === id) || null;
-};
-
-const getPsychologyTopicData = (parentId) => {
-  // This will be a DB/Cache/Elastic-Search call ideally
-  return psychologyTopics.filter(
-    (topic) => topic.parentIds.indexOf(parentId) >= 0
-  );
-};
-
 const CarouselItem = React.memo(
   ({ item, imageWidth, imageHeight, navigation }) => {
     console.log("CarouselItem rendering item:", JSON.stringify(item, null, 2)); // <-- ADD LOG 1

@@ -1,441 +1,680 @@
-// functions/index.js
-const functions = require("firebase-functions"); // General import
-const { onRequest } = require("firebase-functions/v2/https"); // v2 HTTPS import
+// functions/index.js - Using ONLY v1 SDK Syntax
+
+const functions = require("firebase-functions"); // Use v1 main import
 const admin = require("firebase-admin");
 
 // Initialize Firebase Admin SDK
-admin.initializeApp();
+try {
+  if (admin.apps.length === 0) {
+    admin.initializeApp();
+    console.log("Firebase Admin SDK initialized.");
+  }
+} catch (e) {
+  console.error("Firebase admin initialization error", e);
+}
 
-// Get a reference to Firestore
 const db = admin.firestore();
 
-// Define reusable runtime options for functions
-const functionOptions = {
-  memory: "256MiB", // Lowest memory setting
-  timeoutSeconds: 60, // Slightly reduced timeout
+// --- Define Region and Runtime Options for v1 ---
+const region = "us-central1"; // Your chosen region
+const runtimeOptions = {
+  memory: "256MB",
+  timeoutSeconds: 60,
 };
 
-const bulkFunctionOptions = {
-  memory: "256MiB", // Lowest memory setting
-  timeoutSeconds: 60, // Default timeout
-};
-
-// --- Single Item Add Functions ---
-
+// =========================================================
+// --- Auth Trigger (v1 Syntax) ---
+// =========================================================
 /**
- * Adds or updates a single category document using its 'id'.
- * Handles 'title', 'subtitle', and 'carouselGroup' fields.
- * Expects a POST request with JSON body containing category data.
- * Example Body:
- * {
- * "id": "psy",                     // Document ID for the category
- * "title": "Psychology",           // Main display name
- * "image": "URL_FROM_STORAGE",     // Full HTTPS URL
- * "subtitle": "Class XI",          // Subtitle/Description
- * "order": 2,                      // Display order
- * "carouselGroup": "classroom",    // Group for UI filtering
- * "type": "COURSE",                // Type for navigation logic
- * "duration": "20 hr",             // Optional duration
- * "author": "Seema Joshi"          // Optional author
- * }
+ * V1 Auth Trigger: Runs when a new Firebase Auth user is created.
  */
-exports.addCategory = onRequest(functionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const categoryData = req.body;
-    const requiredFields = ["id", "title", "image", "order", "carouselGroup"];
-    for (const field of requiredFields) {
-      if (
-        categoryData[field] === undefined ||
-        categoryData[field] === null ||
-        categoryData[field] === ""
-      ) {
-        return res
-          .status(400)
-          .send(`Missing or empty required field: ${field}`);
-      }
-    }
-    const categoryId = categoryData.id;
-    const categoryRef = db.collection("categories").doc(categoryId);
-
-    await categoryRef.set({
-      title: categoryData.title,
-      image: categoryData.image,
-      subtitle: categoryData.subtitle || "",
-      order: categoryData.order,
-      carouselGroup: categoryData.carouselGroup, // Included
-      type: categoryData.type || "COURSE",
-      duration: categoryData.duration || "",
-      author: categoryData.author || "",
-    });
-
-    console.log(`Successfully added/updated category: ${categoryId}`);
-    return res.status(201).send({ success: true, id: categoryId });
-  } catch (error) {
-    console.error("Error adding category:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
-
-/**
- * Adds or updates a single topic document using its 'id'.
- * Links to a category via 'categoryId'. Includes boolean flags for content.
- * Expects a POST request with JSON body containing topic data.
- * Example Body:
- * {
- * "id": "4-imo-add",         // Document ID for the topic
- * "categoryId": "imo",       // ID of the parent category
- * "title": "Addition",
- * "order": 2,
- * "hasStudy": true,          // Boolean flag
- * "hasQuiz": false,          // Boolean flag
- * "type": "ACTIVITY",        // Optional original type
- * "otherActivities": []      // Optional array of other activity types
- * }
- */
-exports.addTopic = onRequest(functionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const topicData = req.body;
-    const requiredFields = ["id", "categoryId", "title", "order"];
-    for (const field of requiredFields) {
-      if (topicData[field] === undefined || topicData[field] === null) {
-        return res.status(400).send(`Missing required field: ${field}`);
-      }
-    }
-    const hasStudy = topicData.hasStudy === true;
-    const hasQuiz = topicData.hasQuiz === true;
-    const topicId = topicData.id;
-    const topicRef = db.collection("topics").doc(topicId);
-
-    const dataToSave = {
-      categoryId: topicData.categoryId,
-      title: topicData.title,
-      order: topicData.order,
-      hasStudy: hasStudy,
-      hasQuiz: hasQuiz,
-      otherActivities: Array.isArray(topicData.otherActivities)
-        ? topicData.otherActivities
-        : [],
-      type: topicData.type || "ACTIVITY",
-    };
-
-    await topicRef.set(dataToSave);
+exports.initializeNewUser = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .auth.user()
+  .onCreate(async (user) => {
+    const userId = user.uid;
+    const email = user.email || "";
     console.log(
-      `Successfully added/updated topic: ${topicId} under category ${topicData.categoryId}`
+      `V1 auth.user().onCreate: Initializing user: ${userId}, email: ${email}`
     );
-    return res
-      .status(201)
-      .send({ success: true, id: topicId, data: dataToSave });
-  } catch (error) {
-    console.error("Error adding topic:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
-
-/**
- * Adds or updates study content for a specific topic.
- * Uses the 'topicId' as the document ID in the 'studyContent' collection.
- * Expects a POST request with JSON body containing study content data.
- * Example Body:
- * {
- * "topicId": "4-imo-add",       // ID of the topic this content belongs to
- * "name": "Addition Study",   // Display name for the reader screen
- * "author": "Mohit Chilkoti",
- * "content": "## Addition Basics\n...",
- * "coverImage": "OPTIONAL_URL_FROM_STORAGE",
- * "additionalImages": ["OPTIONAL_URL_1"]
- * }
- */
-exports.addStudyContent = onRequest(functionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const contentData = req.body;
-    const requiredFields = ["topicId", "name", "author", "content"];
-    for (const field of requiredFields) {
-      if (!contentData[field]) {
-        return res.status(400).send(`Missing required field: ${field}`);
-      }
-    }
-    const topicId = contentData.topicId;
-    const studyContentRef = db.collection("studyContent").doc(topicId);
-
-    const dataToSave = {
-      name: contentData.name,
-      author: contentData.author,
-      content: contentData.content,
-      coverImage: contentData.coverImage || null,
-      additionalImages: Array.isArray(contentData.additionalImages)
-        ? contentData.additionalImages
-        : [],
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    const userRef = db.collection("users").doc(userId);
+    const userStatsRef = db.collection("userStats").doc(userId);
+    const defaultUsername = email
+      ? email.split("@")[0]
+      : `User_${userId.substring(0, 6)}`;
+    const userData = {
+      userId: userId,
+      email: email,
+      username: defaultUsername,
+      phone: "",
+      createdAt: now,
+      lastUpdatedAt: now,
+      lastActivityAt: null,
     };
-
-    await studyContentRef.set(dataToSave);
-    console.log(
-      `Successfully added/updated study content for topic: ${topicId}`
-    );
-    return res.status(201).send({ success: true, id: topicId });
-  } catch (error) {
-    console.error("Error adding study content:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
-
-/**
- * Adds a single new quiz question to the 'quizQuestions' collection.
- * Links to a topic via 'topicId'. Uses auto-generated document ID.
- * Expects a POST request with JSON body containing question data.
- * Example Body:
- * {
- * "topicId": "4-imo-mul",
- * "question": "19 x __ = 152", // Use 'question' field
- * "options": ["6", "7", "8", "9"],
- * "answer": "8",               // Use 'answer' field
- * "explanation": "Because 19 * 8 = 152.",
- * "order": 1                 // Order within the quiz
- * }
- */
-exports.addQuizQuestion = onRequest(functionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const questionData = req.body;
-    const requiredFields = [
-      "topicId",
-      "question",
-      "options",
-      "answer",
-      "order",
-    ];
-    for (const field of requiredFields) {
-      if (questionData[field] === undefined || questionData[field] === null) {
-        if (field === "options" && !Array.isArray(questionData.options)) {
-          return res.status(400).send(`Field 'options' must be an array.`);
-        } else if (field !== "options") {
-          return res.status(400).send(`Missing required field: ${field}`);
-        }
-      }
-    }
-    if (!Array.isArray(questionData.options)) {
-      return res.status(400).send("Field 'options' must be an array.");
-    }
-
-    const dataToSave = {
-      topicId: questionData.topicId,
-      question: questionData.question, // Use 'question' field
-      options: questionData.options,
-      answer: questionData.answer, // Use 'answer' field
-      explanation: questionData.explanation || "",
-      order: questionData.order,
+    const userStatsData = {
+      userId: userId,
+      totalStars: 0,
+      currentStreak: 0,
+      totalQuizzesCompleted: 0,
     };
-
-    const docRef = await db.collection("quizQuestions").add(dataToSave);
-    console.log(
-      `Successfully added quiz question with ID: ${docRef.id} for topic ${questionData.topicId}`
-    );
-    return res.status(201).send({ success: true, id: docRef.id });
-  } catch (error) {
-    console.error("Error adding quiz question:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
-
-// --- Bulk Add Functions ---
-
-/**
- * Adds multiple category documents using a batch write.
- * Handles 'title', 'subtitle', and 'carouselGroup'.
- * Expects POST with JSON body: { "categories": [{cat1}, {cat2}, ...] }
- */
-exports.bulkAddCategories = onRequest(bulkFunctionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const categoriesArray = req.body.categories;
-    if (!Array.isArray(categoriesArray) || categoriesArray.length === 0) {
-      return res
-        .status(400)
-        .send("Request body must contain a non-empty 'categories' array.");
-    }
-    if (categoriesArray.length > 500) {
-      return res
-        .status(400)
-        .send("Cannot add more than 500 categories in one batch.");
-    }
-
     const batch = db.batch();
-    const categoriesCol = db.collection("categories");
-    let processedCount = 0;
+    batch.set(userRef, userData);
+    batch.set(userStatsRef, userStatsData);
+    try {
+      await batch.commit();
+      console.log(
+        `V1 auth.user().onCreate: Successfully initialized documents for user ${userId}`
+      );
+    } catch (error) {
+      console.error(
+        `V1 auth.user().onCreate: Error initializing documents for user ${userId}:`,
+        error
+      );
+    }
+  });
 
-    categoriesArray.forEach((catData) => {
-      if (
-        catData.id &&
-        catData.title &&
-        catData.image &&
-        catData.order !== undefined &&
-        catData.carouselGroup
-      ) {
-        const categoryId = catData.id;
-        const categoryRef = categoriesCol.doc(categoryId);
-        const dataToSave = {
-          title: catData.title,
-          image: catData.image,
-          subtitle: catData.subtitle || "",
-          order: catData.order,
-          carouselGroup: catData.carouselGroup, // Included
-          type: catData.type || "COURSE",
-          duration: catData.duration || "",
-          author: catData.author || "",
-        };
-        batch.set(categoryRef, dataToSave);
-        processedCount++;
-      } else {
-        console.warn(
-          "Skipping invalid category data (missing id, title, image, order, or carouselGroup) in bulk add:",
-          catData
+// ===============================================================
+// --- HTTPS CALLABLE FUNCTION (v1 Syntax) ---
+// ===============================================================
+/**
+ * V1 Callable Function: Records quiz result, calculates stats/stars/streak.
+ * @param {object} data Data passed from the client.
+ * @param {functions.https.CallableContext} context Context object with auth info.
+ * @returns {Promise<object>} Result object.
+ */
+exports.recordQuizResult = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    // Note: Signature is (data, context)
+    // 1. Authentication & Input Validation
+    if (!context.auth) {
+      console.error(
+        "V1 onCall recordQuizResult: Unauthenticated call attempt."
+      );
+      // Use v1 HttpsError constructor
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const userId = context.auth.uid;
+    // Data comes directly from the 'data' parameter in v1
+    const { quizId, scoreAchieved, passingScore, maxScore } = data;
+    console.log(
+      `V1 onCall recordQuizResult: Received request for user ${userId}, quiz ${quizId}`
+    );
+
+    if (
+      !quizId ||
+      typeof scoreAchieved !== "number" ||
+      typeof passingScore !== "number" ||
+      typeof maxScore !== "number"
+    ) {
+      console.error("V1 onCall recordQuizResult: Invalid arguments received.", {
+        userId,
+        data,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Required data (quizId, scoreAchieved, passingScore, maxScore) is missing or invalid."
+      );
+    }
+
+    // 2. Check Passing Score
+    if (scoreAchieved < passingScore) {
+      console.log(
+        `V1 onCall recordQuizResult: User ${userId} did not pass quiz ${quizId}. Score: ${scoreAchieved} < ${passingScore}`
+      );
+      return { status: "not_passed", starsAwarded: 0, currentStreak: null };
+    }
+    console.log(
+      `V1 onCall recordQuizResult: User ${userId} PASSED quiz ${quizId}. Score: ${scoreAchieved}`
+    );
+
+    // 3. Timestamps and Date Logic (UTC) - Same logic
+    const now = admin.firestore.Timestamp.now();
+    const todayStart = new Date(now.toDate());
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const todayStartTimestamp = admin.firestore.Timestamp.fromDate(todayStart);
+
+    // 4. Firestore References - Same
+    const userRef = db.collection("users").doc(userId);
+    const userStatsRef = db.collection("userStats").doc(userId);
+    const quizAttemptRef = db
+      .collection("users")
+      .doc(userId)
+      .collection("quizAttempts")
+      .doc(quizId);
+
+    // 5. Firestore Transaction - Same core logic
+    try {
+      let starsAwarded = 0;
+      let newStreak = 0;
+      let incrementUniqueCompletions = 0;
+      let finalStreak = 0;
+      await db.runTransaction(async (transaction) => {
+        console.log(
+          `V1 onCall recordQuizResult: Starting transaction for user ${userId}, quiz ${quizId}`
         );
-      }
-    });
+        const userDoc = await transaction.get(userRef);
+        const userStatsDoc = await transaction.get(userStatsRef);
+        const quizAttemptDoc = await transaction.get(quizAttemptRef);
+        if (!userDoc.exists || !userStatsDoc.exists) {
+          console.error(
+            `V1 onCall recordQuizResult: User profile (${userDoc.exists}) / stats (${userStatsDoc.exists}) not found for user ${userId}.`
+          );
+          throw new Error("User profile or stats document missing."); // Internal error
+        }
+        const userData = userDoc.data();
+        const userStatsData = userStatsDoc.data();
+        const lastActivityAt = userData.lastActivityAt;
+        const currentStreak = userStatsData.currentStreak || 0;
 
-    if (processedCount === 0) {
-      return res
-        .status(400)
-        .send("No valid category data found in the request.");
+        // --- Quiz Completion & Stars Logic (Identical) ---
+        if (!quizAttemptDoc.exists) {
+          console.log(`V1: First completion ever.`);
+          starsAwarded = 5;
+          if (scoreAchieved >= maxScore) {
+            starsAwarded = 10;
+            console.log(`V1: 100% bonus.`);
+          }
+          incrementUniqueCompletions = 1;
+          transaction.set(quizAttemptRef, {
+            quizId: quizId,
+            userId: userId,
+            completed: true,
+            firstCompletionAt: now,
+            firstCompletionScore: scoreAchieved,
+            bestScore: scoreAchieved,
+            lastAttemptAt: now,
+            lastCompletionOfDay: now,
+          });
+        } else {
+          console.log(`V1: Subsequent completion.`);
+          const attemptData = quizAttemptDoc.data();
+          const lastCompletionOfDay = attemptData.lastCompletionOfDay;
+          if (
+            !lastCompletionOfDay ||
+            lastCompletionOfDay.toDate() < todayStart
+          ) {
+            console.log(`V1: First today.`);
+            starsAwarded = 1;
+            transaction.update(quizAttemptRef, {
+              bestScore: Math.max(attemptData.bestScore || 0, scoreAchieved),
+              lastAttemptAt: now,
+              lastCompletionOfDay: now,
+            });
+          } else {
+            console.log(`V1: Repeat today.`);
+            starsAwarded = 0;
+            transaction.update(quizAttemptRef, {
+              bestScore: Math.max(attemptData.bestScore || 0, scoreAchieved),
+              lastAttemptAt: now,
+            });
+          }
+        }
+        // --- Streak Calculation Logic (Identical) ---
+        if (!lastActivityAt) {
+          newStreak = 1;
+        } else {
+          const lastActivityDate = new Date(lastActivityAt.toDate());
+          lastActivityDate.setUTCHours(0, 0, 0, 0);
+          const yesterdayStart = new Date(todayStart);
+          yesterdayStart.setUTCDate(yesterdayStart.getUTCDate() - 1);
+          if (lastActivityDate.getTime() === yesterdayStart.getTime()) {
+            newStreak = currentStreak + 1;
+          } else if (lastActivityDate.getTime() < yesterdayStart.getTime()) {
+            newStreak = 1;
+          } else {
+            newStreak = currentStreak;
+          }
+        }
+        finalStreak = newStreak;
+        console.log(`V1: Streak calc. New streak: ${finalStreak}`);
+        // --- Prepare Updates ---
+        transaction.update(userStatsRef, {
+          totalStars: admin.firestore.FieldValue.increment(starsAwarded),
+          totalQuizzesCompleted: admin.firestore.FieldValue.increment(
+            incrementUniqueCompletions
+          ),
+          currentStreak: newStreak,
+        });
+        transaction.update(userRef, {
+          lastActivityAt: now,
+          lastUpdatedAt: now,
+        });
+      }); // End transaction
+      console.log(
+        `V1 onCall recordQuizResult: Transaction successful. Stars: ${starsAwarded}, Streak: ${finalStreak}`
+      );
+      return {
+        status: "success",
+        starsAwarded: starsAwarded,
+        currentStreak: finalStreak,
+      };
+    } catch (error) {
+      console.error(
+        `V1 onCall recordQuizResult: Transaction error for user ${userId}, quiz ${quizId}:`,
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        error.message || "Failed to record quiz result."
+      );
     }
+  });
 
-    await batch.commit();
-    console.log(
-      `Successfully added ${processedCount} categories via bulk operation.`
-    );
-    return res.status(201).send({ success: true, count: processedCount });
-  } catch (error) {
-    console.error("Error adding categories in bulk:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
+// ==========================================================
+// --- EXISTING HTTPS FUNCTIONS (Converted to v1 Syntax) ---
+// ==========================================================
 
-/**
- * Adds multiple topic documents using a batch write.
- * Expects POST with JSON body: { "topics": [{topic1}, {topic2}, ...] }
- */
-exports.bulkAddTopics = onRequest(bulkFunctionOptions, async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
-  }
-  try {
-    const topicsArray = req.body.topics;
-    if (!Array.isArray(topicsArray) || topicsArray.length === 0) {
-      return res
-        .status(400)
-        .send("Request body must contain a non-empty 'topics' array.");
-    }
-    if (topicsArray.length > 500) {
-      return res
-        .status(400)
-        .send("Cannot add more than 500 topics in one batch.");
-    }
-
-    const batch = db.batch();
-    const topicsCol = db.collection("topics");
-    let processedCount = 0;
-
-    topicsArray.forEach((topicData) => {
-      if (
-        topicData.id &&
-        topicData.categoryId &&
-        topicData.title &&
-        topicData.order !== undefined
-      ) {
-        const topicId = topicData.id;
-        const topicRef = topicsCol.doc(topicId);
-        const dataToSave = {
-          categoryId: topicData.categoryId,
-          title: topicData.title,
-          order: topicData.order,
-          hasStudy: topicData.hasStudy === true,
-          hasQuiz: topicData.hasQuiz === true,
-          otherActivities: Array.isArray(topicData.otherActivities)
-            ? topicData.otherActivities
-            : [],
-          type: topicData.type || "ACTIVITY",
-        };
-        batch.set(topicRef, dataToSave);
-        processedCount++;
-      } else {
-        console.warn("Skipping invalid topic data in bulk add:", topicData);
-      }
-    });
-
-    if (processedCount === 0) {
-      return res.status(400).send("No valid topic data found in the request.");
-    }
-
-    await batch.commit();
-    console.log(
-      `Successfully added ${processedCount} topics via bulk operation.`
-    );
-    return res.status(201).send({ success: true, count: processedCount });
-  } catch (error) {
-    console.error("Error adding topics in bulk:", error);
-    return res
-      .status(500)
-      .send({ success: false, error: "Internal Server Error" });
-  }
-});
-
-/**
- * Adds/Updates multiple study content docs using a batch write.
- * Expects POST with JSON body: { "studyItems": [{item1}, {item2}, ...] }
- */
-exports.bulkAddStudyContent = onRequest(
-  bulkFunctionOptions,
-  async (req, res) => {
+/** V1: Adds or updates a single category document. */
+exports.addCategory = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
-      return res.status(405).send("Method Not Allowed");
+      res.status(405).send("Method Not Allowed");
+      return;
     }
     try {
-      const studyItemsArray = req.body.studyItems;
+      const categoryData = req.body;
+      const requiredFields = ["id", "title", "image", "order", "carouselGroup"];
+      for (const field of requiredFields) {
+        if (
+          categoryData[field] === undefined ||
+          categoryData[field] === null ||
+          String(categoryData[field]).trim() === ""
+        ) {
+          console.warn(`V1 addCategory: Missing/empty field: ${field}`);
+          res
+            .status(400)
+            .send({ success: false, error: `Missing/empty field: ${field}` });
+          return;
+        }
+      }
+      const categoryId = String(categoryData.id);
+      const categoryRef = db.collection("categories").doc(categoryId);
+      await categoryRef.set(
+        {
+          title: categoryData.title,
+          image: categoryData.image,
+          subtitle: categoryData.subtitle || "",
+          order: categoryData.order,
+          carouselGroup: categoryData.carouselGroup,
+          type: categoryData.type || "COURSE",
+          duration: categoryData.duration || "",
+          author: categoryData.author || "",
+        },
+        { merge: true }
+      );
+      console.log(`V1 addCategory: Success for id: ${categoryId}`);
+      res.status(201).send({ success: true, id: categoryId });
+    } catch (error) {
+      console.error("V1 addCategory: Error:", error);
+      res.status(500).send({ success: false, error: "Internal Server Error" });
+    }
+  });
+
+/** V1: Adds or updates a single topic document. */
+exports.addTopic = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const topicData = req.body;
+      const requiredFields = ["id", "categoryId", "title", "order"];
+      for (const field of requiredFields) {
+        if (topicData[field] === undefined || topicData[field] === null) {
+          console.warn(`V1 addTopic: Missing field: ${field}`);
+          res
+            .status(400)
+            .send({ success: false, error: `Missing field: ${field}` });
+          return;
+        }
+      }
+      const topicId = String(topicData.id);
+      const topicRef = db.collection("topics").doc(topicId);
+      const dataToSave = {
+        categoryId: topicData.categoryId,
+        title: topicData.title,
+        order: topicData.order,
+        hasStudy: topicData.hasStudy === true,
+        hasQuiz: topicData.hasQuiz === true,
+        otherActivities: Array.isArray(topicData.otherActivities)
+          ? topicData.otherActivities
+          : [],
+        type: topicData.type || "ACTIVITY",
+      };
+      await topicRef.set(dataToSave, { merge: true });
+      console.log(`V1 addTopic: Success for id: ${topicId}`);
+      res.status(201).send({ success: true, id: topicId, data: dataToSave });
+    } catch (error) {
+      console.error("V1 addTopic: Error:", error);
+      res.status(500).send({ success: false, error: "Internal Server Error" });
+    }
+  });
+
+/** V1: Adds or updates study content for a specific topic. */
+exports.addStudyContent = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const contentData = req.body;
+      const requiredFields = ["topicId", "name", "author", "content"];
+      for (const field of requiredFields) {
+        if (!contentData[field] || String(contentData[field]).trim() === "") {
+          console.warn(`V1 addStudyContent: Missing/empty field: ${field}`);
+          res
+            .status(400)
+            .send({ success: false, error: `Missing/empty field: ${field}` });
+          return;
+        }
+      }
+      const topicId = String(contentData.topicId);
+      const studyContentRef = db.collection("studyContent").doc(topicId);
+      const dataToSave = {
+        name: contentData.name,
+        author: contentData.author,
+        content: contentData.content,
+        coverImage: contentData.coverImage || null,
+        additionalImages: Array.isArray(contentData.additionalImages)
+          ? contentData.additionalImages
+          : [],
+      };
+      await studyContentRef.set(dataToSave, { merge: true });
+      console.log(`V1 addStudyContent: Success for topicId: ${topicId}`);
+      res.status(201).send({ success: true, id: topicId });
+    } catch (error) {
+      console.error("V1 addStudyContent: Error:", error);
+      res.status(500).send({ success: false, error: "Internal Server Error" });
+    }
+  });
+
+/** V1: Adds a single new quiz question. */
+exports.addQuizQuestion = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const questionData = req.body;
+      const requiredFields = [
+        "topicId",
+        "question",
+        "options",
+        "answer",
+        "order",
+      ];
+      for (const field of requiredFields) {
+        if (questionData[field] === undefined || questionData[field] === null) {
+          console.warn(`V1 addQuizQuestion: Missing field: ${field}`);
+          res
+            .status(400)
+            .send({ success: false, error: `Missing field: ${field}` });
+          return;
+        }
+        if (
+          field !== "explanation" &&
+          String(questionData[field]).trim() === ""
+        ) {
+          console.warn(`V1 addQuizQuestion: Empty field: ${field}`);
+          res
+            .status(400)
+            .send({ success: false, error: `Empty field: ${field}` });
+          return;
+        }
+      }
+      if (
+        !Array.isArray(questionData.options) ||
+        questionData.options.length === 0
+      ) {
+        console.warn(`V1 addQuizQuestion: Options invalid.`);
+        res.status(400).send({
+          success: false,
+          error: "Field 'options' must be a non-empty array.",
+        });
+        return;
+      }
+      const dataToSave = {
+        topicId: questionData.topicId,
+        question: questionData.question,
+        options: questionData.options,
+        answer: questionData.answer,
+        explanation: questionData.explanation || "",
+        order: questionData.order,
+      };
+      const docRef = await db.collection("quizQuestions").add(dataToSave);
+      console.log(`V1 addQuizQuestion: Success, new id: ${docRef.id}`);
+      res.status(201).send({ success: true, id: docRef.id });
+    } catch (error) {
+      console.error("V1 addQuizQuestion: Error:", error);
+      res.status(500).send({ success: false, error: "Internal Server Error" });
+    }
+  });
+
+// --- Bulk Add Functions (v1 Syntax) ---
+
+/** V1: Adds multiple category documents using a batch write. */
+exports.bulkAddCategories = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const { categories: categoriesArray } = req.body;
+      if (!Array.isArray(categoriesArray) || categoriesArray.length === 0) {
+        res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'categories' array.",
+        });
+        return;
+      }
+      if (categoriesArray.length > 500) {
+        res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 categories in one batch.",
+        });
+        return;
+      }
+      const batch = db.batch();
+      const categoriesCol = db.collection("categories");
+      let processedCount = 0;
+      let skippedCount = 0;
+      categoriesArray.forEach((catData) => {
+        if (
+          catData.id &&
+          catData.title &&
+          String(catData.title).trim() !== "" &&
+          catData.image &&
+          String(catData.image).trim() !== "" &&
+          catData.order !== undefined &&
+          catData.order !== null &&
+          catData.carouselGroup &&
+          String(catData.carouselGroup).trim() !== ""
+        ) {
+          const categoryId = String(catData.id);
+          const categoryRef = categoriesCol.doc(categoryId);
+          const dataToSave = {
+            title: catData.title,
+            image: catData.image,
+            subtitle: catData.subtitle || "",
+            order: catData.order,
+            carouselGroup: catData.carouselGroup,
+            type: catData.type || "COURSE",
+            duration: catData.duration || "",
+            author: catData.author || "",
+          };
+          batch.set(categoryRef, dataToSave, { merge: true });
+          processedCount++;
+        } else {
+          skippedCount++;
+          console.warn("V1 bulkAddCategories: Skipping invalid data:", catData);
+        }
+      });
+      if (processedCount === 0) {
+        res.status(400).send({
+          success: false,
+          error: "No valid category data found.",
+          skipped: skippedCount,
+        });
+        return;
+      }
+      await batch.commit();
+      console.log(
+        `V1: Bulk add categories complete. Processed: ${processedCount}, Skipped: ${skippedCount}.`
+      );
+      res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
+    } catch (error) {
+      console.error("V1: Error bulk adding categories:", error);
+      res.status(500).send({ success: false, error: "Bulk operation failed." });
+    }
+  });
+
+/** V1: Adds multiple topic documents using a batch write. */
+exports.bulkAddTopics = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const { topics: topicsArray } = req.body;
+      if (!Array.isArray(topicsArray) || topicsArray.length === 0) {
+        res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'topics' array.",
+        });
+        return;
+      }
+      if (topicsArray.length > 500) {
+        res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 topics in one batch.",
+        });
+        return;
+      }
+      const batch = db.batch();
+      const topicsCol = db.collection("topics");
+      let processedCount = 0;
+      let skippedCount = 0;
+      topicsArray.forEach((topicData) => {
+        if (
+          topicData.id &&
+          topicData.categoryId &&
+          String(topicData.categoryId).trim() !== "" &&
+          topicData.title &&
+          String(topicData.title).trim() !== "" &&
+          topicData.order !== undefined &&
+          topicData.order !== null
+        ) {
+          const topicId = String(topicData.id);
+          const topicRef = topicsCol.doc(topicId);
+          const dataToSave = {
+            categoryId: topicData.categoryId,
+            title: topicData.title,
+            order: topicData.order,
+            hasStudy: topicData.hasStudy === true,
+            hasQuiz: topicData.hasQuiz === true,
+            otherActivities: Array.isArray(topicData.otherActivities)
+              ? topicData.otherActivities
+              : [],
+            type: topicData.type || "ACTIVITY",
+          };
+          batch.set(topicRef, dataToSave, { merge: true });
+          processedCount++;
+        } else {
+          skippedCount++;
+          console.warn("V1 bulkAddTopics: Skipping invalid data:", topicData);
+        }
+      });
+      if (processedCount === 0) {
+        res.status(400).send({
+          success: false,
+          error: "No valid topic data found.",
+          skipped: skippedCount,
+        });
+        return;
+      }
+      await batch.commit();
+      console.log(
+        `V1: Bulk add topics complete. Processed: ${processedCount}, Skipped: ${skippedCount}.`
+      );
+      res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
+    } catch (error) {
+      console.error("V1: Error bulk adding topics:", error);
+      res.status(500).send({ success: false, error: "Bulk operation failed." });
+    }
+  });
+
+/** V1: Adds/Updates multiple study content docs using a batch write. */
+exports.bulkAddStudyContent = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+    try {
+      const { studyItems: studyItemsArray } = req.body;
       if (!Array.isArray(studyItemsArray) || studyItemsArray.length === 0) {
-        return res
-          .status(400)
-          .send("Request body must contain a non-empty 'studyItems' array.");
+        res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'studyItems' array.",
+        });
+        return;
       }
       if (studyItemsArray.length > 500) {
-        return res
-          .status(400)
-          .send("Cannot process more than 500 study items in one batch.");
+        res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 study items in one batch.",
+        });
+        return;
       }
-
       const batch = db.batch();
       const studyCol = db.collection("studyContent");
       let processedCount = 0;
-
+      let skippedCount = 0;
       studyItemsArray.forEach((itemData) => {
         if (
           itemData.topicId &&
           itemData.name &&
+          String(itemData.name).trim() !== "" &&
           itemData.author &&
-          itemData.content
+          String(itemData.author).trim() !== "" &&
+          itemData.content &&
+          String(itemData.content).trim() !== ""
         ) {
-          const topicId = itemData.topicId;
+          const topicId = String(itemData.topicId);
           const studyRef = studyCol.doc(topicId);
           const dataToSave = {
             name: itemData.name,
@@ -446,76 +685,87 @@ exports.bulkAddStudyContent = onRequest(
               ? itemData.additionalImages
               : [],
           };
-          batch.set(studyRef, dataToSave);
+          batch.set(studyRef, dataToSave, { merge: true });
           processedCount++;
         } else {
+          skippedCount++;
           console.warn(
-            "Skipping invalid study item data in bulk add:",
+            "V1 bulkAddStudyContent: Skipping invalid data:",
             itemData
           );
         }
       });
-
       if (processedCount === 0) {
-        return res
-          .status(400)
-          .send("No valid study item data found in the request.");
+        res.status(400).send({
+          success: false,
+          error: "No valid study item data found.",
+          skipped: skippedCount,
+        });
+        return;
       }
-
       await batch.commit();
       console.log(
-        `Successfully added/updated ${processedCount} study items via bulk operation.`
+        `V1: Bulk add study content complete. Processed: ${processedCount}, Skipped: ${skippedCount}.`
       );
-      return res.status(201).send({ success: true, count: processedCount });
+      res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
-      console.error("Error adding study items in bulk:", error);
-      return res
-        .status(500)
-        .send({ success: false, error: "Internal Server Error" });
+      console.error("V1: Error bulk adding study content:", error);
+      res.status(500).send({ success: false, error: "Bulk operation failed." });
     }
-  }
-);
+  });
 
-/**
- * Adds multiple new quiz questions using a batch write.
- * Expects POST with JSON body: { "questions": [{q1}, {q2}, ...] }
- */
-exports.bulkAddQuizQuestions = onRequest(
-  bulkFunctionOptions,
-  async (req, res) => {
+/** V1: Adds multiple new quiz questions using a batch write. */
+exports.bulkAddQuizQuestions = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
-      return res.status(405).send("Method Not Allowed");
+      res.status(405).send("Method Not Allowed");
+      return;
     }
     try {
-      const questionsArray = req.body.questions;
+      const { questions: questionsArray } = req.body;
       if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
-        return res
-          .status(400)
-          .send("Request body must contain a non-empty 'questions' array.");
+        res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'questions' array.",
+        });
+        return;
       }
       if (questionsArray.length > 500) {
-        return res
-          .status(400)
-          .send("Cannot add more than 500 questions in one batch.");
+        res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 questions in one batch.",
+        });
+        return;
       }
-
       const batch = db.batch();
       const quizCol = db.collection("quizQuestions");
       let processedCount = 0;
-
+      let skippedCount = 0;
       questionsArray.forEach((qData) => {
         if (
           qData.topicId &&
+          String(qData.topicId).trim() !== "" &&
           qData.question &&
+          String(qData.question).trim() !== "" &&
           Array.isArray(qData.options) &&
+          qData.options.length > 0 &&
           qData.answer !== undefined &&
-          qData.order !== undefined
+          qData.answer !== null &&
+          String(qData.answer).trim() !== "" &&
+          qData.order !== undefined &&
+          qData.order !== null
         ) {
           const dataToSave = {
             topicId: qData.topicId,
-            question: qData.question, // Use 'question'
+            question: qData.question,
             options: qData.options,
-            answer: qData.answer, // Use 'answer'
+            answer: qData.answer,
             explanation: qData.explanation || "",
             order: qData.order,
           };
@@ -523,29 +773,32 @@ exports.bulkAddQuizQuestions = onRequest(
           batch.set(newQuestionRef, dataToSave);
           processedCount++;
         } else {
+          skippedCount++;
           console.warn(
-            "Skipping invalid quiz question data in bulk add:",
+            "V1 bulkAddQuizQuestions: Skipping invalid data:",
             qData
           );
         }
       });
-
       if (processedCount === 0) {
-        return res
-          .status(400)
-          .send("No valid quiz question data found in the request.");
+        res.status(400).send({
+          success: false,
+          error: "No valid quiz question data found.",
+          skipped: skippedCount,
+        });
+        return;
       }
-
       await batch.commit();
       console.log(
-        `Successfully added ${processedCount} quiz questions via bulk operation.`
+        `V1: Bulk add quiz questions complete. Processed: ${processedCount}, Skipped: ${skippedCount}.`
       );
-      return res.status(201).send({ success: true, count: processedCount });
+      res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
-      console.error("Error adding quiz questions in bulk:", error);
-      return res
-        .status(500)
-        .send({ success: false, error: "Internal Server Error" });
+      console.error("V1: Error bulk adding quiz questions:", error);
+      res.status(500).send({ success: false, error: "Bulk operation failed." });
     }
-  }
-);
+  });

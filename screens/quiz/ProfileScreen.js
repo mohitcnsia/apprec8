@@ -1,7 +1,7 @@
-// screens/quiz/ProfileScreen.js
+// screens/profile/ProfileScreen.js
 
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useMemo } from "react"; // Import useMemo
+import React, { useState, useMemo, useEffect } from "react"; // Import useEffect
 import {
   View,
   Text,
@@ -10,58 +10,223 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  ActivityIndicator, // Import ActivityIndicator
+  RefreshControl, // Import RefreshControl for pull-to-refresh
+  Platform,
 } from "react-native";
-// Import desired icon set(s)
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import firestore from "@react-native-firebase/firestore"; // Import firestore
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
+import { authInstance } from "../../config/firebaseConfig"; // Import auth instance
 
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name || "App Rec"
+    name || "App Rec" // Fallback name
   )}&background=random&color=fff&size=128`;
 
-const ProfileScreen = ({ navigation, signoutHandler, user }) => {
+// Define default/empty stats structure
+const defaultStats = {
+  currentStreak: 0,
+  totalQuizzesCompleted: 0,
+  totalStars: 0,
+  // Add other stats with defaults if needed (e.g., globalRank: 'N/A', hours: 0)
+};
+
+const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
+  // Rename user prop to avoid conflict
   const [modalVisible, setModalVisible] = useState(false);
 
-  const userName = user?.displayName || user?.email?.split("@")[0] || "User";
-  const profileImageUri = user?.photoURL || generateAvatarUrl(userName);
+  // --- State for Firestore Data ---
+  const [userData, setUserData] = useState(null); // Data from /users/{userId}
+  const [userStats, setUserStats] = useState(defaultStats); // Data from /userStats/{userId}
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // For pull-to-refresh
 
-  // --- Format Enrollment Date ---
+  // Use auth instance directly to get current user reliably
+  const currentAuthUser = authInstance.currentUser;
+  const userId = currentAuthUser?.uid;
+
+  // --- Data Fetching Logic ---
+  const fetchData = async (isRefreshing = false) => {
+    if (!userId) {
+      setError("Not authenticated.");
+      setLoading(false);
+      if (isRefreshing) setRefreshing(false);
+      return;
+    }
+
+    if (!isRefreshing) setLoading(true); // Only show initial loading indicator
+    setError(null);
+
+    try {
+      const userRef = firestore().collection("users").doc(userId);
+      const statsRef = firestore().collection("userStats").doc(userId);
+
+      // Fetch both documents
+      const userDocPromise = userRef.get();
+      const statsDocPromise = statsRef.get();
+
+      const [userDoc, statsDoc] = await Promise.all([
+        userDocPromise,
+        statsDocPromise,
+      ]);
+
+      if (userDoc.exists) {
+        setUserData(userDoc.data());
+      } else {
+        console.warn(`User document not found for userId: ${userId}`);
+        setError("User profile data not found."); // Consider if this is an error state
+        setUserData(null); // Explicitly set to null if not found
+      }
+
+      if (statsDoc.exists) {
+        setUserStats(statsDoc.data());
+      } else {
+        console.warn(`User stats document not found for userId: ${userId}`);
+        // Don't set error, just use default stats
+        setUserStats(defaultStats);
+      }
+    } catch (err) {
+      console.error("Error fetching profile data:", err);
+      setError("Failed to load profile. Please try again.");
+    } finally {
+      setLoading(false);
+      if (isRefreshing) setRefreshing(false);
+    }
+  };
+
+  // Initial data fetch on mount
+  useEffect(() => {
+    fetchData();
+
+    // Optional: Set up listeners for real-time updates (more complex state management)
+    // Replace fetchData() call above with listener setup if needed.
+    // Example Listener Setup (add error handling and combine loading states):
+    /*
+    if (!userId) { setLoading(false); return; }
+    const userUnsubscribe = firestore().collection('users').doc(userId).onSnapshot(doc => setUserData(doc.exists ? doc.data() : null));
+    const statsUnsubscribe = firestore().collection('userStats').doc(userId).onSnapshot(doc => {
+        setUserStats(doc.exists ? doc.data() : defaultStats);
+        setLoading(false); // Consider loading done after first stats snapshot
+    });
+    return () => { userUnsubscribe(); statsUnsubscribe(); };
+    */
+  }, [userId]); // Re-fetch if userId changes (e.g., re-authentication)
+
+  // Handler for pull-to-refresh
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData(true); // Pass flag indicating refresh
+  }, [userId]); // Dependency array for useCallback
+
+  // --- Determine Display Values (using fetched data with fallbacks) ---
+  const displayName =
+    userData?.username ||
+    currentAuthUser?.displayName ||
+    currentAuthUser?.email?.split("@")[0] ||
+    "User";
+  // Use userData.profileImageUrl if you store it, otherwise fallback
+  const profileImageUri =
+    userData?.profileImageUrl ||
+    currentAuthUser?.photoURL ||
+    generateAvatarUrl(displayName);
+
   const enrollmentDate = useMemo(() => {
-    if (user?.metadata?.creationTime) {
+    let dateToFormat = null;
+
+    if (
+      userData?.createdAt &&
+      typeof userData.createdAt.toDate === "function"
+    ) {
+      // If userData.createdAt exists and is a Firestore Timestamp, use it
+      dateToFormat = userData.createdAt.toDate();
+    } else if (currentAuthUser?.metadata?.creationTime) {
+      // Otherwise, try using the auth metadata creation time (which is likely a string)
+      // Convert it directly to a JS Date object
       try {
-        const date = new Date(user.metadata.creationTime);
-        // Format as Month Day, Year (e.g., Apr 10, 2025)
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short", // 'short' for 'Apr', 'long' for 'April'
-          day: "numeric",
-        });
-      } catch (error) {
-        console.error("Error parsing creationTime:", error);
-        return "Date Unavailable"; // Fallback on error
+        dateToFormat = new Date(currentAuthUser.metadata.creationTime);
+        // Optional: Check if the date is valid after conversion
+        if (isNaN(dateToFormat.getTime())) {
+          dateToFormat = null; // Invalidate if parsing failed
+          console.warn(
+            "Failed to parse creationTime string:",
+            currentAuthUser.metadata.creationTime
+          );
+        }
+      } catch (parseError) {
+        console.error("Error creating Date from creationTime:", parseError);
+        dateToFormat = null;
       }
     }
-    return "Enrolled Date Unavailable"; // Fallback if no creationTime
-  }, [user?.metadata?.creationTime]); // Recalculate only if creationTime changes
 
+    // Now format the valid date object, if we have one
+    if (dateToFormat) {
+      try {
+        return dateToFormat.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      } catch (formatError) {
+        console.error("Error formatting date:", formatError);
+      }
+    }
+
+    // Fallback if no valid date could be determined
+    return "Date Unavailable";
+  }, [userData?.createdAt, currentAuthUser?.metadata?.creationTime]); // Dependencies
+
+  // --- Navigation Handlers (Keep Existing) ---
   function helpPressHandler() {
     navigation.navigate("LinkScreen", { data: helpTopics });
   }
-
   function myTasksPressHandler() {
     navigation.navigate("Tasks");
   }
-
   function editProfileHandler() {
-    navigation.navigate("EditProfile");
+    // Pass current userData to EditProfile screen if needed
+    navigation.navigate("EditProfile", {
+      currentUsername: userData?.username,
+      currentPhone: userData?.phone,
+    });
+  }
+  function contactUsPressHandler() {
+    navigation.navigate("cntct");
   }
 
-  function contactUsPressHandler() {
-    navigation.navigate("cntct"); // Navigate to Contact Us form
+  // --- Render Logic ---
+  if (loading) {
+    return (
+      <LinearGradient
+        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        style={styles.loadingContainer}
+      >
+        <ActivityIndicator size="large" color={Colors.primaryOrange} />
+      </LinearGradient>
+    );
+  }
+
+  // You might want a more prominent error display
+  if (error && !userData) {
+    // Show error if loading failed and no data is available
+    return (
+      <LinearGradient
+        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        style={styles.loadingContainer}
+      >
+        <Text style={styles.errorText}>{error}</Text>
+        <TouchableOpacity
+          onPress={() => fetchData()}
+          style={styles.retryButton}
+        >
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
+      </LinearGradient>
+    );
   }
 
   return (
@@ -72,47 +237,66 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          // Add RefreshControl
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={Colors.primaryOrange} // iOS tint color
+            colors={[Colors.primaryOrange, Colors.primaryDarkMaroon]} // Android colors
+          />
+        }
       >
-        {/* Profile Section */}
+        {/* Profile Section - Use fetched/derived data */}
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <Image
               source={{ uri: profileImageUri }}
               style={styles.profileImage}
+              onError={(e) =>
+                console.log("Error loading profile image:", e.nativeEvent.error)
+              } // Add error handling for image
             />
-            <TouchableOpacity
-              style={styles.editIcon}
-              onPress={editProfileHandler}
-            >
-              <MaterialCommunityIcons
-                name="pencil-outline"
-                size={20}
-                color={Colors.primaryDarkMaroon}
-              />
-            </TouchableOpacity>
+            {/* Only show edit button if profile data loaded successfully */}
+            {userData && (
+              <TouchableOpacity
+                style={styles.editIcon}
+                onPress={editProfileHandler}
+              >
+                <MaterialCommunityIcons
+                  name="pencil-outline"
+                  size={20}
+                  color={Colors.primaryDarkMaroon}
+                />
+              </TouchableOpacity>
+            )}
           </View>
-          <Text style={styles.name}>{userName}</Text>
-          {/* --- Use dynamic enrollmentDate --- */}
+          <Text style={styles.name}>{displayName}</Text>
           <Text style={styles.memberSince}>Enrolled {enrollmentDate}</Text>
+          {/* Display error inline if data is partially loaded */}
+          {error && <Text style={styles.inlineErrorText}>{error}</Text>}
         </View>
 
-        {/* --- Stats Section --- Optional: Add icons here too */}
+        {/* Stats Section - Use fetched userStats */}
         <View style={styles.statsContainer}>
           {[
-            // Example with icons
             {
               label: "Day Streak",
-              value: "223",
+              value: userStats.currentStreak ?? 0,
               icon: "calendar-check-outline",
             },
-            { label: "Questions", value: "3,000", icon: "help-circle-outline" },
-            { label: "Stars", value: "1,57,899", icon: "star-outline" },
-            { label: "Exp Level", value: "200", icon: "trending-up" },
-            { label: "Global Rank", value: "1", icon: "earth" },
-            { label: "Hours", value: "47", icon: "timer-outline" },
+            {
+              label: "Quizzes",
+              value: (userStats.totalQuizzesCompleted ?? 0).toLocaleString(),
+              icon: "help-circle-outline",
+            }, // Format number
+            {
+              label: "Stars",
+              value: (userStats.totalStars ?? 0).toLocaleString(),
+              icon: "star-outline",
+            },
           ].map((item, index) => (
             <View key={index} style={styles.statCard}>
-              {/* Add Icon to Stat Card */}
               <MaterialCommunityIcons
                 name={item.icon}
                 size={28}
@@ -125,9 +309,8 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
           ))}
         </View>
 
-        {/* --- Achievements Section --- */}
-        <Text style={styles.sectionTitle}>Achievements</Text>
-        {/* Consider adding icons to these cards too */}
+        {/* Achievements Section (Keep Existing) */}
+        {/* <Text style={styles.sectionTitle}>Achievements</Text>
         <Pressable
           onPress={() =>
             navigation.navigate("DummyScreen", { title: "Practice Time" })
@@ -156,9 +339,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
         </Pressable>
         <Pressable
           onPress={() =>
-            navigation.navigate("DummyScreen", {
-              title: "Your Badges are ",
-            })
+            navigation.navigate("DummyScreen", { title: "Your Badges are " })
           }
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
@@ -171,17 +352,13 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
             />
             <Text style={styles.cardText}>Badge Collection</Text>
           </View>
-        </Pressable>
+        </Pressable> */}
 
-        {/* --- Settings & Support Section --- */}
+        {/* Settings & Support Section (Keep Existing) */}
         <Text style={styles.sectionTitle}>Settings & Support</Text>
-        {/* My Tasks with Icon */}
         <Pressable
           onPress={myTasksPressHandler}
-          style={({ pressed }) => [
-            styles.card,
-            pressed && styles.pressedCard, // Use consistent pressed style
-          ]}
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
           <View style={styles.cardContent}>
             <MaterialCommunityIcons
@@ -193,7 +370,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
             <Text style={styles.cardText}>My Tasks</Text>
           </View>
         </Pressable>
-        {/* Contact Us with Icon */}
         <Pressable
           onPress={contactUsPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
@@ -208,7 +384,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
             <Text style={styles.cardText}>Contact Us</Text>
           </View>
         </Pressable>
-        {/* Help with Icon */}
         <Pressable
           onPress={helpPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
@@ -223,39 +398,45 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
             <Text style={styles.cardText}>Help</Text>
           </View>
         </Pressable>
-        {/* Sign out with Icon */}
-        <Pressable
-          onPress={() => setModalVisible(true)}
-          style={({ pressed }) => [
-            styles.card,
-            styles.signOutCard, // Optional different style for sign out
-            pressed && styles.pressedCard,
-          ]}
-        >
-          <View style={styles.cardContent}>
-            <MaterialCommunityIcons
-              name="logout"
-              size={22}
-              color={Colors.warningRed}
-              style={styles.cardIcon}
-            />
-            <Text style={[styles.cardText, styles.signOutText]}>Sign out</Text>
-          </View>
-        </Pressable>
+        {/* Sign out Button */}
+        {typeof signoutHandler === "function" && ( // Only show if handler is provided
+          <Pressable
+            onPress={() => setModalVisible(true)}
+            style={({ pressed }) => [
+              styles.card,
+              styles.signOutCard,
+              pressed && styles.pressedCard,
+            ]}
+          >
+            <View style={styles.cardContent}>
+              <MaterialCommunityIcons
+                name="logout"
+                size={22}
+                color={Colors.warningRed}
+                style={styles.cardIcon}
+              />
+              <Text style={[styles.cardText, styles.signOutText]}>
+                Sign out
+              </Text>
+            </View>
+          </Pressable>
+        )}
 
-        {/* Footer */}
+        {/* Footer (Keep Existing) */}
         <Text style={styles.copyright}>
           © {new Date().getFullYear()} Apprec8. All rights reserved.
         </Text>
 
-        {/* Sign-Out Confirmation Modal */}
+        {/* Sign-Out Confirmation Modal (Keep Existing) */}
         <ConfirmationModal
           visible={modalVisible}
           title="Are you sure you want to sign out?"
           onCancel={() => setModalVisible(false)}
           onConfirm={() => {
             setModalVisible(false);
-            signoutHandler();
+            if (typeof signoutHandler === "function") {
+              signoutHandler();
+            }
           }}
         />
       </ScrollView>
@@ -263,11 +444,50 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
   );
 };
 
-// --- Update Styles ---
+// --- Styles (Keep Existing, Add loading/error styles) ---
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30 }, // Added paddingTop
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: Platform.OS === "android" ? 40 : 50,
+  }, // Adjust paddingTop for status bar
+  loadingContainer: {
+    // Style for loading/error states
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    // Style for error message on full screen error
+    color: Colors.warningRed || "#FF6B6B",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    fontFamily: "delius", // Use your font
+  },
+  inlineErrorText: {
+    // Style for error message below profile info
+    color: Colors.warningRed || "#FF6B6B",
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 5,
+    fontFamily: "delius", // Use your font
+  },
+  retryButton: {
+    marginTop: 15,
+    backgroundColor: Colors.primaryOrange,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    borderRadius: 20,
+  },
+  retryButtonText: {
+    color: Colors.primaryWhite,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   scrollContainer: { flexGrow: 1, paddingBottom: 20 },
-  profileSection: { alignItems: "center", marginBottom: 30 }, // Increased marginBottom
+  profileSection: { alignItems: "center", marginBottom: 30 },
   profileImageContainer: {
     position: "relative",
     marginBottom: 8,
@@ -278,6 +498,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 4,
     borderColor: Colors.primaryMaroon200,
+    backgroundColor: Colors.primaryLightGray, // Add a background color while loading/error
   },
   editIcon: {
     position: "absolute",
@@ -288,7 +509,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderColor: Colors.primaryDarkMaroon,
-    // Add shadow for elevation effect (optional)
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
@@ -296,101 +516,96 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   name: {
-    fontSize: 22, // Slightly larger
+    fontSize: 22,
     fontWeight: "bold",
-    marginTop: 10, // Increased marginTop
+    marginTop: 10,
     color: Colors.primaryWhite,
-    fontFamily: "sans-serif-medium", // Example font
+    fontFamily: "sans-serif-medium",
   },
   memberSince: {
     color: Colors.primaryLightGray,
-    fontSize: 13, // Slightly smaller
-    marginTop: 4, // Added marginTop
+    fontSize: 13,
+    marginTop: 4,
   },
   statsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Keeps space between items
-    marginBottom: 30, // Increased marginBottom
-    // Add negative margin to counteract card margin if needed for alignment
-    // marginHorizontal: -5,
+    justifyContent: "space-between",
+    marginBottom: 30,
   },
   statCard: {
-    width: "31%", // Adjusted width for 3 cards per row (approx)
-    backgroundColor: Colors.primaryMaroon100 + "dd", // Added transparency
+    width: "31%",
+    backgroundColor: Colors.primaryMaroon100 + "dd",
     paddingVertical: 16,
-    paddingHorizontal: 8, // Adjusted padding
+    paddingHorizontal: 8,
     alignItems: "center",
-    borderRadius: 10, // Slightly more rounded
-    marginBottom: 12, // Increased spacing
-    // marginHorizontal: 5, // Add horizontal margin for spacing
+    borderRadius: 10,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3, // Increased elevation
+    shadowRadius: 1,
+    elevation: 1,
+    minHeight: 110, // Ensure cards have a minimum height
+    justifyContent: "center", // Center content vertically
   },
   statValue: {
-    fontSize: 20, // Adjusted size
+    fontSize: 20,
     fontWeight: "bold",
     color: Colors.primaryLightGray,
-    marginTop: 4, // Spacing below icon
+    marginTop: 4,
+    textAlign: "center", // Ensure value is centered
   },
   statLabel: {
     color: Colors.primaryLightGray,
-    fontSize: 11, // Smaller label
-    textAlign: "center", // Center label text
+    fontSize: 11,
+    textAlign: "center",
     marginTop: 2,
   },
   sectionTitle: {
-    fontSize: 18, // Keep size or adjust
-    fontWeight: "600", // Slightly bolder
-    marginBottom: 15, // Increased spacing
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 15,
     color: Colors.primaryDarkMaroon,
-    // borderBottomWidth: 1, // Optional separator
-    // borderBottomColor: Colors.primaryMaroon200,
-    // paddingBottom: 5,
   },
   card: {
-    backgroundColor: Colors.primaryMaroon100 + "dd", // Added transparency
+    backgroundColor: Colors.primaryMaroon100 + "dd",
     borderRadius: 10,
-    marginBottom: 12, // Consistent spacing
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 1,
     elevation: 2,
-    overflow: "hidden", // Ensures Pressable ripple effect stays within bounds
+    overflow: "hidden",
   },
   cardContent: {
-    // Use this View inside Pressable for padding and layout
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 16,
   },
   cardIcon: {
-    marginRight: 15, // Space between icon and text
+    marginRight: 15,
   },
   cardText: {
     color: Colors.primaryLightGray,
-    fontSize: 16, // Slightly larger text
-    flex: 1, // Allow text to take available space if needed (e.g., with badge)
+    fontSize: 16,
+    flex: 1,
   },
   signOutCard: {
-    backgroundColor: Colors.warningRedLight + "aa", // Different background for sign out
+    backgroundColor: Colors.warningRedLight + "aa",
   },
   signOutText: {
-    color: Colors.warningRed, // Different text color for sign out
+    color: Colors.warningRed,
     fontWeight: "bold",
   },
   copyright: {
     textAlign: "center",
-    color: Colors.primaryDarkMaroon, // Match section title color
-    marginTop: 30, // Increased spacing
+    color: Colors.primaryDarkMaroon,
+    marginTop: 30,
     marginBottom: 10,
     fontSize: 12,
   },
   pressedCard: {
-    // Define the pressed style for reuse
     opacity: 0.75,
   },
 });

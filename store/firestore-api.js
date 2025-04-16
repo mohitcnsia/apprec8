@@ -1,4 +1,4 @@
-import { db } from "../config/firebaseConfig";
+import { db, authInstance } from "../config/firebaseConfig";
 import {
   collection,
   getDocs,
@@ -11,28 +11,71 @@ import {
 const TASKS_COLLECTION = "tasks"; // Firestore collection name
 
 export async function fetchTasks() {
+  const currentUser = authInstance.currentUser; // Use the imported instance
+
+  if (!currentUser) {
+    console.log("No user logged in to fetch tasks.");
+    return [];
+  }
+
+  const userId = currentUser.uid;
+
   try {
-    const querySnapshot = await getDocs(collection(db, TASKS_COLLECTION));
+    console.log(`Workspaceing tasks for user: ${userId}`);
+    const tasksQuery = db // Use the imported db instance
+      .collection(TASKS_COLLECTION)
+      .where("userId", "==", userId); // Filter by userId field in your task documents
+
+    const querySnapshot = await tasksQuery.get();
+
     const tasks = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    console.log(`Workspaceed ${tasks.length} tasks for user ${userId}`);
     return tasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
-    return [];
+    if (error.code === "firestore/permission-denied") {
+      console.error(
+        "Firestore permission denied. Check rules and ensure task documents have a correct 'userId' field matching the logged-in user."
+      );
+    }
+    return []; // Return empty array on error
   }
 }
 
 export async function addTaskToFirestore(taskData) {
+  const currentUser = authInstance.currentUser;
+
+  if (!currentUser) {
+    console.error("Error adding task: No user logged in.");
+    throw new Error("User must be logged in to add tasks."); // Throw error if no user
+  }
+
+  const userId = currentUser.uid;
+
   try {
-    const { id, ...taskDataWithoutId } = taskData;
-    const docRef = await addDoc(collection(db, "tasks"), taskDataWithoutId);
-    // Return Firestore-generated ID with task data
-    return { id: docRef.id, ...taskDataWithoutId };
+    // Destructure potentially incoming client-side ID if needed, but don't save it
+    const { id, ...taskDataFromInput } = taskData;
+
+    // Create the object to save, merging input data with the userId
+    const dataToSave = {
+      ...taskDataFromInput, // Spread the original task data (title, details, etc.)
+      userId: userId, // **Add the logged-in user's ID**
+      createdAt: new Date(), // Optional: Add a server timestamp later if needed via rules/functions
+      // Or just use client time for simplicity now
+      isComplete: false, // Optional: Set default status if applicable
+    };
+
+    const docRef = await addDoc(collection(db, TASKS_COLLECTION), dataToSave);
+    console.log(`Task added with ID: ${docRef.id} for user ${userId}`);
+    // Return Firestore-generated ID with the *saved* data (including userId)
+    return { id: docRef.id, ...dataToSave };
   } catch (error) {
-    console.error("Error adding task:", error);
-    throw error;
+    console.error(`Error adding task for user ${userId}:`, error);
+    throw error; // Re-throw error for calling code to handle
   }
 }
 
