@@ -11,8 +11,8 @@ const db = admin.firestore();
 
 // Define reusable runtime options for functions
 const functionOptions = {
-  memory: "128MiB", // Lowest memory setting
-  timeoutSeconds: 30, // Slightly reduced timeout
+  memory: "256MiB", // Lowest memory setting
+  timeoutSeconds: 60, // Slightly reduced timeout
 };
 
 const bulkFunctionOptions = {

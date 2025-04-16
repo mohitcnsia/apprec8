@@ -1,5 +1,7 @@
+// screens/quiz/ProfileScreen.js
+
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react"; // Import useMemo
 import {
   View,
   Text,
@@ -7,41 +9,46 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
-  TouchableOpacity, // Use TouchableOpacity for icon button
+  TouchableOpacity,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import icons
+// Import desired icon set(s)
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../config/colors";
 import { helpTopics } from "../../data/app-topic-data";
 import Badge from "../../components/common/Badge";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 
-// --- Define Placeholder URIs ---
-// Option 1: Use a service like ui-avatars.com
-// (Generates initials-based avatars)
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name || "App Rec" // Use initials from name or default
+    name || "App Rec"
   )}&background=random&color=fff&size=128`;
-
-// Option 2: Use local assets (make sure you have these images in your assets folder)
-// const DEFAULT_USER_AVATAR = require('../../assets/images/default-avatar.png');
-// const GUEST_AVATAR = require('../../assets/images/guest-avatar.png'); // If needed elsewhere
 
 const ProfileScreen = ({ navigation, signoutHandler, user }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  // --- Determine User Name ---
-  // Priority: 1. Firebase Auth displayName, 2. Email prefix
-  // Later, we can add Firestore display name as priority 1
   const userName = user?.displayName || user?.email?.split("@")[0] || "User";
-
-  // --- Determine Profile Image URI ---
   const profileImageUri = user?.photoURL || generateAvatarUrl(userName);
-  // If using local assets:
-  // const profileImageSource = user?.photoURL ? { uri: user.photoURL } : DEFAULT_USER_AVATAR;
+
+  // --- Format Enrollment Date ---
+  const enrollmentDate = useMemo(() => {
+    if (user?.metadata?.creationTime) {
+      try {
+        const date = new Date(user.metadata.creationTime);
+        // Format as Month Day, Year (e.g., Apr 10, 2025)
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short", // 'short' for 'Apr', 'long' for 'April'
+          day: "numeric",
+        });
+      } catch (error) {
+        console.error("Error parsing creationTime:", error);
+        return "Date Unavailable"; // Fallback on error
+      }
+    }
+    return "Enrolled Date Unavailable"; // Fallback if no creationTime
+  }, [user?.metadata?.creationTime]); // Recalculate only if creationTime changes
 
   function helpPressHandler() {
-    console.log("Help Clicked");
     navigation.navigate("LinkScreen", { data: helpTopics });
   }
 
@@ -49,9 +56,12 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
     navigation.navigate("Tasks");
   }
 
-  // --- Navigate to Edit Profile Screen ---
   function editProfileHandler() {
-    navigation.navigate("EditProfile"); // Navigate to the new screen
+    navigation.navigate("EditProfile");
+  }
+
+  function contactUsPressHandler() {
+    navigation.navigate("cntct"); // Navigate to Contact Us form
   }
 
   return (
@@ -67,16 +77,12 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <Image
-              // If using local assets, use source={profileImageSource}
               source={{ uri: profileImageUri }}
               style={styles.profileImage}
-              // Add defaultSource for better UX while image loads (optional)
-              // defaultSource={DEFAULT_USER_AVATAR} // If using local assets
             />
-            {/* --- Add Edit Icon Button --- */}
             <TouchableOpacity
               style={styles.editIcon}
-              onPress={editProfileHandler} // Add onPress handler
+              onPress={editProfileHandler}
             >
               <MaterialCommunityIcons
                 name="pencil-outline"
@@ -86,42 +92,67 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
             </TouchableOpacity>
           </View>
           <Text style={styles.name}>{userName}</Text>
-          {/* TODO: Add dynamic enrollment date here later */}
-          <Text style={styles.memberSince}>Enrolled Jan 01, 2024</Text>
+          {/* --- Use dynamic enrollmentDate --- */}
+          <Text style={styles.memberSince}>Enrolled {enrollmentDate}</Text>
         </View>
 
-        {/* Stats Section (Keep as is for now) */}
-        {/* ... existing stats code ... */}
+        {/* --- Stats Section --- Optional: Add icons here too */}
         <View style={styles.statsContainer}>
           {[
-            { label: "Day Streak", value: "223" },
-            { label: "Questions", value: "3,000" },
-            { label: "Stars", value: "1,57,899" },
-            { label: "Exp Level", value: "200" },
-            { label: "Global Rank", value: "1" },
-            { label: "Hours", value: "47" },
+            // Example with icons
+            {
+              label: "Day Streak",
+              value: "223",
+              icon: "calendar-check-outline",
+            },
+            { label: "Questions", value: "3,000", icon: "help-circle-outline" },
+            { label: "Stars", value: "1,57,899", icon: "star-outline" },
+            { label: "Exp Level", value: "200", icon: "trending-up" },
+            { label: "Global Rank", value: "1", icon: "earth" },
+            { label: "Hours", value: "47", icon: "timer-outline" },
           ].map((item, index) => (
             <View key={index} style={styles.statCard}>
+              {/* Add Icon to Stat Card */}
+              <MaterialCommunityIcons
+                name={item.icon}
+                size={28}
+                color={Colors.primaryLightGray}
+                style={{ marginBottom: 5 }}
+              />
               <Text style={styles.statValue}>{item.value}</Text>
               <Text style={styles.statLabel}>{item.label}</Text>
             </View>
           ))}
         </View>
 
-        {/* Achievements Section (Keep as is for now) */}
-        {/* ... existing achievements code ... */}
+        {/* --- Achievements Section --- */}
         <Text style={styles.sectionTitle}>Achievements</Text>
+        {/* Consider adding icons to these cards too */}
         <Pressable
           onPress={() =>
             navigation.navigate("DummyScreen", { title: "Practice Time" })
           }
-          style={({ pressed }) => [
-            styles.card,
-            pressed && { opacity: 0.7 }, // Visual feedback when pressed
-          ]}
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
-          <Badge label="Coming Soon" />
-          <Text style={styles.cardText}>Practice Time</Text>
+          <View style={styles.cardContent}>
+            <Ionicons
+              name="time-outline"
+              size={20}
+              color={Colors.primaryLightGray}
+              style={styles.cardIcon}
+            />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.cardText}>Practice Time</Text>
+              <Badge label="Coming Soon" />
+            </View>
+          </View>
         </Pressable>
         <Pressable
           onPress={() =>
@@ -129,53 +160,95 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
               title: "Your Badges are ",
             })
           }
-          style={({ pressed }) => [
-            styles.card,
-            pressed && { opacity: 0.7 }, // Visual feedback when pressed
-          ]}
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
-          <Text style={styles.cardText}>Badge Collection</Text>
+          <View style={styles.cardContent}>
+            <Ionicons
+              name="ribbon-outline"
+              size={20}
+              color={Colors.primaryLightGray}
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardText}>Badge Collection</Text>
+          </View>
         </Pressable>
 
-        {/* Support Section (Keep as is for now) */}
-        {/* ... existing support code ... */}
-        <Text style={styles.sectionTitle}>Settings</Text>
+        {/* --- Settings & Support Section --- */}
+        <Text style={styles.sectionTitle}>Settings & Support</Text>
+        {/* My Tasks with Icon */}
         <Pressable
           onPress={myTasksPressHandler}
           style={({ pressed }) => [
             styles.card,
-            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+            pressed && styles.pressedCard, // Use consistent pressed style
           ]}
         >
-          <Text style={styles.cardText}>My Tasks</Text>
+          <View style={styles.cardContent}>
+            <MaterialCommunityIcons
+              name="check-circle-outline"
+              size={22}
+              color={Colors.primaryLightGray}
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardText}>My Tasks</Text>
+          </View>
         </Pressable>
+        {/* Contact Us with Icon */}
+        <Pressable
+          onPress={contactUsPressHandler}
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
+        >
+          <View style={styles.cardContent}>
+            <MaterialCommunityIcons
+              name="email-outline"
+              size={22}
+              color={Colors.primaryLightGray}
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardText}>Contact Us</Text>
+          </View>
+        </Pressable>
+        {/* Help with Icon */}
         <Pressable
           onPress={helpPressHandler}
-          style={({ pressed }) => [
-            styles.card,
-            pressed && { opacity: 0.7 }, // Visual feedback when pressed
-          ]}
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
-          <Text style={styles.cardText}>Help</Text>
+          <View style={styles.cardContent}>
+            <Ionicons
+              name="help-circle-outline"
+              size={24}
+              color={Colors.primaryLightGray}
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardText}>Help</Text>
+          </View>
         </Pressable>
+        {/* Sign out with Icon */}
         <Pressable
           onPress={() => setModalVisible(true)}
           style={({ pressed }) => [
             styles.card,
-            pressed && { opacity: 0.7 }, // Visual feedback when pressed
+            styles.signOutCard, // Optional different style for sign out
+            pressed && styles.pressedCard,
           ]}
         >
-          <Text style={styles.cardText}>Sign out</Text>
+          <View style={styles.cardContent}>
+            <MaterialCommunityIcons
+              name="logout"
+              size={22}
+              color={Colors.warningRed}
+              style={styles.cardIcon}
+            />
+            <Text style={[styles.cardText, styles.signOutText]}>Sign out</Text>
+          </View>
         </Pressable>
 
-        {/* Footer (Keep as is for now) */}
-        {/* ... existing copyright code ... */}
+        {/* Footer */}
         <Text style={styles.copyright}>
-          © 2025 Apprec8. All rights reserved.
+          © {new Date().getFullYear()} Apprec8. All rights reserved.
         </Text>
 
-        {/* Sign-Out Confirmation Modal (Keep as is) */}
-        {/* ... existing modal code ... */}
+        {/* Sign-Out Confirmation Modal */}
         <ConfirmationModal
           visible={modalVisible}
           title="Are you sure you want to sign out?"
@@ -192,13 +265,12 @@ const ProfileScreen = ({ navigation, signoutHandler, user }) => {
 
 // --- Update Styles ---
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, padding: 16, paddingTop: 30 }, // Added paddingTop
   scrollContainer: { flexGrow: 1, paddingBottom: 20 },
-  profileSection: { alignItems: "center", marginBottom: 20 },
+  profileSection: { alignItems: "center", marginBottom: 30 }, // Increased marginBottom
   profileImageContainer: {
-    // Added container for positioning edit icon
     position: "relative",
-    marginBottom: 8, // Add some space below image container
+    marginBottom: 8,
   },
   profileImage: {
     width: 100,
@@ -208,72 +280,119 @@ const styles = StyleSheet.create({
     borderColor: Colors.primaryMaroon200,
   },
   editIcon: {
-    // Style for the edit icon button
     position: "absolute",
     right: 0,
     bottom: 0,
-    backgroundColor: Colors.primaryWhite, // White background
-    borderRadius: 15, // Make it circular
-    padding: 5, // Padding around the icon
+    backgroundColor: Colors.primaryWhite,
+    borderRadius: 15,
+    padding: 5,
     borderWidth: 1,
     borderColor: Colors.primaryDarkMaroon,
+    // Add shadow for elevation effect (optional)
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   name: {
-    fontSize: 20,
+    fontSize: 22, // Slightly larger
     fontWeight: "bold",
-    marginTop: 8,
+    marginTop: 10, // Increased marginTop
     color: Colors.primaryWhite,
+    fontFamily: "sans-serif-medium", // Example font
   },
-  memberSince: { color: Colors.primaryLightGray },
+  memberSince: {
+    color: Colors.primaryLightGray,
+    fontSize: 13, // Slightly smaller
+    marginTop: 4, // Added marginTop
+  },
   statsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginBottom: 20,
+    justifyContent: "space-between", // Keeps space between items
+    marginBottom: 30, // Increased marginBottom
+    // Add negative margin to counteract card margin if needed for alignment
+    // marginHorizontal: -5,
   },
   statCard: {
-    width: "48%",
-    backgroundColor: Colors.primaryMaroon100,
-    padding: 16,
+    width: "31%", // Adjusted width for 3 cards per row (approx)
+    backgroundColor: Colors.primaryMaroon100 + "dd", // Added transparency
+    paddingVertical: 16,
+    paddingHorizontal: 8, // Adjusted padding
     alignItems: "center",
-    borderRadius: 8,
-    marginBottom: 10,
+    borderRadius: 10, // Slightly more rounded
+    marginBottom: 12, // Increased spacing
+    // marginHorizontal: 5, // Add horizontal margin for spacing
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3, // Increased elevation
   },
   statValue: {
-    fontSize: 22,
+    fontSize: 20, // Adjusted size
     fontWeight: "bold",
     color: Colors.primaryLightGray,
+    marginTop: 4, // Spacing below icon
   },
-  statLabel: { color: Colors.primaryLightGray },
+  statLabel: {
+    color: Colors.primaryLightGray,
+    fontSize: 11, // Smaller label
+    textAlign: "center", // Center label text
+    marginTop: 2,
+  },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: Colors.primaryDarkMaroon, // Match header style perhaps?
+    fontSize: 18, // Keep size or adjust
+    fontWeight: "600", // Slightly bolder
+    marginBottom: 15, // Increased spacing
+    color: Colors.primaryDarkMaroon,
+    // borderBottomWidth: 1, // Optional separator
+    // borderBottomColor: Colors.primaryMaroon200,
+    // paddingBottom: 5,
   },
   card: {
-    backgroundColor: Colors.primaryMaroon100,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 10,
+    backgroundColor: Colors.primaryMaroon100 + "dd", // Added transparency
+    borderRadius: 10,
+    marginBottom: 12, // Consistent spacing
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    overflow: "hidden", // Ensures Pressable ripple effect stays within bounds
   },
-  cardText: { color: Colors.primaryLightGray },
+  cardContent: {
+    // Use this View inside Pressable for padding and layout
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  cardIcon: {
+    marginRight: 15, // Space between icon and text
+  },
+  cardText: {
+    color: Colors.primaryLightGray,
+    fontSize: 16, // Slightly larger text
+    flex: 1, // Allow text to take available space if needed (e.g., with badge)
+  },
+  signOutCard: {
+    backgroundColor: Colors.warningRedLight + "aa", // Different background for sign out
+  },
+  signOutText: {
+    color: Colors.warningRed, // Different text color for sign out
+    fontWeight: "bold",
+  },
   copyright: {
     textAlign: "center",
-    color: "gray",
-    marginTop: 20,
+    color: Colors.primaryDarkMaroon, // Match section title color
+    marginTop: 30, // Increased spacing
     marginBottom: 10,
-    color: Colors.primaryDarkMaroon,
+    fontSize: 12,
   },
-  // pressedCard style was unused, remove or implement if needed
+  pressedCard: {
+    // Define the pressed style for reuse
+    opacity: 0.75,
+  },
 });
 
 export default ProfileScreen;
