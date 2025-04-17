@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
-import AppFlatList from "../components/common/list/AppFlatList"; // Adjust path if needed
+import AppFlatList from "../components/common/list/AppFlatList";
 // Import listener function for topics
-import { listenToCategoryTopics } from "../services/firestoreContentApi"; // Adjust path if needed
-import { Colors } from "../config/colors"; // Adjust path if needed
-
+import { listenToCategoryTopics } from "../services/firestoreContentApi";
+import { Colors } from "../config/colors";
 const LinksScreen = ({ route, navigation }) => {
   // Get parameters: either direct data (activity choices) or categoryId to fetch topics
   const activityData = route?.params?.data;
@@ -157,6 +156,10 @@ const LinksScreen = ({ route, navigation }) => {
         params = { errorMessage: `No action defined for "${item.title}".` };
         break;
     }
+
+    if (topicId === "cntct") targetScreen = "cntct";
+    else if (topicId === "faq") targetScreen = "DummyScreen";
+    else if (topicId === "tnc") targetScreen = "DummyScreen";
 
     if (targetScreen) {
       navigation.push(targetScreen, params); // Use push for better back navigation experience

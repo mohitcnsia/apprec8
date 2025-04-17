@@ -194,9 +194,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
       currentPhone: userData?.phone,
     });
   }
-  function contactUsPressHandler() {
-    navigation.navigate("cntct");
-  }
 
   // --- Render Logic ---
   if (loading) {
@@ -370,20 +367,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
             <Text style={styles.cardText}>My Tasks</Text>
           </View>
         </Pressable>
-        <Pressable
-          onPress={contactUsPressHandler}
-          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
-        >
-          <View style={styles.cardContent}>
-            <MaterialCommunityIcons
-              name="email-outline"
-              size={22}
-              color={Colors.primaryLightGray}
-              style={styles.cardIcon}
-            />
-            <Text style={styles.cardText}>Contact Us</Text>
-          </View>
-        </Pressable>
+
         <Pressable
           onPress={helpPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
