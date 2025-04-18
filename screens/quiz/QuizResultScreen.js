@@ -8,91 +8,88 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  Alert,
+  // Alert removed
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../config/colors";
-import { authInstance } from "../../config/firebaseConfig"; // Use your config
-import functions from "@react-native-firebase/functions"; // Import functions
+import { authInstance } from "../../config/firebaseConfig";
+import functions from "@react-native-firebase/functions";
 
 // --- Get screen width ---
 const screenWidth = Dimensions.get("window").width;
 const imageDiameter = screenWidth * 0.7;
 
 // Default passing score if not provided by navigation
-const DEFAULT_PASSING_SCORE = 1; // Set a sensible default, e.g., 1 for >= 1 correct answer
+const DEFAULT_PASSING_SCORE = 1;
+
+// --- Define callable function reference outside component ---
+// Ensure 'recordQuizResult' matches the deployed function name
+// Specify region if your function isn't in us-central1 and you haven't set a global default
+// const functionsInstance = functions().app.functions('your-region');
+// const recordQuizResult = functionsInstance.httpsCallable('recordQuizResult');
+const recordQuizResult = functions().httpsCallable("recordQuizResult");
 
 const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("User");
 
-  // --- Get Params ---
-  // Ensure all expected params are destructured, provide defaults
+  // --- Get Params (with defaults) ---
   const {
-    score = 0, // Default score to 0
-    totalQuestions = 0, // Default total to 0
-    topicId = null, // Default topicId to null
-    passingScore = DEFAULT_PASSING_SCORE, // Use default if not passed
-  } = route.params || {}; // Add fallback for route.params itself
-
-  // Use totalQuestions as maxScore unless a specific maxScore is passed
+    score = 0,
+    totalQuestions = 0,
+    topicId = null,
+    passingScore = DEFAULT_PASSING_SCORE,
+  } = route.params || {};
   const maxScore = route.params?.maxScore ?? totalQuestions;
 
   // --- State for Cloud Function Call ---
-  const [isSubmittingResult, setIsSubmittingResult] = useState(false);
+  // Removed isSubmittingResult, using submitStatus only
   const [submitError, setSubmitError] = useState(null);
   const [submitStatus, setSubmitStatus] = useState("idle"); // 'idle', 'submitting', 'success', 'error', 'skipped'
 
-  // --- Get Username (from Auth state, fallback to email) ---
+  // --- Get Username ---
   useEffect(() => {
     const currentUser = authInstance.currentUser;
     if (currentUser?.displayName) {
       setUsername(currentUser.displayName);
     } else if (currentUser?.email) {
-      const nameFromEmail = currentUser.email.split("@")[0];
-      setUsername(nameFromEmail);
+      setUsername(currentUser.email.split("@")[0]);
     } else {
-      console.warn(
-        "QuizResultScreen: Could not determine username (no displayName or email)."
-      );
+      console.warn("QuizResultScreen: Could not determine username.");
       setUsername("User");
     }
-  }, []); // Runs once on mount
+  }, []);
 
   // --- Submit Result to Cloud Function ---
   const submitQuizResult = useCallback(async () => {
-    const currentUser = authInstance.currentUser; // Ensure user is still logged in
+    const currentUser = authInstance.currentUser;
 
-    // Conditions to skip submission
+    // Conditions to skip submission (unchanged)
     if (!currentUser) {
-      console.log(
-        "QuizResultScreen: Skipping result submission (user not authenticated)."
-      );
+      console.log("QuizResultScreen: Skip submission (unauthenticated).");
       setSubmitStatus("skipped");
       return;
     }
     if (!topicId) {
-      console.log(
-        "QuizResultScreen: Skipping result submission (topicId missing)."
-      );
+      console.log("QuizResultScreen: Skip submission (no topicId).");
       setSubmitStatus("skipped");
       return;
     }
     if (score < passingScore) {
       console.log(
-        `QuizResultScreen: Skipping result submission (score ${score} < passingScore ${passingScore}).`
+        `QuizResultScreen: Skip submission (score ${score} < passingScore ${passingScore}).`
       );
       setSubmitStatus("skipped");
       return;
     }
     if (submitStatus !== "idle") {
       console.log(
-        `QuizResultScreen: Skipping result submission (already processed: ${submitStatus}).`
+        `QuizResultScreen: Skip submission (already processed: ${submitStatus}).`
       );
-      return; // Avoid multiple submissions
+      return;
     }
 
-    setIsSubmittingResult(true); // Legacy state for button disable
+    // Set status to submitting
     setSubmitStatus("submitting");
     setSubmitError(null);
     console.log(
@@ -100,41 +97,30 @@ const QuizResultScreen = ({ route, navigation }) => {
     );
 
     try {
-      // Ensure region matches your function deployment if not us-central1
-      // const functionsInstance = functions().app.functions('asia-south1');
-      // const recordQuizResult = functionsInstance.httpsCallable('recordQuizResult');
-      const recordQuizResult = functions().httpsCallable("recordQuizResult"); // Use default region or adjust
-
       const resultData = {
         quizId: topicId,
         scoreAchieved: score,
         passingScore: passingScore,
         maxScore: maxScore,
       };
-
       console.log("Calling 'recordQuizResult' with data:", resultData);
-      const result = await recordQuizResult(resultData);
+      const result = await recordQuizResult(resultData); // Use reference defined outside
       console.log("Cloud Function 'recordQuizResult' returned:", result.data);
 
-      // Check the status returned by the function
       if (result?.data?.status === "success") {
         console.log("Quiz result successfully recorded.");
         setSubmitStatus("success");
-        // Optional: Show feedback based on stars/streak from result.data
-        // Alert.alert("Progress Saved!", `You earned ${result.data.starsAwarded} stars! Current streak: ${result.data.currentStreak}`);
       } else if (result?.data?.status === "not_passed") {
-        // This case should have been caught earlier, but handle defensively
         console.warn(
           "QuizResultScreen: Cloud function reported 'not_passed' unexpectedly."
         );
-        setSubmitStatus("skipped");
+        setSubmitStatus("skipped"); // Treat as skipped if backend says not passed
       } else {
-        // Handle unexpected response structure or status
         console.error(
           "Cloud Function 'recordQuizResult' returned unexpected status:",
           result.data
         );
-        setSubmitError("An unexpected response was received from the server.");
+        setSubmitError("An unexpected server response was received.");
         setSubmitStatus("error");
       }
     } catch (error) {
@@ -142,42 +128,41 @@ const QuizResultScreen = ({ route, navigation }) => {
         "Cloud Function 'recordQuizResult' call failed:",
         JSON.stringify(error)
       );
-      // Provide more context if available
       const message =
+        error.details?.message ||
         error.message ||
-        "Failed to save quiz results. Please check your connection.";
+        "Failed to save quiz results. Please check connection."; // Try to get more specific error
       setSubmitError(message);
       setSubmitStatus("error");
-      Alert.alert("Error Saving Progress", message);
-    } finally {
-      setIsSubmittingResult(false); // Legacy state
+      // Alert removed - rely on text feedback instead
+      // Alert.alert("Error Saving Progress", message);
     }
-  }, [topicId, score, passingScore, maxScore, submitStatus]); // Dependencies
+    // No finally needed as we don't have the separate boolean state anymore
+  }, [topicId, score, passingScore, maxScore, submitStatus]); // Dependencies remain the same
 
-  // Effect to trigger submission on mount
+  // Effect to trigger submission on mount (unchanged)
   useEffect(() => {
     console.log("QuizResultScreen mounted. Params:", route.params);
-    // Only attempt submission if status is idle (initial state)
     if (submitStatus === "idle") {
       submitQuizResult();
     }
-  }, [submitQuizResult, submitStatus]); // Re-run if submitQuizResult changes (rare) or status changes
+  }, [submitQuizResult, submitStatus]);
 
+  // Navigation Handler (unchanged)
   const handlePlayAgain = () => {
     if (topicId) {
       console.log(`Playing again for topicId: ${topicId}`);
-      // Make sure to pass necessary params if Quiz screen needs them
       navigation.replace("Quiz", {
         topicId: topicId,
-        passingScore: passingScore /* pass other needed params */,
+        passingScore: passingScore,
       });
     } else {
       console.error("Cannot play again: topicId is missing.");
-      navigation.popToTop(); // Go back home if essential data is missing
+      navigation.popToTop();
     }
   };
 
-  // Display score even if totalQuestions is 0 to avoid NaN
+  // Score Text (unchanged)
   const scoreText =
     totalQuestions > 0 ? `${score} / ${totalQuestions}` : `${score}`;
 
@@ -186,19 +171,18 @@ const QuizResultScreen = ({ route, navigation }) => {
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
+      {/* Header, Image, Score Text (Unchanged) */}
       <Text style={styles.header}>Quiz Over!</Text>
       <Image
         style={styles.imageContainer}
-        source={require("../../assets/images/success.png")} // Verify path
+        source={require("../../assets/images/success.png")}
       />
       <Text style={styles.text}>Well done, {username}!</Text>
       <Text style={styles.text}>
         You scored <Text style={styles.highlight}>{scoreText}</Text>.
-        {/* Optionally show passing score */}
-        {/* <Text style={styles.subText}>(Passing Score: {passingScore})</Text> */}
       </Text>
 
-      {/* Show loading/error status */}
+      {/* UI Feedback based on submitStatus */}
       {submitStatus === "submitting" && (
         <ActivityIndicator
           size="small"
@@ -214,13 +198,15 @@ const QuizResultScreen = ({ route, navigation }) => {
       {submitStatus === "success" && (
         <Text style={styles.successText}>Progress saved!</Text>
       )}
+      {/* Could add text for 'skipped' or 'not_passed' if needed */}
 
+      {/* Buttons - disable based on submitStatus */}
       <PaperButton
         mode="contained"
         style={styles.button}
         labelStyle={styles.buttonText}
         onPress={handlePlayAgain}
-        disabled={submitStatus === "submitting"} // Disable while submitting
+        disabled={submitStatus === "submitting"} // Check status directly
       >
         Play Again
       </PaperButton>
@@ -229,7 +215,7 @@ const QuizResultScreen = ({ route, navigation }) => {
         style={styles.button}
         labelStyle={[styles.buttonText, { color: Colors.primaryWhite }]}
         onPress={() => navigation.popToTop()}
-        disabled={submitStatus === "submitting"}
+        disabled={submitStatus === "submitting"} // Check status directly
       >
         Back to Home / Topics
       </PaperButton>
@@ -237,6 +223,7 @@ const QuizResultScreen = ({ route, navigation }) => {
   );
 };
 
+// Styles (Unchanged)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -253,13 +240,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    marginBottom: 5, // Reduced margin
+    marginBottom: 5,
     textAlign: "center",
     color: Colors.primaryWhite,
     fontFamily: "delius",
   },
   subText: {
-    // Style for optional text like passing score
     fontSize: 14,
     marginBottom: 10,
     textAlign: "center",
@@ -280,32 +266,23 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.primaryWhite,
   },
-  activityIndicator: {
-    marginVertical: 10, // Added vertical margin
-  },
+  activityIndicator: { marginVertical: 10 },
   errorText: {
-    color: Colors.warningRed || "#FF6B6B", // Use your warning color
-    marginVertical: 10, // Added vertical margin
+    color: Colors.warningRed || "#FF6B6B",
+    marginVertical: 10,
     textAlign: "center",
     fontFamily: "delius",
     fontSize: 14,
   },
   successText: {
-    color: Colors.successGreen || "#4CAF50", // Use a success color
-    marginVertical: 10, // Added vertical margin
+    color: Colors.successGreen || "#4CAF50",
+    marginVertical: 10,
     textAlign: "center",
     fontFamily: "deliusBold",
     fontSize: 14,
   },
-  button: {
-    marginTop: 15,
-    paddingVertical: 5,
-    width: "70%",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontFamily: "deliusBold",
-  },
+  button: { marginTop: 15, paddingVertical: 5, width: "70%" },
+  buttonText: { fontSize: 16, fontFamily: "deliusBold" },
 });
 
 export default QuizResultScreen;
