@@ -75,198 +75,6 @@ exports.initializeNewUser = functions
     }
   });
 
-// ===============================================================
-// --- HTTPS CALLABLE FUNCTION (v1 Syntax) ---
-// ===============================================================
-/**
- * V1 Callable Function: Records quiz result, calculates stats/stars/streak.
- * @param {object} data Data passed from the client.
- * @param {functions.https.CallableContext} context Context object with auth info.
- * @returns {Promise<object>} Result object.
- */
-exports.recordQuizResult = functions
-  .region(region)
-  .runWith(runtimeOptions)
-  .https.onCall(async (data, context) => {
-    // Note: Signature is (data, context)
-    // 1. Authentication & Input Validation
-    if (!context.auth) {
-      console.error(
-        "V1 onCall recordQuizResult: Unauthenticated call attempt."
-      );
-      // Use v1 HttpsError constructor
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "The function must be called while authenticated."
-      );
-    }
-    const userId = context.auth.uid;
-    // Data comes directly from the 'data' parameter in v1
-    const { quizId, scoreAchieved, passingScore, maxScore } = data;
-    console.log(
-      `V1 onCall recordQuizResult: Received request for user ${userId}, quiz ${quizId}`
-    );
-
-    if (
-      !quizId ||
-      typeof scoreAchieved !== "number" ||
-      typeof passingScore !== "number" ||
-      typeof maxScore !== "number"
-    ) {
-      console.error("V1 onCall recordQuizResult: Invalid arguments received.", {
-        userId,
-        data,
-      });
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "Required data (quizId, scoreAchieved, passingScore, maxScore) is missing or invalid."
-      );
-    }
-
-    // 2. Check Passing Score
-    if (scoreAchieved < passingScore) {
-      console.log(
-        `V1 onCall recordQuizResult: User ${userId} did not pass quiz ${quizId}. Score: ${scoreAchieved} < ${passingScore}`
-      );
-      return { status: "not_passed", starsAwarded: 0, currentStreak: null };
-    }
-    console.log(
-      `V1 onCall recordQuizResult: User ${userId} PASSED quiz ${quizId}. Score: ${scoreAchieved}`
-    );
-
-    // 3. Timestamps and Date Logic (UTC) - Same logic
-    const now = admin.firestore.Timestamp.now();
-    const todayStart = new Date(now.toDate());
-    todayStart.setUTCHours(0, 0, 0, 0);
-    const todayStartTimestamp = admin.firestore.Timestamp.fromDate(todayStart);
-
-    // 4. Firestore References - Same
-    const userRef = db.collection("users").doc(userId);
-    const userStatsRef = db.collection("userStats").doc(userId);
-    const quizAttemptRef = db
-      .collection("users")
-      .doc(userId)
-      .collection("quizAttempts")
-      .doc(quizId);
-
-    // 5. Firestore Transaction - Same core logic
-    try {
-      let starsAwarded = 0;
-      let newStreak = 0;
-      let incrementUniqueCompletions = 0;
-      let finalStreak = 0;
-      await db.runTransaction(async (transaction) => {
-        console.log(
-          `V1 onCall recordQuizResult: Starting transaction for user ${userId}, quiz ${quizId}`
-        );
-        const userDoc = await transaction.get(userRef);
-        const userStatsDoc = await transaction.get(userStatsRef);
-        const quizAttemptDoc = await transaction.get(quizAttemptRef);
-        if (!userDoc.exists || !userStatsDoc.exists) {
-          console.error(
-            `V1 onCall recordQuizResult: User profile (${userDoc.exists}) / stats (${userStatsDoc.exists}) not found for user ${userId}.`
-          );
-          throw new Error("User profile or stats document missing."); // Internal error
-        }
-        const userData = userDoc.data();
-        const userStatsData = userStatsDoc.data();
-        const lastActivityAt = userData.lastActivityAt;
-        const currentStreak = userStatsData.currentStreak || 0;
-
-        // --- Quiz Completion & Stars Logic (Identical) ---
-        if (!quizAttemptDoc.exists) {
-          console.log(`V1: First completion ever.`);
-          starsAwarded = 5;
-          if (scoreAchieved >= maxScore) {
-            starsAwarded = 10;
-            console.log(`V1: 100% bonus.`);
-          }
-          incrementUniqueCompletions = 1;
-          transaction.set(quizAttemptRef, {
-            quizId: quizId,
-            userId: userId,
-            completed: true,
-            firstCompletionAt: now,
-            firstCompletionScore: scoreAchieved,
-            bestScore: scoreAchieved,
-            lastAttemptAt: now,
-            lastCompletionOfDay: now,
-          });
-        } else {
-          console.log(`V1: Subsequent completion.`);
-          const attemptData = quizAttemptDoc.data();
-          const lastCompletionOfDay = attemptData.lastCompletionOfDay;
-          if (
-            !lastCompletionOfDay ||
-            lastCompletionOfDay.toDate() < todayStart
-          ) {
-            console.log(`V1: First today.`);
-            starsAwarded = 1;
-            transaction.update(quizAttemptRef, {
-              bestScore: Math.max(attemptData.bestScore || 0, scoreAchieved),
-              lastAttemptAt: now,
-              lastCompletionOfDay: now,
-            });
-          } else {
-            console.log(`V1: Repeat today.`);
-            starsAwarded = 0;
-            transaction.update(quizAttemptRef, {
-              bestScore: Math.max(attemptData.bestScore || 0, scoreAchieved),
-              lastAttemptAt: now,
-            });
-          }
-        }
-        // --- Streak Calculation Logic (Identical) ---
-        if (!lastActivityAt) {
-          newStreak = 1;
-        } else {
-          const lastActivityDate = new Date(lastActivityAt.toDate());
-          lastActivityDate.setUTCHours(0, 0, 0, 0);
-          const yesterdayStart = new Date(todayStart);
-          yesterdayStart.setUTCDate(yesterdayStart.getUTCDate() - 1);
-          if (lastActivityDate.getTime() === yesterdayStart.getTime()) {
-            newStreak = currentStreak + 1;
-          } else if (lastActivityDate.getTime() < yesterdayStart.getTime()) {
-            newStreak = 1;
-          } else {
-            newStreak = currentStreak;
-          }
-        }
-        finalStreak = newStreak;
-        console.log(`V1: Streak calc. New streak: ${finalStreak}`);
-        // --- Prepare Updates ---
-        transaction.update(userStatsRef, {
-          totalStars: admin.firestore.FieldValue.increment(starsAwarded),
-          totalQuizzesCompleted: admin.firestore.FieldValue.increment(
-            incrementUniqueCompletions
-          ),
-          currentStreak: newStreak,
-        });
-        transaction.update(userRef, {
-          lastActivityAt: now,
-          lastUpdatedAt: now,
-        });
-      }); // End transaction
-      console.log(
-        `V1 onCall recordQuizResult: Transaction successful. Stars: ${starsAwarded}, Streak: ${finalStreak}`
-      );
-      return {
-        status: "success",
-        starsAwarded: starsAwarded,
-        currentStreak: finalStreak,
-      };
-    } catch (error) {
-      console.error(
-        `V1 onCall recordQuizResult: Transaction error for user ${userId}, quiz ${quizId}:`,
-        error
-      );
-      throw new functions.https.HttpsError(
-        "internal",
-        error.message || "Failed to record quiz result."
-      );
-    }
-  });
-
 // ==========================================================
 // --- EXISTING HTTPS FUNCTIONS (Converted to v1 Syntax) ---
 // ==========================================================
@@ -800,5 +608,368 @@ exports.bulkAddQuizQuestions = functions
     } catch (error) {
       console.error("V1: Error bulk adding quiz questions:", error);
       res.status(500).send({ success: false, error: "Bulk operation failed." });
+    }
+  });
+
+// ==========================================================
+// --- NEW BULK DELETE FUNCTION (v1 Syntax) ---
+// ==========================================================
+/**
+ * V1: Deletes documents from a specified collection based on matching field values.
+ * Handles single or multiple values to match (up to 30 for 'valuesToMatch' array).
+ * Uses batched writes for efficiency.
+ *
+ * @param {object} req.body - JSON payload
+ * @param {string} req.body.collectionName - Name of the collection.
+ * @param {string} req.body.fieldToMatch - Field to query against (e.g., 'topicId').
+ * @param {string|number} [req.body.valueToMatch] - Single value to match (use if not using valuesToMatch).
+ * @param {Array<string|number>} [req.body.valuesToMatch] - Array of values to match (use if not using valueToMatch, max 30 items).
+ */
+exports.deleteAllDocuments = functions
+  .region(region)
+  .runWith(runtimeOptions) // Use runtime options with potentially longer timeout
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+      return res.status(405).send("Method Not Allowed");
+    }
+
+    try {
+      const { collectionName, fieldToMatch, valueToMatch, valuesToMatch } =
+        req.body;
+
+      // --- Input Validation ---
+      if (!collectionName || !fieldToMatch) {
+        return res.status(400).send({
+          success: false,
+          error:
+            "Missing required fields: 'collectionName' and 'fieldToMatch'.",
+        });
+      }
+      if (valueToMatch === undefined && !Array.isArray(valuesToMatch)) {
+        return res.status(400).send({
+          success: false,
+          error:
+            "Must provide either 'valueToMatch' (string/number) or 'valuesToMatch' (array).",
+        });
+      }
+      if (valueToMatch !== undefined && Array.isArray(valuesToMatch)) {
+        return res.status(400).send({
+          success: false,
+          error: "Provide either 'valueToMatch' OR 'valuesToMatch', not both.",
+        });
+      }
+      if (Array.isArray(valuesToMatch) && valuesToMatch.length === 0) {
+        return res.status(400).send({
+          success: false,
+          error: "'valuesToMatch' array cannot be empty.",
+        });
+      }
+      if (Array.isArray(valuesToMatch) && valuesToMatch.length > 30) {
+        // Firestore 'in' query limit
+        return res.status(400).send({
+          success: false,
+          error: "'valuesToMatch' array cannot contain more than 30 items.",
+        });
+      }
+
+      console.log(
+        `V1 deleteAllDocuments: Received request for collection '${collectionName}', field '${fieldToMatch}'.`
+      );
+
+      // --- Build Query ---
+      let query = db.collection(collectionName);
+      if (valueToMatch !== undefined) {
+        console.log(`Matching single value: ${valueToMatch}`);
+        query = query.where(fieldToMatch, "==", valueToMatch);
+      } else {
+        // valuesToMatch must be a non-empty array here
+        console.log(
+          `Matching multiple values (count: ${valuesToMatch.length})`
+        );
+        query = query.where(fieldToMatch, "in", valuesToMatch);
+      }
+
+      // --- Fetch and Delete in Batches ---
+      const BATCH_SIZE = 499; // Firestore batch limit is 500 operations
+      let totalDeleted = 0;
+      let snapshot;
+
+      do {
+        snapshot = await query.limit(BATCH_SIZE).get(); // Get next batch of docs
+
+        if (snapshot.empty) {
+          break; // No more documents match
+        }
+
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+
+        await batch.commit();
+        totalDeleted += snapshot.size;
+        console.log(
+          `V1 deleteAllDocuments: Deleted batch of ${snapshot.size} documents.`
+        );
+
+        // If we deleted exactly the BATCH_SIZE, there might be more, so loop again.
+        // The query implicitly continues from where it left off due to document ordering.
+        // For guaranteed ordering/continuation with very large datasets, cursor-based pagination is safer,
+        // but this limit-based approach works for moderately large deletes within timeout.
+      } while (snapshot.size === BATCH_SIZE);
+
+      console.log(
+        `V1 deleteAllDocuments: Completed. Total documents deleted: ${totalDeleted}`
+      );
+      res.status(200).send({ success: true, deletedCount: totalDeleted });
+    } catch (error) {
+      console.error("V1 deleteAllDocuments: Error:", error);
+      res.status(500).send({
+        success: false,
+        error: "Internal Server Error during delete operation.",
+        details: error.message,
+      });
+    }
+  });
+
+// ===============================================================
+// --- HTTPS CALLABLE FUNCTION (v1 Syntax) - UPDATED STREAK LOGIC ---
+// ===============================================================
+/**
+ * V1 Callable Function: Records quiz result, calculates stats/stars/streak.
+ * Star Logic: +5/+10 first ever; +2 first completion today; +1 later completions today.
+ * Streak Logic: Updates only on the first completion of *any* quiz per day.
+ */
+exports.recordQuizResult = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "...");
+    }
+    const userId = context.auth.uid;
+    const { quizId, scoreAchieved, passingScore, maxScore } = data;
+    console.log(`V1 recordQuizResult: User ${userId}, Quiz ${quizId}`);
+    if (
+      !quizId ||
+      typeof scoreAchieved !== "number" ||
+      typeof passingScore !== "number" ||
+      typeof maxScore !== "number"
+    ) {
+      throw new functions.https.HttpsError("invalid-argument", "...");
+    }
+    if (scoreAchieved < passingScore) {
+      console.log(`V1: Not passed.`);
+      return { status: "not_passed", starsAwarded: 0, currentStreak: null };
+    }
+    console.log(`V1: Passed.`);
+
+    const now = admin.firestore.Timestamp.now();
+    const todayStart = new Date(now.toDate());
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const todayStartTimestamp = admin.firestore.Timestamp.fromDate(todayStart);
+
+    const userRef = db.collection("users").doc(userId);
+    const userStatsRef = db.collection("userStats").doc(userId);
+    const quizAttemptRef = db
+      .collection("users")
+      .doc(userId)
+      .collection("quizAttempts")
+      .doc(quizId);
+
+    try {
+      let starsAwarded = 0;
+      let incrementUniqueCompletions = 0;
+      let finalStreak = 0; // Store the final streak value to return
+      let newStreakCalculated = false; // Flag to know if we calculated a new streak today
+      let newLastActivityAt = null; // Store the potential new timestamp
+
+      await db.runTransaction(async (transaction) => {
+        console.log(`V1: Starting transaction`);
+        const userDoc = await transaction.get(userRef);
+        const userStatsDoc = await transaction.get(userStatsRef);
+        const quizAttemptDoc = await transaction.get(quizAttemptRef);
+        if (!userDoc.exists || !userStatsDoc.exists) {
+          throw new Error("User profile/stats missing.");
+        }
+
+        const userData = userDoc.data();
+        const userStatsData = userStatsDoc.data();
+        const lastActivityAt = userData.lastActivityAt; // Firestore Timestamp or null
+        const currentStreak = userStatsData.currentStreak || 0;
+        finalStreak = currentStreak; // Start with current streak
+
+        // --- Determine if this is the first activity TODAY ---
+        const isFirstActivityToday =
+          !lastActivityAt || lastActivityAt.toDate() < todayStart;
+        console.log(`V1: Is first activity today? ${isFirstActivityToday}`);
+
+        // --- Calculate Streak ONLY if it's the first activity today ---
+        if (isFirstActivityToday) {
+          newStreakCalculated = true;
+          newLastActivityAt = now; // Will update timestamp
+          if (!lastActivityAt) {
+            // First ever activity
+            finalStreak = 1;
+            console.log(`V1: First ever activity, streak=1.`);
+          } else {
+            // Check if consecutive day
+            const lastActivityDate = new Date(lastActivityAt.toDate());
+            lastActivityDate.setUTCHours(0, 0, 0, 0);
+            const yesterdayStart = new Date(todayStart);
+            yesterdayStart.setUTCDate(yesterdayStart.getUTCDate() - 1);
+            if (lastActivityDate.getTime() === yesterdayStart.getTime()) {
+              finalStreak = currentStreak + 1; // Consecutive day
+              console.log(
+                `V1: Consecutive day activity, streak=${finalStreak}`
+              );
+            } else {
+              finalStreak = 1; // Gap detected, reset streak
+              console.log(`V1: Gap detected, resetting streak=1`);
+            }
+          }
+        } else {
+          console.log(
+            `V1: Not first activity today, streak remains ${finalStreak}`
+          );
+          // Keep finalStreak = currentStreak
+          newLastActivityAt = lastActivityAt; // Keep existing timestamp
+        }
+
+        // --- Quiz Completion & Stars Logic (Same as previous) ---
+        let newCompletionCount = 0;
+        let bestScore = scoreAchieved;
+        if (!quizAttemptDoc.exists) {
+          console.log(`V1: First completion ever.`);
+          starsAwarded = 5;
+          if (scoreAchieved >= maxScore) {
+            starsAwarded = 10;
+          }
+          incrementUniqueCompletions = 1;
+          newCompletionCount = 1;
+          transaction.set(quizAttemptRef, {
+            quizId: quizId,
+            userId: userId,
+            completed: true,
+            firstCompletionAt: now,
+            firstCompletionScore: scoreAchieved,
+            bestScore: bestScore,
+            lastAttemptAt: now,
+            lastCompletionOfDay: now,
+            completionCount: newCompletionCount,
+          });
+        } else {
+          console.log(`V1: Subsequent completion.`);
+          const attemptData = quizAttemptDoc.data();
+          const currentCompletionCount = attemptData.completionCount || 0;
+          bestScore = Math.max(attemptData.bestScore || 0, scoreAchieved);
+          const lastCompletionOfDay = attemptData.lastCompletionOfDay;
+          if (
+            !lastCompletionOfDay ||
+            lastCompletionOfDay.toDate() < todayStart
+          ) {
+            console.log(`V1: First completion today. +2 stars.`);
+            starsAwarded = 2;
+          } else {
+            console.log(`V1: Repeat completion today. +1 star.`);
+            starsAwarded = 1;
+          }
+          newCompletionCount = currentCompletionCount + 1;
+          incrementUniqueCompletions = 0;
+          transaction.update(quizAttemptRef, {
+            bestScore: bestScore,
+            lastAttemptAt: now,
+            lastCompletionOfDay: now,
+            completionCount: newCompletionCount,
+          });
+        }
+
+        // --- Prepare Updates ---
+        console.log(
+          `V1: Preparing updates. Stars: ${starsAwarded}, UniqueInc: ${incrementUniqueCompletions}, FinalStreak: ${finalStreak}`
+        );
+        const currentStars = userStatsData.totalStars || 0;
+        // Update Stats (only update streak if calculated)
+        transaction.update(userStatsRef, {
+          totalStars: Math.max(0, currentStars + starsAwarded),
+          totalQuizzesCompleted: admin.firestore.FieldValue.increment(
+            incrementUniqueCompletions
+          ),
+          currentStreak: finalStreak, // Use the final calculated or existing streak
+        });
+        // Update User (only update lastActivityAt if it's the first today)
+        transaction.update(userRef, {
+          lastActivityAt: newLastActivityAt, // Use the new timestamp OR the existing one
+          lastUpdatedAt: now, // Always update lastUpdatedAt
+        });
+      }); // End transaction
+
+      console.log(
+        `V1 recordQuizResult: Transaction successful. Stars: ${starsAwarded}, Streak: ${finalStreak}`
+      );
+      return {
+        status: "success",
+        starsAwarded: starsAwarded,
+        currentStreak: finalStreak,
+      };
+    } catch (error) {
+      console.error(
+        `V1 recordQuizResult: Transaction error for user ${userId}, quiz ${quizId}:`,
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        error.message || "Failed to record quiz result."
+      );
+    }
+  });
+
+// ===============================================================
+// --- Cloud Function for Leaving Quiz Penalty (v1 Syntax) ---
+// ===============================================================
+/** V1 Callable Function: Penalizes user 1 star for leaving a quiz early. */
+exports.penalizeQuizLeave = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "...");
+    }
+    const userId = context.auth.uid;
+    const quizId = data?.quizId;
+    console.log(
+      `V1 penalizeQuizLeave: User ${userId} left quiz ${
+        quizId || "(unknown)"
+      }. Penalizing 1 star.`
+    );
+    const userStatsRef = db.collection("userStats").doc(userId);
+    try {
+      let finalStarTotal = null;
+      await db.runTransaction(async (transaction) => {
+        const userStatsDoc = await transaction.get(userStatsRef);
+        if (!userStatsDoc.exists) {
+          console.error(
+            `V1 penalizeQuizLeave: User stats not found for ${userId}.`
+          );
+          return;
+        }
+        const currentStars = userStatsDoc.data().totalStars || 0;
+        const newStarTotal = Math.max(0, currentStars - 1);
+        console.log(
+          `V1 penalizeQuizLeave: Current stars: ${currentStars}, New stars: ${newStarTotal}`
+        );
+        transaction.update(userStatsRef, { totalStars: newStarTotal });
+        finalStarTotal = newStarTotal;
+      });
+      return { status: "success", newStarTotal: finalStarTotal };
+    } catch (error) {
+      console.error(
+        `V1 penalizeQuizLeave: Error applying penalty for user ${userId}:`,
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        "Failed to apply penalty."
+      );
     }
   });
