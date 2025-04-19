@@ -19,7 +19,8 @@ import { Colors } from "../../../config/colors"; // Adjust path if needed
 
 const Apprec8Reader = ({ route }) => {
   const theme = useColorScheme();
-  const topicId = route?.params?.topicId; // Expect topicId from navigation
+  // const topicId = route?.params?.topicId; // Expect topicId from navigation
+  const contentId = route?.params?.subtopicId || route?.params?.topicId;
 
   // State for fetched data, loading, error
   const [studyData, setStudyData] = useState(null);
@@ -32,7 +33,7 @@ const Apprec8Reader = ({ route }) => {
 
   // Effect to listen for study content
   useEffect(() => {
-    if (!topicId) {
+    if (!contentId) {
       setError("No topic specified.");
       setIsLoading(false);
       return;
@@ -44,17 +45,17 @@ const Apprec8Reader = ({ route }) => {
     let isMounted = true;
 
     console.log(
-      `Apprec8Reader: Subscribing to study content for topicId: ${topicId}`
+      `Apprec8Reader: Subscribing to study content for contentId: ${contentId}`
     );
     const unsubscribe = listenToStudyContent(
-      topicId,
+      contentId,
       (data) => {
         if (isMounted) {
           if (data) {
-            console.log(`Apprec8Reader: Received data for ${topicId}`);
+            console.log(`Apprec8Reader: Received data for ${contentId}`);
             setStudyData(data);
           } else {
-            console.warn(`Apprec8Reader: No data found for ${topicId}`);
+            console.warn(`Apprec8Reader: No data found for ${contentId}`);
             setError("Study content not found.");
           }
           setIsLoading(false);
@@ -63,7 +64,7 @@ const Apprec8Reader = ({ route }) => {
       (fetchError) => {
         if (isMounted) {
           console.error(
-            `Apprec8Reader: Error fetching study content for ${topicId}:`,
+            `Apprec8Reader: Error fetching study content for ${contentId}:`,
             fetchError
           );
           setError("Could not load study content.");
@@ -72,15 +73,15 @@ const Apprec8Reader = ({ route }) => {
       }
     );
 
-    // Cleanup listener on unmount or topicId change
+    // Cleanup listener on unmount or contentId change
     return () => {
       console.log(
-        `Apprec8Reader: Unsubscribing from study content listener for ${topicId}`
+        `Apprec8Reader: Unsubscribing from study content listener for ${contentId}`
       );
       isMounted = false;
       unsubscribe();
     };
-  }, [topicId]); // Re-run effect if topicId changes
+  }, [contentId]); // Re-run effect if contentId changes
 
   // Memoized function to open image modal
   const openImage = useCallback((imageUri) => {
@@ -388,13 +389,20 @@ const commonMarkdownStyles = {
     marginBottom: 8,
     lineHeight: 36,
   },
+  heading3: {
+    fontSize: 24, // Example size (smaller than H2)
+    fontWeight: "bold",
+    marginTop: 10, // Example margin
+    marginBottom: 6, // Example margin
+    lineHeight: 32, // Example line height
+  },
   strong: { fontWeight: "bold" },
   em: { fontStyle: "italic" },
   bullet_list: { marginBottom: 10 },
   ordered_list: { marginBottom: 10 },
   list_item: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginBottom: 5,
   },
   blockquote: {
@@ -436,6 +444,7 @@ const darkStyles = {
     text: { ...commonMarkdownStyles.text, color: "#EAEAEA" },
     heading1: { ...commonMarkdownStyles.heading1, color: "#FFFFFF" },
     heading2: { ...commonMarkdownStyles.heading2, color: "#FFFFFF" },
+    heading3: { ...commonMarkdownStyles.heading3, color: "#EEEEEE" },
     strong: { ...commonMarkdownStyles.strong, color: "#EAEAEA" },
     em: { ...commonMarkdownStyles.em, color: "#EAEAEA" },
     blockquote: {
@@ -460,6 +469,7 @@ const lightStyles = {
     text: { ...commonMarkdownStyles.text, color: "#222" },
     heading1: { ...commonMarkdownStyles.heading1, color: "#000" },
     heading2: { ...commonMarkdownStyles.heading2, color: "#000" },
+    heading3: { ...commonMarkdownStyles.heading3, color: "#111" },
     strong: { ...commonMarkdownStyles.strong, color: "#222" },
     em: { ...commonMarkdownStyles.em, color: "#222" },
     blockquote: {

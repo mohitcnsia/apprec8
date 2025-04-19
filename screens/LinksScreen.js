@@ -1,172 +1,393 @@
-// screens/LinksScreen.js (Refactored for @r-n-firebase listeners)
+// screens/LinksScreen.js (Rewritten to handle single activity navigation directly)
 
-import React, { useState, useEffect } from "react";
-import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
-import AppFlatList from "../components/common/list/AppFlatList";
-// Import listener function for topics
-import { listenToCategoryTopics } from "../services/firestoreContentApi";
-import { Colors } from "../config/colors";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  StyleSheet,
+  Button,
+} from "react-native";
+import AppFlatList from "../components/common/list/AppFlatList"; // Adjust path
+import {
+  listenToCategoryTopics,
+  listenToSubtopics,
+} from "../services/firestoreContentApi"; // Adjust path
+import { Colors } from "../config/colors"; // Adjust path
+
 const LinksScreen = ({ route, navigation }) => {
-  // Get parameters: either direct data (activity choices) or categoryId to fetch topics
-  const activityData = route?.params?.data;
+  // --- Parameters ---
   const categoryId = route?.params?.categoryId;
-  const screenTitle = route?.params?.categoryTitle || "Details"; // Use passed title or default
+  const parentTopicId = route?.params?.parentTopicId;
+  const passedData = route?.params?.data;
+  const screenTitle =
+    route?.params?.screenTitle || route?.params?.categoryTitle || "Details";
 
-  // State for list items, loading, error
+  // --- State ---
   const [itemsToDisplay, setItemsToDisplay] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [fetchType, setFetchType] = useState("NONE");
 
-  // Effect to set title and fetch topics if categoryId is provided
+  // --- Ref to track mounted status ---
+  const isMounted = useRef(true);
+
+  console.log(
+    `LINKS SCREEN RENDER: isLoading=${isLoading}, error=${JSON.stringify(
+      error
+    )}, items=${itemsToDisplay.length}, fetchType=${fetchType}`
+  );
+
+  // --- Effect for Mount/Unmount Tracking ---
   useEffect(() => {
-    navigation.setOptions({ title: screenTitle }); // Set header title
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      console.log(
+        `LinksScreen Cleanup: Unmounting or params changed (Fetch type: ${fetchType})`
+      );
+    };
+  }, [categoryId, parentTopicId, passedData]);
 
-    let unsubscribe = () => {}; // Placeholder for cleanup
+  // --- Effect to Fetch Data ---
+  useEffect(() => {
+    console.log("--- useEffect Data Fetch Running ---");
+    console.log(
+      "Dependencies: categoryId=",
+      categoryId,
+      "parentTopicId=",
+      parentTopicId,
+      "passedData exists=",
+      !!passedData,
+      "screenTitle=",
+      screenTitle
+    );
+    navigation.setOptions({ title: screenTitle });
 
+    let unsubscribe = () => {};
+    setIsLoading(true);
+    setError(null);
+    setItemsToDisplay([]);
+
+    const handleTopicData = (fetchedTopics) => {
+      /* ... (Callback with setTimeout fix as before) ... */
+      console.log(
+        `LINKS SCREEN CALLBACK (Topics - onDataReceived): Received ${fetchedTopics?.length} items.`
+      );
+      if (isMounted.current) {
+        try {
+          const formatted = fetchedTopics
+            .map((topic) => {
+              if (
+                !topic ||
+                typeof topic !== "object" ||
+                !topic.id ||
+                !topic.title
+              ) {
+                console.warn("Skipping malformed topic:", topic);
+                return null;
+              }
+              return {
+                id: topic.id,
+                title: topic.title,
+                hasStudy: topic.hasStudy === true,
+                hasQuiz: topic.hasQuiz === true,
+                hasSubtopics: topic.hasSubtopics === true,
+                type: "TOPIC",
+              };
+            })
+            .filter(Boolean);
+          console.log(
+            `Mapping topics complete. ${formatted.length} valid items. Setting items...`
+          );
+          setItemsToDisplay(formatted);
+          setTimeout(() => {
+            if (isMounted.current) {
+              setIsLoading(false);
+              console.log("setTimeout (Topics): Set isLoading=false.");
+            }
+          }, 0);
+        } catch (mapError) {
+          console.error(
+            "LINKS SCREEN CALLBACK (Topics): Error processing!",
+            mapError
+          );
+          setError("Error processing topic data.");
+          setItemsToDisplay([]);
+          setIsLoading(false);
+        }
+      } else {
+        console.log("LINKS SCREEN CALLBACK (Topics): Unmounted.");
+      }
+    };
+    const handleTopicError = (fetchError) => {
+      /* ... (Callback as before) ... */
+      console.error(
+        `LinksScreen: Error listening to topics for ${categoryId}:`,
+        fetchError
+      );
+      if (isMounted.current) {
+        setError("Could not fetch topics.");
+        setItemsToDisplay([]);
+        setIsLoading(false);
+      } else {
+        console.log("LINKS SCREEN CALLBACK (onError - Topics): Unmounted.");
+      }
+    };
+    const handleSubtopicData = (fetchedSubtopics) => {
+      /* ... (Callback with setTimeout fix as before) ... */
+      console.log(
+        `LINKS SCREEN CALLBACK (Subtopics - onDataReceived): Received ${fetchedSubtopics?.length} items.`
+      );
+      if (isMounted.current) {
+        try {
+          const formatted = fetchedSubtopics
+            .map((sub) => {
+              if (!sub || typeof sub !== "object" || !sub.id || !sub.title) {
+                console.warn("Skipping malformed subtopic:", sub);
+                return null;
+              }
+              return {
+                id: sub.id,
+                title: sub.title,
+                parentTopicId: parentTopicId,
+                hasStudy: sub.hasStudy === true,
+                hasQuiz: sub.hasQuiz === true,
+                hasSubtopics: sub.hasSubtopics === true,
+                type: "SUBTOPIC",
+              };
+            })
+            .filter(Boolean);
+          console.log(
+            `Mapping subtopics complete. ${formatted.length} valid items. Setting items...`
+          );
+          setItemsToDisplay(formatted);
+          setTimeout(() => {
+            if (isMounted.current) {
+              setIsLoading(false);
+              console.log("setTimeout (Subtopics): Set isLoading=false.");
+            }
+          }, 0);
+        } catch (mapError) {
+          console.error(
+            "LINKS SCREEN CALLBACK (Subtopics): Error processing!",
+            mapError
+          );
+          setError("Error processing subtopic data.");
+          setItemsToDisplay([]);
+          setIsLoading(false);
+        }
+      } else {
+        console.log("LINKS SCREEN CALLBACK (Subtopics): Unmounted.");
+      }
+    };
+    const handleSubtopicError = (fetchError) => {
+      /* ... (Callback as before) ... */
+      console.error(
+        `LinksScreen: Error listening to subtopics for ${parentTopicId}:`,
+        fetchError
+      );
+      if (isMounted.current) {
+        setError("Could not fetch subtopics.");
+        setItemsToDisplay([]);
+        setIsLoading(false);
+      } else {
+        console.log("LINKS SCREEN CALLBACK (onError - Subtopics): Unmounted.");
+      }
+    };
+
+    // Determine fetch type and attach listener
     if (categoryId) {
-      // Fetch topics for this category
-      setIsLoading(true);
-      setError(null);
-      let isMounted = true; // Prevent state update if unmounted quickly
-
+      setFetchType("TOPICS");
       unsubscribe = listenToCategoryTopics(
         categoryId,
-        (fetchedTopics) => {
-          if (isMounted) {
-            // Format data for display (can use a helper if complex)
-            const formatted = fetchedTopics.map((topic) => ({
-              id: topic.id,
-              title: topic.title,
-              // Include necessary fields for handleLinkPress logic below
-              hasStudy: topic.hasStudy,
-              hasQuiz: topic.hasQuiz,
-              type: topic.type || "ACTIVITY", // Pass original type
-              otherActivities: topic.otherActivities || [],
-            }));
-            setItemsToDisplay(formatted);
-            setIsLoading(false);
-          }
-        },
-        (fetchError) => {
-          if (isMounted) {
-            console.error(
-              `Failed to load topics for ${categoryId}:`,
-              fetchError
-            );
-            setError("Could not fetch topics.");
-            setIsLoading(false);
-          }
-        }
+        handleTopicData,
+        handleTopicError
       );
-
-      // Cleanup function
-      return () => {
-        console.log(
-          `Unsubscribing from topics listener for category ${categoryId}`
-        );
-        isMounted = false;
-        unsubscribe();
-      };
-    } else if (activityData) {
-      // If activity data was passed directly, just display it
-      setItemsToDisplay(activityData);
+    } else if (parentTopicId) {
+      setFetchType("SUBTOPICS");
+      unsubscribe = listenToSubtopics(
+        parentTopicId,
+        handleSubtopicData,
+        handleSubtopicError
+      );
+    } else if (passedData) {
+      setFetchType("DATA");
+      setItemsToDisplay(Array.isArray(passedData) ? passedData : []);
       setIsLoading(false);
     } else {
-      // No categoryId and no direct data - show empty or error
-      console.warn("LinksScreen loaded without categoryId or data param.");
+      setFetchType("NONE");
       setError("No content specified.");
       setIsLoading(false);
     }
-  }, [categoryId, screenTitle, navigation]); // Re-run if categoryId changes
 
-  // Refactored press handler: Determines target screen and passes ID
-  const handleLinkPress = (item) => {
-    console.log("LinksScreen item pressed:", JSON.stringify(item));
-
-    // Check if it's a Topic with MULTIPLE activities that needs an intermediate step
-    // Check !item.topicId to ensure it's not already an activity choice object
-    const isMultiActivityTopic =
-      item.hasStudy === true && item.hasQuiz === true && !item.topicId;
-
-    if (isMultiActivityTopic) {
-      console.log(
-        `Topic ${item.id} has multiple activities. Generating choices.`
-      );
-      const activities = [];
-      if (item.hasStudy)
-        activities.push({
-          id: `${item.id}-study`,
-          title: "Study Material",
-          type: "STUDY",
-          topicId: item.id,
-        });
-      if (item.hasQuiz)
-        activities.push({
-          id: `${item.id}-quiz`,
-          title: "Quiz",
-          type: "QUIZ",
-          topicId: item.id,
-        });
-      // TODO: Add logic for item.otherActivities if needed
-
-      if (activities.length > 0) {
-        // Navigate recursively to LinksScreen, passing activity choices as 'data'
-        navigation.push("LinkScreen", {
-          data: activities,
-          categoryTitle: item.title,
-        }); // Use push to allow going back
-      } else {
-        console.warn("Multi-activity topic has no activities generated?", item);
-        navigation.navigate("DummyScreen", {
-          errorMessage: `No activities found for "${item.title}".`,
-        });
+    // Cleanup
+    return () => {
+      if (unsubscribe && typeof unsubscribe === "function") {
+        console.log(`LinksScreen: Cleaning up listener.`);
+        unsubscribe();
       }
-      return; // Stop processing here
-    }
+    };
+  }, [categoryId, parentTopicId, passedData, screenTitle, navigation]);
 
-    // --- Handle single-activity Topic or an Activity Choice ---
-    let targetScreen = null;
-    let params = {};
-    let actionType = item.type?.toUpperCase();
-    let topicId = item.topicId || item.id; // Use topicId if available (activity choice), else use item's id (topic)
+  // --- handleLinkPress - MODIFIED LOGIC for TOPIC and SUBTOPIC ---
+  const handleLinkPress = (item) => {
+    console.log(
+      `LinksScreen (${fetchType}) item pressed:`,
+      JSON.stringify(item)
+    );
 
-    // If it's a topic object, derive action type from flags
-    if (item.hasStudy === true && !item.topicId) actionType = "STUDY";
-    else if (item.hasQuiz === true && !item.topicId) actionType = "QUIZ";
+    switch (item?.type) {
+      case "TOPIC":
+        if (item.hasSubtopics) {
+          // --- Has Subtopics: Navigate to fetch subtopics ---
+          console.log(
+            `Topic ${item.id} has subtopics. Navigating to fetch subtopics...`
+          );
+          navigation.push("LinkScreen", {
+            parentTopicId: item.id,
+            screenTitle: item.title,
+          });
+        } else {
+          // --- No Subtopics: Check for direct activities ---
+          const hasStudy = item.hasStudy === true;
+          const hasQuiz = item.hasQuiz === true;
+          const activityCount = (hasStudy ? 1 : 0) + (hasQuiz ? 1 : 0);
+          // TODO: Add otherActivities to count if applicable
 
-    console.log(`Determined action: ${actionType} for topicId: ${topicId}`);
+          if (activityCount === 1) {
+            // --- Exactly ONE Activity: Navigate Directly ---
+            console.log(
+              `Topic ${item.id} has exactly ONE activity. Navigating directly...`
+            );
+            if (hasStudy) {
+              navigation.push("Apprec8Reader", { topicId: item.id });
+            } else {
+              navigation.push("Quiz", { topicId: item.id });
+            } // Must be quiz
+          } else if (activityCount > 1) {
+            // --- MORE than one Activity: Show Choices Screen ---
+            console.log(
+              `Topic ${item.id} has multiple (${activityCount}) activities. Generating choices...`
+            );
+            const activities = [];
+            if (hasStudy)
+              activities.push({
+                id: `${item.id}-study`,
+                title: "Study Material",
+                type: "STUDY",
+                topicId: item.id,
+              });
+            if (hasQuiz)
+              activities.push({
+                id: `${item.id}-quiz`,
+                title: "Quiz",
+                type: "QUIZ",
+                topicId: item.id,
+              });
+            // TODO: Add otherActivities if needed
+            navigation.push("LinkScreen", {
+              data: activities,
+              screenTitle: item.title,
+            });
+          } else {
+            // --- No Subtopics AND No Activities ---
+            console.log(`Topic ${item.id} has no subtopics or activities.`);
+            navigation.navigate("DummyScreen", {
+              errorMessage: `Content for "${item.title}" is not yet available.`,
+            });
+          }
+        }
+        break; // End TOPIC case
 
-    switch (actionType) {
+      case "SUBTOPIC":
+        const hasSubtopicStudy = item.hasStudy === true;
+        const hasSubtopicQuiz = item.hasQuiz === true;
+        const subtopicActivityCount =
+          (hasSubtopicStudy ? 1 : 0) + (hasSubtopicQuiz ? 1 : 0);
+        // TODO: Add otherActivities to count if applicable
+
+        if (subtopicActivityCount === 1) {
+          // --- Exactly ONE Activity: Navigate Directly ---
+          console.log(
+            `Subtopic ${item.id} has exactly ONE activity. Navigating directly...`
+          );
+          if (hasSubtopicStudy) {
+            navigation.push("Apprec8Reader", {
+              subtopicId: item.id,
+              topicId: item.parentTopicId,
+            });
+          } else {
+            navigation.push("Quiz", {
+              subtopicId: item.id,
+              topicId: item.parentTopicId,
+            });
+          } // Must be quiz
+        } else if (subtopicActivityCount > 1) {
+          // --- MORE than one Activity: Show Choices Screen ---
+          console.log(
+            `Subtopic ${item.id} has multiple (${subtopicActivityCount}) activities. Generating choices...`
+          );
+          const subtopicActivities = [];
+          if (hasSubtopicStudy)
+            subtopicActivities.push({
+              id: `${item.id}-study`,
+              title: "Study Material",
+              type: "STUDY",
+              subtopicId: item.id,
+              topicId: item.parentTopicId,
+            });
+          if (hasSubtopicQuiz)
+            subtopicActivities.push({
+              id: `${item.id}-quiz`,
+              title: "Quiz",
+              type: "QUIZ",
+              subtopicId: item.id,
+              topicId: item.parentTopicId,
+            });
+          // TODO: Add otherActivities if needed
+          navigation.push("LinkScreen", {
+            data: subtopicActivities,
+            screenTitle: item.title,
+          });
+        } else {
+          // --- No Activities for Subtopic ---
+          console.log(`Subtopic ${item.id} has no activities.`);
+          navigation.navigate("DummyScreen", {
+            errorMessage: `Content for "${item.title}" is not yet available.`,
+          });
+        }
+        break; // End SUBTOPIC case
+
+      // --- Other cases (STUDY, QUIZ, CONTACT, etc.) remain the same ---
       case "STUDY":
-        targetScreen = "Apprec8Reader";
-        params = { topicId: topicId }; // Pass only the ID
-        break;
       case "QUIZ":
-        targetScreen = "Quiz";
-        params = { topicId: topicId }; // Pass only the ID
+      case "ACTIVITY":
+        console.log(`Navigating to activity: ${item.type}`);
+        const targetScreen = item.type === "STUDY" ? "Apprec8Reader" : "Quiz";
+        navigation.push(targetScreen, {
+          topicId: item.topicId,
+          subtopicId: item.subtopicId,
+        });
         break;
-      case "COURSE": // Clicking a category tile (should ideally navigate here from elsewhere now)
-        targetScreen = "LinkScreen";
-        params = { categoryId: item.id, categoryTitle: item.title }; // Pass category details
+      case "CONTACT":
+      case "FAQ":
+      case "TNC":
+        if (item.id === "cntct" || item.type === "CONTACT")
+          navigation.push("cntct");
+        else navigation.push("DummyScreen", { title: item.title });
         break;
-      // Add cases for COMPLEX, ACTIVITY if they lead to specific screens or recursive LinkScreen
       default:
-        console.warn("Unhandled item type in LinksScreen:", item.type);
-        targetScreen = "DummyScreen";
-        params = { errorMessage: `No action defined for "${item.title}".` };
+        if (passedData && item.id) {
+          /* ... handle other passed data items ... */
+        } else {
+          /* ... unhandled item ... */
+        }
         break;
-    }
-
-    if (topicId === "cntct") targetScreen = "cntct";
-    else if (topicId === "faq") targetScreen = "DummyScreen";
-    else if (topicId === "tnc") targetScreen = "DummyScreen";
-
-    if (targetScreen) {
-      navigation.push(targetScreen, params); // Use push for better back navigation experience
     }
   };
 
-  // --- Render Logic ---
+  // --- Render Logic (Keep Back buttons) ---
   if (isLoading) {
     return (
       <View style={styles.centered}>
@@ -178,22 +399,30 @@ const LinksScreen = ({ route, navigation }) => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
+        {/* {navigation.canGoBack() && (
+          <Button title="Go Back" onPress={() => navigation.goBack()} />
+        )} */}
       </View>
     );
   }
-  if (itemsToDisplay.length === 0) {
+  if (!isLoading && itemsToDisplay.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text style={styles.infoText}>No items found.</Text>
+        <Text style={styles.infoText}>No items found for this section.</Text>
+        {/* {navigation.canGoBack() && (
+          <Button title="Go Back" onPress={() => navigation.goBack()} />
+        )} */}
       </View>
     );
   }
 
+  // --- Main list ---
   return (
     <AppFlatList
       data={itemsToDisplay}
       isPressable={true}
       onItemPress={handleLinkPress}
+      textStyle={{ fontWeight: "bold" }} // Keep text bold
     />
   );
 };
@@ -204,11 +433,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    // Add background color if needed, depends on navigator style
-    // backgroundColor: Colors.primaryLightGray,
   },
-  errorText: { color: "red", fontSize: 16, textAlign: "center" },
-  infoText: { color: "#666", fontSize: 16, textAlign: "center" }, // Style for no items message
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  infoText: {
+    color: "#666",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
+  },
 });
 
 export default LinksScreen;
