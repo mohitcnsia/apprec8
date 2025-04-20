@@ -1,18 +1,13 @@
 // screens/LinksScreen.js (Rewritten to handle single activity navigation directly)
 
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  ActivityIndicator,
-  Text,
-  StyleSheet,
-  Button,
-} from "react-native";
+import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import AppFlatList from "../components/common/list/AppFlatList"; // Adjust path
 import {
   listenToCategoryTopics,
   listenToSubtopics,
 } from "../services/firestoreContentApi"; // Adjust path
+import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../config/colors"; // Adjust path
 
 const LinksScreen = ({ route, navigation }) => {
@@ -418,16 +413,28 @@ const LinksScreen = ({ route, navigation }) => {
 
   // --- Main list ---
   return (
-    <AppFlatList
-      data={itemsToDisplay}
-      isPressable={true}
-      onItemPress={handleLinkPress}
-      textStyle={{ fontWeight: "bold" }} // Keep text bold
-    />
+    <LinearGradient
+      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      style={styles.container}
+    >
+      <AppFlatList
+        data={itemsToDisplay}
+        isPressable={true}
+        onItemPress={handleLinkPress}
+        textStyle={{ fontFamily: "nunitoBold", color: Colors.primaryWhite }} // Keep text bold
+        itemStyle={{
+          backgroundColor: "#2c0527ff",
+          borderRadius: 10,
+        }}
+      />
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   centered: {
     flex: 1,
     justifyContent: "center",

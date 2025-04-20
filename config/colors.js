@@ -1,6 +1,7 @@
 export const Colors = {
   primaryDarkMaroon: "#3b0940",
   primaryDarkMaroon900: "#3d1141",
+  primaryDarkMaroon800: "#4e1a53",
   primaryMaroon10: "#f5d2f8ff",
   primaryMaroon100: "#85508aff",
   primaryMaroon200: "rgba(70, 64, 71, 1)",
