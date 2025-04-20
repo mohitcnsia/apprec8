@@ -425,6 +425,8 @@ const LinksScreen = ({ route, navigation }) => {
         itemStyle={{
           backgroundColor: "#2c0527ff",
           borderRadius: 10,
+          padding: 15,
+          margin: 1,
         }}
       />
     </LinearGradient>
