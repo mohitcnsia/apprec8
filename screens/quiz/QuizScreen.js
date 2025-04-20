@@ -1,25 +1,27 @@
-// screens/quiz/QuizScreen.js (Rewritten with corrected score calculation)
+// screens/quiz/QuizScreen.js (Final Version with Conditional Vertical Centering)
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   View,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,
-  Platform, // Keeping Platform just in case styles need it later
+  ScrollView, // Main content wrapper
+  Text, // Standard Text for options
+  TouchableOpacity, // Touchable for options
 } from "react-native";
 import {
-  Button as PaperButton,
+  Button as PaperButton, // For Submit/Next button
   Card,
-  Text as PaperText,
+  Text as PaperText, // For Question/Progress/Error text
   ActivityIndicator as PaperActivityIndicator,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import functions from "@react-native-firebase/functions";
-import { Colors } from "../../config/colors";
-import { listenToQuizQuestions } from "../../services/firestoreContentApi";
-import Explanation from "../../components/quiz/Explanation";
-import ConfirmationModal from "../../components/common/ConfirmationModel";
+import { useFocusEffect } from "@react-navigation/native"; // For tab bar hiding
+import { Colors } from "../../config/colors"; // Assuming you have this config
+import { listenToQuizQuestions } from "../../services/firestoreContentApi"; // Assuming this service exists
+import Explanation from "../../components/quiz/Explanation"; // Assuming this component exists
+import ConfirmationModal from "../../components/common/ConfirmationModel"; // Assuming this component exists
 
 // --- Firebase Callable Function Reference ---
 const penalizeQuizLeave = functions().httpsCallable("penalizeQuizLeave");
@@ -35,8 +37,10 @@ const shuffleArray = (array) => {
   return shuffledArray;
 };
 
+// --- Constants ---
 const MAX_QUESTIONS = 10;
-const PASSING_SCORE_THRESHOLD = 1;
+const PASSING_SCORE_THRESHOLD = 1; // Example value
+const SHORT_QUESTION_THRESHOLD = 80; //
 
 // --- Component ---
 const QuizScreen = ({ route, navigation }) => {
@@ -86,7 +90,9 @@ const QuizScreen = ({ route, navigation }) => {
     if (!quizContentId) {
       console.warn("QuizScreen: No quizContentId provided.");
       if (isMounted.current) {
+        // Navigate to a screen indicating an error or back
         navigation.replace("DummyScreen", {
+          // Replace with your error/fallback screen
           errorMessage: "No topic specified for the quiz.",
         });
       }
@@ -112,30 +118,23 @@ const QuizScreen = ({ route, navigation }) => {
             const selQ = sQ.slice(0, c);
             const fQ = selQ.map((q) => ({
               ...q,
-              options: shuffleArray(q.options || []),
+              options: shuffleArray(q.options || []), // Shuffle options per question
             }));
             setQuestions(fQ);
             setError(null);
-            setIsLoading(false); // Stop loading ONLY when data is ready
           } else {
-            console.log(
-              "QuizScreen: No questions found, navigating to DummyScreen."
-            );
-            navigation.replace("DummyScreen", {
-              errorMessage:
-                "Quiz questions are not available yet for this topic.",
-            });
+            // Handle case where questions exist but are empty array
+            setError("Quiz questions are not available yet for this topic.");
           }
+          setIsLoading(false); // Stop loading once data is processed or error set
         }
       },
       (fetchError) => {
         // onError
         console.error("QuizScreen: Firestore listener error:", fetchError);
         if (isMounted.current) {
-          navigation.replace("DummyScreen", {
-            errorMessage:
-              fetchError?.message || "Failed to load quiz questions.",
-          });
+          setError(fetchError?.message || "Failed to load quiz questions.");
+          setIsLoading(false);
         }
       }
     );
@@ -146,28 +145,33 @@ const QuizScreen = ({ route, navigation }) => {
       );
       unsubscribe();
     };
-  }, [quizContentId, navigation]);
+  }, [quizContentId, navigation]); // Dependency includes navigation for replace action
 
   // --- Effect for Handling Navigation Away (Leave Prompt) ---
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      // Allow navigation if intentionally going to results OR if loading failed/is still in progress OR already leaving
+      // Allow navigation if intentionally going to results OR if loading/error states active OR already leaving
       if (isNavigatingToResults.current || isLoading || error || isLeaving) {
         console.log(
-          "Allowing navigation: Intentionally going to results OR load failed/still loading OR already leaving."
+          "Allowing navigation: To results, loading, error, or already leaving."
         );
         if (isNavigatingToResults.current) {
-          isNavigatingToResults.current = false;
+          // Reset flag if it was set for results navigation
+          // No, keep it true until navigation actually happens in handleNextQuestion
         }
         return; // Do NOT prevent default
       }
-      // Otherwise, prevent default and show modal for user-initiated leave
-      console.log(
-        "User initiated leave during active quiz, preventing default and showing modal."
-      );
-      e.preventDefault();
-      setPendingNavigationAction(e.data.action);
-      setShowLeaveConfirmModal(true);
+
+      // Prevent default and show modal only if quiz is active and user initiates leave
+      if (questions.length > 0 && questionIndex < questions.length) {
+        console.log("User initiated leave during active quiz, showing modal.");
+        e.preventDefault();
+        setPendingNavigationAction(e.data.action); // Store the intended action
+        setShowLeaveConfirmModal(true);
+      } else {
+        console.log("Allowing navigation: Quiz not active or finished.");
+        // Quiz isn't active (no questions, or finished index), allow navigation
+      }
     });
     // Cleanup listener
     return unsubscribe;
@@ -178,40 +182,84 @@ const QuizScreen = ({ route, navigation }) => {
     pendingNavigationAction,
     isLoading,
     error,
-  ]); // Added isLoading, error
+    questions,
+    questionIndex,
+  ]); // Add dependencies
+
+  // --- Effect to Hide/Show Tab Bar ---
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("QuizScreen focused, hiding tab bar.");
+      const parentNav = navigation.getParent(); // Try to get parent navigator (e.g., Tab Navigator)
+      if (parentNav) {
+        // Method for typical React Navigation v5/v6 Tab Navigator
+        parentNav.setOptions({
+          tabBarStyle: { display: "none" },
+          tabBarVisible: false,
+        });
+      } else {
+        // Fallback if no parent or different navigator structure
+        try {
+          navigation.setOptions({ tabBarStyle: { display: "none" } }); // May not work if not direct child
+        } catch (err) {
+          console.warn("Could not hide tab bar directly on navigation object.");
+        }
+      }
+
+      // Return cleanup function to restore tab bar when screen loses focus
+      return () => {
+        console.log("QuizScreen blurred, showing tab bar.");
+        if (parentNav) {
+          // Restore to default visible state
+          parentNav.setOptions({
+            tabBarStyle: { display: "flex" },
+            tabBarVisible: true,
+          }); // Adjust 'flex' if your default is different
+        } else {
+          try {
+            navigation.setOptions({ tabBarStyle: { display: "flex" } });
+          } catch (err) {
+            console.warn(
+              "Could not restore tab bar directly on navigation object."
+            );
+          }
+        }
+      };
+    }, [navigation]) // Dependency on navigation object
+  );
 
   // --- Handlers ---
   const handleAnswer = (answer) => {
+    // Allow selecting only if feedback is not being shown
     if (!showFeedback) {
       setSelectedAnswer(answer);
     }
   };
 
   const handleSubmit = () => {
+    // Prevent submission if no answer selected, loading, or feedback already shown
     if (selectedAnswer === null || isLoading || showFeedback) return;
+
     const q = questions[questionIndex];
     if (!q) {
       console.error("handleSubmit: current question is undefined!");
-      return;
+      return; // Should ideally not happen if questionIndex is valid
     }
     const correct = selectedAnswer === q.answer;
-    setWasCorrect(correct); // Set correctness based on current answer
-    setShowFeedback(true); // Show feedback
+    setWasCorrect(correct); // Record if the selected answer was correct
+    setShowFeedback(true); // Trigger feedback display
   };
 
-  // --- CORRECTED handleNextQuestion ---
   const handleNextQuestion = () => {
-    if (!showFeedback || isLoading) return; // Should only proceed when feedback is shown
+    // Prevent proceeding if feedback isn't shown or still loading
+    if (!showFeedback || isLoading) return;
 
-    // Determine score increment based on the question just reviewed
+    // Increment score based on the correctness of the *just answered* question
     const scoreIncrement = wasCorrect ? 1 : 0;
-    // Note: We don't call setScore here anymore before checking the index
-
     const nextIndex = questionIndex + 1;
 
     if (nextIndex < questions.length) {
-      // --- Move to next question ---
-      // Update score state based on the previous question's correctness *before* moving index
+      // Update score state *before* moving to the next question
       if (scoreIncrement > 0) {
         setScore((prevScore) => prevScore + scoreIncrement);
       }
@@ -222,96 +270,109 @@ const QuizScreen = ({ route, navigation }) => {
       setWasCorrect(null);
       setShowFeedback(false);
     } else {
-      // --- Quiz finished normally ---
-      // Calculate final score explicitly, including the increment from the *last* question
+      // Quiz finished normally
+      // Calculate final score including the last question's result
       const finalScore = score + scoreIncrement;
-
       console.log(
         `Quiz finished normally. Final score calculated: ${finalScore}. Navigating to results.`
       );
-      isNavigatingToResults.current = true; // Signal intentional navigation
+      isNavigatingToResults.current = true; // Signal intentional navigation to results
 
       navigation.replace("QuizResult", {
-        score: finalScore, // <<< Pass the CORRECT final score
+        // Use replace to prevent going back to the quiz
+        score: finalScore,
         totalQuestions: questions.length,
-        topicId: quizContentId,
-        passingScore: PASSING_SCORE_THRESHOLD,
-        maxScore: questions.length,
+        topicId: quizContentId, // Pass topicId for context if needed on results screen
+        passingScore: PASSING_SCORE_THRESHOLD, // Pass threshold if needed
+        maxScore: questions.length, // Pass max possible score
       });
     }
   };
-  // --- End CORRECTED handleNextQuestion ---
 
-  // --- Logic for Confirmation Modal Actions ---
   const handleConfirmLeave = async () => {
-    // Determine the correct ID for the quiz being left
-    const quizContentId = route?.params?.subtopicId || route?.params?.topicId; // <<< ADD THIS LINE
+    const currentQuizId = route?.params?.subtopicId || route?.params?.topicId;
 
     if (isLeaving || !pendingNavigationAction) return; // Prevent double execution
 
-    // --- ADD Safety Check ---
-    if (!quizContentId) {
+    if (!currentQuizId) {
       console.error(
         "handleConfirmLeave: Cannot penalize, quizContentId is missing."
       );
-      // Decide how to handle - maybe just navigate without penalty?
       setShowLeaveConfirmModal(false);
+      // Just navigate without penalty if ID is missing
       if (pendingNavigationAction) navigation.dispatch(pendingNavigationAction);
-      else navigation.goBack();
+      else navigation.goBack(); // Fallback if no action stored
+      setPendingNavigationAction(null);
       return;
     }
-    // --- End Safety Check ---
 
     setShowLeaveConfirmModal(false);
-    setIsLeaving(true);
+    setIsLeaving(true); // Indicate leaving process has started
     try {
       console.log(
-        `User confirmed leave. Calling penalizeQuizLeave for quizId: ${quizContentId}...`
-      ); // Log correct ID
-      // Pass the correct ID to the Cloud Function
-      await penalizeQuizLeave({ quizId: quizContentId }); // <<< USE quizContentId HERE
+        `User confirmed leave. Calling penalizeQuizLeave for quizId: ${currentQuizId}...`
+      );
+      await penalizeQuizLeave({ quizId: currentQuizId }); // Pass the correct ID
       console.log("penalizeQuizLeave call finished.");
     } catch (error) {
+      // Log error but proceed with navigation regardless
       console.error("Error calling penalizeQuizLeave:", error);
     } finally {
       console.log(
         "Dispatching stored navigation action after penalty attempt."
       );
+      // Ensure navigation happens even if penalty fails
       if (pendingNavigationAction) {
         navigation.dispatch(pendingNavigationAction);
       } else {
         console.warn("No pending action found, navigating back.");
-        navigation.goBack();
+        navigation.goBack(); // Fallback navigation
       }
-      setPendingNavigationAction(null);
-      setIsLeaving(false);
+      setPendingNavigationAction(null); // Clean up stored action
+      // No need to set isLeaving back to false, component will unmount
     }
   };
 
   const handleCancelLeave = () => {
     console.log("User cancelled leaving quiz.");
     setShowLeaveConfirmModal(false);
-    setPendingNavigationAction(null);
-    setIsLeaving(false);
+    setPendingNavigationAction(null); // Clear stored action
+    setIsLeaving(false); // Reset leaving flag
   };
 
-  // --- Dynamic Styling ---
-  const getButtonStyle = (option) => {
-    /* ... (same as before) ... */
-    const q = questions[questionIndex];
-    if (!q) return styles.optionButton;
+  // --- Helper Function for Option Appearance ---
+  const getOptionAppearance = (option, currentQuestion) => {
+    const isSelected = option === selectedAnswer;
+    const isCorrect = option === currentQuestion?.answer;
+
+    let viewStyles = [styles.optionViewBase];
+    let textStyles = [styles.optionTextBase];
+
     if (showFeedback) {
-      if (option === q.answer) return styles.correctAnswerButton;
-      if (option === selectedAnswer) return styles.incorrectAnswerButton;
-      return styles.disabledAnswerButton;
+      if (isCorrect) {
+        viewStyles.push(styles.optionViewCorrect);
+        textStyles.push(styles.optionTextFeedback);
+      } else if (isSelected) {
+        viewStyles.push(styles.optionViewIncorrect);
+        textStyles.push(styles.optionTextFeedback);
+      } else {
+        viewStyles.push(styles.optionViewDisabled);
+        textStyles.push(styles.optionTextDisabled);
+      }
     } else {
-      return selectedAnswer === option
-        ? styles.selectedAnswerButton
-        : styles.optionButton;
+      if (isSelected) {
+        viewStyles.push(styles.optionViewSelected);
+        textStyles.push(styles.optionTextSelected);
+      } else {
+        viewStyles.push(styles.optionViewDefault);
+        textStyles.push(styles.optionTextDefault);
+      }
     }
+    return { viewStyles, textStyles };
   };
+
+  // --- Dynamic Styling for Submit/Next Button ---
   const getNextButtonStyle = () => {
-    /* ... (same as before) ... */
     if (!showFeedback)
       return selectedAnswer === null
         ? styles.submitButtonDisabled
@@ -321,11 +382,6 @@ const QuizScreen = ({ route, navigation }) => {
   };
 
   // --- RENDER LOGIC ---
-  console.log(
-    `Render Check: isLoading=${isLoading}, error=${JSON.stringify(
-      error
-    )}, questions.length=${questions.length}, index=${questionIndex}`
-  );
 
   // Loading State
   if (isLoading) {
@@ -343,31 +399,77 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  // Error / No Questions states (should be handled by navigation, but keep as fallback)
+  // Error State (Includes No Questions Found)
   if (error) {
-    /* ... (Error UI with Back Button) ... */
-  }
-  if (questions.length === 0) {
-    /* ... (No Questions UI with Back Button) ... */
-  }
-
-  // Brief Loading state if index is out of bounds (during navigation)
-  if (questionIndex >= questions.length) {
     return (
       <LinearGradient
         colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
         style={styles.centered}
       >
-        <ActivityIndicator size="large" color={Colors.primaryWhite} />
+        <PaperText style={styles.errorText}>{error}</PaperText>
+        <PaperButton mode="contained" onPress={() => navigation.goBack()}>
+          Go Back
+        </PaperButton>
       </LinearGradient>
     );
   }
 
-  // Data Integrity Check
+  // Handle cases where component might render briefly before navigation or data check completes fully
+  if (questions.length === 0 || questionIndex >= questions.length) {
+    // If navigation to results is in progress, show loader briefly
+    if (isNavigatingToResults.current) {
+      return (
+        <LinearGradient
+          colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+          style={styles.centered}
+        >
+          <ActivityIndicator size="large" color={Colors.primaryWhite} />
+        </LinearGradient>
+      );
+    }
+    // Otherwise, this might indicate an unexpected state or end of quiz before navigation action
+    console.warn(
+      `QuizScreen rendered with questions.length=${questions.length}, index=${questionIndex} unexpectedly.`
+    );
+    return (
+      <LinearGradient
+        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        style={styles.centered}
+      >
+        <PaperText style={styles.infoText}>Loading quiz state...</PaperText>
+        {/* Provide a way out if stuck */}
+        <PaperButton
+          mode="contained"
+          onPress={() => navigation.goBack()}
+          style={{ marginTop: 15 }}
+        >
+          Go Back
+        </PaperButton>
+      </LinearGradient>
+    );
+  }
+
+  // Data Integrity Check (Should be redundant now but safe)
   const currentQuestion = questions[questionIndex];
   if (!currentQuestion) {
-    /* ... (Critical Error UI with Back Button) ... */
+    return (
+      <LinearGradient
+        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        style={styles.centered}
+      >
+        <PaperText style={styles.errorText}>
+          Critical Error: Could not load current question data.
+        </PaperText>
+        <PaperButton mode="contained" onPress={() => navigation.goBack()}>
+          Go Back
+        </PaperButton>
+      </LinearGradient>
+    );
   }
+
+  // <<< Heuristic Check >>>
+  const isLikelyShortContent =
+    (currentQuestion?.question?.length || 0) < SHORT_QUESTION_THRESHOLD;
 
   // --- Main Quiz UI ---
   return (
@@ -375,68 +477,79 @@ const QuizScreen = ({ route, navigation }) => {
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
       style={styles.container}
     >
+      {/* Main Scrollable Content Area */}
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        style={styles.mainScroll}
+        contentContainerStyle={styles.mainScrollContentContainer}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         {/* Progress Text */}
         <PaperText style={styles.progressText}>
           Question {questionIndex + 1} of {questions.length}
         </PaperText>
+
         {/* Question Card */}
         <Card style={styles.card}>
-          <Card.Content>
-            <PaperText
-              style={[
-                styles.questionText,
-                showFeedback && styles.questionTextAnswered,
-              ]}
-            >
+          <Card.Content style={styles.cardContent}>
+            <PaperText style={styles.questionText}>
               {currentQuestion.question}
             </PaperText>
             {showFeedback && currentQuestion.explanation ? (
               <View style={styles.explanationContainer}>
+                {/* Assuming Explanation component handles array/string */}
                 <Explanation explanationText={currentQuestion.explanation} />
               </View>
             ) : null}
           </Card.Content>
         </Card>
-        {/* Options */}
+
+        {/* <<< Conditionally Expanding Spacer >>> */}
+        <View
+          style={[
+            styles.spacer, // Apply base height/margin
+            isLikelyShortContent && styles.spacerLarge, // Apply larger height if heuristic matches
+          ]}
+        />
+
+        {/* Options Area */}
         <View style={styles.optionsContainer}>
-          {(currentQuestion.options || []).map((option, index) => (
-            <PaperButton
-              key={index}
-              mode="contained"
-              onPress={() => handleAnswer(option)}
-              style={[styles.baseButton, getButtonStyle(option)]}
-              labelStyle={
-                selectedAnswer === option
-                  ? styles.selectedOptionButtonText
-                  : styles.optionButtonText
-              }
-              disabled={showFeedback}
-              uppercase={false}
-            >
-              {option}
-            </PaperButton>
-          ))}
+          {(currentQuestion.options || []).map((option, index) => {
+            const { viewStyles, textStyles } = getOptionAppearance(
+              option,
+              currentQuestion
+            );
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.optionTouchable}
+                onPress={() => handleAnswer(option)}
+                disabled={showFeedback}
+                activeOpacity={0.7}
+              >
+                <View style={viewStyles}>
+                  <Text style={textStyles}>{option}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
-        {/* Submit/Next Button */}
+      </ScrollView>
+
+      {/* Fixed Footer Area */}
+      <View style={styles.footer}>
         <PaperButton
           mode="contained"
-          style={[
-            styles.baseButton,
-            styles.nextButtonBase,
-            getNextButtonStyle(),
-          ]}
+          style={[styles.submitNextButtonBase, getNextButtonStyle()]}
           labelStyle={styles.nextButtonText}
           onPress={showFeedback ? handleNextQuestion : handleSubmit}
-          disabled={!showFeedback && selectedAnswer === null} // Removed isLoading check here as button should be usable if UI rendered
+          disabled={!showFeedback && selectedAnswer === null} // Disable Check if no answer; Next always enabled when shown
           uppercase={false}
         >
           {showFeedback ? "Next" : "Check"}
         </PaperButton>
-      </ScrollView>
+      </View>
+
       {/* Confirmation Modal */}
       <ConfirmationModal
         visible={showLeaveConfirmModal}
@@ -453,27 +566,32 @@ const QuizScreen = ({ route, navigation }) => {
 
 // --- Styles ---
 const styles = StyleSheet.create({
-  // ...(Keep all your existing styles here)...
+  // Layout
   container: { flex: 1 },
-  scrollContent: { flexGrow: 1, justifyContent: "center", padding: 20 },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  errorText: {
-    color: "#FFBABA",
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 15,
+  mainScroll: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
-  infoText: {
-    color: Colors.primaryLightGray,
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 15,
+  mainScrollContentContainer: {
+    flexGrow: 1, // <<< Crucial for vertical centering
+    justifyContent: "center", // <<< Crucial for vertical centering
+    paddingTop: 20,
+    paddingBottom: 20,
   },
+  footer: {
+    padding: 20,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: Colors.primaryLightGray,
+  },
+
+  // Components
   progressText: {
     fontSize: 16,
     color: Colors.primaryWhite,
@@ -482,9 +600,14 @@ const styles = StyleSheet.create({
     fontFamily: "nunitoBold",
   },
   card: {
-    marginBottom: 20,
     backgroundColor: Colors.primaryWhite100,
     borderRadius: 12,
+    minHeight: 120, // Ensures card has some presence
+    justifyContent: "center", // Centers Card.Content vertically
+  },
+  cardContent: {
+    paddingVertical: 15,
+    paddingHorizontal: 10,
   },
   questionText: {
     fontSize: 18,
@@ -492,57 +615,76 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Colors.blackText,
     fontFamily: "nunitoBold",
-    paddingVertical: 10,
-    paddingHorizontal: 5,
   },
-  questionTextAnswered: { fontSize: 16, lineHeight: 24 },
   explanationContainer: {
     marginTop: 15,
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: Colors.primaryLightGray,
   },
-  optionsContainer: { marginVertical: 5 },
-  baseButton: {
-    borderRadius: 25,
+  // <<< Spacer Style >>>
+  spacer: {
+    height: 15, // Ensure at least some minimum space always
+  },
+  spacerLarge: {
+    // Increased height applied conditionally when content is likely short
+    height: 40, // <<< Extra space (Adjust value as needed)
+  },
+
+  // Options Styling
+  optionsContainer: {
+    // No extra style needed now, just logical grouping
+  },
+  optionTouchable: {
     marginVertical: 7,
-    paddingVertical: Platform.OS === "ios" ? 10 : 6,
+  },
+  optionViewBase: {
     borderWidth: 1,
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 75, // Fixed height for uniformity
+    paddingVertical: 5, // Minimal vertical padding with fixed height
   },
-  optionButtonText: {
+  optionTextBase: {
     fontSize: 16,
     fontFamily: "nunitoBold",
-    color: Colors.blackText,
+    textAlign: "center",
   },
-  selectedOptionButtonText: {
-    fontSize: 16,
-    fontFamily: "nunitoBold",
-    color: Colors.primaryWhite,
-  },
-  optionButton: {
+  // Dynamic Option Styles (View Backgrounds/Borders & Text Colors)
+  optionViewDefault: {
     backgroundColor: Colors.primaryWhite100,
     borderColor: Colors.primaryDarkMaroon,
   },
-  selectedAnswerButton: {
+  optionTextDefault: { color: Colors.blackText },
+  optionViewSelected: {
     backgroundColor: Colors.primaryDarkMaroon,
     borderColor: Colors.primaryDarkMaroon,
   },
-  correctAnswerButton: {
+  optionTextSelected: { color: Colors.primaryWhite },
+  optionViewCorrect: {
     backgroundColor: Colors.successGreen,
     borderColor: Colors.successGreen,
-    color: Colors.primaryWhite,
   },
-  incorrectAnswerButton: {
+  optionViewIncorrect: {
     backgroundColor: Colors.errorRed,
     borderColor: Colors.errorRed,
-    color: Colors.primaryWhite,
   },
-  disabledAnswerButton: {
+  optionTextFeedback: { color: Colors.primaryWhite }, // For Correct/Incorrect Text
+  optionViewDisabled: {
     backgroundColor: Colors.mediumGray,
-    borderColor: Colors.mediumGray,
-    opacity: 0.6,
+    borderColor: Colors.darkGray,
+    opacity: 0.7,
   },
-  nextButtonBase: { marginTop: 20 },
+  optionTextDisabled: { color: Colors.darkGray },
+
+  // Submit/Next Button Styles
+  submitNextButtonBase: {
+    borderRadius: 25, // Match option radius
+    paddingVertical: 8, // Adjust padding for Paper button visual height
+    // No margin needed, footer provides spacing
+  },
   submitButton: {
     backgroundColor: Colors.primaryDarkMaroon,
     borderColor: Colors.primaryDarkMaroon,
@@ -564,6 +706,20 @@ const styles = StyleSheet.create({
     color: Colors.primaryWhite,
     fontSize: 18,
     fontFamily: "nunitoBold",
+  },
+
+  // Error/Info Text
+  errorText: {
+    color: "#FFBABA",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  infoText: {
+    color: Colors.primaryWhite,
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
   },
 });
 
