@@ -53,8 +53,9 @@ const CarouselItem = React.memo(
         return;
       }
 
+      // Cleaned up log:
       console.log(
-        `CarouselItem pressed: ID=<span class="math-inline">\{item\.id\}, Type\=</span>{item.type}, Title=${item.title}`
+        `CarouselItem pressed: ID=${item.id}, Type=${item.type}, Title=${item.title}`
       );
 
       switch (
@@ -63,13 +64,13 @@ const CarouselItem = React.memo(
         case "STUDY":
           // If the tile itself represents study content, navigate directly to the reader, passing the ID.
           console.log(`Navigating to Apprec8Reader with topicId: ${item.id}`);
-          navigation.push("Apprec8Reader", { topicId: item.id }); // Use push
+          navigation.push("Apprec8Reader", { contentId: item.id }); // Use push
           break;
 
         case "QUIZ":
           // If the tile itself represents a quiz, navigate directly to the quiz screen, passing the ID.
           console.log(`Navigating to Quiz with topicId: ${item.id}`);
-          navigation.push("Quiz", { topicId: item.id }); // Use push
+          navigation.push("Quiz", { quizContentId: item.id }); // Use push
           break;
 
         case "COURSE": // Falls through

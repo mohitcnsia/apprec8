@@ -37,50 +37,47 @@ const longRuntimeOptions = {
  * Initializes corresponding documents in 'users' and 'userStats' collections.
  * NOTE: This function runs automatically. No external security check needed.
  */
+// In functions/index.js
 exports.initializeNewUser = functions
   .region(region)
   .runWith(runtimeOptions)
   .auth.user()
   .onCreate(async (user) => {
-    // Function receives the 'user' object
     const userId = user.uid;
-    const email = user.email || ""; // Email might be optional
-    const displayName = user.displayName;
-    const photoURL = user.photoURL;
+    // ... (get email, displayName, etc.) ...
+    console.log(`Initializing user: ${userId}`);
 
-    console.log(
-      `V1 auth.user().onCreate: Initializing user: ${userId}, email: ${email}`
-    );
-
-    // --- Security check REMOVED - Not applicable or needed for Auth triggers ---
-
-    const now = FieldValue.serverTimestamp();
+    const now = admin.firestore.FieldValue.serverTimestamp();
     const userRef = db.collection("users").doc(userId);
     const userStatsRef = db.collection("userStats").doc(userId);
 
-    // Use provided info, fallback for username
+    // Determine default username (replace with your actual logic if needed)
     const defaultUsername =
-      displayName ||
-      (email ? email.split("@")[0] : `User_${userId.substring(0, 6)}`);
+      user.displayName ||
+      (user.email
+        ? user.email.split("@")[0]
+        : `User_${userId.substring(0, 6)}`);
 
     const userData = {
       userId: userId,
-      email: email,
+      email: user.email || "",
       username: defaultUsername,
-      displayName: displayName || "",
-      photoURL: photoURL || "",
+      displayName: user.displayName || "",
+      photoURL: user.photoURL || "",
       phone: user.phoneNumber || "",
       createdAt: now,
       lastUpdatedAt: now,
-      lastActivityAt: null,
+      lastActivityAt: null, // Or set to 'now'? Decide based on if creation counts as activity
     };
 
     const userStatsData = {
       userId: userId,
       totalStars: 0,
       currentStreak: 0,
-      lastQuizCompletionDate: null,
+      lastQuizCompletionDate: null, // Keep this if specifically used elsewhere
       totalQuizzesCompleted: 0,
+      lastActivityCompletionDate: null, // <<< ADDED: Initialize to null
+      lastDailyBonusDate: null, // <<< ADDED: Initialize to null (for daily 100% bonus)
     };
 
     const batch = db.batch();
@@ -89,16 +86,10 @@ exports.initializeNewUser = functions
 
     try {
       await batch.commit();
-      console.log(
-        `V1 auth.user().onCreate: Successfully initialized documents for user ${userId}`
-      );
+      console.log(`Successfully initialized documents for user ${userId}`);
     } catch (error) {
-      console.error(
-        `V1 auth.user().onCreate: Error initializing documents for user ${userId}:`,
-        error
-      );
+      console.error(`Error initializing documents for user ${userId}:`, error);
     }
-    // No return value or res.send() needed for this trigger type
   });
 
 // ==========================================================
@@ -174,8 +165,6 @@ exports.addCategory = functions
  * @param {string} req.body.categoryId - ID of the parent category.
  * @param {string} req.body.title - Title of the topic.
  * @param {number} req.body.order - Order for sorting.
- * @param {boolean} [req.body.hasStudy=false] - Does it have study content?
- * @param {boolean} [req.body.hasQuiz=false] - Does it have quiz content?
  * @param {string|null} [req.body.parentTopicId=null] - ID of parent topic if subtopic.
  * @param {boolean} [req.body.hasSubtopics=false] - Does it have subtopics?
  * @param {string} [req.body.type="ACTIVITY"] - Type indicator (e.g., TOPIC, SUBTOPIC).
@@ -210,23 +199,19 @@ exports.addTopic = functions
             console.warn(
               `V1 addTopic: Missing or empty required field: ${field}`
             );
-            return res
-              .status(400)
-              .send({
-                success: false,
-                error: `Missing or empty required field: ${field}`,
-              });
+            return res.status(400).send({
+              success: false,
+              error: `Missing or empty required field: ${field}`,
+            });
           } else if (
             field === "order" &&
             typeof topicData[field] !== "number"
           ) {
             console.warn(`V1 addTopic: Field 'order' must be a number.`);
-            return res
-              .status(400)
-              .send({
-                success: false,
-                error: `Field 'order' must be a number.`,
-              });
+            return res.status(400).send({
+              success: false,
+              error: `Field 'order' must be a number.`,
+            });
           }
         }
       }
@@ -245,8 +230,6 @@ exports.addTopic = functions
         categoryId: String(topicData.categoryId),
         title: String(topicData.title),
         order: Number(topicData.order),
-        hasStudy: topicData.hasStudy === true, // Ensure boolean
-        hasQuiz: topicData.hasQuiz === true, // Ensure boolean
         parentTopicId:
           topicData.parentTopicId !== undefined
             ? String(topicData.parentTopicId)
@@ -325,24 +308,20 @@ exports.updateTopic = functions
 
       // --- Basic Input Validation ---
       if (!topicId || typeof topicId !== "string" || topicId.trim() === "") {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Missing or invalid 'id' (string) in request body.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Missing or invalid 'id' (string) in request body.",
+        });
       }
       if (
         !fieldsToUpdate ||
         typeof fieldsToUpdate !== "object" ||
         Object.keys(fieldsToUpdate).length === 0
       ) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Missing or empty 'fields' object in request body.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Missing or empty 'fields' object in request body.",
+        });
       }
       // Optional: Add validation to prevent updating certain fields like 'id' or 'createdAt'
       if (
@@ -354,12 +333,10 @@ exports.updateTopic = functions
         );
         // delete fieldsToUpdate.id; // Silently remove them
         // delete fieldsToUpdate.createdAt;
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Cannot update immutable fields like 'id' or 'createdAt'.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Cannot update immutable fields like 'id' or 'createdAt'.",
+        });
       }
 
       const topicRef = db.collection("topics").doc(topicId);
@@ -662,8 +639,6 @@ exports.bulkAddTopics = functions
             categoryId: topicData.categoryId,
             title: topicData.title,
             order: topicData.order,
-            hasStudy: topicData.hasStudy === true,
-            hasQuiz: topicData.hasQuiz === true,
             parentTopicId:
               topicData.parentTopicId !== undefined
                 ? topicData.parentTopicId
@@ -1004,8 +979,46 @@ exports.deleteAllDocuments = functions
   });
 
 /**
- * V1 HTTPS: Updates documents based on field matching or all documents.
+ * V2 HTTPS: Updates and/or deletes fields in documents based on field matching or all documents.
  * SECURITY: Ensure this function's IAM permissions restrict invocation.
+ *
+
+How to Call with Deletion:
+
+Now you can call the API like this to both update parentId and delete fieldName1 and fieldName2:
+
+{
+  "collectionName": "topics",
+  "fieldToMatch": "topicId",
+  "valueToMatch": "mt13",
+  "fields": {
+    "parentId": "mt13_new_value" // Example update
+  },
+  "deleteFields": ["fieldName1", "fieldName2"] // Correct format: Array of strings
+}
+
+
+ To only delete fields:
+
+{
+  "collectionName": "topics",
+  "fieldToMatch": "topicId",
+  "valueToMatch": "mt13",
+  "deleteFields": ["fieldToDelete1", "anotherFieldToDelete"]
+}
+
+To only update fields (original functionality):
+
+{
+  "collectionName": "topics",
+  "fieldToMatch": "topicId",
+  "valueToMatch": "mt13",
+  "fields": {
+      "parentId": "mt13_only_update"
+  }
+}
+
+ * 
  */
 exports.updateFirestoreDocuments = functions
   .region(region)
@@ -1026,7 +1039,8 @@ exports.updateFirestoreDocuments = functions
       collectionName,
       fieldToMatch,
       valueToMatch,
-      fields,
+      fields, // Fields to update/set
+      deleteFields, // Fields to delete (optional)
       confirmUpdateAll,
     } = req.body;
 
@@ -1040,17 +1054,39 @@ exports.updateFirestoreDocuments = functions
         .status(400)
         .send('Bad Request: "collectionName" (string) is required.');
     }
-    if (
-      !fields ||
-      typeof fields !== "object" ||
-      Object.keys(fields).length === 0
-    ) {
+
+    // Validate 'fields' (optional if deleteFields is provided)
+    const hasFieldsToUpdate =
+      fields && typeof fields === "object" && Object.keys(fields).length > 0;
+
+    // Validate 'deleteFields' (optional)
+    let hasFieldsToDelete = false;
+    if (deleteFields !== undefined) {
+      if (
+        !Array.isArray(deleteFields) ||
+        !deleteFields.every((f) => typeof f === "string" && f.trim() !== "")
+      ) {
+        return res
+          .status(400)
+          .send(
+            'Bad Request: "deleteFields" must be an array of non-empty strings.'
+          );
+      }
+      if (deleteFields.length > 0) {
+        hasFieldsToDelete = true;
+      }
+    }
+
+    // Ensure at least one action (update or delete) is requested
+    if (!hasFieldsToUpdate && !hasFieldsToDelete) {
       return res
         .status(400)
         .send(
-          'Bad Request: "fields" (object) is required and must not be empty.'
+          'Bad Request: Either "fields" (object with entries) or "deleteFields" (array with entries) must be provided.'
         );
     }
+
+    // --- Query Setup ---
     const hasMatchCriteria =
       fieldToMatch &&
       typeof fieldToMatch === "string" &&
@@ -1076,16 +1112,16 @@ exports.updateFirestoreDocuments = functions
         queryDescription = "ALL documents";
         if (confirmUpdateAll !== true) {
           functions.logger.warn(
-            `Attempt to update all documents in "${collectionName}" without explicit confirmation.`
+            `Attempt to update/delete in all documents in "${collectionName}" without explicit confirmation.`
           );
           return res
             .status(400)
             .send(
-              'Bad Request: Updating all documents requires "confirmUpdateAll": true in the request body for safety.'
+              'Bad Request: Modifying all documents requires "confirmUpdateAll": true in the request body for safety.'
             );
         }
         functions.logger.warn(
-          `!!! Querying ALL documents in collection "${collectionName}" for update. Ensure this is intended!`
+          `!!! Querying ALL documents in collection "${collectionName}" for modification. Ensure this is intended!`
         );
         query = db.collection(collectionName);
       }
@@ -1099,31 +1135,50 @@ exports.updateFirestoreDocuments = functions
         return res
           .status(200)
           .send(
-            "Query successful, but no documents matched the criteria. No updates performed."
+            "Query successful, but no documents matched the criteria. No modifications performed."
           );
       }
 
       functions.logger.info(
-        `Found ${snapshot.size} documents to update in "${collectionName}" based on: ${queryDescription}.`
+        `Found ${snapshot.size} documents to modify in "${collectionName}" based on: ${queryDescription}.`
       );
 
-      // --- Perform Updates using Batched Writes ---
+      // --- Perform Updates/Deletes using Batched Writes ---
       const MAX_BATCH_SIZE = 500;
       let batch = db.batch();
       let documentsInBatch = 0;
-      let totalUpdatesCommitted = 0;
+      let totalModificationsCommitted = 0;
       const commitPromises = [];
 
       for (const doc of snapshot.docs) {
-        batch.update(doc.ref, fields); // Use update() to merge fields
+        // --- Construct the update payload ---
+        const updateData = {};
+
+        // 1. Add fields to update/set (if any)
+        if (hasFieldsToUpdate) {
+          Object.assign(updateData, fields); // Copy fields to updateData
+        }
+
+        // 2. Add fields to delete (if any)
+        //    This will overwrite any field present in both 'fields' and 'deleteFields',
+        //    ensuring deletion takes precedence.
+        if (hasFieldsToDelete) {
+          deleteFields.forEach((fieldName) => {
+            updateData[fieldName] = FieldValue.delete(); // Use FieldValue.delete()
+          });
+        }
+        // --- End Construct update payload ---
+
+        // Add the update operation to the batch
+        batch.update(doc.ref, updateData);
         documentsInBatch++;
 
         if (documentsInBatch === MAX_BATCH_SIZE) {
           functions.logger.info(
-            `Committing batch of ${documentsInBatch} updates...`
+            `Committing batch of ${documentsInBatch} modifications...`
           );
           commitPromises.push(batch.commit());
-          totalUpdatesCommitted += documentsInBatch;
+          totalModificationsCommitted += documentsInBatch;
           batch = db.batch(); // Start a new batch
           documentsInBatch = 0;
         }
@@ -1132,32 +1187,36 @@ exports.updateFirestoreDocuments = functions
       // Commit the final batch if it has any operations
       if (documentsInBatch > 0) {
         functions.logger.info(
-          `Committing final batch of ${documentsInBatch} updates...`
+          `Committing final batch of ${documentsInBatch} modifications...`
         );
         commitPromises.push(batch.commit());
-        totalUpdatesCommitted += documentsInBatch;
+        totalModificationsCommitted += documentsInBatch;
       }
 
       // Wait for all batch commits to complete
       await Promise.all(commitPromises);
 
       functions.logger.info(
-        `Successfully updated ${totalUpdatesCommitted} documents in collection "${collectionName}".`
+        `Successfully modified ${totalModificationsCommitted} documents in collection "${collectionName}".`
       );
       return res
         .status(200)
-        .send(`Successfully updated ${totalUpdatesCommitted} documents.`); // Use return
+        .send(
+          `Successfully modified ${totalModificationsCommitted} documents.`
+        ); // Use return
     } catch (error) {
       functions.logger.error(
-        `Error updating documents in collection "${collectionName}" with criteria "${queryDescription}":`,
+        `Error modifying documents in collection "${collectionName}" with criteria "${queryDescription}":`,
         error
       );
-      let errorMessage = "Internal Server Error: Failed to update documents.";
+      let errorMessage = "Internal Server Error: Failed to modify documents.";
       if (error.code === "permission-denied") {
         errorMessage =
           "Permission Denied: Check Firestore security rules and function service account permissions.";
       } else if (error.message.includes("index")) {
         errorMessage = `Internal Server Error: Firestore query might require an index. Check logs for details. Error: ${error.message}`;
+      } else if (error.code === "invalid-argument") {
+        errorMessage = `Bad Request: Invalid argument provided, potentially in field names or values. Details: ${error.message}`;
       }
       return res.status(500).send(errorMessage); // Use return
     }
@@ -1170,67 +1229,250 @@ exports.updateFirestoreDocuments = functions
  * V1 Callable Function: Records quiz result, calculates stats/stars/streak.
  * Security: Checks context.auth automatically handled by Callable Functions.
  */
+// --- Helper functions for date comparison (using UTC) ---
+
+/** Checks if two Firestore Timestamps are on the same calendar date in UTC */
+function isSameUTCDate(timestamp1, timestamp2) {
+  if (!timestamp1 || !timestamp2) return false;
+  try {
+    const date1 = timestamp1.toDate();
+    const date2 = timestamp2.toDate();
+    return (
+      date1.getUTCFullYear() === date2.getUTCFullYear() &&
+      date1.getUTCMonth() === date2.getUTCMonth() &&
+      date1.getUTCDate() === date2.getUTCDate()
+    );
+  } catch (e) {
+    console.error("isSameUTCDate Error:", e);
+    return false;
+  }
+}
+
+/** Checks if timestamp1 is exactly the day before timestamp2 in UTC */
+function isYesterdayUTC(timestamp1, timestamp2) {
+  if (!timestamp1 || !timestamp2) return false;
+  try {
+    const date1 = timestamp1.toDate();
+    const date2 = timestamp2.toDate();
+    // Get UTC timestamp for the start of the day for date2
+    const startOfDate2 = Date.UTC(
+      date2.getUTCFullYear(),
+      date2.getUTCMonth(),
+      date2.getUTCDate(),
+      0,
+      0,
+      0,
+      0
+    );
+    // Get UTC timestamp for the start of the day BEFORE date2
+    const startOfYesterday = startOfDate2 - 24 * 60 * 60 * 1000;
+    // Check if date1 falls between startOfYesterday (inclusive) and startOfDate2 (exclusive)
+    const date1Millis = date1.getTime();
+    return date1Millis >= startOfYesterday && date1Millis < startOfDate2;
+  } catch (e) {
+    console.error("isYesterdayUTC Error:", e);
+    return false;
+  }
+}
+// --- End Date Helpers ---
+
 exports.recordQuizResult = functions
   .region(region)
   .runWith(runtimeOptions)
   .https.onCall(async (data, context) => {
-    // Correctly checks context.auth
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
-        "User must be authenticated to record results."
+        "User must be authenticated."
       );
     }
     const userId = context.auth.uid;
     const { quizId, scoreAchieved, passingScore, maxScore } = data;
-    console.log(`V1 recordQuizResult: User ${userId}, Quiz ${quizId}`);
+    const now = admin.firestore.Timestamp.now();
 
-    // Basic validation
+    console.log(
+      `Record Result V4: User ${userId}, Quiz ${quizId}, Score ${scoreAchieved}/${maxScore}`
+    );
+
+    // --- Input Validation ---
     if (
       quizId == null ||
       typeof scoreAchieved !== "number" ||
       typeof passingScore !== "number" ||
-      typeof maxScore !== "number"
+      typeof maxScore !== "number" ||
+      maxScore <= 0
     ) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "Missing or invalid quiz result data."
+        "Missing or invalid quiz result data (quizId, scoreAchieved, passingScore, maxScore>0 required)."
       );
     }
-
-    // Your existing logic for handling passed/not passed, transactions, stars, streak...
-    // Make sure all database references use the top-level `db` instance.
-    // Ensure FieldValue is used for increments/timestamps if needed within transaction.
-    // ... (Your transaction logic here) ...
-
-    // Example structure (replace with your actual transaction logic)
-    try {
-      let starsAwarded = 0;
-      let finalStreak = 0;
-      // --- Start Transaction ---
-      await db.runTransaction(async (transaction) => {
-        const userRef = db.collection("users").doc(userId);
-        const userStatsRef = db.collection("userStats").doc(userId);
-        // ... fetch docs using transaction.get() ...
-        // ... calculate stars, streak, updates ...
-        // ... perform transaction.update() / transaction.set() ...
-        finalStreak = 1; // Placeholder
-        starsAwarded = 1; // Placeholder
-      });
-      // --- End Transaction ---
+    if (scoreAchieved < passingScore) {
       console.log(
-        `V1 recordQuizResult: Transaction successful. Stars: ${starsAwarded}, Streak: ${finalStreak}`
+        `Record Result V4: Score ${scoreAchieved} < passingScore ${passingScore}. Not recording.`
       );
       return {
+        status: "not_passed",
+        message: "Score below passing threshold.",
+      };
+    }
+
+    const userStatsRef = db.collection("userStats").doc(userId);
+    const quizAttemptRef = db
+      .collection("users")
+      .doc(userId)
+      .collection("quizAttempts")
+      .doc(quizId);
+
+    try {
+      let starsEarnedThisQuiz = 0;
+      let dailyBonusAwarded = 0;
+      let quizPerfStars = 0;
+      let isFirstAttempt = false;
+      let calculatedNewStreak = 0;
+      let finalTotalStars = 0;
+
+      // --- Start Transaction ---
+      await db.runTransaction(async (transaction) => {
+        // Get current stats and specific quiz attempt history
+        const [statsSnap, attemptSnap] = await Promise.all([
+          transaction.get(userStatsRef),
+          transaction.get(quizAttemptRef),
+        ]);
+
+        if (!statsSnap.exists) {
+          console.error(
+            `User stats not found for ${userId} in transaction! Cannot record result.`
+          );
+          throw new Error(`User stats not found for ${userId}.`); // Fail transaction
+        }
+
+        // --- Process Existing Stats ---
+        const currentStats = statsSnap.data();
+        const currentTotalStars = currentStats.totalStars || 0;
+        const currentStreak = currentStats.currentStreak || 0;
+        const lastActivityTS = currentStats.lastActivityCompletionDate || null; // <<< Use new field
+        const lastDailyBonusTS = currentStats.lastDailyBonusDate || null; // <<< Use new field
+
+        // --- Process Attempt History ---
+        isFirstAttempt = !attemptSnap.exists;
+        const attemptCount = isFirstAttempt
+          ? 1
+          : (attemptSnap.data()?.attempts || 0) + 1;
+
+        // --- Calculations ---
+        const percentage = (scoreAchieved / maxScore) * 100;
+
+        // 1. Calculate Quiz Performance Stars (Rule B & C)
+        quizPerfStars = 0;
+        if (isFirstAttempt) {
+          if (percentage === 100) quizPerfStars = 10;
+          else if (percentage >= 90) quizPerfStars = 5;
+          else quizPerfStars = 3; // Passed but < 90%
+        } else {
+          // Subsequent attempts
+          if (percentage === 100) quizPerfStars = 2;
+          else quizPerfStars = 1; // Passed but < 100%
+        }
+        console.log(
+          ` > Perf Stars: ${quizPerfStars} (First Attempt: ${isFirstAttempt}, %: ${percentage.toFixed(
+            1
+          )})`
+        );
+
+        // 2. Calculate Daily Bonus Stars (Rule A)
+        dailyBonusAwarded = 0;
+        let needsBonusDateUpdate = false;
+        if (percentage === 100 && !isSameUTCDate(lastDailyBonusTS, now)) {
+          dailyBonusAwarded = 5;
+          needsBonusDateUpdate = true;
+          console.log(` > Awarding Daily Bonus: ${dailyBonusAwarded} stars.`);
+        }
+
+        // 3. Calculate Streak
+        if (isYesterdayUTC(lastActivityTS, now)) {
+          // Last activity was yesterday, continue streak
+          calculatedNewStreak = currentStreak + 1;
+          console.log(` > Streak Continued: Day ${calculatedNewStreak}`);
+        } else if (isSameUTCDate(lastActivityTS, now)) {
+          // Already active today, streak doesn't change
+          calculatedNewStreak = currentStreak;
+          console.log(
+            ` > Already active today, streak remains: ${calculatedNewStreak}`
+          );
+        } else {
+          // Missed a day or first activity, reset streak to 1
+          calculatedNewStreak = 1;
+          console.log(` > Streak Reset/Started: Day 1`);
+        }
+
+        // 4. Calculate Total Stars & Prepare Updates
+        starsEarnedThisQuiz = quizPerfStars + dailyBonusAwarded;
+        finalTotalStars = currentTotalStars + starsEarnedThisQuiz;
+
+        // Prepare updates for userStats
+        const updateStatsData = {
+          totalStars: finalTotalStars,
+          totalQuizzesCompleted: isFirstAttempt
+            ? FieldValue.increment(1) // ONLY increment if it's the first successful attempt
+            : currentStats.totalQuizzesCompleted || 0,
+          lastQuizCompletionDate: admin.firestore.FieldValue.serverTimestamp(), // Still useful maybe?
+          lastActivityCompletionDate: now, // <<< Update last activity date
+          currentStreak: calculatedNewStreak, // <<< Update streak
+        };
+        if (needsBonusDateUpdate) {
+          updateStatsData.lastDailyBonusDate = now; // Update if bonus was awarded
+        }
+        console.log(` > Updating userStats:`, updateStatsData);
+        transaction.update(userStatsRef, updateStatsData); // Update userStats
+
+        // Prepare updates/creation for quizAttempts
+        if (isFirstAttempt) {
+          const attemptData = {
+            quizId: quizId,
+            attempts: 1,
+            firstAttemptDate: now,
+            lastAttemptDate: now,
+            highestScore: scoreAchieved,
+            passed: true,
+          };
+          console.log(` > Creating quizAttempt doc for ${quizId}`);
+          transaction.set(quizAttemptRef, attemptData); // Create attempt doc
+        } else {
+          const currentHighest = attemptSnap.data()?.highestScore || 0;
+          const updateAttemptData = {
+            attempts: attemptCount,
+            lastAttemptDate: now,
+            highestScore: Math.max(currentHighest, scoreAchieved),
+            passed: true,
+          };
+          console.log(
+            ` > Updating quizAttempt doc for ${quizId}, attempt #${attemptCount}.`
+          );
+          transaction.update(quizAttemptRef, updateAttemptData); // Update attempt doc
+        }
+      }); // --- End Transaction ---
+
+      console.log(
+        `Record Result V4: Transaction successful for user ${userId}, quiz ${quizId}. Awarded: ${starsEarnedThisQuiz}, New Total: ${finalTotalStars}, New Streak: ${calculatedNewStreak}`
+      );
+
+      // Return details about what was awarded THIS time
+      return {
         status: "success",
-        starsAwarded: starsAwarded,
-        currentStreak: finalStreak,
-      }; // Return result
+        starsAwarded: starsEarnedThisQuiz, // Total stars earned from this specific completion
+        dailyBonusAwarded: dailyBonusAwarded,
+        quizPerfStars: quizPerfStars,
+        isFirstAttempt: isFirstAttempt,
+        currentStreak: calculatedNewStreak, // Return the NEW streak value
+        totalStars: finalTotalStars, // Optionally return the new total
+      };
     } catch (error) {
       console.error(
-        `V1 recordQuizResult: Transaction error for user ${userId}, quiz ${quizId}:`,
+        `Record Result V4: Transaction error for user ${userId}, quiz ${quizId}:`,
         error
       );
+      // Rethrow error for client to handle
       throw new functions.https.HttpsError(
         "internal",
         error.message || "Failed to record quiz result."
@@ -1299,3 +1541,179 @@ exports.penalizeQuizLeave = functions
       );
     }
   });
+
+// Add this alongside your other functions in index.js
+
+/**
+ * V1 HTTPS (POST): Fetches multiple documents by ID from a specified collection,
+ * or optionally returns the inferred schema of those documents.
+ * SECURITY: Ensure this function's IAM permissions restrict invocation (e.g., remove 'allUsers').
+ *
+ * @param {object} req.body - JSON payload.
+ * @param {string} req.body.collectionName - The name of the collection to query.
+ * @param {Array<string>} req.body.docIds - An array of document IDs (max 25).
+ * @param {boolean} [req.body.getSchema=false] - If true, returns inferred schema instead of data.
+ */
+exports.getDocumentsById = functions
+  .region(region) // Use the region defined earlier in your file
+  .runWith(runtimeOptions) // Use runtime options defined earlier
+  .https.onRequest(async (req, res) => {
+    // Allow CORS requests - adjust origin for production if needed
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+
+    // Handle preflight requests for CORS
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
+    if (req.method !== "POST") {
+      return res
+        .status(405)
+        .send({ success: false, error: "Method Not Allowed. Use POST." });
+    }
+    if (!req.is("application/json")) {
+      return res.status(400).send({
+        success: false,
+        error: "Bad Request: Content-Type must be application/json.",
+      });
+    }
+
+    try {
+      const { collectionName, docIds, getSchema = false } = req.body;
+
+      // --- Input Validation ---
+      if (
+        !collectionName ||
+        typeof collectionName !== "string" ||
+        collectionName.trim() === ""
+      ) {
+        return res.status(400).send({
+          success: false,
+          error: 'Bad Request: "collectionName" (string) is required.',
+        });
+      }
+      if (!Array.isArray(docIds) || docIds.length === 0) {
+        return res.status(400).send({
+          success: false,
+          error: 'Bad Request: "docIds" must be a non-empty array.',
+        });
+      }
+      if (docIds.length > 25) {
+        // Added limit check
+        return res.status(400).send({
+          success: false,
+          error: "Bad Request: Maximum number of docIds allowed is 25.",
+        });
+      }
+      if (!docIds.every((id) => typeof id === "string" && id.trim() !== "")) {
+        return res.status(400).send({
+          success: false,
+          error:
+            'Bad Request: All items in "docIds" must be non-empty strings.',
+        });
+      }
+      if (typeof getSchema !== "boolean") {
+        return res.status(400).send({
+          success: false,
+          error: 'Bad Request: "getSchema" must be a boolean (true or false).',
+        });
+      }
+
+      console.log(
+        `getDocumentsById: Request for collection '${collectionName}', IDs: [${docIds.join(
+          ", "
+        )}], getSchema: ${getSchema}`
+      );
+
+      // --- Prepare Firestore References ---
+      const docRefs = docIds.map((id) =>
+        db.collection(collectionName).doc(id.trim())
+      );
+
+      // --- Fetch Documents using getAll ---
+      const documentSnapshots = await db.getAll(...docRefs);
+
+      // --- Process Results ---
+      const results = {};
+      documentSnapshots.forEach((snapshot) => {
+        const docId = snapshot.id; // Get the ID from the snapshot
+        if (!snapshot.exists) {
+          results[docId] = null; // Indicate document not found
+        } else {
+          const docData = snapshot.data();
+          if (getSchema) {
+            // Infer and store schema if requested
+            results[docId] = inferSchemaFromData(docData);
+          } else {
+            // Store document data (including ID) if schema not requested
+            results[docId] = { id: docId, ...docData };
+          }
+        }
+      });
+
+      // --- Construct Success Response ---
+      const responsePayload = { success: true };
+      if (getSchema) {
+        responsePayload.schema = results;
+      } else {
+        responsePayload.documents = results;
+      }
+
+      console.log(
+        `getDocumentsById: Successfully processed ${
+          Object.keys(results).length
+        } requested documents.`
+      );
+      return res.status(200).send(responsePayload);
+    } catch (error) {
+      console.error(`getDocumentsById: Error processing request:`, error);
+      let errorMessage = "Internal Server Error: Failed to process request.";
+      if (error.code === "permission-denied") {
+        errorMessage =
+          "Permission Denied: Check Firestore security rules and function service account permissions.";
+      }
+      return res.status(500).send({ success: false, error: errorMessage });
+    }
+  });
+
+/**
+ * Helper function to infer basic schema from a Firestore document data object.
+ * Note: This provides a snapshot based on existing fields and their current types.
+ * It cannot perfectly represent complex schemas or enforce rules.
+ */
+function inferSchemaFromData(data) {
+  if (!data || typeof data !== "object") return null;
+  const schema = {};
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const value = data[key];
+      const type = typeof value;
+
+      if (value === null) {
+        schema[key] = "null";
+      } else if (type === "object") {
+        // Check for specific Firestore types BEFORE general object/array
+        if (value instanceof admin.firestore.Timestamp) {
+          schema[key] = "Timestamp";
+        } else if (value instanceof admin.firestore.GeoPoint) {
+          schema[key] = "GeoPoint";
+        } else if (value instanceof admin.firestore.DocumentReference) {
+          schema[key] = "Reference";
+        } else if (Array.isArray(value)) {
+          // Could potentially infer array element types if needed, but 'array' is often sufficient
+          schema[key] = "array";
+        } else {
+          // Could recurse for nested objects or just label as 'object'
+          schema[key] = "object";
+        }
+      } else {
+        // Basic JavaScript types: 'string', 'number', 'boolean', 'undefined' (though undefined is rare in Firestore)
+        schema[key] = type;
+      }
+    }
+  }
+  return schema;
+}

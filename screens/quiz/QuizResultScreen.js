@@ -1,4 +1,4 @@
-// screens/quiz/QuizResultScreen.js
+// screens/quiz/QuizResultScreen.js (Corrected for quizId Parameter)
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -8,12 +8,12 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  // Alert removed
+  Button, // Import Button if using it in error/no-data states
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors";
-import { authInstance } from "../../config/firebaseConfig";
+import { Colors } from "../../config/colors"; // Adjust path
+import { authInstance } from "../../config/firebaseConfig"; // Adjust path
 import functions from "@react-native-firebase/functions";
 
 // --- Get screen width ---
@@ -24,26 +24,24 @@ const imageDiameter = screenWidth * 0.7;
 const DEFAULT_PASSING_SCORE = 1;
 
 // --- Define callable function reference outside component ---
-// Ensure 'recordQuizResult' matches the deployed function name
-// Specify region if your function isn't in us-central1 and you haven't set a global default
-// const functionsInstance = functions().app.functions('your-region');
-// const recordQuizResult = functionsInstance.httpsCallable('recordQuizResult');
 const recordQuizResult = functions().httpsCallable("recordQuizResult");
 
 const QuizResultScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("User");
 
-  // --- Get Params (with defaults) ---
+  // --- VVV Corrected Param Destructuring VVV ---
   const {
     score = 0,
     totalQuestions = 0,
-    topicId = null,
+    quizId = null, // <<< CORRECT: Expect quizId now
+    parentTopicId = null, // <<< Capture parentTopicId for context if needed
     passingScore = DEFAULT_PASSING_SCORE,
   } = route.params || {};
+  // Calculate maxScore if not explicitly passed
   const maxScore = route.params?.maxScore ?? totalQuestions;
+  // --- ^^^ Corrected Param Destructuring ^^^ ---
 
   // --- State for Cloud Function Call ---
-  // Removed isSubmittingResult, using submitStatus only
   const [submitError, setSubmitError] = useState(null);
   const [submitStatus, setSubmitStatus] = useState("idle"); // 'idle', 'submitting', 'success', 'error', 'skipped'
 
@@ -64,17 +62,22 @@ const QuizResultScreen = ({ route, navigation }) => {
   const submitQuizResult = useCallback(async () => {
     const currentUser = authInstance.currentUser;
 
-    // Conditions to skip submission (unchanged)
+    // --- VVV Corrected Check for quizId VVV ---
     if (!currentUser) {
       console.log("QuizResultScreen: Skip submission (unauthenticated).");
       setSubmitStatus("skipped");
       return;
     }
-    if (!topicId) {
-      console.log("QuizResultScreen: Skip submission (no topicId).");
-      setSubmitStatus("skipped");
+    if (!quizId) {
+      // <<< CORRECT: Check for quizId
+      console.error(
+        "QuizResultScreen: Skip submission (CRITICAL: quizId is missing!)."
+      );
+      setSubmitError("Cannot save result: Quiz ID missing.");
+      setSubmitStatus("error");
       return;
     }
+    // --- ^^^ Corrected Check for quizId ^^^ ---
     if (score < passingScore) {
       console.log(
         `QuizResultScreen: Skip submission (score ${score} < passingScore ${passingScore}).`
@@ -89,32 +92,31 @@ const QuizResultScreen = ({ route, navigation }) => {
       return;
     }
 
-    // Set status to submitting
     setSubmitStatus("submitting");
     setSubmitError(null);
     console.log(
-      `QuizResultScreen: Submitting result for topicId: ${topicId}, score: ${score}`
-    );
+      `QuizResultScreen: Submitting result for quizId: ${quizId}, score: ${score}`
+    ); // Log with quizId
 
     try {
+      // --- VVV Corrected Data Payload VVV ---
       const resultData = {
-        quizId: topicId,
+        quizId: quizId, // <<< CORRECT: Send quizId
         scoreAchieved: score,
         passingScore: passingScore,
         maxScore: maxScore,
       };
+      // --- ^^^ Corrected Data Payload ^^^ ---
       console.log("Calling 'recordQuizResult' with data:", resultData);
-      const result = await recordQuizResult(resultData); // Use reference defined outside
+      const result = await recordQuizResult(resultData);
       console.log("Cloud Function 'recordQuizResult' returned:", result.data);
 
       if (result?.data?.status === "success") {
         console.log("Quiz result successfully recorded.");
         setSubmitStatus("success");
       } else if (result?.data?.status === "not_passed") {
-        console.warn(
-          "QuizResultScreen: Cloud function reported 'not_passed' unexpectedly."
-        );
-        setSubmitStatus("skipped"); // Treat as skipped if backend says not passed
+        console.warn("QuizResultScreen: Cloud function reported 'not_passed'.");
+        setSubmitStatus("skipped");
       } else {
         console.error(
           "Cloud Function 'recordQuizResult' returned unexpected status:",
@@ -131,41 +133,49 @@ const QuizResultScreen = ({ route, navigation }) => {
       const message =
         error.details?.message ||
         error.message ||
-        "Failed to save quiz results. Please check connection."; // Try to get more specific error
+        "Failed to save quiz results.";
       setSubmitError(message);
       setSubmitStatus("error");
-      // Alert removed - rely on text feedback instead
-      // Alert.alert("Error Saving Progress", message);
     }
-    // No finally needed as we don't have the separate boolean state anymore
-  }, [topicId, score, passingScore, maxScore, submitStatus]); // Dependencies remain the same
+  }, [quizId, score, passingScore, maxScore, submitStatus]); // Dependency updated to quizId
 
-  // Effect to trigger submission on mount (unchanged)
+  // Effect to trigger submission on mount
   useEffect(() => {
-    console.log("QuizResultScreen mounted. Params:", route.params);
+    // VVV Add Log for Received Params VVV
+    console.log(
+      "QuizResultScreen mounted. Received Params:",
+      JSON.stringify(route.params, null, 2)
+    );
+    // --- End Log ---
     if (submitStatus === "idle") {
       submitQuizResult();
     }
-  }, [submitQuizResult, submitStatus]);
+    // Include submitQuizResult in dependency array as per ESLint rules for useCallback
+  }, [route.params, submitQuizResult, submitStatus]);
 
-  // Navigation Handler (unchanged)
+  // --- VVV Corrected Navigation Handler VVV ---
   const handlePlayAgain = () => {
-    if (topicId) {
-      console.log(`Playing again for topicId: ${topicId}`);
+    if (quizId) {
+      // <<< CORRECT: Check for quizId
+      console.log(`Playing again for quizId: ${quizId}`);
+      // Navigate back to QuizScreen, passing the correct expected parameter name
       navigation.replace("Quiz", {
-        topicId: topicId,
-        passingScore: passingScore,
+        quizContentId: quizId, // <<< CORRECT: Pass ID back as quizContentId
+        parentTopicId: parentTopicId, // Pass context back if needed
+        passingScore: passingScore, // Pass passing score back if needed
       });
     } else {
-      console.error("Cannot play again: topicId is missing.");
-      navigation.popToTop();
+      console.error("Cannot play again: quizId is missing.");
+      navigation.popToTop(); // Go back to main stack screen if ID missing
     }
   };
+  // --- ^^^ Corrected Navigation Handler ^^^ ---
 
-  // Score Text (unchanged)
+  // Score Text Calculation (unchanged)
   const scoreText =
     totalQuestions > 0 ? `${score} / ${totalQuestions}` : `${score}`;
 
+  // --- RENDER ---
   return (
     <LinearGradient
       colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
@@ -175,7 +185,7 @@ const QuizResultScreen = ({ route, navigation }) => {
       <Text style={styles.header}>Quiz Over!</Text>
       <Image
         style={styles.imageContainer}
-        source={require("../../assets/images/success.png")}
+        source={require("../../assets/images/success.png")} // Ensure path is correct
       />
       <Text style={styles.text}>Well done, {username}!</Text>
       <Text style={styles.text}>
@@ -183,47 +193,52 @@ const QuizResultScreen = ({ route, navigation }) => {
       </Text>
 
       {/* UI Feedback based on submitStatus */}
-      {submitStatus === "submitting" && (
-        <ActivityIndicator
-          size="small"
-          color={Colors.primaryWhite}
-          style={styles.activityIndicator}
-        />
-      )}
-      {submitStatus === "error" && (
-        <Text style={styles.errorText}>
-          {submitError || "Error saving results."}
-        </Text>
-      )}
-      {submitStatus === "success" && (
-        <Text style={styles.successText}>Progress saved!</Text>
-      )}
-      {/* Could add text for 'skipped' or 'not_passed' if needed */}
+      <View style={styles.statusContainer}>
+        {submitStatus === "submitting" && (
+          <ActivityIndicator size="small" color={Colors.primaryWhite} />
+        )}
+        {submitStatus === "error" && (
+          <Text style={styles.errorText}>
+            {submitError || "Error saving results."}
+          </Text>
+        )}
+        {submitStatus === "success" && (
+          <Text style={styles.successText}>Progress saved!</Text>
+        )}
+        {submitStatus === "skipped" && (
+          <Text style={styles.infoText}>
+            Result not saved (e.g., score too low).
+          </Text>
+        )}
+      </View>
 
       {/* Buttons - disable based on submitStatus */}
-      <PaperButton
-        mode="contained"
-        style={styles.button}
-        labelStyle={styles.buttonText}
-        onPress={handlePlayAgain}
-        disabled={submitStatus === "submitting"} // Check status directly
-      >
-        Play Again
-      </PaperButton>
-      <PaperButton
-        mode="outlined"
-        style={styles.button}
-        labelStyle={[styles.buttonText, { color: Colors.primaryWhite }]}
-        onPress={() => navigation.popToTop()}
-        disabled={submitStatus === "submitting"} // Check status directly
-      >
-        Back to Home / Topics
-      </PaperButton>
+      <View style={styles.buttonContainer}>
+        <PaperButton
+          mode="contained"
+          style={styles.button}
+          labelStyle={styles.buttonText}
+          onPress={handlePlayAgain}
+          disabled={submitStatus === "submitting"} // Disable while submitting
+        >
+          Play Again
+        </PaperButton>
+        <PaperButton
+          mode="outlined"
+          style={[styles.button, styles.outlineButton]} // Added specific style for outline
+          labelStyle={[styles.buttonText, styles.outlineButtonText]}
+          onPress={() => navigation.popToTop()} // Use popToTop or specific navigation
+          disabled={submitStatus === "submitting"} // Disable while submitting
+        >
+          Topics / Home
+        </PaperButton>
+      </View>
     </LinearGradient>
   );
 };
 
-// Styles (Unchanged)
+// --- Styles ---
+// Using styles from your previously shared version
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -245,13 +260,6 @@ const styles = StyleSheet.create({
     color: Colors.primaryWhite,
     fontFamily: "delius",
   },
-  subText: {
-    fontSize: 14,
-    marginBottom: 10,
-    textAlign: "center",
-    color: Colors.primaryLightGray,
-    fontFamily: "delius",
-  },
   highlight: {
     fontFamily: "deliusBold",
     color: Colors.primaryOrange,
@@ -266,23 +274,38 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.primaryWhite,
   },
-  activityIndicator: { marginVertical: 10 },
+  statusContainer: {
+    minHeight: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  activityIndicator: {},
   errorText: {
     color: Colors.warningRed || "#FF6B6B",
-    marginVertical: 10,
     textAlign: "center",
     fontFamily: "delius",
     fontSize: 14,
   },
   successText: {
     color: Colors.successGreen || "#4CAF50",
-    marginVertical: 10,
     textAlign: "center",
     fontFamily: "deliusBold",
     fontSize: 14,
   },
-  button: { marginTop: 15, paddingVertical: 5, width: "70%" },
+  infoText: {
+    color: Colors.primaryLightGray,
+    textAlign: "center",
+    fontFamily: "delius",
+    fontSize: 14,
+  },
+  buttonContainer: { width: "80%", alignItems: "center", marginTop: 15 },
+  button: { marginTop: 15, paddingVertical: 5, width: "100%" },
   buttonText: { fontSize: 16, fontFamily: "deliusBold" },
+  outlineButton: { borderColor: Colors.primaryWhite },
+  outlineButtonText: { color: Colors.primaryWhite },
+  // Add starContainer style if you implement stars
+  // starContainer: { flexDirection: 'row', marginVertical: 15 },
 });
 
 export default QuizResultScreen;
