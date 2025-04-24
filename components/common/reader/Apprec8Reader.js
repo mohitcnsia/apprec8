@@ -1,6 +1,12 @@
-// components/common/reader/Apprec8Reader.js (Corrected)
+// components/common/reader/Apprec8Reader.js
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react"; // Import useMemo
 import {
   View,
   Text,
@@ -8,223 +14,329 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  useColorScheme,
+  // useColorScheme, // Remove useColorScheme
   Image,
   ActivityIndicator,
-  Dimensions, // Import Dimensions
-  Button, // Added missing import for Button used in error/no-data states
+  Dimensions,
+  Button,
 } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
-import { listenToStudyContent } from "../../../services/firestoreContentApi"; // Adjust path if needed
-import { Colors } from "../../../config/colors"; // Adjust path if needed
+import { listenToStudyContent } from "../../../services/firestoreContentApi";
+// import { Colors } from "../../../config/colors"; // Remove legacy Colors import
+import { useTheme } from "../../../context/ThemeContext"; // Import useTheme hook
 
-/**
- * @component Apprec8Reader
- * @description Displays formatted study content (fetched from Firestore) including text,
- * markdown, cover images, and additional images. Handles loading and error states.
- * Allows viewing images in a zoomable modal.
- * Expects the ID of the study content document to fetch via route parameters.
- *
- * @param {object} route - React Navigation route object.
- * @param {object} route.params - Parameters passed during navigation.
- * @param {string} route.params.contentId - The unique ID of the document in the 'studyContent' collection to display. This ID should match the ID of the corresponding 'STUDY' type document in the 'topics' collection.
- * @param {string} [route.params.parentTopicId] - Optional: The ID of the parent topic/subtopic for context (not directly used for fetching here).
- *
- * @param {object} navigation - React Navigation navigation object (implicitly available via props).
- */
-// --- VVV Correction is Here VVV ---
+// Dimensions remains the same
+const screenWidth = Dimensions.get("window").width;
+const coverImageHeight = screenWidth * 0.6;
+
 const Apprec8Reader = ({ route, navigation }) => {
-  // <<< Added navigation to props destructuring
-  // --- Hooks ---
-  const theme = useColorScheme(); // Get device theme (light/dark)
-  // Determine the ID of the content to fetch, prioritizing the new 'contentId' param
-  const contentId = route?.params?.contentId; // Use contentId passed from LinksScreen
-  // Use ref to track if component is mounted to prevent state updates after unmount
-  const isMounted = useRef(true);
+  // --- Use Theme Hook ---
+  const { theme } = useTheme(); // Get the theme object from context
 
-  // --- State ---
-  // Holds the fetched study data object from Firestore
+  // --- State and Params (remain the same) ---
+  const contentId = route?.params?.contentId;
+  const isMounted = useRef(true);
   const [studyData, setStudyData] = useState(null);
-  // Tracks whether content is currently being loaded
   const [isLoading, setIsLoading] = useState(true);
-  // Stores any error message encountered during fetching
   const [error, setError] = useState(null);
-  // Controls visibility of the image zoom modal
   const [modalVisible, setModalVisible] = useState(false);
-  // Holds the image URL(s) for the image viewer modal
   const [selectedImage, setSelectedImage] = useState([]);
 
-  // --- Effect for Mount/Unmount Tracking ---
+  // --- Effects (remain the same, logic untouched) ---
   useEffect(() => {
+    // Mount/Unmount tracking
     isMounted.current = true;
     return () => {
-      isMounted.current = false; // Set to false on unmount
-      console.log(`Apprec8Reader Unmounting (contentId: ${contentId})`);
+      isMounted.current = false;
     };
-  }, []); // Run only on mount and unmount
+  }, []);
 
-  // --- Effect to Fetch Study Content ---
-  // Runs when component mounts or when the contentId parameter changes.
   useEffect(() => {
-    // Validate if contentId is provided
+    // Fetching logic
     if (!contentId) {
-      console.error("Apprec8Reader: No contentId provided in route params.");
       if (isMounted.current) {
         setError("No content specified.");
         setIsLoading(false);
       }
-      return; // Stop if no ID
+      return;
     }
-
-    // Reset state before fetching new content
     setIsLoading(true);
     setError(null);
     setStudyData(null);
-
-    console.log(
-      `Apprec8Reader: Subscribing to study content for contentId: ${contentId}`
-    );
-
-    // Attach Firestore listener using the API function
     const unsubscribe = listenToStudyContent(
       contentId,
-      // --- onDataReceived Callback ---
       (data) => {
-        // Check if component is still mounted before updating state
         if (isMounted.current) {
           if (data) {
-            // Data found
-            console.log(`Apprec8Reader: Received data for ${contentId}`);
             setStudyData(data);
-            setError(null); // Clear any previous error
+            setError(null);
           } else {
-            // Document does not exist in studyContent collection
-            console.warn(`Apprec8Reader: No data found for ${contentId}`);
-            setError("Study content not found."); // Set error message
-            setStudyData(null); // Ensure no stale data is shown
+            setError("Study content not found.");
+            setStudyData(null);
           }
-          setIsLoading(false); // Mark loading as complete
-          console.log(`Apprec8Reader: Set isLoading=false for ${contentId}`);
-        } else {
-          console.log(
-            `Apprec8Reader: Unmounted before data callback for ${contentId}`
-          );
+          setIsLoading(false);
         }
       },
-      // --- onError Callback ---
       (fetchError) => {
-        // Check if component is still mounted before updating state
         if (isMounted.current) {
-          console.error(
-            `Apprec8Reader: Error fetching study content for ${contentId}:`,
-            fetchError
-          );
-          setError(fetchError?.message || "Could not load study content."); // Set error message
+          setError(fetchError?.message || "Could not load study content.");
           setStudyData(null);
-          setIsLoading(false); // Mark loading as complete (with error)
-          console.log(
-            `Apprec8Reader: Set isLoading=false after error for ${contentId}`
-          );
-        } else {
-          console.log(
-            `Apprec8Reader: Unmounted before error callback for ${contentId}`
-          );
+          setIsLoading(false);
         }
       }
     );
+    return () => unsubscribe();
+  }, [contentId]);
 
-    // Cleanup function: Detach the Firestore listener when the component unmounts
-    // or when the contentId dependency changes (triggering the effect again).
-    return () => {
-      console.log(
-        `Apprec8Reader: Unsubscribing from listener for ${contentId}`
-      );
-      unsubscribe();
-    };
-  }, [contentId]); // Effect dependency: Re-run only if contentId changes
-
-  // --- Image Modal Handler ---
-  // Memoized function to prevent unnecessary re-creations on re-renders.
+  // --- Image Modal Handler (remains the same) ---
   const openImage = useCallback((imageUri) => {
-    // Basic validation for the image URI
     if (imageUri && typeof imageUri === "string" && imageUri.trim() !== "") {
-      console.log("Opening image:", imageUri);
-      // ImageViewer expects an array of objects with a 'url' property
       setSelectedImage([{ url: imageUri }]);
-      setModalVisible(true); // Show the modal
+      setModalVisible(true);
     } else {
       console.warn("Attempted to open invalid image URI:", imageUri);
     }
-  }, []); // No dependencies, this function doesn't rely on props or state
+  }, []);
 
-  // --- Select Styles based on Theme ---
-  // Using lightStyles directly as per previous code
-  const dynamicStyles = lightStyles;
+  // --- Define Base Styles Inside Component with useMemo ---
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        // Layout styles mostly remain the same
+        container: {
+          flex: 1,
+          paddingHorizontal: 16,
+          paddingTop: 20,
+          backgroundColor: theme.background,
+        }, // Themed background
+        centered: {
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          padding: 20,
+          backgroundColor: theme.background,
+        }, // Themed background
+        header: { marginBottom: 20, alignItems: "center" },
+        // Text styles using theme
+        name: {
+          fontSize: 28,
+          fontWeight: "bold",
+          letterSpacing: 0.5,
+          lineHeight: 36,
+          textAlign: "center",
+          color: theme.textPrimary,
+        },
+        author: {
+          fontSize: 16,
+          fontStyle: "italic",
+          marginTop: 6,
+          opacity: 0.8,
+          textAlign: "center",
+          color: theme.textSecondary,
+        },
+        // Image styles using theme for placeholder
+        coverImage: {
+          width: "100%",
+          height: coverImageHeight,
+          resizeMode: "cover",
+          borderRadius: 12,
+          marginBottom: 20,
+          backgroundColor: theme.placeholder || "#e0e0e0",
+        },
+        markdownContainer: { marginBottom: 20 },
+        markdownImageWrapper: { marginBottom: 12, alignItems: "center" }, // Layout style
+        imageContainer: {
+          marginTop: 20,
+          marginBottom: 20,
+          paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: theme.border || "#cccccc66",
+        }, // Themed border
+        additionalImagesTitle: {
+          fontSize: 18,
+          fontWeight: "bold",
+          marginBottom: 15,
+          textAlign: "center",
+          color: theme.textPrimary,
+        },
+        additionalImageTouchable: {
+          marginBottom: 12,
+          width: "100%",
+          alignItems: "center",
+        },
+        additionalImage: {
+          width: "95%",
+          aspectRatio: 16 / 9,
+          resizeMode: "contain",
+          borderRadius: 10,
+          backgroundColor: theme.placeholder || "#e0e0e0",
+        },
+        invalidImagePlaceholder: {
+          width: "95%",
+          aspectRatio: 16 / 9,
+          borderRadius: 10,
+          marginBottom: 12,
+          backgroundColor: theme.placeholder || "#eeeeee",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        message: {
+          fontSize: 18,
+          textAlign: "center",
+          marginTop: 20,
+          paddingHorizontal: 20,
+          color: theme.textSecondary,
+        }, // Use theme secondary text for info/error messages
+        errorTextSpecific: {
+          fontSize: 18,
+          textAlign: "center",
+          marginTop: 20,
+          paddingHorizontal: 20,
+          color: theme.warning,
+        }, // Optional specific error color
+      }),
+    [theme]
+  ); // Depend on theme
+
+  // --- Define Markdown Styles Inside Component with useMemo ---
+  const markdownStyles = useMemo(
+    () => ({
+      // Apply theme colors to common markdown base styles
+      text: { fontSize: 18, lineHeight: 28, color: theme.textPrimary },
+      heading1: {
+        fontSize: 32,
+        fontWeight: "bold",
+        marginTop: 15,
+        marginBottom: 10,
+        lineHeight: 40,
+        color: theme.textPrimary,
+        borderBottomColor: theme.border,
+        borderBottomWidth: 1,
+      },
+      heading2: {
+        fontSize: 28,
+        fontWeight: "bold",
+        marginTop: 12,
+        marginBottom: 8,
+        lineHeight: 36,
+        color: theme.textPrimary,
+      },
+      heading3: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginTop: 10,
+        marginBottom: 6,
+        lineHeight: 32,
+        color: theme.textPrimary,
+      },
+      strong: { fontWeight: "bold", color: theme.textPrimary },
+      em: { fontStyle: "italic", color: theme.textPrimary },
+      bullet_list: { marginVertical: 10 },
+      ordered_list: { marginVertical: 10 },
+      list_item: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 8,
+        marginHorizontal: 10,
+      },
+      bullet_list_icon: {
+        fontSize: 18,
+        lineHeight: 26,
+        marginRight: 8,
+        fontWeight: "bold",
+        color: theme.textSecondary,
+      },
+      ordered_list_icon: {
+        fontSize: 17,
+        lineHeight: 26,
+        marginRight: 8,
+        fontWeight: "bold",
+        color: theme.textSecondary,
+      },
+      blockquote: {
+        paddingLeft: 15,
+        marginLeft: 0,
+        borderLeftWidth: 4,
+        marginVertical: 10,
+        opacity: 0.9,
+        backgroundColor: theme.quoteBackground || theme.primary + "15",
+        borderLeftColor: theme.quoteBorder || theme.primary,
+      }, // Themed blockquote
+      image: {
+        width: screenWidth - 64,
+        maxWidth: "100%",
+        height: undefined,
+        aspectRatio: 16 / 9,
+        borderRadius: 10,
+        resizeMode: "stretch",
+        alignSelf: "center",
+        marginVertical: 10,
+        backgroundColor: theme.placeholder,
+      }, // Themed image placeholder
+      link: {
+        textDecorationLine: "underline",
+        color: theme.link || theme.accent,
+      }, // Themed link
+      hr: { height: 1, marginVertical: 20, backgroundColor: theme.border }, // Themed horizontal rule
+      code_inline: {
+        backgroundColor: theme.codeBackground || theme.placeholder,
+        paddingHorizontal: 4,
+        borderRadius: 3,
+        color: theme.codeText || theme.textPrimary,
+        // fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
+      }, // Themed inline code
+      fence: {
+        backgroundColor: theme.codeBackground || theme.placeholder,
+        padding: 10,
+        borderRadius: 4,
+        marginVertical: 10,
+        color: theme.codeText || theme.textPrimary,
+        // fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
+      }, // Themed code block (fence)
+    }),
+    [theme]
+  ); // Depend on theme
 
   // --- RENDER LOGIC ---
-  console.log(
-    `Apprec8Reader RENDER: isLoading=${isLoading}, error=${JSON.stringify(
-      error
-    )}, studyData exists=${!!studyData}`
-  );
-
   // 1. Loading State
   if (isLoading) {
-    console.log("Apprec8Reader: Rendering Loading UI");
     return (
-      <View
-        style={[styles.container, styles.centered, dynamicStyles.background]}
-      >
-        <ActivityIndicator size="large" color={dynamicStyles.text.color} />
+      <View style={styles.centered}>
+        {/* Use themed color for indicator */}
+        <ActivityIndicator size="large" color={theme.primary || "#800000"} />
       </View>
     );
   }
 
   // 2. Error State
   if (error) {
-    console.log(`Apprec8Reader: Rendering Error UI: ${error}`);
     return (
-      <View
-        style={[styles.container, styles.centered, dynamicStyles.background]}
-      >
-        <Text style={[styles.message, dynamicStyles.message]}>{error}</Text>
-        {/* Add a back button for better UX in error state */}
-        {navigation.canGoBack() && ( // Now 'navigation' should be defined
+      <View style={styles.centered}>
+        {/* Use themed color for text */}
+        <Text style={styles.errorTextSpecific}>{error}</Text>
+        {navigation.canGoBack() && (
           <Button
             title="Go Back"
             onPress={() => navigation.goBack()}
-            color={
-              dynamicStyles.text.color === "#222"
-                ? Colors.primaryDarkMaroon
-                : Colors.primaryWhite
-            }
+            color={theme.primary || "#800000"} // Use themed color for button
           />
         )}
       </View>
     );
   }
 
-  // 3. No Data State (after loading finished without error, but data is null)
+  // 3. No Data State
   if (!studyData) {
-    console.log("Apprec8Reader: Rendering Content Not Available UI");
     return (
-      <View
-        style={[styles.container, styles.centered, dynamicStyles.background]}
-      >
-        <Text style={[styles.message, dynamicStyles.message]}>
-          Content not available.
-        </Text>
-        {/* Add a back button here too */}
-        {navigation.canGoBack() && ( // Now 'navigation' should be defined
+      <View style={styles.centered}>
+        {/* Use themed color for text */}
+        <Text style={styles.message}>Content not available.</Text>
+        {navigation.canGoBack() && (
           <Button
             title="Go Back"
             onPress={() => navigation.goBack()}
-            color={
-              dynamicStyles.text.color === "#222"
-                ? Colors.primaryDarkMaroon
-                : Colors.primaryWhite
-            }
+            color={theme.primary || "#800000"} // Use themed color for button
           />
         )}
       </View>
@@ -232,35 +344,29 @@ const Apprec8Reader = ({ route, navigation }) => {
   }
 
   // 4. Content Loaded State
-  console.log("Apprec8Reader: Rendering main content UI");
-  // Destructure fields from the fetched studyData, providing defaults for safety.
   const {
-    name = "Untitled Content", // Default title
-    author = "Unknown Author", // Default author
-    coverImage, // Can be null/undefined/empty string
-    content = "No text content available.", // Default text
-    additionalImages = [], // Default to empty array
+    name = "Untitled Content",
+    author = "Unknown Author",
+    coverImage,
+    content = "No text content available.",
+    additionalImages = [],
   } = studyData;
-
-  // Ensure additionalImages is always an array
   const validAdditionalImages = Array.isArray(additionalImages)
     ? additionalImages
     : [];
 
   return (
-    <View style={[styles.container, dynamicStyles.background]}>
-      {/* Use ScrollView to allow content longer than the screen */}
+    // Use themed background
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header Section: Displays title and author */}
+        {/* Header Section - uses themed styles */}
         <View style={styles.header}>
-          <Text style={[styles.name, dynamicStyles.text]}>{name}</Text>
-          <Text style={[styles.author, dynamicStyles.secondaryText]}>
-            By {author}
-          </Text>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.author}>By {author}</Text>
         </View>
 
-        {/* Cover Image: Displayed only if a valid URL exists */}
-        {coverImage ? ( // Check if coverImage is truthy (not null/empty)
+        {/* Cover Image - uses themed placeholder */}
+        {coverImage ? (
           <TouchableOpacity onPress={() => openImage(coverImage)}>
             <Image
               source={{ uri: coverImage }}
@@ -272,31 +378,20 @@ const Apprec8Reader = ({ route, navigation }) => {
                   e.nativeEvent.error
                 )
               }
-              onLoad={() => console.log("Cover Image Loaded:", coverImage)}
             />
           </TouchableOpacity>
         ) : null}
 
         {/* Markdown Content Area */}
         <View style={styles.markdownContainer}>
-          {/* The core Markdown component */}
           <Markdown
-            style={dynamicStyles.markdownText} // Apply theme-specific styles for markdown elements
+            style={markdownStyles} // Pass themed markdown styles
             rules={{
-              // Custom rule to handle images within the markdown content
-              image: (node, children, parent, inheritedStyles) => {
+              // Image rule remains the same logic
+              image: (node, children, parent, styles) => {
                 const src = node.attributes.src;
-                if (
-                  !src ||
-                  typeof src !== "string" ||
-                  !src.startsWith("http")
-                ) {
-                  console.warn(
-                    "Markdown Image Rule: Invalid or missing src attribute",
-                    node.attributes
-                  );
+                if (!src || typeof src !== "string" || !src.startsWith("http"))
                   return null;
-                }
                 return (
                   <TouchableOpacity
                     key={node.key}
@@ -305,17 +400,13 @@ const Apprec8Reader = ({ route, navigation }) => {
                   >
                     <Image
                       source={{ uri: src }}
-                      style={dynamicStyles.markdownText.image}
+                      style={styles.image}
                       onError={(e) =>
                         console.error(
                           "Markdown Image Load Error:",
                           src,
                           e.nativeEvent.error
                         )
-                      }
-                      onLoad={() => console.log("Markdown Image Loaded:", src)}
-                      resizeMode={
-                        dynamicStyles.markdownText.image.resizeMode || "contain"
                       }
                     />
                   </TouchableOpacity>
@@ -327,12 +418,10 @@ const Apprec8Reader = ({ route, navigation }) => {
           </Markdown>
         </View>
 
-        {/* Additional Images Section */}
+        {/* Additional Images Section - uses themed styles */}
         {validAdditionalImages.length > 0 && (
           <View style={styles.imageContainer}>
-            <Text style={[styles.additionalImagesTitle, dynamicStyles.text]}>
-              Additional Images:
-            </Text>
+            <Text style={styles.additionalImagesTitle}>Additional Images:</Text>
             {validAdditionalImages.map((img, index) =>
               img && typeof img === "string" && img.trim() !== "" ? (
                 <TouchableOpacity
@@ -350,7 +439,6 @@ const Apprec8Reader = ({ route, navigation }) => {
                         e.nativeEvent.error
                       )
                     }
-                    onLoad={() => console.log("Additional Image Loaded:", img)}
                   />
                 </TouchableOpacity>
               ) : (
@@ -358,7 +446,7 @@ const Apprec8Reader = ({ route, navigation }) => {
                   key={`invalid-image-${index}`}
                   style={styles.invalidImagePlaceholder}
                 >
-                  <Text style={dynamicStyles.secondaryText}>
+                  <Text style={{ color: theme.textSecondary }}>
                     Invalid Image Entry
                   </Text>
                 </View>
@@ -378,267 +466,23 @@ const Apprec8Reader = ({ route, navigation }) => {
             enableSwipeDown={true}
             onSwipeDown={() => setModalVisible(false)}
             renderIndicator={() => null}
+            // Use themed color for modal loading indicator
             loadingRender={() => (
-              <ActivityIndicator size="large" color="#FFFFFF" />
+              <ActivityIndicator
+                size="large"
+                color={theme.primaryWhite || "#FFFFFF"}
+              />
             )}
             failImageSource={{
               uri: "https://via.placeholder.com/150?text=Load+Error",
               width: 150,
               height: 150,
-            }}
+            }} // Keep placeholder
           />
         </Modal>
       </ScrollView>
     </View>
   );
-};
-
-// --- Styles ---
-const screenWidth = Dimensions.get("window").width;
-const coverImageHeight = screenWidth * 0.6;
-
-// Shared styles
-const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: 16, paddingTop: 20 },
-  centered: { justifyContent: "center", alignItems: "center" },
-  header: { marginBottom: 20, alignItems: "center" },
-  name: {
-    fontSize: 28,
-    fontWeight: "bold",
-    letterSpacing: 0.5,
-    lineHeight: 36,
-    textAlign: "center",
-  },
-  author: {
-    fontSize: 16,
-    fontStyle: "italic",
-    marginTop: 6,
-    opacity: 0.8,
-    textAlign: "center",
-  },
-  coverImage: {
-    width: "100%",
-    height: coverImageHeight,
-    resizeMode: "cover",
-    borderRadius: 12,
-    marginBottom: 20,
-    backgroundColor: "#e0e0e0",
-  },
-  markdownContainer: { marginBottom: 20 },
-  markdownImageWrapper: { marginBottom: 12, alignItems: "center" },
-  imageContainer: {
-    marginTop: 20,
-    marginBottom: 20,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#cccccc66",
-  },
-  additionalImagesTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  additionalImageTouchable: {
-    marginBottom: 12,
-    width: "100%",
-    alignItems: "center",
-  },
-  additionalImage: {
-    width: "95%",
-    aspectRatio: 16 / 9,
-    resizeMode: "contain",
-    borderRadius: 10,
-    backgroundColor: "#e0e0e0",
-  },
-  invalidImagePlaceholder: {
-    width: "95%",
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-    marginBottom: 12,
-    backgroundColor: "#eeeeee",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  message: {
-    fontSize: 18,
-    textAlign: "center",
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-});
-
-// --- Theme-Specific Styles ---
-const commonMarkdownStyles = {
-  text: { fontSize: 18, lineHeight: 28 },
-  heading1: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginTop: 15,
-    marginBottom: 10,
-    lineHeight: 40,
-  },
-  heading2: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginTop: 12,
-    marginBottom: 8,
-    lineHeight: 36,
-  },
-  heading3: {
-    fontSize: 24, // Example size (smaller than H2)
-    fontWeight: "bold",
-    marginTop: 10, // Example margin
-    marginBottom: 6, // Example margin
-    lineHeight: 32, // Example line height
-  },
-  strong: { fontWeight: "bold" },
-  em: { fontStyle: "italic" },
-  bullet_list: { marginVertical: 10 },
-  ordered_list: { marginVertical: 10 },
-  list_item: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-    marginHorizontal: 10,
-  },
-  bullet_list_icon: {
-    fontSize: 18,
-    lineHeight: 26,
-    marginRight: 8,
-    fontWeight: "bold",
-  },
-  ordered_list_icon: {
-    fontSize: 17,
-    lineHeight: 26,
-    marginRight: 8,
-    fontWeight: "bold",
-  },
-  blockquote: {
-    paddingLeft: 15,
-    marginLeft: 0,
-    borderLeftWidth: 4,
-    marginVertical: 10,
-    opacity: 0.9,
-  },
-  image: {
-    width: screenWidth - 64,
-    maxWidth: "100%",
-    height: undefined,
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-    resizeMode: "stretch",
-    alignSelf: "center",
-    marginVertical: 10,
-    backgroundColor: "#e0e0e0",
-  },
-  link: { textDecorationLine: "underline" },
-  hr: { height: 1, marginVertical: 20 },
-  code_inline: {
-    backgroundColor: "#e0e0e0",
-    paddingHorizontal: 4,
-    borderRadius: 3,
-  },
-  fence: {
-    backgroundColor: "#f0f0f0",
-    padding: 10,
-    borderRadius: 4,
-    marginVertical: 10,
-  },
-};
-
-const darkStyles = {
-  background: { backgroundColor: "#121212" },
-  text: { color: "#EAEAEA" },
-  secondaryText: { color: "#BBBBBB" },
-  markdownText: {
-    ...commonMarkdownStyles,
-    text: { ...commonMarkdownStyles.text, color: "#EAEAEA" },
-    heading1: {
-      ...commonMarkdownStyles.heading1,
-      color: "#FFFFFF",
-      borderBottomColor: "#444",
-      borderBottomWidth: 1,
-    },
-    heading2: { ...commonMarkdownStyles.heading2, color: "#FFFFFF" },
-    heading3: { ...commonMarkdownStyles.heading3, color: "#EEEEEE" },
-    strong: { ...commonMarkdownStyles.strong, color: "#EAEAEA" },
-    em: { ...commonMarkdownStyles.em, color: "#EAEAEA" },
-    bullet_list_icon: {
-      ...commonMarkdownStyles.bullet_list_icon,
-      color: "#BBBBBB",
-    },
-    ordered_list_icon: {
-      ...commonMarkdownStyles.ordered_list_icon,
-      color: "#BBBBBB",
-    },
-    blockquote: {
-      ...commonMarkdownStyles.blockquote,
-      backgroundColor: "#222222",
-      borderLeftColor: "#555555",
-    },
-    image: { ...commonMarkdownStyles.image, backgroundColor: "#333333" },
-    link: { ...commonMarkdownStyles.link, color: "#64b5f6" },
-    hr: { ...commonMarkdownStyles.hr, backgroundColor: "#444444" },
-    code_inline: {
-      ...commonMarkdownStyles.code_inline,
-      backgroundColor: "#333",
-      color: "#eee",
-    },
-    fence: {
-      ...commonMarkdownStyles.fence,
-      backgroundColor: "#222",
-      color: "#eee",
-    },
-  },
-  message: { color: "#BBBBBB" },
-};
-
-const lightStyles = {
-  background: { backgroundColor: "#FFFFFF" },
-  text: { color: "#222222" },
-  secondaryText: { color: "#555555" },
-  markdownText: {
-    ...commonMarkdownStyles,
-    text: { ...commonMarkdownStyles.text, color: "#222222" },
-    heading1: {
-      ...commonMarkdownStyles.heading1,
-      color: "#000000",
-      borderBottomColor: "#ddd",
-      borderBottomWidth: 1,
-    },
-    heading2: { ...commonMarkdownStyles.heading2, color: "#111111" },
-    heading3: { ...commonMarkdownStyles.heading3, color: "#222222" },
-    strong: { ...commonMarkdownStyles.strong, color: "#000000" },
-    em: { ...commonMarkdownStyles.em, color: "#222222" },
-    bullet_list_icon: {
-      ...commonMarkdownStyles.bullet_list_icon,
-      color: "#444",
-    },
-    ordered_list_icon: {
-      ...commonMarkdownStyles.ordered_list_icon,
-      color: "#444",
-    },
-    blockquote: {
-      ...commonMarkdownStyles.blockquote,
-      backgroundColor: "#f4f4f4",
-      borderLeftColor: "#cccccc",
-    },
-    image: { ...commonMarkdownStyles.image, backgroundColor: "#e0e0e0" },
-    link: { ...commonMarkdownStyles.link, color: "#056bcd" },
-    hr: { ...commonMarkdownStyles.hr, backgroundColor: "#cccccc" },
-    code_inline: {
-      ...commonMarkdownStyles.code_inline,
-      backgroundColor: "#eeeeee",
-      color: "#333",
-    },
-    fence: {
-      ...commonMarkdownStyles.fence,
-      backgroundColor: "#f4f4f4",
-      color: "#333",
-    },
-  },
-  message: { color: "#555555" },
 };
 
 export default Apprec8Reader;

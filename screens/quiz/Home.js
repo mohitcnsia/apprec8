@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, ActivityIndicator } from "react-native";
 import CustomCarousel from "../../components/common/CustomCarousal"; // Adjust path
 import { THOUGHTS } from "../../data/thoughts"; // Keep for now, maybe move to Firestore later?
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors"; // Adjust path
+import { useTheme } from "../../context/ThemeContext";
 import KidsThoughtOfTheDay from "../../components/thought/KidsThoughtOfTheDay"; // Adjust path
 import { listenToCategoriesByGroup } from "../../services/firestoreContentApi"; // Adjust path
 
@@ -21,6 +21,7 @@ const formatCategoryDataForCarousel = (category) => ({
 });
 
 function Home({ navigation }) {
+  const { theme } = useTheme();
   const [storyItems, setStoryItems] = useState([]);
   const [bookSummaryItems, setBookSummaryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +31,31 @@ function Home({ navigation }) {
   const getThoughtOfTheDay = () => {
     return THOUGHTS[1]; // Maybe fetch this from Firestore later too?
   };
+
+  const styles = React.useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1 },
+        centered: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }, // Added centered
+        errorText: {
+          color: theme.errorText,
+          fontSize: 16,
+          textAlign: "center",
+        }, // Added errorText
+        thoughtContainer: { padding: 20 },
+        thought: {
+          color: theme.textPrimary,
+          fontFamily: "pacifico",
+          fontSize: 20,
+        },
+      }),
+    [theme]
+  );
 
   // useEffect to set up listeners for Home screen carousels
   useEffect(() => {
@@ -94,10 +120,10 @@ function Home({ navigation }) {
   if (isLoading) {
     return (
       <LinearGradient
-        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        colors={[theme.gradientStart, theme.gradientEnd]}
         style={styles.centered}
       >
-        <ActivityIndicator size="large" color={Colors.primaryWhite} />
+        <ActivityIndicator size="large" color={theme.textPrimary} />
       </LinearGradient>
     );
   }
@@ -106,7 +132,7 @@ function Home({ navigation }) {
     // Could still render thought even if carousels fail
     return (
       <LinearGradient
-        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+        colors={[theme.gradientStart, theme.gradientEnd]}
         style={styles.centered}
       >
         <Text style={styles.errorText}>{error}</Text>
@@ -116,7 +142,7 @@ function Home({ navigation }) {
 
   return (
     <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
+      colors={[theme.gradientStart, theme.gradientEnd]}
       style={styles.container}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -146,16 +172,3 @@ function Home({ navigation }) {
 }
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  }, // Added centered
-  errorText: { color: Colors.primaryWhite, fontSize: 16, textAlign: "center" }, // Added errorText
-  thoughtContainer: { padding: 20 },
-  thought: { color: Colors.primaryWhite, fontFamily: "pacifico", fontSize: 20 },
-});

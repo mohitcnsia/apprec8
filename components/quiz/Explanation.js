@@ -1,25 +1,45 @@
-// components/quiz/Explanation.js (Handles Array of Strings)
+// components/quiz/Explanation.js
 
-import React from "react";
+import React, { useMemo } from "react"; // Import useMemo
 import { StyleSheet, View } from "react-native";
-import { Text as PaperText } from "react-native-paper"; // Use PaperText for consistency
-import { Colors } from "../../config/colors"; // Adjust path if needed
+import { Text as PaperText } from "react-native-paper";
+// import { Colors } from "../../config/colors"; // <<< Remove legacy Colors import
+import { useTheme } from "../../context/ThemeContext"; // <<< Import useTheme hook
 
-// Prop name kept as explanationText, but now expects an array of strings
 function Explanation({ explanationText }) {
-  // --- Check if input is a valid, non-empty array ---
+  const { theme } = useTheme(); // <<< Use the theme hook
+
+  // Input validation remains the same
   if (!Array.isArray(explanationText) || explanationText.length === 0) {
-    // Don't render anything if prop is not an array or is empty
     return null;
   }
-  // --- End Check ---
+
+  // --- Define Styles Inside Component with useMemo ---
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        explanationContainer: {
+          backgroundColor: "transparent", // Keep transparent to show parent Card background
+          paddingVertical: 10,
+          paddingHorizontal: 5,
+          width: "100%",
+        },
+        description: {
+          color: theme.textPrimary, // <<< Use themed primary text color
+          fontSize: 16, // Adjusted size slightly
+          lineHeight: 24, // Adjusted line height
+          fontFamily: "nunitoBold", // Keep font
+          textAlign: "left",
+          marginBottom: 10,
+        },
+      }),
+    [theme]
+  ); // Depend on theme
 
   return (
-    // Container with transparent background, providing padding
     <View style={styles.explanationContainer}>
-      {/* Map over the array and render each string as a separate Text component */}
+      {/* Map over the array using themed styles */}
       {explanationText.map((paragraph, index) =>
-        // Filter out empty strings just in case
         paragraph && paragraph.trim() !== "" ? (
           <PaperText key={index} style={styles.description}>
             {paragraph}
@@ -31,20 +51,3 @@ function Explanation({ explanationText }) {
 }
 
 export default Explanation;
-
-const styles = StyleSheet.create({
-  explanationContainer: {
-    backgroundColor: "transparent", // Inherits Card background
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    width: "100%",
-  },
-  description: {
-    color: Colors.blackText, // Readable on white Card background
-    fontSize: 18,
-    lineHeight: 22,
-    fontFamily: "nunitoBold", // Kid-friendly font
-    textAlign: "left", // Align paragraphs naturally
-    marginBottom: 10, // Add space between paragraphs
-  },
-});

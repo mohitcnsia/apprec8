@@ -1,34 +1,34 @@
-// screens/auth/AuthScreen.js (Refactored for @react-native-firebase hook)
+// screens/auth/AuthScreen.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react"; // Import useMemo
 import { View, StyleSheet } from "react-native";
 import { Button, TextInput, Card, Text } from "react-native-paper";
-import { Colors } from "../../config/colors"; // Adjust path if needed
+// import { Colors } from "../../config/colors"; // <-- Remove this direct import
+import { useTheme } from "../../context/ThemeContext"; // <-- Import useTheme
 
 export default function AuthScreen({
-  externalError, // Error state passed from useFirebaseAuth hook
-  isAuthLoading, // Loading state passed from useFirebaseAuth hook
+  externalError,
+  isAuthLoading,
   onGuestLogin,
   onGoogleLogin,
-  onEmailSignIn, // <-- Prop for sign-in handler from hook
-  onEmailSignUp, // <-- Prop for sign-up handler from hook
+  onEmailSignIn,
+  onEmailSignUp,
 }) {
+  const { theme } = useTheme(); // <-- Use the theme hook
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [isLoading, setIsLoading] = useState(false); // Loading is now controlled by the hook via isAuthLoading prop
-  const [error, setError] = useState(""); // Local error state, updated by externalError prop
+  const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [secureText, setSecureText] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const shouldShowEye = isFocused || password.length === 0;
   const isValid = email.includes("@") && password.length >= 6;
 
-  // Update local error state when the error prop from the hook changes
   useEffect(() => {
     if (externalError) setError(externalError);
   }, [externalError]);
 
-  // Keep the secure text toggle logic
   useEffect(() => {
     let timer;
     if (!secureText) {
@@ -37,35 +37,68 @@ export default function AuthScreen({
     return () => clearTimeout(timer);
   }, [secureText]);
 
-  // --- REMOVED handleAuthAction function ---
-
-  // --- REVISED handleEmailPassword function ---
   const handleEmailPassword = () => {
-    // Basic client-side validation first
     if (!isValid) return;
-    setError(""); // Clear local error before trying
-
-    // Call the appropriate handler passed via props from the hook
+    setError("");
     if (isLogin) {
-      console.log("AuthScreen: Calling onEmailSignIn...");
-      onEmailSignIn(email, password); // This now calls the hook's logic
+      onEmailSignIn(email, password);
     } else {
-      console.log("AuthScreen: Calling onEmailSignUp...");
-      onEmailSignUp(email, password); // This now calls the hook's logic
-      // Note: Verification email logic is now inside the hook's emailSignUpHandler
-      // You might want the hook to return a status or update the error prop
-      // if you want to show the "Verification email sent" message here specifically.
-      // For now, rely on the hook's error state passed via externalError.
+      onEmailSignUp(email, password);
     }
   };
-  // --- END REVISED handleEmailPassword ---
+
+  // --- Define Styles Inside Component with useMemo ---
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: "center",
+          padding: 20,
+          backgroundColor: theme.background, // Use theme background
+        },
+        card: {
+          padding: 20,
+          elevation: 4, // Keep elevation if desired
+          backgroundColor: theme.cardBackground, // Use theme card background
+        },
+        title: {
+          fontSize: 24,
+          marginBottom: 20,
+          textAlign: "center",
+          fontFamily: "deliusBold", // Keep custom font
+          color: theme.primary, // Use theme primary color (e.g., Maroon)
+        },
+        input: {
+          marginBottom: 10,
+          // Note: Fully theming Paper inputs (underline, label, etc.)
+          // is best done via PaperProvider.theme.
+          // Setting background explicitly might be needed if card bg differs.
+          // backgroundColor: theme.inputBackground || theme.cardBackground,
+        },
+        button: {
+          // Common button margin
+          marginTop: 10,
+        },
+        error: {
+          color: theme.warning, // Use theme warning color
+          marginBottom: 10,
+          textAlign: "center",
+        },
+        bottomView: {
+          flexDirection: "row",
+          justifyContent: "space-evenly", // Better spacing for two buttons
+          marginTop: 15,
+        },
+      }),
+    [theme]
+  ); // Depend on theme
 
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Text style={styles.title}>{isLogin ? "Login" : "Register"}</Text>
 
-        {/* Display error from local state (updated by externalError prop) */}
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <TextInput
@@ -74,11 +107,17 @@ export default function AuthScreen({
           onChangeText={(text) => {
             setEmail(text);
             setError("");
-          }} // Clear error on input change
+          }}
           autoCapitalize="none"
           keyboardType="email-address"
           style={styles.input}
-          disabled={isAuthLoading} // Disable input while loading
+          disabled={isAuthLoading}
+          // Paper Theming Notes: Apply theme colors if needed, but PaperProvider is better.
+          // Example minimal overrides:
+          activeOutlineColor={theme.primary} // Or theme.accent
+          activeUnderlineColor={theme.primary} // Or theme.accent
+          textColor={theme.textPrimary}
+          // theme={{ colors: { primary: theme.accent, background: theme.cardBackground } }} // More complex override
         />
         <TextInput
           label="Password"
@@ -86,64 +125,84 @@ export default function AuthScreen({
           onChangeText={(text) => {
             setPassword(text);
             setError("");
-          }} // Clear error on input change
+          }}
           secureTextEntry={secureText}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          disabled={isAuthLoading} // Disable input while loading
+          disabled={isAuthLoading}
+          style={styles.input}
+          // Paper Theming Notes: (Similar to above)
+          activeOutlineColor={theme.primary} // Or theme.accent
+          activeUnderlineColor={theme.primary} // Or theme.accent
+          textColor={theme.textPrimary}
           right={
             shouldShowEye ? (
               <TextInput.Icon
                 icon={secureText ? "eye-off" : "eye"}
                 onPress={() => setSecureText((prev) => !prev)}
                 forceTextInputFocus={false}
-                disabled={isAuthLoading} // Disable icon too
+                disabled={isAuthLoading}
+                iconColor={theme.textSecondary} // Use theme color for icon
               />
             ) : null
           }
         />
 
+        {/* Login / Register Button */}
         <Button
           mode="contained"
-          onPress={handleEmailPassword} // Call the revised handler
+          onPress={handleEmailPassword}
           style={styles.button}
-          disabled={!isValid || isAuthLoading} // Use isAuthLoading from props
-          loading={isAuthLoading} // Use isAuthLoading from props
+          disabled={!isValid || isAuthLoading}
+          loading={isAuthLoading}
+          // Paper Theming: Use specific props
+          buttonColor={theme.accent} // Use theme accent for background
+          textColor={theme.buttonText} // Use theme color for text
         >
           {isLogin ? "Login" : "Register"}
         </Button>
 
+        {/* Switch Button */}
         <Button
           mode="outlined"
           onPress={() => {
             setIsLogin(!isLogin);
             setError("");
-          }} // Clear error on switch
-          style={styles.button}
-          disabled={isAuthLoading} // Use isAuthLoading from props
+          }}
+          style={[styles.button, { borderColor: theme.accent }]} // Apply border color via style
+          disabled={isAuthLoading}
+          // Paper Theming: Use specific props
+          textColor={theme.accent} // Use theme accent for text/border
         >
           Switch to {isLogin ? "Register" : "Login"}
         </Button>
 
-        {/* Google Login Button - uses onGoogleLogin prop */}
+        {/* Google Login Button */}
         <Button
           mode="contained"
           icon="google"
-          disabled={isAuthLoading} // Use isAuthLoading from props
+          disabled={isAuthLoading}
           onPress={onGoogleLogin}
           style={styles.button}
-          // You might want to use isAuthLoading here too if Google login sets the hook's loading state
-          loading={isAuthLoading && !isLogin} // Example: show loading only if relevant action active? Or just use isAuthLoading
+          loading={isAuthLoading} // Show loading indicator if auth is generally busy
+          // Paper Theming: Style Google button distinctively if desired
+          buttonColor={theme.cardBackground} // e.g., Use card background
+          textColor={theme.textPrimary} // e.g., Use primary text color
+          // Alternatively, keep it consistent with primary action:
+          // buttonColor={theme.accent}
+          // textColor={theme.buttonText}
         >
           Continue with Google
         </Button>
 
-        {/* Bottom buttons - use onGuestLogin prop */}
+        {/* Bottom buttons */}
         <View style={styles.bottomView}>
           <Button
             mode="text"
             onPress={() => setError("TODO: Implement password reset")}
             disabled={isAuthLoading}
+            // Paper Theming: Use specific props
+            textColor={theme.textSecondary} // Use secondary text color
           >
             Forgot Password?
           </Button>
@@ -152,8 +211,10 @@ export default function AuthScreen({
             onPress={() => {
               onGuestLogin();
               setError("");
-            }} // Clear error on guest login
+            }}
             disabled={isAuthLoading}
+            // Paper Theming: Use specific props
+            textColor={theme.textSecondary} // Use secondary text color
           >
             Continue as Guest
           </Button>
@@ -162,27 +223,3 @@ export default function AuthScreen({
     </View>
   );
 }
-
-// --- Styles (Keep your existing styles) ---
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-  card: { padding: 20, elevation: 4 },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: "center",
-    fontFamily: "deliusBold",
-    color: Colors.primaryDarkMaroon,
-  },
-  input: { marginBottom: 10 },
-  button: { marginTop: 10 },
-  error: {
-    color: "red",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  bottomView: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-});

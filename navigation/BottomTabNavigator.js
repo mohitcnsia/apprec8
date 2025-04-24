@@ -1,80 +1,105 @@
-// navigation/BottomTabNavigator.js (Pass correct handler down)
+// navigation/BottomTabNavigator.js
 
+import React from "react"; // Import React
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import Ionicons from "@expo/vector-icons/Ionicons"; // Keep Ionicons if used elsewhere
-import MaterialIcons from "@expo/vector-icons/MaterialIcons"; // Import if needed for other icons
-import { Colors } from "../config/colors";
+// import { NavigationContainer } from "@react-navigation/native"; // <<< REMOVE THIS LINE
+import Ionicons from "@expo/vector-icons/Ionicons";
+// import { Colors } from "../config/colors"; // <<< REMOVE THIS LINE
 import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
 import ProfileNavigator from "./ProfileNavigator";
+import { useTheme } from "../context/ThemeContext"; // <<< KEEP THIS
 
 const Tab = createBottomTabNavigator();
 
-// Receive exitGuestModeHandler from App.js
+// Props received from AppContent (remain the same)
 function BottomTabNavigator({
   isGuest,
   signoutHandler,
   exitGuestModeHandler,
   user,
 }) {
+  const { theme } = useTheme(); // Get theme object
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: Colors.primaryDarkMaroon },
-          headerTintColor: "#ffffff",
-          sceneContainerStyle: { backgroundColor: Colors.primaryDarkMaroon },
-          tabBarActiveTintColor: Colors.primaryDarkMaroon,
-          tabBarStyle: { backgroundColor: Colors.primaryLightGray },
+    // <<< REMOVE NavigationContainer wrapper >>>
+    // <NavigationContainer>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        // Use function form to access route
+        headerShown: false, // Keep headers hidden for tabs
+        // --- CORRECTED Tab Bar Styling ---
+        tabBarStyle: {
+          backgroundColor: theme.tabBarBackground, // Use specific theme key
+          borderTopColor: theme.border || "transparent", // Use theme border color (or transparent)
+          // Add other styles like height if needed
+        },
+        tabBarActiveTintColor: theme.tabBarActiveTint, // Use specific theme key
+        tabBarInactiveTintColor: theme.tabBarInactiveTint, // Use specific theme key
+        // --- End Corrected Tab Bar Styling ---
+
+        // Scene background (keep this)
+        sceneContainerStyle: { backgroundColor: theme.background },
+
+        // --- Optional: Remove or theme unused header styles ---
+        // headerStyle: { backgroundColor: theme.headerBackground }, // Example if header shown
+        // headerTintColor: theme.headerTint, // Example if header shown
+        // --- End Optional ---
+
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          // Determine icon based on route name (ensure names match Tab.Screen names)
+          if (route.name === "Apprec8") {
+            // Changed from 'HomeTab'/'HomeRoot' to match actual Screen name
+            iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "Study") {
+            // Changed from 'StudyTab'/'StudyRoot'
+            iconName = focused ? "book" : "book-outline";
+          } else if (route.name === "Profile") {
+            // Changed from 'ProfileTab'/'ProfileRoot'
+            iconName = focused ? "person-circle" : "person-circle-outline";
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      {/* Home Tab */}
+      <Tab.Screen
+        name="Apprec8" // Ensure this name is used in tabBarIcon logic
+        component={HomeNavigator}
+        options={{
+          title: "Home", // Sets the label below the icon
+          // tabBarIcon is handled in screenOptions
         }}
+      />
+      {/* Study Tab */}
+      <Tab.Screen
+        name="Study" // Ensure this name is used in tabBarIcon logic
+        component={StudyNavigator}
+        options={{
+          title: "Study", // Sets the label
+          // tabBarIcon is handled in screenOptions
+        }}
+      />
+      {/* Profile Tab */}
+      <Tab.Screen
+        name="Profile" // Ensure this name is used in tabBarIcon logic
+        options={{
+          title: "Profile", // Sets the label
+          // tabBarIcon is handled in screenOptions
+        }}
+        // Children function to pass props (this part is correct)
       >
-        {/* Home Tab */}
-        <Tab.Screen
-          name="Apprec8"
-          component={HomeNavigator}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-        {/* Study Tab */}
-        <Tab.Screen
-          name="Study"
-          component={StudyNavigator}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="book" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-        {/* Profile Tab */}
-        <Tab.Screen
-          name="Profile"
-          // initialParams={{ title: "Profile" }} // Can remove if using component function
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        >
-          {/* Use a component function to pass props down */}
-          {() => (
-            <ProfileNavigator
-              isGuest={isGuest}
-              // Pass the *correct* handler based on guest status
-              // Use a consistent prop name like onButtonPress or actionHandler
-              actionHandler={isGuest ? exitGuestModeHandler : signoutHandler}
-              user={user}
-            />
-          )}
-        </Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>
+        {() => (
+          <ProfileNavigator
+            isGuest={isGuest}
+            actionHandler={isGuest ? exitGuestModeHandler : signoutHandler}
+            user={user}
+          />
+        )}
+      </Tab.Screen>
+    </Tab.Navigator>
+    // </NavigationContainer> // <<< REMOVE NavigationContainer wrapper >>>
   );
 }
 

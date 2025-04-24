@@ -1,68 +1,64 @@
-// screens/quiz/StudyScreen.js (using @react-native-firebase listeners)
+// screens/quiz/StudyScreen.js
 
-import React, { useState, useEffect } from "react"; // Use useEffect for listeners
+import React, { useState, useEffect, useMemo } from "react"; // Import useMemo
 import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View, // Keep View if needed for future layout, though not used currently
   ActivityIndicator,
 } from "react-native";
-import CustomCarousel from "../../components/common/CustomCarousal"; // Adjust path if needed
+import CustomCarousel from "../../components/common/CustomCarousal";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors"; // Adjust path if needed
-import { listenToCategoriesByGroup } from "../../services/firestoreContentApi"; // Adjust path if needed
+// import { Colors } from "../../config/colors"; // Remove legacy Colors import
+import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { listenToCategoriesByGroup } from "../../services/firestoreContentApi";
 
-// Helper function to format data for the carousel
+// Helper function (remains the same)
 const formatCategoryDataForCarousel = (category) => ({
   id: category.id,
-  title: category.title, // Use title field
+  title: category.title,
   image: category.image,
-  subtitle: category.subtitle || "", // Use subtitle field
+  subtitle: category.subtitle || "",
   duration: category.duration || "",
   author: category.author || "",
-  type: category.type || "COURSE", // Keep original type for navigation logic
-  // No need to add carouselGroup here if only used for fetching
+  type: category.type || "COURSE",
 });
 
 function StudyScreen({ navigation }) {
-  // Separate state for each carousel's data
+  const { theme } = useTheme(); // Use the theme hook
+
+  // State variables (remain the same)
   const [olympiadCategories, setOlympiadCategories] = useState([]);
   const [classroomCategories, setClassroomCategories] = useState([]);
   const [popularReadCategories, setPopularReadCategories] = useState([]);
   const [popularQuizCategories, setPopularQuizCategories] = useState([]);
-
-  // Combined loading/error state for initial fetch
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect to set up listeners on mount and clean up on unmount
+  // useEffect for listeners (remains the same)
   useEffect(() => {
     console.log("StudyScreen mounted, setting up listeners...");
-    setIsLoading(true); // Assume loading until first data arrives
+    setIsLoading(true);
     setError(null);
-    let active = true; // Flag to prevent state updates if component unmounts during async op
-
-    // Track how many listeners have provided their first data snapshot
+    let active = true;
     let listenersInitialized = 0;
-    const totalListeners = 4; // Update if you add/remove carousels
+    const totalListeners = 4;
 
     const handleInitialLoad = () => {
       listenersInitialized++;
       if (active && listenersInitialized >= totalListeners) {
-        setIsLoading(false); // Stop loading once all listeners give initial data
+        setIsLoading(false);
         console.log("All initial listeners fired for StudyScreen.");
       }
     };
-
     const handleError = (err) => {
       if (active) {
-        setError("Could not load all study sections."); // Set a generic error
-        setIsLoading(false); // Stop loading on error
+        setError("Could not load all study sections.");
+        setIsLoading(false);
       }
     };
 
-    // --- Set up listeners ---
     const unsubOlympiad = listenToCategoriesByGroup(
       "olympiad",
       (data) => {
@@ -103,54 +99,103 @@ function StudyScreen({ navigation }) {
       },
       handleError
     );
-    // --- End Listener Setup ---
 
-    // --- Return cleanup function ---
     return () => {
       console.log("StudyScreen unmounting, cleaning up listeners.");
-      active = false; // Prevent state updates after unmount
+      active = false;
       unsubOlympiad();
       unsubClassroom();
       unsubReads();
       unsubQuizzes();
     };
-  }, []); // Empty dependency array ensures this runs only once on mount/unmount
+  }, []);
+
+  // --- Define Styles Inside Component with useMemo ---
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        // Style for the LinearGradient wrapper
+        gradientContainer: {
+          flex: 1,
+        },
+        // Style for centered content (loading/error)
+        centered: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+          // Background handled by the gradient applied to this View
+        },
+        // Style for error text
+        errorText: {
+          // Use themed text color suitable for gradient background
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
+          fontSize: 16,
+          textAlign: "center",
+        },
+        // Optional: Add padding to ScrollView content if needed
+        scrollViewContent: {
+          paddingBottom: 20, // Add padding at the bottom
+        },
+      }),
+    [theme]
+  ); // Depend on theme
 
   // --- Render Logic ---
   if (isLoading) {
     return (
+      // Apply themed gradient to the loading container
       <LinearGradient
-        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-        style={styles.centered}
+        colors={[
+          theme.gradientStart || "#3b0940",
+          theme.gradientEnd || "#d7d1d3",
+        ]}
+        style={styles.centered} // Use centered style which has flex: 1
       >
-        <ActivityIndicator size="large" color={Colors.primaryWhite} />
+        {/* Use themed color for indicator */}
+        <ActivityIndicator
+          size="large"
+          color={theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF"}
+        />
       </LinearGradient>
     );
   }
   if (error) {
     return (
+      // Apply themed gradient to the error container
       <LinearGradient
-        colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-        style={styles.centered}
+        colors={[
+          theme.gradientStart || "#3b0940",
+          theme.gradientEnd || "#d7d1d3",
+        ]}
+        style={styles.centered} // Use centered style which has flex: 1
       >
         <Text style={styles.errorText}>{error}</Text>
       </LinearGradient>
     );
   }
 
+  // --- Main Screen Render ---
   return (
+    // Apply themed gradient to the main container
     <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-      style={styles.container}
+      colors={[
+        theme.gradientStart || "#3b0940",
+        theme.gradientEnd || "#d7d1d3",
+      ]}
+      style={styles.gradientContainer} // Use container style which has flex: 1
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Conditionally render carousels based on data length */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent} // Optional padding
+      >
+        {/* Carousels are assumed to be themed internally */}
         {olympiadCategories.length > 0 && (
           <CustomCarousel
             title="Olympiad"
             data={olympiadCategories}
             navigation={navigation}
-            customWidth={40}
+            customWidth={40} // Keep custom dimensions
             customHeight={120}
           />
         )}
@@ -188,13 +233,4 @@ function StudyScreen({ navigation }) {
 
 export default StudyScreen;
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  errorText: { color: Colors.primaryWhite, fontSize: 16, textAlign: "center" },
-});
+// Removed the external StyleSheet as styles are now internal and memoized

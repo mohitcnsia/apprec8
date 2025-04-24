@@ -1,6 +1,6 @@
-// screens/quiz/QuizResultScreen.js (Corrected for quizId Parameter)
+// screens/quiz/QuizResultScreen.js
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react"; // Import useMemo
 import {
   View,
   Text,
@@ -8,128 +8,80 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  Button, // Import Button if using it in error/no-data states
+  // Button, // No longer needed if using PaperButton consistently
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../config/colors"; // Adjust path
-import { authInstance } from "../../config/firebaseConfig"; // Adjust path
+// import { Colors } from "../../config/colors"; // Remove legacy Colors import
+import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { authInstance } from "../../config/firebaseConfig";
 import functions from "@react-native-firebase/functions";
 
-// --- Get screen width ---
+// --- Dimensions, Defaults, Function Ref (remain the same) ---
 const screenWidth = Dimensions.get("window").width;
 const imageDiameter = screenWidth * 0.7;
-
-// Default passing score if not provided by navigation
 const DEFAULT_PASSING_SCORE = 1;
-
-// --- Define callable function reference outside component ---
 const recordQuizResult = functions().httpsCallable("recordQuizResult");
 
 const QuizResultScreen = ({ route, navigation }) => {
-  const [username, setUsername] = useState("User");
+  const { theme } = useTheme(); // Use the theme hook
 
-  // --- VVV Corrected Param Destructuring VVV ---
+  // --- State and Props Destructuring (remain the same) ---
+  const [username, setUsername] = useState("User");
   const {
     score = 0,
     totalQuestions = 0,
-    quizId = null, // <<< CORRECT: Expect quizId now
-    parentTopicId = null, // <<< Capture parentTopicId for context if needed
+    quizId = null,
+    parentTopicId = null,
     passingScore = DEFAULT_PASSING_SCORE,
   } = route.params || {};
-  // Calculate maxScore if not explicitly passed
   const maxScore = route.params?.maxScore ?? totalQuestions;
-  // --- ^^^ Corrected Param Destructuring ^^^ ---
-
-  // --- State for Cloud Function Call ---
   const [submitError, setSubmitError] = useState(null);
-  const [submitStatus, setSubmitStatus] = useState("idle"); // 'idle', 'submitting', 'success', 'error', 'skipped'
+  const [submitStatus, setSubmitStatus] = useState("idle");
 
-  // --- Get Username ---
+  // --- useEffects and Callbacks (remain the same) ---
   useEffect(() => {
     const currentUser = authInstance.currentUser;
-    if (currentUser?.displayName) {
-      setUsername(currentUser.displayName);
-    } else if (currentUser?.email) {
-      setUsername(currentUser.email.split("@")[0]);
-    } else {
-      console.warn("QuizResultScreen: Could not determine username.");
-      setUsername("User");
-    }
+    if (currentUser?.displayName) setUsername(currentUser.displayName);
+    else if (currentUser?.email) setUsername(currentUser.email.split("@")[0]);
+    else setUsername("User");
   }, []);
 
-  // --- Submit Result to Cloud Function ---
   const submitQuizResult = useCallback(async () => {
     const currentUser = authInstance.currentUser;
-
-    // --- VVV Corrected Check for quizId VVV ---
     if (!currentUser) {
-      console.log("QuizResultScreen: Skip submission (unauthenticated).");
       setSubmitStatus("skipped");
       return;
     }
     if (!quizId) {
-      // <<< CORRECT: Check for quizId
-      console.error(
-        "QuizResultScreen: Skip submission (CRITICAL: quizId is missing!)."
-      );
       setSubmitError("Cannot save result: Quiz ID missing.");
       setSubmitStatus("error");
       return;
     }
-    // --- ^^^ Corrected Check for quizId ^^^ ---
     if (score < passingScore) {
-      console.log(
-        `QuizResultScreen: Skip submission (score ${score} < passingScore ${passingScore}).`
-      );
       setSubmitStatus("skipped");
       return;
     }
-    if (submitStatus !== "idle") {
-      console.log(
-        `QuizResultScreen: Skip submission (already processed: ${submitStatus}).`
-      );
-      return;
-    }
+    if (submitStatus !== "idle") return;
 
     setSubmitStatus("submitting");
     setSubmitError(null);
-    console.log(
-      `QuizResultScreen: Submitting result for quizId: ${quizId}, score: ${score}`
-    ); // Log with quizId
-
     try {
-      // --- VVV Corrected Data Payload VVV ---
       const resultData = {
-        quizId: quizId, // <<< CORRECT: Send quizId
+        quizId,
         scoreAchieved: score,
-        passingScore: passingScore,
-        maxScore: maxScore,
+        passingScore,
+        maxScore,
       };
-      // --- ^^^ Corrected Data Payload ^^^ ---
-      console.log("Calling 'recordQuizResult' with data:", resultData);
       const result = await recordQuizResult(resultData);
-      console.log("Cloud Function 'recordQuizResult' returned:", result.data);
-
-      if (result?.data?.status === "success") {
-        console.log("Quiz result successfully recorded.");
-        setSubmitStatus("success");
-      } else if (result?.data?.status === "not_passed") {
-        console.warn("QuizResultScreen: Cloud function reported 'not_passed'.");
+      if (result?.data?.status === "success") setSubmitStatus("success");
+      else if (result?.data?.status === "not_passed")
         setSubmitStatus("skipped");
-      } else {
-        console.error(
-          "Cloud Function 'recordQuizResult' returned unexpected status:",
-          result.data
-        );
-        setSubmitError("An unexpected server response was received.");
+      else {
+        setSubmitError("An unexpected server response.");
         setSubmitStatus("error");
       }
     } catch (error) {
-      console.error(
-        "Cloud Function 'recordQuizResult' call failed:",
-        JSON.stringify(error)
-      );
       const message =
         error.details?.message ||
         error.message ||
@@ -137,65 +89,150 @@ const QuizResultScreen = ({ route, navigation }) => {
       setSubmitError(message);
       setSubmitStatus("error");
     }
-  }, [quizId, score, passingScore, maxScore, submitStatus]); // Dependency updated to quizId
+  }, [quizId, score, passingScore, maxScore, submitStatus]);
 
-  // Effect to trigger submission on mount
   useEffect(() => {
-    // VVV Add Log for Received Params VVV
     console.log(
-      "QuizResultScreen mounted. Received Params:",
+      "QuizResultScreen mounted. Params:",
       JSON.stringify(route.params, null, 2)
     );
-    // --- End Log ---
-    if (submitStatus === "idle") {
-      submitQuizResult();
-    }
-    // Include submitQuizResult in dependency array as per ESLint rules for useCallback
+    if (submitStatus === "idle") submitQuizResult();
   }, [route.params, submitQuizResult, submitStatus]);
 
-  // --- VVV Corrected Navigation Handler VVV ---
   const handlePlayAgain = () => {
     if (quizId) {
-      // <<< CORRECT: Check for quizId
-      console.log(`Playing again for quizId: ${quizId}`);
-      // Navigate back to QuizScreen, passing the correct expected parameter name
       navigation.replace("Quiz", {
-        quizContentId: quizId, // <<< CORRECT: Pass ID back as quizContentId
-        parentTopicId: parentTopicId, // Pass context back if needed
-        passingScore: passingScore, // Pass passing score back if needed
+        quizContentId: quizId,
+        parentTopicId,
+        passingScore,
       });
     } else {
-      console.error("Cannot play again: quizId is missing.");
-      navigation.popToTop(); // Go back to main stack screen if ID missing
+      navigation.popToTop();
     }
   };
-  // --- ^^^ Corrected Navigation Handler ^^^ ---
 
-  // Score Text Calculation (unchanged)
   const scoreText =
     totalQuestions > 0 ? `${score} / ${totalQuestions}` : `${score}`;
+
+  // --- Define Styles Inside Component with useMemo ---
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        // gradientContainer necessary if LinearGradient isn't the root with flex: 1
+        container: {
+          // Applied to LinearGradient
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        },
+        header: {
+          fontSize: 30,
+          fontFamily: "pacifico", // Keep font
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed text color
+          marginBottom: 20,
+          textAlign: "center",
+        },
+        text: {
+          fontSize: 18,
+          marginBottom: 5,
+          textAlign: "center",
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed text color
+          fontFamily: "delius", // Keep font
+        },
+        highlight: {
+          fontFamily: "deliusBold", // Keep font
+          color: theme.accent || "#f12b15", // Use theme accent color
+          fontSize: 20,
+        },
+        imageContainer: {
+          height: imageDiameter,
+          width: imageDiameter,
+          borderRadius: imageDiameter / 2,
+          resizeMode: "cover",
+          marginBottom: 20,
+          borderWidth: 2,
+          borderColor:
+            theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed border color
+        },
+        statusContainer: {
+          minHeight: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          marginVertical: 10,
+        },
+        // activityIndicator: {}, // Not needed if color passed directly
+        errorText: {
+          color: theme.warning || "#FF6B6B", // Use theme warning color
+          textAlign: "center",
+          fontFamily: "delius",
+          fontSize: 14,
+        },
+        successText: {
+          color: theme.success || "#4CAF50", // Use theme success color
+          textAlign: "center",
+          fontFamily: "deliusBold",
+          fontSize: 14,
+        },
+        infoText: {
+          // Use themed secondary text color, suitable for gradient
+          color:
+            theme.textSecondaryOnGradient || theme.textSecondary || "#E0E0E0",
+          textAlign: "center",
+          fontFamily: "delius",
+          fontSize: 14,
+        },
+        buttonContainer: {
+          width: "80%", // Keep width constraint
+          alignItems: "center",
+          marginTop: 15,
+        },
+        button: {
+          // Common button style (margin, width)
+          marginTop: 15,
+          paddingVertical: 5,
+          width: "100%",
+        },
+        // buttonText: { fontSize: 16, fontFamily: "deliusBold" }, // Use PaperButton textColor prop instead
+        outlineButton: {
+          // Specific style for outline button border
+          // Border color set via PaperButton prop (borderColor doesn't work directly)
+          // We can use this style potentially for other overrides if needed
+        },
+        // outlineButtonText: { color: Colors.primaryWhite }, // Use PaperButton textColor prop instead
+      }),
+    [theme]
+  ); // Depend on theme
 
   // --- RENDER ---
   return (
     <LinearGradient
-      colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-      style={styles.container}
+      // Apply themed gradient colors
+      colors={[
+        theme.gradientStart || "#3b0940",
+        theme.gradientEnd || "#d7d1d3",
+      ]}
+      style={styles.container} // Ensure gradient fills screen
     >
-      {/* Header, Image, Score Text (Unchanged) */}
       <Text style={styles.header}>Quiz Over!</Text>
       <Image
         style={styles.imageContainer}
-        source={require("../../assets/images/success.png")} // Ensure path is correct
+        source={require("../../assets/images/success.png")} // Ensure path correct
       />
       <Text style={styles.text}>Well done, {username}!</Text>
       <Text style={styles.text}>
         You scored <Text style={styles.highlight}>{scoreText}</Text>.
       </Text>
 
-      {/* UI Feedback based on submitStatus */}
+      {/* Status Feedback */}
       <View style={styles.statusContainer}>
         {submitStatus === "submitting" && (
-          <ActivityIndicator size="small" color={Colors.primaryWhite} />
+          <ActivityIndicator
+            size="small"
+            color={
+              theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF"
+            }
+          /> // Themed indicator
         )}
         {submitStatus === "error" && (
           <Text style={styles.errorText}>
@@ -212,23 +249,34 @@ const QuizResultScreen = ({ route, navigation }) => {
         )}
       </View>
 
-      {/* Buttons - disable based on submitStatus */}
+      {/* Buttons */}
       <View style={styles.buttonContainer}>
+        {/* Play Again Button */}
         <PaperButton
           mode="contained"
-          style={styles.button}
-          labelStyle={styles.buttonText}
+          style={styles.button} // Common margin/width style
+          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }} // Keep font style
           onPress={handlePlayAgain}
-          disabled={submitStatus === "submitting"} // Disable while submitting
+          disabled={submitStatus === "submitting"}
+          // Use PaperButton props for theming
+          buttonColor={theme.accent}
+          textColor={theme.buttonText || theme.primaryWhite}
         >
           Play Again
         </PaperButton>
+
+        {/* Topics / Home Button */}
         <PaperButton
           mode="outlined"
-          style={[styles.button, styles.outlineButton]} // Added specific style for outline
-          labelStyle={[styles.buttonText, styles.outlineButtonText]}
-          onPress={() => navigation.popToTop()} // Use popToTop or specific navigation
-          disabled={submitStatus === "submitting"} // Disable while submitting
+          style={[styles.button, styles.outlineButton]} // Common + specific styles
+          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }} // Keep font style
+          onPress={() => navigation.popToTop()}
+          disabled={submitStatus === "submitting"}
+          // Use PaperButton props for theming outline button
+          textColor={theme.textPrimaryOnGradient || theme.primaryWhite} // Text/Border color
+          // Note: Paper's outlined button border color uses the theme's 'primary' or 'outline' color by default.
+          // To force a specific border color matching the text, you might need theme override or a wrapper View.
+          // For simplicity, we set the textColor, which often controls the border too.
         >
           Topics / Home
         </PaperButton>
@@ -236,76 +284,5 @@ const QuizResultScreen = ({ route, navigation }) => {
     </LinearGradient>
   );
 };
-
-// --- Styles ---
-// Using styles from your previously shared version
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  header: {
-    fontSize: 30,
-    fontFamily: "pacifico",
-    color: Colors.primaryWhite,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 5,
-    textAlign: "center",
-    color: Colors.primaryWhite,
-    fontFamily: "delius",
-  },
-  highlight: {
-    fontFamily: "deliusBold",
-    color: Colors.primaryOrange,
-    fontSize: 20,
-  },
-  imageContainer: {
-    height: imageDiameter,
-    width: imageDiameter,
-    borderRadius: imageDiameter / 2,
-    resizeMode: "cover",
-    marginBottom: 20,
-    borderWidth: 2,
-    borderColor: Colors.primaryWhite,
-  },
-  statusContainer: {
-    minHeight: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  activityIndicator: {},
-  errorText: {
-    color: Colors.warningRed || "#FF6B6B",
-    textAlign: "center",
-    fontFamily: "delius",
-    fontSize: 14,
-  },
-  successText: {
-    color: Colors.successGreen || "#4CAF50",
-    textAlign: "center",
-    fontFamily: "deliusBold",
-    fontSize: 14,
-  },
-  infoText: {
-    color: Colors.primaryLightGray,
-    textAlign: "center",
-    fontFamily: "delius",
-    fontSize: 14,
-  },
-  buttonContainer: { width: "80%", alignItems: "center", marginTop: 15 },
-  button: { marginTop: 15, paddingVertical: 5, width: "100%" },
-  buttonText: { fontSize: 16, fontFamily: "deliusBold" },
-  outlineButton: { borderColor: Colors.primaryWhite },
-  outlineButtonText: { color: Colors.primaryWhite },
-  // Add starContainer style if you implement stars
-  // starContainer: { flexDirection: 'row', marginVertical: 15 },
-});
 
 export default QuizResultScreen;
