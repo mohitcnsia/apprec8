@@ -37,12 +37,7 @@ function BottomTabNavigator({
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
             ),
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 18,
-              letterSpacing: 0.5,
-              fontFamily: "pacifico",
-            },
+            headerShown: false,
           }}
         />
         {/* Study Tab */}

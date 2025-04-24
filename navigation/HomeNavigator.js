@@ -4,8 +4,8 @@ import { Colors } from "../config/colors";
 import { StyleSheet } from "react-native";
 import Home from "../screens/quiz/Home";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
-import LinksScreen from "../components/common/dummy/DummyLinksScreen";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
+import LinksScreen from "../screens/LinksScreen";
 
 const Stack = createStackNavigator();
 
@@ -32,7 +32,7 @@ const HomeNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="LinksScreen"
+        name="LinkScreen"
         component={LinksScreen}
         options={{
           headerShown: false,
