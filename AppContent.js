@@ -133,7 +133,7 @@ const AppContent = () => {
         ) : (
           <AuthScreen
             // Pass necessary props
-            externalError={error}
+            externalError={authError}
             isAuthLoading={authLoading} // Pass renamed loading state
             onGuestLogin={onGuestLogin}
             onGoogleLogin={googleLoginHandler}
