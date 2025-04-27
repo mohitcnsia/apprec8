@@ -61,6 +61,7 @@ const AppContent = () => {
     googleLoginHandler,
     emailSignInHandler,
     emailSignUpHandler,
+    passwordResetHandler,
     exitGuestModeHandler,
   } = useFirebaseAuth();
 
@@ -139,6 +140,7 @@ const AppContent = () => {
             onGoogleLogin={googleLoginHandler}
             onEmailSignIn={emailSignInHandler}
             onEmailSignUp={emailSignUpHandler}
+            onPasswordReset={passwordResetHandler}
             // IMPORTANT: AuthScreen now needs to use useTheme()
             // internally to get themed colors for styling.
           />

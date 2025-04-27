@@ -13,6 +13,7 @@ export default function AuthScreen({
   onGoogleLogin,
   onEmailSignIn,
   onEmailSignUp,
+  onPasswordReset,
 }) {
   const { theme } = useTheme(); // <-- Use the theme hook
 
@@ -156,7 +157,7 @@ export default function AuthScreen({
           disabled={!isValid || isAuthLoading}
           loading={isAuthLoading}
           // Paper Theming: Use specific props
-          buttonColor={theme.accent} // Use theme accent for background
+          buttonColor={theme.primary} // Use theme accent for background
           textColor={theme.buttonText} // Use theme color for text
         >
           {isLogin ? "Login" : "Register"}
@@ -169,10 +170,10 @@ export default function AuthScreen({
             setIsLogin(!isLogin);
             setError("");
           }}
-          style={[styles.button, { borderColor: theme.accent }]} // Apply border color via style
+          style={[styles.button, { borderColor: theme.primary }]} // Apply border color via style
           disabled={isAuthLoading}
           // Paper Theming: Use specific props
-          textColor={theme.accent} // Use theme accent for text/border
+          textColor={theme.primary} // Use theme accent for text/border
         >
           Switch to {isLogin ? "Register" : "Login"}
         </Button>
@@ -199,7 +200,16 @@ export default function AuthScreen({
         <View style={styles.bottomView}>
           <Button
             mode="text"
-            onPress={() => setError("TODO: Implement password reset")}
+            onPress={() => {
+              if (email && email.includes("@")) {
+                onPasswordReset(email); // Call the handler passed via props
+              } else {
+                // Prompt user to enter email first if the field is empty/invalid
+                setError(
+                  "Please enter your email address in the field above first."
+                );
+              }
+            }}
             disabled={isAuthLoading}
             // Paper Theming: Use specific props
             textColor={theme.textSecondary} // Use secondary text color

@@ -259,7 +259,7 @@ const QuizResultScreen = ({ route, navigation }) => {
           onPress={handlePlayAgain}
           disabled={submitStatus === "submitting"}
           // Use PaperButton props for theming
-          buttonColor={theme.accent}
+          buttonColor={theme.success}
           textColor={theme.buttonText || theme.primaryWhite}
         >
           Play Again

@@ -135,6 +135,7 @@ const LinksScreen = ({ route, navigation }) => {
         }
         break;
       case "STUDY":
+        console.log(`pushing to apprec8reader with id "${item.id}"`);
         navigation.push("Apprec8Reader", {
           contentId: item.id,
           parentTopicId: item.parentTopicId,
