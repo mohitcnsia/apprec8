@@ -1,46 +1,60 @@
 // components/input/Input.js
 
-import { StyleSheet, Text, View, TextInput } from "react-native"; // Import TextInput directly
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useMemo } from "react";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { useTheme } from "../../context/ThemeContext";
 
-const Input = ({ label, value, onChangeText, style, textInputConfig }) => {
-  const { theme } = useTheme(); // Use theme hook
+// Add isInvalid prop (defaults to false)
+const Input = ({
+  label,
+  value,
+  onChangeText,
+  style,
+  textInputConfig,
+  isInvalid = false,
+}) => {
+  const { theme } = useTheme();
 
-  // Define styles inside useMemo
+  // Define styles inside useMemo, now also depending on isInvalid
   const styles = useMemo(
     () =>
       StyleSheet.create({
         inputContainer: {
-          marginHorizontal: 10, // Keep margins or adjust as needed
+          marginHorizontal: 10,
           marginVertical: 10,
         },
         label: {
-          // Use standard secondary text color for labels
-          color: theme.textSecondary || "#555555",
-          fontFamily: "delius", // Keep font
+          // Conditionally change label color if invalid
+          color: isInvalid ? theme.warning : theme.textSecondary || "#555555",
+          fontFamily: "delius",
           fontSize: 16,
           marginBottom: 5,
         },
         input: {
-          // Use themed background and text colors
           backgroundColor: theme.inputBackground || "#FFFFFF",
           color: theme.inputText || "#000000",
-          paddingHorizontal: 10, // Adjust padding
-          paddingVertical: 8, // Adjust padding
+          paddingHorizontal: 10,
+          paddingVertical: 8,
           borderRadius: 6,
-          fontSize: 16, // Adjusted font size slightly
-          borderWidth: 1, // Add border for visibility
-          borderColor: theme.border || "#cccccc", // Use themed border color
+          fontSize: 16,
+          borderWidth: 1,
+          // Conditionally change border color if invalid
+          borderColor: isInvalid ? theme.warning : theme.border || "#cccccc",
         },
         inputMultiline: {
-          minHeight: 100, // Adjusted minHeight
+          minHeight: 100,
           textAlignVertical: "top",
         },
+        // Optional: Style for error text below input
+        errorText: {
+          color: theme.warning,
+          fontSize: 12,
+          marginTop: 4,
+          marginLeft: 2, // Align slightly with input padding
+        },
       }),
-    [theme]
-  ); // Depend on theme
+    [theme, isInvalid]
+  ); // Add isInvalid dependency
 
   // Apply multiline style conditionally
   const inputStyles = [styles.input];
@@ -49,16 +63,17 @@ const Input = ({ label, value, onChangeText, style, textInputConfig }) => {
   }
 
   return (
-    // Allow external container style override
     <View style={[styles.inputContainer, style]}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={inputStyles}
         value={value}
         onChangeText={onChangeText}
-        placeholderTextColor={theme.placeholder || "#999999"} // Theme placeholder text color
-        {...textInputConfig} // Spread other TextInput props
+        placeholderTextColor={theme.placeholder || "#999999"}
+        {...textInputConfig}
       />
+      {/* Optional: Conditionally render an error message */}
+      {/* {isInvalid && <Text style={styles.errorText}>This field is required.</Text>} */}
     </View>
   );
 };

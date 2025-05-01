@@ -1,35 +1,36 @@
-// screens/ContactUsForm.js (or similar path)
+// screens/ContactUsForm.js
 
 import {
-  Alert,
+  // Alert, // Can remove Alert if not used elsewhere
   ScrollView,
   StyleSheet,
   Text,
   View,
-  ActivityIndicator, // Keep standard indicator
-  Pressable,
-  Platform,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState, useCallback, useMemo } from "react"; // Import useMemo
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Input from "../../components/input/Input"; // Import themed Input
-import PrimaryButton from "../../components/PrimaryButton"; // Import themed Button
+import PrimaryButton from "../../components/PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
-import DateTimePicker from "@react-native-community/datetimepicker"; // Keep if used elsewhere, not here
-import { formatDate } from "../../components/utils/date"; // Keep if used elsewhere, not here
+// Removed unused DateTimePicker/formatDate imports
 
 const ContactUsForm = ({ navigation }) => {
-  const { theme, isDark } = useTheme(); // Use theme hook
+  const { theme, isDark } = useTheme();
 
-  // State remains the same
+  // Form data state
   const [formData, setFormData] = useState({ subject: "", message: "" });
+  // User email state
   const [userEmail, setUserEmail] = useState("");
   const [isLoadingEmail, setIsLoadingEmail] = useState(true);
+  // Submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // --- NEW: Validation error states ---
+  const [subjectError, setSubjectError] = useState(false);
+  const [messageError, setMessageError] = useState(false);
+  // ------------------------------------
 
-  // useEffect and handlers remain the same logic
   useEffect(() => {
     const currentUser = authInstance.currentUser;
     if (currentUser) setUserEmail(currentUser.email || "Email not available");
@@ -37,18 +38,37 @@ const ContactUsForm = ({ navigation }) => {
     setIsLoadingEmail(false);
   }, []);
 
+  // Update input handler to clear errors on change
   const inputChangeHandler = (key, value) => {
     setFormData((prevState) => ({ ...prevState, [key]: value }));
+    // Clear specific error when user types
+    if (key === "subject") setSubjectError(false);
+    if (key === "message") setMessageError(false);
   };
 
+  // Update validation to set error states instead of Alert
   function validateFormData() {
+    console.log("Validating form...");
     const isSubjectValid = formData.subject.trim().length > 0;
     const isMessageValid = formData.message.trim().length > 0;
-    if (isSubjectValid && isMessageValid) return true;
-    Alert.alert("Validation Error", "Subject and Message fields are required!");
-    return false;
+
+    // Set error states based on validity
+    setSubjectError(!isSubjectValid);
+    setMessageError(!isMessageValid);
+
+    const isFormValid = isSubjectValid && isMessageValid;
+    if (!isFormValid) {
+      console.log("Validation failed.");
+    } else {
+      console.log("Validation passed.");
+      // Optionally clear errors here too, though inputChangeHandler covers it
+      // setSubjectError(false);
+      // setMessageError(false);
+    }
+    return isFormValid;
   }
 
+  // Update submit handler (no Alert needed here for validation)
   function submitHandler() {
     if (validateFormData() && !isSubmitting) {
       setIsSubmitting(true);
@@ -56,29 +76,23 @@ const ContactUsForm = ({ navigation }) => {
       // Replace with actual email sending logic
       setTimeout(() => {
         setIsSubmitting(false);
-        Alert.alert("Success", "Your message would be sent!");
-        setFormData({ subject: "", message: "" });
+        // Use Alert only for SUCCESS notification now
+        // Alert.alert("Success", "Email feature is Coming Soon");
+        setFormData({ subject: "", message: "" }); // Clear form on success
         navigation.goBack();
       }, 1500);
     }
   }
 
-  // --- Define Styles Inside Component with useMemo ---
+  // --- Styles (remain the same as previous themed version) ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: {
-          // Applied to LinearGradient
-          flex: 1,
-        },
-        scrollContent: {
-          padding: 20,
-          paddingBottom: 40, // Ensure space at bottom
-        },
+        container: { flex: 1 },
+        scrollContent: { padding: 20, paddingBottom: 40 },
         heading: {
           fontSize: 24,
           fontFamily: "deliusBold",
-          // Use themed text color suitable for gradient
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           textAlign: "center",
           marginBottom: 25,
@@ -86,7 +100,6 @@ const ContactUsForm = ({ navigation }) => {
         infoLabel: {
           fontSize: 16,
           fontFamily: "delius",
-          // Use themed secondary text color suitable for gradient
           color:
             theme.textSecondaryOnGradient ||
             theme.primaryLightGray ||
@@ -96,34 +109,22 @@ const ContactUsForm = ({ navigation }) => {
         infoValue: {
           fontSize: 17,
           fontFamily: "nunitoBold",
-          // Use themed primary text color suitable for gradient
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           marginBottom: 15,
         },
         separator: {
           height: 1,
-          // Use themed border or subtle primary color
           backgroundColor: theme.border || theme.primaryMaroon100 || "#cccccc",
           marginVertical: 20,
         },
-        messageInputContainer: {
-          // Style for the message Input component wrapper
-          // Input internal style handles height, but we can add margin here
-          marginBottom: 10,
-        },
-        button: {
-          // Style for the PrimaryButton wrapper/margin
-          minWidth: 150,
-          alignSelf: "center",
-          marginTop: 10,
-        },
+        messageInputContainer: { marginBottom: 10 },
+        button: { minWidth: 150, alignSelf: "center", marginTop: 10 },
       }),
     [theme]
-  ); // Depend on theme
+  );
 
   // --- RENDER ---
   return (
-    // Apply themed gradient
     <LinearGradient
       colors={[
         theme.gradientStart || "#3b0940",
@@ -138,12 +139,11 @@ const ContactUsForm = ({ navigation }) => {
       >
         <Text style={styles.heading}>Email Us</Text>
 
+        {/* Info section remains the same */}
         <Text style={styles.infoLabel}>To:</Text>
         <Text style={styles.infoValue}>Apprec8 Customer Service</Text>
-
         <Text style={styles.infoLabel}>Email:</Text>
         {isLoadingEmail ? (
-          // Use themed color for indicator
           <ActivityIndicator
             size="small"
             color={
@@ -153,17 +153,14 @@ const ContactUsForm = ({ navigation }) => {
         ) : (
           <Text style={styles.infoValue}>{userEmail}</Text>
         )}
-
-        {/* Use themed separator */}
         <View style={styles.separator} />
 
-        {/* Input components are now themed internally */}
+        {/* Pass error state to Input components */}
         <Input
           label="Subject:"
           value={formData.subject}
           onChangeText={(value) => inputChangeHandler("subject", value)}
-          // Override label color if Input default (textSecondary) doesn't contrast well
-          // labelStyle={{ color: theme.textSecondaryOnGradient || theme.primaryLightGray }}
+          isInvalid={subjectError} // <<< Pass subject error state
         />
 
         <Input
@@ -174,23 +171,19 @@ const ContactUsForm = ({ navigation }) => {
             autoCapitalize: "sentences",
             multiline: true,
           }}
-          style={styles.messageInputContainer} // Apply margin if needed
-          // Override label color if Input default doesn't contrast well
-          // labelStyle={{ color: theme.textSecondaryOnGradient || theme.primaryLightGray }}
-          // Input text color uses theme.inputText which should contrast with theme.inputBackground
+          style={styles.messageInputContainer}
+          isInvalid={messageError} // <<< Pass message error state
         />
 
         <View style={styles.separator} />
 
-        {/* PrimaryButton is now themed internally */}
+        {/* PrimaryButton remains the same */}
         <PrimaryButton
-          style={styles.button} // Apply layout styles
+          style={styles.button}
           onPress={submitHandler}
           disabled={isSubmitting}
-          // PrimaryButton might accept isLoading prop for internal indicator
-          // isLoading={isSubmitting}
         >
-          {isSubmitting ? "Sending..." : "Send E-mail"}
+          {isSubmitting ? "Sending..." : "Send E-mail Coming Soon"}
         </PrimaryButton>
       </ScrollView>
     </LinearGradient>
