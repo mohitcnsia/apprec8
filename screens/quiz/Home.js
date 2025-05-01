@@ -27,9 +27,28 @@ function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch thought - keep existing logic for now
   const getThoughtOfTheDay = () => {
-    return THOUGHTS[1]; // Maybe fetch this from Firestore later too?
+    // Make sure the THOUGHTS array exists and isn't empty
+    if (!THOUGHTS || THOUGHTS.length === 0) {
+      return "No thoughts today. Only Action !!"; // Or handle this case as needed
+    }
+
+    // Calculate milliseconds in a day
+    const msPerDay = 1000 * 60 * 60 * 24;
+
+    // Get the current time in milliseconds since the Unix epoch
+    const now = Date.now();
+
+    // Calculate the number of full days passed since the epoch (this number changes once per day UTC)
+    const dayNumber = Math.floor(now / msPerDay);
+
+    // Use the day number to pick an index.
+    // The modulo operator (%) ensures the index wraps around within the bounds of the array.
+    // This means that each day gets a specific, repeatable thought based on the day number.
+    const index = dayNumber % THOUGHTS.length;
+
+    // Return the thought for that specific day
+    return THOUGHTS[index];
   };
 
   const styles = React.useMemo(

@@ -62,6 +62,7 @@ export const lightColors = {
   wordBackground: brandColors.primaryDarkMaroon + "15",
   quoteBackground: brandColors.primaryDarkMaroon + "10",
   codeBackground: brandColors.primaryLightGray + "80",
+  inputBackground: brandColors.primaryWhite, // White input background
 
   // Text
   textPrimary: brandColors.blackText,
@@ -78,6 +79,7 @@ export const lightColors = {
   textDisabled: brandColors.primaryMaroon200,
   codeText: brandColors.blackText,
   link: brandColors.primaryDarkMaroon,
+  inputText: brandColors.blackText,
 
   // UI Elements & Borders
   primary: brandColors.primaryDarkMaroon,
@@ -111,6 +113,8 @@ export const darkColors = {
   statusBarBackground: brandColors.primaryDarkMaroon900,
   disabledBackground: "#333333", // Keep example dark disabled background
   disabledBorder: "#555555", // Keep example dark disabled border
+  inputBackground: "#333333", // Dark gray input background
+
   // Text
   textPrimary: brandColors.primaryWhite,
   textSecondary: brandColors.primaryLightGray,
@@ -118,6 +122,8 @@ export const darkColors = {
   headerTint: brandColors.primaryWhite,
   buttonText: brandColors.primaryWhite,
   textDisabled: brandColors.primaryLightGray,
+  inputText: brandColors.primaryWhite, // White text inside input
+
   // UI Elements & Borders
   primary: brandColors.primaryMaroon100, // Use lighter maroon for primary in dark
   border: "#38383A",

@@ -86,6 +86,16 @@ export default ({ config }) => {
             category: ["BROWSABLE", "DEFAULT"],
           },
         ],
+        usesFeatures: [
+          {
+            name: "android.hardware.telephony",
+            required: true, // Require phone capabilities
+          },
+          {
+            name: "android.hardware.touchscreen",
+            required: true, // Require a touchscreen
+          },
+        ],
         // Add permissions if needed (INTERNET is usually default)
         permissions: ["android.permission.INTERNET"],
       },
