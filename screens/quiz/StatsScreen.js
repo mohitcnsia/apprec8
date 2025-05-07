@@ -1,108 +1,265 @@
-import React, { memo } from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { View, FlatList, StyleSheet } from "react-native";
+// screens/quiz/StatsScreen.js (Refactored - No Top Tabs)
+
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  RefreshControl,
+  ScrollView,
+} from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import { Timestamp } from "@react-native-firebase/firestore"; // For date comparisons
 import { LinearGradient } from "expo-linear-gradient";
-import LeaderCard from "../../components/common/LeaderCard";
-import CustomListItem from "../../components/common/CustomListItem";
-import { Colors } from "../../config/colors";
+import TopThreeDisplay from "../../components/common/TopThreeDisplay"; // Adjust path
+import LeaderListItem from "../../components/common/LeaderListItem"; // Adjust path
+import { useTheme } from "../../context/ThemeContext"; // Adjust path
+import { authInstance } from "../../config/firebaseConfig"; // Adjust path
 
-const Tab = createMaterialTopTabNavigator();
+const LEADERBOARD_TOP_N = 10; // Show Top 10
 
-const leaderboardData = [
-  { id: "1", name: "Pratha Chilkoti", points: 8000, rank: 1 },
-  { id: "2", name: "Jeffery Bezos", points: 7000, rank: 2 },
-  { id: "3", name: "Cristiano Ronaldo", points: 6500, rank: 3 },
-  { id: "4", name: "Mark Zuckerberg", points: 4000, rank: 4 },
-  { id: "5", name: "Jeff Bezos", points: 2400, rank: 5 },
-  { id: "6", name: "Frank Muller", points: 1680, rank: 6 },
-  { id: "7", name: "Seema Joshi", points: 1680, rank: 7 },
-  { id: "8", name: "Mohit Chilkoti", points: 1680, rank: 8 },
-  { id: "9", name: "Elon Musk", points: 1680, rank: 9 },
-  { id: "10", name: "Sundar Pichai", points: 1680, rank: 10 },
-];
+const StatsScreen = ({ navigation }) => {
+  // Added navigation for potential future use
+  const { theme } = useTheme();
+  const [leaders, setLeaders] = useState([]); // Top N leaders
+  const [currentUserData, setCurrentUserData] = useState(null); // Logged-in user if not in top N
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-// memo() prevents unnecessary re-renders by only updating the components when their props change.
-// Without memo(), every time the parent (LeaderBoard) re-renders, TopThree and CustomLeaderboard would also re-render—even if their data hasn’t changed.
-const TopThreeLeaders = memo(() => (
-  <View style={styles.topThreeContainer}>
-    <LeaderCard
-      name={leaderboardData[1].name}
-      points={leaderboardData[1].points}
-      rank={2}
-      style={styles.silver}
-    />
-    <LeaderCard
-      name={leaderboardData[0].name}
-      points={leaderboardData[0].points}
-      rank={1}
-      userImageUri="https://images.pexels.com/photos/1470677/pexels-photo-1470677.jpeg"
-      style={styles.gold}
-    />
-    <LeaderCard
-      name={leaderboardData[2].name}
-      points={leaderboardData[2].points}
-      rank={3}
-      style={styles.bronze}
-    />
-  </View>
-));
+  const currentUserId = authInstance.currentUser?.uid;
 
-const CustomLeaderboard = memo(() => (
-  <LinearGradient
-    colors={[Colors.primaryDarkMaroon, Colors.primaryLightGray]}
-    style={StyleSheet.absoluteFillObject}
-  >
-    <FlatList
-      data={leaderboardData.slice(3)}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <CustomListItem item={item} />}
-      ListHeaderComponent={<TopThreeLeaders />}
-      contentContainerStyle={styles.listContent}
-      // Provides precomputed layout information (height, offset, index) for each list item.
-      // Helps React Native optimize scrolling by avoiding layout recalculations.
-      getItemLayout={(data, index) => ({
-        length: 60,
-        offset: 60 * index,
-        index,
-      })}
-      initialNumToRender={7}
-      maxToRenderPerBatch={10}
-      windowSize={5}
-      style={styles.transparentBg}
-      showsVerticalScrollIndicator={false}
-    />
-  </LinearGradient>
-));
+  const fetchLeaderboard = useCallback(async () => {
+    console.log("StatsScreen: Fetching leaderboard data...");
+    setError(null);
+    // Don't set isLoading to true if it's just a refresh, only for initial load
+    // setRefreshing will handle the pull-to-refresh indicator
 
-const StatsScreen = () => (
-  <View style={styles.container}>
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: { backgroundColor: Colors.primaryDarkMaroon },
-        tabBarIndicatorStyle: { backgroundColor: "#007AFF", height: 3 },
-        tabBarLabelStyle: { fontWeight: "bold", color: Colors.primaryWhite },
-      }}
+    try {
+      // 1. Fetch Top N leaders
+      const topNQuery = firestore()
+        .collection("userStats")
+        .orderBy("totalStars", "desc")
+        .limit(LEADERBOARD_TOP_N);
+
+      const topNSnapshot = await topNQuery.get();
+      const fetchedTopNLeaders = [];
+      let isCurrentUserInTopN = false;
+
+      topNSnapshot.forEach((doc, index) => {
+        const leaderData = {
+          id: doc.id,
+          rank: index + 1,
+          points: doc.data()?.totalStars || 0,
+          name:
+            doc.data()?.username ||
+            doc.data()?.displayName ||
+            `User ${doc.id.substring(0, 4)}`,
+          photoURL: doc.data()?.photoURL || null,
+        };
+        fetchedTopNLeaders.push(leaderData);
+        if (doc.id === currentUserId) {
+          isCurrentUserInTopN = true;
+        }
+      });
+      setLeaders(fetchedTopNLeaders);
+      setCurrentUserData(null); // Reset current user data if they fall out of top N display
+
+      // 2. If logged-in user is not in Top N, fetch their data and rank
+      if (currentUserId && !isCurrentUserInTopN) {
+        const currentUserStatsSnap = await firestore()
+          .collection("userStats")
+          .doc(currentUserId)
+          .get();
+
+        if (currentUserStatsSnap.exists) {
+          const currentUserStats = currentUserStatsSnap.data();
+          const currentUserScore = currentUserStats.totalStars || 0;
+
+          // Get count of users with more stars than current user
+          const rankQuery = firestore()
+            .collection("userStats")
+            .where("totalStars", ">", currentUserScore);
+
+          const rankSnapshot = await rankQuery.count().get(); // Use count()
+          const usersAhead = rankSnapshot.data().count;
+          const currentUserRank = usersAhead + 1;
+
+          setCurrentUserData({
+            id: currentUserId,
+            rank: currentUserRank,
+            points: currentUserScore,
+            name:
+              currentUserStats.username ||
+              currentUserStats.displayName ||
+              `User ${currentUserId.substring(0, 4)}`,
+            photoURL: currentUserStats.photoURL || null,
+            isCurrentUser: true, // Flag to style differently if needed
+          });
+          console.log(
+            `Current user (${currentUserId}) rank: ${currentUserRank}, score: ${currentUserScore}`
+          );
+        } else {
+          console.log(`Current user (${currentUserId}) stats not found.`);
+          setCurrentUserData(null); // No data for current user
+        }
+      } else if (currentUserId && isCurrentUserInTopN) {
+        setCurrentUserData(null); // User is in top N, clear separate display data
+      }
+    } catch (err) {
+      console.error("StatsScreen: Leaderboard fetch error:", err);
+      setError("Could not load leaderboard. Please try again.");
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  }, [currentUserId]); // Re-fetch if currentUserId changes (e.g., login/logout while screen is cached)
+
+  useEffect(() => {
+    setIsLoading(true); // Set loading for initial fetch
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
+
+  // --- Prepare data for rendering ---
+  const topThree = leaders.slice(0, 3);
+  const restOfList = leaders.slice(3, LEADERBOARD_TOP_N); // Only show up to Top N from 'leaders'
+
+  // --- Render States ---
+  if (isLoading) {
+    return (
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.textPrimary} />
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+        <Text
+          style={[styles.centeredText, { color: theme.warningRed || "red" }]}
+        >
+          {error}
+        </Text>
+        <Button
+          title="Retry"
+          onPress={fetchLeaderboard}
+          color={theme.primaryOrange}
+        />
+      </View>
+    );
+  }
+  if (leaders.length === 0 && !currentUserData) {
+    // Check both leader list and current user data
+    return (
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+        <Text style={[styles.centeredText, { color: theme.textSecondary }]}>
+          Leaderboard is currently empty.
+        </Text>
+        <Button
+          title="Refresh"
+          onPress={onRefresh}
+          color={theme.primaryOrange}
+        />
+      </View>
+    );
+  }
+
+  return (
+    <LinearGradient
+      colors={theme.backgroundGradient || ["#8B0000", "#D3D3D3"]}
+      style={styles.gradientFill}
     >
-      <Tab.Screen name="Daily" component={CustomLeaderboard} />
-      <Tab.Screen name="Weekly" component={CustomLeaderboard} />
-      <Tab.Screen name="Monthly" component={CustomLeaderboard} />
-    </Tab.Navigator>
-  </View>
-);
+      <FlatList
+        data={restOfList}
+        keyExtractor={(item) => item.id}
+        renderItem={(
+          { item } // 'index' here is for 'restOfList', so rank is already in item.rank
+        ) => (
+          <LeaderListItem item={item} /> // Pass the whole item which includes rank
+        )}
+        ListHeaderComponent={
+          <>
+            <TopThreeDisplay topLeaders={topThree} />
+            {/* Add a small separator if there are more leaders after top 3 */}
+            {restOfList.length > 0 && (
+              <View
+                style={[
+                  styles.listSeparator,
+                  { backgroundColor: theme.border || "#ccc" },
+                ]}
+              />
+            )}
+          </>
+        }
+        ListFooterComponent={
+          currentUserData && ( // Render current user at the bottom if they exist and are not in top N
+            <>
+              <View
+                style={[
+                  styles.listSeparator,
+                  {
+                    backgroundColor: theme.border || "#ccc",
+                    marginVertical: 15,
+                  },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.currentUserSectionTitle,
+                  { color: theme.textPrimary },
+                ]}
+              >
+                Your Rank
+              </Text>
+              <LeaderListItem item={currentUserData} isCurrentUser={true} />
+            </>
+          )
+        }
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.primaryOrange}
+          />
+        }
+      />
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  transparentBg: { backgroundColor: "transparent" },
-  listContent: { paddingBottom: 20 },
-  topThreeContainer: {
-    flexDirection: "row",
+  gradientFill: { flex: 1 },
+  centered: {
+    flex: 1,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
     padding: 20,
   },
-  silver: { backgroundColor: "#5c5b5b", height: 250 },
-  gold: { backgroundColor: "#f5bd31", height: 300 },
-  bronze: { backgroundColor: "#74491e", height: 230 },
+  centeredText: { textAlign: "center", fontSize: 16, padding: 20 },
+  listContent: { paddingBottom: 20 },
+  listSeparator: {
+    height: 1,
+    marginHorizontal: 20, // Or full width
+    marginTop: 10, // Space after top three before list starts
+  },
+  currentUserSectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  // Container for StatsScreen itself is removed if not needed (e.g. if BottomTabNavigator provides background)
+  // Or defined in BottomTabNavigator screenOptions
 });
 
 export default StatsScreen;
