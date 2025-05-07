@@ -169,7 +169,7 @@ function Home({ navigation }) {
 
         {storyItems.length > 0 && (
           <CustomCarousel
-            title="Stories"
+            title="Featured"
             data={storyItems} // Use fetched data
             navigation={navigation}
             customWidth={50}

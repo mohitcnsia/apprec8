@@ -9,6 +9,8 @@ import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import { useTheme } from "../context/ThemeContext"; // <<< KEEP THIS
+import StatsScreen from "../screens/quiz/StatsScreen";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -79,6 +81,16 @@ function BottomTabNavigator({
         options={{
           title: "Study", // Sets the label
           // tabBarIcon is handled in screenOptions
+        }}
+      />
+      <Tab.Screen
+        name="Stats"
+        component={StatsScreen}
+        initialParams={{ title: "Leaderboard" }}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="leaderboard" color={color} size={size} />
+          ),
         }}
       />
       {/* Profile Tab */}
