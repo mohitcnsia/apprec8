@@ -29,7 +29,7 @@ const LeaderListItem = ({ item, isCurrentUser = false }) => {
 
   return (
     <View style={dynamicStyles.container}>
-      <Text style={dynamicStyles.rank}>{rank}</Text>
+      <Text style={dynamicStyles.rank}>#{rank}</Text>
       <Image source={{ uri: imageSourceUri }} style={dynamicStyles.image} />
       <View style={dynamicStyles.nameContainer}>
         <Text style={dynamicStyles.name} numberOfLines={1} ellipsizeMode="tail">

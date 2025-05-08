@@ -1779,10 +1779,11 @@ exports.getLeaderboardData = functions
       );
     }
     const currentUserId = context.auth.uid;
-    const topN =
-      data && typeof data.topN === "number"
-        ? data.topN
-        : LEADERBOARD_DEFAULT_TOP_N;
+    const topN = data && typeof data.topN === "number" ? data.topN : 10; // Defaulting to 10
+
+    console.log(
+      `getLeaderboardData (Rank Debug): User ${currentUserId}, TopN: ${topN}`
+    );
 
     try {
       const usersCollection = db.collection("users");
@@ -1794,29 +1795,32 @@ exports.getLeaderboardData = functions
         .limit(topN)
         .get();
 
-      console.log(`Processing ${topNQuerySnapshot.docs.length} top N users.`);
+      console.log(
+        `Workspaceed ${topNQuerySnapshot.docs.length} users for Top N list.`
+      );
       for (const doc of topNQuerySnapshot.docs) {
-        // Changed to for...of for easier async logging if needed
+        // Use for...of loop
         const userData = doc.data();
         const userId = doc.id;
+        const currentRank = fetchedTopNLeaders.length + 1; // Rank is position in list
 
         const rawStars = userData.stats?.totalStars;
+        // Using Number.isNaN for robustness, though typeof check should make it equivalent
         const pointsValue =
-          typeof rawStars === "number" && !isNaN(rawStars) ? rawStars : 0;
-        if (typeof rawStars === "number" && isNaN(rawStars)) {
-          console.warn(
-            `  WARNING: NaN detected for stats.totalStars for user ${userId} BEFORE sanitization!`
-          );
-        }
-        if (isNaN(pointsValue)) {
+          typeof rawStars === "number" && !Number.isNaN(rawStars)
+            ? rawStars
+            : 0;
+
+        // Log intermediate values for debugging this specific user if NaN occurs
+        if (Number.isNaN(pointsValue)) {
           console.error(
-            `  ERROR: pointsValue is NaN for user ${userId} AFTER sanitization! This should not happen.`
+            `!!! NaN detected for pointsValue for user ${userId}. Raw stars: ${rawStars}`
           );
         }
 
         const leaderData = {
           id: userId,
-          rank: fetchedTopNLeaders.length + 1, // Calculate rank based on current length of array
+          rank: currentRank,
           name:
             userData.displayName ||
             userData.username ||
@@ -1828,10 +1832,17 @@ exports.getLeaderboardData = functions
         if (userId === currentUserId) {
           isCurrentUserInTopN = true;
         }
-      }
+      } // End of for...of loop
 
       let currentUserDisplayData = null;
+      console.log(
+        `Is current user ${currentUserId} in Top N? ${isCurrentUserInTopN}`
+      );
+
       if (!isCurrentUserInTopN && currentUserId) {
+        console.log(
+          `Current user ${currentUserId} NOT in Top N. Calculating their rank...`
+        );
         const currentUserDocSnap = await usersCollection
           .doc(currentUserId)
           .get();
@@ -1840,33 +1851,31 @@ exports.getLeaderboardData = functions
           const rawCurrentUserScore = currentUserDocData.stats?.totalStars;
           const currentUserScoreValue =
             typeof rawCurrentUserScore === "number" &&
-            !isNaN(rawCurrentUserScore)
+            !Number.isNaN(rawCurrentUserScore)
               ? rawCurrentUserScore
               : 0;
-
-          if (
-            typeof rawCurrentUserScore === "number" &&
-            isNaN(rawCurrentUserScore)
-          ) {
-            console.warn(
-              `  WARNING: NaN detected for stats.totalStars for CURRENT USER ${currentUserId} BEFORE sanitization!`
-            );
-          }
-          if (isNaN(currentUserScoreValue)) {
+          console.log(
+            `Current user's score for rank calculation: ${currentUserScoreValue}`
+          );
+          if (Number.isNaN(currentUserScoreValue)) {
             console.error(
-              `  ERROR: currentUserScoreValue is NaN for CURRENT USER ${currentUserId} AFTER sanitization!`
+              `!!! NaN detected for currentUserScoreValue for user ${currentUserId}. Raw score: ${rawCurrentUserScore}`
             );
           }
 
           const rankQuerySnapshot = await usersCollection
             .where("stats.totalStars", ">", currentUserScoreValue)
-            .count();
-          get();
+            .count()
+            .get();
+
           const usersAhead = rankQuerySnapshot.data().count;
           const currentUserRank = usersAhead + 1;
-          if (isNaN(currentUserRank)) {
+          console.log(
+            `Users ahead of ${currentUserId} (score > ${currentUserScoreValue}): ${usersAhead}. Calculated rank: ${currentUserRank}`
+          );
+          if (Number.isNaN(currentUserRank)) {
             console.error(
-              `  ERROR: currentUserRank is NaN! usersAhead: ${usersAhead}`
+              `!!! NaN detected for currentUserRank. usersAhead: ${usersAhead}`
             );
           }
 
@@ -1881,42 +1890,90 @@ exports.getLeaderboardData = functions
             points: currentUserScoreValue,
             isCurrentUser: true,
           };
+        } else {
+          console.log(
+            `Document for current user ${currentUserId} not found for rank calculation.`
+          );
         }
       }
-
-      // Final check before returning
-      fetchedTopNLeaders.forEach((l) => {
-        if (isNaN(l.points) || isNaN(l.rank))
-          console.error(
-            `FINAL CHECK FAILED for topN user <span class="math-inline">\{l\.id\}\: points\=</span>{l.points}, rank=${l.rank}`
-          );
-      });
-      if (
-        currentUserDisplayData &&
-        (isNaN(currentUserDisplayData.points) ||
-          isNaN(currentUserDisplayData.rank))
-      )
+      // --- ADDED VALIDATION BLOCK ---
+      console.log("Preparing to return data. Validating structure...");
+      try {
+        // Check each item explicitly before returning
+        fetchedTopNLeaders.forEach((item, idx) => {
+          if (item === null || typeof item !== "object")
+            throw new Error(
+              `Item ${idx} in fetchedTopNLeaders is not an object.`
+            );
+          if (Number.isNaN(item.rank))
+            throw new Error(`Rank is NaN for item ${idx} (ID: ${item.id})`);
+          if (Number.isNaN(item.points)) {
+            console.error(
+              `Validation Found NaN points for TopN User ${item.id} - Points: ${item.points}`
+            ); // Log before throwing
+            throw new Error(`Points is NaN for item ${idx} (ID: ${item.id})`);
+          }
+        });
+        if (currentUserDisplayData) {
+          if (
+            currentUserDisplayData === null ||
+            typeof currentUserDisplayData !== "object"
+          )
+            throw new Error("currentUserDisplayData is not an object.");
+          if (Number.isNaN(currentUserDisplayData.rank))
+            throw new Error(
+              `Rank is NaN for currentUserDisplayData (ID: ${currentUserDisplayData.id})`
+            );
+          if (Number.isNaN(currentUserDisplayData.points)) {
+            console.error(
+              `Validation Found NaN points for currentUserData (ID: ${currentUserDisplayData.id}) - Points: ${currentUserDisplayData.points}`
+            ); // Log before throwing
+            throw new Error(
+              `Points is NaN for currentUserData (ID: ${currentUserDisplayData.id})`
+            );
+          }
+        }
+        console.log("Data structure passed validation check.");
+      } catch (validationError) {
         console.error(
-          `FINAL CHECK FAILED for currentUserData: points=<span class="math-inline">\{currentUserDisplayData\.points\}, rank\=</span>{currentUserDisplayData.rank}`
+          "!!! VALIDATION FAILED before return !!!",
+          validationError
         );
+        // Log the structure that failed using JSON.stringify with NaN replacer
+        console.error(
+          "Failing fetchedTopNLeaders:",
+          JSON.stringify(
+            fetchedTopNLeaders,
+            (k, v) => (Number.isNaN(v) ? "##NaN##" : v),
+            2
+          )
+        );
+        console.error(
+          "Failing currentUserDisplayData:",
+          JSON.stringify(
+            currentUserDisplayData,
+            (k, v) => (Number.isNaN(v) ? "##NaN##" : v),
+            2
+          )
+        );
+        // Re-throw the validation error so the main catch block handles it
+        throw validationError;
+      }
+      // --- END VALIDATION BLOCK ---
 
-      console.log("getLeaderboardData V2: Successfully processed data.");
       return {
+        // This return triggers the framework JSON encoding
         leaderboard: fetchedTopNLeaders,
         currentUserData: currentUserDisplayData,
       };
     } catch (error) {
       console.error(
-        "getLeaderboardData V2: Error fetching leaderboard:",
+        `getLeaderboardData (Final Check): Error fetching leaderboard:`,
         error
-      );
-      console.error(
-        "Detailed error object V2:",
-        JSON.stringify(error, Object.getOwnPropertyNames(error))
       );
       throw new functions.https.HttpsError(
         "internal",
-        "An error occurred while fetching the leaderboard V2."
+        "Error processing leaderboard data."
       );
     }
   });
