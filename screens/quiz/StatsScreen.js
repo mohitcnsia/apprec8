@@ -1,5 +1,4 @@
-// screens/quiz/StatsScreen.js (Refactored - No Top Tabs)
-
+// screens/quiz/StatsScreen.js
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -8,117 +7,84 @@ import {
   ActivityIndicator,
   Text,
   RefreshControl,
-  ScrollView,
+  Button,
 } from "react-native";
-import firestore from "@react-native-firebase/firestore";
-import { Timestamp } from "@react-native-firebase/firestore"; // For date comparisons
+// REMOVE direct firestore import for leaderboard queries
+// import firestore from "@react-native-firebase/firestore";
+import functions from "@react-native-firebase/functions"; // MODIFIED: Import Firebase Functions
 import { LinearGradient } from "expo-linear-gradient";
-import TopThreeDisplay from "../../components/common/TopThreeDisplay"; // Adjust path
-import LeaderListItem from "../../components/common/LeaderListItem"; // Adjust path
-import { useTheme } from "../../context/ThemeContext"; // Adjust path
-import { authInstance } from "../../config/firebaseConfig"; // Adjust path
+import TopThreeDisplay from "../../components/common/TopThreeDisplay";
+import LeaderListItem from "../../components/common/LeaderListItem";
+import { useTheme } from "../../context/ThemeContext";
+import { authInstance } from "../../config/firebaseConfig";
 
-const LEADERBOARD_TOP_N = 10; // Show Top 10
+const LEADERBOARD_TOP_N = 10;
 
 const StatsScreen = ({ navigation }) => {
-  // Added navigation for potential future use
   const { theme } = useTheme();
-  const [leaders, setLeaders] = useState([]); // Top N leaders
-  const [currentUserData, setCurrentUserData] = useState(null); // Logged-in user if not in top N
+  const [leaders, setLeaders] = useState([]);
+  const [currentUserData, setCurrentUserData] = useState(null); // For user NOT in top N, or null
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
+  // currentUserId is still useful for client-side highlighting if needed
   const currentUserId = authInstance.currentUser?.uid;
 
   const fetchLeaderboard = useCallback(async () => {
-    console.log("StatsScreen: Fetching leaderboard data...");
+    console.log("StatsScreen: Fetching leaderboard data via Cloud Function...");
     setError(null);
-    // Don't set isLoading to true if it's just a refresh, only for initial load
-    // setRefreshing will handle the pull-to-refresh indicator
 
     try {
-      // 1. Fetch Top N leaders
-      const topNQuery = firestore()
-        .collection("userStats")
-        .orderBy("totalStars", "desc")
-        .limit(LEADERBOARD_TOP_N);
-
-      const topNSnapshot = await topNQuery.get();
-      const fetchedTopNLeaders = [];
-      let isCurrentUserInTopN = false;
-
-      topNSnapshot.forEach((doc, index) => {
-        const leaderData = {
-          id: doc.id,
-          rank: index + 1,
-          points: doc.data()?.totalStars || 0,
-          name:
-            doc.data()?.username ||
-            doc.data()?.displayName ||
-            `User ${doc.id.substring(0, 4)}`,
-          photoURL: doc.data()?.photoURL || null,
-        };
-        fetchedTopNLeaders.push(leaderData);
-        if (doc.id === currentUserId) {
-          isCurrentUserInTopN = true;
-        }
+      // MODIFIED: Call the Cloud Function
+      const getLeaderboardDataCallable =
+        functions().httpsCallable("getLeaderboardData");
+      const response = await getLeaderboardDataCallable({
+        topN: LEADERBOARD_TOP_N,
       });
-      setLeaders(fetchedTopNLeaders);
-      setCurrentUserData(null); // Reset current user data if they fall out of top N display
 
-      // 2. If logged-in user is not in Top N, fetch their data and rank
-      if (currentUserId && !isCurrentUserInTopN) {
-        const currentUserStatsSnap = await firestore()
-          .collection("userStats")
-          .doc(currentUserId)
-          .get();
+      // console.log(
+      //   "Data received from Cloud Function by client:",
+      //   JSON.stringify(response.data, null, 2)
+      // );
 
-        if (currentUserStatsSnap.exists) {
-          const currentUserStats = currentUserStatsSnap.data();
-          const currentUserScore = currentUserStats.totalStars || 0;
-
-          // Get count of users with more stars than current user
-          const rankQuery = firestore()
-            .collection("userStats")
-            .where("totalStars", ">", currentUserScore);
-
-          const rankSnapshot = await rankQuery.count().get(); // Use count()
-          const usersAhead = rankSnapshot.data().count;
-          const currentUserRank = usersAhead + 1;
-
-          setCurrentUserData({
-            id: currentUserId,
-            rank: currentUserRank,
-            points: currentUserScore,
-            name:
-              currentUserStats.username ||
-              currentUserStats.displayName ||
-              `User ${currentUserId.substring(0, 4)}`,
-            photoURL: currentUserStats.photoURL || null,
-            isCurrentUser: true, // Flag to style differently if needed
-          });
-          console.log(
-            `Current user (${currentUserId}) rank: ${currentUserRank}, score: ${currentUserScore}`
-          );
-        } else {
-          console.log(`Current user (${currentUserId}) stats not found.`);
-          setCurrentUserData(null); // No data for current user
-        }
-      } else if (currentUserId && isCurrentUserInTopN) {
-        setCurrentUserData(null); // User is in top N, clear separate display data
+      // Ensure response.data exists and has the expected structure
+      if (response && response.data) {
+        setLeaders(response.data.leaderboard || []);
+        setCurrentUserData(response.data.currentUserData || null); // Will be null if user in topN or no data
+        // console.log(
+        //   "StatsScreen: Data received from Cloud Function:",
+        //   response.data
+        // );
+      } else {
+        throw new Error("Invalid response structure from Cloud Function.");
       }
     } catch (err) {
-      console.error("StatsScreen: Leaderboard fetch error:", err);
-      setError("Could not load leaderboard. Please try again.");
+      console.error(
+        "StatsScreen: Leaderboard fetch error (Cloud Function):",
+        err
+      );
+      let errorMessage = "Could not load leaderboard. Please try again.";
+      if (err.message) {
+        errorMessage = err.message; // Show more specific error from function if available
+      }
+      if (err.details && err.details.originalErrorMessage) {
+        // For HttpsError details
+        console.error(
+          "Original error details:",
+          err.details.originalErrorMessage
+        );
+      }
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
       setRefreshing(false);
     }
-  }, [currentUserId]); // Re-fetch if currentUserId changes (e.g., login/logout while screen is cached)
+  }, []); // Removed currentUserId from dependency array as function call doesn't directly use it on client side.
+  // The Cloud Function uses the authenticated user's context.
 
   useEffect(() => {
-    setIsLoading(true); // Set loading for initial fetch
+    setIsLoading(true);
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
@@ -127,15 +93,18 @@ const StatsScreen = ({ navigation }) => {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  // --- Prepare data for rendering ---
+  // --- Prepare data for rendering (no change here) ---
   const topThree = leaders.slice(0, 3);
-  const restOfList = leaders.slice(3, LEADERBOARD_TOP_N); // Only show up to Top N from 'leaders'
+  const restOfList = leaders.slice(3, LEADERBOARD_TOP_N);
 
-  // --- Render States ---
+  // --- Render States (no major change here, just ensure theme keys are robust) ---
   if (isLoading) {
     return (
       <View style={[styles.centered, { backgroundColor: theme.background }]}>
-        <ActivityIndicator size="large" color={theme.textPrimary} />
+        <ActivityIndicator
+          size="large"
+          color={theme.accent || theme.primaryOrange || "blue"}
+        />
       </View>
     );
   }
@@ -143,52 +112,67 @@ const StatsScreen = ({ navigation }) => {
     return (
       <View style={[styles.centered, { backgroundColor: theme.background }]}>
         <Text
-          style={[styles.centeredText, { color: theme.warningRed || "red" }]}
+          style={[
+            styles.errorText,
+            { color: theme.warning || theme.errorRed || "red" },
+          ]}
         >
           {error}
         </Text>
         <Button
           title="Retry"
           onPress={fetchLeaderboard}
-          color={theme.primaryOrange}
+          color={theme.accent || theme.primaryOrange || "blue"}
         />
       </View>
     );
   }
+  // Check if leaders array itself is empty AND there's no separate currentUserData
   if (leaders.length === 0 && !currentUserData) {
-    // Check both leader list and current user data
     return (
       <View style={[styles.centered, { backgroundColor: theme.background }]}>
-        <Text style={[styles.centeredText, { color: theme.textSecondary }]}>
-          Leaderboard is currently empty.
+        <Text
+          style={[
+            styles.centeredText,
+            { color: theme.textSecondary || "#666" },
+          ]}
+        >
+          Leaderboard is currently empty or could not be loaded.
         </Text>
         <Button
           title="Refresh"
           onPress={onRefresh}
-          color={theme.primaryOrange}
+          color={theme.accent || theme.primaryOrange || "blue"}
         />
       </View>
     );
   }
 
+  // The rest of your return () and styles remain the same as previously refactored for theming.
+  // Ensure LeaderListItem and TopThreeDisplay correctly use their theme props or useTheme hook.
+
   return (
     <LinearGradient
-      colors={theme.backgroundGradient || ["#8B0000", "#D3D3D3"]}
+      colors={
+        theme.gradientStart && theme.gradientEnd
+          ? [theme.gradientStart, theme.gradientEnd]
+          : ["#4c669f", "#3b5998"]
+      }
       style={styles.gradientFill}
     >
       <FlatList
         data={restOfList}
         keyExtractor={(item) => item.id}
-        renderItem={(
-          { item } // 'index' here is for 'restOfList', so rank is already in item.rank
-        ) => (
-          <LeaderListItem item={item} /> // Pass the whole item which includes rank
+        renderItem={({ item }) => (
+          <LeaderListItem
+            item={item}
+            isCurrentUser={item.id === currentUserId}
+          />
         )}
         ListHeaderComponent={
           <>
             <TopThreeDisplay topLeaders={topThree} />
-            {/* Add a small separator if there are more leaders after top 3 */}
-            {restOfList.length > 0 && (
+            {restOfList.length > 0 && leaders.length > 3 && (
               <View
                 style={[
                   styles.listSeparator,
@@ -199,14 +183,16 @@ const StatsScreen = ({ navigation }) => {
           </>
         }
         ListFooterComponent={
-          currentUserData && ( // Render current user at the bottom if they exist and are not in top N
+          currentUserData && ( // Only render if currentUserData is populated (meaning user NOT in topN)
             <>
               <View
                 style={[
                   styles.listSeparator,
                   {
+                    height: 2,
                     backgroundColor: theme.border || "#ccc",
-                    marginVertical: 15,
+                    marginVertical: 20,
+                    marginHorizontal: 20,
                   },
                 ]}
               />
@@ -216,7 +202,8 @@ const StatsScreen = ({ navigation }) => {
                   { color: theme.textPrimary },
                 ]}
               >
-                Your Rank
+                {" "}
+                Your Rank{" "}
               </Text>
               <LeaderListItem item={currentUserData} isCurrentUser={true} />
             </>
@@ -228,7 +215,9 @@ const StatsScreen = ({ navigation }) => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={theme.primaryOrange}
+            tintColor={theme.accent || theme.primaryOrange}
+            colors={[theme.accent || theme.primaryOrange]}
+            progressBackgroundColor={theme.cardBackground}
           />
         }
       />
@@ -236,6 +225,8 @@ const StatsScreen = ({ navigation }) => {
   );
 };
 
+// Your StyleSheet (styles) should remain the same as previously refactored for theming
+// Make sure the styles.gradientFill, styles.centered, styles.errorText etc. are defined
 const styles = StyleSheet.create({
   gradientFill: { flex: 1 },
   centered: {
@@ -244,22 +235,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  centeredText: { textAlign: "center", fontSize: 16, padding: 20 },
+  centeredText: { textAlign: "center", fontSize: 16, paddingVertical: 10 },
+  errorText: {
+    textAlign: "center",
+    fontSize: 16,
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
   listContent: { paddingBottom: 20 },
   listSeparator: {
     height: 1,
-    marginHorizontal: 20, // Or full width
-    marginTop: 10, // Space after top three before list starts
+    marginHorizontal: 30,
+    marginTop: 15,
+    marginBottom: 5,
   },
   currentUserSectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
-  // Container for StatsScreen itself is removed if not needed (e.g. if BottomTabNavigator provides background)
-  // Or defined in BottomTabNavigator screenOptions
 });
 
 export default StatsScreen;
