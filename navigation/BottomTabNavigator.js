@@ -85,9 +85,10 @@ function BottomTabNavigator({
       />
       <Tab.Screen
         name="Stats"
-        component={StatsScreen}
-        initialParams={{ title: "Leaderboard" }}
+        component={StatsScreen} // Use the placeholder StatsScreen
+        // initialParams={{ title: "Leaderboard" }} // Not needed for placeholder
         options={{
+          title: "Stats", // Or "Leaderboard"
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="leaderboard" color={color} size={size} />
           ),

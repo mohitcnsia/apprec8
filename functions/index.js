@@ -39,26 +39,26 @@ const longRuntimeOptions = {
  */
 // In functions/index.js
 exports.initializeNewUser = functions
-  .region(region)
-  .runWith(runtimeOptions)
+  .region(region) // Ensure 'region' is defined
+  .runWith(runtimeOptions) // Ensure 'runtimeOptions' are defined
   .auth.user()
   .onCreate(async (user) => {
     const userId = user.uid;
-    // ... (get email, displayName, etc.) ...
     console.log(`Initializing user: ${userId}`);
 
     const now = admin.firestore.FieldValue.serverTimestamp();
-    const userRef = db.collection("users").doc(userId);
-    const userStatsRef = db.collection("userStats").doc(userId);
+    const userRef = db.collection("users").doc(userId); // 'db' should be your initialized Firestore instance
 
-    // Determine default username (replace with your actual logic if needed)
+    // Determine default username
     const defaultUsername =
       user.displayName ||
       (user.email
         ? user.email.split("@")[0]
         : `User_${userId.substring(0, 6)}`);
 
-    const userData = {
+    // --- MODIFIED PART ---
+    // Combine user data and initial stats into one object
+    const newUserDocument = {
       userId: userId,
       email: user.email || "",
       username: defaultUsername,
@@ -67,28 +67,34 @@ exports.initializeNewUser = functions
       phone: user.phoneNumber || "",
       createdAt: now,
       lastUpdatedAt: now,
-      lastActivityAt: null, // Or set to 'now'? Decide based on if creation counts as activity
-    };
+      // 'lastActivityAt' was in your original userData.
+      // Decide if this top-level 'lastActivityAt' is still needed or if
+      // 'stats.lastActivityCompletionDate' covers its purpose.
+      // For now, I'll keep it as per your original userData structure.
+      lastActivityAt: null,
 
-    const userStatsData = {
-      userId: userId,
-      totalStars: 0,
-      currentStreak: 0,
-      lastQuizCompletionDate: null, // Keep this if specifically used elsewhere
-      totalQuizzesCompleted: 0,
-      lastActivityCompletionDate: null, // <<< ADDED: Initialize to null
-      lastDailyBonusDate: null, // <<< ADDED: Initialize to null (for daily 100% bonus)
+      // Embed the stats directly
+      stats: {
+        totalStars: 0,
+        currentStreak: 0,
+        totalQuizzesCompleted: 0,
+        // 'lastQuizCompletionDate' was in userStatsData.
+        // It's in your target schema within stats, so keeping it here.
+        lastQuizCompletionDate: null,
+        lastActivityCompletionDate: null,
+        lastDailyBonusDate: null,
+      },
     };
-
-    const batch = db.batch();
-    batch.set(userRef, userData);
-    batch.set(userStatsRef, userStatsData);
+    // --- END MODIFIED PART ---
 
     try {
-      await batch.commit();
-      console.log(`Successfully initialized documents for user ${userId}`);
+      // --- MODIFIED PART ---
+      // Set the single user document
+      await userRef.set(newUserDocument);
+      // --- END MODIFIED PART ---
+      console.log(`Successfully initialized document for user ${userId}`);
     } catch (error) {
-      console.error(`Error initializing documents for user ${userId}:`, error);
+      console.error(`Error initializing document for user ${userId}:`, error);
     }
   });
 
@@ -1277,8 +1283,8 @@ function isYesterdayUTC(timestamp1, timestamp2) {
 // --- End Date Helpers ---
 
 exports.recordQuizResult = functions
-  .region(region)
-  .runWith(runtimeOptions)
+  .region(region) // Ensure 'region' is defined
+  .runWith(runtimeOptions) // Ensure 'runtimeOptions' are defined
   .https.onCall(async (data, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(
@@ -1288,10 +1294,11 @@ exports.recordQuizResult = functions
     }
     const userId = context.auth.uid;
     const { quizId, scoreAchieved, passingScore, maxScore } = data;
-    const now = admin.firestore.Timestamp.now();
+    const now = admin.firestore.Timestamp.now(); // Firestore Timestamp
+    const serverTimestamp = admin.firestore.FieldValue.serverTimestamp(); // For setting timestamps
 
     console.log(
-      `Record Result V4: User ${userId}, Quiz ${quizId}, Score ${scoreAchieved}/${maxScore}`
+      `Record Result V4 (Refactored): User ${userId}, Quiz ${quizId}, Score ${scoreAchieved}/${maxScore}`
     );
 
     // --- Input Validation ---
@@ -1309,7 +1316,7 @@ exports.recordQuizResult = functions
     }
     if (scoreAchieved < passingScore) {
       console.log(
-        `Record Result V4: Score ${scoreAchieved} < passingScore ${passingScore}. Not recording.`
+        `Record Result V4 (Refactored): Score ${scoreAchieved} < passingScore ${passingScore}. Not recording.`
       );
       return {
         status: "not_passed",
@@ -1317,7 +1324,9 @@ exports.recordQuizResult = functions
       };
     }
 
-    const userStatsRef = db.collection("userStats").doc(userId);
+    // --- MODIFIED PART: Use userRef instead of userStatsRef ---
+    const userRef = db.collection("users").doc(userId);
+    // --- END MODIFIED PART ---
     const quizAttemptRef = db
       .collection("users")
       .doc(userId)
@@ -1334,25 +1343,35 @@ exports.recordQuizResult = functions
 
       // --- Start Transaction ---
       await db.runTransaction(async (transaction) => {
-        // Get current stats and specific quiz attempt history
-        const [statsSnap, attemptSnap] = await Promise.all([
-          transaction.get(userStatsRef),
+        // --- MODIFIED PART: Get user document (which includes stats) ---
+        const [userSnap, attemptSnap] = await Promise.all([
+          transaction.get(userRef), // Get the main user document
           transaction.get(quizAttemptRef),
         ]);
 
-        if (!statsSnap.exists) {
+        if (!userSnap.exists) {
           console.error(
-            `User stats not found for ${userId} in transaction! Cannot record result.`
+            `User document not found for ${userId} in transaction! Cannot record result.`
           );
-          throw new Error(`User stats not found for ${userId}.`); // Fail transaction
+          throw new Error(`User document not found for ${userId}.`);
         }
 
-        // --- Process Existing Stats ---
-        const currentStats = statsSnap.data();
+        const userData = userSnap.data();
+        if (!userData.stats) {
+          console.error(
+            `User stats map not found for ${userId} in transaction! Possible data inconsistency.`
+          );
+          throw new Error(`User stats not found for ${userId}.`);
+        }
+        const currentStats = userData.stats; // Access the embedded stats object
+        // --- END MODIFIED PART ---
+
+        // --- Process Existing Stats (from currentStats) ---
         const currentTotalStars = currentStats.totalStars || 0;
         const currentStreak = currentStats.currentStreak || 0;
-        const lastActivityTS = currentStats.lastActivityCompletionDate || null; // <<< Use new field
-        const lastDailyBonusTS = currentStats.lastDailyBonusDate || null; // <<< Use new field
+        // Ensure 'isSameUTCDate' and 'isYesterdayUTC' can handle null timestamps if needed
+        const lastActivityTS = currentStats.lastActivityCompletionDate; // Already a Firestore Timestamp or null
+        const lastDailyBonusTS = currentStats.lastDailyBonusDate; // Already a Firestore Timestamp or null
 
         // --- Process Attempt History ---
         isFirstAttempt = !attemptSnap.exists;
@@ -1363,16 +1382,15 @@ exports.recordQuizResult = functions
         // --- Calculations ---
         const percentage = (scoreAchieved / maxScore) * 100;
 
-        // 1. Calculate Quiz Performance Stars (Rule B & C)
+        // 1. Calculate Quiz Performance Stars
         quizPerfStars = 0;
         if (isFirstAttempt) {
           if (percentage === 100) quizPerfStars = 10;
           else if (percentage >= 90) quizPerfStars = 5;
-          else quizPerfStars = 3; // Passed but < 90%
+          else quizPerfStars = 3;
         } else {
-          // Subsequent attempts
           if (percentage === 100) quizPerfStars = 2;
-          else quizPerfStars = 1; // Passed but < 100%
+          else quizPerfStars = 1;
         }
         console.log(
           ` > Perf Stars: ${quizPerfStars} (First Attempt: ${isFirstAttempt}, %: ${percentage.toFixed(
@@ -1380,28 +1398,30 @@ exports.recordQuizResult = functions
           )})`
         );
 
-        // 2. Calculate Daily Bonus Stars (Rule A)
+        // 2. Calculate Daily Bonus Stars
         dailyBonusAwarded = 0;
         let needsBonusDateUpdate = false;
-        if (percentage === 100 && !isSameUTCDate(lastDailyBonusTS, now)) {
+        // Assuming isSameUTCDate can handle null lastDailyBonusTS for the very first bonus
+        if (
+          percentage === 100 &&
+          (lastDailyBonusTS === null || !isSameUTCDate(lastDailyBonusTS, now))
+        ) {
           dailyBonusAwarded = 5;
           needsBonusDateUpdate = true;
           console.log(` > Awarding Daily Bonus: ${dailyBonusAwarded} stars.`);
         }
 
         // 3. Calculate Streak
-        if (isYesterdayUTC(lastActivityTS, now)) {
-          // Last activity was yesterday, continue streak
+        // Assuming isYesterdayUTC and isSameUTCDate can handle null lastActivityTS for the very first activity
+        if (lastActivityTS && isYesterdayUTC(lastActivityTS, now)) {
           calculatedNewStreak = currentStreak + 1;
           console.log(` > Streak Continued: Day ${calculatedNewStreak}`);
-        } else if (isSameUTCDate(lastActivityTS, now)) {
-          // Already active today, streak doesn't change
+        } else if (lastActivityTS && isSameUTCDate(lastActivityTS, now)) {
           calculatedNewStreak = currentStreak;
           console.log(
             ` > Already active today, streak remains: ${calculatedNewStreak}`
           );
         } else {
-          // Missed a day or first activity, reset streak to 1
           calculatedNewStreak = 1;
           console.log(` > Streak Reset/Started: Day 1`);
         }
@@ -1410,23 +1430,28 @@ exports.recordQuizResult = functions
         starsEarnedThisQuiz = quizPerfStars + dailyBonusAwarded;
         finalTotalStars = currentTotalStars + starsEarnedThisQuiz;
 
-        // Prepare updates for userStats
-        const updateStatsData = {
-          totalStars: finalTotalStars,
-          totalQuizzesCompleted: isFirstAttempt
-            ? FieldValue.increment(1) // ONLY increment if it's the first successful attempt
-            : currentStats.totalQuizzesCompleted || 0,
-          lastQuizCompletionDate: admin.firestore.FieldValue.serverTimestamp(), // Still useful maybe?
-          lastActivityCompletionDate: now, // <<< Update last activity date
-          currentStreak: calculatedNewStreak, // <<< Update streak
+        // --- MODIFIED PART: Prepare updates for the user document's stats map ---
+        const updatesForUserDoc = {
+          "stats.totalStars": finalTotalStars,
+          "stats.lastQuizCompletionDate": serverTimestamp, // Use server timestamp
+          "stats.lastActivityCompletionDate": now, // Current timestamp
+          "stats.currentStreak": calculatedNewStreak,
+          lastUpdatedAt: serverTimestamp, // Update top-level lastUpdatedAt
         };
-        if (needsBonusDateUpdate) {
-          updateStatsData.lastDailyBonusDate = now; // Update if bonus was awarded
-        }
-        console.log(` > Updating userStats:`, updateStatsData);
-        transaction.update(userStatsRef, updateStatsData); // Update userStats
 
-        // Prepare updates/creation for quizAttempts
+        if (isFirstAttempt) {
+          // Only increment if it's the first successful attempt of this specific quiz
+          updatesForUserDoc["stats.totalQuizzesCompleted"] =
+            admin.firestore.FieldValue.increment(1);
+        }
+        if (needsBonusDateUpdate) {
+          updatesForUserDoc["stats.lastDailyBonusDate"] = now; // Current timestamp
+        }
+        console.log(` > Updating user doc (${userId}):`, updatesForUserDoc);
+        transaction.update(userRef, updatesForUserDoc); // Update user document
+        // --- END MODIFIED PART ---
+
+        // Prepare updates/creation for quizAttempts (This part remains largely the same)
         if (isFirstAttempt) {
           const attemptData = {
             quizId: quizId,
@@ -1437,42 +1462,40 @@ exports.recordQuizResult = functions
             passed: true,
           };
           console.log(` > Creating quizAttempt doc for ${quizId}`);
-          transaction.set(quizAttemptRef, attemptData); // Create attempt doc
+          transaction.set(quizAttemptRef, attemptData);
         } else {
           const currentHighest = attemptSnap.data()?.highestScore || 0;
           const updateAttemptData = {
             attempts: attemptCount,
             lastAttemptDate: now,
             highestScore: Math.max(currentHighest, scoreAchieved),
-            passed: true,
+            passed: true, // Assuming this function is only called on pass
           };
           console.log(
             ` > Updating quizAttempt doc for ${quizId}, attempt #${attemptCount}.`
           );
-          transaction.update(quizAttemptRef, updateAttemptData); // Update attempt doc
+          transaction.update(quizAttemptRef, updateAttemptData);
         }
       }); // --- End Transaction ---
 
       console.log(
-        `Record Result V4: Transaction successful for user ${userId}, quiz ${quizId}. Awarded: ${starsEarnedThisQuiz}, New Total: ${finalTotalStars}, New Streak: ${calculatedNewStreak}`
+        `Record Result V4 (Refactored): Transaction successful for user ${userId}, quiz ${quizId}. Awarded: ${starsEarnedThisQuiz}, New Total: ${finalTotalStars}, New Streak: ${calculatedNewStreak}`
       );
 
-      // Return details about what was awarded THIS time
       return {
         status: "success",
-        starsAwarded: starsEarnedThisQuiz, // Total stars earned from this specific completion
+        starsAwarded: starsEarnedThisQuiz,
         dailyBonusAwarded: dailyBonusAwarded,
         quizPerfStars: quizPerfStars,
         isFirstAttempt: isFirstAttempt,
-        currentStreak: calculatedNewStreak, // Return the NEW streak value
-        totalStars: finalTotalStars, // Optionally return the new total
+        currentStreak: calculatedNewStreak,
+        totalStars: finalTotalStars,
       };
     } catch (error) {
       console.error(
-        `Record Result V4: Transaction error for user ${userId}, quiz ${quizId}:`,
+        `Record Result V4 (Refactored): Transaction error for user ${userId}, quiz ${quizId}:`,
         error
       );
-      // Rethrow error for client to handle
       throw new functions.https.HttpsError(
         "internal",
         error.message || "Failed to record quiz result."
@@ -1484,11 +1507,11 @@ exports.recordQuizResult = functions
  * V1 Callable Function: Penalizes user 1 star for leaving a quiz early.
  * Security: Checks context.auth automatically handled by Callable Functions.
  */
+
 exports.penalizeQuizLeave = functions
-  .region(region)
-  .runWith(runtimeOptions)
+  .region(region) // Ensure 'region' is defined
+  .runWith(runtimeOptions) // Ensure 'runtimeOptions' are defined
   .https.onCall(async (data, context) => {
-    // Correctly checks context.auth
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
@@ -1497,42 +1520,68 @@ exports.penalizeQuizLeave = functions
     }
     const userId = context.auth.uid;
     const quizId = data?.quizId; // Optional quizId
+    const serverTimestamp = admin.firestore.FieldValue.serverTimestamp();
+
     console.log(
-      `V1 penalizeQuizLeave: User ${userId} left quiz ${
+      `V1 penalizeQuizLeave (Refactored): User ${userId} left quiz ${
         quizId || "(unknown)"
       }. Penalizing 1 star.`
     );
 
-    const userStatsRef = db.collection("userStats").doc(userId);
+    // --- MODIFIED PART: Use userRef instead of userStatsRef ---
+    const userRef = db.collection("users").doc(userId);
+    // --- END MODIFIED PART ---
+
     try {
       let finalStarTotal = null;
       await db.runTransaction(async (transaction) => {
-        const userStatsDoc = await transaction.get(userStatsRef);
-        if (!userStatsDoc.exists) {
+        // --- MODIFIED PART: Get user document (which includes stats) ---
+        const userDoc = await transaction.get(userRef);
+
+        if (!userDoc.exists) {
           console.warn(
-            `V1 penalizeQuizLeave: User stats not found for ${userId}. Cannot apply penalty.`
+            `V1 penalizeQuizLeave (Refactored): User document not found for ${userId}. Cannot apply penalty.`
           );
-          // Consider if you should throw an error or just return
-          finalStarTotal = null; // Indicate stats weren't found/updated
+          finalStarTotal = null;
           return; // Exit transaction
         }
-        const currentStars = userStatsDoc.data().totalStars || 0;
+
+        const userData = userDoc.data();
+        if (!userData.stats) {
+          console.warn(
+            `V1 penalizeQuizLeave (Refactored): User stats map not found for ${userId}. Cannot apply penalty.`
+          );
+          finalStarTotal = null;
+          return; // Exit transaction
+        }
+        const currentStats = userData.stats;
+        // --- END MODIFIED PART ---
+
+        const currentStars = currentStats.totalStars || 0;
         const newStarTotal = Math.max(0, currentStars - 1); // Ensure stars don't go below 0
+
         console.log(
-          `V1 penalizeQuizLeave: Current stars: ${currentStars}, New stars: ${newStarTotal}`
+          `V1 penalizeQuizLeave (Refactored): Current stars: ${currentStars}, New stars: ${newStarTotal}`
         );
-        transaction.update(userStatsRef, { totalStars: newStarTotal });
-        finalStarTotal = newStarTotal; // Store the value to return
+
+        // --- MODIFIED PART: Update stats map and lastUpdatedAt in user document ---
+        transaction.update(userRef, {
+          "stats.totalStars": newStarTotal,
+          lastUpdatedAt: serverTimestamp, // Update top-level lastUpdatedAt
+        });
+        // --- END MODIFIED PART ---
+        finalStarTotal = newStarTotal;
       });
 
       if (finalStarTotal === null) {
-        return { status: "no_stats_found", newStarTotal: null };
+        // This means the user document or stats map wasn't found.
+        return { status: "no_user_data_found", newStarTotal: null };
       } else {
-        return { status: "success", newStarTotal: finalStarTotal }; // Return result
+        return { status: "success", newStarTotal: finalStarTotal };
       }
     } catch (error) {
       console.error(
-        `V1 penalizeQuizLeave: Error applying penalty for user ${userId}:`,
+        `V1 penalizeQuizLeave (Refactored): Error applying penalty for user ${userId}:`,
         error
       );
       throw new functions.https.HttpsError(
@@ -1717,3 +1766,214 @@ function inferSchemaFromData(data) {
   }
   return schema;
 }
+
+exports.getLeaderboardData = functions
+  .region(region) // **** IMPORTANT: Set your Firebase region ****
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      console.log("getLeaderboardData: Unauthenticated access attempt.");
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const currentUserId = context.auth.uid;
+    const topN = data && typeof data.topN === "number" ? data.topN : 10; // Defaulting to 10
+
+    console.log(
+      `getLeaderboardData (Rank Debug): User ${currentUserId}, TopN: ${topN}`
+    );
+
+    try {
+      const usersCollection = db.collection("users");
+      const fetchedTopNLeaders = [];
+      let isCurrentUserInTopN = false;
+
+      const topNQuerySnapshot = await usersCollection
+        .orderBy("stats.totalStars", "desc")
+        .limit(topN)
+        .get();
+
+      console.log(
+        `Workspaceed ${topNQuerySnapshot.docs.length} users for Top N list.`
+      );
+      for (const doc of topNQuerySnapshot.docs) {
+        // Use for...of loop
+        const userData = doc.data();
+        const userId = doc.id;
+        const currentRank = fetchedTopNLeaders.length + 1; // Rank is position in list
+
+        const rawStars = userData.stats?.totalStars;
+        // Using Number.isNaN for robustness, though typeof check should make it equivalent
+        const pointsValue =
+          typeof rawStars === "number" && !Number.isNaN(rawStars)
+            ? rawStars
+            : 0;
+
+        // Log intermediate values for debugging this specific user if NaN occurs
+        if (Number.isNaN(pointsValue)) {
+          console.error(
+            `!!! NaN detected for pointsValue for user ${userId}. Raw stars: ${rawStars}`
+          );
+        }
+
+        const leaderData = {
+          id: userId,
+          rank: currentRank,
+          name:
+            userData.displayName ||
+            userData.username ||
+            `User ${userId.substring(0, 4)}`,
+          photoURL: userData.photoURL || null,
+          points: pointsValue,
+        };
+        fetchedTopNLeaders.push(leaderData);
+        if (userId === currentUserId) {
+          isCurrentUserInTopN = true;
+        }
+      } // End of for...of loop
+
+      let currentUserDisplayData = null;
+      console.log(
+        `Is current user ${currentUserId} in Top N? ${isCurrentUserInTopN}`
+      );
+
+      if (!isCurrentUserInTopN && currentUserId) {
+        console.log(
+          `Current user ${currentUserId} NOT in Top N. Calculating their rank...`
+        );
+        const currentUserDocSnap = await usersCollection
+          .doc(currentUserId)
+          .get();
+        if (currentUserDocSnap.exists) {
+          const currentUserDocData = currentUserDocSnap.data();
+          const rawCurrentUserScore = currentUserDocData.stats?.totalStars;
+          const currentUserScoreValue =
+            typeof rawCurrentUserScore === "number" &&
+            !Number.isNaN(rawCurrentUserScore)
+              ? rawCurrentUserScore
+              : 0;
+          console.log(
+            `Current user's score for rank calculation: ${currentUserScoreValue}`
+          );
+          if (Number.isNaN(currentUserScoreValue)) {
+            console.error(
+              `!!! NaN detected for currentUserScoreValue for user ${currentUserId}. Raw score: ${rawCurrentUserScore}`
+            );
+          }
+
+          const rankQuerySnapshot = await usersCollection
+            .where("stats.totalStars", ">", currentUserScoreValue)
+            .count()
+            .get();
+
+          const usersAhead = rankQuerySnapshot.data().count;
+          const currentUserRank = usersAhead + 1;
+          console.log(
+            `Users ahead of ${currentUserId} (score > ${currentUserScoreValue}): ${usersAhead}. Calculated rank: ${currentUserRank}`
+          );
+          if (Number.isNaN(currentUserRank)) {
+            console.error(
+              `!!! NaN detected for currentUserRank. usersAhead: ${usersAhead}`
+            );
+          }
+
+          currentUserDisplayData = {
+            id: currentUserId,
+            rank: currentUserRank,
+            name:
+              currentUserDocData.displayName ||
+              currentUserDocData.username ||
+              `User ${currentUserId.substring(0, 4)}`,
+            photoURL: currentUserDocData.photoURL || null,
+            points: currentUserScoreValue,
+            isCurrentUser: true,
+          };
+        } else {
+          console.log(
+            `Document for current user ${currentUserId} not found for rank calculation.`
+          );
+        }
+      }
+      // --- ADDED VALIDATION BLOCK ---
+      console.log("Preparing to return data. Validating structure...");
+      try {
+        // Check each item explicitly before returning
+        fetchedTopNLeaders.forEach((item, idx) => {
+          if (item === null || typeof item !== "object")
+            throw new Error(
+              `Item ${idx} in fetchedTopNLeaders is not an object.`
+            );
+          if (Number.isNaN(item.rank))
+            throw new Error(`Rank is NaN for item ${idx} (ID: ${item.id})`);
+          if (Number.isNaN(item.points)) {
+            console.error(
+              `Validation Found NaN points for TopN User ${item.id} - Points: ${item.points}`
+            ); // Log before throwing
+            throw new Error(`Points is NaN for item ${idx} (ID: ${item.id})`);
+          }
+        });
+        if (currentUserDisplayData) {
+          if (
+            currentUserDisplayData === null ||
+            typeof currentUserDisplayData !== "object"
+          )
+            throw new Error("currentUserDisplayData is not an object.");
+          if (Number.isNaN(currentUserDisplayData.rank))
+            throw new Error(
+              `Rank is NaN for currentUserDisplayData (ID: ${currentUserDisplayData.id})`
+            );
+          if (Number.isNaN(currentUserDisplayData.points)) {
+            console.error(
+              `Validation Found NaN points for currentUserData (ID: ${currentUserDisplayData.id}) - Points: ${currentUserDisplayData.points}`
+            ); // Log before throwing
+            throw new Error(
+              `Points is NaN for currentUserData (ID: ${currentUserDisplayData.id})`
+            );
+          }
+        }
+        console.log("Data structure passed validation check.");
+      } catch (validationError) {
+        console.error(
+          "!!! VALIDATION FAILED before return !!!",
+          validationError
+        );
+        // Log the structure that failed using JSON.stringify with NaN replacer
+        console.error(
+          "Failing fetchedTopNLeaders:",
+          JSON.stringify(
+            fetchedTopNLeaders,
+            (k, v) => (Number.isNaN(v) ? "##NaN##" : v),
+            2
+          )
+        );
+        console.error(
+          "Failing currentUserDisplayData:",
+          JSON.stringify(
+            currentUserDisplayData,
+            (k, v) => (Number.isNaN(v) ? "##NaN##" : v),
+            2
+          )
+        );
+        // Re-throw the validation error so the main catch block handles it
+        throw validationError;
+      }
+      // --- END VALIDATION BLOCK ---
+
+      return {
+        // This return triggers the framework JSON encoding
+        leaderboard: fetchedTopNLeaders,
+        currentUserData: currentUserDisplayData,
+      };
+    } catch (error) {
+      console.error(
+        `getLeaderboardData (Final Check): Error fetching leaderboard:`,
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        "Error processing leaderboard data."
+      );
+    }
+  });

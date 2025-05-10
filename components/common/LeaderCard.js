@@ -1,146 +1,199 @@
-// components/common/LeaderCard.js (Refactored)
-
+// components/common/LeaderCard.js
 import React from "react";
 import { View, Text, Image, Dimensions, StyleSheet } from "react-native";
-import { useTheme } from "../../context/ThemeContext"; // Adjust path
-import { MaterialCommunityIcons } from "@expo/vector-icons"; // Example for trophy
+import { useTheme } from "../../context/ThemeContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
-const CARD_WIDTH_FACTOR = 0.28; // Width relative to screen
-const IMAGE_SIZE_FACTOR = 0.15; // Image size relative to screen
-const GOLD_IMAGE_FACTOR = 0.2; // Larger image for rank 1
 
-// Helper to generate fallback avatar
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name || "User"
-  )}&background=random&color=fff&size=128`;
+    name || "U"
+  )}&background=random&color=fff&size=128&bold=true`;
 
-// --- Trophy Icons (Example) ---
-const trophies = {
-  1: "trophy-variant", // Gold
-  2: "trophy-variant-outline", // Silver-ish outline
-  3: "trophy-outline", // Bronze-ish outline
+const trophyIcons = {
+  1: "trophy",
+  2: "trophy-variant",
+  3: "trophy-outline",
 };
-const trophyColors = {
-  1: "#FFD700", // Gold
-  2: "#C0C0C0", // Silver
-  3: "#CD7F32", // Bronze
-};
-// --- End Trophies ---
 
-export default function LeaderCard({ leader, style }) {
-  // Accept leader object and external style
-  const { theme } = useTheme(); // Get theme context
+const LeaderCard = ({ leader }) => {
+  // Removed cardStyle prop, theme is handled internally
+  const { theme } = useTheme();
 
-  if (!leader) return null; // Don't render if no leader data
+  if (!leader || typeof leader !== "object") {
+    // ... placeholder logic ...
+    // Fallback styles for placeholder can also use theme.placeholder or theme.cardBackground
+    const placeholderDynamicStyles = styles(
+      theme,
+      windowWidth * 0.15,
+      windowWidth * 0.15 * 0.5,
+      false,
+      theme.placeholder || "#AAA"
+    );
+    return (
+      <View
+        style={[
+          placeholderDynamicStyles.cardBase,
+          placeholderDynamicStyles.placeholderCard,
+        ]}
+      />
+    );
+  }
 
-  const { rank, name, points, photoURL } = leader; // Destructure leader data
+  const { rank, name = "Anonymous User", points = 0, photoURL } = leader;
 
   const isGold = rank === 1;
-  const imageSize =
-    windowWidth * (isGold ? GOLD_IMAGE_FACTOR : IMAGE_SIZE_FACTOR);
-  const imageOffset = imageSize * 0.5; // Move half the image out
-
-  const dynamicStyles = StyleSheet.create({
-    card: {
-      width: windowWidth * CARD_WIDTH_FACTOR,
-      height: windowWidth * CARD_WIDTH_FACTOR * (isGold ? 1.8 : 1.6), // Adjust height ratio
-      backgroundColor: theme.cardBackground || "#444444", // Use theme color
-      borderColor: theme.border || "#666666", // Use theme color
-      borderWidth: 1,
-      shadowColor: theme.shadowColor || "#000", // Use theme color (might not show well on dark)
-      shadowOpacity: 0.3,
-      elevation: 4,
-      alignItems: "center",
-      justifyContent: "flex-end", // Align content to bottom (name, points etc)
-      paddingBottom: 10, // Padding at the bottom
-      marginHorizontal: 5,
-      borderRadius: 10,
-      overflow: "visible", // Still needed for positioned image
-    },
-    userImage: {
-      position: "absolute",
-      alignSelf: "center", // Center horizontally
-      borderRadius: imageSize / 2,
-      backgroundColor: theme.placeholder || "#555555", // Theme placeholder
-      width: imageSize,
-      height: imageSize,
-      top: -imageOffset, // Position half out
-      borderWidth: isGold ? 3 : 2, // Thicker border for gold
-      borderColor: isGold ? theme.gold || "#FFD700" : theme.border || "#666666",
-    },
-    name: {
-      fontWeight: "bold",
-      color: theme.textPrimary, // Use theme color
-      fontSize: 12, // Adjust size as needed
-      textAlign: "center",
-      marginTop: 5, // Space below image
-    },
-    points: {
-      fontSize: 11,
-      color: theme.textSecondary, // Use theme color
-      textAlign: "center",
-    },
-    rankContainer: {
-      position: "absolute",
-      bottom: 5,
-      right: 5,
-      backgroundColor: trophyColors[rank] || theme.textSecondary, // Use trophy color or fallback
-      borderRadius: 10,
-      paddingHorizontal: 5,
-      paddingVertical: 1,
-    },
-    rankText: {
-      fontSize: 10,
-      fontWeight: "bold",
-      color: "#FFFFFF", // White text usually works on trophy colors
-    },
-    trophyIcon: {
-      position: "absolute",
-      bottom: 5,
-      left: 5,
-    },
-  });
+  const imageSize = windowWidth * (isGold ? 0.22 : 0.18); // Slightly adjusted sizes
+  const imageOffset = imageSize * 0.5; // Used for top positioning of image
 
   const imageSourceUri = photoURL || generateAvatarUrl(name);
-  const trophyName = trophies[rank];
-  const trophyColor = trophyColors[rank] || theme.textSecondary;
+  const trophyName = trophyIcons[rank];
+
+  // MODIFIED: Determine card background and trophy/rank colors from theme
+  let cardBackgroundColor = theme.cardBackground;
+  let rankBadgeColor = theme.accent || theme.primaryOrange; // Default accent
+  let trophyIconColor = theme.accent || theme.primaryOrange;
+  let imageBorderColor = theme.borderStrong || "#777";
+
+  if (rank === 1) {
+    cardBackgroundColor = theme.goldBackground || theme.cardBackground; // Use specific theme keys
+    rankBadgeColor = theme.goldAccent || theme.goldBackground || "#FFD700"; // Use a gold accent or background
+    trophyIconColor = theme.goldAccent || theme.goldBackground || "#FFD700";
+    imageBorderColor = theme.goldAccent || theme.goldBackground || "#FFD700";
+  } else if (rank === 2) {
+    cardBackgroundColor = theme.silverBackground || theme.cardBackground;
+    rankBadgeColor = theme.silverAccent || theme.silverBackground || "#C0C0C0";
+    trophyIconColor = theme.silverAccent || theme.silverBackground || "#C0C0C0";
+    imageBorderColor =
+      theme.silverAccent || theme.silverBackground || "#C0C0C0";
+  } else if (rank === 3) {
+    cardBackgroundColor = theme.bronzeBackground || theme.cardBackground;
+    rankBadgeColor = theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
+    trophyIconColor = theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
+    imageBorderColor =
+      theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
+  }
+
+  const dynamicStyles = styles(
+    theme,
+    imageSize,
+    imageOffset,
+    isGold,
+    cardBackgroundColor, // Pass the determined background
+    rankBadgeColor,
+    imageBorderColor
+  );
 
   return (
-    // Outer view still needed for overflow context if absolutely necessary, but often avoidable
-    <View style={[dynamicStyles.card, style]}>
-      {/* Positioned Image */}
+    <View style={dynamicStyles.cardBase}>
       <Image
         source={{ uri: imageSourceUri }}
         style={dynamicStyles.userImage}
         onError={(e) =>
-          console.log("LeaderCard Image Error:", e.nativeEvent.error)
+          console.log(
+            `LeaderCard Image Error (ID: ${leader.id}):`,
+            e.nativeEvent.error
+          )
         }
       />
-
-      {/* Content inside card */}
-      <Text style={dynamicStyles.name} numberOfLines={1}>
-        {name || "User"}
+      <Text style={dynamicStyles.name} numberOfLines={2} ellipsizeMode="tail">
+        {name}
       </Text>
-      <Text style={dynamicStyles.points}>
-        {points?.toLocaleString() || 0} pts
-      </Text>
+      <Text style={dynamicStyles.points}>{points?.toLocaleString()} pts</Text>
 
-      {/* Rank Badge (Example) */}
-      {rank <= 3 &&
-        trophyName && ( // Show trophy icon only for top 3
-          <MaterialCommunityIcons
-            name={trophyName}
-            size={20}
-            color={trophyColor}
-            style={dynamicStyles.trophyIcon}
-          />
-        )}
-      {/* Rank Text (Example) */}
-      <View style={dynamicStyles.rankContainer}>
+      {rank <= 3 && trophyName && (
+        <MaterialCommunityIcons
+          name={trophyName}
+          size={isGold ? 28 : 24} // Larger trophy for gold
+          color={trophyIconColor} // Use determined trophy color
+          style={dynamicStyles.trophyIcon}
+        />
+      )}
+      <View style={dynamicStyles.rankBadge}>
         <Text style={dynamicStyles.rankText}>#{rank}</Text>
       </View>
     </View>
   );
-}
+};
+
+const styles = (
+  theme,
+  imageSize,
+  imageOffset,
+  isGold,
+  cardBackgroundColor, // Receive themed card background
+  rankBadgeColor, // Receive themed rank badge color
+  imageBorderColor // Receive themed image border color
+) =>
+  StyleSheet.create({
+    cardBase: {
+      width: windowWidth * 0.28,
+      height: windowWidth * 0.28 * (isGold ? 2.0 : 1.75), // Adjusted height for better visual
+      backgroundColor: cardBackgroundColor, // MODIFIED: Use themed background
+      borderColor: theme.border || theme.borderLight, // Use general theme border
+      borderWidth: 1,
+      alignItems: "center",
+      justifyContent: "flex-end",
+      paddingBottom: 32, // Increased for rank badge and trophy
+      marginHorizontal: 5,
+      borderRadius: 16, // More rounded
+      overflow: "visible",
+      elevation: isGold ? 8 : 5,
+      shadowColor: theme.shadowColor,
+      shadowOffset: { width: 0, height: isGold ? 4 : 2 },
+      shadowOpacity: isGold ? 0.3 : 0.2,
+      shadowRadius: isGold ? 5 : 3,
+    },
+    placeholderCard: {
+      backgroundColor: theme.placeholder || "#DDD", // Use theme placeholder
+      opacity: 0.5,
+    },
+    userImage: {
+      position: "absolute",
+      alignSelf: "center",
+      width: imageSize,
+      height: imageSize,
+      borderRadius: imageSize / 2,
+      top: -imageOffset,
+      backgroundColor: theme.placeholder || "#BBB",
+      borderWidth: isGold ? 4 : 3, // Thicker border for gold
+      borderColor: imageBorderColor, // MODIFIED: Use themed border color
+    },
+    name: {
+      fontWeight: "bold",
+      color: theme.textPrimary,
+      fontSize: 13, // Adjusted
+      textAlign: "center",
+      marginTop: imageOffset * 0.1, // Make sure it's below the image
+      paddingHorizontal: 5, // More padding
+    },
+    points: {
+      fontSize: 12, // Adjusted
+      color: theme.textSecondary,
+      textAlign: "center",
+      marginTop: 3,
+    },
+    trophyIcon: {
+      position: "absolute",
+      bottom: 35, // Adjusted position
+      alignSelf: "center",
+      opacity: 0.9,
+    },
+    rankBadge: {
+      position: "absolute",
+      bottom: 10, // Adjusted position
+      alignSelf: "center",
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      backgroundColor: rankBadgeColor, // MODIFIED: Use themed rank badge color
+    },
+    rankText: {
+      fontSize: 13, // Adjusted
+      fontWeight: "bold",
+      color: theme.textOnPrimary || "#FFFFFF", // Ensure contrast
+    },
+  });
+
+export default React.memo(LeaderCard);
