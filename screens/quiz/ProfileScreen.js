@@ -1,7 +1,7 @@
 // screens/profile/ProfileScreen.js
 
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useMemo, useEffect, useCallback } from "react"; // Import useCallback
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,13 +13,12 @@ import {
   ActivityIndicator,
   RefreshControl,
   Platform,
-  Switch, // Import Switch
+  Switch,
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
-import { helpTopics } from "../../data/app-topic-data";
-import Badge from "../../components/common/Badge";
-import ConfirmationModal from "../../components/common/ConfirmationModel";
+import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is correct
+import ConfirmationModal from "../../components/common/ConfirmationModel"; // Assuming path correct
 import { authInstance } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -28,17 +27,23 @@ const generateAvatarUrl = (name) =>
     name || "App Rec" // Fallback name
   )}&background=random&color=fff&size=128`;
 
-const defaultStats = {
+const defaultStatsValues = {
+  // Renamed for clarity
   currentStreak: 0,
   totalQuizzesCompleted: 0,
   totalStars: 0,
+  // Add other stats from your schema with defaults if needed
+  lastQuizCompletionDate: null,
+  lastActivityCompletionDate: null,
+  lastDailyBonusDate: null,
 };
 
-const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
-  const { theme, toggleTheme, isDark } = useTheme(); // Use the theme hook
+const ProfileScreen = ({ navigation, signoutHandler }) => {
+  const { theme, toggleTheme, isDark } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
-  const [userData, setUserData] = useState(null);
-  const [userStats, setUserStats] = useState(defaultStats);
+  const [userData, setUserData] = useState(null); // Will hold the entire user document
+  // userStats will be derived from userData.stats
+  const [userStats, setUserStats] = useState(defaultStatsValues);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -46,60 +51,101 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
   const currentAuthUser = authInstance.currentUser;
   const userId = currentAuthUser?.uid;
 
-  // --- Data Fetching Logic (remains mostly the same) ---
-  const fetchData = async (isRefreshing = false) => {
+  // useEffect for real-time listener on the 'users' document
+  useEffect(() => {
     if (!userId) {
-      setError("Not authenticated.");
+      setError("Not authenticated. Please sign in.");
       setLoading(false);
-      if (isRefreshing) setRefreshing(false);
+      setUserData(null);
+      setUserStats(defaultStatsValues);
       return;
     }
-    if (!isRefreshing) setLoading(true);
-    setError(null);
-    try {
-      const userRef = firestore().collection("users").doc(userId);
-      const statsRef = firestore().collection("userStats").doc(userId);
-      const [userDoc, statsDoc] = await Promise.all([
-        userRef.get(),
-        statsRef.get(),
-      ]);
-      if (userDoc.exists) setUserData(userDoc.data());
-      else {
-        console.warn(`User document not found for userId: ${userId}`);
-        setUserData(null);
-      }
-      if (statsDoc.exists) setUserStats(statsDoc.data());
-      else {
-        console.warn(`User stats document not found for userId: ${userId}`);
-        setUserStats(defaultStats);
-      }
-    } catch (err) {
-      console.error("Error fetching profile data:", err);
-      setError("Failed to load profile. Please try again.");
-    } finally {
-      setLoading(false);
-      if (isRefreshing) setRefreshing(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchData();
+    console.log(
+      `ProfileScreen: Setting up listener for user document: ${userId}`
+    );
+    setLoading(true);
+    setError(null);
+
+    const userDocumentListener = firestore()
+      .collection("users")
+      .doc(userId)
+      .onSnapshot(
+        (documentSnapshot) => {
+          console.log("ProfileScreen: User document snapshot received.");
+          if (documentSnapshot.exists) {
+            const data = documentSnapshot.data();
+            setUserData(data); // Store the entire user document
+
+            // Extract stats from the nested data.stats object or use defaults
+            const statsData = data.stats || {}; // Handle case where stats object might be missing
+            setUserStats({
+              currentStreak:
+                statsData.currentStreak ?? defaultStatsValues.currentStreak,
+              totalQuizzesCompleted:
+                statsData.totalQuizzesCompleted ??
+                defaultStatsValues.totalQuizzesCompleted,
+              totalStars: statsData.totalStars ?? defaultStatsValues.totalStars,
+              lastQuizCompletionDate:
+                statsData.lastQuizCompletionDate ??
+                defaultStatsValues.lastQuizCompletionDate,
+              lastActivityCompletionDate:
+                statsData.lastActivityCompletionDate ??
+                defaultStatsValues.lastActivityCompletionDate,
+              lastDailyBonusDate:
+                statsData.lastDailyBonusDate ??
+                defaultStatsValues.lastDailyBonusDate,
+            });
+            console.log("Updated userData:", data);
+            console.log("Derived userStats:", {
+              currentStreak:
+                statsData.currentStreak ?? defaultStatsValues.currentStreak,
+              totalQuizzesCompleted:
+                statsData.totalQuizzesCompleted ??
+                defaultStatsValues.totalQuizzesCompleted,
+              totalStars: statsData.totalStars ?? defaultStatsValues.totalStars,
+            });
+          } else {
+            console.warn(`User document not found for userId: ${userId}`);
+            setUserData(null);
+            setUserStats(defaultStatsValues);
+          }
+          setLoading(false); // Data processed, stop loading
+        },
+        (err) => {
+          console.error("Error fetching user document snapshot:", err);
+          setError("Failed to load profile data.");
+          setLoading(false);
+        }
+      );
+
+    // Unsubscribe from listener when the component unmounts or userId changes
+    return () => {
+      console.log(
+        `ProfileScreen: Unsubscribing user document listener for userId: ${userId}`
+      );
+      userDocumentListener();
+    };
   }, [userId]);
 
   const onRefresh = useCallback(() => {
+    console.log("ProfileScreen: Manual refresh triggered.");
     setRefreshing(true);
-    fetchData(true);
-  }, [userId]);
+    // With onSnapshot, data updates in real-time.
+    // For now, just simulate the refresh ending as data is live.
+    setTimeout(() => setRefreshing(false), 1000);
+  }, []);
 
-  // --- Determine Display Values (remains the same) ---
+  // --- Determine Display Values ---
   const displayName =
-    userData?.username ||
-    currentAuthUser?.displayName ||
+    userData?.username || // From Firestore user document's username field
+    currentAuthUser?.displayName || // Fallback to Firebase Auth display name
     currentAuthUser?.email?.split("@")[0] ||
     "User";
+
   const profileImageUri =
-    userData?.profileImageUrl ||
-    currentAuthUser?.photoURL ||
+    userData?.photoURL || // Use photoURL from Firestore user document
+    currentAuthUser?.photoURL || // Fallback to Firebase Auth photoURL
     generateAvatarUrl(displayName);
 
   const enrollmentDate = useMemo(() => {
@@ -128,7 +174,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
     return "Date Unavailable";
   }, [userData?.createdAt, currentAuthUser?.metadata?.creationTime]);
 
-  // --- Navigation Handlers (remain the same) ---
+  // --- Navigation Handlers ---
   function helpPressHandler() {
     navigation.navigate("LinkScreen", { data: helpTopics });
   }
@@ -137,20 +183,16 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
   }
   function editProfileHandler() {
     navigation.navigate("EditProfile", {
-      currentUsername: userData?.username,
-      currentPhone: userData?.phone,
+      currentUsername: userData?.username, // From Firestore user document
+      currentPhone: userData?.phone, // From Firestore user document
     });
   }
 
-  // --- Define Styles Inside Component with useMemo ---
+  // --- Styles ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        // Container for Gradient
-        gradientContainer: {
-          flex: 1,
-        },
-        // Actual content container with padding
+        gradientContainer: { flex: 1 },
         container: {
           flex: 1,
           padding: 16,
@@ -160,10 +202,10 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: theme.background, // Use theme background
+          backgroundColor: theme.background,
         },
         errorText: {
-          color: theme.warning || "#FF6B6B", // Use theme warning color
+          color: theme.warning || "#FF6B6B",
           fontSize: 16,
           textAlign: "center",
           marginBottom: 20,
@@ -171,7 +213,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           fontFamily: "delius",
         },
         inlineErrorText: {
-          color: theme.warning || "#FF6B6B", // Use theme warning color
+          color: theme.warning || "#FF6B6B",
           fontSize: 12,
           textAlign: "center",
           marginTop: 5,
@@ -179,13 +221,13 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
         },
         retryButton: {
           marginTop: 15,
-          backgroundColor: theme.accent, // Use theme accent color (e.g., Orange)
+          backgroundColor: theme.accent,
           paddingVertical: 10,
           paddingHorizontal: 25,
           borderRadius: 20,
         },
         retryButtonText: {
-          color: theme.buttonText || "#FFFFFF", // Use theme button text color
+          color: theme.buttonText || "#FFFFFF",
           fontSize: 16,
           fontWeight: "bold",
         },
@@ -197,39 +239,35 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           height: 100,
           borderRadius: 50,
           borderWidth: 4,
-          borderColor: theme.primary || "#800000", // Use theme primary color (e.g., Maroon)
-          backgroundColor: theme.placeholder || "#cccccc", // Use theme placeholder color
+          borderColor: theme.primary || "#800000",
+          backgroundColor: theme.placeholder || "#cccccc",
         },
         editIcon: {
           position: "absolute",
           right: 0,
           bottom: 0,
-          backgroundColor: theme.background, // Use theme background
+          backgroundColor: theme.background,
           borderRadius: 15,
           padding: 5,
           borderWidth: 1,
-          borderColor: theme.primary || "#800000", // Use theme primary
-          // Shadow might need theme adjustments if desired
+          borderColor: theme.primary || "#800000",
           shadowColor: theme.shadowColor || "#000",
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.2,
           shadowRadius: 1.41,
           elevation: 2,
         },
-        editIconIcon: {
-          // Style for the icon itself if needed
-          color: theme.primary || "#800000", // Use theme primary
-        },
+        editIconIcon: { color: theme.primary || "#800000" },
         name: {
           fontSize: 22,
           fontWeight: "bold",
           marginTop: 10,
-          color: theme.textPrimaryOnGradient || theme.textPrimary || "#FFFFFF", // Use specific theme color or fallback
-          fontFamily: "sans-serif-medium", // Ensure font loaded
+          color: theme.textPrimaryOnGradient || theme.textPrimary || "#FFFFFF",
+          fontFamily: "sans-serif-medium",
         },
         memberSince: {
           color:
-            theme.textSecondaryOnGradient || theme.textSecondary || "#E0E0E0", // Use specific theme color or fallback
+            theme.textSecondaryOnGradient || theme.textSecondary || "#E0E0E0",
           fontSize: 13,
           marginTop: 4,
         },
@@ -241,7 +279,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
         },
         statCard: {
           width: "31%",
-          backgroundColor: theme.cardBackground || "#A0522D80", // Use theme card background
+          backgroundColor: theme.cardBackground || "#A0522D80",
           paddingVertical: 16,
           paddingHorizontal: 8,
           alignItems: "center",
@@ -254,19 +292,16 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           minHeight: 110,
           justifyContent: "center",
         },
-        statIcon: {
-          color: theme.textSecondary || "#E0E0E0", // Use theme text secondary
-          marginBottom: 5,
-        },
+        statIcon: { color: theme.textSecondary || "#E0E0E0", marginBottom: 5 },
         statValue: {
           fontSize: 20,
           fontWeight: "bold",
-          color: theme.textPrimary || "#FFFFFF", // Use theme text primary
+          color: theme.textPrimary || "#FFFFFF",
           marginTop: 4,
           textAlign: "center",
         },
         statLabel: {
-          color: theme.textSecondary || "#E0E0E0", // Use theme text secondary
+          color: theme.textSecondary || "#E0E0E0",
           fontSize: 11,
           textAlign: "center",
           marginTop: 2,
@@ -275,10 +310,10 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           fontSize: 18,
           fontWeight: "600",
           marginBottom: 15,
-          color: theme.primary || "#800000", // Use theme primary
+          color: theme.primary || "#800000",
         },
         card: {
-          backgroundColor: theme.cardBackground || "#A0522D80", // Use theme card background
+          backgroundColor: theme.cardBackground || "#A0522D80",
           borderRadius: 10,
           marginBottom: 12,
           shadowColor: theme.shadowColor || "#000",
@@ -293,37 +328,25 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           paddingVertical: 16,
           paddingHorizontal: 16,
         },
-        cardIcon: {
-          marginRight: 15,
-          color: theme.textSecondary || "#E0E0E0", // Use theme text secondary
-        },
+        cardIcon: { marginRight: 15, color: theme.textSecondary || "#E0E0E0" },
         cardText: {
-          color: theme.textPrimary || "#FFFFFF", // Use theme text primary
+          color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
           flex: 1,
         },
         signOutCard: {
-          backgroundColor: theme.warningBackground || "#FFDEDE", // Use theme warning background
+          backgroundColor: theme.warningBackground || "#FFDEDE",
         },
-        signOutIcon: {
-          marginRight: 15,
-          color: theme.warning || "#CC0000", // Use theme warning color
-        },
-        signOutText: {
-          color: theme.warning || "#CC0000", // Use theme warning color
-          fontWeight: "bold",
-        },
+        signOutIcon: { marginRight: 15, color: theme.warning || "#CC0000" },
+        signOutText: { color: theme.warning || "#CC0000", fontWeight: "bold" },
         copyright: {
           textAlign: "center",
-          color: theme.textSecondary || "#A0A0A0", // Use theme text secondary
+          color: theme.textSecondary || "#A0A0A0",
           marginTop: 30,
           marginBottom: 10,
           fontSize: 12,
         },
-        pressedCard: {
-          opacity: 0.75,
-        },
-        // --- Theme Toggle Styles ---
+        pressedCard: { opacity: 0.75 },
         themeToggleCard: {
           backgroundColor: theme.cardBackground || "#A0522D80",
           borderRadius: 10,
@@ -332,31 +355,26 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           overflow: "hidden",
         },
         themeToggleContent: {
-          // Parent container for label group and switch
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between", // Pushes label group left, switch right
-          paddingVertical: 12, // Adjusted padding slightly if needed
+          justifyContent: "space-between",
+          paddingVertical: 12,
           paddingHorizontal: 16,
         },
         themeToggleLabelContainer: {
-          // New container for Icon and Text
           flexDirection: "row",
           alignItems: "center",
-          // No justifyContent needed here
         },
         themeToggleText: {
-          // Text style (marginRight removed)
           color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
         },
       }),
     [theme]
-  ); // Depend on theme object
+  );
 
   // --- Render Logic ---
-  if (loading) {
-    // Show loading indicator against themed background
+  if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={theme.accent || "#FFA500"} />
@@ -365,16 +383,10 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
   }
 
   if (error && !userData) {
-    // Show full error screen against themed background
+    // Show full error screen only if no userData at all
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.errorText}>{error}</Text>
-        <TouchableOpacity
-          onPress={() => fetchData()}
-          style={styles.retryButton}
-        >
-          <Text style={styles.retryButtonText}>Retry</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -382,7 +394,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
   // --- Main Screen Render ---
   return (
     <LinearGradient
-      // Use theme gradient colors
       colors={[
         theme.gradientStart || "#8B0000",
         theme.gradientEnd || "#D3D3D3",
@@ -390,15 +401,15 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
       style={styles.gradientContainer}
     >
       <ScrollView
-        style={styles.container} // Add padding etc. here
+        style={styles.container}
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={theme.accent || "#FFA500"} // Use theme accent
-            colors={[theme.accent || "#FFA500", theme.primary || "#800000"]} // Use theme colors
+            tintColor={theme.accent || "#FFA500"}
+            colors={[theme.accent || "#FFA500", theme.primary || "#800000"]}
           />
         }
       >
@@ -412,7 +423,7 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
                 console.log("Error loading image:", e.nativeEvent.error)
               }
             />
-            {userData && (
+            {userData && ( // Only show edit icon if userData is loaded
               <TouchableOpacity
                 style={styles.editIcon}
                 onPress={editProfileHandler}
@@ -427,25 +438,28 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           </View>
           <Text style={styles.name}>{displayName}</Text>
           <Text style={styles.memberSince}>Enrolled {enrollmentDate}</Text>
-          {error && <Text style={styles.inlineErrorText}>{error}</Text>}
+          {error &&
+            userData && ( // Show inline error if some userData is present but there was an issue
+              <Text style={styles.inlineErrorText}>{error}</Text>
+            )}
         </View>
 
-        {/* Stats Section */}
+        {/* Stats Section - uses userStats state which is derived from userData.stats */}
         <View style={styles.statsContainer}>
           {[
             {
               label: "Day Streak",
-              value: userStats.currentStreak ?? 0,
+              value: userStats.currentStreak, // Access directly from userStats state
               icon: "calendar-check-outline",
             },
             {
               label: "Quizzes",
-              value: (userStats.totalQuizzesCompleted ?? 0).toLocaleString(),
+              value: userStats.totalQuizzesCompleted.toLocaleString(), // Access directly
               icon: "help-circle-outline",
             },
             {
               label: "Stars",
-              value: (userStats.totalStars ?? 0).toLocaleString(),
+              value: userStats.totalStars.toLocaleString(), // Access directly
               icon: "star-outline",
             },
           ].map((item, index) => (
@@ -463,7 +477,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
 
         {/* Settings & Support Section */}
         <Text style={styles.sectionTitle}>Settings & Support</Text>
-        {/* My Tasks Card */}
         <Pressable
           onPress={myTasksPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
@@ -477,7 +490,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
             <Text style={styles.cardText}>My Tasks</Text>
           </View>
         </Pressable>
-        {/* Help Card */}
         <Pressable
           onPress={helpPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
@@ -492,21 +504,16 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           </View>
         </Pressable>
 
-        {/* --- Theme Toggle Button --- */}
         <View style={styles.themeToggleCard}>
           <View style={styles.themeToggleContent}>
-            {/* Group 1: Icon and Text */}
             <View style={styles.themeToggleLabelContainer}>
-              {/* <-- New Wrapper View */}
               <Ionicons
-                name="contrast-outline" // Changed icon to be theme-related
+                name="contrast-outline"
                 size={24}
-                style={styles.cardIcon} // Style for icon color and margin
+                style={styles.cardIcon}
               />
               <Text style={styles.themeToggleText}>Dark Mode</Text>
             </View>
-
-            {/* Group 2: Switch (remains the same) */}
             <Switch
               trackColor={{
                 false: theme.switchTrackOff || "#767577",
@@ -524,13 +531,12 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           </View>
         </View>
 
-        {/* Sign out Button */}
         {typeof signoutHandler === "function" && (
           <Pressable
             onPress={() => setModalVisible(true)}
             style={({ pressed }) => [
-              styles.card, // Reuse base card style
-              styles.signOutCard, // Apply sign-out specific background
+              styles.card,
+              styles.signOutCard,
               pressed && styles.pressedCard,
             ]}
           >
@@ -547,12 +553,10 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
           </Pressable>
         )}
 
-        {/* Footer */}
         <Text style={styles.copyright}>
           © {new Date().getFullYear()} Apprec8. All rights reserved.
         </Text>
 
-        {/* Sign-Out Confirmation Modal */}
         <ConfirmationModal
           visible={modalVisible}
           title="Are you sure you want to sign out?"
@@ -561,8 +565,6 @@ const ProfileScreen = ({ navigation, signoutHandler, user: authUserProp }) => {
             setModalVisible(false);
             if (typeof signoutHandler === "function") signoutHandler();
           }}
-          // Pass theme or use hook internally if Modal needs theming
-          // theme={theme}
         />
       </ScrollView>
     </LinearGradient>
