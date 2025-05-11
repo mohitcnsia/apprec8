@@ -60,7 +60,7 @@ export default ({ config }) => {
             existingCFBundleURLTypes,
             reversedClientIdScheme
           ),
-        },``
+        },
         // If your iOS icon is different from the main one, you can specify it here:
         // icon: "./assets/ios-icon.png", // Ensure this file exists if you uncomment
       },
