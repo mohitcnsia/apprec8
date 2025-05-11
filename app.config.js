@@ -5,7 +5,6 @@ import "dotenv/config";
 const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
   if (!newScheme) return existingTypes;
 
-  // Check if the scheme already exists to avoid duplicates
   const schemeExists = existingTypes.some((type) =>
     type.CFBundleURLSchemes?.includes(newScheme)
   );
@@ -14,7 +13,6 @@ const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
     return existingTypes;
   }
 
-  // Add the new scheme configuration
   return [
     ...existingTypes,
     {
@@ -24,7 +22,6 @@ const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
 };
 
 export default ({ config }) => {
-  // Get the existing CFBundleURLTypes from the evaluated config, if any
   const existingCFBundleURLTypes = config.ios?.infoPlist?.CFBundleURLTypes;
   const reversedClientIdScheme = process.env.IOS_REVERSED_CLIENT_ID;
 
@@ -41,13 +38,13 @@ export default ({ config }) => {
       scheme: "apprec8",
       version: "1.0.0",
       orientation: "portrait",
+      // Main app icon (e.g., 1024x1024px). Used for Play Store, iOS, and as fallback.
       icon: "./assets/icon.png",
-      // newArchEnabled: true, // Keep if you had it, enables New Architecture
-      backgroundColor: "#24180f", // Match your original background
+      backgroundColor: "#24180f", // Your app's main background color
       splash: {
         image: "./assets/splash.png",
         resizeMode: "contain",
-        backgroundColor: "#ffffff", // Match your original splash background
+        backgroundColor: "#ffffff", // Splash screen background color
       },
       updates: {
         fallbackToCacheTimeout: 0,
@@ -55,33 +52,37 @@ export default ({ config }) => {
       assetBundlePatterns: ["**/*"],
       ios: {
         supportsTablet: true,
-        bundleIdentifier: "com.mohitchilkoti.apprec8", // Your iOS bundle ID
-        // Point to the .plist file (assuming it's in the root)
+        bundleIdentifier: "com.mohitchilkoti.apprec8",
         googleServicesFile: "./GoogleService-Info.plist",
-        // Manually configure the necessary URL Type using the reversed client ID
         infoPlist: {
-          ...config.ios?.infoPlist, // Preserve other infoPlist entries
+          ...config.ios?.infoPlist,
           CFBundleURLTypes: mergeCFBundleURLTypes(
             existingCFBundleURLTypes,
-            reversedClientIdScheme // Add the scheme from .env
+            reversedClientIdScheme
           ),
-        },
+        },``
+        // If your iOS icon is different from the main one, you can specify it here:
+        // icon: "./assets/ios-icon.png", // Ensure this file exists if you uncomment
       },
       android: {
+        versionCode: 10,
         adaptiveIcon: {
+          // Path to your adaptive icon foreground image (e.g., 1024x1024px from IconKitchen)
           foregroundImage: "./assets/adaptive-icon.png",
-          backgroundColor: "#FFFFFF",
+          // TODO: Replace #YourAppBackgroundColor with the actual hex color for your adaptive icon's background.
+          // This could be a color from IconKitchen or your app's branding.
+          backgroundColor: "#3d1141", // Example: using your app's main background, CHOOSE WISELY
+          // Optional: If you have a monochrome icon for Android 13+ themed icons (e.g., 1024x1024px)
+          monochromeImage: "./assets/monochrome-icon.png",
         },
-        package: "com.mohitchilkoti.apprec8", // Your Android package name
-        // Point to the .json file (standard location)
+        package: "com.mohitchilkoti.apprec8",
         googleServicesFile: "./google-services.json",
-        // Keep original intent filters if needed for other deeplinking
         intentFilters: [
           {
             action: "VIEW",
             data: {
               scheme: "apprec8",
-              host: "redirect", // Keep if used elsewhere
+              host: "redirect",
             },
             category: ["BROWSABLE", "DEFAULT"],
           },
@@ -89,44 +90,40 @@ export default ({ config }) => {
         usesFeatures: [
           {
             name: "android.hardware.telephony",
-            required: true, // Require phone capabilities
+            required: true,
           },
           {
             name: "android.hardware.touchscreen",
-            required: true, // Require a touchscreen
+            required: true,
           },
         ],
-        // Add permissions if needed (INTERNET is usually default)
         permissions: ["android.permission.INTERNET"],
+        // The top-level "icon" will be used for legacy Android versions if not overridden here.
+        // If you need a specific legacy icon (not generally recommended if adaptive is well-designed):
+        // icon: "./assets/android-legacy-icon.png", // Ensure this file exists if you uncomment
       },
       web: {
         favicon: "./assets/favicon.png",
       },
       plugins: [
         "expo-font",
-        "expo-secure-store", // If using secure store
-        // Re-add the Google Sign-In plugin.
-        // Try WITHOUT options first, as manual config above might be enough.
-        // If build fails again, try adding the options back:
-        // ["@react-native-google-signin/google-signin", { reservedClientId: process.env.IOS_REVERSED_CLIENT_ID }]
+        "expo-secure-store",
         "@react-native-google-signin/google-signin",
         "@react-native-firebase/app",
       ],
       extra: {
-        // Expose necessary Firebase config and the Web Client ID for the hook
         firebaseApiKey: process.env.FIREBASE_API_KEY,
         firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
         firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
         firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
         firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         firebaseAppId: process.env.FIREBASE_APP_ID,
-        // Needed by GoogleSignin.configure in the hook
         googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
         eas: {
           projectId: "ce048455-06a3-4e7e-aebb-ae82b867c72a",
         },
       },
-      owner: "mohitchilkoti", // Your Expo username
+      owner: "mohitchilkoti",
     },
   };
 };
