@@ -1,53 +1,56 @@
 // components/common/TopThreeDisplay.js
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import LeaderCard from "./LeaderCard"; // Adjust path if necessary
-import { useTheme } from "../../context/ThemeContext"; // Adjust path if necessary
+import LeaderCard from "./LeaderCard";
+import { useTheme } from "../../context/ThemeContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-const TopThreeDisplay = ({ topLeaders = [] }) => {
+const TopThreeDisplay = ({ topLeaders = [], currentUserId }) => {
   const { theme } = useTheme();
 
   const leader1 = topLeaders[0] || null;
   const leader2 = topLeaders[1] || null;
   const leader3 = topLeaders[2] || null;
 
-  // Define base dimensions
-  const baseCardWidth = screenWidth * 0.3;
-  const goldCardHeight = baseCardWidth * 2.2;
+  // Define base dimensions more clearly
+  const baseCardWidth = screenWidth * 0.28; // Slightly smaller base for better spacing
+  const spacing = screenWidth * 0.03; // Spacing between cards
 
-  // Height Ratios (Rank 1 is 100%)
-  // Original request: Silver 70%, Bronze 50%
-  // Adjusted for better visual balance: Silver 85%, Bronze 70%
-  // You can change these ratios as desired:
-  const silverCardHeight = goldCardHeight * 0.85; // e.g., 0.70 for 70%
-  const bronzeCardHeight = goldCardHeight * 0.7; // e.g., 0.50 for 50%
+  const goldCardWidth = baseCardWidth * 1.1; // Gold card slightly wider
+  const goldCardHeight = goldCardWidth * 2.1; // Adjusted height aspect ratio
+
+  const silverCardWidth = baseCardWidth;
+  const silverCardHeight = goldCardHeight * 0.85;
+
+  const bronzeCardWidth = baseCardWidth;
+  const bronzeCardHeight = goldCardHeight * 0.7;
 
   const dynamicStyles = StyleSheet.create({
     topThreeContainer: {
       flexDirection: "row",
-      justifyContent: "center",
+      justifyContent: "space-around", // Use space-around for better distribution
       alignItems: "flex-end",
-      paddingTop: 30,
+      paddingTop: 30, // Space for trophies/rank circles
       paddingBottom: 20,
+      paddingHorizontal: spacing / 2, // Overall padding for the container
       marginBottom: 15,
-      minHeight: goldCardHeight + 50, // Accommodate tallest card and padding
+      minHeight: goldCardHeight + 40, // Ensure enough height
       backgroundColor: theme.podiumAreaBackground || "transparent",
     },
+    // Placeholder styling can be simplified if LeaderCard handles its own empty state
     placeholderView: {
-      width: baseCardWidth,
-      marginHorizontal: 5,
-      backgroundColor: theme.placeholderCard || "transparent", // Use transparent or a subtle themed placeholder
+      // width and height will be set dynamically
+      backgroundColor:
+        theme.placeholderCard || theme.cardBackground || "#f0f0f0",
       borderRadius: 12,
-      // Ensure placeholder has some visible style if not transparent
-      // borderStyle: 'dashed',
-      // borderColor: theme.border || '#cccccc',
-      // borderWidth: 1,
+      marginHorizontal: spacing / 2, // Apply consistent spacing
+      alignItems: "center",
+      justifyContent: "center",
     },
     cardWrapper: {
-      // This wrapper is useful if you need to add specific transforms or absolute positioning
-      // relative to the flex item, but for simple height/width, direct child is fine.
+      // This wrapper can help manage individual card positions if needed
+      marginHorizontal: spacing / 2, // Consistent spacing
     },
   });
 
@@ -59,13 +62,14 @@ const TopThreeDisplay = ({ topLeaders = [] }) => {
           <LeaderCard
             leader={leader2}
             rankNumber={2}
-            cardStyle={{ width: baseCardWidth, height: silverCardHeight }}
+            cardStyle={{ width: silverCardWidth, height: silverCardHeight }}
+            isCurrentUser={leader2.id === currentUserId}
           />
         ) : (
           <View
             style={[
               dynamicStyles.placeholderView,
-              { height: silverCardHeight },
+              { width: silverCardWidth, height: silverCardHeight },
             ]}
           />
         )}
@@ -77,13 +81,14 @@ const TopThreeDisplay = ({ topLeaders = [] }) => {
           <LeaderCard
             leader={leader1}
             rankNumber={1}
-            cardStyle={{ width: baseCardWidth * 1.08, height: goldCardHeight }} // Gold card slightly wider
+            cardStyle={{ width: goldCardWidth, height: goldCardHeight }}
+            isCurrentUser={leader1.id === currentUserId}
           />
         ) : (
           <View
             style={[
               dynamicStyles.placeholderView,
-              { width: baseCardWidth * 1.08, height: goldCardHeight },
+              { width: goldCardWidth, height: goldCardHeight },
             ]}
           />
         )}
@@ -95,13 +100,14 @@ const TopThreeDisplay = ({ topLeaders = [] }) => {
           <LeaderCard
             leader={leader3}
             rankNumber={3}
-            cardStyle={{ width: baseCardWidth, height: bronzeCardHeight }}
+            cardStyle={{ width: bronzeCardWidth, height: bronzeCardHeight }}
+            isCurrentUser={leader3.id === currentUserId}
           />
         ) : (
           <View
             style={[
               dynamicStyles.placeholderView,
-              { height: bronzeCardHeight },
+              { width: bronzeCardWidth, height: bronzeCardHeight },
             ]}
           />
         )}

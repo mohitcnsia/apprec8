@@ -51,6 +51,31 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
   const currentAuthUser = authInstance.currentUser;
   const userId = currentAuthUser?.uid;
 
+  const getDisplayName = (userDoc, authUser) => {
+    const firestoreFirstName = userDoc?.firstName?.trim();
+    const firestoreLastName = userDoc?.lastName?.trim();
+
+    if (firestoreFirstName && firestoreLastName) {
+      return `${firestoreFirstName} ${firestoreLastName}`;
+    }
+    if (firestoreFirstName) {
+      return firestoreFirstName;
+    }
+    // Fallbacks (you can adjust the order of these as per your preference)
+    if (userDoc?.username) {
+      // If username exists in Firestore
+      return userDoc.username;
+    }
+    if (authUser?.displayName) {
+      // Firebase Auth display name
+      return authUser.displayName;
+    }
+    if (authUser?.email) {
+      return authUser.email.split("@")[0]; // Part of email
+    }
+    return "User"; // Ultimate fallback
+  };
+
   // useEffect for real-time listener on the 'users' document
   useEffect(() => {
     if (!userId) {
@@ -136,12 +161,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
     setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
-  // --- Determine Display Values ---
-  const displayName =
-    userData?.username || // From Firestore user document's username field
-    currentAuthUser?.displayName || // Fallback to Firebase Auth display name
-    currentAuthUser?.email?.split("@")[0] ||
-    "User";
+  const displayName = getDisplayName(userData, currentAuthUser);
 
   const profileImageUri =
     userData?.photoURL || // Use photoURL from Firestore user document
@@ -182,9 +202,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
     navigation.navigate("Tasks");
   }
   function editProfileHandler() {
+    if (!userData) {
+      console.log("Cannot edit profile, user data not loaded yet.");
+      return;
+    }
     navigation.navigate("EditProfile", {
-      currentUsername: userData?.username, // From Firestore user document
-      currentPhone: userData?.phone, // From Firestore user document
+      currentFirstName: userData.firstName || "",
+      currentLastName: userData.lastName || "",
+      currentPhotoURL: userData.photoURL || "",
+      currentLastUpdatedAt: userData.lastUpdatedAt || null,
     });
   }
 
@@ -430,7 +456,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
               >
                 <MaterialCommunityIcons
                   name="pencil-outline"
-                  size={20}
+                  size={15}
                   style={styles.editIconIcon}
                 />
               </TouchableOpacity>

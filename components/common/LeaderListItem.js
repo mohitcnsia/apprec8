@@ -1,4 +1,4 @@
-// components/common/LeaderListItem.js (Review for theme key usage)
+// components/common/LeaderListItem.js
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
@@ -10,21 +10,28 @@ const generateAvatarUrl = (name) =>
   )}&background=random&color=fff&size=64`;
 
 const LeaderListItem = ({ item, isCurrentUser = false }) => {
-  const { theme } = useTheme(); // Already using theme!
+  const { theme } = useTheme();
 
   if (!item || typeof item !== "object") {
-    // ... (error handling remains the same)
+    const localStyles = styles(theme, isCurrentUser);
     return (
-      <View style={dynamicStyles(theme, isCurrentUser).container}>
+      <View style={localStyles.container}>
         <Text style={{ color: theme.textSecondary || "#888" }}>
-          Error loading item
+          Error loading item data.
         </Text>
       </View>
     );
   }
 
-  const { rank, name = "Anonymous User", points = 0, photoURL } = item;
-  const imageSourceUri = photoURL || generateAvatarUrl(name);
+  const nameToDisplay = item.computedDisplayName || "User";
+  const { rank, points = 0, photoURL } = item;
+
+  const avatarNameSource =
+    item.computedDisplayName !== "User"
+      ? item.computedDisplayName
+      : item.firstName || item.username || item.name || "U";
+  const imageSourceUri = photoURL || generateAvatarUrl(avatarNameSource);
+
   const dynamicStyles = styles(theme, isCurrentUser);
 
   return (
@@ -33,78 +40,77 @@ const LeaderListItem = ({ item, isCurrentUser = false }) => {
       <Image source={{ uri: imageSourceUri }} style={dynamicStyles.image} />
       <View style={dynamicStyles.nameContainer}>
         <Text style={dynamicStyles.name} numberOfLines={1} ellipsizeMode="tail">
-          {name}
+          {nameToDisplay}
         </Text>
       </View>
       <Text style={dynamicStyles.points}>{points?.toLocaleString()}</Text>
       <MaterialCommunityIcons
         name="star-circle"
         size={16}
-        color={theme.accent || theme.primaryOrange || "orange"} // MODIFIED: Ensure accent exists
+        color={theme.accent || theme.primaryOrange || "orange"}
         style={{ marginLeft: 3 }}
       />
     </View>
   );
 };
 
-// Dynamic styles function - review theme keys
 const styles = (theme, isCurrentUser) =>
   StyleSheet.create({
     container: {
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: 12, // Slightly more padding
+      paddingVertical: 12,
       paddingHorizontal: 16,
       backgroundColor: isCurrentUser
-        ? theme.currentUserListItemBackground || theme.primaryMaroon100 // Use more distinct theme key if available
-        : theme.listItemBackground || theme.cardBackground || theme.background, // Fallback to cardBackground or background
-      // borderBottomWidth: 1, // Consider removing if list items have margin/padding or if cards are used
-      // borderBottomColor: theme.borderLight || "#444444",
-      marginHorizontal: 10, // Added margin
-      marginVertical: 4, // Added margin
-      borderRadius: isCurrentUser ? 10 : 8, // Consistent rounding
-      elevation: isCurrentUser ? 3 : 1, // Add some elevation
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
+        ? theme.currentUserListItemBackground || theme.primaryMaroon100 // More distinct for current user
+        : theme.listItemBackground ||
+          theme.cardBackground ||
+          theme.backgroundLighter ||
+          "#fff", // Lighter background for items
+      marginHorizontal: 10,
+      marginVertical: 4,
+      borderRadius: isCurrentUser ? 12 : 10, // Slightly more rounding for current user
+      elevation: isCurrentUser ? 4 : 2, // More elevation for current user
+      shadowColor: theme.shadowColor || "#000",
+      shadowOffset: { width: 0, height: isCurrentUser ? 2 : 1 },
+      shadowOpacity: isCurrentUser ? 0.15 : 0.1,
+      shadowRadius: isCurrentUser ? 3 : 2,
     },
     rank: {
-      fontSize: 16, // Slightly larger
+      fontSize: 16,
       fontWeight: "bold",
       color: isCurrentUser
-        ? theme.textOnPrimary || theme.textPrimary // Ensure textOnPrimary provides contrast for currentUserListItemBackground
+        ? theme.textOnCurrentUserListItem || theme.accent2 || theme.textPrimary // High contrast text
         : theme.textSecondary,
-      minWidth: 35, // Ensure alignment
+      minWidth: 35,
       textAlign: "center",
       marginRight: 12,
     },
     image: {
-      width: 48, // Slightly larger
+      width: 48,
       height: 48,
       borderRadius: 24,
       marginRight: 12,
-      backgroundColor: theme.placeholder || "#666666",
+      backgroundColor: theme.placeholder || "#e0e0e0",
     },
     nameContainer: {
       flex: 1,
       marginRight: 10,
     },
     name: {
-      fontSize: 17, // Slightly larger
-      fontWeight: "600", // Semibold
+      fontSize: 17,
+      fontWeight: "600",
       color: isCurrentUser
-        ? theme.textOnPrimary || theme.textPrimary
+        ? theme.textOnCurrentUserListItem || theme.accent2 || theme.textPrimary
         : theme.textPrimary,
     },
     points: {
-      fontSize: 16, // Slightly larger
+      fontSize: 16,
       fontWeight: "bold",
-      color: theme.accent || theme.primaryOrange || "orange", // Use theme.accent consistently
-      minWidth: 60,
+      color: theme.accent || theme.primaryOrange || "orange",
+      minWidth: 50, // Adjusted minWidth
       textAlign: "right",
     },
-    // Removed specific currentUserContainer/currentUserText as styling is now part of main 'container', 'rank', 'name' etc.
   });
 
 export default React.memo(LeaderListItem);
