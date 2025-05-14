@@ -65,7 +65,7 @@ export default ({ config }) => {
         // icon: "./assets/ios-icon.png", // Ensure this file exists if you uncomment
       },
       android: {
-        versionCode: 10,
+        versionCode: 11,
         adaptiveIcon: {
           // Path to your adaptive icon foreground image (e.g., 1024x1024px from IconKitchen)
           foregroundImage: "./assets/adaptive-icon.png",

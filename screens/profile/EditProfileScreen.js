@@ -228,7 +228,7 @@ const EditProfileScreen = ({ route, navigation }) => {
           backgroundColor: theme.inputBackground || "transparent",
           width: "100%",
         },
-        button: { marginTop: 20, paddingVertical: 10, width: "100%" },
+        button: { marginTop: 20, paddingVertical: 5, width: "100%" },
         errorText: {
           color: theme.warning || "red",
           textAlign: "center",

@@ -20,8 +20,8 @@
     },
     "production": {
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease"
       },
       "developmentClient": false,  // Keep ***false*** for Prod build. no debug tools; real release build
       "distribution": "store"      // signed and ready for upload to Play Store or install manually
