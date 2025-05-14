@@ -1,8 +1,10 @@
 // components/common/TopThreeDisplay.js
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import LeaderCard from "./LeaderCard";
-import { useTheme } from "../../context/ThemeContext";
+import LeaderCard from "./LeaderCard"; // Adjust path if necessary
+import { useTheme } from "../../context/ThemeContext"; // Adjust path if necessary
+
+const { width: screenWidth } = Dimensions.get("window");
 
 const TopThreeDisplay = ({ topLeaders = [] }) => {
   const { theme } = useTheme();
@@ -11,69 +13,97 @@ const TopThreeDisplay = ({ topLeaders = [] }) => {
   const leader2 = topLeaders[1] || null;
   const leader3 = topLeaders[2] || null;
 
-  const cardWidth = Dimensions.get("window").width * 0.28; // Keep dynamic sizing
+  // Define base dimensions
+  const baseCardWidth = screenWidth * 0.3;
+  const goldCardHeight = baseCardWidth * 2.2;
 
-  // MODIFIED: Use theme for podium styles
+  // Height Ratios (Rank 1 is 100%)
+  // Original request: Silver 70%, Bronze 50%
+  // Adjusted for better visual balance: Silver 85%, Bronze 70%
+  // You can change these ratios as desired:
+  const silverCardHeight = goldCardHeight * 0.85; // e.g., 0.70 for 70%
+  const bronzeCardHeight = goldCardHeight * 0.7; // e.g., 0.50 for 50%
+
   const dynamicStyles = StyleSheet.create({
     topThreeContainer: {
       flexDirection: "row",
       justifyContent: "center",
-      alignItems: "flex-end", // Podium effect
-      paddingTop: Dimensions.get("window").width * 0.2 * 0.5 + 30, // Increased top padding for gold card image
-      paddingBottom: 20, // Increased bottom padding
+      alignItems: "flex-end",
+      paddingTop: 30,
+      paddingBottom: 20,
       marginBottom: 15,
-      minHeight: Dimensions.get("window").width * 0.28 * 1.9 + 40, // Adjusted min height
-      // backgroundColor: theme.podiumAreaBackground || theme.transparent, // Optional background for podium area
+      minHeight: goldCardHeight + 50, // Accommodate tallest card and padding
+      backgroundColor: theme.podiumAreaBackground || "transparent",
     },
     placeholderView: {
-      width: cardWidth,
-      marginHorizontal: 5, // Consistent with LeaderCard margin
-      height: Dimensions.get("window").width * 0.28 * 1.6, // Approximate height
-      // backgroundColor: theme.placeholder, // Can add placeholder styling
-      // borderRadius: 12,
+      width: baseCardWidth,
+      marginHorizontal: 5,
+      backgroundColor: theme.placeholderCard || "transparent", // Use transparent or a subtle themed placeholder
+      borderRadius: 12,
+      // Ensure placeholder has some visible style if not transparent
+      // borderStyle: 'dashed',
+      // borderColor: theme.border || '#cccccc',
+      // borderWidth: 1,
     },
-    // Define rank-specific styles using theme (mainly for background or slight elevation differences)
-    // These are passed to LeaderCard which will apply them to its base style
-    silverCardStyle: {
-      // For LeaderCard's cardStyle prop
-      // Specific styles for silver if needed, beyond what LeaderCard does by default
-      // Example: theme.silverPodiumBorder, etc.
-      // LeaderCard will use its own background if this is not set,
-      // or we can enforce one here from theme.
-    },
-    goldCardStyle: {
-      // For LeaderCard's cardStyle prop
-    },
-    bronzeCardStyle: {
-      // For LeaderCard's cardStyle prop
+    cardWrapper: {
+      // This wrapper is useful if you need to add specific transforms or absolute positioning
+      // relative to the flex item, but for simple height/width, direct child is fine.
     },
   });
 
   return (
     <View style={dynamicStyles.topThreeContainer}>
-      <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
+      {/* Rank 2 (Silver) - Left */}
+      <View style={dynamicStyles.cardWrapper}>
         {leader2 ? (
           <LeaderCard
             leader={leader2}
-            // cardStyle prop on LeaderCard is for *additional* styling to its base.
-            // The theme for podium backgrounds (gold, silver, bronze) will be handled *inside* LeaderCard.
+            rankNumber={2}
+            cardStyle={{ width: baseCardWidth, height: silverCardHeight }}
           />
         ) : (
-          <View style={dynamicStyles.placeholderView} />
+          <View
+            style={[
+              dynamicStyles.placeholderView,
+              { height: silverCardHeight },
+            ]}
+          />
         )}
       </View>
 
-      {leader1 ? (
-        <LeaderCard leader={leader1} />
-      ) : (
-        <View style={dynamicStyles.placeholderView} />
-      )}
-
-      <View style={{ alignSelf: "flex-end", marginBottom: 30 }}>
-        {leader3 ? (
-          <LeaderCard leader={leader3} />
+      {/* Rank 1 (Gold) - Center */}
+      <View style={dynamicStyles.cardWrapper}>
+        {leader1 ? (
+          <LeaderCard
+            leader={leader1}
+            rankNumber={1}
+            cardStyle={{ width: baseCardWidth * 1.08, height: goldCardHeight }} // Gold card slightly wider
+          />
         ) : (
-          <View style={dynamicStyles.placeholderView} />
+          <View
+            style={[
+              dynamicStyles.placeholderView,
+              { width: baseCardWidth * 1.08, height: goldCardHeight },
+            ]}
+          />
+        )}
+      </View>
+
+      {/* Rank 3 (Bronze) - Right */}
+      <View style={dynamicStyles.cardWrapper}>
+        {leader3 ? (
+          <LeaderCard
+            leader={leader3}
+            rankNumber={3}
+            cardStyle={{ width: baseCardWidth, height: bronzeCardHeight }}
+          />
+        ) : (
+          <View
+            style={[
+              dynamicStyles.placeholderView,
+              { height: bronzeCardHeight },
+            ]}
+          />
         )}
       </View>
     </View>

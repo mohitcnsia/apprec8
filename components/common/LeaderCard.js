@@ -1,117 +1,88 @@
 // components/common/LeaderCard.js
 import React from "react";
-import { View, Text, Image, Dimensions, StyleSheet } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
+import { View, Text, Image, StyleSheet } from "react-native"; // Removed Dimensions as it's passed via cardStyle
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const windowWidth = Dimensions.get("window").width;
+import { useTheme } from "../../context/ThemeContext"; // Adjust path if necessary
 
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
     name || "U"
-  )}&background=random&color=fff&size=128&bold=true`;
+  )}&background=random&color=fff&size=128`;
 
-const trophyIcons = {
-  1: "trophy",
-  2: "trophy-variant",
-  3: "trophy-outline",
-};
-
-const LeaderCard = ({ leader }) => {
-  // Removed cardStyle prop, theme is handled internally
+const LeaderCard = ({ leader, rankNumber, cardStyle }) => {
   const { theme } = useTheme();
 
   if (!leader || typeof leader !== "object") {
-    // ... placeholder logic ...
-    // Fallback styles for placeholder can also use theme.placeholder or theme.cardBackground
-    const placeholderDynamicStyles = styles(
-      theme,
-      windowWidth * 0.15,
-      windowWidth * 0.15 * 0.5,
-      false,
-      theme.placeholder || "#AAA"
-    );
     return (
       <View
         style={[
-          placeholderDynamicStyles.cardBase,
-          placeholderDynamicStyles.placeholderCard,
+          styles(theme, rankNumber, cardStyle).cardBase,
+          cardStyle,
+          styles(theme, rankNumber, cardStyle).errorCard,
         ]}
-      />
+      >
+        <Text style={styles(theme, rankNumber, cardStyle).errorText}>N/A</Text>
+      </View>
     );
   }
 
-  const { rank, name = "Anonymous User", points = 0, photoURL } = leader;
-
-  const isGold = rank === 1;
-  const imageSize = windowWidth * (isGold ? 0.22 : 0.18); // Slightly adjusted sizes
-  const imageOffset = imageSize * 0.5; // Used for top positioning of image
-
+  const { name = "Anonymous", points = 0, photoURL } = leader;
   const imageSourceUri = photoURL || generateAvatarUrl(name);
-  const trophyName = trophyIcons[rank];
 
-  // MODIFIED: Determine card background and trophy/rank colors from theme
-  let cardBackgroundColor = theme.cardBackground;
-  let rankBadgeColor = theme.accent || theme.primaryOrange; // Default accent
-  let trophyIconColor = theme.accent || theme.primaryOrange;
-  let imageBorderColor = theme.borderStrong || "#777";
+  const trophyDetails = {
+    1: { icon: "trophy", color: theme.gold || "#FFD700", sizeMultiplier: 1 },
+    2: {
+      icon: "trophy-variant",
+      color: theme.silver || "#C0C0C0",
+      sizeMultiplier: 0.9,
+    },
+    3: {
+      icon: "trophy-variant",
+      color: theme.bronze || "#CD7F32",
+      sizeMultiplier: 0.8,
+    },
+  };
 
-  if (rank === 1) {
-    cardBackgroundColor = theme.goldBackground || theme.cardBackground; // Use specific theme keys
-    rankBadgeColor = theme.goldAccent || theme.goldBackground || "#FFD700"; // Use a gold accent or background
-    trophyIconColor = theme.goldAccent || theme.goldBackground || "#FFD700";
-    imageBorderColor = theme.goldAccent || theme.goldBackground || "#FFD700";
-  } else if (rank === 2) {
-    cardBackgroundColor = theme.silverBackground || theme.cardBackground;
-    rankBadgeColor = theme.silverAccent || theme.silverBackground || "#C0C0C0";
-    trophyIconColor = theme.silverAccent || theme.silverBackground || "#C0C0C0";
-    imageBorderColor =
-      theme.silverAccent || theme.silverBackground || "#C0C0C0";
-  } else if (rank === 3) {
-    cardBackgroundColor = theme.bronzeBackground || theme.cardBackground;
-    rankBadgeColor = theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
-    trophyIconColor = theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
-    imageBorderColor =
-      theme.bronzeAccent || theme.bronzeBackground || "#CD7F32";
-  }
-
+  const currentTrophy = trophyDetails[rankNumber] || trophyDetails[3];
   const dynamicStyles = styles(
     theme,
-    imageSize,
-    imageOffset,
-    isGold,
-    cardBackgroundColor, // Pass the determined background
-    rankBadgeColor,
-    imageBorderColor
-  );
+    rankNumber,
+    cardStyle,
+    currentTrophy.color
+  ); // Pass currentTrophy.color for avatar border
 
   return (
-    <View style={dynamicStyles.cardBase}>
-      <Image
-        source={{ uri: imageSourceUri }}
-        style={dynamicStyles.userImage}
-        onError={(e) =>
-          console.log(
-            `LeaderCard Image Error (ID: ${leader.id}):`,
-            e.nativeEvent.error
-          )
+    <View style={[dynamicStyles.cardBase, cardStyle]}>
+      <View style={dynamicStyles.rankCircle}>
+        <Text style={dynamicStyles.rankText}>#{rankNumber}</Text>
+      </View>
+      <MaterialCommunityIcons
+        name={currentTrophy.icon}
+        size={
+          (cardStyle && cardStyle.width ? cardStyle.width * 0.5 : 55) *
+          currentTrophy.sizeMultiplier
         }
+        color={currentTrophy.color}
+        style={dynamicStyles.trophyIcon}
       />
+      <Image source={{ uri: imageSourceUri }} style={dynamicStyles.avatar} />
       <Text style={dynamicStyles.name} numberOfLines={2} ellipsizeMode="tail">
         {name}
       </Text>
-      <Text style={dynamicStyles.points}>{points?.toLocaleString()} pts</Text>
-
-      {rank <= 3 && trophyName && (
+      <View style={dynamicStyles.pointsContainer}>
+        <Text
+          style={dynamicStyles.points}
+          numberOfLines={1}
+          ellipsizeMode="clip"
+        >
+          {points?.toLocaleString()}
+        </Text>
         <MaterialCommunityIcons
-          name={trophyName}
-          size={isGold ? 28 : 24} // Larger trophy for gold
-          color={trophyIconColor} // Use determined trophy color
-          style={dynamicStyles.trophyIcon}
+          name="star-circle"
+          size={dynamicStyles.pointsStar.size} // Access pre-calculated size
+          color={theme.accent || theme.primaryOrange || "orange"}
+          style={dynamicStyles.pointsStarIcon} // Renamed to avoid conflict
         />
-      )}
-      <View style={dynamicStyles.rankBadge}>
-        <Text style={dynamicStyles.rankText}>#{rank}</Text>
       </View>
     </View>
   );
@@ -119,81 +90,108 @@ const LeaderCard = ({ leader }) => {
 
 const styles = (
   theme,
-  imageSize,
-  imageOffset,
-  isGold,
-  cardBackgroundColor, // Receive themed card background
-  rankBadgeColor, // Receive themed rank badge color
-  imageBorderColor // Receive themed image border color
-) =>
-  StyleSheet.create({
+  rankNumber,
+  cardStyleProps,
+  avatarBorderColorFromTrophy
+) => {
+  const cardHeight =
+    cardStyleProps && cardStyleProps.height ? cardStyleProps.height : 180; // Default height if not passed
+  const cardWidth =
+    cardStyleProps && cardStyleProps.width ? cardStyleProps.width : 110; // Default width if not passed
+
+  const pointsFontSize = Math.max(13, cardHeight * 0.075);
+
+  return StyleSheet.create({
     cardBase: {
-      width: windowWidth * 0.28,
-      height: windowWidth * 0.28 * (isGold ? 2.0 : 1.75), // Adjusted height for better visual
-      backgroundColor: cardBackgroundColor, // MODIFIED: Use themed background
-      borderColor: theme.border || theme.borderLight, // Use general theme border
-      borderWidth: 1,
       alignItems: "center",
-      justifyContent: "flex-end",
-      paddingBottom: 32, // Increased for rank badge and trophy
+      justifyContent: "space-around",
+      padding: 10,
+      borderRadius: 12,
+      backgroundColor:
+        theme.cardBackground || theme.cardBackground || "#9c6262",
+      elevation: rankNumber === 1 ? 8 : rankNumber === 2 ? 6 : 4,
+      shadowColor: theme.shadowColor || "#000000",
+      shadowOffset: { width: 0, height: rankNumber === 1 ? 4 : 2 },
+      shadowOpacity: rankNumber === 1 ? 0.3 : 0.2,
+      shadowRadius: rankNumber === 1 ? 5 : 3,
       marginHorizontal: 5,
-      borderRadius: 16, // More rounded
-      overflow: "visible",
-      elevation: isGold ? 8 : 5,
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: isGold ? 4 : 2 },
-      shadowOpacity: isGold ? 0.3 : 0.2,
-      shadowRadius: isGold ? 5 : 3,
+      position: "relative",
     },
-    placeholderCard: {
-      backgroundColor: theme.placeholder || "#DDD", // Use theme placeholder
-      opacity: 0.5,
+    errorCard: {
+      justifyContent: "center",
     },
-    userImage: {
+    errorText: {
+      color: theme.textSecondary || "#888888",
+      fontSize: 16,
+    },
+    rankCircle: {
       position: "absolute",
-      alignSelf: "center",
-      width: imageSize,
-      height: imageSize,
-      borderRadius: imageSize / 2,
-      top: -imageOffset,
-      backgroundColor: theme.placeholder || "#BBB",
-      borderWidth: isGold ? 4 : 3, // Thicker border for gold
-      borderColor: imageBorderColor, // MODIFIED: Use themed border color
-    },
-    name: {
-      fontWeight: "bold",
-      color: theme.textPrimary,
-      fontSize: 13, // Adjusted
-      textAlign: "center",
-      marginTop: imageOffset * 0.1, // Make sure it's below the image
-      paddingHorizontal: 5, // More padding
-    },
-    points: {
-      fontSize: 12, // Adjusted
-      color: theme.textSecondary,
-      textAlign: "center",
-      marginTop: 3,
-    },
-    trophyIcon: {
-      position: "absolute",
-      bottom: 35, // Adjusted position
-      alignSelf: "center",
-      opacity: 0.9,
-    },
-    rankBadge: {
-      position: "absolute",
-      bottom: 10, // Adjusted position
-      alignSelf: "center",
-      borderRadius: 8,
-      paddingHorizontal: 10,
-      paddingVertical: 3,
-      backgroundColor: rankBadgeColor, // MODIFIED: Use themed rank badge color
+      top: cardHeight * -0.05, // Adjusted for dynamic height
+      left: cardWidth * -0.05, // Adjusted for dynamic width
+      backgroundColor:
+        rankNumber === 1
+          ? theme.gold || "#FFD700"
+          : rankNumber === 2
+          ? theme.silver || "#C0C0C0"
+          : theme.bronze || "#CD7F32",
+      borderRadius: Math.min(cardWidth, cardHeight) * 0.15, // Proportional radius
+      width: Math.min(cardWidth, cardHeight) * 0.3, // Proportional size
+      height: Math.min(cardWidth, cardHeight) * 0.3, // Proportional size
+      justifyContent: "center",
+      alignItems: "center",
+      elevation: 10,
+      borderColor: theme.background || "#FFFFFF",
+      borderWidth: 2,
     },
     rankText: {
-      fontSize: 13, // Adjusted
+      fontSize: Math.min(cardWidth, cardHeight) * 0.1, // Proportional font size
       fontWeight: "bold",
-      color: theme.textOnPrimary || "#FFFFFF", // Ensure contrast
+      color:
+        theme.textOnGoldSilverBronze ||
+        (rankNumber === 1 ? "#000000" : "#FFFFFF"),
+    },
+    trophyIcon: {
+      marginTop: cardHeight * 0.05,
+      marginBottom: cardHeight * 0.02,
+    },
+    avatar: {
+      width: cardHeight * 0.25,
+      height: cardHeight * 0.25,
+      borderRadius: cardHeight * 0.125,
+      marginBottom: cardHeight * 0.03,
+      borderWidth: 2,
+      borderColor:
+        theme.podiumAvatarBorder ||
+        avatarBorderColorFromTrophy ||
+        theme.accent ||
+        "transparent",
+    },
+    name: {
+      fontSize: Math.max(13, cardHeight * 0.07),
+      fontWeight: "bold",
+      color: theme.textPrimary || "#000000",
+      textAlign: "center",
+      minHeight: cardHeight * 0.07 * 2.2, // Approx 2 lines
+      marginBottom: cardHeight * 0.02,
+      paddingHorizontal: 3, // Prevent text touching edges
+    },
+    pointsContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 5,
+    },
+    points: {
+      fontSize: pointsFontSize,
+      fontWeight: "bold",
+      color: theme.accent || theme.primaryOrange || "orange",
+      textAlign: "center",
+    },
+    pointsStar: {
+      size: pointsFontSize * 1.5,
+      marginLeft: 3,
     },
   });
+};
 
 export default React.memo(LeaderCard);

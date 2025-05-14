@@ -56,7 +56,7 @@ export default function CalmLoader() {
       <Animated.Text
         style={[styles.text, styles.animatedText]} // Combine base text styles and animation transform
       >
-        Take a deep breath
+        Appreciate
       </Animated.Text>
     </View>
   );

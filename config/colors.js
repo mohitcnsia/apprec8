@@ -8,8 +8,8 @@ const brandColors = {
   primaryDarkMaroon: "#3b0940",
   primaryDarkMaroon900: "#3d1141",
   primaryDarkMaroon800: "#4e1a53",
-  primaryMaroon10: "#f5d2f8ff",
-  primaryMaroon100: "#85508aff",
+  primaryMaroon10: "#f5d2f8ff", // A very light pink/purple
+  primaryMaroon100: "#85508aff", // A medium maroon/purple
   primaryMaroon200: "rgba(70, 64, 71, 1)", // Dark grayish maroon
   primaryLightGray: "#d7d1d3",
   primaryLightYellow: "#f0e3b0",
@@ -18,8 +18,8 @@ const brandColors = {
   primaryOrange: "#f12b15", // Accent
   blackText: "#000000",
   primaryWhite: "#ffffff",
-  primaryWhite100: "#d7c8c8",
-  primaryPink100: "#f6ebef",
+  primaryWhite100: "#d7c8c8", // A light, slightly off-white gray
+  primaryPink100: "#f6ebef", // A very light pink, good for backgrounds
   successGreen: "#6dbb7e",
   errorRed: "#c86c62", // Warning/Error
   // Add any other specific colors your old screens might import directly
@@ -41,7 +41,7 @@ const commonColors = {
   black: brandColors.blackText,
   transparent: "transparent",
   success: brandColors.successGreen,
-  warning: brandColors.errorRed,
+  warning: brandColors.errorRed, // Note: Using 'errorRed' for 'warning'
   accent: brandColors.primaryOrange,
 };
 
@@ -53,25 +53,32 @@ export const lightColors = {
 
   // Backgrounds
   background: brandColors.primaryWhite,
-  cardBackground: brandColors.primaryWhite,
+  cardBackground: brandColors.primaryPink100,
   headerBackground: brandColors.primaryWhite,
-  tabBarBackground: brandColors.primaryWhite, // Use brandColors
+  tabBarBackground: brandColors.primaryWhite,
   warningBackground: brandColors.primaryPink100,
   successBackground: brandColors.successGreen + "30",
   disabledBackground: brandColors.primaryLightGray,
   wordBackground: brandColors.primaryDarkMaroon + "15",
   quoteBackground: brandColors.primaryDarkMaroon + "10",
   codeBackground: brandColors.primaryLightGray + "80",
-  inputBackground: brandColors.primaryWhite, // White input background
+  inputBackground: brandColors.primaryWhite,
+  // NEW KEY: Background for list items (can be same as cardBackground)
+  listItemBackground: brandColors.primaryPink100,
+  // NEW KEY: Background for the current user's list item
+  currentUserListItemBackground: brandColors.primaryMaroon10, // Using a subtle light color
+  // NEW KEY: Background for info blocks (e.g., from StatsScreen)
+  infoBlockBackground: "rgba(0, 0, 0, 0.7)", // Semi-transparent dark
 
   // Text
   textPrimary: brandColors.blackText,
   textSecondary: brandColors.primaryMaroon200,
-  headerTint: brandColors.primaryDarkMaroon, // Use brandColors
-  tabBarActiveTint: brandColors.primaryDarkMaroon, // <<< CORRECTED: Use brandColors
-  tabBarInactiveTint: brandColors.primaryMaroon200, // <<< CORRECTED: Use brandColors
+  headerTint: brandColors.primaryDarkMaroon,
+  tabBarActiveTint: brandColors.primaryDarkMaroon,
+  tabBarInactiveTint: brandColors.primaryMaroon200,
   buttonText: brandColors.primaryWhite,
-  textPrimaryOnGradient: brandColors.blackText,
+  // ENSURED/MODIFIED KEY: Text on gradients (consider if black is always best)
+  textPrimaryOnGradient: brandColors.blackText, // Kept as per your file
   textSecondaryOnGradient: brandColors.primaryMaroon200,
   textOnPrimary: brandColors.primaryWhite,
   textOnSuccess: brandColors.primaryWhite,
@@ -84,21 +91,33 @@ export const lightColors = {
   // UI Elements & Borders
   primary: brandColors.primaryDarkMaroon,
   border: brandColors.primaryLightGray,
+  // NEW KEY: Lighter border variant
+  borderLight: brandColors.primaryWhite100, // Using one of your defined light grays
   placeholder: brandColors.primaryLightGray,
-  shadowColor: commonColors.black,
+  shadowColor: commonColors.black + "33", // Added some transparency for subtle shadow
   disabledBorder: brandColors.primaryWhite100,
   rippleOnPrimary: brandColors.primaryDarkMaroon + "99",
   quoteBorder: brandColors.primaryDarkMaroon,
 
   // Gradients
-  gradientStart: brandColors.primaryWhite,
-  gradientEnd: brandColors.primaryWhite,
+  gradientStart: brandColors.primaryWhite, // Consider if this should be more colorful for StatsScreen
+  gradientEnd: brandColors.primaryWhite, // Consider if this should be more colorful for StatsScreen
 
   // Switch
   switchTrackOff: brandColors.primaryLightGray,
   switchTrackOn: brandColors.primaryMaroon100,
   switchThumbOff: brandColors.primaryWhite,
   switchThumbOn: brandColors.primaryWhite,
+
+  // --- NEW Keys for LeaderCard and TopThreeDisplay (Podium) ---
+  cardBackgroundPodium: brandColors.primaryWhite, // Can be same as cardBackground or slightly different
+  gold: "#FFD700", // Standard gold hex
+  silver: "#C0C0C0", // Standard silver hex
+  bronze: "#CD7F32", // Standard bronze hex
+  textOnGoldSilverBronze: brandColors.blackText, // Text on metallic badges (black for gold, adjust for silver/bronze if needed)
+  podiumAvatarBorder: brandColors.primaryWhite, // Border for avatars on podium cards
+  podiumAreaBackground: commonColors.transparent, // Background for the entire TopThreeDisplay area
+  placeholderCard: brandColors.primaryPink100, // Using a very light color for placeholder
 };
 
 // Dark Theme Definition
@@ -107,13 +126,19 @@ export const darkColors = {
   ...commonColors,
   // Backgrounds
   background: commonColors.black,
-  cardBackground: "#1C1C1E",
+  cardBackground: "#1C1C1E", // A common dark surface color
   headerBackground: brandColors.primaryDarkMaroon900,
-  warningBackground: brandColors.errorRed + "40",
+  warningBackground: brandColors.errorRed + "40", // Semi-transparent errorRed
   statusBarBackground: brandColors.primaryDarkMaroon900,
-  disabledBackground: "#333333", // Keep example dark disabled background
-  disabledBorder: "#555555", // Keep example dark disabled border
-  inputBackground: "#333333", // Dark gray input background
+  disabledBackground: "#333333",
+  disabledBorder: "#555555",
+  inputBackground: "#333333",
+  // NEW KEY: Background for list items
+  listItemBackground: "#1C1C1E", // Same as cardBackground
+  // NEW KEY: Background for the current user's list item
+  currentUserListItemBackground: "#2A2A3D", // A subtle dark blue/purple tint
+  // NEW KEY: Background for info blocks (e.g., from StatsScreen)
+  infoBlockBackground: "rgba(220, 220, 220, 0.15)", // Semi-transparent light
 
   // Text
   textPrimary: brandColors.primaryWhite,
@@ -122,21 +147,36 @@ export const darkColors = {
   headerTint: brandColors.primaryWhite,
   buttonText: brandColors.primaryWhite,
   textDisabled: brandColors.primaryLightGray,
-  inputText: brandColors.primaryWhite, // White text inside input
+  inputText: brandColors.primaryWhite,
+  // NEW KEY: Text on gradients for dark theme
+  textPrimaryOnGradient: brandColors.primaryWhite,
+  // textSecondaryOnGradient: (if needed, could be brandColors.primaryLightGray)
 
   // UI Elements & Borders
   primary: brandColors.primaryMaroon100, // Use lighter maroon for primary in dark
   border: "#38383A",
-  placeholder: "#38383A",
-  shadowColor: commonColors.black,
+  // NEW KEY: Lighter border variant for dark mode
+  borderLight: "#4F4F4F",
+  placeholder: "#5A5A5A", // Adjusted placeholder for better visibility on dark
+  shadowColor: commonColors.black, // Shadows are often less visible or different in dark mode
   // Gradients
-  gradientStart: brandColors.primaryDarkMaroon,
-  gradientEnd: commonColors.black,
+  gradientStart: brandColors.primaryDarkMaroon, // Kept as per your file
+  gradientEnd: commonColors.black, // Kept as per your file
   // Switch
   switchTrackOff: "#3e3e3e",
   switchTrackOn: brandColors.primaryMaroon100,
   switchThumbOff: brandColors.primaryLightGray,
   switchThumbOn: brandColors.primaryWhite,
   // Add any other keys your themed components need
-  wordBackground: "#373434",
+  wordBackground: "#272727", // Adjusted for better dark theme integration
+
+  // --- NEW Keys for LeaderCard and TopThreeDisplay (Podium) ---
+  cardBackgroundPodium: "#202022", // Slightly different dark for podium cards
+  gold: "#FFC107", // Gold, possibly slightly desaturated for dark mode
+  silver: "#B0BEC5", // Silver, can be a bit lighter for contrast
+  bronze: "#A1887F", // Bronze for dark mode
+  textOnGoldSilverBronze: brandColors.primaryWhite, // White text on dark metallic badges
+  podiumAvatarBorder: "#38383A", // Using dark border color
+  podiumAreaBackground: commonColors.transparent,
+  placeholderCard: "#2C2C2E", // Dark placeholder
 };
