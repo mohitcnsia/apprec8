@@ -86,24 +86,67 @@ const EditProfileScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (currentLastUpdatedAt && currentLastUpdatedAt.toDate) {
-      const lastUpdateDate = currentLastUpdatedAt.toDate();
+    let lastUpdateDate = null;
+
+    if (currentLastUpdatedAt) {
+      if (typeof currentLastUpdatedAt.toDate === "function") {
+        // It's already a Firestore Timestamp object
+        lastUpdateDate = currentLastUpdatedAt.toDate();
+      } else if (
+        typeof currentLastUpdatedAt.seconds === "number" &&
+        typeof currentLastUpdatedAt.nanoseconds === "number"
+      ) {
+        // It's a plain object, convert it to a Firestore Timestamp, then to a JS Date
+        // This requires the 'Timestamp' class from the Firestore SDK
+        try {
+          const firestoreTimestamp = new firestore.Timestamp(
+            currentLastUpdatedAt.seconds,
+            currentLastUpdatedAt.nanoseconds
+          );
+          lastUpdateDate = firestoreTimestamp.toDate();
+          console.log("Converted plain object to JS Date:", lastUpdateDate);
+        } catch (e) {
+          console.error(
+            "Error converting plain object to Firestore Timestamp:",
+            e
+          );
+        }
+      } else {
+        console.warn(
+          "currentLastUpdatedAt is in an unrecognized format:",
+          currentLastUpdatedAt
+        );
+      }
+    }
+
+    if (lastUpdateDate) {
       const now = new Date();
       const timeSinceLastUpdate = now.getTime() - lastUpdateDate.getTime();
+      console.log(
+        "Time since last update (ms):",
+        timeSinceLastUpdate,
+        "Required (ms):",
+        TEN_MIN_IN_MS
+      );
+
       if (timeSinceLastUpdate < TEN_MIN_IN_MS) {
         setCanUpdateProfile(false);
         const timeLeftMs = TEN_MIN_IN_MS - timeSinceLastUpdate;
         const minutesLeft = Math.ceil(timeLeftMs / (60 * 1000));
         setUpdateCooldownMessage(
-          `You can update again in about ${minutesLeft} minute(s).`
+          `You can update your profile again in about ${minutesLeft} minute(s).`
         );
+        console.log(`Cooldown active. Minutes left: ${minutesLeft}`);
       } else {
         setCanUpdateProfile(true);
         setUpdateCooldownMessage("");
+        console.log("Cooldown ended or not applicable.");
       }
     } else {
+      // If no valid previous update timestamp
       setCanUpdateProfile(true);
       setUpdateCooldownMessage("");
+      console.log("No valid last update timestamp, update allowed.");
     }
   }, [currentLastUpdatedAt]);
 
@@ -142,10 +185,10 @@ const EditProfileScreen = ({ route, navigation }) => {
         .collection("users")
         .doc(userId)
         .update(userDataToUpdate);
-      setSuccessMessage("Profile updated! You can update again in an hour.");
+      setSuccessMessage("Profile updated! You can update again in 10 minutes.");
       setLoading(false);
       setCanUpdateProfile(false);
-      setUpdateCooldownMessage(`You can update again in about 60 minute(s).`);
+      setUpdateCooldownMessage(`You can update again in about 10 minute(s).`);
       setTimeout(() => navigation.goBack(), 2500);
     } catch (err) {
       console.error("Error updating profile:", err);
@@ -302,9 +345,6 @@ const EditProfileScreen = ({ route, navigation }) => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={componentStyles.sectionContainer}>
-          <Text style={componentStyles.avatarSectionTitle}>
-            Your Current Avatar
-          </Text>
           <Image
             source={{ uri: selectedAvatarUrl }}
             style={componentStyles.currentAvatar}
@@ -377,30 +417,25 @@ const EditProfileScreen = ({ route, navigation }) => {
               },
             }}
           />
-          <PaperButton
-            mode="contained"
-            onPress={handleSaveProfile}
-            disabled={loading || !canUpdateProfile}
-            loading={loading}
-            style={componentStyles.button}
-            labelStyle={{ fontSize: 18, fontWeight: "bold" }}
-            buttonColor={
-              !canUpdateProfile
-                ? theme.disabledBackground || "#cccccc"
-                : theme.primary || theme.accent
-            }
-            textColor={
-              !canUpdateProfile
-                ? theme.disabledText || "#777777"
-                : theme.buttonText || "#FFFFFF"
-            }
-          >
-            {loading
-              ? "Saving..."
-              : canUpdateProfile
-              ? "Save Profile"
-              : "Update Cooldown"}
-          </PaperButton>
+          {canUpdateProfile ? ( // Only show the button if the user CAN update
+            <PaperButton
+              mode="contained"
+              onPress={handleSaveProfile}
+              disabled={loading} // Button is only disabled by loading state now
+              loading={loading}
+              style={componentStyles.button}
+              labelStyle={{ fontSize: 18, fontWeight: "bold" }}
+              buttonColor={theme.primary || theme.accent} // Active button color
+              textColor={theme.buttonText || "#FFFFFF"} // Active text color
+            >
+              {loading ? "Saving..." : "Save Profile"}
+            </PaperButton>
+          ) : // Optional: You can render null or an empty View if you want nothing else,
+          // or keep the cooldown message prominent here if it's not already shown above.
+          // The cooldown message is already being displayed above the input section
+          // based on `!canUpdateProfile && updateCooldownMessage`.
+          // So, rendering null here for the button spot is fine.
+          null}
         </View>
       </ScrollView>
     </LinearGradient>

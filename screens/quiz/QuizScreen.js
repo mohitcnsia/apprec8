@@ -247,7 +247,6 @@ const QuizScreen = ({ route, navigation }) => {
     setIsLeaving(false);
   };
 
-  // --- Define Styles Inside Component with useMemo ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -262,7 +261,7 @@ const QuizScreen = ({ route, navigation }) => {
         mainScroll: { flex: 1, paddingHorizontal: 20 },
         mainScrollContentContainer: {
           flexGrow: 1,
-          justifyContent: "center",
+          justifyContent: "flex-start", // Align items to the start to allow growth from top
           paddingTop: 20,
           paddingBottom: 20,
         },
@@ -276,7 +275,6 @@ const QuizScreen = ({ route, navigation }) => {
         // Components
         progressText: {
           fontSize: 16,
-          // Ensure light color on gradient
           color: isDark
             ? theme.primaryWhite || "#FFFFFF"
             : theme.primary || "#3b0940",
@@ -288,7 +286,7 @@ const QuizScreen = ({ route, navigation }) => {
           backgroundColor: theme.cardBackground || "#f0f0f0", // Themed card bg
           borderRadius: 12,
           minHeight: 120,
-          justifyContent: "center",
+          justifyContent: "flex-start", // Allow content to grow from the start
           marginBottom: 10, // Add margin below card
           elevation: 2, // Add subtle elevation
           shadowColor: theme.shadowColor,
@@ -302,6 +300,14 @@ const QuizScreen = ({ route, navigation }) => {
           lineHeight: 28,
           textAlign: "center",
           color: theme.textPrimary, // Themed text on card
+          fontFamily: "nunitoBold",
+        },
+        questionTextShrunk: {
+          // New style for shrunk question text
+          fontSize: 12, // Adjust the size as needed
+          lineHeight: 18, // Adjust the line height accordingly
+          textAlign: "center",
+          color: theme.textSecondary, // Maybe use a slightly less prominent color
           fontFamily: "nunitoBold",
         },
         explanationContainer: {
@@ -322,16 +328,15 @@ const QuizScreen = ({ route, navigation }) => {
           borderWidth: 1,
           borderRadius: 25,
           paddingHorizontal: 15,
-          // alignItems: "center", // <<< REMOVED for better text wrapping
-          justifyContent: "center", // <<< REMOVED for better text wrapping
-          // minHeight: 50,
-          height: 75,
-          paddingVertical: 12, // <<< Increased vertical padding
+          // alignItems: "center", // REMOVED
+          // justifyContent: "center", // REMOVED
+          minHeight: 50, // REMOVED fixed height
+          paddingVertical: 12, // Increased vertical padding
         },
         optionTextBase: {
           fontSize: 16,
           fontFamily: "nunitoBold",
-          textAlign: "center",
+          textAlign: "center", // Keep if you want centered text within the option
         },
         // Default State
         optionViewDefault: {
@@ -375,7 +380,7 @@ const QuizScreen = ({ route, navigation }) => {
         submitNextButtonBase: {
           borderRadius: 25,
           paddingVertical: 8,
-          width: "100%", // <<< ADDED: Make button fill footer width
+          width: "100%", // Make button fill footer width
           borderWidth: 1, // Add border width
           // Set border color conditionally based on theme mode
           borderColor: isDark
@@ -408,7 +413,7 @@ const QuizScreen = ({ route, navigation }) => {
         },
       }),
     [theme, isDark]
-  ); // Depend on theme
+  );
 
   // --- Helper Function for Option Appearance (using themed styles) ---
   const getOptionAppearance = useCallback(
@@ -574,7 +579,11 @@ const QuizScreen = ({ route, navigation }) => {
         <Card style={styles.card}>
           <Card.Content style={styles.cardContent}>
             {/* Question text uses themed style */}
-            <PaperText style={styles.questionText}>
+            <PaperText
+              style={
+                showFeedback ? styles.questionTextShrunk : styles.questionText
+              }
+            >
               {currentQuestion.question}
             </PaperText>
             {/* Explanation uses themed container style; assumes Explanation component is themed */}
