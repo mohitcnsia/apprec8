@@ -15,6 +15,7 @@ const brandColors = {
   primaryLightYellow: "#f0e3b0",
   primaryBrightYellow: "#dcb51b",
   primaryLightPink: "#f0b0f0",
+  pinkPressed: "#e090d0",
   primaryOrange: "#f12b15", // Accent
   blackText: "#000000",
   primaryWhite: "#ffffff",
@@ -118,6 +119,11 @@ export const lightColors = {
   podiumAvatarBorder: brandColors.primaryWhite, // Border for avatars on podium cards
   podiumAreaBackground: commonColors.transparent, // Background for the entire TopThreeDisplay area
   placeholderCard: brandColors.primaryPink100, // Using a very light color for placeholder
+
+  fabBackground: brandColors.primaryDarkMaroon, // Purple background
+  fabIconColor: brandColors.primaryWhite, // White icon
+  fabPressedBackground: brandColors.primaryDarkMaroon800, // Darker purple pressed
+  fabRippleColor: brandColors.primaryWhite + "77", // Semi-transparent white ripple
 };
 
 // Dark Theme Definition
@@ -180,4 +186,9 @@ export const darkColors = {
   podiumAvatarBorder: "#38383A", // Using dark border color
   podiumAreaBackground: commonColors.transparent,
   placeholderCard: "#2C2C2E", // Dark placeholder
+
+  fabBackground: brandColors.primaryLightPink, // Pinkish background
+  fabIconColor: brandColors.primaryDarkMaroon, // Dark purple icon (for contrast on light pink)
+  fabPressedBackground: brandColors.pinkPressed, // Darker/variant pink pressed
+  fabRippleColor: brandColors.primaryDarkMaroon + "77", // Semi-transparent dark purple ripple
 };

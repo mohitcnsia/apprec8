@@ -17,7 +17,21 @@ export function getFormattedDate(date) {
  * @returns {Date} A new Date object representing the date 'days' ago.
  */
 export function getDateMinusDays(date, days) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate() - days);
+  const result = new Date(date); // Clone the date to avoid modifying the original
+  result.setDate(result.getDate() - days);
+  return result;
+}
+
+/**
+ * Returns a new Date object that is a specified number of days after the given date.
+ * @param {Date} date - The original date.
+ * @param {number} days - The number of days to add.
+ * @returns {Date} A new Date object representing the date 'days' from now.
+ */
+export function getDatePlusDays(date, days) {
+  const result = new Date(date); // Clone the date
+  result.setDate(result.getDate() + days);
+  return result;
 }
 
 /**
@@ -29,6 +43,8 @@ export const formatDate = (date) => {
   if (!(date instanceof Date) || isNaN(date)) {
     return "Invalid Date"; // Or handle as appropriate
   }
+  // Using a more universal locale or letting the system decide might be better for broader audiences
+  // but "en-US" is fine if that's your target.
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
