@@ -1,122 +1,224 @@
-// screens/task/Tasks.js (or similar path)
+// screens/task/Tasks.js
 
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native"; // ScrollView not used directly here? Keep imports clean.
-import React, { useContext, useLayoutEffect, useMemo } from "react"; // Import useMemo
+import React, {
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
+import { Alert, StyleSheet, Text, View, ActivityIndicator } from "react-native"; // Removed ScrollView as it's not directly used
 import { LinearGradient } from "expo-linear-gradient";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { useTheme } from "../../context/ThemeContext";
 import IconButton from "../../components/ui/IconButton";
 import AppFlatList from "../../components/common/list/AppFlatList";
 import { TasksContext } from "../../store/tasks-context";
-import { formatDate } from "../../components/utils/date"; // Keep if needed, though not used directly here
 
-// --- Main Content Component ---
 const TasksScreenContent = ({ navigation }) => {
-  const { theme } = useTheme(); // Use theme hook
+  const { theme } = useTheme();
   const taskContext = useContext(TasksContext);
 
-  // --- Header Button ---
+  // Clear error from context when component mounts
+  useEffect(() => {
+    // Assuming clearError function exists in your context
+    if (taskContext.clearError) {
+      taskContext.clearError();
+    }
+  }, [taskContext.clearError]); // Added taskContext.clearError to dependency array
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      // Header styles likely set by Navigator's screenOptions
       headerRight: () => (
         <IconButton
           icon="add"
           size={24}
-          color={theme.headerTint || "#ffffff"} // Use themed header tint color
-          onPress={() => {
-            navigation.navigate("TaskEditor"); // Navigate without params for new task
-          }}
+          color={theme.headerTint || "#ffffff"}
+          onPress={() => navigation.navigate("TaskEditor")} // Navigate without params for new task
         />
       ),
+      // Ensure header is shown if it was globally hidden by navigator
+      // This might be needed if ProfileNavigator still has headerShown: false globally
+      // and you haven't overridden it for the "Tasks" screen in ProfileNavigator.js
+      // headerShown: true,
+      // title: "Tasks", // Or any title you prefer
     });
-    // Depend on theme for headerTint
   }, [navigation, theme]);
 
-  // --- Navigation Handler ---
-  const handleLinkPress = (task) => {
-    // Ensure date fields exist and are valid Date objects or null/undefined before conversion
-    // TasksContext might store dates differently than route params did
-    // Let's assume taskContext provides Date objects or ISO strings for dates
-    const convertToISO = (date) => {
-      if (date instanceof Date && !isNaN(date)) {
-        return date.toISOString();
-      }
-      if (typeof date === "string") {
-        // Attempt to parse if it's a string, otherwise return null
-        const parsedDate = new Date(date);
-        return !isNaN(parsedDate) ? parsedDate.toISOString() : null;
-      }
-      return null; // Handle other invalid types
-    };
+  const convertToISO = useCallback((date) => {
+    if (date instanceof Date && !isNaN(date)) {
+      return date.toISOString();
+    }
+    if (typeof date === "string") {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate) ? parsedDate.toISOString() : null;
+    }
+    return null;
+  }, []);
 
-    const dueDateISO = convertToISO(task.dueDate); // Or task.dueAt if that's the field name
-    const createdAtISO = convertToISO(task.createdAt);
-    const lastUpdatedAtISO = convertToISO(task.lastUpdatedAt);
+  const handleLinkPress = useCallback(
+    (task) => {
+      navigation.navigate("TaskDetails", {
+        data: {
+          ...task,
+          dueDate: task.dueDate ? convertToISO(task.dueDate) : null,
+          createdAt: task.createdAt ? convertToISO(task.createdAt) : null,
+          lastUpdatedAt: task.lastUpdatedAt
+            ? convertToISO(task.lastUpdatedAt)
+            : null,
+        },
+      });
+    },
+    [navigation, convertToISO]
+  );
 
-    navigation.navigate("TaskDetails", {
-      data: {
-        ...task,
-        // Pass serialized dates (ISO strings) to the details screen
-        dueDate: dueDateISO,
-        createdAt: createdAtISO,
-        lastUpdatedAt: lastUpdatedAtISO,
-      },
-    });
-  };
-
-  // --- Define Styles Inside Component with useMemo ---
+  // Define styles, including new ones for overdue tasks
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: {
-          // Applied to LinearGradient
+        container: { flex: 1, justifyContent: "center" },
+        loadingOrErrorContainer: {
           flex: 1,
-          justifyContent: "center", // Center the 'noTask' text vertically
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        },
+        errorText: {
+          color: theme.danger || "red",
+          fontSize: 16,
+          textAlign: "center",
+          fontFamily: "delius",
         },
         noTask: {
-          // Use themed text color suitable for gradient
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
-          fontFamily: "delius", // Keep font
+          fontFamily: "delius",
           fontSize: 18,
           textAlign: "center",
-          paddingHorizontal: 20, // Add padding for centering text
+          paddingHorizontal: 20,
         },
-        // Style for regular task items (uses AppFlatList default text color)
         taskItem: {
-          backgroundColor: theme.cardBackground || "white", // Themed card background
-          padding: 15, // Adjusted padding
-          marginVertical: 6,
-          marginHorizontal: 10,
-          borderRadius: 8,
-          // Add shadow/elevation if needed
-        },
-        // Style for completed task items
-        completedTask: {
-          backgroundColor:
-            theme.successBackground || theme.success + "30" || "lightgreen", // Themed success background (e.g., light green tint)
+          // Default style for active, non-overdue tasks
+          backgroundColor: theme.cardBackground || "white",
           padding: 15,
           marginVertical: 6,
           marginHorizontal: 10,
           borderRadius: 8,
-          // Consider adding opacity or strikethrough via textStyle prop if desired
         },
-        // Style for text inside completed tasks (if needed)
-        completedTaskText: {
-          color: theme.textOnSuccess || theme.textPrimary, // Ensure contrast
-          // textDecorationLine: 'line-through', // Optional strikethrough
-        },
-        // Style for text inside regular tasks (uses AppFlatList default)
         taskItemText: {
-          color: theme.textPrimary, // Default text color for regular items
+          // Default text for active, non-overdue
+          color: theme.textPrimary || "black",
+        },
+        completedTask: {
+          padding: 15,
+          marginVertical: 6,
+          marginHorizontal: 10,
+          borderRadius: 8,
+        },
+        completedTaskText: {
+          // Text for completed tasks
+          color: theme.success || "#155724", // Darker green text
+          textDecorationLine: "line-through", // Add strikethrough for completed tasks
+        },
+        overdueTask: {
+          // Style for overdue tasks (red)
+          backgroundColor: theme.dangerBackground || "#f8d7da", // Light red
+          padding: 15,
+          marginVertical: 6,
+          marginHorizontal: 10,
+          borderRadius: 8,
+          // Optionally add a border
+          // borderColor: theme.danger || 'red',
+          // borderWidth: 1,
+        },
+        overdueTaskText: {
+          // Text for overdue tasks
+          color: theme.textOnDanger || theme.danger || "#721c24", // Darker red text
         },
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- Render Logic ---
+  // Helper function to check if a task is overdue
+  const isTaskOverdue = (task) => {
+    if (!task.dueDate || task.completed) {
+      return false;
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today to the beginning of the day for date-only comparison
+
+    // Ensure task.dueDate is a Date object (it should be from context processing)
+    const dueDate =
+      task.dueDate instanceof Date ? task.dueDate : new Date(task.dueDate);
+    if (isNaN(dueDate.getTime())) return false; // Invalid due date
+
+    const normalizedDueDate = new Date(
+      dueDate.getFullYear(),
+      dueDate.getMonth(),
+      dueDate.getDate()
+    );
+    normalizedDueDate.setHours(0, 0, 0, 0); // Normalize due date to beginning of the day
+
+    return today.getTime() > normalizedDueDate.getTime();
+  };
+
+  // Determine item style based on task status
+  const getItemStyle = (task) => {
+    if (task.completed) {
+      return styles.completedTask;
+    }
+    if (isTaskOverdue(task)) {
+      return styles.overdueTask;
+    }
+    return styles.taskItem;
+  };
+
+  // Determine text style based on task status
+  const getTextStyle = (task) => {
+    if (task.completed) {
+      return styles.completedTaskText;
+    }
+    if (isTaskOverdue(task)) {
+      return styles.overdueTaskText;
+    }
+    return styles.taskItemText;
+  };
+
+  if (taskContext.isLoading && taskContext.tasks.length === 0) {
+    return (
+      <LinearGradient
+        colors={[
+          theme.gradientStart || "#3b0940",
+          theme.gradientEnd || "#d7d1d3",
+        ]}
+        style={styles.container}
+      >
+        <View style={styles.loadingOrErrorContainer}>
+          <ActivityIndicator
+            size="large"
+            color={theme.primaryWhite || "#FFFFFF"}
+          />
+          <Text style={styles.noTask}>Loading Tasks...</Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+
+  if (taskContext.error && taskContext.tasks.length === 0) {
+    return (
+      <LinearGradient
+        colors={[
+          theme.gradientStart || "#3b0940",
+          theme.gradientEnd || "#d7d1d3",
+        ]}
+        style={styles.container}
+      >
+        <View style={styles.loadingOrErrorContainer}>
+          <Text style={styles.errorText}>Error: {taskContext.error}</Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+
   return (
-    // Apply themed gradient
     <LinearGradient
       colors={[
         theme.gradientStart || "#3b0940",
@@ -124,24 +226,15 @@ const TasksScreenContent = ({ navigation }) => {
       ]}
       style={styles.container}
     >
-      {taskContext?.tasks?.length > 0 ? (
+      {taskContext.tasks?.length > 0 ? (
         <AppFlatList
           data={taskContext.tasks}
           isPressable={true}
           onItemPress={handleLinkPress}
-          // Pass a function to itemStyle to conditionally apply themed styles
-          itemStyle={(task) =>
-            task.completed ? styles.completedTask : styles.taskItem
-          }
-          // Conditionally set textStyle based on completion status for contrast
-          textStyle={(task) =>
-            task.completed ? styles.completedTaskText : styles.taskItemText
-          }
-          // Optional: Add padding to the list container itself
-          // containerStyle={{ paddingTop: 10, paddingBottom: 10 }}
+          itemStyle={getItemStyle} // Pass the function to determine style
+          textStyle={getTextStyle} // Pass the function to determine text style
         />
       ) : (
-        // Use themed style for "No Tasks" message
         <Text style={styles.noTask}>Yay !! You have no Tasks</Text>
       )}
     </LinearGradient>

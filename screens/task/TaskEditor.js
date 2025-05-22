@@ -1,6 +1,12 @@
-// screens/task/TaskEditor.js (or similar path)
+// screens/task/TaskEditor.js
 
-import React, { useContext, useState, useLayoutEffect, useMemo } from "react"; // Import useMemo
+import React, {
+  useContext,
+  useState,
+  useLayoutEffect,
+  useMemo,
+  useEffect,
+} from "react";
 import {
   Alert,
   ScrollView,
@@ -9,147 +15,212 @@ import {
   View,
   Pressable,
   Platform,
+  Switch, // Import Switch
+  ActivityIndicator, // For loading state
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
-import Input from "../../components/input/Input"; // Assume themed internally
-import PrimaryButton from "../../components/PrimaryButton"; // Assume themed internally
+import { useTheme } from "../../context/ThemeContext";
+import Input from "../../components/input/Input";
+import PrimaryButton from "../../components/PrimaryButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { formatDate } from "../../components/utils/date";
 import { TasksContext } from "../../store/tasks-context";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig"; // To know if current user is the reviewer
+import { authInstance } from "../../config/firebaseConfig"; // To get current user
 
 const TaskEditor = ({ route, navigation }) => {
-  const { theme, isDark } = useTheme(); // Use the theme hook, get isDark for DateTimePicker potentially
+  const { theme, isDark } = useTheme();
   const taskContext = useContext(TasksContext);
+  const currentUser = authInstance.currentUser;
 
-  // Existing data handling and state (remain the same)
-  const data = route?.params?.data; // Keep optional chaining for safety
+  const existingTaskData = route?.params?.data;
+
+  // Initialize formData state
   const [formData, setFormData] = useState({
-    id: data?.id || "", // Use optional chaining
-    title: data?.title || "",
-    detail: data?.detail || "",
-    // Ensure dueDate is initialized correctly, handling potential string from navigation
-    dueDate: data?.dueDate ? new Date(data.dueDate) : new Date(),
-    completed: data?.completed || false, // Keep completed state
+    id: existingTaskData?.id || "",
+    title: existingTaskData?.title || "",
+    detail: existingTaskData?.detail || "",
+    dueDate: existingTaskData?.dueDate
+      ? new Date(existingTaskData.dueDate)
+      : new Date(),
+    completed: existingTaskData?.completed || false,
+    // Initialize assignToTeam based on existing data or default to false
+    assignToTeam:
+      existingTaskData?.assignedTeamReviewerUid === APPREC8_TEAM_REVIEWER_UID ||
+      false,
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // --- Add Header Title based on edit/add mode ---
-  // (This wasn't in the original but is good practice for editors)
+  // Clear error from context when component mounts or when user starts editing
+  useEffect(() => {
+    taskContext.clearError();
+  }, []);
+
+  // Update header title
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: formData.id ? "Edit Task" : "Add New Task",
-      // Header styles are controlled by the Navigator's screenOptions
+      // title: formData.id ? "Edit Task" : "Add New Task",
     });
   }, [navigation, formData.id]);
 
-  // Handlers (remain the same logic)
   const inputChangeHandler = (key, value) => {
     setFormData((prevState) => ({ ...prevState, [key]: value }));
   };
 
   const handleDateChange = (event, selectedDate) => {
-    // Always hide picker on selection/dismissal
-    setShowDatePicker(Platform.OS === "ios"); // On iOS, keep it open until done is pressed maybe? Test UX. Or always hide: setShowDatePicker(false)
+    setShowDatePicker(Platform.OS === "ios"); // Or manage "Done" button for iOS
     if (selectedDate) {
       inputChangeHandler("dueDate", selectedDate);
     }
-    // On Android, hiding is implicit after selection/cancel
     if (Platform.OS === "android") {
       setShowDatePicker(false);
     }
   };
 
   function validateFormData() {
-    const isTaskTitleValid = formData.title.trim().length > 0;
-    const isTaskDetailValid = formData.detail.trim().length > 0;
-    if (isTaskTitleValid && isTaskDetailValid) return true;
-    Alert.alert("Validation Error", "Title and Detail fields are required!");
-    return false;
+    if (formData.title.trim().length === 0) {
+      Alert.alert("Validation Error", "Task Title is required!");
+      return false;
+    }
+    if (formData.detail.trim().length === 0) {
+      Alert.alert("Validation Error", "Task Detail is required!");
+      return false;
+    }
+    return true;
   }
 
-  function saveToDb() {
-    const taskDataToSave = {
-      // Only include fields relevant to save/update
-      title: formData.title,
-      detail: formData.detail,
-      dueDate: formData.dueDate.toISOString(), // Save as ISO string
-      completed: formData.completed, // Persist completed status
+  async function submitHandler() {
+    if (!validateFormData()) {
+      return;
+    }
+
+    const taskPayload = {
+      title: formData.title.trim(),
+      detail: formData.detail.trim(),
+      dueDate: formData.dueDate, // Pass as Date object, context will handle ISO conversion
+      completed: formData.completed,
+      // Only include assignToTeam if it's a new task or if editing is allowed for this field
+      // For now, let's assume assignToTeam can be set during creation
+      assignToTeam: formData.assignToTeam,
     };
-    if (formData.id) {
-      // Editing existing task
-      taskContext.updateTask(formData.id, taskDataToSave);
-    } else {
-      // Adding new task
-      taskContext.addTask(taskDataToSave);
+
+    try {
+      if (formData.id) {
+        // When updating, we might not want to change assignToTeam via this editor screen,
+        // or we might. For now, let's exclude it from update payload directly but
+        // if `formData.assignToTeam` was part of `existingTaskData` mapping,
+        // it would be part of `taskPayload`.
+        // The key is that `assignedTeamReviewerUid` is set in `addTaskToFirestore`
+        // based on `assignToTeam`. Updates don't typically re-assign this way.
+        // We'll pass the relevant fields for update.
+        const updatePayload = {
+          title: taskPayload.title,
+          detail: taskPayload.detail,
+          dueDate: taskPayload.dueDate,
+          completed: taskPayload.completed,
+          // If you want to allow changing team assignment on edit:
+          // ...(formData.assignToTeam ? { assignedTeamReviewerUid: APPREC8_TEAM_REVIEWER_UID } : { assignedTeamReviewerUid: firestore.FieldValue.delete() })
+        };
+        await taskContext.updateTask(formData.id, updatePayload);
+      } else {
+        await taskContext.addTask(taskPayload);
+      }
+      navigation.goBack();
+    } catch (error) {
+      // Error is already set in context, Alert can be shown here or based on context.error prop
+      Alert.alert(
+        "Operation Failed",
+        error.message || "Could not save task. Please try again."
+      );
     }
   }
 
-  function submitHandler() {
-    if (validateFormData()) {
-      saveToDb();
-      navigation.goBack(); // Go back instead of navigating to Tasks maybe?
-    }
-  }
-
-  // --- Define Styles Inside Component with useMemo ---
+  // Define Styles Inside Component with useMemo
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: {
-          // Applied to LinearGradient
-          flex: 1,
-        },
+        container: { flex: 1 },
         scrollContainer: {
-          paddingBottom: 40, // Ensure space at bottom
-          paddingHorizontal: 16, // Add horizontal padding
-          paddingTop: 20, // Add top padding
+          paddingBottom: 40,
+          paddingHorizontal: 16,
+          paddingTop: 20,
         },
         button: {
-          // Style for PrimaryButton wrapper/margin
-          minWidth: 50, // Keep minWidth if needed by button
-          marginHorizontal: 8, // Keep horizontal margin
-          marginTop: 30, // Increased top margin
+          minWidth: 50,
+          marginHorizontal: 8,
+          marginTop: 20,
+          marginBottom: 20,
         },
         dateSection: {
-          marginHorizontal: 8, // Keep horizontal margin
+          marginHorizontal: 8,
           marginVertical: 12,
-          marginBottom: 25, // Adjusted bottom margin
-          // Use flex layout for better alignment
+          marginBottom: 25,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          borderBottomWidth: 1, // Use solid border instead of dotted for theme consistency
-          borderBottomColor: theme.border || theme.primaryLightGray, // Themed border color
-          paddingBottom: 10, // Add padding below border
+          borderBottomWidth: 1,
+          borderBottomColor: theme.border || theme.primaryLightGray,
+          paddingBottom: 10,
         },
         dateLabel: {
-          // Use themed text color suitable for gradient
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           fontSize: 16,
-          fontFamily: "delius", // Keep font
+          fontFamily: "delius",
         },
-        dateTextContainer: {
-          // Wrapper for Pressable text to apply line easily
-          alignItems: "flex-end", // Align text to the right if needed
-        },
+        dateTextContainer: { alignItems: "flex-end" },
         dateText: {
-          // Use themed text color suitable for gradient
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           fontSize: 16,
-          fontFamily: "delius", // Keep font
-          paddingBottom: 5, // Space for the line visual effect if using border below
+          fontFamily: "delius",
+          paddingBottom: 5,
         },
-        // Dotted line removed in favor of borderBottom on dateSection
-        // dottedLine: { ... },
+        assignSwitchContainer: {
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginHorizontal: 8,
+          marginVertical: 15,
+          paddingVertical: 10,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.border || theme.primaryLightGray,
+        },
+        assignLabel: {
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
+          fontSize: 16,
+          fontFamily: "delius",
+        },
+        loadingContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.3)",
+        }, // For full screen loading
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- RENDER ---
+  if (taskContext.isLoading && !showDatePicker) {
+    // Avoid full screen loading when date picker is open
+    return (
+      <LinearGradient
+        colors={[
+          theme.gradientStart || "#3b0940",
+          theme.gradientEnd || "#d7d1d3",
+        ]}
+        style={styles.container}
+      >
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={theme.primaryWhite || "#FFFFFF"}
+          />
+          <Text style={styles.dateLabel}>Saving...</Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+
   return (
-    // Apply themed gradient
     <LinearGradient
       colors={[
         theme.gradientStart || "#3b0940",
@@ -160,32 +231,19 @@ const TaskEditor = ({ route, navigation }) => {
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled" // Good for forms
+        keyboardShouldPersistTaps="handled"
       >
-        {/* Inputs are assumed themed internally */}
         <Input
           label="What is your Task?"
           value={formData.title}
           onChangeText={(value) => inputChangeHandler("title", value)}
-          // Pass theme or specific styles if Input component supports it
-          // labelStyle={{ color: theme.textSecondaryOnGradient }}
-          // textInputStyle={{ color: theme.textPrimaryOnGradient }}
-          // containerStyle={{ marginBottom: 15 }}
+          // Theming for Input should ideally be internal to Input component
         />
         <Input
           label="Please explain the task or just add details"
           value={formData.detail}
           onChangeText={(value) => inputChangeHandler("detail", value)}
-          textInputConfig={{
-            autoCapitalize: "sentences",
-            multiline: true,
-            // Consider setting height or minHeight
-            // minHeight: 80,
-          }}
-          // Pass theme or specific styles if Input component supports it
-          // labelStyle={{ color: theme.textSecondaryOnGradient }}
-          // textInputStyle={{ color: theme.textPrimaryOnGradient, minHeight: 80 }}
-          // containerStyle={{ marginBottom: 15 }}
+          textInputConfig={{ autoCapitalize: "sentences", multiline: true }}
         />
 
         {/* Due Date Section */}
@@ -196,32 +254,55 @@ const TaskEditor = ({ route, navigation }) => {
             style={styles.dateTextContainer}
           >
             <Text style={styles.dateText}>{formatDate(formData.dueDate)}</Text>
-            {/* Dotted line replaced by borderBottom on parent View */}
           </Pressable>
         </View>
 
-        {/* Show DateTimePicker */}
-        {/* Consider wrapping Picker in a conditional View for Android if needed */}
+        {/* Assign to Apprec8 Team Switch - only show if user is NOT the team reviewer themselves OR if it's a new task */}
+        {(!formData.id || currentUser?.uid !== APPREC8_TEAM_REVIEWER_UID) && (
+          <View style={styles.assignSwitchContainer}>
+            <Text style={styles.assignLabel}>
+              Assign to Apprec8 Team for Review?
+            </Text>
+            <Switch
+              trackColor={{
+                false: theme.primaryLightGray,
+                true: theme.primary,
+              }}
+              thumbColor={
+                formData.assignToTeam ? theme.accent : theme.background
+              }
+              ios_backgroundColor={theme.primaryLightGray}
+              onValueChange={(value) =>
+                inputChangeHandler("assignToTeam", value)
+              }
+              value={formData.assignToTeam}
+              disabled={!!formData.id} // Disable for existing tasks for now to simplify
+            />
+          </View>
+        )}
+
         {showDatePicker && (
           <DateTimePicker
             value={formData.dueDate}
             mode="date"
             display={Platform.OS === "ios" ? "spinner" : "default"}
             onChange={handleDateChange}
-            // Potential Theme Props (check documentation, might vary by version/OS)
-            // themeVariant={isDark ? "dark" : "light"} // Example prop
-            // accentColor={theme.primary} // Example prop
-            // textColor={theme.textPrimary} // Example prop (might not exist)
+            // themeVariant={isDark ? "dark" : "light"} // Requires testing specific library version
           />
         )}
 
-        {/* Submit Button (assumed themed internally) */}
         <PrimaryButton
-          // title="Submit" // Removed as child text is used
-          style={styles.button} // Apply margin/layout styles
+          style={styles.button}
           onPress={submitHandler}
+          disabled={taskContext.isLoading}
         >
-          {formData.id ? "Update Task" : "Add Task"}
+          {taskContext.isLoading ? (
+            <ActivityIndicator color={theme.textOnPrimary || "#FFFFFF"} />
+          ) : formData.id ? (
+            "Update Task"
+          ) : (
+            "Add Task"
+          )}
         </PrimaryButton>
       </ScrollView>
     </LinearGradient>

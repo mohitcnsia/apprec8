@@ -278,7 +278,7 @@ const QuizResultScreen = ({ route, navigation }) => {
           // To force a specific border color matching the text, you might need theme override or a wrapper View.
           // For simplicity, we set the textColor, which often controls the border too.
         >
-          Topics / Home
+          Exit
         </PaperButton>
       </View>
     </LinearGradient>

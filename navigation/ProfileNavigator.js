@@ -2,17 +2,15 @@
 
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-// Remove direct Colors import
-// import { Colors } from "../config/colors";
-import { useTheme } from "../context/ThemeContext"; // Import useTheme
+import { useTheme } from "../context/ThemeContext";
 
-// Screen Imports (remain the same)
+// Screen Imports
 import ProfileScreen from "../screens/quiz/ProfileScreen";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import DummyScreen from "../screens/DummyScreen";
 import LinksScreen from "../screens/LinksScreen";
-import ContactUsForm from "../components/input/ContactUsForm";
+import ContactUsForm from "../components/input/ContactUsForm"; // Corrected path from your previous code
 import Tasks from "../screens/task/Tasks";
 import TaskDetails from "../screens/task/TaskDetails";
 import TaskEditor from "../screens/task/TaskEditor";
@@ -20,41 +18,37 @@ import TasksContextProvider from "../store/tasks-context";
 
 const Stack = createStackNavigator();
 
-// Helper component to access theme context for navigator options
 const ThemedStack = ({ isGuest, actionHandler, user }) => {
-  // Use the theme hook HERE
   const { theme } = useTheme();
 
-  // Define screenOptions using theme colors
   const screenOptionsConfig = {
     headerStyle: {
-      // Use theme color for header background
-      backgroundColor: theme.headerBackground || theme.primary || "#800000", // Provide fallbacks
+      backgroundColor: theme.headerBackground || theme.primary || "#800000",
     },
-    // Use theme color for header text and icons
     headerTintColor: theme.headerTint || "#ffffff",
-    headerShown: false,
+    // headerShown: false, // This was global, we override per screen where needed
   };
 
   return (
     <Stack.Navigator
       initialRouteName={isGuest ? "GuestProfile" : "ProfileScreen"}
-      screenOptions={screenOptionsConfig} // Apply themed options
+      screenOptions={screenOptionsConfig}
     >
       {isGuest ? (
         <Stack.Screen
           name="GuestProfile"
-          // Title alignment is now handled by default screenOptions
-          options={{ title: "Guest Profile" }}
+          options={{ title: "Guest Profile", headerShown: false }} // Example: GuestProfile might want a title and header
         >
           {(props) => (
             <GuestProfileScreen {...props} onExitGuestMode={actionHandler} />
           )}
         </Stack.Screen>
       ) : (
-        // Authenticated User Screens
         <>
-          <Stack.Screen name="ProfileScreen" options={{ title: "Profile" }}>
+          <Stack.Screen
+            name="ProfileScreen"
+            options={{ title: "Profile", headerShown: false }}
+          >
             {(props) => (
               <ProfileScreen
                 {...props}
@@ -66,38 +60,54 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen
             name="EditProfile"
             component={EditProfileScreen}
-            options={{ title: "Edit Profile" }}
+            options={{ title: "Edit Profile", headerShown: true }}
           />
         </>
       )}
 
-      {/* Other screens reachable from Profile/Guest screens */}
       <Stack.Screen
         name="LinkScreen"
         component={LinksScreen}
-        // Keep headerShown: false if intended
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Tasks" component={Tasks} options={{}} />
-      <Stack.Screen name="TaskDetails" component={TaskDetails} options={{}} />
-      <Stack.Screen name="TaskEditor" component={TaskEditor} options={{}} />
+      <Stack.Screen
+        name="Tasks"
+        component={Tasks}
+        options={{
+          headerShown: true,
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="TaskDetails"
+        component={TaskDetails}
+        options={{
+          headerShown: true,
+          title: "", // <<< REMOVE TITLE TEXT
+        }}
+      />
+      <Stack.Screen
+        name="TaskEditor"
+        component={TaskEditor}
+        options={{
+          headerShown: true,
+          title: "", // <<< REMOVE TITLE TEXT (editor used to set this dynamically)
+        }}
+      />
       <Stack.Screen
         name="DummyScreen"
         component={DummyScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="cntct" // Consider a more descriptive name like "ContactUs"
+        name="cntct"
         component={ContactUsForm}
-        options={{ title: "Contact Us" }}
+        options={{ title: "Contact Us", headerShown: true }}
       />
     </Stack.Navigator>
   );
 };
 
-// --- Main Exported Navigator Component ---
-// This component now just sets up the context provider
-// and renders the ThemedStack helper component.
 const ProfileNavigator = ({ isGuest, actionHandler, user }) => {
   return (
     <TasksContextProvider>

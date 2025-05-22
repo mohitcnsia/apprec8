@@ -112,6 +112,14 @@ const ContactUsForm = ({ navigation }) => {
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           marginBottom: 15,
         },
+        infoHelperText: {
+          fontSize: 14,
+          fontFamily: "delius",
+          color: theme.textSecondaryOnGradient, // <<< USING YOUR THEME KEY DIRECTLY
+          textAlign: "center",
+          paddingHorizontal: 20,
+          marginTop: 5,
+        },
         separator: {
           height: 1,
           backgroundColor: theme.border || theme.primaryMaroon100 || "#cccccc",
@@ -185,6 +193,12 @@ const ContactUsForm = ({ navigation }) => {
         >
           {isSubmitting ? "Sending..." : "Send E-mail Coming Soon"}
         </PrimaryButton>
+        <View style={styles.helperTextContainer}>
+          <Text style={styles.infoHelperText}>
+            * For now you can use Profile -> MyTasks and assign the task to
+            Apprec8 Team.
+          </Text>
+        </View>
       </ScrollView>
     </LinearGradient>
   );

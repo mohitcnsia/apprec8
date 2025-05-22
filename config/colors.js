@@ -129,6 +129,7 @@ export const darkColors = {
   cardBackground: "#1C1C1E", // A common dark surface color
   headerBackground: brandColors.primaryDarkMaroon900,
   warningBackground: brandColors.errorRed + "40", // Semi-transparent errorRed
+  successBackground: brandColors.successGreen + "30",
   statusBarBackground: brandColors.primaryDarkMaroon900,
   disabledBackground: "#333333",
   disabledBorder: "#555555",
@@ -150,7 +151,7 @@ export const darkColors = {
   inputText: brandColors.primaryWhite,
   // NEW KEY: Text on gradients for dark theme
   textPrimaryOnGradient: brandColors.primaryWhite,
-  // textSecondaryOnGradient: (if needed, could be brandColors.primaryLightGray)
+  textSecondaryOnGradient: brandColors.primaryLightGray,
 
   // UI Elements & Borders
   primary: brandColors.primaryMaroon100, // Use lighter maroon for primary in dark

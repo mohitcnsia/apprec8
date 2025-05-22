@@ -1,25 +1,24 @@
 // src/context/ThemeContext.js
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Appearance } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // For persistence
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// Make sure this path is correct for your project structure
 import { lightColors, darkColors } from "../config/colors";
 
-// Create the context with a default value
 const ThemeContext = createContext({
-  theme: lightColors, // Start with default light theme
+  theme: lightColors,
   isDark: false,
-  isThemeLoaded: false, // Flag to indicate if theme loaded from storage/system
+  isThemeLoaded: false,
   toggleTheme: () => {},
 });
 
-// Create the Provider component
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(lightColors);
-  const [isThemeLoaded, setIsThemeLoaded] = useState(false); // Changed name from isLoaded
+  const [theme, setTheme] = useState(lightColors); // Start with lightColors as default
+  const [isThemeLoaded, setIsThemeLoaded] = useState(false);
 
   useEffect(() => {
     const loadThemePreference = async () => {
-      let initialTheme = lightColors; // Default
+      let initialTheme = lightColors; // Default before loading
       try {
         const savedThemeMode = await AsyncStorage.getItem("appTheme");
         if (savedThemeMode) {
@@ -32,13 +31,13 @@ export const ThemeProvider = ({ children }) => {
         }
       } catch (error) {
         console.error("❌ Failed to load theme from storage", error);
-        const systemTheme = Appearance.getColorScheme();
+        const systemTheme = Appearance.getColorScheme(); // Fallback to system theme on error
         initialTheme = systemTheme === "dark" ? darkColors : lightColors;
         console.log(
           `🎨 Error loading theme, falling back to system theme: ${systemTheme}`
         );
       } finally {
-        setTheme(initialTheme); // Set the loaded/fallback theme
+        setTheme(initialTheme); // Set the determined theme
         setIsThemeLoaded(true); // Mark theme as loaded
       }
     };
@@ -46,25 +45,26 @@ export const ThemeProvider = ({ children }) => {
     loadThemePreference();
   }, []);
 
-  // Update theme based on system changes if no preference is saved (optional)
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      AsyncStorage.getItem("appTheme").then((savedThemeMode) => {
-        if (!savedThemeMode && isThemeLoaded) {
-          // Only update if theme loaded and no manual preference saved
-          console.log(
-            `🎨 System theme changed to: ${colorScheme}, updating app theme.`
-          );
-          setTheme(colorScheme === "dark" ? darkColors : lightColors);
-        }
-      });
+      // Only update from system if theme is loaded AND no manual preference is saved
+      if (isThemeLoaded) {
+        AsyncStorage.getItem("appTheme").then((savedThemeMode) => {
+          if (!savedThemeMode) {
+            // No manual preference set by user
+            console.log(
+              `🎨 System theme changed to: ${colorScheme}, updating app theme.`
+            );
+            setTheme(colorScheme === "dark" ? darkColors : lightColors);
+          }
+        });
+      }
     });
     return () => subscription.remove();
-  }, [isThemeLoaded]); // Rerun listener setup if isThemeLoaded changes
+  }, [isThemeLoaded]); // Rerun if isThemeLoaded changes
 
   const toggleTheme = async () => {
-    // Prevent toggling if theme isn't fully loaded yet (optional safety)
-    if (!isThemeLoaded) return;
+    if (!isThemeLoaded) return; // Safety check
 
     const newTheme = theme.mode === "light" ? darkColors : lightColors;
     setTheme(newTheme);
@@ -81,10 +81,10 @@ export const ThemeProvider = ({ children }) => {
   return (
     <ThemeContext.Provider
       value={{
-        theme, // Current theme object (lightColors/darkColors)
-        isDark, // Boolean indicating if the theme is dark
-        toggleTheme, // Function to toggle the theme
-        isThemeLoaded, // <<< ADD THIS LINE: Boolean indicating loading completion
+        theme,
+        isDark,
+        toggleTheme,
+        isThemeLoaded, // Expose this for consumers if needed
       }}
     >
       {children}
@@ -92,5 +92,4 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// Custom hook for easy access to theme context
 export const useTheme = () => useContext(ThemeContext);

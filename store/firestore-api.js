@@ -1,17 +1,24 @@
-import { db, authInstance } from "../config/firebaseConfig";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  deleteDoc,
-  updateDoc,
-} from "@react-native-firebase/firestore";
+// src/store/firestore-api.js
 
-const TASKS_COLLECTION = "tasks"; // Firestore collection name
+import firestore from "@react-native-firebase/firestore"; // Use the direct import
+import { authInstance } from "../config/firebaseConfig"; // Assuming authInstance is correctly exported
+import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
 
+// Assuming 'db' from firebaseConfig.js is firestore() or you can use firestore() directly
+// If db is not firestore(), you might need to adjust.
+// For this example, let's assume direct usage of the imported 'firestore' for clarity.
+// If your 'db' export from firebaseConfig is indeed firestore(), you can use 'db' instead of 'firestore()' below.
+
+const TASKS_COLLECTION = "tasks";
+
+/**
+ * Fetches tasks for the current user.
+ * Includes tasks created by the user and, if the user is the designated
+ * team reviewer, tasks assigned to the Apprec8 team for their review.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of task objects.
+ */
 export async function fetchTasks() {
-  const currentUser = authInstance.currentUser; // Use the imported instance
+  const currentUser = authInstance.currentUser;
 
   if (!currentUser) {
     console.log("No user logged in to fetch tasks.");
@@ -19,78 +26,171 @@ export async function fetchTasks() {
   }
 
   const userId = currentUser.uid;
+  let allTasks = [];
 
   try {
-    console.log(`Workspaceing tasks for user: ${userId}`);
-    const tasksQuery = db // Use the imported db instance
+    console.log(`Workspaceing tasks created by user: ${userId}`);
+    const userTasksQuery = firestore() // Using firestore() directly
       .collection(TASKS_COLLECTION)
-      .where("userId", "==", userId); // Filter by userId field in your task documents
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc");
 
-    const querySnapshot = await tasksQuery.get();
-
-    const tasks = querySnapshot.docs.map((doc) => ({
+    const userTasksSnapshot = await userTasksQuery.get();
+    const userTasksData = userTasksSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+    allTasks = userTasksData; // Corrected variable name from previous thoughts
+    console.log(
+      `Workspaceed ${allTasks.length} tasks created by user ${userId}`
+    );
 
-    console.log(`Workspaceed ${tasks.length} tasks for user ${userId}`);
-    return tasks;
+    if (userId === APPREC8_TEAM_REVIEWER_UID) {
+      console.log(
+        `User ${userId} is Apprec8 Team Reviewer. Fetching team-assigned tasks.`
+      );
+      const teamAssignedTasksQuery = firestore() // Using firestore() directly
+        .collection(TASKS_COLLECTION)
+        .where("assignedTeamReviewerUid", "==", APPREC8_TEAM_REVIEWER_UID)
+        .orderBy("createdAt", "desc");
+
+      const teamAssignedTasksSnapshot = await teamAssignedTasksQuery.get();
+      const teamTasksData = teamAssignedTasksSnapshot.docs.map((doc) => ({
+        // Corrected variable name
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(
+        `Workspaceed ${teamTasksData.length} tasks assigned to Apprec8 Team for review.`
+      );
+
+      const taskMap = new Map();
+      allTasks.forEach((task) => taskMap.set(task.id, task));
+      teamTasksData.forEach((task) => taskMap.set(task.id, task));
+      allTasks = Array.from(taskMap.values());
+
+      allTasks.sort((a, b) => {
+        const dateA = a.createdAt?.toDate
+          ? a.createdAt.toDate()
+          : a.createdAt
+          ? new Date(a.createdAt)
+          : 0;
+        const dateB = b.createdAt?.toDate
+          ? b.createdAt.toDate()
+          : b.createdAt
+          ? new Date(b.createdAt)
+          : 0;
+        return dateB - dateA;
+      });
+    }
+    console.log(
+      `Total unique tasks fetched for user ${userId}: ${allTasks.length}`
+    );
+    return allTasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
     if (error.code === "firestore/permission-denied") {
       console.error(
-        "Firestore permission denied. Check rules and ensure task documents have a correct 'userId' field matching the logged-in user."
+        "Firestore permission denied. Check rules and ensure task documents have a correct 'userId' field matching the logged-in user, or appropriate indexing for queries."
       );
     }
-    return []; // Return empty array on error
+    throw error;
   }
 }
 
+/**
+ * Adds a new task to Firestore.
+ * @param {Object} taskData - The data for the new task.
+ * Expected fields: title, detail, dueDate (ISO string), completed (boolean), assignToTeam (boolean, optional).
+ * @returns {Promise<Object>} A promise that resolves to the newly created task object with its Firestore ID.
+ */
 export async function addTaskToFirestore(taskData) {
   const currentUser = authInstance.currentUser;
 
   if (!currentUser) {
     console.error("Error adding task: No user logged in.");
-    throw new Error("User must be logged in to add tasks."); // Throw error if no user
+    throw new Error("User must be logged in to add tasks.");
   }
 
   const userId = currentUser.uid;
 
   try {
-    // Destructure potentially incoming client-side ID if needed, but don't save it
-    const { id, ...taskDataFromInput } = taskData;
+    const { assignToTeam, ...taskDetails } = taskData;
 
-    // Create the object to save, merging input data with the userId
     const dataToSave = {
-      ...taskDataFromInput, // Spread the original task data (title, details, etc.)
-      userId: userId, // **Add the logged-in user's ID**
-      createdAt: new Date(), // Optional: Add a server timestamp later if needed via rules/functions
-      // Or just use client time for simplicity now
-      isComplete: false, // Optional: Set default status if applicable
+      ...taskDetails,
+      userId: userId,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+      lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
+      // 'completed' field comes from taskData
     };
 
-    const docRef = await addDoc(collection(db, TASKS_COLLECTION), dataToSave);
+    if (assignToTeam) {
+      dataToSave.assignedTeamReviewerUid = APPREC8_TEAM_REVIEWER_UID;
+      console.log(
+        `Task assigned to Apprec8 Team Reviewer: ${APPREC8_TEAM_REVIEWER_UID}`
+      );
+    }
+
+    const docRef = await firestore() // Using firestore() directly
+      .collection(TASKS_COLLECTION)
+      .add(dataToSave); // Changed from addDoc(collection(db,...))
+
     console.log(`Task added with ID: ${docRef.id} for user ${userId}`);
-    // Return Firestore-generated ID with the *saved* data (including userId)
-    return { id: docRef.id, ...dataToSave };
+    return {
+      id: docRef.id,
+      ...dataToSave,
+      // Approximate client time for immediate UI update, actual value is server-set
+      createdAt: new Date(),
+      lastUpdatedAt: new Date(),
+    };
   } catch (error) {
     console.error(`Error adding task for user ${userId}:`, error);
-    throw error; // Re-throw error for calling code to handle
+    throw error;
   }
 }
 
+/**
+ * Deletes a task from Firestore.
+ * @param {string} taskId - The ID of the task to delete.
+ * @returns {Promise<void>}
+ */
 export async function deleteTaskFromFirestore(taskId) {
   try {
-    await deleteDoc(doc(db, TASKS_COLLECTION, taskId));
+    await firestore() // Using firestore() directly
+      .collection(TASKS_COLLECTION)
+      .doc(taskId)
+      .delete(); // Changed from deleteDoc(doc(db,...))
+    console.log(`Task deleted with ID: ${taskId}`);
   } catch (error) {
-    console.error("Error deleting task:", error);
+    console.error(`Error deleting task ${taskId}:`, error);
+    throw error;
   }
 }
 
+/**
+ * Updates an existing task in Firestore.
+ * @param {string} taskId - The ID of the task to update.
+ * @param {Object} updatedData - An object containing the fields to update.
+ * @returns {Promise<void>}
+ */
 export async function updateTaskInFirestore(taskId, updatedData) {
   try {
-    await updateDoc(doc(db, TASKS_COLLECTION, taskId), updatedData);
+    const dataToUpdate = {
+      ...updatedData, // This will include 'completionComment' if sent from context
+      lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
+    };
+    if ("id" in dataToUpdate) delete dataToUpdate.id;
+    if ("userId" in dataToUpdate) delete dataToUpdate.userId;
+    if ("createdAt" in dataToUpdate) delete dataToUpdate.createdAt;
+
+    await firestore()
+      .collection(TASKS_COLLECTION)
+      .doc(taskId)
+      .update(dataToUpdate);
+    console.log(`Task updated with ID: ${taskId}`);
   } catch (error) {
-    console.error("Error updating task:", error);
+    console.error(`Error updating task ${taskId}:`, error);
+    throw error;
   }
 }
