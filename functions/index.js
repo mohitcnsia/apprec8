@@ -1952,3 +1952,241 @@ exports.getLeaderboardData = functions
       throw new functions.https.HttpsError(code, message, error.details);
     }
   });
+
+// Add this to your functions/index.js, alongside your other Firebase Functions
+
+// ==========================================================
+// --- USER FEEDBACK FUNCTION (Callable v1 Syntax) ---
+// ==========================================================
+
+// Helper constants for feedback text validation (can be defined globally or within function)
+const MIN_FEEDBACK_CHARS = 10;
+const MIN_FEEDBACK_WORDS = 3;
+
+/**
+ * Helper function to count words for feedback text validation.
+ * @param {string} str The string to count words in.
+ * @return {number} The number of words.
+ */
+const countFeedbackWords = (str) => {
+  if (!str || typeof str !== "string" || str.trim() === "") {
+    return 0;
+  }
+  return str.trim().split(/\s+/).length;
+};
+
+/**
+ * V1 Callable Function: Stores user feedback and can trigger task creation for issue reports.
+ * Security: Checks context.auth automatically.
+ */
+exports.submitFeedback = functions
+  .region(region) // Use your globally defined region
+  .runWith(runtimeOptions) // Use your globally defined runtimeOptions
+  .https.onCall(async (data, context) => {
+    // 1. Authentication Check
+    if (!context.auth || !context.auth.uid) {
+      functions.logger.warn("submitFeedback: Unauthenticated access attempt.", {
+        data,
+      });
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated to submit feedback."
+      );
+    }
+    const userId = context.auth.uid;
+
+    // 2. Data Destructuring and Basic Validation from Client
+    const {
+      contentContext, // Expected: { id: string, type: string, parentId?: string, titlePreview?: string }
+      entryPoint, // Expected: e.g., 'like_fab', 'feedback_fab'
+      reaction, // Expected: 'like', 'dislike', or null
+      feedbackText, // Expected: string
+      feedbackType, // Expected: 'general' or 'issue_report'
+      clientTimestamp, // Optional: ISO string
+    } = data;
+
+    functions.logger.info(`submitFeedback: Attempt by user ${userId}`, {
+      userId,
+      contentContext,
+      entryPoint,
+      reaction,
+      feedbackTextLength: feedbackText ? feedbackText.length : 0,
+      feedbackType,
+    });
+
+    // 3. Detailed Input Validation
+    if (
+      !contentContext ||
+      typeof contentContext.id !== "string" ||
+      contentContext.id.trim() === "" ||
+      typeof contentContext.type !== "string" ||
+      contentContext.type.trim() === ""
+    ) {
+      functions.logger.error("submitFeedback: Invalid contentContext.", {
+        userId,
+        contentContext,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Content context (including a valid 'id' and 'type') is required."
+      );
+    }
+
+    if (
+      !entryPoint ||
+      typeof entryPoint !== "string" ||
+      !entryPoint.endsWith("_fab")
+    ) {
+      functions.logger.error("submitFeedback: Invalid entryPoint.", {
+        userId,
+        entryPoint,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Invalid feedback entry point."
+      );
+    }
+
+    if (reaction !== null && reaction !== "like" && reaction !== "dislike") {
+      functions.logger.error("submitFeedback: Invalid reaction value.", {
+        userId,
+        reaction,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Reaction must be 'like', 'dislike', or null."
+      );
+    }
+
+    if (typeof feedbackText !== "string") {
+      // Ensure feedbackText is always a string, even if empty, for trimming.
+      functions.logger.error("submitFeedback: feedbackText is not a string.", {
+        userId,
+        feedbackText,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Feedback text must be a string."
+      );
+    }
+    const trimmedFeedbackText = feedbackText.trim();
+
+    if (!["general", "issue_report"].includes(feedbackType)) {
+      functions.logger.error("submitFeedback: Invalid feedbackType.", {
+        userId,
+        feedbackType,
+      });
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Invalid feedback type provided."
+      );
+    }
+
+    // Text is mandatory and requires min length/words if:
+    // - It's an 'issue_report' OR
+    // - It's 'general' feedback coming from the 'feedback_fab' (distinguishing from simple like/dislike comments)
+    const isTextStrictlyRequired =
+      feedbackType === "issue_report" || entryPoint === "feedback_fab";
+
+    if (isTextStrictlyRequired) {
+      if (
+        trimmedFeedbackText.length < MIN_FEEDBACK_CHARS ||
+        countFeedbackWords(trimmedFeedbackText) < MIN_FEEDBACK_WORDS
+      ) {
+        functions.logger.error(
+          "submitFeedback: Feedback text too short for mandatory field.",
+          {
+            userId,
+            feedbackTextLength: trimmedFeedbackText.length,
+            wordCount: countFeedbackWords(trimmedFeedbackText),
+            feedbackType,
+            entryPoint,
+          }
+        );
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          `For this type of feedback, text must be at least ${MIN_FEEDBACK_CHARS} characters and ${MIN_FEEDBACK_WORDS} words.`
+        );
+      }
+    }
+
+    // 4. Prepare data for Firestore, ensuring all parts of contentContext are present or null
+    const feedbackEntry = {
+      userId: userId,
+      contentContext: {
+        id: contentContext.id,
+        type: contentContext.type,
+        parentId: contentContext.parentId || null,
+        titlePreview: contentContext.titlePreview || null,
+      },
+      entryPoint: entryPoint,
+      reaction: reaction, // Stored as 'like', 'dislike', or null
+      feedbackText: trimmedFeedbackText,
+      feedbackType: feedbackType, // 'general' or 'issue_report'
+      clientTimestamp: clientTimestamp || null, // Store if provided, useful for client-side issues
+      createdAt: FieldValue.serverTimestamp(), // Use your global FieldValue from 'firebase-admin/firestore'
+      status: "new", // Default status, e.g., 'new', 'reviewed', 'actioned', 'archived'
+      // You could add appVersion or platform if available from context or client
+      // appVersion: context.app?.version || null, // If using App Check and client sends it
+    };
+
+    try {
+      const feedbackCollectionRef = db.collection("userFeedback"); // Or your preferred collection name
+      const feedbackDocRef = await feedbackCollectionRef.add(feedbackEntry);
+      functions.logger.info(
+        `submitFeedback: Feedback ${feedbackDocRef.id} stored successfully for user ${userId}.`,
+        { feedbackId: feedbackDocRef.id }
+      );
+
+      // --- PHASE 2 Enhancement: Task Creation for 'issue_report' ---
+      // This part will be implemented by you in the next phase if desired.
+      if (feedbackType === "issue_report") {
+        functions.logger.info(
+          `submitFeedback: Issue report received (ID: ${feedbackDocRef.id}). Task creation logic would run here.`,
+          { userId }
+        );
+        // Example task data structure (refer to your schema)
+        const taskData = {
+          title: `Issue reported on ${contentContext.type}: ${
+            contentContext.titlePreview || contentContext.id
+          }`.substring(0, 100), // Max title length
+          detail: `Feedback ID: ${
+            feedbackDocRef.id
+          }\nUser: ${userId}\nContext: Type='${contentContext.type}', ID='${
+            contentContext.id
+          }'\nParent ID: ${
+            contentContext.parentId || "N/A"
+          }\n\nUser Comment: ${trimmedFeedbackText}`,
+          userId: userId, // User who reported
+          // assignedTeamReviewerUid: "some_default_reviewer_uid", // Or logic to assign
+          createdAt: FieldValue.serverTimestamp(),
+          lastUpdatedAt: FieldValue.serverTimestamp(),
+          // dueDate: null, // Or set a default due date logic
+          completed: false,
+          completionComment: "",
+          sourceFeedbackId: feedbackDocRef.id, // Link back to the feedback
+          // Add other fields from your task schema ("O8WGYD2fIb5mEFbZp5h6")
+          // e.g. if you map your schema, you might need other defaults here.
+        };
+        // await db.collection("tasks").add(taskData); // Your tasks collection name
+        // functions.logger.info(`submitFeedback: Task created for feedback ${feedbackDocRef.id}.`);
+      }
+      // --- End of Phase 2 Enhancement ---
+
+      return {
+        status: "success",
+        message: "Feedback submitted successfully.",
+        feedbackId: feedbackDocRef.id,
+      };
+    } catch (error) {
+      functions.logger.error(
+        "submitFeedback: Error writing to Firestore for user " + userId + ":",
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        "An error occurred while saving your feedback. Please try again.",
+        error.message // Keep server-side logs detailed, client gets generic message
+      );
+    }
+  });

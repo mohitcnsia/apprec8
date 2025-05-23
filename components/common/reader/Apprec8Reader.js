@@ -1,12 +1,10 @@
-// components/common/reader/Apprec8Reader.js
-
 import React, {
   useState,
   useEffect,
   useCallback,
   useRef,
   useMemo,
-} from "react"; // Import useMemo
+} from "react";
 import {
   View,
   Text,
@@ -14,27 +12,23 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  // useColorScheme, // Remove useColorScheme
   Image,
   ActivityIndicator,
   Dimensions,
-  Button,
+  Button, // Kept for fallback error button
 } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
 import { listenToStudyContent } from "../../../services/firestoreContentApi";
-// import { Colors } from "../../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../../context/ThemeContext"; // Import useTheme hook
+import { useTheme } from "../../../context/ThemeContext";
+import FeedbackFAB from "../FeedbackFAB"; // <<< ADDED IMPORT (Adjust path: if FeedbackFAB is in /common, this becomes '../FeedbackFAB')
 
-// Dimensions remains the same
 const screenWidth = Dimensions.get("window").width;
 const coverImageHeight = screenWidth * 0.6;
 
 const Apprec8Reader = ({ route, navigation }) => {
-  // --- Use Theme Hook ---
-  const { theme } = useTheme(); // Get the theme object from context
+  const { theme } = useTheme();
 
-  // --- State and Params (remain the same) ---
   const contentId = route?.params?.contentId;
   const isMounted = useRef(true);
   const [studyData, setStudyData] = useState(null);
@@ -43,9 +37,7 @@ const Apprec8Reader = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState([]);
 
-  // --- Effects (remain the same, logic untouched) ---
   useEffect(() => {
-    // Mount/Unmount tracking
     isMounted.current = true;
     return () => {
       isMounted.current = false;
@@ -53,7 +45,6 @@ const Apprec8Reader = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Fetching logic
     if (!contentId) {
       if (isMounted.current) {
         setError("No content specified.");
@@ -71,6 +62,10 @@ const Apprec8Reader = ({ route, navigation }) => {
           if (data) {
             setStudyData(data);
             setError(null);
+            // Set screen title if possible
+            if (data.name) {
+              navigation.setOptions({ title: data.name });
+            }
           } else {
             setError("Study content not found.");
             setStudyData(null);
@@ -87,9 +82,8 @@ const Apprec8Reader = ({ route, navigation }) => {
       }
     );
     return () => unsubscribe();
-  }, [contentId]);
+  }, [contentId, navigation]); // Added navigation to dependency array for setOptions
 
-  // --- Image Modal Handler (remains the same) ---
   const openImage = useCallback((imageUri) => {
     if (imageUri && typeof imageUri === "string" && imageUri.trim() !== "") {
       setSelectedImage([{ url: imageUri }]);
@@ -99,26 +93,23 @@ const Apprec8Reader = ({ route, navigation }) => {
     }
   }, []);
 
-  // --- Define Base Styles Inside Component with useMemo ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        // Layout styles mostly remain the same
         container: {
           flex: 1,
           paddingHorizontal: 16,
           paddingTop: 20,
           backgroundColor: theme.background,
-        }, // Themed background
+        },
         centered: {
           justifyContent: "center",
           alignItems: "center",
           flex: 1,
           padding: 20,
           backgroundColor: theme.background,
-        }, // Themed background
+        },
         header: { marginBottom: 20, alignItems: "center" },
-        // Text styles using theme
         name: {
           fontSize: 28,
           fontWeight: "bold",
@@ -135,7 +126,6 @@ const Apprec8Reader = ({ route, navigation }) => {
           textAlign: "center",
           color: theme.textSecondary,
         },
-        // Image styles using theme for placeholder
         coverImage: {
           width: "100%",
           height: coverImageHeight,
@@ -145,14 +135,14 @@ const Apprec8Reader = ({ route, navigation }) => {
           backgroundColor: theme.placeholder || "#e0e0e0",
         },
         markdownContainer: { marginBottom: 20 },
-        markdownImageWrapper: { marginBottom: 12, alignItems: "center" }, // Layout style
+        markdownImageWrapper: { marginBottom: 12, alignItems: "center" },
         imageContainer: {
           marginTop: 20,
           marginBottom: 20,
           paddingTop: 10,
           borderTopWidth: 1,
           borderTopColor: theme.border || "#cccccc66",
-        }, // Themed border
+        },
         additionalImagesTitle: {
           fontSize: 18,
           fontWeight: "bold",
@@ -187,22 +177,20 @@ const Apprec8Reader = ({ route, navigation }) => {
           marginTop: 20,
           paddingHorizontal: 20,
           color: theme.textSecondary,
-        }, // Use theme secondary text for info/error messages
+        },
         errorTextSpecific: {
           fontSize: 18,
           textAlign: "center",
           marginTop: 20,
           paddingHorizontal: 20,
           color: theme.warning,
-        }, // Optional specific error color
+        },
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- Define Markdown Styles Inside Component with useMemo ---
   const markdownStyles = useMemo(
     () => ({
-      // Apply theme colors to common markdown base styles
       text: { fontSize: 18, lineHeight: 28, color: theme.textPrimary },
       heading1: {
         fontSize: 32,
@@ -262,7 +250,7 @@ const Apprec8Reader = ({ route, navigation }) => {
         opacity: 0.9,
         backgroundColor: theme.quoteBackground || theme.primary + "15",
         borderLeftColor: theme.quoteBorder || theme.primary,
-      }, // Themed blockquote
+      },
       image: {
         width: screenWidth - 64,
         maxWidth: "100%",
@@ -273,77 +261,65 @@ const Apprec8Reader = ({ route, navigation }) => {
         alignSelf: "center",
         marginVertical: 10,
         backgroundColor: theme.placeholder,
-      }, // Themed image placeholder
+      },
       link: {
         textDecorationLine: "underline",
         color: theme.link || theme.accent,
-      }, // Themed link
-      hr: { height: 1, marginVertical: 20, backgroundColor: theme.border }, // Themed horizontal rule
+      },
+      hr: { height: 1, marginVertical: 20, backgroundColor: theme.border },
       code_inline: {
         backgroundColor: theme.codeBackground || theme.placeholder,
         paddingHorizontal: 4,
         borderRadius: 3,
         color: theme.codeText || theme.textPrimary,
-        // fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
-      }, // Themed inline code
+      },
       fence: {
         backgroundColor: theme.codeBackground || theme.placeholder,
         padding: 10,
         borderRadius: 4,
         marginVertical: 10,
         color: theme.codeText || theme.textPrimary,
-        // fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
-      }, // Themed code block (fence)
+      },
     }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- RENDER LOGIC ---
-  // 1. Loading State
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        {/* Use themed color for indicator */}
         <ActivityIndicator size="large" color={theme.primary || "#800000"} />
       </View>
     );
   }
-
-  // 2. Error State
   if (error) {
     return (
       <View style={styles.centered}>
-        {/* Use themed color for text */}
         <Text style={styles.errorTextSpecific}>{error}</Text>
         {navigation.canGoBack() && (
           <Button
             title="Go Back"
             onPress={() => navigation.goBack()}
-            color={theme.primary || "#800000"} // Use themed color for button
+            color={theme.primary || "#800000"}
           />
         )}
       </View>
     );
   }
-
-  // 3. No Data State
   if (!studyData) {
     return (
       <View style={styles.centered}>
-        {/* Use themed color for text */}
         <Text style={styles.message}>Content not available.</Text>
         {navigation.canGoBack() && (
           <Button
             title="Go Back"
             onPress={() => navigation.goBack()}
-            color={theme.primary || "#800000"} // Use themed color for button
+            color={theme.primary || "#800000"}
           />
         )}
       </View>
     );
   }
 
-  // 4. Content Loaded State
   const {
     name = "Untitled Content",
     author = "Unknown Author",
@@ -355,17 +331,27 @@ const Apprec8Reader = ({ route, navigation }) => {
     ? additionalImages
     : [];
 
+  // Prepare contentContext for FeedbackFAB
+  const feedbackContext =
+    contentId && studyData
+      ? {
+          type: "study_content", // Or 'study_material_page'
+          id: contentId,
+          // parentId: studyData.topicId || studyData.categoryId, // If available from studyData
+          titlePreview: studyData.name
+            ? studyData.name.substring(0, 70)
+            : "Study Content",
+        }
+      : null;
+
   return (
-    // Use themed background
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header Section - uses themed styles */}
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {/* Ensure main view has flex 1 for FAB positioning */}
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.author}>By {author}</Text>
         </View>
-
-        {/* Cover Image - uses themed placeholder */}
         {coverImage ? (
           <TouchableOpacity onPress={() => openImage(coverImage)}>
             <Image
@@ -381,14 +367,12 @@ const Apprec8Reader = ({ route, navigation }) => {
             />
           </TouchableOpacity>
         ) : null}
-
-        {/* Markdown Content Area */}
         <View style={styles.markdownContainer}>
           <Markdown
-            style={markdownStyles} // Pass themed markdown styles
+            style={markdownStyles}
             rules={{
-              // Image rule remains the same logic
-              image: (node, children, parent, styles) => {
+              image: (node, children, parent, mdStyles) => {
+                // Changed styles to mdStyles to avoid conflict
                 const src = node.attributes.src;
                 if (!src || typeof src !== "string" || !src.startsWith("http"))
                   return null;
@@ -396,11 +380,14 @@ const Apprec8Reader = ({ route, navigation }) => {
                   <TouchableOpacity
                     key={node.key}
                     onPress={() => openImage(src)}
-                    style={styles.markdownImageWrapper}
+                    style={
+                      mdStyles.markdownImageWrapper_image ||
+                      styles.markdownImageWrapper
+                    }
                   >
                     <Image
                       source={{ uri: src }}
-                      style={styles.image}
+                      style={mdStyles.image}
                       onError={(e) =>
                         console.error(
                           "Markdown Image Load Error:",
@@ -417,8 +404,6 @@ const Apprec8Reader = ({ route, navigation }) => {
             {content}
           </Markdown>
         </View>
-
-        {/* Additional Images Section - uses themed styles */}
         {validAdditionalImages.length > 0 && (
           <View style={styles.imageContainer}>
             <Text style={styles.additionalImagesTitle}>Additional Images:</Text>
@@ -454,8 +439,6 @@ const Apprec8Reader = ({ route, navigation }) => {
             )}
           </View>
         )}
-
-        {/* Image Zoom Modal */}
         <Modal
           visible={modalVisible}
           transparent={true}
@@ -466,21 +449,17 @@ const Apprec8Reader = ({ route, navigation }) => {
             enableSwipeDown={true}
             onSwipeDown={() => setModalVisible(false)}
             renderIndicator={() => null}
-            // Use themed color for modal loading indicator
             loadingRender={() => (
               <ActivityIndicator
                 size="large"
                 color={theme.primaryWhite || "#FFFFFF"}
               />
             )}
-            failImageSource={{
-              uri: "https://via.placeholder.com/150?text=Load+Error",
-              width: 150,
-              height: 150,
-            }} // Keep placeholder
           />
         </Modal>
       </ScrollView>
+      {/* ADDED FeedbackFAB - Render only if context can be formed */}
+      {feedbackContext && <FeedbackFAB contentContext={feedbackContext} />}
     </View>
   );
 };

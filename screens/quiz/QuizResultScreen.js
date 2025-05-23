@@ -1,6 +1,4 @@
-// screens/quiz/QuizResultScreen.js
-
-import React, { useState, useEffect, useCallback, useMemo } from "react"; // Import useMemo
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -8,38 +6,34 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  // Button, // No longer needed if using PaperButton consistently
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
+import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import functions from "@react-native-firebase/functions";
+import FeedbackFAB from "../../components/common/FeedbackFAB"; // <<< ADDED IMPORT (Adjust path if needed)
 
-// --- Dimensions, Defaults, Function Ref (remain the same) ---
 const screenWidth = Dimensions.get("window").width;
 const imageDiameter = screenWidth * 0.7;
 const DEFAULT_PASSING_SCORE = 1;
 const recordQuizResult = functions().httpsCallable("recordQuizResult");
 
 const QuizResultScreen = ({ route, navigation }) => {
-  const { theme } = useTheme(); // Use the theme hook
+  const { theme } = useTheme();
 
-  // --- State and Props Destructuring (remain the same) ---
   const [username, setUsername] = useState("User");
   const {
     score = 0,
     totalQuestions = 0,
-    quizId = null,
-    parentTopicId = null,
+    quizId = null, // ID of the quiz taken
+    parentTopicId = null, // Context: e.g., ID of the topic this quiz belongs to
     passingScore = DEFAULT_PASSING_SCORE,
   } = route.params || {};
   const maxScore = route.params?.maxScore ?? totalQuestions;
   const [submitError, setSubmitError] = useState(null);
   const [submitStatus, setSubmitStatus] = useState("idle");
 
-  // --- useEffects and Callbacks (remain the same) ---
   useEffect(() => {
     const currentUser = authInstance.currentUser;
     if (currentUser?.displayName) setUsername(currentUser.displayName);
@@ -48,6 +42,7 @@ const QuizResultScreen = ({ route, navigation }) => {
   }, []);
 
   const submitQuizResult = useCallback(async () => {
+    // ... (logic remains same)
     const currentUser = authInstance.currentUser;
     if (!currentUser) {
       setSubmitStatus("skipped");
@@ -63,7 +58,6 @@ const QuizResultScreen = ({ route, navigation }) => {
       return;
     }
     if (submitStatus !== "idle") return;
-
     setSubmitStatus("submitting");
     setSubmitError(null);
     try {
@@ -107,20 +101,17 @@ const QuizResultScreen = ({ route, navigation }) => {
         passingScore,
       });
     } else {
-      navigation.popToTop();
+      navigation.popToTop(); // Should ideally not happen if quizId is missing
     }
   };
 
   const scoreText =
     totalQuestions > 0 ? `${score} / ${totalQuestions}` : `${score}`;
 
-  // --- Define Styles Inside Component with useMemo ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        // gradientContainer necessary if LinearGradient isn't the root with flex: 1
         container: {
-          // Applied to LinearGradient
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
@@ -128,8 +119,8 @@ const QuizResultScreen = ({ route, navigation }) => {
         },
         header: {
           fontSize: 30,
-          fontFamily: "pacifico", // Keep font
-          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed text color
+          fontFamily: "pacifico",
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           marginBottom: 20,
           textAlign: "center",
         },
@@ -137,14 +128,14 @@ const QuizResultScreen = ({ route, navigation }) => {
           fontSize: 18,
           marginBottom: 5,
           textAlign: "center",
-          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed text color
-          fontFamily: "delius", // Keep font
+          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
+          fontFamily: "delius",
         },
         highlight: {
-          fontFamily: "deliusBold", // Keep font
-          color: theme.accent || "#f12b15", // Use theme accent color
+          fontFamily: "deliusBold",
+          color: theme.accent || theme.appAccent || "#f12b15",
           fontSize: 20,
-        },
+        }, // Added theme.appAccent
         imageContainer: {
           height: imageDiameter,
           width: imageDiameter,
@@ -153,7 +144,7 @@ const QuizResultScreen = ({ route, navigation }) => {
           marginBottom: 20,
           borderWidth: 2,
           borderColor:
-            theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF", // Themed border color
+            theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
         },
         statusContainer: {
           minHeight: 30,
@@ -161,70 +152,62 @@ const QuizResultScreen = ({ route, navigation }) => {
           alignItems: "center",
           marginVertical: 10,
         },
-        // activityIndicator: {}, // Not needed if color passed directly
         errorText: {
-          color: theme.warning || "#FF6B6B", // Use theme warning color
+          color: theme.warning || theme.appWarning || "#FF6B6B",
           textAlign: "center",
           fontFamily: "delius",
           fontSize: 14,
-        },
+        }, // Added theme.appWarning
         successText: {
-          color: theme.success || "#4CAF50", // Use theme success color
+          color: theme.success || theme.appSuccess || "#4CAF50",
           textAlign: "center",
           fontFamily: "deliusBold",
           fontSize: 14,
-        },
+        }, // Added theme.appSuccess
         infoText: {
-          // Use themed secondary text color, suitable for gradient
           color:
             theme.textSecondaryOnGradient || theme.textSecondary || "#E0E0E0",
           textAlign: "center",
           fontFamily: "delius",
           fontSize: 14,
         },
-        buttonContainer: {
-          width: "80%", // Keep width constraint
-          alignItems: "center",
-          marginTop: 15,
-        },
-        button: {
-          // Common button style (margin, width)
-          marginTop: 15,
-          paddingVertical: 5,
-          width: "100%",
-        },
-        // buttonText: { fontSize: 16, fontFamily: "deliusBold" }, // Use PaperButton textColor prop instead
-        outlineButton: {
-          // Specific style for outline button border
-          // Border color set via PaperButton prop (borderColor doesn't work directly)
-          // We can use this style potentially for other overrides if needed
-        },
-        // outlineButtonText: { color: Colors.primaryWhite }, // Use PaperButton textColor prop instead
+        buttonContainer: { width: "80%", alignItems: "center", marginTop: 15 },
+        button: { marginTop: 15, paddingVertical: 5, width: "100%" },
+        outlineButton: {},
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- RENDER ---
+  // Prepare contentContext for FeedbackFAB
+  // Using quizId as the ID for the quiz itself.
+  // parentTopicId can be the parent context if it represents a course/topic.
+  const feedbackContext = quizId
+    ? {
+        type: "quiz_overall",
+        id: quizId,
+        parentId: parentTopicId || null, // The broader topic/category this quiz belongs to
+        titlePreview: `Quiz ${quizId} Results`, // Or a fetched quiz title if available
+      }
+    : null;
+
   return (
     <LinearGradient
-      // Apply themed gradient colors
       colors={[
         theme.gradientStart || "#3b0940",
         theme.gradientEnd || "#d7d1d3",
       ]}
-      style={styles.container} // Ensure gradient fills screen
+      style={styles.container}
     >
       <Text style={styles.header}>Quiz Over!</Text>
       <Image
         style={styles.imageContainer}
-        source={require("../../assets/images/success.png")} // Ensure path correct
+        source={require("../../assets/images/success.png")}
       />
       <Text style={styles.text}>Well done, {username}!</Text>
       <Text style={styles.text}>
         You scored <Text style={styles.highlight}>{scoreText}</Text>.
       </Text>
 
-      {/* Status Feedback */}
       <View style={styles.statusContainer}>
         {submitStatus === "submitting" && (
           <ActivityIndicator
@@ -232,7 +215,7 @@ const QuizResultScreen = ({ route, navigation }) => {
             color={
               theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF"
             }
-          /> // Themed indicator
+          />
         )}
         {submitStatus === "error" && (
           <Text style={styles.errorText}>
@@ -249,38 +232,32 @@ const QuizResultScreen = ({ route, navigation }) => {
         )}
       </View>
 
-      {/* Buttons */}
       <View style={styles.buttonContainer}>
-        {/* Play Again Button */}
         <PaperButton
           mode="contained"
-          style={styles.button} // Common margin/width style
-          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }} // Keep font style
+          style={styles.button}
+          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }}
           onPress={handlePlayAgain}
           disabled={submitStatus === "submitting"}
-          // Use PaperButton props for theming
-          buttonColor={theme.success}
+          buttonColor={theme.success || theme.appSuccess} // Added theme.appSuccess
           textColor={theme.buttonText || theme.primaryWhite}
         >
           Play Again
         </PaperButton>
-
-        {/* Topics / Home Button */}
         <PaperButton
           mode="outlined"
-          style={[styles.button, styles.outlineButton]} // Common + specific styles
-          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }} // Keep font style
+          style={[styles.button, styles.outlineButton]}
+          labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }}
           onPress={() => navigation.popToTop()}
           disabled={submitStatus === "submitting"}
-          // Use PaperButton props for theming outline button
-          textColor={theme.textPrimaryOnGradient || theme.primaryWhite} // Text/Border color
-          // Note: Paper's outlined button border color uses the theme's 'primary' or 'outline' color by default.
-          // To force a specific border color matching the text, you might need theme override or a wrapper View.
-          // For simplicity, we set the textColor, which often controls the border too.
+          textColor={theme.textPrimaryOnGradient || theme.primaryWhite}
+          // For outlined button, border color often comes from textColor or theme's primary/outline
         >
           Exit
         </PaperButton>
       </View>
+      {/* ADDED FeedbackFAB - Render only if context can be formed */}
+      {feedbackContext && <FeedbackFAB contentContext={feedbackContext} />}
     </LinearGradient>
   );
 };

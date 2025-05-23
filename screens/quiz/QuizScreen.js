@@ -1,5 +1,3 @@
-// screens/quiz/QuizScreen.js
-
 import React, {
   useEffect,
   useState,
@@ -25,11 +23,11 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import functions from "@react-native-firebase/functions";
 import { useFocusEffect } from "@react-navigation/native";
-// import { Colors } from "../../config/colors"; // <<< REMOVE
-import { useTheme } from "../../context/ThemeContext"; // <<< ADD
+import { useTheme } from "../../context/ThemeContext";
 import { listenToQuizQuestions } from "../../services/firestoreContentApi";
-import Explanation from "../../components/quiz/Explanation"; // Assumed themed internally
-import ConfirmationModal from "../../components/common/ConfirmationModel"; // Assumed themed internally
+import Explanation from "../../components/quiz/Explanation";
+import ConfirmationModal from "../../components/common/ConfirmationModel";
+import FeedbackFAB from "../../components/common/FeedbackFAB"; // <<< ADDED IMPORT (Adjust path if needed)
 
 // --- Firebase Callable Function Reference ---
 const penalizeQuizLeave = functions().httpsCallable("penalizeQuizLeave");
@@ -52,11 +50,10 @@ const SHORT_QUESTION_THRESHOLD = 80;
 
 // --- Component ---
 const QuizScreen = ({ route, navigation }) => {
-  const { theme, isDark } = useTheme(); // <<< USE THEME HOOK
+  const { theme, isDark } = useTheme();
 
-  // --- State & Refs (Logic remains the same) ---
-  const quizContentId = route?.params?.quizContentId;
-  const parentTopicIdForContext = route?.params?.parentTopicId;
+  const quizContentId = route?.params?.quizContentId; // This is the ID for the whole quiz
+  const parentTopicIdFromParams = route?.params?.parentTopicId; // Context for the quiz itself
   const passingScore = route?.params?.passingScore ?? PASSING_SCORE_THRESHOLD;
   const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,16 +62,15 @@ const QuizScreen = ({ route, navigation }) => {
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [wasCorrect, setWasCorrect] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false); // This state indicates if explanation is shown
   const [isLeaving, setIsLeaving] = useState(false);
   const [showLeaveConfirmModal, setShowLeaveConfirmModal] = useState(false);
   const [pendingNavigationAction, setPendingNavigationAction] = useState(null);
   const isNavigatingToResults = useRef(false);
   const isMounted = useRef(true);
 
-  // --- Effects (Logic remains the same) ---
+  // --- Effects ---
   useEffect(() => {
-    // Mount/Unmount tracking
     isMounted.current = true;
     return () => {
       isMounted.current = false;
@@ -82,7 +78,6 @@ const QuizScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Fetching Questions
     setIsLoading(true);
     setError(null);
     setQuestions([]);
@@ -113,6 +108,9 @@ const QuizScreen = ({ route, navigation }) => {
             const selQ = sQ.slice(0, c);
             const fQ = selQ.map((q) => ({
               ...q,
+              // Ensure 'id' exists on question, or use another unique identifier.
+              // If 'id' comes from Firestore, it's usually the document ID.
+              id: q.id || q.question, // Fallback to question text if no ID, adjust as per your data
               options: shuffleArray(q.options || []),
             }));
             setQuestions(fQ);
@@ -134,7 +132,6 @@ const QuizScreen = ({ route, navigation }) => {
   }, [quizContentId]);
 
   useEffect(() => {
-    // Navigation Leave Listener
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
       if (isNavigatingToResults.current || isLoading || error || isLeaving)
         return;
@@ -146,14 +143,13 @@ const QuizScreen = ({ route, navigation }) => {
   }, [navigation, isLoading, error, isLeaving, pendingNavigationAction]);
 
   useFocusEffect(
-    // Hide/Show Tab Bar - Now includes theme for restoring style
     useCallback(() => {
       const parentNav = navigation.getParent();
       if (parentNav) {
         parentNav.setOptions({
           tabBarStyle: { display: "none" },
           tabBarVisible: false,
-        }); // Hide
+        });
       } else {
         try {
           navigation.setOptions({ tabBarStyle: { display: "none" } });
@@ -162,17 +158,13 @@ const QuizScreen = ({ route, navigation }) => {
         }
       }
       return () => {
-        // Cleanup function
         if (parentNav) {
           parentNav.setOptions({
             tabBarStyle: {
-              // Restore themed style
               display: "flex",
-              backgroundColor: theme.tabBarBackground, // <<< Themed restore
-              borderTopColor: theme.border, // <<< Themed restore
-              // Add other original styles if needed (e.g., height)
+              backgroundColor: theme.tabBarBackground,
+              borderTopColor: theme.border,
             },
-            // tabBarVisible: true, // Only for older nav versions
           });
         } else {
           try {
@@ -182,22 +174,23 @@ const QuizScreen = ({ route, navigation }) => {
           }
         }
       };
-    }, [navigation, theme]) // <<< Added theme dependency
+    }, [navigation, theme])
   );
 
-  // --- Handlers (Logic remains the same) ---
+  // --- Handlers ---
   const handleAnswer = (answer) => {
     if (!showFeedback) setSelectedAnswer(answer);
   };
+
   const handleSubmit = () => {
     if (selectedAnswer === null || isLoading || showFeedback) return;
     const q = questions[questionIndex];
-    console.log("Quiz Question: ", q);
     if (!q) return;
     const correct = selectedAnswer === q.answer;
     setWasCorrect(correct);
-    setShowFeedback(true);
+    setShowFeedback(true); // This will show the explanation and make FeedbackFAB relevant
   };
+
   const handleNextQuestion = () => {
     if (!showFeedback || isLoading) return;
     const scoreInc = wasCorrect ? 1 : 0;
@@ -208,7 +201,7 @@ const QuizScreen = ({ route, navigation }) => {
       setQuestionIndex(nextIndex);
       setSelectedAnswer(null);
       setWasCorrect(null);
-      setShowFeedback(false);
+      setShowFeedback(false); // Hide explanation for next question
     } else {
       const finalScore = currentScore + scoreInc;
       isNavigatingToResults.current = true;
@@ -216,13 +209,14 @@ const QuizScreen = ({ route, navigation }) => {
         score: finalScore,
         totalQuestions: questions.length,
         quizId: quizContentId,
-        parentTopicId: parentTopicIdForContext,
+        parentTopicId: parentTopicIdFromParams,
         passingScore: passingScore,
         maxScore: questions.length,
       });
     }
   };
   const handleConfirmLeave = async () => {
+    // ... (logic remains same)
     if (isLeaving || !pendingNavigationAction) return;
     const contentId = route?.params?.quizContentId;
     if (!contentId) {
@@ -243,15 +237,16 @@ const QuizScreen = ({ route, navigation }) => {
     }
   };
   const handleCancelLeave = () => {
+    // ... (logic remains same)
     setShowLeaveConfirmModal(false);
     setPendingNavigationAction(null);
     setIsLeaving(false);
   };
 
-  const styles = useMemo(
+  const stylesFromTheme = useMemo(
+    // Renamed to avoid conflict if styles is used elsewhere
     () =>
       StyleSheet.create({
-        // Layout
         container: { flex: 1 },
         centered: {
           flex: 1,
@@ -262,7 +257,7 @@ const QuizScreen = ({ route, navigation }) => {
         mainScroll: { flex: 1, paddingHorizontal: 20 },
         mainScrollContentContainer: {
           flexGrow: 1,
-          justifyContent: "flex-start", // Align items to the start to allow growth from top
+          justifyContent: "flex-start",
           paddingTop: 20,
           paddingBottom: 20,
         },
@@ -271,9 +266,7 @@ const QuizScreen = ({ route, navigation }) => {
           paddingTop: 10,
           borderTopWidth: 1,
           borderTopColor: theme.border || "#cccccc",
-        }, // Themed border
-
-        // Components
+        },
         progressText: {
           fontSize: 16,
           color: isDark
@@ -284,12 +277,12 @@ const QuizScreen = ({ route, navigation }) => {
           fontFamily: "nunitoBold",
         },
         card: {
-          backgroundColor: theme.cardBackground || "#f0f0f0", // Themed card bg
+          backgroundColor: theme.cardBackground || "#f0f0f0",
           borderRadius: 12,
           minHeight: 120,
-          justifyContent: "center", // Allow content to grow from the start
-          marginBottom: 10, // Add margin below card
-          elevation: 2, // Add subtle elevation
+          justifyContent: "center",
+          marginBottom: 10,
+          elevation: 2,
           shadowColor: theme.shadowColor,
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.1,
@@ -300,52 +293,44 @@ const QuizScreen = ({ route, navigation }) => {
           fontSize: 18,
           lineHeight: 28,
           textAlign: "center",
-          color: theme.textPrimary, // Themed text on card
+          color: theme.textPrimary,
           fontFamily: "nunitoBold",
         },
         questionTextShrunk: {
-          // New style for shrunk question text
-          fontSize: 12, // Adjust the size as needed
-          lineHeight: 18, // Adjust the line height accordingly
+          fontSize: 12,
+          lineHeight: 18,
           textAlign: "center",
-          color: theme.textSecondary, // Maybe use a slightly less prominent color
+          color: theme.textSecondary,
           fontFamily: "nunitoBold",
         },
         explanationContainer: {
           marginTop: 15,
           paddingTop: 10,
           borderTopWidth: 1,
-          borderTopColor: theme.border || "#cccccc", // Themed border
+          borderTopColor: theme.border || "#cccccc",
         },
-
-        // Spacer Style
         spacer: { height: 15 },
         spacerLarge: { height: 40 },
-
-        // Options Styling
-        optionsContainer: { marginTop: 10 }, // Add margin above options
+        optionsContainer: { marginTop: 10 },
         optionTouchable: { marginVertical: 7 },
         optionViewBase: {
           borderWidth: 1,
           borderRadius: 25,
           paddingHorizontal: 15,
-          // alignItems: "center", // REMOVED
-          justifyContent: "center", // REMOVED
-          minHeight: "15%", // REMOVED fixed height
-          paddingVertical: 12, // Increased vertical padding
-        },
+          justifyContent: "center",
+          minHeight: 50,
+          paddingVertical: 12,
+        }, // minHeight adjusted
         optionTextBase: {
           fontSize: 16,
           fontFamily: "nunitoBold",
-          textAlign: "center", // Keep if you want centered text within the option
+          textAlign: "center",
         },
-        // Default State
         optionViewDefault: {
           backgroundColor: theme.cardBackground,
           borderColor: theme.primary,
         },
         optionTextDefault: { color: theme.textPrimary },
-        // Selected State
         optionViewSelected: {
           backgroundColor: theme.primary,
           borderColor: theme.primary,
@@ -353,21 +338,17 @@ const QuizScreen = ({ route, navigation }) => {
         optionTextSelected: {
           color: theme.textOnPrimary || theme.primaryWhite,
         },
-        // Correct State
         optionViewCorrect: {
           backgroundColor: theme.success,
           borderColor: theme.success,
         },
-        // Incorrect State
         optionViewIncorrect: {
           backgroundColor: theme.warning,
           borderColor: theme.warning,
         },
-        // Feedback Text (Correct/Incorrect)
         optionTextFeedback: {
           color: theme.textOnPrimary || theme.primaryWhite,
         },
-        // Disabled State
         optionViewDisabled: {
           backgroundColor: theme.disabledBackground || theme.placeholder,
           borderColor: theme.disabledBorder || theme.border,
@@ -376,30 +357,20 @@ const QuizScreen = ({ route, navigation }) => {
         optionTextDisabled: {
           color: theme.textDisabled || theme.textSecondary,
         },
-
-        // Submit/Next Button Styles
         submitNextButtonBase: {
           borderRadius: 25,
           paddingVertical: 8,
-          width: "100%", // Make button fill footer width
-          borderWidth: 1, // Add border width
-          // Set border color conditionally based on theme mode
+          width: "100%",
+          borderWidth: 1,
           borderColor: isDark
             ? (theme.textOnPrimary || theme.primaryWhite || "#FFFFFF") + "80"
-            : "transparent", // Light semi-transparent border in dark mode, transparent in light
+            : "transparent",
         },
-        nextButtonText: {
-          // color: theme.textOnPrimary || theme.primaryWhite,
-          fontSize: 18,
-          fontFamily: "nunitoBold",
-        },
-        // Background color keys (used by getNextButtonColor)
+        // nextButtonText: { fontSize: 18, fontFamily: "nunitoBold" }, // Covered by labelStyle
         submitButtonBg: theme.primary,
         submitButtonDisabledBg: theme.disabledBackground || theme.placeholder,
         nextButtonCorrectBg: theme.success,
         nextButtonIncorrectBg: theme.warning,
-
-        // Error/Info Text
         errorText: {
           color: theme.warning || "#FFBABA",
           fontSize: 16,
@@ -416,60 +387,56 @@ const QuizScreen = ({ route, navigation }) => {
     [theme, isDark]
   );
 
-  // --- Helper Function for Option Appearance (using themed styles) ---
   const getOptionAppearance = useCallback(
-    (option, currentQuestion) => {
+    (option, currentQ) => {
+      // currentQ instead of currentQuestion to avoid naming conflict
       const isSelected = option === selectedAnswer;
-      const isCorrect = option === currentQuestion?.answer;
-      let viewStyles = [styles.optionViewBase];
-      let textStyles = [styles.optionTextBase];
+      const isCorrect = option === currentQ?.answer;
+      let viewStyles = [stylesFromTheme.optionViewBase];
+      let textStyles = [stylesFromTheme.optionTextBase];
       if (showFeedback) {
         if (isCorrect) {
-          viewStyles.push(styles.optionViewCorrect);
-          textStyles.push(styles.optionTextFeedback);
+          viewStyles.push(stylesFromTheme.optionViewCorrect);
+          textStyles.push(stylesFromTheme.optionTextFeedback);
         } else if (isSelected) {
-          viewStyles.push(styles.optionViewIncorrect);
-          textStyles.push(styles.optionTextFeedback);
+          viewStyles.push(stylesFromTheme.optionViewIncorrect);
+          textStyles.push(stylesFromTheme.optionTextFeedback);
         } else {
-          viewStyles.push(styles.optionViewDisabled);
-          textStyles.push(styles.optionTextDisabled);
+          viewStyles.push(stylesFromTheme.optionViewDisabled);
+          textStyles.push(stylesFromTheme.optionTextDisabled);
         }
       } else {
         if (isSelected) {
-          viewStyles.push(styles.optionViewSelected);
-          textStyles.push(styles.optionTextSelected);
+          viewStyles.push(stylesFromTheme.optionViewSelected);
+          textStyles.push(stylesFromTheme.optionTextSelected);
         } else {
-          viewStyles.push(styles.optionViewDefault);
-          textStyles.push(styles.optionTextDefault);
+          viewStyles.push(stylesFromTheme.optionViewDefault);
+          textStyles.push(stylesFromTheme.optionTextDefault);
         }
       }
       return { viewStyles, textStyles };
-      // Depend on styles object now as it contains theme values
     },
-    [selectedAnswer, showFeedback, styles]
+    [selectedAnswer, showFeedback, stylesFromTheme] // Use stylesFromTheme
   );
 
-  // --- Dynamic Styling for Submit/Next Button (using theme colors from styles) ---
   const getNextButtonColor = useCallback(() => {
     if (!showFeedback) {
       return selectedAnswer === null
-        ? styles.submitButtonDisabledBg
-        : styles.submitButtonBg;
+        ? stylesFromTheme.submitButtonDisabledBg
+        : stylesFromTheme.submitButtonBg;
     } else {
       return wasCorrect
-        ? styles.nextButtonCorrectBg
-        : styles.nextButtonIncorrectBg;
+        ? stylesFromTheme.nextButtonCorrectBg
+        : stylesFromTheme.nextButtonIncorrectBg;
     }
-    // Depend on styles object now as it contains theme values
-  }, [showFeedback, selectedAnswer, wasCorrect, styles]);
+  }, [showFeedback, selectedAnswer, wasCorrect, stylesFromTheme]); // Use stylesFromTheme
 
   // --- RENDER LOGIC ---
-  // 1. Loading State
   if (isLoading) {
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={styles.centered}
+        style={stylesFromTheme.centered}
       >
         <PaperActivityIndicator
           animating={true}
@@ -480,14 +447,13 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  // 2. Error State
   if (error) {
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={styles.centered}
+        style={stylesFromTheme.centered}
       >
-        <PaperText style={styles.errorText}>{error}</PaperText>
+        <PaperText style={stylesFromTheme.errorText}>{error}</PaperText>
         <PaperButton
           mode="contained"
           buttonColor={theme.accent}
@@ -500,13 +466,15 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  // 3. Fallback/No Questions checks
-  if (questions.length === 0 || questionIndex >= questions.length) {
+  const currentQuestion = questions[questionIndex]; // Defined here for use in FAB and main render
+
+  if (questions.length === 0 || !currentQuestion) {
+    // Combined checks
     if (isNavigatingToResults.current) {
       return (
         <LinearGradient
           colors={[theme.gradientStart, theme.gradientEnd]}
-          style={styles.centered}
+          style={stylesFromTheme.centered}
         >
           <ActivityIndicator
             size="large"
@@ -515,13 +483,19 @@ const QuizScreen = ({ route, navigation }) => {
         </LinearGradient>
       );
     }
+    const message =
+      questions.length === 0 && !isLoading
+        ? "Quiz questions are not available yet for this topic."
+        : "Loading quiz state or quiz finished.";
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={styles.centered}
+        style={stylesFromTheme.centered}
       >
-        <PaperText style={styles.infoText}>
-          Loading quiz state or quiz finished.
+        <PaperText style={stylesFromTheme.infoText}>
+          {currentQuestion
+            ? "Critical Error: Could not load question data."
+            : message}
         </PaperText>
         <PaperButton
           mode="contained"
@@ -535,73 +509,62 @@ const QuizScreen = ({ route, navigation }) => {
       </LinearGradient>
     );
   }
-  const currentQuestion = questions[questionIndex];
-  if (!currentQuestion) {
-    return (
-      <LinearGradient
-        colors={[theme.gradientStart, theme.gradientEnd]}
-        style={styles.centered}
-      >
-        <PaperText style={styles.errorText}>
-          Critical Error: Could not load question data.
-        </PaperText>
-        <PaperButton
-          mode="contained"
-          buttonColor={theme.accent}
-          textColor={theme.buttonText}
-          onPress={() => navigation.goBack()}
-        >
-          Go Back
-        </PaperButton>
-      </LinearGradient>
-    );
-  }
 
   const isLikelyShortContent =
     (currentQuestion?.question?.length || 0) < SHORT_QUESTION_THRESHOLD;
 
-  // --- 6. Main Quiz UI ---
+  // Prepare contentContext for FeedbackFAB, only if currentQuestion is available
+  const feedbackContext = currentQuestion
+    ? {
+        type: "question",
+        // Ensure currentQuestion.id is the correct unique identifier for the question
+        id: currentQuestion.id || `question_${questionIndex}`, // Fallback if .id is not present
+        parentId: quizContentId, // ID of the overall quiz
+        titlePreview: currentQuestion.question
+          ? currentQuestion.question.substring(0, 70)
+          : "N/A",
+      }
+    : null;
+
   return (
     <LinearGradient
       colors={[theme.gradientStart, theme.gradientEnd]}
-      style={styles.container}
+      style={stylesFromTheme.container}
     >
       <ScrollView
-        style={styles.mainScroll}
-        contentContainerStyle={styles.mainScrollContentContainer}
+        style={stylesFromTheme.mainScroll}
+        contentContainerStyle={stylesFromTheme.mainScrollContentContainer}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* Progress text uses themed style */}
-        <PaperText style={styles.progressText}>
+        <PaperText style={stylesFromTheme.progressText}>
           Question {questionIndex + 1} of {questions.length}
         </PaperText>
-        {/* Card uses themed style */}
-        <Card style={styles.card}>
-          <Card.Content style={styles.cardContent}>
-            {/* Question text uses themed style */}
+        <Card style={stylesFromTheme.card}>
+          <Card.Content style={stylesFromTheme.cardContent}>
             <PaperText
               style={
                 showFeedback && currentQuestion.explanation
-                  ? styles.questionTextShrunk
-                  : styles.questionText
+                  ? stylesFromTheme.questionTextShrunk
+                  : stylesFromTheme.questionText
               }
             >
               {currentQuestion.question}
             </PaperText>
-            {/* Explanation uses themed container style; assumes Explanation component is themed */}
             {showFeedback && currentQuestion.explanation ? (
-              <View style={styles.explanationContainer}>
+              <View style={stylesFromTheme.explanationContainer}>
                 <Explanation explanationText={currentQuestion.explanation} />
               </View>
             ) : null}
           </Card.Content>
         </Card>
         <View
-          style={[styles.spacer, isLikelyShortContent && styles.spacerLarge]}
+          style={[
+            stylesFromTheme.spacer,
+            isLikelyShortContent && stylesFromTheme.spacerLarge,
+          ]}
         />
-        <View style={styles.optionsContainer}>
-          {/* Options mapping uses themed styles via getOptionAppearance */}
+        <View style={stylesFromTheme.optionsContainer}>
           {(currentQuestion.options || []).map((option, index) => {
             const { viewStyles, textStyles } = getOptionAppearance(
               option,
@@ -610,7 +573,7 @@ const QuizScreen = ({ route, navigation }) => {
             return (
               <TouchableOpacity
                 key={index}
-                style={styles.optionTouchable}
+                style={stylesFromTheme.optionTouchable}
                 onPress={() => handleAnswer(option)}
                 disabled={showFeedback}
                 activeOpacity={0.7}
@@ -623,20 +586,17 @@ const QuizScreen = ({ route, navigation }) => {
           })}
         </View>
       </ScrollView>
-      {/* Footer uses themed style */}
-      <View style={styles.footer}>
-        {/* Button uses themed styles via props and getNextButtonColor */}
+      <View style={stylesFromTheme.footer}>
         <PaperButton
           mode="contained"
-          style={styles.submitNextButtonBase} // Base style includes width: 100%
+          style={stylesFromTheme.submitNextButtonBase}
           labelStyle={{
-            // Combine font/size AND color here
             fontSize: 18,
             fontFamily: "nunitoBold",
-            color: theme.textOnPrimary || theme.primaryWhite || "#FFFFFF", // Apply themed color HERE
+            color: theme.textOnPrimary || theme.primaryWhite || "#FFFFFF",
           }}
-          buttonColor={getNextButtonColor()} // Themed background color
-          textColor={theme.textOnPrimary || theme.primaryWhite || "#FFFFFF"}
+          buttonColor={getNextButtonColor()}
+          textColor={theme.textOnPrimary || theme.primaryWhite || "#FFFFFF"} // Redundant with labelStyle but good for Paper
           onPress={showFeedback ? handleNextQuestion : handleSubmit}
           disabled={!showFeedback && selectedAnswer === null}
           uppercase={false}
@@ -644,7 +604,7 @@ const QuizScreen = ({ route, navigation }) => {
           {showFeedback ? "Next" : "Check"}
         </PaperButton>
       </View>
-      <ConfirmationModal // Assumed themed internally
+      <ConfirmationModal
         visible={showLeaveConfirmModal}
         title="Leave Quiz? You'll lose One Star"
         onCancel={handleCancelLeave}
@@ -652,6 +612,10 @@ const QuizScreen = ({ route, navigation }) => {
         confirmText="Leave"
         cancelText="Stay"
       />
+      {/* ADDED FeedbackFAB - Render only if context can be formed */}
+      {feedbackContext && (
+        <FeedbackFAB contentContext={feedbackContext} bottomOffset={75} />
+      )}
     </LinearGradient>
   );
 };
