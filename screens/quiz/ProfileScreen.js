@@ -206,11 +206,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       console.log("Cannot edit profile, user data not loaded yet.");
       return;
     }
+    console.log(
+      "Navigating to EditProfileScreen with userData.lastUpdatedAt: ",
+      userData.lastUpdatedAt
+    );
     navigation.navigate("EditProfile", {
       currentFirstName: userData.firstName || "",
       currentLastName: userData.lastName || "",
       currentPhotoURL: userData.photoURL || "",
-      currentLastUpdatedAt: userData.lastUpdatedAt || null,
+      currentProfileLastSavedAt: userData.profileLastSavedAt || null,
     });
   }
 

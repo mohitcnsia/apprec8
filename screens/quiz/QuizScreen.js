@@ -192,6 +192,7 @@ const QuizScreen = ({ route, navigation }) => {
   const handleSubmit = () => {
     if (selectedAnswer === null || isLoading || showFeedback) return;
     const q = questions[questionIndex];
+    console.log("Quiz Question: ", q);
     if (!q) return;
     const correct = selectedAnswer === q.answer;
     setWasCorrect(correct);
@@ -286,7 +287,7 @@ const QuizScreen = ({ route, navigation }) => {
           backgroundColor: theme.cardBackground || "#f0f0f0", // Themed card bg
           borderRadius: 12,
           minHeight: 120,
-          justifyContent: "flex-start", // Allow content to grow from the start
+          justifyContent: "center", // Allow content to grow from the start
           marginBottom: 10, // Add margin below card
           elevation: 2, // Add subtle elevation
           shadowColor: theme.shadowColor,
@@ -329,8 +330,8 @@ const QuizScreen = ({ route, navigation }) => {
           borderRadius: 25,
           paddingHorizontal: 15,
           // alignItems: "center", // REMOVED
-          // justifyContent: "center", // REMOVED
-          minHeight: 50, // REMOVED fixed height
+          justifyContent: "center", // REMOVED
+          minHeight: "15%", // REMOVED fixed height
           paddingVertical: 12, // Increased vertical padding
         },
         optionTextBase: {
@@ -581,7 +582,9 @@ const QuizScreen = ({ route, navigation }) => {
             {/* Question text uses themed style */}
             <PaperText
               style={
-                showFeedback ? styles.questionTextShrunk : styles.questionText
+                showFeedback && currentQuestion.explanation
+                  ? styles.questionTextShrunk
+                  : styles.questionText
               }
             >
               {currentQuestion.question}

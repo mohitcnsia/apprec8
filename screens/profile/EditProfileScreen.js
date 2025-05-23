@@ -60,7 +60,7 @@ const EditProfileScreen = ({ route, navigation }) => {
     currentFirstName = "",
     currentLastName = "",
     currentPhotoURL = "",
-    currentLastUpdatedAt = null,
+    currentProfileLastSavedAt = null,
   } = route.params || {};
 
   const [firstName, setFirstName] = useState(currentFirstName);
@@ -87,21 +87,25 @@ const EditProfileScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     let lastUpdateDate = null;
+    console.log(
+      "EditProfileScreen -> currentProfileLastSavedAt: ",
+      currentProfileLastSavedAt
+    );
 
-    if (currentLastUpdatedAt) {
-      if (typeof currentLastUpdatedAt.toDate === "function") {
+    if (currentProfileLastSavedAt) {
+      if (typeof currentProfileLastSavedAt.toDate === "function") {
         // It's already a Firestore Timestamp object
-        lastUpdateDate = currentLastUpdatedAt.toDate();
+        lastUpdateDate = currentProfileLastSavedAt.toDate();
       } else if (
-        typeof currentLastUpdatedAt.seconds === "number" &&
-        typeof currentLastUpdatedAt.nanoseconds === "number"
+        typeof currentProfileLastSavedAt.seconds === "number" &&
+        typeof currentProfileLastSavedAt.nanoseconds === "number"
       ) {
         // It's a plain object, convert it to a Firestore Timestamp, then to a JS Date
         // This requires the 'Timestamp' class from the Firestore SDK
         try {
           const firestoreTimestamp = new firestore.Timestamp(
-            currentLastUpdatedAt.seconds,
-            currentLastUpdatedAt.nanoseconds
+            currentProfileLastSavedAt.seconds,
+            currentProfileLastSavedAt.nanoseconds
           );
           lastUpdateDate = firestoreTimestamp.toDate();
           console.log("Converted plain object to JS Date:", lastUpdateDate);
@@ -113,8 +117,8 @@ const EditProfileScreen = ({ route, navigation }) => {
         }
       } else {
         console.warn(
-          "currentLastUpdatedAt is in an unrecognized format:",
-          currentLastUpdatedAt
+          "currentProfileLastSavedAt is in an unrecognized format:",
+          currentProfileLastSavedAt
         );
       }
     }
@@ -148,7 +152,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       setUpdateCooldownMessage("");
       console.log("No valid last update timestamp, update allowed.");
     }
-  }, [currentLastUpdatedAt]);
+  }, [currentProfileLastSavedAt]);
 
   const handleSaveProfile = useCallback(async () => {
     if (!canUpdateProfile) {
@@ -179,6 +183,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       lastName: trimmedLastName,
       photoURL: selectedAvatarUrl,
       lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
+      profileLastSavedAt: firestore.FieldValue.serverTimestamp(),
     };
     try {
       await firestoreService

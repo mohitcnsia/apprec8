@@ -78,7 +78,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
             component={EditProfileScreen}
             options={{
               title: "Edit Profile",
-              headerShown: true, // Explicitly show header
+              headerShown: false, // Explicitly show header
             }}
           />
         </>
