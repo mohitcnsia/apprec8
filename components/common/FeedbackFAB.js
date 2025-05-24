@@ -1,5 +1,6 @@
 // components/common/FeedbackFAB.js
-import React, { useState, useEffect, useCallback } from "react";
+// Based on Ultra-Simplified, now respects a 'visible' prop
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -16,16 +17,16 @@ import {
   Text,
   IconButton,
   ActivityIndicator,
-} from "react-native-paper"; // PaperProvider removed, assuming it's at app root
+} from "react-native-paper";
 import functions from "@react-native-firebase/functions";
 import auth from "@react-native-firebase/auth";
-import { useTheme } from "../../context/ThemeContext"; // Assuming path to your ThemeContext
+import { useTheme } from "../../context/ThemeContext";
 
-// Helper function to count words
+const MIN_CHARS = 10;
+const MIN_WORDS = 3;
+
 const countWords = (str) => {
-  if (!str || typeof str !== "string" || str.trim() === "") {
-    return 0;
-  }
+  if (!str || typeof str !== "string" || str.trim() === "") return 0;
   return str.trim().split(/\s+/).length;
 };
 
@@ -37,20 +38,14 @@ const countWords = (str) => {
  * @property {string} [titlePreview]
  */
 
-/**
- * FeedbackFAB component designed to work with the user's existing custom theme structure.
- * @param {object} props
- * @param {ContentContext} props.contentContext - Contextual info about the content.
- */
-const FeedbackFAB = ({ contentContext }) => {
-  const { theme } = useTheme(); // Get theme from your ThemeContext
+const FeedbackFAB = ({
+  contentContext,
+  visible = true, // Prop to control visibility from parent
+}) => {
+  const { theme } = useTheme();
+  const C = theme.appColors || theme;
 
-  // Use appColors if present, otherwise fallback to root theme keys
-  // This assumes your theme structure (from config/colors.js after my last suggestion)
-  // is either theme.appColors.yourKey or theme.yourKey if appColors doesn't exist/not used yet
-  const C = theme.appColors || theme; // C for Colors from theme
-
-  const [fabState, setFabState] = useState({ open: false });
+  const [fabOpen, setFabOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMode, setModalMode] = useState(null);
   const [selectedReactionInModal, setSelectedReactionInModal] = useState(null);
@@ -58,8 +53,28 @@ const FeedbackFAB = ({ contentContext }) => {
   const [textInputError, setTextInputError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onFabStateChange = ({ open }) => setFabState({ open });
-  const { open: fabOpen } = fabState;
+  // If the FAB is externally made invisible while its menu was open, close the menu.
+  useEffect(() => {
+    if (!visible && fabOpen) {
+      setFabOpen(false);
+    }
+  }, [visible, fabOpen]);
+
+  const onFabStateChange = ({ open }) => {
+    console.log("[FeedbackFAB] onFabStateChange, open:", open);
+    setFabOpen(open);
+  };
+
+  const handleFabActionPress = (mode) => {
+    console.log("[FeedbackFAB] FAB action selected:", mode);
+    setModalMode(mode);
+    setFabOpen(false);
+    if (mode === "like") setSelectedReactionInModal("like");
+    else if (mode === "dislike") setSelectedReactionInModal("dislike");
+    else if (mode === "feedback") setSelectedReactionInModal("like");
+    else if (mode === "report_issue") setSelectedReactionInModal(null);
+    setModalVisible(true);
+  };
 
   useEffect(() => {
     if (!modalVisible) {
@@ -73,93 +88,69 @@ const FeedbackFAB = ({ contentContext }) => {
     }
   }, [modalVisible]);
 
-  const MIN_CHARS = 10;
-  const MIN_WORDS = 3;
-
   const validateInput = useCallback(() => {
+    /* ... (Same as your working "ultra-simplified" version) ... */
     setTextInputError("");
-    let isTextMandatory = false;
-    let validationMessage = `Text must be at least ${MIN_CHARS} characters and ${MIN_WORDS} words.`;
-
-    if (modalMode === "feedback") isTextMandatory = true;
-    else if (modalMode === "report_issue") {
-      isTextMandatory = true;
-      validationMessage = `Please describe the issue (min ${MIN_CHARS} chars, ${MIN_WORDS} words).`;
-    }
-
-    if (isTextMandatory) {
-      if (
-        feedbackText.trim().length < MIN_CHARS ||
-        countWords(feedbackText) < MIN_WORDS
-      ) {
-        setTextInputError(validationMessage);
-        return false;
-      }
+    let isTextMandatory =
+      modalMode === "feedback" || modalMode === "report_issue";
+    let msg = `Text must be at least ${MIN_CHARS} characters and ${MIN_WORDS} words.`;
+    if (modalMode === "report_issue")
+      msg = `Please describe the issue (min ${MIN_CHARS} chars, ${MIN_WORDS} words).`;
+    if (
+      isTextMandatory &&
+      (feedbackText.trim().length < MIN_CHARS ||
+        countWords(feedbackText) < MIN_WORDS)
+    ) {
+      setTextInputError(msg);
+      return false;
     }
     return true;
   }, [feedbackText, modalMode]);
 
-  const handleFabActionPress = (mode) => {
-    setModalMode(mode);
-    setFabState({ open: false });
-    if (mode === "like") setSelectedReactionInModal("like");
-    else if (mode === "dislike") setSelectedReactionInModal("dislike");
-    else if (mode === "feedback")
-      setSelectedReactionInModal("like"); // Default like
-    else if (mode === "report_issue") setSelectedReactionInModal(null);
-    setModalVisible(true);
-  };
-
   const toggleReactionInModal = (reaction) => {
+    /* ... (Same as your working "ultra-simplified" version) ... */
     if (modalMode !== "feedback") return;
     setSelectedReactionInModal((prev) => (prev === reaction ? null : reaction));
   };
 
   const handleSubmit = async () => {
+    /* ... (Same as your working "ultra-simplified" version) ... */
     if (!validateInput()) return;
     const currentUser = auth().currentUser;
     if (!currentUser) {
-      Alert.alert("Authentication Error", "You must be logged in.");
+      Alert.alert("Auth Error", "Must be logged in.");
       return;
     }
     setIsSubmitting(true);
-    const feedbackTypePayload =
-      modalMode === "report_issue" ? "issue_report" : "general";
     const payload = {
       contentContext: contentContext || {
-        id: "unknown_context",
-        type: "unknown_context",
+        id: "unknown_fab_hideshow",
+        type: "unknown_fab_hideshow",
       },
       entryPoint: `${modalMode || "unknown"}_fab`,
       reaction: selectedReactionInModal,
       feedbackText: feedbackText.trim(),
-      feedbackType: feedbackTypePayload,
+      feedbackType: modalMode === "report_issue" ? "issue_report" : "general",
       clientTimestamp: new Date().toISOString(),
     };
-
     try {
-      const submitFeedbackFunction =
-        functions().httpsCallable("submitFeedback");
-      const result = await submitFeedbackFunction(payload);
-      if (result.data && result.data.status === "success") {
+      const submitFn = functions().httpsCallable("submitFeedback");
+      const result = await submitFn(payload);
+      if (result.data?.status === "success") {
         Alert.alert("Feedback Sent", "Thank you!");
         setModalVisible(false);
       } else {
-        throw new Error(result.data.message || "Failed to submit feedback.");
+        throw new Error(result.data.message || "Failed.");
       }
-    } catch (error) {
-      console.error("Feedback submission error:", error);
-      Alert.alert(
-        "Submission Error",
-        `Could not submit feedback: ${error.message}`
-      );
+    } catch (e) {
+      Alert.alert("Error", `Submit failed: ${e.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const getModalTitle = () => {
-    // ... (same as before)
+    /* ... (Same as your working "ultra-simplified" version) ... */
     switch (modalMode) {
       case "like":
         return "Liked this? Add a comment?";
@@ -174,7 +165,7 @@ const FeedbackFAB = ({ contentContext }) => {
     }
   };
   const getSubmitButtonText = () => {
-    // ... (same as before)
+    /* ... (Same as your working "ultra-simplified" version) ... */
     switch (modalMode) {
       case "like":
       case "dislike":
@@ -187,12 +178,13 @@ const FeedbackFAB = ({ contentContext }) => {
         return "Submit";
     }
   };
+
   const isFeedbackTextRequired =
     modalMode === "feedback" || modalMode === "report_issue";
   const placeholderText = isFeedbackTextRequired
     ? modalMode === "report_issue"
-      ? "Please describe the issue in detail..."
-      : "Your feedback (required)..."
+      ? "Describe issue..."
+      : "Feedback (required)..."
     : "Optional comment...";
 
   const fabActions = [
@@ -202,6 +194,7 @@ const FeedbackFAB = ({ contentContext }) => {
       onPress: () => handleFabActionPress("like"),
       color: C.fabIconColor,
       style: { backgroundColor: C.fabBackground },
+      small: false,
     },
     {
       icon: "thumb-down",
@@ -209,6 +202,7 @@ const FeedbackFAB = ({ contentContext }) => {
       onPress: () => handleFabActionPress("dislike"),
       color: C.fabIconColor,
       style: { backgroundColor: C.fabBackground },
+      small: false,
     },
     {
       icon: "pencil-outline",
@@ -216,6 +210,7 @@ const FeedbackFAB = ({ contentContext }) => {
       onPress: () => handleFabActionPress("feedback"),
       color: C.fabIconColor,
       style: { backgroundColor: C.fabBackground },
+      small: false,
     },
     {
       icon: "alert-circle-outline",
@@ -223,19 +218,19 @@ const FeedbackFAB = ({ contentContext }) => {
       onPress: () => handleFabActionPress("report_issue"),
       color: C.fabIconColor,
       style: { backgroundColor: C.fabBackground },
+      small: false,
     },
   ].reverse();
 
-  // Styles defined using your theme (C)
   const styles = StyleSheet.create({
+    // No specific positioning container style needed here, FAB.Group positions itself by default
     modalContainer: {
-      backgroundColor: C.cardBackground || C.background || "#FFFFFF", // Fallback
+      backgroundColor: C.cardBackground || C.background || "#FFFFFF",
       padding: 20,
       marginHorizontal: 20,
       borderRadius: 12,
       maxHeight: "90%",
     },
-    modalContent: {},
     modalHeader: {
       flexDirection: "row",
       justifyContent: "space-between",
@@ -248,7 +243,6 @@ const FeedbackFAB = ({ contentContext }) => {
       color: C.textPrimary || "#000000",
       flex: 1,
     },
-    closeButton: {},
     reactionButtonsContainer: {
       flexDirection: "row",
       justifyContent: "center",
@@ -256,7 +250,7 @@ const FeedbackFAB = ({ contentContext }) => {
       marginBottom: 15,
       paddingVertical: 5,
     },
-    reactionIcon: { marginHorizontal: 15 },
+    reactionIconStyle: { marginHorizontal: 15 },
     reactionDisplayContainer: {
       flexDirection: "row",
       alignItems: "center",
@@ -271,9 +265,8 @@ const FeedbackFAB = ({ contentContext }) => {
       flexShrink: 1,
     },
     textInputStyle: {
-      // Note: This is for the style prop of TextInput, not a StyleSheet object
       backgroundColor: C.inputBackground || C.background || "transparent",
-      // color: C.inputText || C.textPrimary, // Not a direct prop for Paper TextInput, handled by theme or activeUnderlineColor etc.
+      marginBottom: 5,
     },
     errorText: {
       color: C.appWarning || C.errorRed || "#B00020",
@@ -288,12 +281,26 @@ const FeedbackFAB = ({ contentContext }) => {
       alignItems: "center",
     },
     buttonStyle: { marginLeft: 10, minWidth: 90 },
-    fabStyle: { backgroundColor: C.fabBackground || C.primary || "#6200EE" },
+    fabStyleForMainButton: {
+      backgroundColor: C.fabBackground || C.primary,
+      // If Paper's default positioning isn't quite right, you can add explicit positioning here:
+      // position: 'absolute', // This might be needed if it doesn't float correctly otherwise
+      // right: 16,
+      // bottom: 25, // Adjust this value
+    },
   });
+
+  if (!visible) {
+    // console.log('[FeedbackFAB] Prop "visible" is false, rendering null.');
+    return null; // Don't render if not visible
+  }
+
+  console.log("[FeedbackFAB] Rendering. fabOpen:", fabOpen);
 
   return (
     <>
       <Portal>
+        {/* Modal Definition (Same as your "ultra-simplified" version) */}
         <Modal
           visible={modalVisible}
           onDismiss={() => {
@@ -314,12 +321,10 @@ const FeedbackFAB = ({ contentContext }) => {
                     icon="close"
                     size={24}
                     onPress={() => setModalVisible(false)}
-                    style={styles.closeButton}
                     iconColor={C.textPrimary}
                   />
                 )}
               </View>
-
               {modalMode === "feedback" && (
                 <View style={styles.reactionButtonsContainer}>
                   <IconButton
@@ -335,7 +340,7 @@ const FeedbackFAB = ({ contentContext }) => {
                         ? C.appAccent || C.primary
                         : C.textSecondary || C.placeholder
                     }
-                    style={styles.reactionIcon}
+                    style={styles.reactionIconStyle}
                   />
                   <IconButton
                     icon={
@@ -350,11 +355,10 @@ const FeedbackFAB = ({ contentContext }) => {
                         ? C.appAccent || C.primary
                         : C.textSecondary || C.placeholder
                     }
-                    style={styles.reactionIcon}
+                    style={styles.reactionIconStyle}
                   />
                 </View>
               )}
-
               {(modalMode === "like" || modalMode === "dislike") &&
                 selectedReactionInModal && (
                   <View style={styles.reactionDisplayContainer}>
@@ -374,38 +378,35 @@ const FeedbackFAB = ({ contentContext }) => {
                     </Text>
                   </View>
                 )}
-
               <TextInput
                 label={placeholderText}
                 value={feedbackText}
                 onChangeText={setFeedbackText}
                 multiline
                 numberOfLines={4}
-                style={styles.textInputStyle} // Pass style object for TextInput
+                style={styles.textInputStyle}
                 error={!!textInputError}
                 maxLength={1000}
                 disabled={isSubmitting}
-                mode="outlined" // Or "flat"
+                mode="outlined"
                 outlineColor={C.border || C.placeholder}
                 activeOutlineColor={C.appPrimary || C.primary}
                 placeholderTextColor={C.placeholder || C.textSecondary}
                 theme={{
-                  // Pass a minimal theme to TextInput for text color if needed
                   colors: {
-                    text: C.inputText || C.textPrimary, // For older Paper, newer uses onSurface or text color from global theme
-                    placeholder: C.placeholder || C.textSecondary,
-                    primary: C.appPrimary || C.primary, // For active states
+                    text: C.inputText || C.textPrimary || "#000000",
+                    placeholder: C.placeholder || C.textSecondary || "#757575",
+                    primary: C.appPrimary || C.primary || "#6200EE",
                     background:
-                      C.inputBackground || C.background || "transparent", // Ensure background is styled
-                    onSurface: C.inputText || C.textPrimary, // For newer Paper text color
-                    outline: C.border || C.placeholder,
+                      C.inputBackground || C.background || "transparent",
+                    onSurface: C.inputText || C.textPrimary || "#000000",
+                    outline: C.border || C.placeholder || "#757575",
                   },
                 }}
               />
               {textInputError ? (
                 <Text style={styles.errorText}>{textInputError}</Text>
               ) : null}
-
               <View style={styles.modalActions}>
                 {isSubmitting ? (
                   <ActivityIndicator
@@ -417,9 +418,8 @@ const FeedbackFAB = ({ contentContext }) => {
                   <PaperButton
                     onPress={() => setModalVisible(false)}
                     style={styles.buttonStyle}
-                    textColor={C.appPrimary || C.primary} // For outlined button text
+                    textColor={C.appPrimary || C.primary}
                     mode="outlined"
-                    borderColor={C.appPrimary || C.primary} // Explicitly set border color
                   >
                     Cancel
                   </PaperButton>
@@ -428,7 +428,10 @@ const FeedbackFAB = ({ contentContext }) => {
                   onPress={handleSubmit}
                   disabled={
                     isSubmitting ||
-                    (isFeedbackTextRequired && !feedbackText.trim())
+                    (isFeedbackTextRequired &&
+                      !feedbackText.trim() &&
+                      modalMode !== "like" &&
+                      modalMode !== "dislike")
                   }
                   style={styles.buttonStyle}
                   buttonColor={C.appPrimary || C.primary}
@@ -447,15 +450,18 @@ const FeedbackFAB = ({ contentContext }) => {
 
       <FAB.Group
         open={fabOpen}
-        visible={true}
+        visible={true} // FAB.Group itself is always "visible" when this component renders; parent controls overall mount/unmount
         icon={fabOpen ? "close-circle-outline" : "message-plus-outline"}
-        actions={fabActions} // fabActions already have color & style applied
+        actions={fabActions}
         onStateChange={onFabStateChange}
-        fabStyle={[
-          styles.fabStyle,
-          { backgroundColor: C.fabBackground || C.primary },
-        ]} // Main FAB button itself
-        color={C.fabIconColor || C.primaryWhite} // Color for the main FAB icon
+        onPress={() => {
+          console.log(
+            "[FeedbackFAB] Main FAB onPress, toggling fabOpen state."
+          );
+          setFabOpen((prev) => !prev);
+        }}
+        fabStyle={styles.fabStyleForMainButton}
+        color={C.fabIconColor || C.primaryWhite}
       />
     </>
   );

@@ -1,3 +1,4 @@
+// components/common/reader/Apprec8Reader.js
 import React, {
   useState,
   useEffect,
@@ -10,21 +11,23 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Modal,
+  Modal as RNModal, // Renamed to avoid conflict
   TouchableOpacity,
   Image,
   ActivityIndicator,
   Dimensions,
-  Button, // Kept for fallback error button
+  Button,
+  TouchableWithoutFeedback, // For triple-tap
 } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
-import { listenToStudyContent } from "../../../services/firestoreContentApi";
-import { useTheme } from "../../../context/ThemeContext";
-import FeedbackFAB from "../FeedbackFAB"; // <<< ADDED IMPORT (Adjust path: if FeedbackFAB is in /common, this becomes '../FeedbackFAB')
+import { listenToStudyContent } from "../../../services/firestoreContentApi"; // Adjust path if needed
+import { useTheme } from "../../../context/ThemeContext"; // Adjust path if needed
+import FeedbackFAB from "../FeedbackFAB"; // Adjust path to your FeedbackFAB component
 
 const screenWidth = Dimensions.get("window").width;
 const coverImageHeight = screenWidth * 0.6;
+const TRIPLE_TAP_DELAY = 300; // Milliseconds for triple-tap detection
 
 const Apprec8Reader = ({ route, navigation }) => {
   const { theme } = useTheme();
@@ -34,35 +37,51 @@ const Apprec8Reader = ({ route, navigation }) => {
   const [studyData, setStudyData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [imageViewerModalVisible, setImageViewerModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState([]);
 
-  useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  // --- State and Refs for FAB Visibility (Triple Tap) ---
+  const [isFabVisibleByGesture, setIsFabVisibleByGesture] = useState(false); // Starts hidden
+  const tapCountRef = useRef(0);
+  const lastTapTimestampRef = useRef(0);
+  const tapTimerRef = useRef(null); // Timer to reset tap count for triple-tap sequence
 
   useEffect(() => {
+    // This effect runs when contentId changes, or on initial mount if contentId is present.
+
+    // 1. Reset FAB visibility states for new content
+    console.log(
+      `[Apprec8Reader] contentId effect: ${contentId}. Resetting FAB visibility and tap state.`
+    );
+    setIsFabVisibleByGesture(false);
+    tapCountRef.current = 0;
+    clearTimeout(tapTimerRef.current);
+
+    // 2. Handle data fetching based on contentId
     if (!contentId) {
       if (isMounted.current) {
+        // isMounted.current is still useful for async operations
         setError("No content specified.");
         setIsLoading(false);
+        setStudyData(null); // Ensure studyData is also cleared
       }
-      return;
+      return; // Exit if no contentId
     }
+
+    // Start loading for the new contentId
     setIsLoading(true);
     setError(null);
     setStudyData(null);
-    const unsubscribe = listenToStudyContent(
+
+    console.log(`[Apprec8Reader] Fetching study content for ID: ${contentId}`);
+    const unsubscribeFirestore = listenToStudyContent(
+      // Renamed to avoid conflict with returned function
       contentId,
       (data) => {
         if (isMounted.current) {
           if (data) {
             setStudyData(data);
             setError(null);
-            // Set screen title if possible
             if (data.name) {
               navigation.setOptions({ title: data.name });
             }
@@ -81,26 +100,83 @@ const Apprec8Reader = ({ route, navigation }) => {
         }
       }
     );
-    return () => unsubscribe();
-  }, [contentId, navigation]); // Added navigation to dependency array for setOptions
+
+    // 3. Return cleanup function
+    return () => {
+      console.log(
+        `[Apprec8Reader] Cleaning up effect for contentId: ${contentId}`
+      );
+      if (unsubscribeFirestore) {
+        unsubscribeFirestore();
+      }
+      clearTimeout(tapTimerRef.current); // Ensure tap timer is cleared
+    };
+  }, [contentId, navigation]); // Dependencies: contentId and navigation (for setOptions)
+
+  // Separate effect for mount/unmount if 'isMounted.current' is used elsewhere
+  // or for general component lifecycle cleanup not tied to contentId.
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []); // Empty dependency array means this runs only on mount and unmount
 
   const openImage = useCallback((imageUri) => {
     if (imageUri && typeof imageUri === "string" && imageUri.trim() !== "") {
       setSelectedImage([{ url: imageUri }]);
-      setModalVisible(true);
+      setImageViewerModalVisible(true);
     } else {
       console.warn("Attempted to open invalid image URI:", imageUri);
     }
   }, []);
 
+  // Triple-tap handler to toggle FAB visibility
+  const handleScreenPressForFabToggle = () => {
+    const now = Date.now();
+    clearTimeout(tapTimerRef.current); // Clear previous reset timer
+
+    // If current tap is too slow after a sequence started, reset count
+    if (
+      tapCountRef.current > 0 &&
+      now - lastTapTimestampRef.current > TRIPLE_TAP_DELAY
+    ) {
+      // console.log('[Apprec8Reader] Tap sequence broken (too slow since last tap), resetting count.');
+      tapCountRef.current = 0;
+    }
+
+    tapCountRef.current += 1;
+    lastTapTimestampRef.current = now;
+    // console.log(`[Apprec8Reader] Tap recorded. Count: ${tapCountRef.current}`);
+
+    if (tapCountRef.current === 3) {
+      console.log(
+        "[Apprec8Reader] Triple-tap detected! Toggling FAB visibility."
+      );
+      setIsFabVisibleByGesture((prev) => !prev);
+      tapCountRef.current = 0; // Reset count after successful triple-tap action
+    } else if (tapCountRef.current > 0) {
+      // Set a timer: if no more taps come soon enough to complete a triple, reset the count.
+      tapTimerRef.current = setTimeout(() => {
+        // console.log('[Apprec8Reader] Tap sequence incomplete within time, resetting tap count.');
+        tapCountRef.current = 0;
+      }, TRIPLE_TAP_DELAY * 2);
+    }
+  };
+
+  // Styles
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: {
+        outerView: {
           flex: 1,
+          backgroundColor: theme.background,
+        },
+        scrollContentContainer: {
+          flexGrow: 1,
           paddingHorizontal: 16,
           paddingTop: 20,
-          backgroundColor: theme.background,
+          paddingBottom: 80, // Space for FAB
         },
         centered: {
           justifyContent: "center",
@@ -189,6 +265,7 @@ const Apprec8Reader = ({ route, navigation }) => {
     [theme]
   );
 
+  // Markdown Styles
   const markdownStyles = useMemo(
     () => ({
       text: { fontSize: 18, lineHeight: 28, color: theme.textPrimary },
@@ -248,7 +325,9 @@ const Apprec8Reader = ({ route, navigation }) => {
         borderLeftWidth: 4,
         marginVertical: 10,
         opacity: 0.9,
-        backgroundColor: theme.quoteBackground || theme.primary + "15",
+        backgroundColor:
+          theme.quoteBackground ||
+          (theme.primary ? theme.primary + "15" : "#E0E0E015"),
         borderLeftColor: theme.quoteBorder || theme.primary,
       },
       image: {
@@ -284,6 +363,7 @@ const Apprec8Reader = ({ route, navigation }) => {
     [theme]
   );
 
+  // --- RENDER LOGIC ---
   if (isLoading) {
     return (
       <View style={styles.centered}>
@@ -331,123 +411,138 @@ const Apprec8Reader = ({ route, navigation }) => {
     ? additionalImages
     : [];
 
-  // Prepare contentContext for FeedbackFAB
   const feedbackContext =
     contentId && studyData
       ? {
-          type: "study_content", // Or 'study_material_page'
+          type: "study_content",
           id: contentId,
-          // parentId: studyData.topicId || studyData.categoryId, // If available from studyData
           titlePreview: studyData.name
             ? studyData.name.substring(0, 70)
             : "Study Content",
         }
       : null;
 
+  // Determine final FAB visibility
+  const fabShouldActuallyBeVisible = isFabVisibleByGesture && !!feedbackContext;
+
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      {/* Ensure main view has flex 1 for FAB positioning */}
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.author}>By {author}</Text>
-        </View>
-        {coverImage ? (
-          <TouchableOpacity onPress={() => openImage(coverImage)}>
-            <Image
-              source={{ uri: coverImage }}
-              style={styles.coverImage}
-              onError={(e) =>
-                console.error(
-                  "Cover Image Load Error:",
-                  coverImage,
-                  e.nativeEvent.error
-                )
-              }
-            />
-          </TouchableOpacity>
-        ) : null}
-        <View style={styles.markdownContainer}>
-          <Markdown
-            style={markdownStyles}
-            rules={{
-              image: (node, children, parent, mdStyles) => {
-                // Changed styles to mdStyles to avoid conflict
-                const src = node.attributes.src;
-                if (!src || typeof src !== "string" || !src.startsWith("http"))
-                  return null;
-                return (
+    <TouchableWithoutFeedback
+      onPress={handleScreenPressForFabToggle}
+      accessible={false}
+    >
+      <View style={styles.outerView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContentContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.author}>By {author}</Text>
+          </View>
+          {coverImage ? (
+            <TouchableOpacity onPress={() => openImage(coverImage)}>
+              <Image
+                source={{ uri: coverImage }}
+                style={styles.coverImage}
+                onError={(e) =>
+                  console.error(
+                    "Cover Image Load Error:",
+                    coverImage,
+                    e.nativeEvent.error
+                  )
+                }
+              />
+            </TouchableOpacity>
+          ) : null}
+          <View style={styles.markdownContainer}>
+            <Markdown
+              style={markdownStyles}
+              rules={{
+                image: (node, children, parent, mdStyles) => {
+                  const src = node.attributes.src;
+                  if (
+                    !src ||
+                    typeof src !== "string" ||
+                    !src.startsWith("http")
+                  )
+                    return null;
+                  return (
+                    <TouchableOpacity
+                      key={node.key}
+                      onPress={() => openImage(src)}
+                      style={
+                        mdStyles.markdownImageWrapper_image ||
+                        styles.markdownImageWrapper
+                      }
+                    >
+                      <Image
+                        source={{ uri: src }}
+                        style={mdStyles.image}
+                        onError={(e) =>
+                          console.error(
+                            "Markdown Image Load Error:",
+                            src,
+                            e.nativeEvent.error
+                          )
+                        }
+                      />
+                    </TouchableOpacity>
+                  );
+                },
+              }}
+            >
+              {content}
+            </Markdown>
+          </View>
+          {validAdditionalImages.length > 0 && (
+            <View style={styles.imageContainer}>
+              <Text style={styles.additionalImagesTitle}>
+                Additional Images:
+              </Text>
+              {validAdditionalImages.map((img, index) =>
+                img && typeof img === "string" && img.trim() !== "" ? (
                   <TouchableOpacity
-                    key={node.key}
-                    onPress={() => openImage(src)}
-                    style={
-                      mdStyles.markdownImageWrapper_image ||
-                      styles.markdownImageWrapper
-                    }
+                    key={`additional-image-${index}`}
+                    onPress={() => openImage(img)}
+                    style={styles.additionalImageTouchable}
                   >
                     <Image
-                      source={{ uri: src }}
-                      style={mdStyles.image}
+                      source={{ uri: img }}
+                      style={styles.additionalImage}
                       onError={(e) =>
                         console.error(
-                          "Markdown Image Load Error:",
-                          src,
+                          "Additional Image Load Error:",
+                          img,
                           e.nativeEvent.error
                         )
                       }
                     />
                   </TouchableOpacity>
-                );
-              },
-            }}
-          >
-            {content}
-          </Markdown>
-        </View>
-        {validAdditionalImages.length > 0 && (
-          <View style={styles.imageContainer}>
-            <Text style={styles.additionalImagesTitle}>Additional Images:</Text>
-            {validAdditionalImages.map((img, index) =>
-              img && typeof img === "string" && img.trim() !== "" ? (
-                <TouchableOpacity
-                  key={`additional-image-${index}`}
-                  onPress={() => openImage(img)}
-                  style={styles.additionalImageTouchable}
-                >
-                  <Image
-                    source={{ uri: img }}
-                    style={styles.additionalImage}
-                    onError={(e) =>
-                      console.error(
-                        "Additional Image Load Error:",
-                        img,
-                        e.nativeEvent.error
-                      )
-                    }
-                  />
-                </TouchableOpacity>
-              ) : (
-                <View
-                  key={`invalid-image-${index}`}
-                  style={styles.invalidImagePlaceholder}
-                >
-                  <Text style={{ color: theme.textSecondary }}>
-                    Invalid Image Entry
-                  </Text>
-                </View>
-              )
-            )}
-          </View>
-        )}
-        <Modal
-          visible={modalVisible}
+                ) : (
+                  <View
+                    key={`invalid-image-${index}`}
+                    style={styles.invalidImagePlaceholder}
+                  >
+                    <Text style={{ color: theme.textSecondary }}>
+                      {" "}
+                      Invalid Image Entry{" "}
+                    </Text>
+                  </View>
+                )
+              )}
+            </View>
+          )}
+        </ScrollView>
+
+        <RNModal
+          visible={imageViewerModalVisible}
           transparent={true}
-          onRequestClose={() => setModalVisible(false)}
+          onRequestClose={() => setImageViewerModalVisible(false)}
         >
           <ImageViewer
             imageUrls={selectedImage}
             enableSwipeDown={true}
-            onSwipeDown={() => setModalVisible(false)}
+            onSwipeDown={() => setImageViewerModalVisible(false)}
             renderIndicator={() => null}
             loadingRender={() => (
               <ActivityIndicator
@@ -456,11 +551,17 @@ const Apprec8Reader = ({ route, navigation }) => {
               />
             )}
           />
-        </Modal>
-      </ScrollView>
-      {/* ADDED FeedbackFAB - Render only if context can be formed */}
-      {feedbackContext && <FeedbackFAB contentContext={feedbackContext} />}
-    </View>
+        </RNModal>
+
+        {/* FeedbackFAB: Mount if context is valid, visibility controlled by gesture */}
+        {feedbackContext && (
+          <FeedbackFAB
+            contentContext={feedbackContext}
+            visible={fabShouldActuallyBeVisible}
+          />
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

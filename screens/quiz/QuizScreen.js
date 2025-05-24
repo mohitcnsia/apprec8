@@ -1,3 +1,4 @@
+// screens/quiz/QuizScreen.js
 import React, {
   useEffect,
   useState,
@@ -8,17 +9,18 @@ import React, {
 import {
   View,
   StyleSheet,
-  ActivityIndicator, // Using react-native one for fallback loading state
+  ActivityIndicator as RNActivityIndicator,
   ScrollView,
   Platform,
-  Text, // Standard Text for options
-  TouchableOpacity, // Touchable for options
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback, // For triple-tap
 } from "react-native";
 import {
   Button as PaperButton,
   Card,
   Text as PaperText,
-  ActivityIndicator as PaperActivityIndicator, // Prefer Paper indicator
+  ActivityIndicator as PaperActivityIndicator,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import functions from "@react-native-firebase/functions";
@@ -27,7 +29,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { listenToQuizQuestions } from "../../services/firestoreContentApi";
 import Explanation from "../../components/quiz/Explanation";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
-import FeedbackFAB from "../../components/common/FeedbackFAB"; // <<< ADDED IMPORT (Adjust path if needed)
+import FeedbackFAB from "../../components/common/FeedbackFAB"; // Adjust path if needed
 
 // --- Firebase Callable Function Reference ---
 const penalizeQuizLeave = functions().httpsCallable("penalizeQuizLeave");
@@ -47,14 +49,16 @@ const shuffleArray = (array) => {
 const MAX_QUESTIONS = 10;
 const PASSING_SCORE_THRESHOLD = 1;
 const SHORT_QUESTION_THRESHOLD = 80;
+const TRIPLE_TAP_DELAY = 300; // Max delay between taps for a triple tap sequence (milliseconds)
 
 // --- Component ---
 const QuizScreen = ({ route, navigation }) => {
   const { theme, isDark } = useTheme();
 
-  const quizContentId = route?.params?.quizContentId; // This is the ID for the whole quiz
-  const parentTopicIdFromParams = route?.params?.parentTopicId; // Context for the quiz itself
+  const quizContentId = route?.params?.quizContentId;
+  const parentTopicIdForContext = route?.params?.parentTopicId;
   const passingScore = route?.params?.passingScore ?? PASSING_SCORE_THRESHOLD;
+
   const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,14 +66,77 @@ const QuizScreen = ({ route, navigation }) => {
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [wasCorrect, setWasCorrect] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false); // This state indicates if explanation is shown
+  const [showExplanation, setShowExplanation] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [showLeaveConfirmModal, setShowLeaveConfirmModal] = useState(false);
   const [pendingNavigationAction, setPendingNavigationAction] = useState(null);
   const isNavigatingToResults = useRef(false);
   const isMounted = useRef(true);
 
-  // --- Effects ---
+  // --- State and Refs for FAB Manual Toggle (Triple Tap) ---
+  const [isFabRevealedByGesture, setIsFabRevealedByGesture] = useState(false); // FAB starts hidden
+  const tapCountRef = useRef(0);
+  const lastTapTimestampRef = useRef(0);
+  const tapTimerRef = useRef(null); // Timer to reset tap count for triple-tap sequence
+
+  // When explanation appears/disappears or question changes, reset FAB gesture state
+  useEffect(() => {
+    console.log(
+      `[QuizScreen] Effect for showExplanation/questionIndex. showExplanation: ${showExplanation}, questionIndex: ${questionIndex}. Resetting isFabRevealedByGesture to false.`
+    );
+    setIsFabRevealedByGesture(false); // FAB is hidden by default for any new explanation context
+    tapCountRef.current = 0; // Reset tap count
+    clearTimeout(tapTimerRef.current); // Clear any pending tap reset timer
+  }, [showExplanation, questionIndex]); // Resets when explanation state changes or new question
+
+  // Handler for screen presses to detect triple-tap for FAB toggle
+  const handleScreenPressForFabToggle = () => {
+    // <<< RENAMED FUNCTION DEFINITION
+    // Only allow toggling if an explanation is currently visible (FAB context is active)
+    if (!showExplanation) {
+      tapCountRef.current = 0; // Reset tap count if tapped when explanation not shown
+      return;
+    }
+
+    const now = Date.now();
+    clearTimeout(tapTimerRef.current); // Clear previous reset timer
+
+    // If taps are too far apart (more than 2*delay), reset the tap sequence entirely
+    if (
+      tapCountRef.current > 0 &&
+      now - lastTapTimestampRef.current > TRIPLE_TAP_DELAY * 2
+    ) {
+      console.log("[QuizScreen] Tap sequence timed out, resetting count.");
+      tapCountRef.current = 0;
+    }
+
+    tapCountRef.current += 1;
+    lastTapTimestampRef.current = now;
+    console.log(`[QuizScreen] Tap recorded. Count: ${tapCountRef.current}`);
+
+    if (tapCountRef.current === 3) {
+      console.log(
+        "[QuizScreen] Triple-tap detected! Toggling FAB revealed state."
+      );
+      setIsFabRevealedByGesture((prev) => !prev);
+      tapCountRef.current = 0; // Reset count after successful triple-tap action
+    } else {
+      // Set a timer to reset tapCount if triple tap is not completed quickly enough
+      tapTimerRef.current = setTimeout(() => {
+        console.log(
+          "[QuizScreen] Tap sequence incomplete, resetting tap count."
+        );
+        tapCountRef.current = 0;
+      }, TRIPLE_TAP_DELAY * 2); // Allow time for up to 2 more taps in sequence
+    }
+  };
+
+  // Cleanup tap timer on component unmount
+  useEffect(() => {
+    return () => clearTimeout(tapTimerRef.current);
+  }, []);
+
+  // --- Original Effects ---
   useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -85,11 +152,12 @@ const QuizScreen = ({ route, navigation }) => {
     setScore(0);
     setSelectedAnswer(null);
     setWasCorrect(null);
-    setShowFeedback(false);
+    setShowExplanation(false);
     setIsLeaving(false);
     setPendingNavigationAction(null);
     setShowLeaveConfirmModal(false);
     isNavigatingToResults.current = false;
+    setIsFabRevealedByGesture(false); // Ensure FAB is hidden when a new quiz loads
 
     if (!quizContentId) {
       if (isMounted.current) {
@@ -102,15 +170,13 @@ const QuizScreen = ({ route, navigation }) => {
       quizContentId,
       (fetchedQuestions) => {
         if (isMounted.current) {
-          if (fetchedQuestions?.length > 0) {
+          if (fetchedQuestions && fetchedQuestions.length > 0) {
             let sQ = shuffleArray(fetchedQuestions);
             const c = Math.min(sQ.length, MAX_QUESTIONS);
             const selQ = sQ.slice(0, c);
-            const fQ = selQ.map((q) => ({
+            const fQ = selQ.map((q, index) => ({
               ...q,
-              // Ensure 'id' exists on question, or use another unique identifier.
-              // If 'id' comes from Firestore, it's usually the document ID.
-              id: q.id || q.question, // Fallback to question text if no ID, adjust as per your data
+              id: q.id || `${quizContentId}_q${index}`,
               options: shuffleArray(q.options || []),
             }));
             setQuestions(fQ);
@@ -177,46 +243,47 @@ const QuizScreen = ({ route, navigation }) => {
     }, [navigation, theme])
   );
 
-  // --- Handlers ---
+  // --- Original Handlers ---
   const handleAnswer = (answer) => {
-    if (!showFeedback) setSelectedAnswer(answer);
+    if (!showExplanation) setSelectedAnswer(answer);
   };
 
   const handleSubmit = () => {
-    if (selectedAnswer === null || isLoading || showFeedback) return;
+    if (selectedAnswer === null || isLoading || showExplanation) return;
     const q = questions[questionIndex];
     if (!q) return;
     const correct = selectedAnswer === q.answer;
     setWasCorrect(correct);
-    setShowFeedback(true); // This will show the explanation and make FeedbackFAB relevant
+    setShowExplanation(true); // This allows FAB to be revealed by triple-tap
   };
 
   const handleNextQuestion = () => {
-    if (!showFeedback || isLoading) return;
+    if (!showExplanation || isLoading) return;
     const scoreInc = wasCorrect ? 1 : 0;
-    const currentScore = score;
+    const currentScoreVal = score;
     const nextIndex = questionIndex + 1;
     if (nextIndex < questions.length) {
       if (scoreInc > 0) setScore((s) => s + scoreInc);
       setQuestionIndex(nextIndex);
       setSelectedAnswer(null);
       setWasCorrect(null);
-      setShowFeedback(false); // Hide explanation for next question
+      setShowExplanation(false); // Hides explanation, FAB will also be hidden
     } else {
-      const finalScore = currentScore + scoreInc;
+      const finalScore = currentScoreVal + scoreInc;
       isNavigatingToResults.current = true;
+      setShowExplanation(false); // Hides explanation, FAB will also be hidden
       navigation.replace("QuizResult", {
         score: finalScore,
         totalQuestions: questions.length,
         quizId: quizContentId,
-        parentTopicId: parentTopicIdFromParams,
+        parentTopicId: parentTopicIdForContext,
         passingScore: passingScore,
         maxScore: questions.length,
       });
     }
   };
+
   const handleConfirmLeave = async () => {
-    // ... (logic remains same)
     if (isLeaving || !pendingNavigationAction) return;
     const contentId = route?.params?.quizContentId;
     if (!contentId) {
@@ -232,19 +299,20 @@ const QuizScreen = ({ route, navigation }) => {
     } catch (error) {
       console.error("Error penalizing:", error);
     } finally {
+      setShowExplanation(false); // Hides explanation, FAB will also be hidden
       if (pendingNavigationAction) navigation.dispatch(pendingNavigationAction);
       else navigation.goBack();
     }
   };
+
   const handleCancelLeave = () => {
-    // ... (logic remains same)
     setShowLeaveConfirmModal(false);
     setPendingNavigationAction(null);
     setIsLeaving(false);
   };
 
-  const stylesFromTheme = useMemo(
-    // Renamed to avoid conflict if styles is used elsewhere
+  // --- Styles ---
+  const styles = useMemo(
     () =>
       StyleSheet.create({
         container: { flex: 1 },
@@ -259,7 +327,7 @@ const QuizScreen = ({ route, navigation }) => {
           flexGrow: 1,
           justifyContent: "flex-start",
           paddingTop: 20,
-          paddingBottom: 20,
+          paddingBottom: 80,
         },
         footer: {
           padding: 20,
@@ -318,9 +386,9 @@ const QuizScreen = ({ route, navigation }) => {
           borderRadius: 25,
           paddingHorizontal: 15,
           justifyContent: "center",
-          minHeight: 50,
+          minHeight: 75,
           paddingVertical: 12,
-        }, // minHeight adjusted
+        }, // Your updated minHeight
         optionTextBase: {
           fontSize: 16,
           fontFamily: "nunitoBold",
@@ -366,7 +434,7 @@ const QuizScreen = ({ route, navigation }) => {
             ? (theme.textOnPrimary || theme.primaryWhite || "#FFFFFF") + "80"
             : "transparent",
         },
-        // nextButtonText: { fontSize: 18, fontFamily: "nunitoBold" }, // Covered by labelStyle
+        nextButtonText: { fontSize: 18, fontFamily: "nunitoBold" },
         submitButtonBg: theme.primary,
         submitButtonDisabledBg: theme.disabledBackground || theme.placeholder,
         nextButtonCorrectBg: theme.success,
@@ -387,56 +455,56 @@ const QuizScreen = ({ route, navigation }) => {
     [theme, isDark]
   );
 
+  // --- Helper Functions for Option Appearance ---
   const getOptionAppearance = useCallback(
     (option, currentQ) => {
-      // currentQ instead of currentQuestion to avoid naming conflict
       const isSelected = option === selectedAnswer;
       const isCorrect = option === currentQ?.answer;
-      let viewStyles = [stylesFromTheme.optionViewBase];
-      let textStyles = [stylesFromTheme.optionTextBase];
-      if (showFeedback) {
+      let viewStyles = [styles.optionViewBase];
+      let textStyles = [styles.optionTextBase];
+      if (showExplanation) {
         if (isCorrect) {
-          viewStyles.push(stylesFromTheme.optionViewCorrect);
-          textStyles.push(stylesFromTheme.optionTextFeedback);
+          viewStyles.push(styles.optionViewCorrect);
+          textStyles.push(styles.optionTextFeedback);
         } else if (isSelected) {
-          viewStyles.push(stylesFromTheme.optionViewIncorrect);
-          textStyles.push(stylesFromTheme.optionTextFeedback);
+          viewStyles.push(styles.optionViewIncorrect);
+          textStyles.push(styles.optionTextFeedback);
         } else {
-          viewStyles.push(stylesFromTheme.optionViewDisabled);
-          textStyles.push(stylesFromTheme.optionTextDisabled);
+          viewStyles.push(styles.optionViewDisabled);
+          textStyles.push(styles.optionTextDisabled);
         }
       } else {
         if (isSelected) {
-          viewStyles.push(stylesFromTheme.optionViewSelected);
-          textStyles.push(stylesFromTheme.optionTextSelected);
+          viewStyles.push(styles.optionViewSelected);
+          textStyles.push(styles.optionTextSelected);
         } else {
-          viewStyles.push(stylesFromTheme.optionViewDefault);
-          textStyles.push(stylesFromTheme.optionTextDefault);
+          viewStyles.push(styles.optionViewDefault);
+          textStyles.push(styles.optionTextDefault);
         }
       }
       return { viewStyles, textStyles };
     },
-    [selectedAnswer, showFeedback, stylesFromTheme] // Use stylesFromTheme
+    [selectedAnswer, showExplanation, styles]
   );
 
   const getNextButtonColor = useCallback(() => {
-    if (!showFeedback) {
+    if (!showExplanation) {
       return selectedAnswer === null
-        ? stylesFromTheme.submitButtonDisabledBg
-        : stylesFromTheme.submitButtonBg;
+        ? styles.submitButtonDisabledBg
+        : styles.submitButtonBg;
     } else {
       return wasCorrect
-        ? stylesFromTheme.nextButtonCorrectBg
-        : stylesFromTheme.nextButtonIncorrectBg;
+        ? styles.nextButtonCorrectBg
+        : styles.nextButtonIncorrectBg;
     }
-  }, [showFeedback, selectedAnswer, wasCorrect, stylesFromTheme]); // Use stylesFromTheme
+  }, [showExplanation, selectedAnswer, wasCorrect, styles]);
 
   // --- RENDER LOGIC ---
   if (isLoading) {
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={stylesFromTheme.centered}
+        style={styles.centered}
       >
         <PaperActivityIndicator
           animating={true}
@@ -451,9 +519,9 @@ const QuizScreen = ({ route, navigation }) => {
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={stylesFromTheme.centered}
+        style={styles.centered}
       >
-        <PaperText style={stylesFromTheme.errorText}>{error}</PaperText>
+        <PaperText style={styles.errorText}>{error}</PaperText>
         <PaperButton
           mode="contained"
           buttonColor={theme.accent}
@@ -466,17 +534,17 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  const currentQuestion = questions[questionIndex]; // Defined here for use in FAB and main render
+  const currentQuizQuestion = questions[questionIndex];
 
-  if (questions.length === 0 || !currentQuestion) {
-    // Combined checks
+  if (!isLoading && !currentQuizQuestion) {
+    // Simplified check if no current question when not loading
     if (isNavigatingToResults.current) {
       return (
         <LinearGradient
           colors={[theme.gradientStart, theme.gradientEnd]}
-          style={stylesFromTheme.centered}
+          style={styles.centered}
         >
-          <ActivityIndicator
+          <RNActivityIndicator
             size="large"
             color={theme.primaryWhite || "#FFFFFF"}
           />
@@ -484,19 +552,15 @@ const QuizScreen = ({ route, navigation }) => {
       );
     }
     const message =
-      questions.length === 0 && !isLoading
+      !questions || questions.length === 0
         ? "Quiz questions are not available yet for this topic."
         : "Loading quiz state or quiz finished.";
     return (
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
-        style={stylesFromTheme.centered}
+        style={styles.centered}
       >
-        <PaperText style={stylesFromTheme.infoText}>
-          {currentQuestion
-            ? "Critical Error: Could not load question data."
-            : message}
-        </PaperText>
+        <PaperText style={styles.infoText}>{message}</PaperText>
         <PaperButton
           mode="contained"
           buttonColor={theme.accent}
@@ -510,113 +574,135 @@ const QuizScreen = ({ route, navigation }) => {
     );
   }
 
-  const isLikelyShortContent =
-    (currentQuestion?.question?.length || 0) < SHORT_QUESTION_THRESHOLD;
+  const feedbackContext =
+    currentQuizQuestion && showExplanation
+      ? {
+          type: "question",
+          id: currentQuizQuestion.id,
+          parentId: quizContentId,
+          titlePreview: currentQuizQuestion.question
+            ? currentQuizQuestion.question.substring(0, 70)
+            : "N/A",
+        }
+      : null;
 
-  // Prepare contentContext for FeedbackFAB, only if currentQuestion is available
-  const feedbackContext = currentQuestion
-    ? {
-        type: "question",
-        // Ensure currentQuestion.id is the correct unique identifier for the question
-        id: currentQuestion.id || `question_${questionIndex}`, // Fallback if .id is not present
-        parentId: quizContentId, // ID of the overall quiz
-        titlePreview: currentQuestion.question
-          ? currentQuestion.question.substring(0, 70)
-          : "N/A",
-      }
-    : null;
+  const isLikelyShortContent =
+    (currentQuizQuestion?.question?.length || 0) < SHORT_QUESTION_THRESHOLD;
+
+  // Determine final FAB visibility:
+  const fabShouldActuallyBeVisible =
+    showExplanation && isFabRevealedByGesture && !!feedbackContext;
 
   return (
-    <LinearGradient
-      colors={[theme.gradientStart, theme.gradientEnd]}
-      style={stylesFromTheme.container}
+    <TouchableWithoutFeedback
+      onPress={handleScreenPressForFabToggle}
+      accessible={false}
     >
-      <ScrollView
-        style={stylesFromTheme.mainScroll}
-        contentContainerStyle={stylesFromTheme.mainScrollContentContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+      <LinearGradient
+        colors={[theme.gradientStart, theme.gradientEnd]}
+        style={styles.container}
       >
-        <PaperText style={stylesFromTheme.progressText}>
-          Question {questionIndex + 1} of {questions.length}
-        </PaperText>
-        <Card style={stylesFromTheme.card}>
-          <Card.Content style={stylesFromTheme.cardContent}>
-            <PaperText
-              style={
-                showFeedback && currentQuestion.explanation
-                  ? stylesFromTheme.questionTextShrunk
-                  : stylesFromTheme.questionText
-              }
+        {currentQuizQuestion && (
+          <>
+            <ScrollView
+              style={styles.mainScroll}
+              contentContainerStyle={styles.mainScrollContentContainer}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
             >
-              {currentQuestion.question}
-            </PaperText>
-            {showFeedback && currentQuestion.explanation ? (
-              <View style={stylesFromTheme.explanationContainer}>
-                <Explanation explanationText={currentQuestion.explanation} />
+              <PaperText style={styles.progressText}>
+                Question {questionIndex + 1} of {questions.length}
+              </PaperText>
+              <Card style={styles.card}>
+                <Card.Content style={styles.cardContent}>
+                  <PaperText
+                    style={
+                      showExplanation && currentQuizQuestion.explanation
+                        ? styles.questionTextShrunk
+                        : styles.questionText
+                    }
+                  >
+                    {currentQuizQuestion.question}
+                  </PaperText>
+                  {showExplanation && currentQuizQuestion.explanation ? (
+                    <View style={styles.explanationContainer}>
+                      <Explanation
+                        explanationText={currentQuizQuestion.explanation}
+                      />
+                    </View>
+                  ) : null}
+                </Card.Content>
+              </Card>
+              <View
+                style={[
+                  styles.spacer,
+                  isLikelyShortContent && styles.spacerLarge,
+                ]}
+              />
+              <View style={styles.optionsContainer}>
+                {(currentQuizQuestion.options || []).map((option, index) => {
+                  const { viewStyles, textStyles } = getOptionAppearance(
+                    option,
+                    currentQuizQuestion
+                  );
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.optionTouchable}
+                      onPress={() => handleAnswer(option)}
+                      disabled={showExplanation}
+                      activeOpacity={0.7}
+                    >
+                      <View style={viewStyles}>
+                        <Text style={textStyles}>{option}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
-            ) : null}
-          </Card.Content>
-        </Card>
-        <View
-          style={[
-            stylesFromTheme.spacer,
-            isLikelyShortContent && stylesFromTheme.spacerLarge,
-          ]}
-        />
-        <View style={stylesFromTheme.optionsContainer}>
-          {(currentQuestion.options || []).map((option, index) => {
-            const { viewStyles, textStyles } = getOptionAppearance(
-              option,
-              currentQuestion
-            );
-            return (
-              <TouchableOpacity
-                key={index}
-                style={stylesFromTheme.optionTouchable}
-                onPress={() => handleAnswer(option)}
-                disabled={showFeedback}
-                activeOpacity={0.7}
+            </ScrollView>
+            <View style={styles.footer}>
+              <PaperButton
+                mode="contained"
+                style={styles.submitNextButtonBase}
+                labelStyle={{
+                  fontSize: 18,
+                  fontFamily: "nunitoBold",
+                  color: theme.textOnPrimary || theme.primaryWhite || "#FFFFFF",
+                }}
+                buttonColor={getNextButtonColor()}
+                textColor={
+                  theme.textOnPrimary || theme.primaryWhite || "#FFFFFF"
+                }
+                onPress={showExplanation ? handleNextQuestion : handleSubmit}
+                disabled={!showExplanation && selectedAnswer === null}
+                uppercase={false}
               >
-                <View style={viewStyles}>
-                  <Text style={textStyles}>{option}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </ScrollView>
-      <View style={stylesFromTheme.footer}>
-        <PaperButton
-          mode="contained"
-          style={stylesFromTheme.submitNextButtonBase}
-          labelStyle={{
-            fontSize: 18,
-            fontFamily: "nunitoBold",
-            color: theme.textOnPrimary || theme.primaryWhite || "#FFFFFF",
-          }}
-          buttonColor={getNextButtonColor()}
-          textColor={theme.textOnPrimary || theme.primaryWhite || "#FFFFFF"} // Redundant with labelStyle but good for Paper
-          onPress={showFeedback ? handleNextQuestion : handleSubmit}
-          disabled={!showFeedback && selectedAnswer === null}
-          uppercase={false}
-        >
-          {showFeedback ? "Next" : "Check"}
-        </PaperButton>
-      </View>
-      <ConfirmationModal
-        visible={showLeaveConfirmModal}
-        title="Leave Quiz? You'll lose One Star"
-        onCancel={handleCancelLeave}
-        onConfirm={handleConfirmLeave}
-        confirmText="Leave"
-        cancelText="Stay"
-      />
-      {/* ADDED FeedbackFAB - Render only if context can be formed */}
-      {feedbackContext && (
-        <FeedbackFAB contentContext={feedbackContext} bottomOffset={75} />
-      )}
-    </LinearGradient>
+                {showExplanation ? "Next" : "Check"}
+              </PaperButton>
+            </View>
+          </>
+        )}
+
+        <ConfirmationModal
+          visible={showLeaveConfirmModal}
+          title="Leave Quiz? You'll lose One Star"
+          onCancel={handleCancelLeave}
+          onConfirm={handleConfirmLeave}
+          confirmText="Leave"
+          cancelText="Stay"
+        />
+
+        {/* FeedbackFAB: Render if context is valid, visibility controlled by gesture during explanation */}
+        {showExplanation &&
+          currentQuizQuestion && ( // Only mount if explanation is shown for a valid question
+            <FeedbackFAB
+              contentContext={feedbackContext} // feedbackContext will be valid here because of the outer condition
+              visible={isFabRevealedByGesture} // Actual visibility toggle by gesture
+            />
+          )}
+      </LinearGradient>
+    </TouchableWithoutFeedback>
   );
 };
 
