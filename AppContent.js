@@ -1,21 +1,22 @@
 // src/AppContent.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react"; // Added useState
 import { StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import firestore from "@react-native-firebase/firestore";
-import { Provider as PaperProvider } from "react-native-paper"; // Ensure this import is present
+import { Provider as PaperProvider } from "react-native-paper";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AuthScreen from "./screens/auth/AuthScreen";
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
-import { useTheme } from "./context/ThemeContext"; // Your ThemeContext
+import { useTheme } from "./context/ThemeContext";
+
+const MIN_LOADER_DISPLAY_TIME = 3000; // 3 seconds
 
 // Helper component for themed status bar
 const ThemedStatusBar = () => {
   const { theme, isDark } = useTheme();
-  // Use theme.statusBarBackground if you have it, or theme.background
   const statusBarColor =
     theme.statusBarBackground ||
     theme.background ||
@@ -30,19 +31,26 @@ const ThemedStatusBar = () => {
 };
 
 const AppContent = () => {
-  // 'theme' from your useTheme() is your custom theme object
-  // 'paperTheme' was a suggestion if you adapted it. If your 'theme' object
-  // is what you intend to use for Paper components (even if not fully MD3), pass that.
   const { theme, isDark, isThemeLoaded } = useTheme();
+  const [minimumLoaderTimeElapsed, setMinimumLoaderTimeElapsed] =
+    useState(false); // New state
 
   useEffect(() => {
+    // Start a timer to ensure the loader is shown for at least MIN_LOADER_DISPLAY_TIME
+    const timer = setTimeout(() => {
+      setMinimumLoaderTimeElapsed(true);
+    }, MIN_LOADER_DISPLAY_TIME);
+
+    // Firestore persistence setup
     firestore()
       .settings({ persistence: true })
       .then(() => console.log("🔥 Firestore persistence enabled."))
       .catch((err) =>
         console.error("❌ Firestore persistence setup error:", err)
       );
-  }, []);
+
+    return () => clearTimeout(timer); // Cleanup timer on unmount
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const [fontsLoaded, fontError] = useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
@@ -72,7 +80,6 @@ const AppContent = () => {
       StyleSheet.create({
         container: {
           flex: 1,
-          // Use a color from your theme that PaperProvider won't override for this root View
           backgroundColor: theme.background || (isDark ? "#000000" : "#FFFFFF"),
         },
         loaderContainer: {
@@ -82,7 +89,7 @@ const AppContent = () => {
           backgroundColor: theme.background || (isDark ? "#000000" : "#FFFFFF"),
         },
       }),
-    [theme, isDark] // Added isDark
+    [theme, isDark]
   );
 
   useEffect(() => {
@@ -90,11 +97,24 @@ const AppContent = () => {
     if (typeof authError !== "undefined" && authError)
       console.error("Auth Hook Error:", authError);
     console.log(
-      `>>> AppContent State Check: fontsLoaded=${fontsLoaded}, authLoading=${authLoading}, isThemeLoaded=${isThemeLoaded}`
+      `>>> AppContent State Check: fontsLoaded=${fontsLoaded}, authLoading=${authLoading}, isThemeLoaded=${isThemeLoaded}, minimumLoaderTimeElapsed=${minimumLoaderTimeElapsed}`
     );
-  }, [fontsLoaded, authLoading, isThemeLoaded, fontError, authError]);
+  }, [
+    fontsLoaded,
+    authLoading,
+    isThemeLoaded,
+    fontError,
+    authError,
+    minimumLoaderTimeElapsed,
+  ]);
 
-  if (!fontsLoaded || authLoading || !isThemeLoaded) {
+  // Update the loading condition
+  if (
+    !fontsLoaded ||
+    authLoading ||
+    !isThemeLoaded ||
+    !minimumLoaderTimeElapsed
+  ) {
     return (
       <View style={styles.loaderContainer}>
         <CalmLoader />
@@ -102,12 +122,9 @@ const AppContent = () => {
     );
   }
 
-  // This is the theme object that will be passed to PaperProvider.
-  // It should be the theme object from your ThemeContext.
   const currentPaperTheme = theme;
 
   return (
-    // 👇 PaperProvider should wrap your navigable content
     <PaperProvider theme={currentPaperTheme}>
       <ThemedStatusBar />
       <View style={styles.container}>
