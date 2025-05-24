@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useTheme } from "../context/ThemeContext"; // Adjust path as per your project
 
 // Screen Imports
-import ProfileScreen from "../screens/quiz/ProfileScreen"; // Adjust path
+import ProfileScreen from "../screens//quiz/ProfileScreen"; // Adjust path
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
 import EditProfileScreen from "../screens/profile/EditProfileScreen"; // Adjust path
 import DeleteAccountConfirmationScreen from "../screens/profile/DeleteAccountConfirmationScreen"; // Adjust path
@@ -14,7 +14,12 @@ import Tasks from "../screens/task/Tasks"; // Adjust path
 import TaskDetails from "../screens/task/TaskDetails"; // Adjust path
 import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
 import TasksContextProvider from "../store/tasks-context"; // Adjust path
-// Removed DummyScreen import unless you specifically use it
+import DummyScreen from "../screens/DummyScreen"; // << ENSURE THIS IMPORT IS CORRECT AND UNCOMMENTED
+
+// Import other screens like Apprec8Reader, Quiz if they are part of this stack
+// For example:
+// import Apprec8Reader from "../screens/reader/Apprec8Reader"; // Adjust path
+// import QuizScreen from "../screens/quiz/QuizScreen"; // Adjust path
 
 const Stack = createStackNavigator();
 
@@ -34,8 +39,6 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
 
   return (
     <Stack.Navigator
-      // Add a key that changes when isGuest changes.
-      // This forces a re-mount of the navigator with the correct set of screens.
       key={isGuest ? "guestStack" : "userStack"}
       initialRouteName={isGuest ? "GuestProfile" : "ProfileScreen"}
       screenOptions={defaultScreenOptionsConfig}
@@ -46,7 +49,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           name="GuestProfile"
           options={{
             title: "Guest Profile",
-            headerShown: true,
+            headerShown: false,
           }}
         >
           {(props) => (
@@ -80,14 +83,20 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
             }}
           />
           <Stack.Screen
-            name="DeleteAccountConfirmation" // This screen is now correctly part of the authenticated stack
+            name="DeleteAccountConfirmation"
             component={DeleteAccountConfirmationScreen}
             options={{
               title: "Confirm Deletion",
               headerShown: false,
-              headerBackTitle: "Profile", // iOS back button text
+              headerBackTitle: "Profile",
             }}
           />
+          {/* Screens specific to authenticated users can also go here */}
+          {/* For example, if Apprec8Reader and Quiz are only for logged-in users: */}
+          {/*
+          <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} options={{ headerShown: false }} />
+          <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerShown: false }} />
+          */}
         </>
       )}
 
@@ -95,7 +104,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
       <Stack.Screen
         name="LinkScreen"
         component={LinksScreen}
-        options={{ headerShown: false }} // Assuming LinkScreen manages its own title or doesn't need one from navigator
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Tasks"
@@ -113,15 +122,23 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="cntct" // Consider renaming to "ContactUs"
+        name="cntct"
         component={ContactUsForm}
         options={{
           title: "Contact Us",
-          headerShown: true,
+          headerShown: false,
         }}
       />
-      {/* Add other common screens like Apprec8Reader, Quiz, DummyScreen if they are truly common */}
-      {/* If Apprec8Reader and Quiz are only for authenticated users, move them inside the !isGuest block */}
+      <Stack.Screen // << ENSURE DummyScreen IS REGISTERED HERE
+        name="DummyScreen"
+        component={DummyScreen}
+        options={({ route }) => ({
+          // Make title dynamic based on params
+          title: route.params?.title || "Information",
+          headerShown: false,
+        })}
+      />
+      {/* If Apprec8Reader and Quiz are common, define them here instead of in the authenticated block */}
     </Stack.Navigator>
   );
 };
