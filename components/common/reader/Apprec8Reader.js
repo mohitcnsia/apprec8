@@ -524,8 +524,7 @@ const Apprec8Reader = ({ route, navigation }) => {
                     style={styles.invalidImagePlaceholder}
                   >
                     <Text style={{ color: theme.textSecondary }}>
-                      {" "}
-                      Invalid Image Entry{" "}
+                      Invalid Image Entry
                     </Text>
                   </View>
                 )

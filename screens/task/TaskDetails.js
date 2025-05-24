@@ -362,8 +362,7 @@ const TaskDetails = ({ route, navigation }) => {
               ]}
             >
               <Text style={styles.teamAssignText}>
-                {" "}
-                Assigned to Apprec8 Team for Review{" "}
+                Assigned to Apprec8 Team for Review
               </Text>
             </View>
           )}
