@@ -2190,3 +2190,73 @@ exports.submitFeedback = functions
       );
     }
   });
+
+exports.requestAccountDeletion = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      console.log("requestAccountDeletion: Unauthenticated access attempt.");
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated to delete an account."
+      );
+    }
+
+    const userId = context.auth.uid;
+    const userEmail = context.auth.token.email || `unknown_email_for_${userId}`; // Get email from auth token
+    console.log(
+      `Account deletion requested by user: ${userId}, email: ${userEmail}`
+    );
+
+    const userDocRef = db.collection("users").doc(userId);
+
+    try {
+      // Step 1: Anonymize Firestore data
+      const anonymizedData = {
+        email: `deleted_${userId.substring(0, 8)}@apprec8.example.com`,
+        firstName: "User", // Anonymized
+        lastName: "Deleted", // Anonymized
+        username: `deleted_user_${userId.substring(0, 8)}`, // Anonymized
+        displayName: "Deleted User", // Anonymized (if you use this field)
+        photoURL: null, // Or a URL to a default anonymous avatar
+        phone: null, // Anonymized
+        accountStatus: "anonymized_by_user_request",
+        anonymizedAt: admin.firestore.FieldValue.serverTimestamp(),
+        profileLastSavedAt: admin.firestore.FieldValue.serverTimestamp(), // Also update this to prevent immediate re-edit if somehow possible
+        lastUpdatedAt: admin.firestore.FieldValue.serverTimestamp(), // Update general timestamp
+        // Decide what to do with 'stats'. If they contain no PII after other fields are anonymized,
+        // they could be kept for aggregate analytics. Otherwise, delete or reset them.
+        // stats: admin.firestore.FieldValue.delete(), // Example: To delete the stats map
+        // Or reset stats:
+        // "stats.currentStreak": 0,
+        // "stats.totalQuizzesCompleted": 0,
+        // "stats.totalStars": 0,
+        // etc. for all fields in stats, or set stats: defaultStatsValues
+      };
+
+      // Use update, but if some fields might not exist, set with merge might be safer for those specific fields
+      // However, for anonymization, update is fine as we are overwriting existing PII fields.
+      await userDocRef.update(anonymizedData);
+      console.log(`User document ${userId} anonymized.`);
+
+      // Step 2: Delete Firebase Auth user
+      await admin.auth().deleteUser(userId);
+      console.log(`Successfully deleted Firebase Auth user: ${userId}`);
+
+      return {
+        success: true,
+        message: "Account and associated data have been successfully deleted.",
+      };
+    } catch (error) {
+      console.error(`Error during account deletion for user ${userId}:`, error);
+      // It's good practice to check if the user still exists in Auth if Firestore update failed,
+      // or if Firestore update succeeded but Auth deletion failed, to advise user.
+      // For now, a generic error to the client.
+      throw new functions.https.HttpsError(
+        "internal",
+        "An error occurred while trying to delete your account. Please contact support if this persists.",
+        error.message
+      );
+    }
+  });

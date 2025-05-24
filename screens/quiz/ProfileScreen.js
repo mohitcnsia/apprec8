@@ -1,5 +1,4 @@
 // screens/profile/ProfileScreen.js
-
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
@@ -10,29 +9,28 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
-  ActivityIndicator,
+  ActivityIndicator as NativeActivityIndicator, // Renamed to avoid conflict if you use Paper's
   RefreshControl,
   Platform,
   Switch,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
-import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is correct
-import ConfirmationModal from "../../components/common/ConfirmationModel"; // Assuming path correct
+import { helpTopics } from "../../data/app-topic-data";
+import ConfirmationModal from "../../components/common/ConfirmationModel";
 import { authInstance } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
 
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name || "App Rec" // Fallback name
+    name || "App Rec"
   )}&background=random&color=fff&size=128`;
 
 const defaultStatsValues = {
-  // Renamed for clarity
   currentStreak: 0,
   totalQuizzesCompleted: 0,
   totalStars: 0,
-  // Add other stats from your schema with defaults if needed
   lastQuizCompletionDate: null,
   lastActivityCompletionDate: null,
   lastDailyBonusDate: null,
@@ -40,13 +38,13 @@ const defaultStatsValues = {
 
 const ProfileScreen = ({ navigation, signoutHandler }) => {
   const { theme, toggleTheme, isDark } = useTheme();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [userData, setUserData] = useState(null); // Will hold the entire user document
-  // userStats will be derived from userData.stats
+  const [modalVisible, setModalVisible] = useState(false); // For sign-out confirmation
+  const [userData, setUserData] = useState(null);
   const [userStats, setUserStats] = useState(defaultStatsValues);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false); // For delete button loading state
 
   const currentAuthUser = authInstance.currentUser;
   const userId = currentAuthUser?.uid;
@@ -54,29 +52,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
   const getDisplayName = (userDoc, authUser) => {
     const firestoreFirstName = userDoc?.firstName?.trim();
     const firestoreLastName = userDoc?.lastName?.trim();
-
-    if (firestoreFirstName && firestoreLastName) {
+    if (firestoreFirstName && firestoreLastName)
       return `${firestoreFirstName} ${firestoreLastName}`;
-    }
-    if (firestoreFirstName) {
-      return firestoreFirstName;
-    }
-    // Fallbacks (you can adjust the order of these as per your preference)
-    if (userDoc?.username) {
-      // If username exists in Firestore
-      return userDoc.username;
-    }
-    if (authUser?.displayName) {
-      // Firebase Auth display name
-      return authUser.displayName;
-    }
-    if (authUser?.email) {
-      return authUser.email.split("@")[0]; // Part of email
-    }
-    return "User"; // Ultimate fallback
+    if (firestoreFirstName) return firestoreFirstName;
+    if (userDoc?.username) return userDoc.username;
+    if (authUser?.displayName) return authUser.displayName;
+    if (authUser?.email) return authUser.email.split("@")[0];
+    return "User";
   };
 
-  // useEffect for real-time listener on the 'users' document
   useEffect(() => {
     if (!userId) {
       setError("Not authenticated. Please sign in.");
@@ -85,25 +69,17 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       setUserStats(defaultStatsValues);
       return;
     }
-
-    console.log(
-      `ProfileScreen: Setting up listener for user document: ${userId}`
-    );
     setLoading(true);
     setError(null);
-
     const userDocumentListener = firestore()
       .collection("users")
       .doc(userId)
       .onSnapshot(
         (documentSnapshot) => {
-          console.log("ProfileScreen: User document snapshot received.");
           if (documentSnapshot.exists) {
             const data = documentSnapshot.data();
-            setUserData(data); // Store the entire user document
-
-            // Extract stats from the nested data.stats object or use defaults
-            const statsData = data.stats || {}; // Handle case where stats object might be missing
+            setUserData(data);
+            const statsData = data.stats || {};
             setUserStats({
               currentStreak:
                 statsData.currentStreak ?? defaultStatsValues.currentStreak,
@@ -121,21 +97,12 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
                 statsData.lastDailyBonusDate ??
                 defaultStatsValues.lastDailyBonusDate,
             });
-            console.log("Updated userData:", data);
-            console.log("Derived userStats:", {
-              currentStreak:
-                statsData.currentStreak ?? defaultStatsValues.currentStreak,
-              totalQuizzesCompleted:
-                statsData.totalQuizzesCompleted ??
-                defaultStatsValues.totalQuizzesCompleted,
-              totalStars: statsData.totalStars ?? defaultStatsValues.totalStars,
-            });
           } else {
             console.warn(`User document not found for userId: ${userId}`);
             setUserData(null);
             setUserStats(defaultStatsValues);
           }
-          setLoading(false); // Data processed, stop loading
+          setLoading(false);
         },
         (err) => {
           console.error("Error fetching user document snapshot:", err);
@@ -143,36 +110,24 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           setLoading(false);
         }
       );
-
-    // Unsubscribe from listener when the component unmounts or userId changes
-    return () => {
-      console.log(
-        `ProfileScreen: Unsubscribing user document listener for userId: ${userId}`
-      );
-      userDocumentListener();
-    };
+    return () => userDocumentListener();
   }, [userId]);
 
   const onRefresh = useCallback(() => {
-    console.log("ProfileScreen: Manual refresh triggered.");
     setRefreshing(true);
-    // With onSnapshot, data updates in real-time.
-    // For now, just simulate the refresh ending as data is live.
     setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
   const displayName = getDisplayName(userData, currentAuthUser);
-
   const profileImageUri =
-    userData?.photoURL || // Use photoURL from Firestore user document
-    currentAuthUser?.photoURL || // Fallback to Firebase Auth photoURL
+    userData?.photoURL ||
+    currentAuthUser?.photoURL ||
     generateAvatarUrl(displayName);
 
   const enrollmentDate = useMemo(() => {
     let dateToFormat = null;
-    if (userData?.createdAt?.toDate) {
-      dateToFormat = userData.createdAt.toDate();
-    } else if (currentAuthUser?.metadata?.creationTime) {
+    if (userData?.createdAt?.toDate) dateToFormat = userData.createdAt.toDate();
+    else if (currentAuthUser?.metadata?.creationTime) {
       try {
         dateToFormat = new Date(currentAuthUser.metadata.creationTime);
         if (isNaN(dateToFormat.getTime())) dateToFormat = null;
@@ -188,37 +143,43 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           day: "numeric",
         });
       } catch {
-        /* ignore format error */
+        /* ignore */
       }
     }
     return "Date Unavailable";
   }, [userData?.createdAt, currentAuthUser?.metadata?.creationTime]);
 
-  // --- Navigation Handlers ---
   function helpPressHandler() {
     navigation.navigate("LinkScreen", { data: helpTopics });
   }
   function myTasksPressHandler() {
     navigation.navigate("Tasks");
   }
+
   function editProfileHandler() {
     if (!userData) {
       console.log("Cannot edit profile, user data not loaded yet.");
       return;
     }
-    console.log(
-      "Navigating to EditProfileScreen with userData.lastUpdatedAt: ",
-      userData.lastUpdatedAt
-    );
     navigation.navigate("EditProfile", {
       currentFirstName: userData.firstName || "",
       currentLastName: userData.lastName || "",
       currentPhotoURL: userData.photoURL || "",
-      currentProfileLastSavedAt: userData.profileLastSavedAt || null,
+      currentProfileLastSavedAt: userData.profileLastSavedAt || null, // Use the dedicated timestamp
     });
   }
 
-  // --- Styles ---
+  // NEW: Handler for Delete Account navigation
+  function deleteAccountPressHandler() {
+    if (!userData || !currentAuthUser) {
+      Alert.alert("Error", "User data not available. Please try again later.");
+      return;
+    }
+    navigation.navigate("DeleteAccountConfirmation", {
+      userEmail: userData.email || currentAuthUser.email,
+    });
+  }
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -248,18 +209,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           textAlign: "center",
           marginTop: 5,
           fontFamily: "delius",
-        },
-        retryButton: {
-          marginTop: 15,
-          backgroundColor: theme.accent,
-          paddingVertical: 10,
-          paddingHorizontal: 25,
-          borderRadius: 20,
-        },
-        retryButtonText: {
-          color: theme.buttonText || "#FFFFFF",
-          fontSize: 16,
-          fontWeight: "bold",
         },
         scrollContainer: { flexGrow: 1, paddingBottom: 20 },
         profileSection: { alignItems: "center", marginBottom: 30 },
@@ -300,7 +249,8 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
             theme.textSecondaryOnGradient || theme.textSecondary || "#E0E0E0",
           fontSize: 13,
           marginTop: 4,
-        },
+          fontFamily: "delius",
+        }, // Added font
         statsContainer: {
           flexDirection: "row",
           flexWrap: "wrap",
@@ -335,13 +285,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           fontSize: 11,
           textAlign: "center",
           marginTop: 2,
-        },
+          fontFamily: "delius",
+        }, // Added font
         sectionTitle: {
           fontSize: 18,
           fontWeight: "600",
           marginBottom: 15,
           color: theme.primary || "#800000",
-        },
+          fontFamily: "deliusBold",
+        }, // Added font
         card: {
           backgroundColor: theme.cardBackground || "#A0522D80",
           borderRadius: 10,
@@ -363,19 +315,32 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
           flex: 1,
-        },
-        signOutCard: {
-          backgroundColor: theme.warningBackground || "#FFDEDE",
-        },
+          fontFamily: "delius",
+        }, // Added font
+        signOutCard: { backgroundColor: theme.warningBackground || "#FFDEDE" },
         signOutIcon: { marginRight: 15, color: theme.warning || "#CC0000" },
-        signOutText: { color: theme.warning || "#CC0000", fontWeight: "bold" },
+        signOutText: {
+          color: theme.warning || "#CC0000",
+          fontWeight: "bold",
+          fontFamily: "deliusBold",
+        }, // Added font
+        deleteAccountCard: {
+          backgroundColor: theme.errorBackground || "#FFD2D2",
+        }, // Style for delete button
+        deleteAccountIcon: { marginRight: 15, color: theme.error || "#D32F2F" },
+        deleteAccountText: {
+          color: theme.error || "#D32F2F",
+          fontWeight: "bold",
+          fontFamily: "deliusBold",
+        },
         copyright: {
           textAlign: "center",
           color: theme.textSecondary || "#A0A0A0",
           marginTop: 30,
           marginBottom: 10,
           fontSize: 12,
-        },
+          fontFamily: "delius",
+        }, // Added font
         pressedCard: { opacity: 0.75 },
         themeToggleCard: {
           backgroundColor: theme.cardBackground || "#A0522D80",
@@ -398,36 +363,89 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         themeToggleText: {
           color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
-        },
+          fontFamily: "delius",
+        }, // Added font
       }),
     [theme]
   );
 
-  // --- Render Logic ---
-  if (loading && !refreshing) {
+  if (loading && !refreshing && !userData) {
+    // Show full loader only on initial load
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={theme.accent || "#FFA500"} />
-      </View>
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#8B0000", "#D3D3D3"]
+        }
+        style={styles.gradientContainer}
+      >
+        <View style={styles.loadingContainer}>
+          <NativeActivityIndicator
+            size="large"
+            color={theme.accent || "#FFA500"}
+          />
+        </View>
+      </LinearGradient>
     );
   }
 
   if (error && !userData) {
-    // Show full error screen only if no userData at all
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#8B0000", "#D3D3D3"]
+        }
+        style={styles.gradientContainer}
+      >
+        <View style={styles.loadingContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      </LinearGradient>
     );
   }
 
-  // --- Main Screen Render ---
+  if (!userData && !error && !loading) {
+    // Case where user doc doesn't exist but no error/loading
+    return (
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#8B0000", "#D3D3D3"]
+        }
+        style={styles.gradientContainer}
+      >
+        <View style={styles.loadingContainer}>
+          <Text style={styles.errorText}>
+            Profile data not found. Please sign out and sign in again.
+          </Text>
+          {typeof signoutHandler === "function" && (
+            <Pressable
+              onPress={() => signoutHandler()}
+              style={{ marginTop: 20 }}
+            >
+              <Text
+                style={{ color: theme.accent, textDecorationLine: "underline" }}
+              >
+                Sign Out
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      </LinearGradient>
+    );
+  }
+
   return (
     <LinearGradient
-      colors={[
-        theme.gradientStart || "#8B0000",
-        theme.gradientEnd || "#D3D3D3",
-      ]}
+      colors={
+        theme.gradientStart && theme.gradientEnd
+          ? [theme.gradientStart, theme.gradientEnd]
+          : ["#8B0000", "#D3D3D3"]
+      }
       style={styles.gradientContainer}
     >
       <ScrollView
@@ -443,24 +461,23 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           />
         }
       >
-        {/* Profile Section */}
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <Image
               source={{ uri: profileImageUri }}
               style={styles.profileImage}
               onError={(e) =>
-                console.log("Error loading image:", e.nativeEvent.error)
+                console.log("Error loading profile image:", e.nativeEvent.error)
               }
             />
-            {userData && ( // Only show edit icon if userData is loaded
+            {userData && (
               <TouchableOpacity
                 style={styles.editIcon}
                 onPress={editProfileHandler}
               >
                 <MaterialCommunityIcons
                   name="pencil-outline"
-                  size={15}
+                  size={18}
                   style={styles.editIconIcon}
                 />
               </TouchableOpacity>
@@ -468,28 +485,26 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           </View>
           <Text style={styles.name}>{displayName}</Text>
           <Text style={styles.memberSince}>Enrolled {enrollmentDate}</Text>
-          {error &&
-            userData && ( // Show inline error if some userData is present but there was an issue
-              <Text style={styles.inlineErrorText}>{error}</Text>
-            )}
+          {error && userData && (
+            <Text style={styles.inlineErrorText}>{error}</Text>
+          )}
         </View>
 
-        {/* Stats Section - uses userStats state which is derived from userData.stats */}
         <View style={styles.statsContainer}>
           {[
             {
               label: "Day Streak",
-              value: userStats.currentStreak, // Access directly from userStats state
+              value: userStats.currentStreak,
               icon: "calendar-check-outline",
             },
             {
               label: "Quizzes",
-              value: userStats.totalQuizzesCompleted.toLocaleString(), // Access directly
+              value: userStats.totalQuizzesCompleted.toLocaleString(),
               icon: "help-circle-outline",
             },
             {
               label: "Stars",
-              value: userStats.totalStars.toLocaleString(), // Access directly
+              value: userStats.totalStars.toLocaleString(),
               icon: "star-outline",
             },
           ].map((item, index) => (
@@ -505,7 +520,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           ))}
         </View>
 
-        {/* Settings & Support Section */}
         <Text style={styles.sectionTitle}>Settings & Support</Text>
         <Pressable
           onPress={myTasksPressHandler}
@@ -533,7 +547,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
             <Text style={styles.cardText}>Help</Text>
           </View>
         </Pressable>
-
         <View style={styles.themeToggleCard}>
           <View style={styles.themeToggleContent}>
             <View style={styles.themeToggleLabelContainer}>
@@ -561,6 +574,36 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           </View>
         </View>
 
+        {/* Delete Account Button */}
+        <Pressable
+          onPress={deleteAccountPressHandler}
+          style={({ pressed }) => [
+            styles.card,
+            styles.deleteAccountCard,
+            pressed && styles.pressedCard,
+          ]}
+          disabled={isDeletingAccount || !userData} // Disable if no user data
+        >
+          <View style={styles.cardContent}>
+            <MaterialCommunityIcons
+              name="account-remove-outline"
+              size={22}
+              style={[styles.cardIcon, styles.deleteAccountIcon]}
+            />
+            {isDeletingAccount ? (
+              <NativeActivityIndicator
+                size="small"
+                color={theme.error || theme.warning || "#CC0000"}
+                style={{ flex: 1, alignItems: "center" }}
+              />
+            ) : (
+              <Text style={[styles.cardText, styles.deleteAccountText]}>
+                Delete My Account
+              </Text>
+            )}
+          </View>
+        </Pressable>
+
         {typeof signoutHandler === "function" && (
           <Pressable
             onPress={() => setModalVisible(true)}
@@ -586,7 +629,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         <Text style={styles.copyright}>
           © {new Date().getFullYear()} Apprec8. All rights reserved.
         </Text>
-
         <ConfirmationModal
           visible={modalVisible}
           title="Are you sure you want to sign out?"
