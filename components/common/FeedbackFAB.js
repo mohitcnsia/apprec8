@@ -152,8 +152,7 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
       entryPoint: `${modalMode || "unknown"}_fab`,
       reaction: reactionValue,
       feedbackText: feedbackText.trim(),
-      feedbackType:
-        modalMode === "report_issue" ? "issue_report" : "general_reaction",
+      feedbackType: modalMode === "report_issue" ? "issue_report" : "general",
       clientTimestamp: new Date().toISOString(),
     };
 
