@@ -1,40 +1,50 @@
 // screens/LinksScreen.js
-
-import React, { useState, useEffect, useRef, useMemo } from "react"; // Import useMemo
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
   ActivityIndicator,
   Text,
   StyleSheet,
-  Button, // Keep react-native Button for error/empty states
+  Button,
+  Linking,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import AppFlatList from "../components/common/list/AppFlatList";
+import { FlatList } from "react-native"; // Using standard FlatList
 import {
   listenToCategoryTopics,
   listenToSubtopics,
-} from "../services/firestoreContentApi";
-// import { Colors } from "../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../context/ThemeContext"; // Import useTheme hook
+} from "../services/firestoreContentApi"; // Adjust path as per your project
+import { useTheme } from "../context/ThemeContext"; // Adjust path
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const LinksScreen = ({ route, navigation }) => {
-  const { theme } = useTheme(); // Use the theme hook
+  console.log("-----------------------------------------");
+  console.log("LinksScreen: MOUNTED / RENDERED.");
+  console.log(
+    "LinksScreen: Received route.params:",
+    JSON.stringify(route.params, null, 2)
+  );
+  console.log("-----------------------------------------");
 
-  // --- Parameters and State (remain the same) ---
+  const { theme } = useTheme();
+
   const categoryId = route?.params?.categoryId;
   const parentTopicId = route?.params?.parentTopicId;
   const passedData = route?.params?.data;
-  const screenTitle =
-    route?.params?.screenTitle || route?.params?.categoryTitle || "Details";
+  const screenTitleFromParams =
+    route?.params?.screenTitle ||
+    route?.params?.categoryTitle ||
+    route?.params?.title;
+  const userEmail = route?.params?.userEmail;
+
   const [itemsToDisplay, setItemsToDisplay] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [fetchType, setFetchType] = useState("NONE");
   const isMounted = useRef(true);
 
-  // --- useEffects and Handlers (remain the same, logic untouched) ---
   useEffect(() => {
-    // Mount/Unmount tracking
     isMounted.current = true;
     return () => {
       isMounted.current = false;
@@ -42,100 +52,205 @@ const LinksScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Data Fetching
+    const screenTitle = screenTitleFromParams || "Details";
     navigation.setOptions({ title: screenTitle });
+
     let unsubscribe = () => {};
     setIsLoading(true);
     setError(null);
     setItemsToDisplay([]);
+    console.log(
+      "LinksScreen useEffect: categoryId=",
+      categoryId,
+      "parentTopicId=",
+      parentTopicId,
+      "passedData=",
+      !!passedData
+    );
 
     const handleData = (fetchedItems, itemTypeContext) => {
       if (isMounted.current) {
         try {
           const formatted = fetchedItems
             .map((item) => {
-              if (!item?.id || !item.title) return null;
+              if (
+                !item ||
+                typeof item !== "object" ||
+                !item.id ||
+                typeof item.title === "undefined"
+              ) {
+                return null;
+              }
+              let itemType = item.type;
+              let itemIcon = item.icon; // Preserve icon from data if present
+              let itemActionId = item.actionId;
+
+              if (itemTypeContext === "PASSED_DATA") {
+                if (item.id === "deleteAccount") {
+                  itemType = "ACTION_DELETE_ACCOUNT";
+                  itemActionId =
+                    item.actionId || "NAV_TO_DELETE_ACCOUNT_CONFIRMATION";
+                  itemIcon = item.icon || "account-remove-outline";
+                } else if (item.id === "cntct") {
+                  itemType = "ACTION_CONTACT_US";
+                  itemIcon = item.icon || "email-outline";
+                } else if (item.id === "faq" || item.id === "tnc") {
+                  itemType = "INFO_PAGE";
+                  itemIcon =
+                    item.icon ||
+                    (item.id === "faq"
+                      ? "help-circle-outline"
+                      : "file-document-outline");
+                } else {
+                  itemType = item.type || "INFO"; // Default for other passed_data items
+                  itemIcon = item.icon || null; // No default icon for generic INFO items
+                }
+              } else if (itemTypeContext === "TOPICS") {
+                itemType = "TOPIC";
+                itemIcon =
+                  item.icon ||
+                  (item.hasSubtopics
+                    ? "chevron-right-circle-outline"
+                    : "circle-medium"); // Example icons for topics
+              } else if (itemTypeContext === "SUBTOPICS_OR_ACTIVITIES") {
+                // Could be SUBTOPIC, STUDY, QUIZ, etc.
+                itemType = item.type || "UNKNOWN_ACTIVITY";
+                itemIcon =
+                  item.icon ||
+                  (item.hasSubtopics
+                    ? "chevron-right-circle-outline"
+                    : "circle-medium");
+              } else {
+                itemType = item.type || "UNKNOWN";
+                itemIcon = item.icon || null;
+              }
+
               return {
-                id: item.id,
-                title: item.title,
+                id: String(item.id),
+                title: String(item.title),
                 parentTopicId: item.parentTopicId || parentTopicId || null,
                 hasSubtopics: item.hasSubtopics === true,
-                type:
-                  item.type ||
-                  (itemTypeContext === "TOPICS" ? "TOPIC" : "UNKNOWN"),
+                type: itemType,
                 categoryId: item.categoryId || categoryId || null,
+                url: item.url || null,
+                actionId: itemActionId,
+                icon: itemIcon,
               };
             })
-            .filter(Boolean);
+            .filter((item) => item !== null);
+          console.log(
+            "LinksScreen: Formatted items to display:",
+            JSON.stringify(formatted, null, 2)
+          );
           setItemsToDisplay(formatted);
+        } catch (mapError) {
+          console.error("Error processing data in LinksScreen:", mapError);
+          setError(`Error processing ${itemTypeContext.toLowerCase()} data.`);
+          setItemsToDisplay([]);
+        } finally {
           setTimeout(() => {
             if (isMounted.current) setIsLoading(false);
           }, 0);
-        } catch (mapError) {
-          setError(`Error processing ${itemTypeContext.toLowerCase()} data.`);
-          setItemsToDisplay([]);
-          setIsLoading(false);
         }
       }
     };
+
     const handleError = (fetchError, fetchContext) => {
       if (isMounted.current) {
+        console.error(`Error fetching ${fetchContext}:`, fetchError);
         setError(`Could not fetch ${fetchContext}.`);
         setItemsToDisplay([]);
         setIsLoading(false);
       }
     };
 
-    if (categoryId) {
-      setFetchType("TOPICS");
+    if (passedData) {
+      // Prioritize passedData for Help screen context
+      console.log("LinksScreen: Processing passedData");
+      handleData(Array.isArray(passedData) ? passedData : [], "PASSED_DATA");
+    } else if (categoryId) {
+      console.log(
+        "LinksScreen: Listening to category topics for categoryId:",
+        categoryId
+      );
       unsubscribe = listenToCategoryTopics(
         categoryId,
         (d) => handleData(d, "TOPICS"),
         (e) => handleError(e, "topics")
       );
     } else if (parentTopicId) {
-      setFetchType("SUBTOPICS_OR_ACTIVITIES");
+      console.log(
+        "LinksScreen: Listening to subtopics for parentTopicId:",
+        parentTopicId
+      );
       unsubscribe = listenToSubtopics(
         parentTopicId,
         (d) => handleData(d, "SUBTOPICS_OR_ACTIVITIES"),
         (e) => handleError(e, "subtopics/activities")
       );
-    } else if (passedData) {
-      setFetchType("DATA");
-      setItemsToDisplay(Array.isArray(passedData) ? passedData : []);
-      setIsLoading(false);
     } else {
-      setFetchType("NONE");
+      console.log("LinksScreen: No content specified.");
       setError("No content specified.");
       setIsLoading(false);
     }
 
     return () => {
-      if (typeof unsubscribe === "function") unsubscribe();
+      if (typeof unsubscribe === "function") {
+        console.log("LinksScreen: Unsubscribing listener.");
+        unsubscribe();
+      }
     };
-  }, [categoryId, parentTopicId, passedData, screenTitle, navigation]);
+  }, [
+    categoryId,
+    parentTopicId,
+    passedData,
+    screenTitleFromParams,
+    navigation,
+  ]);
 
   const handleLinkPress = (item) => {
-    // Navigation logic remains the same
     console.log(
-      `LinksScreen item pressed: Type=${item?.type}, ID=${item?.id}, Title=${item?.title}`
+      `LinksScreen item pressed: ID=${item?.id}, Title=${item?.title}, ActionID=${item?.actionId}, Type=${item?.type}`
     );
+
+    if (item.actionId === "NAV_TO_DELETE_ACCOUNT_CONFIRMATION") {
+      if (userEmail !== undefined && userEmail !== null) {
+        navigation.navigate("DeleteAccountConfirmation", { userEmail });
+      } else {
+        Alert.alert("Error", "User information is missing. Cannot proceed.");
+      }
+      return;
+    }
+
+    if (item.url) {
+      Linking.openURL(item.url).catch((err) => {
+        console.error("Failed to open URL:", err);
+        Alert.alert("Error", "Could not open the link.");
+      });
+      return;
+    }
+
     switch (item?.type) {
       case "TOPIC":
-      case "SUBTOPIC":
+      case "SUBTOPIC": // Assuming SUBTOPIC type might be assigned if fetched from DB
         if (item.hasSubtopics === true) {
+          console.log(
+            "!!! PUSHING LinkScreen from LinkScreen for item:",
+            JSON.stringify(item)
+          );
           navigation.push("LinkScreen", {
             parentTopicId: item.id,
             screenTitle: item.title,
+            userEmail: userEmail,
           });
         } else {
           navigation.navigate("DummyScreen", {
+            title: item.title,
             errorMessage: `Content for "${item.title}" is not yet available.`,
           });
         }
         break;
       case "STUDY":
-        console.log(`pushing to apprec8reader with id "${item.id}"`);
         navigation.push("Apprec8Reader", {
           contentId: item.id,
           parentTopicId: item.parentTopicId,
@@ -147,143 +262,223 @@ const LinksScreen = ({ route, navigation }) => {
           parentTopicId: item.parentTopicId,
         });
         break;
-      case "CONTACT":
-      case "FAQ":
-      case "TNC":
-        if (item.id === "cntct" || item.type === "CONTACT") {
-          navigation.push("cntct");
-        } else {
-          navigation.push("DummyScreen", { title: item.title });
-        }
+      case "ACTION_CONTACT_US": // Type assigned in handleData for 'cntct'
+        navigation.push("cntct");
+        break;
+      case "INFO_PAGE": // Type assigned in handleData for 'faq', 'tnc'
+        console.log("Navigating INFO_PAGE to DummyScreen:", item.title);
+        navigation.navigate("DummyScreen", { title: item.title });
         break;
       default:
-        if (passedData && item.id) {
-          if (item.id === "cntct") {
-            navigation.push("cntct");
-          } else {
-            navigation.push("DummyScreen", { title: item.title || "Details" });
-          }
-        } else {
-          navigation.navigate("DummyScreen", {
-            errorMessage: `Cannot determine action for "${
-              item?.title || "this item"
-            }".`,
-          });
-        }
+        // This will catch items with type 'INFO' or 'UNKNOWN' or unhandled types
+        console.log(
+          "LinksScreen: Default action for item:",
+          item.title,
+          "Type:",
+          item.type
+        );
+        navigation.navigate("DummyScreen", {
+          title: item.title || "Details",
+          errorMessage: `Information for "${
+            item?.title || "this item"
+          }" is not currently available.`,
+        });
         break;
     }
   };
 
-  // --- Define Styles Inside Component with useMemo ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        // Style for the main LinearGradient container
-        container: {
-          flex: 1,
-        },
-        // Style for the View used in Loading/Error/Empty states
+        container: { flex: 1 },
         centered: {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
           padding: 20,
-          backgroundColor: theme.background, // Use theme background for these states
+          backgroundColor: "transparent",
         },
         errorText: {
-          color: theme.warning || "red", // Use theme warning color
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
+          color: theme.textPrimaryOnGradient || theme.textLight || "#FFFFFF",
         },
         infoText: {
-          color: theme.textSecondary || "#666", // Use theme secondary text color
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
+          color: theme.textPrimaryOnGradient || theme.textLight || "#FFFFFF",
         },
-        // Specific styles passed to AppFlatList
         listItemStyle: {
-          // Use a subtle background, maybe derived from primary or card bg
-          backgroundColor:
-            theme.cardBackgroundListItem ||
-            theme.primary + "20" ||
-            "rgba(0,0,0,0.1)",
+          backgroundColor: theme.cardBackground || "rgba(0,0,0,0.2)",
           borderRadius: 10,
-          padding: 15,
-          marginVertical: 5, // Add vertical margin
-          marginHorizontal: 10, // Add horizontal margin
+          marginBottom: 12,
+          marginHorizontal: 12,
+          shadowColor: theme.shadowColor || "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 2,
+          elevation: 2,
+          overflow: "hidden",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingVertical: 16,
+          paddingHorizontal: 16,
         },
         listTextStyle: {
-          fontFamily: "nunitoBold", // Keep font
-          // Use text color suitable for the main gradient background
-          color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
+          fontFamily: "delius",
+          color: theme.textPrimary || "#FFFFFF",
+          fontSize: 16,
+          marginLeft: 15,
+          flex: 1,
+        },
+        listTextStyleNoIcon: {
+          fontFamily: "delius",
+          color: theme.textPrimary || "#FFFFFF",
+          fontSize: 16,
+          marginLeft: 0,
+          flex: 1,
+        },
+        iconStyle: {
+          color: theme.textSecondary || "#E0E0E0",
+        },
+        dangerousTextStyle: {
+          fontFamily: "delius",
+          color: theme.error || theme.warning || "#D32F2F",
+          fontSize: 16,
+          marginLeft: 15,
+          flex: 1,
+        },
+        dangerousTextStyleNoIcon: {
+          fontFamily: "deliusBold",
+          color: theme.error || theme.warning || "#D32F2F",
+          fontSize: 16,
+          marginLeft: 0,
+          flex: 1,
+        },
+        dangerousIconStyle: {
+          color: theme.error || theme.warning || "#D32F2F",
         },
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- Render Logic ---
-  // Display loading indicator.
+  const renderCustomItem = ({ item }) => {
+    const isDangerousAction =
+      item.actionId === "NAV_TO_DELETE_ACCOUNT_CONFIRMATION";
+
+    let currentTextStyle = styles.listTextStyle;
+    if (isDangerousAction) {
+      currentTextStyle = item.icon
+        ? styles.dangerousTextStyle
+        : styles.dangerousTextStyleNoIcon;
+    } else {
+      currentTextStyle = item.icon
+        ? styles.listTextStyle
+        : styles.listTextStyleNoIcon;
+    }
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleLinkPress(item)}
+        style={styles.listItemStyle}
+      >
+        {item.icon && (
+          <MaterialCommunityIcons
+            name={item.icon}
+            size={24}
+            style={[
+              styles.iconStyle,
+              isDangerousAction && styles.dangerousIconStyle,
+            ]}
+          />
+        )}
+        <Text style={currentTextStyle}>{item.title}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   if (isLoading) {
     return (
-      <View style={styles.centered}>
-        {/* Use themed color for indicator */}
-        <ActivityIndicator size="large" color={theme.primary || "#800000"} />
-      </View>
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#3b0940", "#d7d1d3"]
+        }
+        style={styles.container}
+      >
+        <View style={styles.centered}>
+          <ActivityIndicator
+            size="large"
+            color={theme.accent || theme.primaryWhite || "#FFFFFF"}
+          />
+        </View>
+      </LinearGradient>
     );
   }
-
-  // Display error message.
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>{error}</Text>
-        {navigation.canGoBack() && (
-          <Button
-            title="Go Back"
-            onPress={() => navigation.goBack()}
-            color={theme.primary || "#800000"} // Use theme color for button
-          />
-        )}
-      </View>
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#3b0940", "#d7d1d3"]
+        }
+        style={styles.container}
+      >
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>{error}</Text>
+          {navigation.canGoBack() && (
+            <Button
+              title="Go Back"
+              onPress={() => navigation.goBack()}
+              color={theme.accent || theme.primaryWhite || "#FFFFFF"}
+            />
+          )}
+        </View>
+      </LinearGradient>
     );
   }
-
-  // Display "No items found".
   if (!isLoading && itemsToDisplay.length === 0) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.infoText}>No items found for this section.</Text>
-        {navigation.canGoBack() && (
-          <Button
-            title="Go Back"
-            onPress={() => navigation.goBack()}
-            color={theme.primary || "#800000"} // Use theme color for button
-          />
-        )}
-      </View>
+      <LinearGradient
+        colors={
+          theme.gradientStart && theme.gradientEnd
+            ? [theme.gradientStart, theme.gradientEnd]
+            : ["#3b0940", "#d7d1d3"]
+        }
+        style={styles.container}
+      >
+        <View style={styles.centered}>
+          <Text style={styles.infoText}>No items found for this section.</Text>
+          {navigation.canGoBack() && (
+            <Button
+              title="Go Back"
+              onPress={() => navigation.goBack()}
+              color={theme.accent || theme.primaryWhite || "#FFFFFF"}
+            />
+          )}
+        </View>
+      </LinearGradient>
     );
   }
 
-  // --- Main list rendering ---
   return (
-    // Apply themed gradient background
     <LinearGradient
-      colors={[
-        theme.gradientStart || "#3b0940",
-        theme.gradientEnd || "#d7d1d3",
-      ]}
+      colors={
+        theme.gradientStart && theme.gradientEnd
+          ? [theme.gradientStart, theme.gradientEnd]
+          : ["#3b0940", "#d7d1d3"]
+      }
       style={styles.container}
     >
-      <AppFlatList
+      <FlatList
         data={itemsToDisplay}
-        isPressable={true}
-        onItemPress={handleLinkPress}
-        // Pass themed styles to the custom list component
-        textStyle={styles.listTextStyle}
-        itemStyle={styles.listItemStyle}
-        // Optionally add ListHeaderComponent, etc. here if needed
+        renderItem={renderCustomItem}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{ paddingVertical: 10 }} // Adjusted padding
       />
     </LinearGradient>
   );

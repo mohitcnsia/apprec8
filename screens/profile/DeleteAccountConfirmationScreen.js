@@ -1,12 +1,10 @@
 // screens/profile/DeleteAccountConfirmationScreen.js
 import React, { useState, useCallback, useMemo } from "react";
 import {
-  View,
   Text,
   ScrollView,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -163,7 +161,7 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             ) : (
               " your account "
             )}
-            will be anonymized, and your access will be revoked.
+            will be deleted, and your access will be revoked.
           </Text>
           <Text style={styles.infoText}>
             To confirm, please type the exact phrase below:

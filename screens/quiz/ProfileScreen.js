@@ -9,15 +9,15 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
-  ActivityIndicator as NativeActivityIndicator, // Renamed to avoid conflict if you use Paper's
+  ActivityIndicator as NativeActivityIndicator,
   RefreshControl,
   Platform,
   Switch,
-  Alert,
+  Alert, // Keep Alert if used elsewhere, though not for delete button directly here now
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
-import { helpTopics } from "../../data/app-topic-data";
+import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is correct
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 import { authInstance } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
@@ -38,13 +38,13 @@ const defaultStatsValues = {
 
 const ProfileScreen = ({ navigation, signoutHandler }) => {
   const { theme, toggleTheme, isDark } = useTheme();
-  const [modalVisible, setModalVisible] = useState(false); // For sign-out confirmation
+  const [modalVisible, setModalVisible] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userStats, setUserStats] = useState(defaultStatsValues);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false); // For delete button loading state
+  // No longer need isDeletingAccount state here
 
   const currentAuthUser = authInstance.currentUser;
   const userId = currentAuthUser?.uid;
@@ -150,8 +150,22 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
   }, [userData?.createdAt, currentAuthUser?.metadata?.creationTime]);
 
   function helpPressHandler() {
-    navigation.navigate("LinkScreen", { data: helpTopics });
+    const emailToPass = userData?.email || currentAuthUser?.email || "";
+    if (!helpTopics || !Array.isArray(helpTopics)) {
+      Alert.alert(
+        "Error",
+        "Help data is missing or invalid. Cannot open Help screen."
+      );
+      return;
+    }
+
+    navigation.navigate("LinkScreen", {
+      data: helpTopics,
+      title: "Help & Support",
+      userEmail: emailToPass,
+    });
   }
+
   function myTasksPressHandler() {
     navigation.navigate("Tasks");
   }
@@ -165,18 +179,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       currentFirstName: userData.firstName || "",
       currentLastName: userData.lastName || "",
       currentPhotoURL: userData.photoURL || "",
-      currentProfileLastSavedAt: userData.profileLastSavedAt || null, // Use the dedicated timestamp
-    });
-  }
-
-  // NEW: Handler for Delete Account navigation
-  function deleteAccountPressHandler() {
-    if (!userData || !currentAuthUser) {
-      Alert.alert("Error", "User data not available. Please try again later.");
-      return;
-    }
-    navigation.navigate("DeleteAccountConfirmation", {
-      userEmail: userData.email || currentAuthUser.email,
+      currentProfileLastSavedAt: userData.profileLastSavedAt || null,
     });
   }
 
@@ -250,7 +253,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           fontSize: 13,
           marginTop: 4,
           fontFamily: "delius",
-        }, // Added font
+        },
         statsContainer: {
           flexDirection: "row",
           flexWrap: "wrap",
@@ -286,14 +289,14 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           textAlign: "center",
           marginTop: 2,
           fontFamily: "delius",
-        }, // Added font
+        },
         sectionTitle: {
           fontSize: 18,
           fontWeight: "600",
           marginBottom: 15,
           color: theme.primary || "#800000",
           fontFamily: "deliusBold",
-        }, // Added font
+        },
         card: {
           backgroundColor: theme.cardBackground || "#A0522D80",
           borderRadius: 10,
@@ -316,23 +319,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           fontSize: 16,
           flex: 1,
           fontFamily: "delius",
-        }, // Added font
+        },
         signOutCard: { backgroundColor: theme.warningBackground || "#FFDEDE" },
         signOutIcon: { marginRight: 15, color: theme.warning || "#CC0000" },
         signOutText: {
           color: theme.warning || "#CC0000",
           fontWeight: "bold",
           fontFamily: "deliusBold",
-        }, // Added font
-        deleteAccountCard: {
-          backgroundColor: theme.errorBackground || "#FFD2D2",
-        }, // Style for delete button
-        deleteAccountIcon: { marginRight: 15, color: theme.error || "#D32F2F" },
-        deleteAccountText: {
-          color: theme.error || "#D32F2F",
-          fontWeight: "bold",
-          fontFamily: "deliusBold",
         },
+        // REMOVED deleteAccountCard, deleteAccountIcon, deleteAccountText styles as the button is moved
         copyright: {
           textAlign: "center",
           color: theme.textSecondary || "#A0A0A0",
@@ -340,7 +335,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           marginBottom: 10,
           fontSize: 12,
           fontFamily: "delius",
-        }, // Added font
+        },
         pressedCard: { opacity: 0.75 },
         themeToggleCard: {
           backgroundColor: theme.cardBackground || "#A0522D80",
@@ -364,13 +359,12 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
           fontFamily: "delius",
-        }, // Added font
+        },
       }),
     [theme]
   );
 
   if (loading && !refreshing && !userData) {
-    // Show full loader only on initial load
     return (
       <LinearGradient
         colors={
@@ -389,7 +383,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       </LinearGradient>
     );
   }
-
   if (error && !userData) {
     return (
       <LinearGradient
@@ -406,9 +399,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       </LinearGradient>
     );
   }
-
   if (!userData && !error && !loading) {
-    // Case where user doc doesn't exist but no error/loading
     return (
       <LinearGradient
         colors={
@@ -461,6 +452,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           />
         }
       >
+        {/* Profile Section ... */}
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <Image
@@ -490,6 +482,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           )}
         </View>
 
+        {/* Stats Section ... */}
         <View style={styles.statsContainer}>
           {[
             {
@@ -520,6 +513,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           ))}
         </View>
 
+        {/* Settings & Support Section */}
         <Text style={styles.sectionTitle}>Settings & Support</Text>
         <Pressable
           onPress={myTasksPressHandler}
@@ -574,35 +568,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           </View>
         </View>
 
-        {/* Delete Account Button */}
-        <Pressable
-          onPress={deleteAccountPressHandler}
-          style={({ pressed }) => [
-            styles.card,
-            styles.deleteAccountCard,
-            pressed && styles.pressedCard,
-          ]}
-          disabled={isDeletingAccount || !userData} // Disable if no user data
-        >
-          <View style={styles.cardContent}>
-            <MaterialCommunityIcons
-              name="account-remove-outline"
-              size={22}
-              style={[styles.cardIcon, styles.deleteAccountIcon]}
-            />
-            {isDeletingAccount ? (
-              <NativeActivityIndicator
-                size="small"
-                color={theme.error || theme.warning || "#CC0000"}
-                style={{ flex: 1, alignItems: "center" }}
-              />
-            ) : (
-              <Text style={[styles.cardText, styles.deleteAccountText]}>
-                Delete My Account
-              </Text>
-            )}
-          </View>
-        </Pressable>
+        {/* REMOVED Delete Account Button from here */}
 
         {typeof signoutHandler === "function" && (
           <Pressable
