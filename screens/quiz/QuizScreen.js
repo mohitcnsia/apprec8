@@ -457,9 +457,9 @@ const QuizScreen = ({ route, navigation }) => {
           width: TAP_ZONE_SIZE,
           height: TAP_ZONE_SIZE,
           // zIndex: 10, // Removed zIndex
-          borderColor: "red",
-          borderWidth: 2,
-          borderStyle: "dashed",
+          // borderColor: "red",
+          // borderWidth: 2,
+          // borderStyle: "dashed",
         },
       }),
     [C, isDark]

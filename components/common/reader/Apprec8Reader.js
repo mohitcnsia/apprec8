@@ -289,9 +289,9 @@ const Apprec8Reader = ({ route, navigation }) => {
           right: 10,
           width: TAP_ZONE_SIZE,
           height: TAP_ZONE_SIZE,
-          borderColor: "red",
-          borderWidth: 2,
-          borderStyle: "dashed",
+          // borderColor: "red",
+          // borderWidth: 2,
+          // borderStyle: "dashed",
         },
       }),
     [C, coverImageHeight]

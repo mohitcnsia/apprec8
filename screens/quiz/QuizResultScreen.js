@@ -268,9 +268,9 @@ const QuizResultScreen = ({ route, navigation }) => {
           right: 10,
           width: TAP_ZONE_SIZE,
           height: TAP_ZONE_SIZE,
-          borderColor: "red",
-          borderWidth: 2,
-          borderStyle: "dashed",
+          // borderColor: "red",
+          // borderWidth: 2,
+          // borderStyle: "dashed",
           // zIndex: 10, // Removed zIndex
           // backgroundColor: 'rgba(0,0,255,0.1)', // For debugging
         },
