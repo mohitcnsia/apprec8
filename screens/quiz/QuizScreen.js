@@ -14,7 +14,7 @@ import {
   Platform,
   Text,
   TouchableOpacity,
-  PanResponder, // Added PanResponder
+  PanResponder,
 } from "react-native";
 import {
   Button as PaperButton,
@@ -31,10 +31,8 @@ import Explanation from "../../components/quiz/Explanation";
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 import FeedbackFAB from "../../components/common/FeedbackFAB";
 
-// --- Firebase Callable Function Reference ---
 const penalizeQuizLeave = functions().httpsCallable("penalizeQuizLeave");
 
-// --- Helper Functions ---
 const shuffleArray = (array) => {
   if (!Array.isArray(array)) return [];
   let shuffledArray = [...array];
@@ -45,18 +43,18 @@ const shuffleArray = (array) => {
   return shuffledArray;
 };
 
-// --- Constants ---
 const MAX_QUESTIONS = 10;
 const PASSING_SCORE_THRESHOLD = 1;
 const SHORT_QUESTION_THRESHOLD = 80;
-// Constants for PanResponder based triple-tap
-const TRIPLE_TAP_INTERVAL = 300; // Max delay between taps for a triple tap sequence (milliseconds)
-const TRIPLE_TAP_RESET_TIMEOUT = 400; // Time to wait before resetting tap count if sequence not completed
-const TAP_SLOP_THRESHOLD = 8; // Max movement (dx, dy) to be considered a tap
 
-// --- Component ---
+const TRIPLE_TAP_INTERVAL = 300;
+const TRIPLE_TAP_RESET_TIMEOUT = 400;
+const TAP_SLOP_THRESHOLD = 10;
+const TAP_ZONE_SIZE = 80;
+
 const QuizScreen = ({ route, navigation }) => {
   const { theme, isDark } = useTheme();
+  const C = theme.appColors || theme;
 
   const quizContentId = route?.params?.quizContentId;
   const parentTopicIdForContext = route?.params?.parentTopicId;
@@ -76,117 +74,90 @@ const QuizScreen = ({ route, navigation }) => {
   const isNavigatingToResults = useRef(false);
   const isMounted = useRef(true);
 
-  // --- State and Refs for FAB Manual Toggle (Triple Tap with PanResponder) ---
   const [isFabRevealedByGesture, setIsFabRevealedByGesture] = useState(false);
   const tapCountRef = useRef(0);
   const lastTapTimestampRef = useRef(0);
-  const gestureTimerRef = useRef(null); // Renamed from tapTimerRef
-
-  // Ref to hold the current value of showExplanation for PanResponder
+  const gestureTimerRef = useRef(null);
   const showExplanationRef = useRef(showExplanation);
+
   useEffect(() => {
     showExplanationRef.current = showExplanation;
   }, [showExplanation]);
 
-  // When explanation appears/disappears or question changes, reset FAB gesture state
   useEffect(() => {
-    // console.log(
-    //   `[QuizScreen] Effect for showExplanation/questionIndex. showExplanation: ${showExplanation}, questionIndex: ${questionIndex}. Resetting isFabRevealedByGesture to false.`
-    // );
     setIsFabRevealedByGesture(false);
     tapCountRef.current = 0;
     clearTimeout(gestureTimerRef.current);
   }, [showExplanation, questionIndex]);
 
-  // --- PanResponder for Triple-Tap Gesture ---
-  const screenPanResponder = useRef(
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      clearTimeout(gestureTimerRef.current);
+    };
+  }, []);
+
+  const cornerTapPanResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onStartShouldSetPanResponder: (evt, gestureState) => {
+        return showExplanationRef.current;
+      },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        // Only become active if the movement is small (tap-like)
+        if (!showExplanationRef.current) return false;
         return (
           Math.abs(gestureState.dx) < TAP_SLOP_THRESHOLD &&
           Math.abs(gestureState.dy) < TAP_SLOP_THRESHOLD
         );
       },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
       onPanResponderGrant: (evt, gestureState) => {
-        // console.log('[QuizScreen PanResponder] Granted');
+        // console.log("[QuizScreen CornerTap] Granted to Zone");
       },
       onPanResponderRelease: (evt, gestureState) => {
-        // console.log(
-        //   `[QuizScreen PanResponder] Release - dx: ${gestureState.dx.toFixed(2)}, dy: ${gestureState.dy.toFixed(2)}`
-        // );
-
-        // Only allow toggling if an explanation is currently visible
         if (!showExplanationRef.current) {
-          // console.log('[QuizScreen PanResponder] Tap ignored: explanation not showing.');
-          tapCountRef.current = 0; // Reset tap count
+          tapCountRef.current = 0;
           clearTimeout(gestureTimerRef.current);
           return;
         }
-
         if (
           Math.abs(gestureState.dx) < TAP_SLOP_THRESHOLD &&
           Math.abs(gestureState.dy) < TAP_SLOP_THRESHOLD
         ) {
-          // It's a tap
           const now = Date.now();
           clearTimeout(gestureTimerRef.current);
-
           if (
             tapCountRef.current === 0 ||
-            now - lastTapTimestampRef.current > TRIPLE_TAP_INTERVAL
+            now - lastTapTimestampRef.current > TRIPLE_TAP_INTERVAL * 1.5
           ) {
             tapCountRef.current = 1;
           } else {
             tapCountRef.current++;
           }
           lastTapTimestampRef.current = now;
-          // console.log(`[QuizScreen PanResponder] TAP PROCESSED. Count: ${tapCountRef.current}`);
-
           if (tapCountRef.current === 3) {
-            // console.log('[QuizScreen PanResponder] TRIPLE-TAP ACTION! Toggling FAB visibility.');
             setIsFabRevealedByGesture((prev) => !prev);
-            tapCountRef.current = 0; // Reset count after action
-          } else {
+            tapCountRef.current = 0;
+          } else if (tapCountRef.current > 0) {
             gestureTimerRef.current = setTimeout(() => {
-              // console.log('[QuizScreen PanResponder] Tap sequence timed out or incomplete, resetting count.');
               tapCountRef.current = 0;
             }, TRIPLE_TAP_RESET_TIMEOUT);
           }
         } else {
-          // It was a swipe/drag, not a tap. Reset tap count.
-          // console.log('[QuizScreen PanResponder] Swipe detected (not a tap), resetting tap count.');
           tapCountRef.current = 0;
           clearTimeout(gestureTimerRef.current);
         }
       },
       onPanResponderTerminate: (evt, gestureState) => {
-        // console.log('[QuizScreen PanResponder] Terminated, resetting tap count.');
+        // console.log('[QuizScreen CornerTap] Terminated, resetting tap count.');
         tapCountRef.current = 0;
         clearTimeout(gestureTimerRef.current);
       },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Important: Do not block native responders like ScrollView's scroll
-        return false;
+      onPanResponderTerminationRequest: (evt, gestureState) => {
+        // console.log('[QuizScreen CornerTap] Termination requested. Yielding.');
+        return true;
       },
     })
   ).current;
-
-  // Cleanup gesture timer on component unmount
-  useEffect(() => {
-    return () => clearTimeout(gestureTimerRef.current);
-  }, []);
-
-  // --- Original Effects ---
-  useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -201,7 +172,7 @@ const QuizScreen = ({ route, navigation }) => {
     setPendingNavigationAction(null);
     setShowLeaveConfirmModal(false);
     isNavigatingToResults.current = false;
-    setIsFabRevealedByGesture(false); // Ensure FAB is hidden when a new quiz loads
+    setIsFabRevealedByGesture(false);
 
     if (!quizContentId) {
       if (isMounted.current) {
@@ -256,10 +227,7 @@ const QuizScreen = ({ route, navigation }) => {
     useCallback(() => {
       const parentNav = navigation.getParent();
       if (parentNav) {
-        parentNav.setOptions({
-          tabBarStyle: { display: "none" },
-          // tabBarVisible: false, // tabBarVisible is deprecated
-        });
+        parentNav.setOptions({ tabBarStyle: { display: "none" } });
       } else {
         try {
           navigation.setOptions({ tabBarStyle: { display: "none" } });
@@ -272,8 +240,8 @@ const QuizScreen = ({ route, navigation }) => {
           parentNav.setOptions({
             tabBarStyle: {
               display: "flex",
-              backgroundColor: theme.tabBarBackground,
-              borderTopColor: theme.border,
+              backgroundColor: C.tabBarBackground,
+              borderTopColor: C.border,
             },
           });
         } else {
@@ -284,14 +252,12 @@ const QuizScreen = ({ route, navigation }) => {
           }
         }
       };
-    }, [navigation, theme])
+    }, [navigation, C.tabBarBackground, C.border])
   );
 
-  // --- Original Handlers ---
   const handleAnswer = (answer) => {
     if (!showExplanation) setSelectedAnswer(answer);
   };
-
   const handleSubmit = () => {
     if (selectedAnswer === null || isLoading || showExplanation) return;
     const q = questions[questionIndex];
@@ -300,11 +266,10 @@ const QuizScreen = ({ route, navigation }) => {
     setWasCorrect(correct);
     setShowExplanation(true);
   };
-
   const handleNextQuestion = () => {
     if (!showExplanation || isLoading) return;
     const scoreInc = wasCorrect ? 1 : 0;
-    const currentScoreVal = score; // Capture score before potential async update
+    const currentScoreVal = score;
     const nextIndex = questionIndex + 1;
     if (nextIndex < questions.length) {
       if (scoreInc > 0) setScore((s) => s + scoreInc);
@@ -326,7 +291,6 @@ const QuizScreen = ({ route, navigation }) => {
       });
     }
   };
-
   const handleConfirmLeave = async () => {
     if (isLeaving || !pendingNavigationAction) return;
     const contentId = route?.params?.quizContentId;
@@ -348,18 +312,17 @@ const QuizScreen = ({ route, navigation }) => {
       else navigation.goBack();
     }
   };
-
   const handleCancelLeave = () => {
     setShowLeaveConfirmModal(false);
     setPendingNavigationAction(null);
     setIsLeaving(false);
   };
 
-  // --- Styles ---
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: { flex: 1 },
+        rootContainer: { flex: 1 },
+        gradientContainer: { flex: 1 },
         centered: {
           flex: 1,
           justifyContent: "center",
@@ -371,32 +334,30 @@ const QuizScreen = ({ route, navigation }) => {
           flexGrow: 1,
           justifyContent: "flex-start",
           paddingTop: 20,
-          paddingBottom: 80, // Ensure space for FAB not to overlap content too much
+          paddingBottom: 80,
         },
         footer: {
           padding: 20,
           paddingTop: 10,
           borderTopWidth: 1,
-          borderTopColor: theme.border || "#cccccc",
-          backgroundColor: "transparent", // Ensure footer in gradient is transparent
+          borderTopColor: C.border || "#cccccc",
+          backgroundColor: "transparent",
         },
         progressText: {
           fontSize: 16,
-          color: isDark
-            ? theme.primaryWhite || "#FFFFFF"
-            : theme.primary || "#3b0940",
+          color: isDark ? C.primaryWhite || "#FFFFFF" : C.primary || "#3b0940",
           textAlign: "center",
           marginBottom: 15,
           fontFamily: "nunitoBold",
         },
         card: {
-          backgroundColor: theme.cardBackground || "#f0f0f0",
+          backgroundColor: C.cardBackground || "#f0f0f0",
           borderRadius: 12,
           minHeight: 120,
           justifyContent: "center",
           marginBottom: 10,
           elevation: 2,
-          shadowColor: theme.shadowColor,
+          shadowColor: C.shadowColor,
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.1,
           shadowRadius: 2,
@@ -406,21 +367,21 @@ const QuizScreen = ({ route, navigation }) => {
           fontSize: 18,
           lineHeight: 28,
           textAlign: "center",
-          color: theme.textPrimary,
+          color: C.textPrimary,
           fontFamily: "nunitoBold",
         },
         questionTextShrunk: {
           fontSize: 12,
           lineHeight: 18,
           textAlign: "center",
-          color: theme.textSecondary,
+          color: C.textSecondary,
           fontFamily: "nunitoBold",
         },
         explanationContainer: {
           marginTop: 15,
           paddingTop: 10,
           borderTopWidth: 1,
-          borderTopColor: theme.border || "#cccccc",
+          borderTopColor: C.border || "#cccccc",
         },
         spacer: { height: 15 },
         spacerLarge: { height: 40 },
@@ -440,67 +401,70 @@ const QuizScreen = ({ route, navigation }) => {
           textAlign: "center",
         },
         optionViewDefault: {
-          backgroundColor: theme.cardBackground,
-          borderColor: theme.primary,
+          backgroundColor: C.cardBackground,
+          borderColor: C.primary,
         },
-        optionTextDefault: { color: theme.textPrimary },
+        optionTextDefault: { color: C.textPrimary },
         optionViewSelected: {
-          backgroundColor: theme.primary,
-          borderColor: theme.primary,
+          backgroundColor: C.primary,
+          borderColor: C.primary,
         },
-        optionTextSelected: {
-          color: theme.textOnPrimary || theme.primaryWhite,
-        },
+        optionTextSelected: { color: C.textOnPrimary || C.primaryWhite },
         optionViewCorrect: {
-          backgroundColor: theme.success,
-          borderColor: theme.success,
+          backgroundColor: C.success,
+          borderColor: C.success,
         },
         optionViewIncorrect: {
-          backgroundColor: theme.warning,
-          borderColor: theme.warning,
+          backgroundColor: C.warning,
+          borderColor: C.warning,
         },
-        optionTextFeedback: {
-          color: theme.textOnPrimary || theme.primaryWhite,
-        },
+        optionTextFeedback: { color: C.textOnPrimary || C.primaryWhite },
         optionViewDisabled: {
-          backgroundColor: theme.disabledBackground || theme.placeholder,
-          borderColor: theme.disabledBorder || theme.border,
+          backgroundColor: C.disabledBackground || C.placeholder,
+          borderColor: C.disabledBorder || C.border,
           opacity: 0.7,
         },
-        optionTextDisabled: {
-          color: theme.textDisabled || theme.textSecondary,
-        },
+        optionTextDisabled: { color: C.textDisabled || C.textSecondary },
         submitNextButtonBase: {
           borderRadius: 25,
           paddingVertical: 8,
           width: "100%",
           borderWidth: 1,
           borderColor: isDark
-            ? (theme.textOnPrimary || theme.primaryWhite || "#FFFFFF") + "80"
+            ? (C.textOnPrimary || C.primaryWhite || "#FFFFFF") + "80"
             : "transparent",
         },
-        // nextButtonText: { fontSize: 18, fontFamily: "nunitoBold" }, // Not used directly as a style object
-        submitButtonBg: theme.primary,
-        submitButtonDisabledBg: theme.disabledBackground || theme.placeholder,
-        nextButtonCorrectBg: theme.success,
-        nextButtonIncorrectBg: theme.warning,
+        submitButtonBg: C.primary,
+        submitButtonDisabledBg: C.disabledBackground || C.placeholder,
+        nextButtonCorrectBg: C.success,
+        nextButtonIncorrectBg: C.warning,
         errorText: {
-          color: theme.warning || "#FFBABA",
+          color: C.warning || "#FFBABA",
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
         },
         infoText: {
-          color: theme.textPrimaryOnGradient || theme.primaryWhite,
+          color: C.textPrimaryOnGradient || C.primaryWhite,
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
         },
+        tripleTapZone: {
+          position: "absolute",
+          bottom: 10,
+          right: 10,
+          width: TAP_ZONE_SIZE,
+          height: TAP_ZONE_SIZE,
+          // zIndex: 10, // Removed zIndex
+          borderColor: "red",
+          borderWidth: 2,
+          borderStyle: "dashed",
+        },
       }),
-    [theme, isDark]
+    [C, isDark]
   );
 
-  // --- Helper Functions for Option Appearance ---
   const getOptionAppearance = useCallback(
     (option, currentQ) => {
       const isSelected = option === selectedAnswer;
@@ -531,7 +495,6 @@ const QuizScreen = ({ route, navigation }) => {
     },
     [selectedAnswer, showExplanation, styles]
   );
-
   const getNextButtonColor = useCallback(() => {
     if (!showExplanation) {
       return selectedAnswer === null
@@ -544,33 +507,31 @@ const QuizScreen = ({ route, navigation }) => {
     }
   }, [showExplanation, selectedAnswer, wasCorrect, styles]);
 
-  // --- RENDER LOGIC ---
   if (isLoading) {
     return (
       <LinearGradient
-        colors={[theme.gradientStart, theme.gradientEnd]}
+        colors={[C.gradientStart, C.gradientEnd]}
         style={styles.centered}
       >
         <PaperActivityIndicator
           animating={true}
           size="large"
-          color={theme.primaryWhite || "#FFFFFF"}
+          color={C.primaryWhite || "#FFFFFF"}
         />
       </LinearGradient>
     );
   }
-
   if (error) {
     return (
       <LinearGradient
-        colors={[theme.gradientStart, theme.gradientEnd]}
+        colors={[C.gradientStart, C.gradientEnd]}
         style={styles.centered}
       >
         <PaperText style={styles.errorText}>{error}</PaperText>
         <PaperButton
           mode="contained"
-          buttonColor={theme.accent}
-          textColor={theme.buttonText}
+          buttonColor={C.accent}
+          textColor={C.buttonText}
           onPress={() => navigation.goBack()}
         >
           Go Back
@@ -578,19 +539,17 @@ const QuizScreen = ({ route, navigation }) => {
       </LinearGradient>
     );
   }
-
   const currentQuizQuestion = questions[questionIndex];
-
   if (!isLoading && !currentQuizQuestion) {
     if (isNavigatingToResults.current) {
       return (
         <LinearGradient
-          colors={[theme.gradientStart, theme.gradientEnd]}
+          colors={[C.gradientStart, C.gradientEnd]}
           style={styles.centered}
         >
           <RNActivityIndicator
             size="large"
-            color={theme.primaryWhite || "#FFFFFF"}
+            color={C.primaryWhite || "#FFFFFF"}
           />
         </LinearGradient>
       );
@@ -601,14 +560,14 @@ const QuizScreen = ({ route, navigation }) => {
         : "Loading quiz state or quiz finished.";
     return (
       <LinearGradient
-        colors={[theme.gradientStart, theme.gradientEnd]}
+        colors={[C.gradientStart, C.gradientEnd]}
         style={styles.centered}
       >
         <PaperText style={styles.infoText}>{message}</PaperText>
         <PaperButton
           mode="contained"
-          buttonColor={theme.accent}
-          textColor={theme.buttonText}
+          buttonColor={C.accent}
+          textColor={C.buttonText}
           onPress={() => navigation.goBack()}
           style={{ marginTop: 15 }}
         >
@@ -629,100 +588,102 @@ const QuizScreen = ({ route, navigation }) => {
             : "N/A",
         }
       : null;
-
   const isLikelyShortContent =
     (currentQuizQuestion?.question?.length || 0) < SHORT_QUESTION_THRESHOLD;
-
-  // Determine final FAB visibility:
-  // The FAB component itself is mounted conditionally based on showExplanation.
-  // So, its 'visible' prop can be directly tied to isFabRevealedByGesture.
-  // const fabShouldActuallyBeVisible = showExplanation && isFabRevealedByGesture && !!feedbackContext; // This logic is implicitly handled by conditional mounting and prop
+  const isFabContextActive = showExplanation && currentQuizQuestion;
 
   return (
-    // Apply PanResponder to the root LinearGradient
-    <LinearGradient
-      colors={[theme.gradientStart, theme.gradientEnd]}
-      style={styles.container}
-      {...screenPanResponder.panHandlers}
-    >
-      {currentQuizQuestion && (
-        <>
-          <ScrollView
-            style={styles.mainScroll}
-            contentContainerStyle={styles.mainScrollContentContainer}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <PaperText style={styles.progressText}>
-              Question {questionIndex + 1} of {questions.length}
-            </PaperText>
-            <Card style={styles.card}>
-              <Card.Content style={styles.cardContent}>
-                <PaperText
-                  style={
-                    showExplanation && currentQuizQuestion.explanation
-                      ? styles.questionTextShrunk
-                      : styles.questionText
-                  }
-                >
-                  {currentQuizQuestion.question}
-                </PaperText>
-                {showExplanation && currentQuizQuestion.explanation ? (
-                  <View style={styles.explanationContainer}>
-                    <Explanation
-                      explanationText={currentQuizQuestion.explanation}
-                    />
-                  </View>
-                ) : null}
-              </Card.Content>
-            </Card>
-            <View
-              style={[
-                styles.spacer,
-                isLikelyShortContent && styles.spacerLarge,
-              ]}
-            />
-            <View style={styles.optionsContainer}>
-              {(currentQuizQuestion.options || []).map((option, index) => {
-                const { viewStyles, textStyles } = getOptionAppearance(
-                  option,
-                  currentQuizQuestion
-                );
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.optionTouchable}
-                    onPress={() => handleAnswer(option)}
-                    disabled={showExplanation}
-                    activeOpacity={0.7}
-                  >
-                    <View style={viewStyles}>
-                      <Text style={textStyles}>{option}</Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView>
-          <View style={styles.footer}>
-            <PaperButton
-              mode="contained"
-              style={styles.submitNextButtonBase}
-              labelStyle={{
-                fontSize: 18,
-                fontFamily: "nunitoBold",
-                color: theme.textOnPrimary || theme.primaryWhite || "#FFFFFF",
-              }}
-              buttonColor={getNextButtonColor()}
-              textColor={theme.textOnPrimary || theme.primaryWhite || "#FFFFFF"}
-              onPress={showExplanation ? handleNextQuestion : handleSubmit}
-              disabled={!showExplanation && selectedAnswer === null}
-              uppercase={false}
+    <View style={styles.rootContainer}>
+      <LinearGradient
+        colors={[C.gradientStart, C.gradientEnd]}
+        style={styles.gradientContainer}
+      >
+        {currentQuizQuestion && (
+          <>
+            <ScrollView
+              style={styles.mainScroll}
+              contentContainerStyle={styles.mainScrollContentContainer}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
             >
-              {showExplanation ? "Next" : "Check"}
-            </PaperButton>
-          </View>
-        </>
+              <PaperText style={styles.progressText}>
+                Question {questionIndex + 1} of {questions.length}
+              </PaperText>
+              <Card style={styles.card}>
+                <Card.Content style={styles.cardContent}>
+                  <PaperText
+                    style={
+                      showExplanation && currentQuizQuestion.explanation
+                        ? styles.questionTextShrunk
+                        : styles.questionText
+                    }
+                  >
+                    {currentQuizQuestion.question}
+                  </PaperText>
+                  {showExplanation && currentQuizQuestion.explanation ? (
+                    <View style={styles.explanationContainer}>
+                      <Explanation
+                        explanationText={currentQuizQuestion.explanation}
+                      />
+                    </View>
+                  ) : null}
+                </Card.Content>
+              </Card>
+              <View
+                style={[
+                  styles.spacer,
+                  isLikelyShortContent && styles.spacerLarge,
+                ]}
+              />
+              <View style={styles.optionsContainer}>
+                {(currentQuizQuestion.options || []).map((option, index) => {
+                  const { viewStyles, textStyles } = getOptionAppearance(
+                    option,
+                    currentQuizQuestion
+                  );
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.optionTouchable}
+                      onPress={() => handleAnswer(option)}
+                      disabled={showExplanation}
+                      activeOpacity={0.7}
+                    >
+                      <View style={viewStyles}>
+                        <Text style={textStyles}>{option}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </ScrollView>
+            <View style={styles.footer}>
+              <PaperButton
+                mode="contained"
+                style={styles.submitNextButtonBase}
+                labelStyle={{
+                  fontSize: 18,
+                  fontFamily: "nunitoBold",
+                  color: C.textOnPrimary || C.primaryWhite || "#FFFFFF",
+                }}
+                buttonColor={getNextButtonColor()}
+                textColor={C.textOnPrimary || C.primaryWhite || "#FFFFFF"}
+                onPress={showExplanation ? handleNextQuestion : handleSubmit}
+                disabled={!showExplanation && selectedAnswer === null}
+                uppercase={false}
+              >
+                {showExplanation ? "Next" : "Check"}
+              </PaperButton>
+            </View>
+          </>
+        )}
+      </LinearGradient>
+
+      {isFabContextActive && (
+        <View
+          style={styles.tripleTapZone}
+          {...cornerTapPanResponder.panHandlers}
+        />
       )}
 
       <ConfirmationModal
@@ -734,14 +695,13 @@ const QuizScreen = ({ route, navigation }) => {
         cancelText="Stay"
       />
 
-      {/* FeedbackFAB: Render if context is valid (explanation shown), visibility controlled by gesture */}
-      {showExplanation && currentQuizQuestion && (
+      {isFabContextActive && (
         <FeedbackFAB
           contentContext={feedbackContext}
-          visible={isFabRevealedByGesture} // Directly use the gesture-controlled state
+          visible={isFabRevealedByGesture}
         />
       )}
-    </LinearGradient>
+    </View>
   );
 };
 
