@@ -25,6 +25,17 @@ export default ({ config }) => {
   const existingCFBundleURLTypes = config.ios?.infoPlist?.CFBundleURLTypes;
   const reversedClientIdScheme = process.env.IOS_REVERSED_CLIENT_ID;
 
+  const majorVersion = 20;
+  const minorVersion = 0;
+  const patchVersion = 0;
+  const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
+
+  const androidVersionCode =
+    majorVersion * 1000000 +
+    minorVersion * 10000 +
+    patchVersion * 100 +
+    buildIteration;
+
   if (!reversedClientIdScheme) {
     console.warn(
       "⚠️ WARNING: IOS_REVERSED_CLIENT_ID is not defined in your .env file. iOS Google Sign-In might fail configuration."
@@ -36,7 +47,7 @@ export default ({ config }) => {
       name: "apprec8",
       slug: "apprec8",
       scheme: "apprec8",
-      version: "1.0.0",
+      version: `${majorVersion}.${minorVersion}.${patchVersion}`,
       orientation: "portrait",
       // Main app icon (e.g., 1024x1024px). Used for Play Store, iOS, and as fallback.
       icon: "./assets/icon.png",
@@ -65,7 +76,7 @@ export default ({ config }) => {
         // icon: "./assets/ios-icon.png", // Ensure this file exists if you uncomment
       },
       android: {
-        versionCode: 19,
+        versionCode: androidVersionCode,
         adaptiveIcon: {
           // Path to your adaptive icon foreground image (e.g., 1024x1024px from IconKitchen)
           foregroundImage: "./assets/adaptive-icon.png",
