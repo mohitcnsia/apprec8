@@ -20,38 +20,31 @@ import {
   SafeAreaView, // For safe area handling
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useTheme } from "../../context/ThemeContext"; // <<< ENSURED useTheme IS IMPORTED
+import { useTheme } from "../../context/ThemeContext";
 import Input from "../../components/input/Input";
 import PrimaryButton from "../../components/PrimaryButton";
-import Ionicons from "@expo/vector-icons/Ionicons"; // For custom back button
+import Ionicons from "@expo/vector-icons/Ionicons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { formatDate, getDatePlusDays } from "../../components/utils/date"; // Ensure getDatePlusDays is imported
+import { formatDate, getDatePlusDays } from "../../components/utils/date";
 import { TasksContext } from "../../store/tasks-context";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { authInstance } from "../../config/firebaseConfig";
-import { useFocusEffect, useNavigation } from "@react-navigation/native"; // useNavigation can be fallback if prop not preferred
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const TaskEditor = ({ route, navigation: propNavigation }) => {
-  // Renamed prop to avoid conflict if useNavigation is primary
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme(); // isDark not used directly in this component's style block
   const { isLoading, error, addTask, updateTask, clearError } =
     useContext(TasksContext);
   const currentUser = authInstance.currentUser;
-
-  // Prefer prop navigation, but use hook as fallback if prop isn't passed (though it should be by StackNavigator)
   const navigation = propNavigation || useNavigation();
-
   const existingTaskData = route?.params?.data;
 
-  // Function to get default due date (7 days from now)
   const getDefaultDueDate = useCallback(() => {
     const today = new Date();
     return getDatePlusDays(today, 7);
-  }, []); // No dependencies, or add getDatePlusDays if it were from context/props
+  }, []);
 
-  // Initialize formData state
   const [formData, setFormData] = useState(() => ({
-    // Use function form for useState to compute initial state once
     id: existingTaskData?.id || "",
     title: existingTaskData?.title || "",
     detail: existingTaskData?.detail || "",
@@ -59,6 +52,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
       ? new Date(existingTaskData.dueDate)
       : getDefaultDueDate(),
     completed: existingTaskData?.completed || false,
+    // This correctly initializes to true if editing a task assigned to the team, false otherwise for new/other tasks
     assignToTeam:
       existingTaskData?.assignedTeamReviewerUid === APPREC8_TEAM_REVIEWER_UID ||
       false,
@@ -67,24 +61,22 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
 
   const editorTitle = formData.id ? "Edit Task" : "Add New Task";
 
-  // Clear error from context when component mounts or if existingTaskData changes
   useEffect(() => {
     if (clearError) {
       clearError();
     }
-  }, [clearError, existingTaskData]);
+  }, [clearError, existingTaskData]); // Only run if clearError or existingTaskData changes
 
   useFocusEffect(
     useCallback(() => {
-      console.log("TASK_EDITOR: Focused. Navigation object:", navigation);
-      if (error && clearError) {
-        // Example: Alert.alert("Task Editor Note", `Previous error: ${error}`);
-        // clearError();
-      }
+      // console.log("TASK_EDITOR: Focused. Navigation object:", navigation);
+      // if (error && clearError) {
+      // clearError(); // Example: clear context error on focus
+      // }
       return () => {
         // console.log('TASK_EDITOR: Unfocused.');
       };
-    }, [navigation, error, clearError])
+    }, [navigation, error, clearError]) // Keep error & clearError if you intend to act on them on focus
   );
 
   const inputChangeHandler = useCallback((key, value) => {
@@ -93,22 +85,16 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
 
   const handleDateChange = useCallback(
     (event, selectedDate) => {
-      const currentDate = selectedDate || formData.dueDate;
-      if (Platform.OS === "android") {
-        setShowDatePicker(false);
-      }
-      // For iOS, picker might stay open until "Done" is pressed.
-      // We update the date immediately if a new one is selected.
+      setShowDatePicker(Platform.OS === "ios"); // Keep open on iOS, close on Android
       if (selectedDate) {
-        // Only update if a new date was actually selected
-        inputChangeHandler("dueDate", currentDate);
+        // Only update if a date was selected (not cancelled)
+        inputChangeHandler("dueDate", selectedDate);
       }
     },
-    [inputChangeHandler, formData.dueDate]
+    [inputChangeHandler] // formData.dueDate is not needed as a dep here
   );
 
   const handleDatePickerDone = useCallback(() => {
-    // For iOS "Done" button
     setShowDatePicker(false);
   }, []);
 
@@ -128,10 +114,8 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
     if (navigation && navigation.canGoBack()) {
       navigation.goBack();
     } else if (navigation) {
-      console.log(
-        "TASK_EDITOR: Cannot go back, navigating to Tasks screen as fallback."
-      );
-      navigation.navigate("Tasks");
+      // console.log("TASK_EDITOR: Cannot go back, navigating to Tasks screen as fallback.");
+      navigation.navigate("Tasks"); // Ensure 'Tasks' is a valid route
     } else {
       console.error(
         "TASK_EDITOR: goBackHandler - navigation object is missing!"
@@ -143,28 +127,30 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
     if (!validateFormData()) {
       return;
     }
-    const taskPayload = {
+    // The payload sent to context functions.
+    // The context function is responsible for setting Firestore-specific fields like 'assignedTeamReviewerUid' or 'creatorUid'.
+    const taskDataForContext = {
       title: formData.title.trim(),
       detail: formData.detail.trim(),
-      dueDate: formData.dueDate,
+      dueDate: formData.dueDate.toISOString(), // Send as ISO string for Firestore
       completed: formData.completed,
-      assignToTeam: formData.assignToTeam,
+      // This boolean tells the context whether the intention is to assign to the team.
+      // It does NOT directly set assignedTeamReviewerUid here.
+      assignToTeamBoolean: formData.assignToTeam,
     };
 
     try {
       if (formData.id) {
-        const updateData = {
-          title: taskPayload.title,
-          detail: taskPayload.detail,
-          dueDate: taskPayload.dueDate,
-          completed: taskPayload.completed,
-        };
-        await updateTask(formData.id, updateData);
+        // For updates, we send only the fields that can be changed by the editor, plus the ID.
+        // The updateTask function in context should handle how `assignToTeamBoolean` affects `assignedTeamReviewerUid`.
+        await updateTask(formData.id, taskDataForContext);
       } else {
-        await addTask(taskPayload);
+        // For new tasks, addTask in context will use taskDataForContext to build the full Firestore document.
+        await addTask(taskDataForContext);
       }
       goBackHandler();
     } catch (err) {
+      // Error from context (already an HttpsError or similar) or local error
       Alert.alert(
         "Operation Failed",
         err.message || "Could not save task. Please try again."
@@ -185,7 +171,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           alignItems: "center",
           paddingHorizontal: Platform.OS === "ios" ? 15 : 10,
           paddingVertical: 10,
-          height: 56,
+          height: 56, // Standard header height
         },
         backButtonContainer: {
           padding: 5,
@@ -199,12 +185,14 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           color: theme.headerTint || theme.primaryWhite || "#FFFFFF",
         },
         headerPlaceholderRight: {
-          // To balance the back button for centering title
-          width: (Platform.OS === "ios" ? 28 : 28) + 5 * 2 + 10, // Icon size + padding + margin
+          width: (Platform.OS === "ios" ? 30 : 28) + 5 * 2 + 10, // Approx (iconSize + padding*2 + margin)
         },
-        scrollContainer: { paddingHorizontal: 16, paddingBottom: 40 },
+        scrollContainer: {
+          paddingHorizontal: 16,
+          paddingBottom: 40,
+        },
         button: {
-          minWidth: 50,
+          minWidth: 50, // Or your desired minWidth
           marginHorizontal: 8,
           marginTop: 30,
           marginBottom: 20,
@@ -212,7 +200,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
         dateSection: {
           marginHorizontal: 8,
           marginVertical: 12,
-          marginBottom: 15,
+          // marginBottom: 15, // Covered by marginVertical
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -225,12 +213,14 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           fontSize: 16,
           fontFamily: "delius",
         },
-        dateTextContainer: { alignItems: "flex-end" },
+        dateTextContainer: {
+          alignItems: "flex-end",
+        }, // No specific style needed if Pressable itself handles layout
         dateText: {
           color: theme.textPrimaryOnGradient || "#FFFFFF",
           fontSize: 16,
           fontFamily: "delius",
-          paddingBottom: 5,
+          paddingVertical: 5, // Make it easier to press
         },
         assignSwitchContainer: {
           flexDirection: "row",
@@ -241,13 +231,13 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           paddingVertical: 10,
           borderBottomWidth: 1,
           borderBottomColor: theme.border || "#d7d1d3",
-          paddingBottom: 10,
+          // paddingBottom: 10, // Duplicated, use paddingVertical
         },
         assignLabel: {
           color: theme.textPrimaryOnGradient || "#FFFFFF",
           fontSize: 16,
           fontFamily: "delius",
-          flexShrink: 1,
+          flexShrink: 1, // Allow label to shrink if switch takes space
           marginRight: 10,
         },
         loadingOverlay: {
@@ -259,7 +249,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           backgroundColor: "rgba(0,0,0,0.4)",
           justifyContent: "center",
           alignItems: "center",
-          zIndex: 10,
+          zIndex: 10, // Ensure it's on top
         },
         loadingText: {
           fontFamily: "delius",
@@ -274,19 +264,21 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           paddingHorizontal: 15,
           borderTopWidth: 1,
           borderTopColor: theme.border || "#d7d1d3",
-          backgroundColor: theme.cardBackground || "#f9f9f9", // Use a themed background
+          backgroundColor: theme.cardBackground || "#f9f9f9",
         },
         doneButtonText: {
-          color: theme.primary || "#007AFF",
+          color: theme.primary || "#007AFF", // Standard iOS blue or theme primary
           fontSize: 17,
-          fontWeight: "600",
-          fontFamily: "delius",
+          fontWeight: "600", // Common for "Done" buttons
+          fontFamily: "delius", // Or system font if Delius doesn't fit
         },
       }),
-    [theme] // Removed isDark as it's not directly used in these styles
+    [theme] // isDark was removed as it wasn't directly used
   );
 
+  // Loading state specifically for task submission context
   if (isLoading && !showDatePicker) {
+    // Avoid showing global loading when only date picker is active
     return (
       <SafeAreaView style={styles.safeArea}>
         <LinearGradient
@@ -294,8 +286,9 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
             theme.gradientStart || "#3b0940",
             theme.gradientEnd || "#d7d1d3",
           ]}
-          style={styles.container}
+          style={styles.container} // This container should have flex: 1
         >
+          {/* Custom loading overlay for task submission */}
           <View style={styles.loadingOverlay}>
             <ActivityIndicator
               size="large"
@@ -325,7 +318,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
                   ? "chevron-back-outline"
                   : "arrow-back-outline"
               }
-              size={Platform.OS === "ios" ? 30 : 28} // Slightly adjust size per platform if needed
+              size={Platform.OS === "ios" ? 30 : 28}
               color={theme.headerTint || "#FFFFFF"}
             />
           </Pressable>
@@ -354,14 +347,20 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
             <Text style={styles.dateLabel}>Due Date</Text>
             <Pressable
               onPress={() => setShowDatePicker(true)}
-              style={styles.dateTextContainer}
+              // style={styles.dateTextContainer} // Not strictly needed if Pressable wraps Text directly and has padding
             >
               <Text style={styles.dateText}>
+                {" "}
+                {/* Added paddingVertical to dateText for better tap area */}
                 {formatDate(formData.dueDate)}
               </Text>
             </Pressable>
           </View>
 
+          {/* Conditional rendering for the Switch:
+              - Not for existing tasks (formData.id is truthy)
+              - Not if the current user IS the Apprec8 team reviewer
+           */}
           {!formData.id && currentUser?.uid !== APPREC8_TEAM_REVIEWER_UID && (
             <View style={styles.assignSwitchContainer}>
               <Text style={styles.assignLabel}>
@@ -382,7 +381,8 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
                   inputChangeHandler("assignToTeam", value)
                 }
                 value={formData.assignToTeam}
-                disabled={!!formData.id}
+                // Switch is implicitly not disabled here as it's only shown for new tasks
+                // disabled={!!formData.id} // This condition is handled by the outer conditional rendering
               />
             </View>
           )}
@@ -401,10 +401,9 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
                 mode="date"
                 display={Platform.OS === "ios" ? "spinner" : "default"}
                 onChange={handleDateChange}
-                minimumDate={new Date()} // Optional: prevent selecting past dates
-                // For iOS, you can try to pass theme colors if supported by your version
-                // textColor={isDark ? theme.textPrimary : theme.inputText}
-                // themeVariant={isDark ? 'dark' : 'light'}
+                minimumDate={new Date()} // Prevent selecting past dates
+                // textColor={isDark ? theme.textPrimaryOnGradient : theme.textPrimary} // Example theming for iOS
+                // themeVariant={isDark ? 'dark' : 'light'} // For some custom pickers or future RN versions
               />
             </>
           )}
@@ -412,9 +411,10 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           <PrimaryButton
             style={styles.button}
             onPress={submitHandler}
-            disabled={isLoading}
+            disabled={isLoading} // isLoading from context, true during submission
           >
-            {isLoading && formData.id ? (
+            {/* Show ActivityIndicator inside button if isLoading (from context) is true */}
+            {isLoading ? (
               <ActivityIndicator
                 size="small"
                 color={theme.textOnPrimary || "#FFFFFF"}

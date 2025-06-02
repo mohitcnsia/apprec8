@@ -119,7 +119,7 @@ function TasksContextProvider({ children }) {
     try {
       const dataForFirestore = {
         ...taskData,
-        dueDate: taskData.dueDate.toISOString(),
+        dueDate: taskData.dueDate,
       };
       const newTaskFromApi = await addTaskToFirestore(dataForFirestore);
       const newTaskForState = {
