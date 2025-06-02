@@ -1,20 +1,21 @@
-// screens/quiz/StudyScreen.js
-
-import React, { useState, useEffect, useMemo } from "react"; // Import useMemo
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   ScrollView,
   StyleSheet,
   Text,
-  View, // Keep View if needed for future layout, though not used currently
+  View,
   ActivityIndicator,
 } from "react-native";
-import CustomCarousel from "../../components/common/CustomCarousal";
+import CustomCarousel from "../../components/common/CustomCarousal"; // Ensure path is correct
 import { LinearGradient } from "expo-linear-gradient";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
-import { listenToCategoriesByGroup } from "../../services/firestoreContentApi";
+import { useTheme } from "../../context/ThemeContext";
+import {
+  listenToCategoriesByGroup,
+  listenToUserDocument, // UPDATED IMPORT
+} from "../../services/firestoreContentApi"; // Adjust path as needed
+import { authInstance } from "../../config/firebaseConfig"; // Adjust path as needed
 
-// Helper function (remains the same)
+// Helper function (from your provided code)
 const formatCategoryDataForCarousel = (category) => ({
   id: category.id,
   title: category.title,
@@ -26,133 +27,166 @@ const formatCategoryDataForCarousel = (category) => ({
 });
 
 function StudyScreen({ navigation }) {
-  const { theme } = useTheme(); // Use the theme hook
+  const { theme } = useTheme();
 
-  // State variables (remain the same)
+  // State variables for categories
   const [olympiadCategories, setOlympiadCategories] = useState([]);
   const [classroomCategories, setClassroomCategories] = useState([]);
   const [popularReadCategories, setPopularReadCategories] = useState([]);
   const [popularQuizCategories, setPopularQuizCategories] = useState([]);
+
+  // UPDATED STATE: Store the whole user document or specifically the completions map
+  // Let's store userData and extract the map from it.
+  const [userData, setUserData] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect for listeners (remains the same)
+  const isMountedRef = useRef(true);
+  const userId = authInstance.currentUser?.uid;
+
   useEffect(() => {
+    isMountedRef.current = true;
     console.log("StudyScreen mounted, setting up listeners...");
     setIsLoading(true);
     setError(null);
-    let active = true;
-    let listenersInitialized = 0;
-    const totalListeners = 4;
+    setUserData(null); // Reset user data on userId change or mount
 
-    const handleInitialLoad = () => {
-      listenersInitialized++;
-      if (active && listenersInitialized >= totalListeners) {
-        setIsLoading(false);
-        console.log("All initial listeners fired for StudyScreen.");
+    let listenersInitializedCount = 0;
+    const CATEGORY_LISTENERS_COUNT = 4;
+    // Total listeners: categories + user document (if user is logged in)
+    const TOTAL_EXPECTED_LISTENERS = userId
+      ? CATEGORY_LISTENERS_COUNT + 1
+      : CATEGORY_LISTENERS_COUNT;
+
+    const onListenerInitialized = () => {
+      if (isMountedRef.current) {
+        listenersInitializedCount++;
+        if (listenersInitializedCount >= TOTAL_EXPECTED_LISTENERS) {
+          setIsLoading(false);
+          console.log(
+            "All expected initial listeners for StudyScreen have reported."
+          );
+        }
       }
     };
-    const handleError = (err) => {
-      if (active) {
-        setError("Could not load all study sections.");
-        setIsLoading(false);
+
+    const handleListenerError = (err, source) => {
+      if (isMountedRef.current) {
+        console.error(`StudyScreen Listener Error from ${source}:`, err);
+        setError(`Failed to load ${source}. Please try again later.`);
+        setIsLoading(false); // Stop loading on critical error
       }
     };
 
+    // Setup listeners for categories (same as before)
     const unsubOlympiad = listenToCategoriesByGroup(
       "olympiad",
       (data) => {
-        if (active) {
+        if (isMountedRef.current) {
           setOlympiadCategories(data.map(formatCategoryDataForCarousel));
-          handleInitialLoad();
+          onListenerInitialized();
         }
       },
-      handleError
+      (e) => handleListenerError(e, "Olympiad Categories")
     );
     const unsubClassroom = listenToCategoriesByGroup(
       "classroom",
       (data) => {
-        if (active) {
+        if (isMountedRef.current) {
           setClassroomCategories(data.map(formatCategoryDataForCarousel));
-          handleInitialLoad();
+          onListenerInitialized();
         }
       },
-      handleError
+      (e) => handleListenerError(e, "Classroom Categories")
     );
     const unsubReads = listenToCategoriesByGroup(
       "popular_read",
       (data) => {
-        if (active) {
+        if (isMountedRef.current) {
           setPopularReadCategories(data.map(formatCategoryDataForCarousel));
-          handleInitialLoad();
+          onListenerInitialized();
         }
       },
-      handleError
+      (e) => handleListenerError(e, "Popular Reads")
     );
     const unsubQuizzes = listenToCategoriesByGroup(
       "popular_quiz",
       (data) => {
-        if (active) {
+        if (isMountedRef.current) {
           setPopularQuizCategories(data.map(formatCategoryDataForCarousel));
-          handleInitialLoad();
+          onListenerInitialized();
         }
       },
-      handleError
+      (e) => handleListenerError(e, "Popular Quizzes")
     );
 
+    // Setup listener for user document if user is logged in
+    let unsubUserDocument = () => {};
+    if (userId) {
+      unsubUserDocument = listenToUserDocument(
+        // Use the new service function
+        (data) => {
+          if (isMountedRef.current) {
+            setUserData(data); // Store the whole user document (or null if not found)
+            console.log(
+              "StudyScreen: User document received:",
+              data
+                ? `has perfectQuizCompletions: ${!!data.perfectQuizCompletions}`
+                : "null"
+            );
+            onListenerInitialized();
+          }
+        },
+        (err) => handleListenerError(err, "User Document")
+      );
+    }
+
+    // Cleanup function
     return () => {
       console.log("StudyScreen unmounting, cleaning up listeners.");
-      active = false;
+      isMountedRef.current = false;
       unsubOlympiad();
       unsubClassroom();
       unsubReads();
       unsubQuizzes();
+      unsubUserDocument(); // Cleanup the user document listener
     };
-  }, []);
+  }, [userId]); // Rerun effect if userId changes
 
-  // --- Define Styles Inside Component with useMemo ---
+  // Extract the perfectQuizCompletions map for passing to carousels
+  const perfectQuizCompletions = userData?.perfectQuizCompletions || {};
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        // Style for the LinearGradient wrapper
-        gradientContainer: {
-          flex: 1,
-        },
-        // Style for centered content (loading/error)
+        gradientContainer: { flex: 1 },
         centered: {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
           padding: 20,
-          // Background handled by the gradient applied to this View
         },
-        // Style for error text
         errorText: {
-          // Use themed text color suitable for gradient background
           color: theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF",
           fontSize: 16,
           textAlign: "center",
+          fontFamily: "nunito",
         },
-        // Optional: Add padding to ScrollView content if needed
-        scrollViewContent: {
-          paddingBottom: 20, // Add padding at the bottom
-        },
+        scrollViewContent: { paddingBottom: 20 },
       }),
     [theme]
-  ); // Depend on theme
+  );
 
-  // --- Render Logic ---
   if (isLoading) {
     return (
-      // Apply themed gradient to the loading container
       <LinearGradient
         colors={[
           theme.gradientStart || "#3b0940",
           theme.gradientEnd || "#d7d1d3",
         ]}
-        style={styles.centered} // Use centered style which has flex: 1
+        style={styles.centered}
       >
-        {/* Use themed color for indicator */}
         <ActivityIndicator
           size="large"
           color={theme.textPrimaryOnGradient || theme.primaryWhite || "#FFFFFF"}
@@ -160,42 +194,40 @@ function StudyScreen({ navigation }) {
       </LinearGradient>
     );
   }
+
   if (error) {
     return (
-      // Apply themed gradient to the error container
       <LinearGradient
         colors={[
           theme.gradientStart || "#3b0940",
           theme.gradientEnd || "#d7d1d3",
         ]}
-        style={styles.centered} // Use centered style which has flex: 1
+        style={styles.centered}
       >
         <Text style={styles.errorText}>{error}</Text>
       </LinearGradient>
     );
   }
 
-  // --- Main Screen Render ---
   return (
-    // Apply themed gradient to the main container
     <LinearGradient
       colors={[
         theme.gradientStart || "#3b0940",
         theme.gradientEnd || "#d7d1d3",
       ]}
-      style={styles.gradientContainer} // Use container style which has flex: 1
+      style={styles.gradientContainer}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollViewContent} // Optional padding
+        contentContainerStyle={styles.scrollViewContent}
       >
-        {/* Carousels are assumed to be themed internally */}
         {olympiadCategories.length > 0 && (
           <CustomCarousel
             title="Olympiad"
             data={olympiadCategories}
             navigation={navigation}
-            customWidth={40} // Keep custom dimensions
+            perfectQuizCompletions={perfectQuizCompletions} // Pass the map
+            customWidth={40}
             customHeight={120}
           />
         )}
@@ -204,6 +236,7 @@ function StudyScreen({ navigation }) {
             title="My Classrooms"
             data={classroomCategories}
             navigation={navigation}
+            perfectQuizCompletions={perfectQuizCompletions} // Pass the map
             customWidth={40}
             customHeight={120}
           />
@@ -213,6 +246,7 @@ function StudyScreen({ navigation }) {
             title="Popular Reads"
             data={popularReadCategories}
             navigation={navigation}
+            perfectQuizCompletions={perfectQuizCompletions} // Pass the map
             customWidth={40}
             customHeight={120}
           />
@@ -222,15 +256,36 @@ function StudyScreen({ navigation }) {
             title="Popular Quizzes"
             data={popularQuizCategories}
             navigation={navigation}
+            perfectQuizCompletions={perfectQuizCompletions} // Pass the map
             customWidth={40}
             customHeight={120}
           />
         )}
+        {!isLoading &&
+          !error &&
+          olympiadCategories.length === 0 &&
+          classroomCategories.length === 0 &&
+          popularReadCategories.length === 0 &&
+          popularQuizCategories.length === 0 && (
+            <View style={styles.centered}>
+              <Text
+                style={[
+                  styles.errorText,
+                  {
+                    color:
+                      theme.textSecondaryOnGradient ||
+                      theme.textLightGray ||
+                      "#B0B0B0",
+                  },
+                ]}
+              >
+                No study content available at the moment.
+              </Text>
+            </View>
+          )}
       </ScrollView>
     </LinearGradient>
   );
 }
 
 export default StudyScreen;
-
-// Removed the external StyleSheet as styles are now internal and memoized

@@ -1,32 +1,28 @@
-// components/common/CustomCarousal.js
-
 import React, {
   useRef,
   useState,
   useEffect,
   useCallback,
   useMemo,
-} from "react"; // Import useMemo
+} from "react";
 import {
   View,
   Image,
   FlatList,
   Dimensions,
   StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity, // For 'View All' button
   Text,
   Pressable,
 } from "react-native";
-// import { Colors } from "../../config/colors"; // Remove legacy Colors import
-import { useTheme } from "../../context/ThemeContext"; // Import useTheme hook
-import DummyScreen from "../../screens/DummyScreen"; // Keep this if needed for navigation fallback
-// Remove data imports if they are not used directly here
-// import { psychologyTopics, systemDesignTopics } from "../../data/app-topic-data";
+import { useTheme } from "../../context/ThemeContext";
+import DummyScreen from "../../screens/DummyScreen"; // Ensure this path is correct if used
+import { MaterialCommunityIcons } from "@expo/vector-icons"; // For the checkmark icon
 
 const { width: screenWidth } = Dimensions.get("window");
-const SPACING = 20; // Keep spacing definition
+const SPACING = 20; // Horizontal spacing between items (total)
 
-// Helper functions remain the same
+// Helper function to get image source (from your provided code)
 const getImageSource = (item) => {
   if (!item) return null;
   if (typeof item === "string") return { uri: item };
@@ -38,26 +34,38 @@ const getImageSource = (item) => {
     : null;
 };
 
+// Helper function to check for metadata (from your provided code)
 const containsMetadata = (item) =>
-  Boolean(item?.title || item?.duration || item?.type || item?.author);
+  Boolean(
+    item?.title ||
+      item?.duration ||
+      item?.type ||
+      item?.author ||
+      item?.subtitle
+  );
 
-// --- CarouselItem Component ---
-// Now accepts 'theme' as a prop
+// --- CarouselItem Component (defined within CustomCarousel) ---
 const CarouselItem = React.memo(
-  ({ item, imageWidth, imageHeight, navigation, theme }) => {
-    // Added theme prop
-    // console.log("CarouselItem rendering item:", JSON.stringify(item, null, 2)); // Keep logs if needed during debugging
+  ({
+    item,
+    imageWidth,
+    imageHeight,
+    navigation,
+    theme,
+    perfectQuizCompletions,
+  }) => {
+    // UPDATED PROP: perfectQuizCompletions
     const imageSource = getImageSource(item);
-    // console.log("CarouselItem imageSource:", imageSource);
-    // console.log("CarouselItem dimensions (w, h):", imageWidth, imageHeight);
     const hasMetadata = containsMetadata(item);
 
-    // Navigation logic remains the same
-    function pressHandler() {
-      if (!item || !item.id) return;
-      console.log(
-        `CarouselItem pressed: ID=${item.id}, Type=${item.type}, Title=${item.title}`
-      );
+    const pressHandler = useCallback(() => {
+      if (!item || !item.id) {
+        console.warn(
+          "CarouselItem: pressHandler called with no item or item.id"
+        );
+        return;
+      }
+      // Navigation logic based on item.type (remains same)
       switch (item.type?.toUpperCase()) {
         case "STUDY":
           navigation.push("Apprec8Reader", { contentId: item.id });
@@ -74,88 +82,171 @@ const CarouselItem = React.memo(
           });
           break;
         default:
-          console.warn(`Unhandled item type: ${item.type} for ID: ${item.id}`);
+          console.warn(
+            `CarouselItem: Unhandled item type: ${item.type} for ID: ${item.id}`
+          );
           navigation.navigate("DummyScreen", {
-            errorMessage: `Action for "${item.title}" not defined.`,
+            errorMessage: `Action for "${item.title || "this item"}" of type "${
+              item.type
+            }" is not yet defined.`,
           });
           break;
       }
-    }
+    }, [navigation, item]);
 
-    // Define minimal styles needed here, using the passed theme prop
+    // --- Checkmark Logic for Quizzes using perfectQuizCompletions map ---
+    const isQuizType = item.type?.toUpperCase() === "QUIZ";
+    let checkmarkColor = null;
+
+    if (isQuizType && perfectQuizCompletions && item.id) {
+      const lastPerfectScoreTimestamp = perfectQuizCompletions[item.id]; // item.id is quizId
+
+      if (
+        lastPerfectScoreTimestamp &&
+        typeof lastPerfectScoreTimestamp.toDate === "function"
+      ) {
+        const lastPerfectScoreDate = lastPerfectScoreTimestamp.toDate();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        if (lastPerfectScoreDate > sevenDaysAgo) {
+          checkmarkColor = theme.success || "green"; // Completed and "fresh"
+        } else {
+          checkmarkColor = theme.textDisabled || "gray"; // Completed but "forgotten"
+        }
+      }
+    }
+    // --- End Checkmark Logic ---
+
     const itemStyles = useMemo(
       () =>
         StyleSheet.create({
           pressableWrapper: {
-            marginHorizontal: SPACING / 2, // Apply spacing for FlatList separation
+            marginHorizontal: SPACING / 2,
           },
           container: {
             width: imageWidth,
             borderRadius: 10,
-            overflow: "hidden", // Clip image corners
+            overflow: "hidden",
+            backgroundColor: theme.cardBackground || theme.surface || "#FFFFFF",
+            elevation: 3,
+            shadowColor: theme.shadowColor || "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
           },
           imageStyle: {
-            width: imageWidth,
+            width: "100%",
             height: imageHeight,
-            borderRadius: 10, // Ensure image has rounded corners (redundant due to container overflow:'hidden')
-            resizeMode: "stretch",
+            resizeMode: "cover",
           },
           imagePlaceholder: {
-            width: imageWidth,
+            width: "100%",
             height: imageHeight,
-            borderRadius: 10,
-            backgroundColor: theme.placeholder || "#cccccc", // Use theme placeholder color
+            backgroundColor: theme.placeholder || "#E0E0E0",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          placeholderText: {
+            color: theme.textSecondary || "#757575",
+            fontSize: 12,
           },
           metadataContainer: {
-            padding: 8, // Slightly more padding
-            // Optional: Add a subtle background overlay if needed for text readability on images
-            // backgroundColor: 'rgba(0,0,0,0.3)',
+            paddingVertical: 8,
+            paddingHorizontal: 10,
           },
           itemTitle: {
+            fontFamily: "nunitoBold",
             fontWeight: "bold",
-            color: theme.textPrimary || "#000000", // Use theme text color
-            fontSize: 13, // Slightly larger title
-            marginBottom: 2,
+            color: theme.textPrimary || "#000000",
+            fontSize: 14,
+            marginBottom: 3,
           },
           metaText: {
-            fontSize: 11,
-            color: theme.textSecondary || "#6E6E73", // Use theme secondary text color
-            marginTop: 1,
+            fontFamily: "nunito",
+            fontSize: 12,
+            color: theme.textSecondary || "#6E6E73",
+            marginTop: 2,
+          },
+          checkmarkContainer: {
+            position: "absolute",
+            top: 8,
+            right: 8,
+            backgroundColor: theme.background || "rgba(255,255,255,0.8)",
+            padding: 3,
+            borderRadius: 15,
+            zIndex: 1,
+            elevation: 2,
           },
         }),
       [theme, imageWidth, imageHeight]
-    ); // Depend on theme and dimensions
+    );
 
     return (
       <Pressable
         onPress={pressHandler}
         style={({ pressed }) => [
-          itemStyles.pressableWrapper, // Use styles defined above
-          { opacity: pressed ? 0.7 : 1 },
+          itemStyles.pressableWrapper,
+          { opacity: pressed ? 0.65 : 1 },
         ]}
+        accessibilityLabel={item.title || "Carousel item"}
+        accessibilityRole="button"
       >
         <View style={itemStyles.container}>
-          {imageSource ? (
-            <Image source={imageSource} style={itemStyles.imageStyle} />
-          ) : (
-            <View style={itemStyles.imagePlaceholder} />
+          {checkmarkColor && isQuizType && (
+            <View style={itemStyles.checkmarkContainer}>
+              <MaterialCommunityIcons
+                name="check-circle"
+                size={22}
+                color={checkmarkColor}
+              />
+            </View>
           )}
 
-          {/* Metadata Section Below Image */}
+          {imageSource ? (
+            <Image
+              source={imageSource}
+              style={itemStyles.imageStyle}
+              accessibilityLabel={
+                item.title ? `Image for ${item.title}` : "Item image"
+              }
+            />
+          ) : (
+            <View style={itemStyles.imagePlaceholder}>
+              <Text style={itemStyles.placeholderText}>No Image</Text>
+            </View>
+          )}
+
           {hasMetadata && (
             <View style={itemStyles.metadataContainer}>
               {item.title && (
-                <Text style={itemStyles.itemTitle} numberOfLines={1}>
+                <Text
+                  style={itemStyles.itemTitle}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
                   {item.title}
                 </Text>
               )}
-              <Text style={itemStyles.metaText} numberOfLines={1}>
-                {item.subtitle && `${item.subtitle} • `}
-                {item.duration && `${item.duration}`}
-              </Text>
+              {(item.subtitle || item.duration) && (
+                <Text
+                  style={itemStyles.metaText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.subtitle
+                    ? `${item.subtitle}${item.duration ? " • " : ""}`
+                    : ""}
+                  {item.duration ? `${item.duration}` : ""}
+                </Text>
+              )}
               {item.author && (
-                <Text style={itemStyles.metaText} numberOfLines={1}>
-                  {item.author}
+                <Text
+                  style={itemStyles.metaText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  By: {item.author}
                 </Text>
               )}
             </View>
@@ -169,51 +260,50 @@ const CarouselItem = React.memo(
 // --- CustomCarousel Component ---
 const CustomCarousel = ({
   title,
-  data = [], // Keep default prop
+  data = [],
   navigation,
   autoPlay = false,
-  interval = 3000,
-  viewAllScreen, // Keep prop if used
+  interval = 3500,
+  viewAllScreen,
   customWidth = 80,
   customHeight = 240,
   pagination = false,
+  perfectQuizCompletions, // UPDATED PROP NAME
 }) => {
-  // Get theme object
   const { theme } = useTheme();
-
-  // console.log(`CustomCarousel "${title}" received data:`, JSON.stringify(data, null, 2)); // Keep if debugging needed
-
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Dimensions calculations remain the same
   const imageWidth = (screenWidth * customWidth) / 100;
   const imageHeight = customHeight;
 
-  // useEffect and useCallback logic remain the same
   useEffect(() => {
-    if (autoPlay && data.length > 1) {
-      const intervalId = setInterval(() => scrollToNext(), interval);
-      return () => clearInterval(intervalId);
+    let autoplayTimerId = null;
+    if (autoPlay && Array.isArray(data) && data.length > 1) {
+      autoplayTimerId = setInterval(() => {
+        if (flatListRef.current) {
+          setCurrentIndex((prevIndex) => {
+            const nextIndex = (prevIndex + 1) % data.length;
+            flatListRef.current.scrollToIndex({
+              index: nextIndex,
+              animated: true,
+            });
+            return nextIndex;
+          });
+        }
+      }, interval);
     }
-  }, [autoPlay, data, interval, scrollToNext]); // Added data, scrollToNext dependencies
-
-  const scrollToNext = useCallback(() => {
-    if (!flatListRef.current || !Array.isArray(data) || data.length === 0)
-      return;
-    let nextIndex = (currentIndex + 1) % data.length;
-    flatListRef.current.scrollToIndex({ index: nextIndex, animated: true });
-    // setCurrentIndex(nextIndex); // Let onScroll handle index update for consistency
-  }, [currentIndex, data]);
+    return () => {
+      if (autoplayTimerId) clearInterval(autoplayTimerId);
+    };
+  }, [autoPlay, data, interval]);
 
   const handleScroll = useCallback(
     (event) => {
-      if (!Array.isArray(data) || data.length === 0) return;
-      // Calculate index based on scroll position and item width + spacing
+      if (!Array.isArray(data) || data.length === 0 || imageWidth <= 0) return;
       const contentOffsetX = event.nativeEvent.contentOffset.x;
-      const itemTotalWidth = imageWidth + SPACING / 2; // Width + margin used in container
-      const newIndex = Math.round(contentOffsetX / itemTotalWidth);
-
+      const itemEffectiveWidth = imageWidth + SPACING;
+      const newIndex = Math.round(contentOffsetX / itemEffectiveWidth);
       if (
         newIndex !== currentIndex &&
         newIndex >= 0 &&
@@ -222,106 +312,112 @@ const CustomCarousel = ({
         setCurrentIndex(newIndex);
       }
     },
-    [currentIndex, data, imageWidth] // Added data dependency
+    [currentIndex, data, imageWidth]
   );
 
-  // Define styles inside useMemo, depending on theme
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        carouselWrapper: {
-          marginVertical: 10,
-        },
+        carouselWrapper: { marginVertical: 15 },
         header: {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingHorizontal: SPACING, // Use SPACING for consistency
-          marginBottom: 10, // More space below header
+          paddingHorizontal: SPACING,
+          marginBottom: 12,
         },
         title: {
-          fontSize: 18,
-          fontWeight: "bold",
-          color: theme.textPrimary || "#000000", // Use theme text color
+          fontSize: 20,
+          fontFamily: "nunitoBold",
+          color: theme.textPrimary || "#000000",
         },
         viewAll: {
-          fontSize: 14, // Slightly larger
-          color: theme.accent || "#007AFF", // Use theme accent color (or primary)
-          fontWeight: "500",
+          fontSize: 14,
+          fontFamily: "nunito",
+          color: theme.accent || theme.primary || "#007AFF",
         },
         paginationContainer: {
           flexDirection: "row",
           justifyContent: "center",
-          marginTop: 12, // More space above pagination
-          marginBottom: 5,
+          alignItems: "center",
+          marginTop: 15,
         },
         dot: {
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          backgroundColor: theme.placeholder || "#cccccc", // Use theme placeholder color
-          marginHorizontal: 4, // Adjust spacing
+          width: 9,
+          height: 9,
+          borderRadius: 5,
+          backgroundColor: theme.placeholder || "#D1D1D6",
+          marginHorizontal: 5,
         },
         activeDot: {
-          backgroundColor: theme.primary || "#800000", // Use theme primary (or accent) color
+          backgroundColor: theme.primary || "#800000",
+          width: 10,
+          height: 10,
+          borderRadius: 5,
         },
-        // FlatList content container style (no theme dependency needed here usually)
-        flatlistContentContainer: {
-          paddingHorizontal: SPACING / 2, // Start padding
-        },
+        flatlistContentContainer: { paddingHorizontal: SPACING / 2 },
       }),
     [theme]
-  ); // Depend on theme
+  );
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
 
   return (
     <View style={styles.carouselWrapper}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        {/* Ensure DummyScreen is imported if used here */}
-        {viewAllScreen && (
-          <TouchableOpacity onPress={() => navigation.navigate(DummyScreen)}>
+        {viewAllScreen && viewAllScreen.screenName && (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                viewAllScreen.screenName,
+                viewAllScreen.params || {}
+              )
+            }
+          >
             <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         )}
       </View>
 
-      {/* FlatList */}
       <FlatList
         ref={flatListRef}
-        data={data} // Use data prop
+        data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => item?.id || index.toString()} // Use item.id if available
-        contentContainerStyle={styles.flatlistContentContainer} // Apply padding
+        keyExtractor={(item, index) =>
+          item?.id?.toString() || `carousel-${title}-${index}`
+        }
+        contentContainerStyle={styles.flatlistContentContainer}
         renderItem={({ item }) => (
           <CarouselItem
             item={item}
             imageWidth={imageWidth}
             imageHeight={imageHeight}
             navigation={navigation}
-            theme={theme} // Pass theme object to CarouselItem
+            theme={theme}
+            perfectQuizCompletions={perfectQuizCompletions} // Pass down the map
           />
         )}
-        // Snapping logic requires careful calculation with item width + spacing
-        snapToInterval={imageWidth + SPACING / 2} // Width + marginHorizontal from CarouselItem pressableWrapper
+        snapToInterval={imageWidth + SPACING}
         decelerationRate="fast"
-        snapToAlignment="start" // Align snapped item to the start
+        snapToAlignment="start"
         onScroll={handleScroll}
-        scrollEventThrottle={16} // Standard throttle
-        getItemLayout={(data, index) => ({
-          length: imageWidth + SPACING / 2, // Consistent length calculation
-          offset: (imageWidth + SPACING / 2) * index,
+        scrollEventThrottle={16}
+        getItemLayout={(_data, index) => ({
+          length: imageWidth + SPACING,
+          offset: (imageWidth + SPACING) * index,
           index,
         })}
       />
 
-      {/* Pagination */}
-      {pagination && Array.isArray(data) && data.length > 1 && (
+      {pagination && (
         <View style={styles.paginationContainer}>
           {data.map((_, index) => (
             <View
-              key={index}
+              key={`dot-${title}-${index}`}
               style={[styles.dot, currentIndex === index && styles.activeDot]}
             />
           ))}

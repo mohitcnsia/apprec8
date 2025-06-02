@@ -1,6 +1,7 @@
-// services/firestoreContentApi.js (Rewritten & Documented)
-
 import firestore from "@react-native-firebase/firestore";
+// Assuming authInstance is correctly configured and exported from your firebase setup.
+// Please ensure this path is correct for your project structure.
+import { authInstance } from "../config/firebaseConfig";
 
 /**
  * Sets up a real-time listener for categories filtered by a specific group field.
@@ -16,7 +17,9 @@ export function listenToCategoriesByGroup(groupName, onDataChange, onError) {
   // Validate input
   if (!groupName || typeof groupName !== "string") {
     console.error("listenToCategoriesByGroup: Invalid groupName provided.");
-    onError(new Error("Invalid group name for fetching categories."));
+    if (typeof onError === "function") {
+      onError(new Error("Invalid group name for fetching categories."));
+    }
     return () => {}; // Return no-op unsubscribe
   }
 
@@ -35,7 +38,9 @@ export function listenToCategoriesByGroup(groupName, onDataChange, onError) {
       console.log(
         `LISTENER: Snapshot for group ${groupName}: ${categories.length} items`
       );
-      onDataChange(categories); // Pass fetched data
+      if (typeof onDataChange === "function") {
+        onDataChange(categories); // Pass fetched data
+      }
     },
     (error) => {
       // Firestore listener error handling
@@ -46,7 +51,9 @@ export function listenToCategoriesByGroup(groupName, onDataChange, onError) {
           `Firestore index likely missing for categories query (where carouselGroup == ${groupName}, orderBy order). Check Firestore console.`
         );
       }
-      onError(error); // Pass the error object
+      if (typeof onError === "function") {
+        onError(error); // Pass the error object
+      }
     }
   );
   return unsubscribe; // Return the cleanup function
@@ -70,7 +77,9 @@ export const listenToCategoryTopics = (categoryId, onDataReceived, onError) => {
   // Validate input
   if (!categoryId || typeof categoryId !== "string") {
     console.error("listenToCategoryTopics: Invalid categoryId provided.");
-    onError(new Error("Invalid category ID for fetching topics."));
+    if (typeof onError === "function") {
+      onError(new Error("Invalid category ID for fetching topics."));
+    }
     return () => {};
   }
 
@@ -89,7 +98,9 @@ export const listenToCategoryTopics = (categoryId, onDataReceived, onError) => {
       querySnapshot.forEach((doc) => {
         topics.push({ id: doc.id, ...doc.data() });
       });
-      onDataReceived(topics); // Pass the array of topic objects
+      if (typeof onDataReceived === "function") {
+        onDataReceived(topics); // Pass the array of topic objects
+      }
     },
     (error) => {
       // Firestore listener error handling
@@ -103,7 +114,9 @@ export const listenToCategoryTopics = (categoryId, onDataReceived, onError) => {
           `Firestore index likely missing for topics query (where categoryId == ${categoryId}, where parentTopicId == null, orderBy order). Check Firestore console.`
         );
       }
-      onError(error); // Pass the error object
+      if (typeof onError === "function") {
+        onError(error); // Pass the error object
+      }
     }
   );
   return unsubscribe; // Return the cleanup function
@@ -126,7 +139,9 @@ export const listenToSubtopics = (parentTopicId, onDataReceived, onError) => {
   // Validate input
   if (!parentTopicId || typeof parentTopicId !== "string") {
     console.error("listenToSubtopics: Invalid parentTopicId provided.");
-    onError(new Error("Invalid parent ID for fetching sub-items."));
+    if (typeof onError === "function") {
+      onError(new Error("Invalid parent ID for fetching sub-items."));
+    }
     return () => {};
   }
 
@@ -144,7 +159,9 @@ export const listenToSubtopics = (parentTopicId, onDataReceived, onError) => {
       querySnapshot.forEach((doc) => {
         children.push({ id: doc.id, ...doc.data() });
       });
-      onDataReceived(children); // Pass the array of child items
+      if (typeof onDataReceived === "function") {
+        onDataReceived(children); // Pass the array of child items
+      }
     },
     (error) => {
       // Firestore listener error handling
@@ -158,7 +175,9 @@ export const listenToSubtopics = (parentTopicId, onDataReceived, onError) => {
           `Firestore index likely missing for topics query (where parentTopicId == ${parentTopicId}, orderBy order). Check Firestore console.`
         );
       }
-      onError(error); // Pass the error object
+      if (typeof onError === "function") {
+        onError(error); // Pass the error object
+      }
     }
   );
   return unsubscribe; // Return the cleanup function
@@ -174,19 +193,19 @@ export const listenToSubtopics = (parentTopicId, onDataReceived, onError) => {
  * @returns {() => void} An unsubscribe function to detach the listener.
  */
 export function listenToStudyContent(contentId, onDataChange, onError) {
-  // <<< Renamed param to contentId
   console.log(
     `LISTENER: Setting up for study content with contentId: ${contentId}`
-  ); // <<< Log using contentId
+  );
   // Validate input
   if (!contentId || typeof contentId !== "string") {
     console.error("listenToStudyContent: Invalid contentId provided.");
-    onError(new Error("Invalid ID for fetching study content."));
+    if (typeof onError === "function") {
+      onError(new Error("Invalid ID for fetching study content."));
+    }
     return () => {};
   }
 
-  // Use the contentId directly as the document ID
-  const docRef = firestore().collection("studyContent").doc(contentId); // <<< Use contentId here
+  const docRef = firestore().collection("studyContent").doc(contentId);
 
   const unsubscribe = docRef.onSnapshot(
     (docSnapshot) => {
@@ -195,18 +214,24 @@ export function listenToStudyContent(contentId, onDataChange, onError) {
         console.log(
           `LISTENER: Snapshot for study content ${contentId}: Data received.`
         );
-        onDataChange(studyData); // Pass data
+        if (typeof onDataChange === "function") {
+          onDataChange(studyData); // Pass data
+        }
       } else {
         console.log(
           `LISTENER: Snapshot for study content ${contentId}: Document does not exist.`
         );
-        onDataChange(null); // Indicate not found
+        if (typeof onDataChange === "function") {
+          onDataChange(null); // Indicate not found
+        }
       }
     },
     (error) => {
       // Firestore listener error handling
       console.error(`LISTENER ERROR: study content ${contentId}: `, error);
-      onError(error); // Pass error
+      if (typeof onError === "function") {
+        onError(error); // Pass error
+      }
     }
   );
   return unsubscribe; // Return cleanup function
@@ -224,21 +249,21 @@ export function listenToStudyContent(contentId, onDataChange, onError) {
  * @returns {() => void} An unsubscribe function to detach the listener.
  */
 export function listenToQuizQuestions(parentId, onDataChange, onError) {
-  // Argument is parentId
   console.log(
     `LISTENER: Setting up for quiz questions for parentId: ${parentId}`
   );
   // Validate input
   if (!parentId || typeof parentId !== "string") {
     console.error("listenToQuizQuestions: Invalid parentId provided.");
-    onError(new Error("Invalid ID for fetching quiz questions."));
+    if (typeof onError === "function") {
+      onError(new Error("Invalid ID for fetching quiz questions."));
+    }
     return () => {};
   }
 
-  // Query 'quizQuestions' collection where the 'parentId' field matches
   const query = firestore()
     .collection("quizQuestions")
-    .where("parentId", "==", parentId) // <<< Query using 'parentId' field
+    .where("parentId", "==", parentId)
     .orderBy("order", "asc"); // Order questions
 
   const unsubscribe = query.onSnapshot(
@@ -250,7 +275,9 @@ export function listenToQuizQuestions(parentId, onDataChange, onError) {
       querySnapshot.forEach((doc) => {
         questions.push({ id: doc.id, ...doc.data() });
       });
-      onDataChange(questions); // Pass fetched questions array
+      if (typeof onDataChange === "function") {
+        onDataChange(questions); // Pass fetched questions array
+      }
     },
     (error) => {
       // Firestore listener error handling
@@ -264,8 +291,72 @@ export function listenToQuizQuestions(parentId, onDataChange, onError) {
           `Firestore index likely missing for quizQuestions query (where parentId == ${parentId}, orderBy order). Check Firestore console.`
         );
       }
-      onError(error); // Pass error
+      if (typeof onError === "function") {
+        onError(error); // Pass error
+      }
     }
   );
   return unsubscribe; // Return cleanup function
 }
+
+// --- NEW FUNCTION for fetching the main user document ---
+/**
+ * Listens to the main document for the current authenticated user.
+ * This document should contain the `perfectQuizCompletions` map and other user data.
+ * @param {(userData: object | null) => void} onResult Callback function with the user data object or null if not found/error.
+ * @param {(error: Error) => void} onError Callback function for errors.
+ * @returns {() => void} Unsubscribe function.
+ */
+export const listenToUserDocument = (onResult, onError) => {
+  const currentUser = authInstance.currentUser; // Get the currently signed-in user
+
+  if (!currentUser) {
+    console.warn(
+      "listenToUserDocument: No user authenticated. Cannot attach listener."
+    );
+    if (typeof onError === "function") {
+      // It might be better to call onResult with null if no user,
+      // as it's not strictly a listener "error" but a state.
+      // Or, the calling component should check for user before calling this.
+      onResult(null);
+    }
+    return () => {}; // Return an empty unsubscribe function
+  }
+  const userId = currentUser.uid;
+  console.log(`LISTENER: Setting up for user document: ${userId}`);
+
+  const docRef = firestore().collection("users").doc(userId);
+
+  const unsubscribe = docRef.onSnapshot(
+    (docSnapshot) => {
+      if (docSnapshot.exists) {
+        const userData = {
+          id: docSnapshot.id,
+          ...docSnapshot.data(),
+          // Ensure perfectQuizCompletions is at least an empty object if not present
+          perfectQuizCompletions:
+            docSnapshot.data()?.perfectQuizCompletions || {},
+        };
+        console.log(
+          `LISTENER: Snapshot for user document ${userId}. Perfect completions map exists: ${!!userData.perfectQuizCompletions}`
+        );
+        if (typeof onResult === "function") {
+          onResult(userData);
+        }
+      } else {
+        console.warn(`LISTENER: User document ${userId} does not exist.`);
+        if (typeof onResult === "function") {
+          onResult(null); // User document not found
+        }
+      }
+    },
+    (error) => {
+      console.error(`LISTENER ERROR: User document ${userId}: `, error);
+      if (typeof onError === "function") {
+        onError(error);
+      }
+    }
+  );
+  return unsubscribe;
+};
+// --- END OF NEW FUNCTION ---

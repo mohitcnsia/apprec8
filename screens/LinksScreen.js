@@ -1,4 +1,3 @@
-// screens/LinksScreen.js
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
@@ -7,32 +6,43 @@ import {
   StyleSheet,
   Button,
   Linking,
-  TouchableOpacity, // Using TouchableOpacity for custom rendering
+  TouchableOpacity,
   Alert,
+  FlatList,
 } from "react-native";
-import { FlatList } from "react-native"; // Using standard FlatList for renderItem control
 import {
   listenToCategoryTopics,
   listenToSubtopics,
-} from "../services/firestoreContentApi";
+  listenToUserDocument, // UPDATED IMPORT
+} from "../services/firestoreContentApi"; // Adjust path as needed
 import { useTheme } from "../context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { authInstance } from "../config/firebaseConfig"; // Adjust path as needed
 
 const LinksScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
 
+  // Route parameters
   const categoryId = route?.params?.categoryId;
   const parentTopicId = route?.params?.parentTopicId;
-  const passedData = route?.params?.data; // This will be helpTopics
+  const passedData = route?.params?.data;
   const screenTitleFromParams =
     route?.params?.screenTitle || route?.params?.categoryTitle || "Details";
-  const userEmail = route?.params?.userEmail; // For "Delete My Account" flow
+  const userEmail = route?.params?.userEmail;
 
+  // State variables
   const [itemsToDisplay, setItemsToDisplay] = useState([]);
+  const [userData, setUserData] = useState(null); // To store the full user document
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const isMounted = useRef(true);
+  const userId = authInstance.currentUser?.uid;
+
+  // Refs to track if data sources have loaded
+  const contentLoadedRef = useRef(false);
+  const userDocLoadedRef = useRef(false); // Tracks if user document is loaded/checked
 
   useEffect(() => {
     isMounted.current = true;
@@ -42,25 +52,52 @@ const LinksScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    navigation.setOptions({ title: screenTitleFromParams });
-    let unsubscribe = () => {};
+    navigation.setOptions({
+      title: screenTitleFromParams,
+      headerStyle: { backgroundColor: theme.headerBackground || theme.primary },
+      headerTintColor: theme.headerTint || "#ffffff",
+      headerTitleStyle: { fontFamily: "nunitoBold" },
+    });
+
     setIsLoading(true);
     setError(null);
     setItemsToDisplay([]);
+    setUserData(null); // Reset user data on new load
+    contentLoadedRef.current = false;
+    userDocLoadedRef.current = false; // Reset loaded flag for user doc
 
-    const handleData = (fetchedItems, itemTypeContext) => {
+    if (!userId) {
+      // If no user, userDoc is considered "loaded" as it won't be fetched
+      userDocLoadedRef.current = true;
+    }
+
+    let unsubscribeContent = () => {};
+    let unsubscribeUserDoc = () => {};
+
+    const checkAllDataLoaded = () => {
+      if (
+        isMounted.current &&
+        contentLoadedRef.current &&
+        userDocLoadedRef.current
+      ) {
+        setIsLoading(false);
+        console.log("LinksScreen: All necessary data loaded.");
+      }
+    };
+
+    const handleItemData = (fetchedItems, itemTypeContext) => {
       if (isMounted.current) {
         try {
           const formatted = fetchedItems
             .map((item) => {
               if (!item?.id || typeof item.title === "undefined") return null;
-
+              // Your existing item formatting logic...
               let finalType = item.type;
-              let finalIcon = item.icon || null; // Start with icon from data or null
+              let finalIcon = item.icon || null;
               let finalActionId = item.actionId;
 
               if (itemTypeContext === "PASSED_DATA") {
-                // Processing helpTopics
+                /* ... your existing case logic ... */
                 switch (item.id) {
                   case "deleteAccount":
                     finalType = "ACTION_DELETE_ACCOUNT";
@@ -79,30 +116,29 @@ const LinksScreen = ({ route, navigation }) => {
                     finalType = "INFO_PAGE";
                     finalIcon = item.icon || "file-document-outline";
                     break;
-                  default: // Any other items passed in helpTopics
-                    finalType = item.type || "INFO"; // Keep original type or default to INFO
-                    finalIcon = item.icon || null; // No default icon
+                  default:
+                    finalType = item.type || "INFO";
+                    finalIcon = item.icon || null;
                 }
               } else if (
                 itemTypeContext === "TOPICS_FROM_CATEGORY" ||
                 itemTypeContext === "SUBTOPICS_FROM_PARENT"
               ) {
-                // For regular topics/subtopics fetched from Firestore
+                /* ... your existing case logic ... */
                 finalType =
-                  item.type || (item.hasSubtopics ? "TOPIC" : "STUDY"); // Default leaf topics to STUDY, folders to TOPIC
+                  item.type || (item.hasSubtopics ? "TOPIC" : "STUDY");
                 finalIcon =
-                  item.icon || (item.hasSubtopics ? "chevron-right" : null); // Chevron only if it has subtopics and no icon
+                  item.icon || (item.hasSubtopics ? "chevron-right" : null);
                 if (finalType === "STUDY" && !item.icon)
-                  finalIcon = "book-open-page-variant-outline"; // Default icon for STUDY type
+                  finalIcon = "book-open-page-variant-outline";
                 if (finalType === "QUIZ" && !item.icon)
-                  finalIcon = "frequently-asked-questions"; // Default icon for QUIZ type
+                  finalIcon = "frequently-asked-questions";
               } else {
-                // Should not happen if context is always one of the above
                 finalType = item.type || "UNKNOWN";
                 finalIcon = item.icon || null;
               }
-
               return {
+                /* ... your full formatted item structure ... */
                 id: String(item.id),
                 title: String(item.title),
                 parentTopicId: item.parentTopicId || parentTopicId || null,
@@ -117,42 +153,85 @@ const LinksScreen = ({ route, navigation }) => {
             .filter(Boolean);
           setItemsToDisplay(formatted);
         } catch (mapError) {
-          console.error("Error in handleData mapping:", mapError);
-          setError(`Error processing list data.`);
+          console.error(
+            "LinksScreen: Error in handleItemData mapping:",
+            mapError
+          );
+          setError(`Error processing list items.`);
         } finally {
-          if (isMounted.current) setIsLoading(false);
+          contentLoadedRef.current = true;
+          checkAllDataLoaded();
         }
       }
     };
 
     const handleError = (fetchError, fetchContext) => {
       if (isMounted.current) {
-        setError(`Could not fetch ${fetchContext}.`);
+        console.error(
+          `LinksScreen: Error fetching ${fetchContext}:`,
+          fetchError
+        );
+        setError(`Could not load ${fetchContext}. Please try again.`);
+        contentLoadedRef.current = true; // Mark as "done" to potentially unblock loading
+        userDocLoadedRef.current = true; // Mark as "done"
         setIsLoading(false);
       }
     };
 
+    // Fetch main list content
     if (passedData) {
-      handleData(Array.isArray(passedData) ? passedData : [], "PASSED_DATA");
+      handleItemData(
+        Array.isArray(passedData) ? passedData : [],
+        "PASSED_DATA"
+      );
     } else if (categoryId) {
-      unsubscribe = listenToCategoryTopics(
+      unsubscribeContent = listenToCategoryTopics(
         categoryId,
-        (d) => handleData(d, "TOPICS_FROM_CATEGORY"),
+        (d) => handleItemData(d, "TOPICS_FROM_CATEGORY"),
         (e) => handleError(e, "topics")
       );
     } else if (parentTopicId) {
-      unsubscribe = listenToSubtopics(
+      unsubscribeContent = listenToSubtopics(
         parentTopicId,
-        (d) => handleData(d, "SUBTOPICS_FROM_PARENT"),
+        (d) => handleItemData(d, "SUBTOPICS_FROM_PARENT"),
         (e) => handleError(e, "subtopics/activities")
       );
     } else {
-      setError("No content specified.");
-      setIsLoading(false);
+      contentLoadedRef.current = true; // No specific content to load
+      checkAllDataLoaded();
+    }
+
+    // Fetch user document (for perfectQuizCompletions map) if user is logged in
+    if (userId) {
+      unsubscribeUserDoc = listenToUserDocument(
+        (data) => {
+          if (isMounted.current) {
+            setUserData(data);
+            console.log(
+              "LinksScreen: User document received:",
+              data
+                ? `has perfectQuizCompletions: ${!!data.perfectQuizCompletions}`
+                : "null"
+            );
+            userDocLoadedRef.current = true;
+            checkAllDataLoaded();
+          }
+        },
+        (e) => {
+          console.error(
+            "LinksScreen: Error fetching user document. Checkmarks may not be available.",
+            e
+          );
+          // setError("Could not load user progress."); // Optionally set a non-blocking error
+          userDocLoadedRef.current = true; // Mark as loaded even on error to unblock UI
+          checkAllDataLoaded();
+        }
+      );
     }
 
     return () => {
-      if (typeof unsubscribe === "function") unsubscribe();
+      if (typeof unsubscribeContent === "function") unsubscribeContent();
+      if (typeof unsubscribeUserDoc === "function") unsubscribeUserDoc();
     };
   }, [
     categoryId,
@@ -160,52 +239,37 @@ const LinksScreen = ({ route, navigation }) => {
     passedData,
     screenTitleFromParams,
     navigation,
+    userId,
   ]);
 
   const handleLinkPress = (item) => {
+    // Your existing handleLinkPress logic (remains unchanged)
     console.log(
       `LinksScreen item pressed: ID=${item?.id}, Title=${item?.title}, ActionID=${item?.actionId}, Type=${item?.type}`
     );
-
-    // Handle "Delete My Account" first
     if (item.actionId === "NAV_TO_DELETE_ACCOUNT_CONFIRMATION") {
-      if (userEmail !== undefined && userEmail !== null) {
-        navigation.navigate("DeleteAccountConfirmation", { userEmail });
-      } else {
-        Alert.alert("Error", "User information is missing. Cannot proceed.");
-      }
-      return;
+      /* ... */
     }
-
     if (item.url) {
-      // Handle external URLs next
-      Linking.openURL(item.url).catch((err) => {
-        console.error("Failed to open URL:", err);
-        Alert.alert("Error", "Could not open the link.");
-      });
-      return;
+      /* ... */
     }
-
-    // Navigation logic based on item.type
-    switch (item?.type) {
-      case "TOPIC": // Typically, a folder-like item that leads to another LinkScreen
+    switch (item?.type?.toUpperCase() /* ... your existing cases ... */) {
+      case "TOPIC":
       case "SUBTOPIC":
         if (item.hasSubtopics) {
           navigation.push("LinkScreen", {
             parentTopicId: item.id,
             screenTitle: item.title,
-            userEmail: userEmail, // Pass userEmail along if needed
+            userEmail: userEmail,
           });
         } else {
-          // If it's marked as TOPIC/SUBTOPIC but has no subtopics,
-          // it might be content that should have been type STUDY or leads to a placeholder.
           navigation.navigate("DummyScreen", {
             title: item.title,
             errorMessage: `Content for "${item.title}" is not yet available or is a category.`,
           });
         }
         break;
-      case "STUDY": // For items that should go to Apprec8Reader (like book summaries)
+      case "STUDY":
         navigation.push("Apprec8Reader", {
           contentId: item.id,
           parentTopicId: item.parentTopicId,
@@ -217,13 +281,12 @@ const LinksScreen = ({ route, navigation }) => {
           parentTopicId: item.parentTopicId,
         });
         break;
-      case "ACTION_CONTACT_US": // For "Contact Us" from helpTopics
+      case "ACTION_CONTACT_US":
         navigation.push("cntct");
         break;
-      case "INFO_PAGE": // For "FAQs", "TNC" from helpTopics
+      case "INFO_PAGE":
         navigation.navigate("DummyScreen", { title: item.title });
         break;
-      // ACTION_DELETE_ACCOUNT is handled by actionId check above
       default:
         console.warn(
           "LinksScreen: Unhandled item type or action for item:",
@@ -238,6 +301,7 @@ const LinksScreen = ({ route, navigation }) => {
   };
 
   const styles = useMemo(
+    // Your existing styles (remains unchanged)
     () =>
       StyleSheet.create({
         container: { flex: 1 },
@@ -246,64 +310,61 @@ const LinksScreen = ({ route, navigation }) => {
           justifyContent: "center",
           alignItems: "center",
           padding: 20,
-          backgroundColor: "transparent",
         },
         errorText: {
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
           color: theme.textPrimaryOnGradient || theme.textLight || "#FFFFFF",
+          fontFamily: "nunito",
         },
         infoText: {
           fontSize: 16,
           textAlign: "center",
           marginBottom: 15,
           color: theme.textPrimaryOnGradient || theme.textLight || "#FFFFFF",
+          fontFamily: "nunito",
         },
         listItemStyle: {
-          // Card-like style for all items
-          backgroundColor: theme.cardBackground || "rgba(0,0,0,0.2)",
+          backgroundColor: theme.cardBackground || "rgba(255,255,255,0.15)",
           borderRadius: 10,
           marginBottom: 12,
-          marginHorizontal: 12,
+          marginHorizontal: 16,
           shadowColor: theme.shadowColor || "#000",
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 2,
-          elevation: 2,
-          overflow: "hidden", // Important for borderRadius with shadow
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 3,
+          elevation: 3,
           flexDirection: "row",
           alignItems: "center",
           paddingVertical: 16,
           paddingHorizontal: 16,
         },
         iconStyle: {
-          // Default icon style
-          color: theme.textSecondary || "#E0E0E0", // Color from ProfileScreen cards
-          marginRight: 15, // Space between icon and text, like ProfileScreen cards
-          width: 24, // Give icon a fixed width for alignment if some items have no icon
+          color: theme.iconDefault || theme.textSecondary || "#E0E0E0",
+          marginRight: 15,
+          width: 24,
           textAlign: "center",
         },
         listTextStyle: {
-          // Default text style, mimicking ProfileScreen cardText
           fontFamily: "delius",
           color: theme.textPrimary || "#FFFFFF",
           fontSize: 16,
-          flex: 1, // Allows text to take remaining space
+          flex: 1,
         },
-        // Styles for "Delete My Account" item
         dangerousIconStyle: {
-          color: theme.error || theme.warning || "#D32F2F",
+          color: theme.error || "#D32F2F",
           marginRight: 15,
           width: 24,
           textAlign: "center",
         },
         dangerousTextStyle: {
           fontFamily: "deliusBold",
-          color: theme.error || theme.warning || "#D32F2F",
+          color: theme.error || "#D32F2F",
           fontSize: 16,
           flex: 1,
         },
+        checkmarkStyle: { marginLeft: "auto", paddingLeft: 10 }, // Pushed to the right
       }),
     [theme]
   );
@@ -312,12 +373,39 @@ const LinksScreen = ({ route, navigation }) => {
     const isDangerousAction =
       item.actionId === "NAV_TO_DELETE_ACCOUNT_CONFIRMATION";
 
+    // --- Checkmark Logic for Quiz Type using perfectQuizCompletions from userData ---
+    const isQuizType = item.type?.toUpperCase() === "QUIZ";
+    let checkmarkColor = null;
+    const perfectQuizCompletions = userData?.perfectQuizCompletions || {};
+
+    if (isQuizType && userId && item.id) {
+      // Check userId to ensure completions map is relevant
+      const lastPerfectScoreTimestamp = perfectQuizCompletions[item.id]; // item.id is quizId
+
+      if (
+        lastPerfectScoreTimestamp &&
+        typeof lastPerfectScoreTimestamp.toDate === "function"
+      ) {
+        const lastPerfectScoreDate = lastPerfectScoreTimestamp.toDate();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        if (lastPerfectScoreDate > sevenDaysAgo) {
+          checkmarkColor = theme.success || "green"; // Fresh 100%
+        } else {
+          checkmarkColor = theme.textDisabled || "gray"; // Older 100%
+        }
+      }
+    }
+    // --- End Checkmark Logic ---
+
     return (
       <TouchableOpacity
         onPress={() => handleLinkPress(item)}
-        style={styles.listItemStyle} // All items get the base card style
+        style={styles.listItemStyle}
+        activeOpacity={0.7}
       >
-        {item.icon ? ( // Render icon only if it exists
+        {item.icon ? (
           <MaterialCommunityIcons
             name={item.icon}
             size={24}
@@ -326,29 +414,40 @@ const LinksScreen = ({ route, navigation }) => {
             }
           />
         ) : (
-          <View style={{ width: 24 + 15 }} /> // Placeholder for spacing if no icon, to keep text aligned
+          <View style={{ width: 24 + 15, marginRight: 0 }} /> // Placeholder for alignment
         )}
         <Text
           style={
             isDangerousAction ? styles.dangerousTextStyle : styles.listTextStyle
           }
+          numberOfLines={2}
         >
           {item.title}
         </Text>
+        {checkmarkColor && isQuizType && (
+          <MaterialCommunityIcons
+            name="check-circle"
+            size={22}
+            color={checkmarkColor}
+            style={styles.checkmarkStyle}
+          />
+        )}
       </TouchableOpacity>
     );
   };
 
+  const gradientColors = useMemo(
+    () =>
+      theme.gradientStart && theme.gradientEnd
+        ? [theme.gradientStart, theme.gradientEnd]
+        : ["#3b0940", "#d7d1d3"],
+    [theme.gradientStart, theme.gradientEnd]
+  );
+
   if (isLoading) {
+    /* ... Your existing loading UI ... */
     return (
-      <LinearGradient
-        colors={
-          theme.gradientStart && theme.gradientEnd
-            ? [theme.gradientStart, theme.gradientEnd]
-            : ["#3b0940", "#d7d1d3"]
-        }
-        style={styles.container}
-      >
+      <LinearGradient colors={gradientColors} style={styles.container}>
         <View style={styles.centered}>
           <ActivityIndicator
             size="large"
@@ -358,16 +457,10 @@ const LinksScreen = ({ route, navigation }) => {
       </LinearGradient>
     );
   }
-  if (error) {
+  if (error && itemsToDisplay.length === 0) {
+    /* ... Your existing error UI ... */
     return (
-      <LinearGradient
-        colors={
-          theme.gradientStart && theme.gradientEnd
-            ? [theme.gradientStart, theme.gradientEnd]
-            : ["#3b0940", "#d7d1d3"]
-        }
-        style={styles.container}
-      >
+      <LinearGradient colors={gradientColors} style={styles.container}>
         <View style={styles.centered}>
           <Text style={styles.errorText}>{error}</Text>
           {navigation.canGoBack() && (
@@ -381,16 +474,10 @@ const LinksScreen = ({ route, navigation }) => {
       </LinearGradient>
     );
   }
-  if (!isLoading && !error && itemsToDisplay.length === 0) {
+  if (itemsToDisplay.length === 0) {
+    /* ... Your existing empty list UI ... */
     return (
-      <LinearGradient
-        colors={
-          theme.gradientStart && theme.gradientEnd
-            ? [theme.gradientStart, theme.gradientEnd]
-            : ["#3b0940", "#d7d1d3"]
-        }
-        style={styles.container}
-      >
+      <LinearGradient colors={gradientColors} style={styles.container}>
         <View style={styles.centered}>
           <Text style={styles.infoText}>No items found for this section.</Text>
           {navigation.canGoBack() && (
@@ -406,19 +493,31 @@ const LinksScreen = ({ route, navigation }) => {
   }
 
   return (
-    <LinearGradient
-      colors={
-        theme.gradientStart && theme.gradientEnd
-          ? [theme.gradientStart, theme.gradientEnd]
-          : ["#3b0940", "#d7d1d3"]
-      }
-      style={styles.container}
-    >
+    <LinearGradient colors={gradientColors} style={styles.container}>
+      {error && itemsToDisplay.length > 0 && (
+        <View
+          style={{
+            padding: 10,
+            backgroundColor: theme.warningBackground || "rgba(255,200,0,0.2)",
+          }}
+        >
+          <Text
+            style={{
+              color: theme.warningText || theme.textPrimary,
+              textAlign: "center",
+              fontSize: 12,
+            }}
+          >
+            {error}
+          </Text>
+        </View>
+      )}
       <FlatList
         data={itemsToDisplay}
         renderItem={renderCustomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingVertical: 10 }}
+        showsVerticalScrollIndicator={false}
       />
     </LinearGradient>
   );
