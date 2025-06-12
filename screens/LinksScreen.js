@@ -281,6 +281,12 @@ const LinksScreen = ({ route, navigation }) => {
           parentTopicId: item.parentTopicId,
         });
         break;
+      case "WORD_INSPECTOR":
+        navigation.push("WordInspector", {
+          quizId: item.id,
+          parentTopicId: item.parentTopicId,
+        });
+        break;
       case "ACTION_CONTACT_US":
         navigation.push("cntct");
         break;

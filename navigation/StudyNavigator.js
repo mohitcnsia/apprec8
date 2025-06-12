@@ -16,6 +16,7 @@ import StudyScreen from "../screens/quiz/StudyScreen";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import LinksScreen from "../screens/LinksScreen";
 import DummyScreen from "../screens/DummyScreen";
+import WordInspectorScreen from "../screens/WordInspectorScreen";
 
 const Stack = createStackNavigator();
 
@@ -79,6 +80,13 @@ const ThemedStudyStack = () => {
       <Stack.Screen
         name="Quiz"
         component={QuizScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="WordInspector"
+        component={WordInspectorScreen}
         options={{
           headerShown: false,
         }}

@@ -1,38 +1,27 @@
 // src/store/firestore-api.js
 
-import firestore from "@react-native-firebase/firestore"; // Use the direct import
-import { authInstance } from "../config/firebaseConfig"; // Assuming authInstance is correctly exported
+import firestore from "@react-native-firebase/firestore";
+import { authInstance } from "../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
-
-// Assuming 'db' from firebaseConfig.js is firestore() or you can use firestore() directly
-// If db is not firestore(), you might need to adjust.
-// For this example, let's assume direct usage of the imported 'firestore' for clarity.
-// If your 'db' export from firebaseConfig is indeed firestore(), you can use 'db' instead of 'firestore()' below.
 
 const TASKS_COLLECTION = "tasks";
 
-/**
- * Fetches tasks for the current user.
- * Includes tasks created by the user and, if the user is the designated
- * team reviewer, tasks assigned to the Apprec8 team for their review.
- * @returns {Promise<Array<Object>>} A promise that resolves to an array of task objects.
- */
 export async function fetchTasks() {
   const currentUser = authInstance.currentUser;
-
   if (!currentUser) {
-    console.log("No user logged in to fetch tasks.");
+    console.log("fetchTasks: No user logged in.");
     return [];
   }
-
   const userId = currentUser.uid;
   let allTasks = [];
 
   try {
-    console.log(`Workspaceing tasks created by user: ${userId}`);
-    const userTasksQuery = firestore() // Using firestore() directly
+    console.log(`fetchTasks: Fetching tasks created by user: ${userId}`);
+    // Assuming 'creatorUid' is the field storing the task creator's ID.
+    // If you use 'userId' for this, change "creatorUid" to "userId" below.
+    const userTasksQuery = firestore()
       .collection(TASKS_COLLECTION)
-      .where("userId", "==", userId)
+      .where("userId", "==", userId) // Query for tasks created by the user
       .orderBy("createdAt", "desc");
 
     const userTasksSnapshot = await userTasksQuery.get();
@@ -40,109 +29,112 @@ export async function fetchTasks() {
       id: doc.id,
       ...doc.data(),
     }));
-    allTasks = userTasksData; // Corrected variable name from previous thoughts
+    allTasks = userTasksData;
     console.log(
-      `Workspaceed ${allTasks.length} tasks created by user ${userId}`
+      `fetchTasks: Fetched ${allTasks.length} tasks created by user ${userId}`
     );
 
     if (userId === APPREC8_TEAM_REVIEWER_UID) {
       console.log(
-        `User ${userId} is Apprec8 Team Reviewer. Fetching team-assigned tasks.`
+        `fetchTasks: User ${userId} is Apprec8 Team Reviewer. Fetching team-assigned tasks (using assignToTeamBoolean).`
       );
-      const teamAssignedTasksQuery = firestore() // Using firestore() directly
+      // MODIFIED QUERY: Look for tasks where assignToTeamBoolean is true
+      const teamAssignedTasksQuery = firestore()
         .collection(TASKS_COLLECTION)
-        .where("assignedTeamReviewerUid", "==", APPREC8_TEAM_REVIEWER_UID)
-        .orderBy("createdAt", "desc");
+        .where("assignToTeamBoolean", "==", true) // Query by the boolean flag
+        .orderBy("createdAt", "desc"); // Ensure consistent ordering
 
       const teamAssignedTasksSnapshot = await teamAssignedTasksQuery.get();
       const teamTasksData = teamAssignedTasksSnapshot.docs.map((doc) => ({
-        // Corrected variable name
         id: doc.id,
         ...doc.data(),
       }));
       console.log(
-        `Workspaceed ${teamTasksData.length} tasks assigned to Apprec8 Team for review.`
+        `fetchTasks: Fetched ${teamTasksData.length} tasks with assignToTeamBoolean == true.`
       );
 
+      // Merge and deduplicate tasks
       const taskMap = new Map();
       allTasks.forEach((task) => taskMap.set(task.id, task));
-      teamTasksData.forEach((task) => taskMap.set(task.id, task));
+      teamTasksData.forEach((task) => taskMap.set(task.id, task)); // Will overwrite/add
       allTasks = Array.from(taskMap.values());
 
+      // Re-sort the final merged list
       allTasks.sort((a, b) => {
         const dateA = a.createdAt?.toDate
-          ? a.createdAt.toDate()
+          ? a.createdAt.toDate().getTime()
           : a.createdAt
-          ? new Date(a.createdAt)
+          ? new Date(a.createdAt).getTime()
           : 0;
         const dateB = b.createdAt?.toDate
-          ? b.createdAt.toDate()
+          ? b.createdAt.toDate().getTime()
           : b.createdAt
-          ? new Date(b.createdAt)
+          ? new Date(b.createdAt).getTime()
           : 0;
         return dateB - dateA;
       });
     }
     console.log(
-      `Total unique tasks fetched for user ${userId}: ${allTasks.length}`
+      `fetchTasks: Total unique tasks for user ${userId}: ${allTasks.length}`
     );
     return allTasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
     if (error.code === "firestore/permission-denied") {
       console.error(
-        "Firestore permission denied. Check rules and ensure task documents have a correct 'userId' field matching the logged-in user, or appropriate indexing for queries."
+        "Firestore permission denied during fetchTasks. Check rules and ensure queries are valid (e.g., indexes for orderBy with where clauses)."
       );
     }
     throw error;
   }
 }
 
-/**
- * Adds a new task to Firestore.
- * @param {Object} taskData - The data for the new task.
- * Expected fields: title, detail, dueDate (ISO string), completed (boolean), assignToTeam (boolean, optional).
- * @returns {Promise<Object>} A promise that resolves to the newly created task object with its Firestore ID.
- */
-export async function addTaskToFirestore(taskData) {
+export async function addTaskToFirestore(taskPayloadFromContext) {
   const currentUser = authInstance.currentUser;
-
   if (!currentUser) {
-    console.error("Error adding task: No user logged in.");
+    console.error("addTaskToFirestore: No user logged in.");
     throw new Error("User must be logged in to add tasks.");
   }
-
-  const userId = currentUser.uid;
+  const userId = currentUser.uid; // This is the creator's UID
 
   try {
-    const { assignToTeam, ...taskDetails } = taskData;
+    // taskPayloadFromContext contains: { title, detail, dueDate (ISO string), completed, assignToTeamBoolean }
+    const { assignToTeamBoolean, dueDate, ...otherDetails } =
+      taskPayloadFromContext;
 
     const dataToSave = {
-      ...taskDetails,
-      userId: userId,
+      ...otherDetails, // title, detail, completed
+      creatorUid: userId, // Explicitly set who created the task
       createdAt: firestore.FieldValue.serverTimestamp(),
       lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
-      // 'completed' field comes from taskData
+      // Convert incoming ISO string dueDate to Firestore Timestamp
+      dueDate: firestore.Timestamp.fromDate(new Date(dueDate)),
+      // Store the boolean flag as it exists in your current Firestore documents
+      assignToTeamBoolean: assignToTeamBoolean || false, // Ensure it's always a boolean
     };
 
-    if (assignToTeam) {
-      dataToSave.assignedTeamReviewerUid = APPREC8_TEAM_REVIEWER_UID;
+    // No need to set assignedTeamReviewerUid if your schema uses assignToTeamBoolean
+    // unless you want both for a future migration.
+    // For now, we stick to assignToTeamBoolean.
+    if (assignToTeamBoolean === true) {
       console.log(
-        `Task assigned to Apprec8 Team Reviewer: ${APPREC8_TEAM_REVIEWER_UID}`
+        `addTaskToFirestore: Task flagged for team assignment (assignToTeamBoolean: true)`
+      );
+    } else {
+      console.log(
+        `addTaskToFirestore: Task NOT flagged for team assignment (assignToTeamBoolean: false)`
       );
     }
 
-    const docRef = await firestore() // Using firestore() directly
+    const docRef = await firestore()
       .collection(TASKS_COLLECTION)
-      .add(dataToSave); // Changed from addDoc(collection(db,...))
+      .add(dataToSave);
 
     console.log(`Task added with ID: ${docRef.id} for user ${userId}`);
     return {
       id: docRef.id,
-      ...dataToSave,
-      // Approximate client time for immediate UI update, actual value is server-set
-      createdAt: new Date(),
-      lastUpdatedAt: new Date(),
+      ...dataToSave, // This will include FieldValues for timestamps
+      // TasksContext will handle converting these to client-side Dates
     };
   } catch (error) {
     console.error(`Error adding task for user ${userId}:`, error);
@@ -150,17 +142,9 @@ export async function addTaskToFirestore(taskData) {
   }
 }
 
-/**
- * Deletes a task from Firestore.
- * @param {string} taskId - The ID of the task to delete.
- * @returns {Promise<void>}
- */
 export async function deleteTaskFromFirestore(taskId) {
   try {
-    await firestore() // Using firestore() directly
-      .collection(TASKS_COLLECTION)
-      .doc(taskId)
-      .delete(); // Changed from deleteDoc(doc(db,...))
+    await firestore().collection(TASKS_COLLECTION).doc(taskId).delete();
     console.log(`Task deleted with ID: ${taskId}`);
   } catch (error) {
     console.error(`Error deleting task ${taskId}:`, error);
@@ -168,20 +152,28 @@ export async function deleteTaskFromFirestore(taskId) {
   }
 }
 
-/**
- * Updates an existing task in Firestore.
- * @param {string} taskId - The ID of the task to update.
- * @param {Object} updatedData - An object containing the fields to update.
- * @returns {Promise<void>}
- */
-export async function updateTaskInFirestore(taskId, updatedData) {
+export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
   try {
+    const { assignToTeamBoolean, dueDate, ...otherDetailsToUpdate } =
+      updatedDataFromContext;
+
     const dataToUpdate = {
-      ...updatedData, // This will include 'completionComment' if sent from context
+      ...otherDetailsToUpdate,
       lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
     };
+
+    if (dueDate) {
+      dataToUpdate.dueDate = firestore.Timestamp.fromDate(new Date(dueDate));
+    }
+
+    // Since TaskEditor hides the switch on edit, assignToTeamBoolean might not be in updatedDataFromContext.
+    // If it is, it means you've enabled changing this on edit.
+    if (assignToTeamBoolean !== undefined) {
+      dataToUpdate.assignToTeamBoolean = assignToTeamBoolean;
+    }
+
     if ("id" in dataToUpdate) delete dataToUpdate.id;
-    if ("userId" in dataToUpdate) delete dataToUpdate.userId;
+    if ("creatorUid" in dataToUpdate) delete dataToUpdate.creatorUid;
     if ("createdAt" in dataToUpdate) delete dataToUpdate.createdAt;
 
     await firestore()
