@@ -5,6 +5,7 @@ const bulkOperationsApi = require("./api/bulkOperations");
 const utilityApi = require("./api/utility");
 const quizActionsCallable = require("./callable/quizActions");
 const userActionsCallable = require("./callable/userActions");
+const wordInspectorBulkOperations = require("./api/wordInspectorBulkOperations");
 
 // Export all functions for Firebase to discover
 module.exports = {
@@ -14,4 +15,5 @@ module.exports = {
   ...utilityApi,
   ...quizActionsCallable,
   ...userActionsCallable,
+  ...wordInspectorBulkOperations,
 };
