@@ -10,7 +10,7 @@ const brandColors = {
   primaryMaroon10: "#f5d2f8", // A very light pink/purple
   primaryMaroon100: "#85508a", // A medium maroon/purple
   primaryMaroon200: "rgba(70, 64, 71, 1)", // Dark grayish maroon
-  primaryLightGray: "#d7d1d3",
+  primaryLightGray: "#b4aeb0",
   primaryLightYellow: "#f0e3b0",
   primaryBrightYellow: "#dcb51b",
   primaryLightPink: "#f0b0f0",
@@ -126,7 +126,7 @@ export const darkColors = {
   statusBarBackground: brandColors.primaryDarkMaroon900,
 
   // --- FINAL CONTRAST BOOST FOR DISABLED BUTTON IN DARK MODE ---
-  disabledBackground: brandColors.primaryWhite, // Pure white for disabled button background
+  disabledBackground: brandColors.primaryLightGray, // Pure white for disabled button background
   disabledBorder: brandColors.primaryWhite, // White border for consistency
   // --- END FINAL REVISION ---
 

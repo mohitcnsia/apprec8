@@ -5,19 +5,24 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView,
+  ScrollView, // Keep ScrollView for the main content
   Dimensions,
   Alert,
 } from "react-native";
 import Svg, { Circle, Line, Text as SvgText } from "react-native-svg";
 import { useFocusEffect } from "@react-navigation/native";
+import { useTheme } from "../context/ThemeContext"; // Adjust path as needed based on your project structure
 
-const { width, height } = Dimensions.get("window"); // Get height for fixed positioning
+const { width } = Dimensions.get("window");
 const CLOCK_SIZE = Math.min(width * 0.8, 300);
 const CENTER = CLOCK_SIZE / 2;
 const BUTTON_AREA_HEIGHT = 100; // Approximate height for the fixed button area
 
 const ClockPracticeGenerator = ({ navigation }) => {
+  const { theme, isDark } = useTheme(); // Use the theme hook
+  // C for Colors, consistent with QuizScreen
+  const C = theme.appColors || theme;
+
   const [currentMode, setCurrentMode] = useState("basic");
   const [currentHours, setCurrentHours] = useState(3);
   const [currentMinutes, setCurrentMinutes] = useState(15);
@@ -36,9 +41,33 @@ const ClockPracticeGenerator = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       const parent = navigation.getParent();
-      parent?.setOptions({ tabBarStyle: { display: "none" } });
-      return () => parent?.setOptions({ tabBarStyle: undefined });
-    }, [navigation])
+      if (parent) {
+        parent.setOptions({ tabBarStyle: { display: "none" } });
+      } else {
+        try {
+          navigation.setOptions({ tabBarStyle: { display: "none" } });
+        } catch (err) {
+          /*ignore*/
+        }
+      }
+      return () => {
+        if (parent) {
+          parent.setOptions({
+            tabBarStyle: {
+              display: "flex",
+              backgroundColor: C.tabBarBackground,
+              borderTopColor: C.border,
+            },
+          });
+        } else {
+          try {
+            navigation.setOptions({ tabBarStyle: { display: "flex" } });
+          } catch (err) {
+            /*ignore*/
+          }
+        }
+      };
+    }, [navigation, C.tabBarBackground, C.border])
   );
 
   useEffect(() => {
@@ -119,6 +148,8 @@ const ClockPracticeGenerator = ({ navigation }) => {
 
   const renderClockNumbers = () => {
     const numbers = [];
+    const numberColor = C.textPrimary; // Use theme color
+
     for (let i = 1; i <= 12; i++) {
       const angle = (i * 30 - 90) * (Math.PI / 180);
       const radius = CENTER * 0.8;
@@ -131,7 +162,7 @@ const ClockPracticeGenerator = ({ navigation }) => {
           y={y + 6}
           fontSize="18"
           fontWeight="bold"
-          fill="#333"
+          fill={numberColor}
           textAnchor="middle"
         >
           {i}
@@ -165,44 +196,67 @@ const ClockPracticeGenerator = ({ navigation }) => {
     return ticks;
   };
 
+  // Determine if the Check button should be disabled
+  const isCheckButtonDisabled =
+    guessHours.trim() === "" || guessMinutes.trim() === "";
+
   return (
-    <View style={styles.fullScreenContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+    <View
+      style={[styles.fullScreenContainer, { backgroundColor: C.background }]}
+    >
+      {/* Horizontal ScrollView for the mode buttons */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.modeScrollContent}
+      >
         <View style={styles.modeContainer}>
           {modes.map((mode) => (
             <TouchableOpacity
               key={mode.key}
               style={[
                 styles.modeButton,
-                currentMode === mode.key && styles.activeModeButton,
+                currentMode === mode.key
+                  ? { backgroundColor: C.accent } // Active mode button
+                  : { backgroundColor: C.primary }, // Inactive mode button
               ]}
               onPress={() => {
                 setCurrentMode(mode.key);
               }}
             >
-              <Text style={styles.modeButtonText}>{mode.label}</Text>
+              <Text style={[styles.modeButtonText, { color: C.buttonText }]}>
+                {mode.label}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
+      </ScrollView>
 
-        <View style={styles.clockContainer}>
+      {/* Main content ScrollView */}
+      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+        <View
+          style={[styles.clockContainer, { backgroundColor: C.cardBackground }]}
+        >
           <Svg width={CLOCK_SIZE} height={CLOCK_SIZE}>
             <Circle
               cx={CENTER}
               cy={CENTER}
               r={CENTER - 10}
-              fill="white"
-              stroke="#333"
+              fill={C.cardBackground} // Clock face color
+              stroke={C.primary} // Clock border color
               strokeWidth={8}
             />
-            {renderTicks(12, 1, 0.9, 0.95, "#666", 3)}
+            {/* Hour ticks - using C.buttonText for good contrast (white/light) */}
+            {renderTicks(12, 1, 0.9, 0.95, C.buttonText, 3)}
+            {/* Minute ticks - using C.buttonText (white/light) */}
+            {renderTicks(60, 1, 0.93, 0.95, C.buttonText, 1)}
             {renderClockNumbers()}
             <Line
               x1={CENTER}
               y1={CENTER}
               x2={hourX}
               y2={hourY}
-              stroke="#333"
+              stroke={C.primary} // Hour hand color
               strokeWidth={6}
               strokeLinecap="round"
             />
@@ -211,30 +265,50 @@ const ClockPracticeGenerator = ({ navigation }) => {
               y1={CENTER}
               x2={minuteX}
               y2={minuteY}
-              stroke="#333"
+              stroke={C.primary} // Minute hand color
               strokeWidth={4}
               strokeLinecap="round"
             />
-            <Circle cx={CENTER} cy={CENTER} r="6" fill="#333" />
+            <Circle cx={CENTER} cy={CENTER} r="6" fill={C.textPrimary} />
+            {/* Center dot */}
           </Svg>
         </View>
 
-        <Text style={styles.question}>What time is shown on the clock?</Text>
+        {/* Correct Answer shown immediately below the clock if feedback is 'wrong' */}
+        {feedback === "wrong" && (
+          <Text style={[styles.correctAnswer, { color: C.warning }]}>
+            Correct Time:
+            {`${currentHours}:${currentMinutes.toString().padStart(2, "0")}`}
+          </Text>
+        )}
+
+        {/* Spacer to push the question and input fields towards the bottom */}
+        <View style={styles.spacer} />
+
+        <Text style={[styles.question, { color: C.primary }]}>
+          What time is shown on the clock?
+        </Text>
 
         <View style={styles.answerInputRow}>
           <View style={styles.inputGroup}>
             <TextInput
               style={[
                 styles.input,
-                feedback === "correct"
-                  ? styles.correctBorder
-                  : feedback === "wrong"
-                  ? styles.wrongBorder
-                  : null,
+                {
+                  borderColor:
+                    feedback === "correct"
+                      ? C.success
+                      : feedback === "wrong"
+                      ? C.warning
+                      : C.border,
+                  backgroundColor: C.inputBackground,
+                  color: C.inputText,
+                },
               ]}
               value={guessHours}
               onChangeText={setGuessHours}
               placeholder="HH"
+              placeholderTextColor={C.placeholder}
               keyboardType="numeric"
               maxLength={2}
               editable={feedback === null}
@@ -244,30 +318,36 @@ const ClockPracticeGenerator = ({ navigation }) => {
                 style={[
                   styles.icon,
                   feedback === "correct"
-                    ? styles.correctText
-                    : styles.wrongText,
+                    ? { color: C.success }
+                    : { color: C.warning },
                 ]}
               >
                 {feedback === "correct" ? "✓" : "✗"}
               </Text>
             )}
           </View>
-          <Text style={{ fontSize: 24, marginHorizontal: 5, color: "#333" }}>
+          <Text style={[styles.timeSeparator, { color: C.textPrimary }]}>
             :
           </Text>
           <View style={styles.inputGroup}>
             <TextInput
               style={[
                 styles.input,
-                feedback === "correct"
-                  ? styles.correctBorder
-                  : feedback === "wrong"
-                  ? styles.wrongBorder
-                  : null,
+                {
+                  borderColor:
+                    feedback === "correct"
+                      ? C.success
+                      : feedback === "wrong"
+                      ? C.warning
+                      : C.border,
+                  backgroundColor: C.inputBackground,
+                  color: C.inputText,
+                },
               ]}
               value={guessMinutes}
               onChangeText={setGuessMinutes}
               placeholder="MM"
+              placeholderTextColor={C.placeholder}
               keyboardType="numeric"
               maxLength={2}
               editable={feedback === null}
@@ -277,8 +357,8 @@ const ClockPracticeGenerator = ({ navigation }) => {
                 style={[
                   styles.icon,
                   feedback === "correct"
-                    ? styles.correctText
-                    : styles.wrongText,
+                    ? { color: C.success }
+                    : { color: C.warning },
                 ]}
               >
                 {feedback === "correct" ? "✓" : "✗"}
@@ -286,27 +366,44 @@ const ClockPracticeGenerator = ({ navigation }) => {
             )}
           </View>
         </View>
-
-        {feedback === "wrong" && (
-          <Text style={styles.correctAnswer}>
-            Correct Time:{" "}
-            {`${currentHours}:${currentMinutes.toString().padStart(2, "0")}`}
-          </Text>
-        )}
       </ScrollView>
 
-      {/* Fixed button container at the bottom */}
-      <View style={styles.fixedButtonContainer}>
+      <View
+        style={[
+          styles.fixedButtonContainer,
+          { backgroundColor: C.background, borderTopColor: C.borderLight },
+        ]}
+      >
         {feedback === null ? (
-          <TouchableOpacity style={styles.checkButton} onPress={checkAnswer}>
-            <Text style={styles.buttonText}>Check</Text>
+          <TouchableOpacity
+            style={[
+              styles.checkButton,
+              {
+                backgroundColor: isCheckButtonDisabled
+                  ? C.disabledBackground
+                  : C.primary, // Check button is primary color when enabled
+              },
+            ]}
+            onPress={checkAnswer}
+            disabled={isCheckButtonDisabled} // Disable if no input
+          >
+            <Text style={[styles.buttonText, { color: C.textOnSuccess }]}>
+              Check
+            </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={styles.nextButton}
+            style={[
+              styles.nextButton,
+              {
+                backgroundColor: feedback === "correct" ? C.success : C.warning, // Next button color changes based on feedback
+              },
+            ]}
             onPress={generateRandomTime}
           >
-            <Text style={styles.buttonText}>Next</Text>
+            <Text style={[styles.buttonText, { color: C.buttonText }]}>
+              Next
+            </Text>
           </TouchableOpacity>
         )}
       </View>
@@ -316,22 +413,31 @@ const ClockPracticeGenerator = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   fullScreenContainer: {
-    flex: 1, // Take full height
-    backgroundColor: "#f0f2f5",
+    flex: 1,
+  },
+  // New style for the horizontal ScrollView content
+  modeScrollContent: {
+    paddingHorizontal: 15, // Add some padding on the sides
+    alignItems: "center", // Vertically center the buttons if they have different heights
+    paddingVertical: 10, // Add some vertical padding above/below the buttons
+    // Removed marginBottom as it will be handled by the outer ScrollView's padding
   },
   scrollContentContainer: {
+    flexGrow: 1, // Allows content to grow and push elements to bottom
     padding: 20,
     alignItems: "center",
-    paddingBottom: BUTTON_AREA_HEIGHT + 20, // Add padding to avoid content hiding behind fixed button
+    paddingBottom: BUTTON_AREA_HEIGHT + 20, // Ensure content isn't hidden by the fixed button
+  },
+  spacer: {
+    flex: 1, // This view will take up all available space and push elements below it down
   },
   modeContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    // flexWrap: "wrap", // Removed: buttons will now flow horizontally
     justifyContent: "center",
-    marginBottom: 20,
+    // marginBottom: 20, // Moved to modeScrollContent paddingVertical
   },
   modeButton: {
-    backgroundColor: "#6200EE",
     paddingVertical: 8,
     paddingHorizontal: 15,
     margin: 5,
@@ -342,18 +448,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
-  activeModeButton: {
-    backgroundColor: "#03DAC6",
-    shadowOpacity: 0.2,
-    elevation: 6,
-  },
   modeButtonText: {
-    color: "white",
     fontSize: 13,
     fontWeight: "600",
   },
   clockContainer: {
-    backgroundColor: "#ffffff",
     borderRadius: CLOCK_SIZE / 2,
     padding: 10,
     marginBottom: 25,
@@ -366,7 +465,6 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
     marginBottom: 15,
     textAlign: "center",
   },
@@ -381,22 +479,13 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 2,
-    borderColor: "#ccc",
     borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 15,
     fontSize: 22,
     width: 70,
     textAlign: "center",
-    color: "#333",
-    backgroundColor: "#fff",
     fontWeight: "bold",
-  },
-  correctBorder: {
-    borderColor: "#4CAF50", // Green
-  },
-  wrongBorder: {
-    borderColor: "#F44336", // Red
   },
   icon: {
     fontSize: 28,
@@ -404,55 +493,45 @@ const styles = StyleSheet.create({
     marginRight: 5,
     fontWeight: "bold",
   },
-  correctText: {
-    color: "#4CAF50", // Green for checkmark
-  },
-  wrongText: {
-    color: "#F44336", // Red for cross
+  timeSeparator: {
+    fontSize: 24,
+    marginHorizontal: 5,
   },
   correctAnswer: {
     fontSize: 17,
-    color: "#D32F2F",
-    marginTop: 15,
+    marginTop: 5,
     fontWeight: "600",
     textAlign: "center",
   },
-  // Fixed button styles
   fixedButtonContainer: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#f0f2f5", // Match background or use a distinct color
     paddingVertical: 15,
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
-    // Add shadow for depth if desired
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 8, // For Android shadow
+    elevation: 8,
   },
   checkButton: {
-    backgroundColor: "#28A745",
     paddingVertical: 14,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "80%", // Make button wider
+    width: "80%",
     alignItems: "center",
   },
   nextButton: {
-    backgroundColor: "#007BFF",
     paddingVertical: 14,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "80%", // Make button wider
+    width: "80%",
     alignItems: "center",
   },
   buttonText: {
-    color: "white",
     fontWeight: "bold",
     fontSize: 18,
     textAlign: "center",
