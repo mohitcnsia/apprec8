@@ -13,6 +13,7 @@ import Home from "../screens/quiz/Home"; // Assuming path is correct
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import LinksScreen from "../screens/LinksScreen";
+import ClockPracticeGenerator from "../components/ClockPracticeGenerator";
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,13 @@ const ThemedHomeStack = () => {
         component={Apprec8Reader}
         options={{
           headerShown: false, // Keep screen-specific option
+        }}
+      />
+      <Stack.Screen
+        name="ClockPracticeGenerator"
+        component={ClockPracticeGenerator}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen

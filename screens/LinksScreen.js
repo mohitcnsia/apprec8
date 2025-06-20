@@ -287,6 +287,9 @@ const LinksScreen = ({ route, navigation }) => {
           parentTopicId: item.parentTopicId,
         });
         break;
+      case "CLOCK":
+        navigation.push("ClockPracticeGenerator", {});
+        break;
       case "ACTION_CONTACT_US":
         navigation.push("cntct");
         break;
