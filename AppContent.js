@@ -41,14 +41,6 @@ const AppContent = () => {
       setMinimumLoaderTimeElapsed(true);
     }, MIN_LOADER_DISPLAY_TIME);
 
-    // Firestore persistence setup
-    firestore()
-      .settings({ persistence: true })
-      .then(() => console.log("🔥 Firestore persistence enabled."))
-      .catch((err) =>
-        console.error("❌ Firestore persistence setup error:", err)
-      );
-
     return () => clearTimeout(timer); // Cleanup timer on unmount
   }, []); // Empty dependency array ensures this runs only once on mount
 

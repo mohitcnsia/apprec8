@@ -1,7 +1,21 @@
-import firestore from "@react-native-firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  doc,
+  onSnapshot,
+} from "@react-native-firebase/firestore";
+import { getApp } from "@react-native-firebase/app"; // To get the default app instance
 // Assuming authInstance is correctly configured and exported from your firebase setup.
 // Please ensure this path is correct for your project structure.
-import { authInstance } from "../config/firebaseConfig";
+import { authInstance } from "../config/firebaseConfig"; // Assuming this is already modular and provides auth
+
+// Get the default Firebase app instance
+const app = getApp();
+// Get the Firestore instance from the app
+const db = getFirestore(app);
 
 /**
  * Sets up a real-time listener for categories filtered by a specific group field.
@@ -23,17 +37,22 @@ export function listenToCategoriesByGroup(groupName, onDataChange, onError) {
     return () => {}; // Return no-op unsubscribe
   }
 
-  const query = firestore()
-    .collection("categories")
-    .where("carouselGroup", "==", groupName)
-    .orderBy("order");
+  // Use modular `collection`, `query`, `where`, and `orderBy`
+  const categoriesCollectionRef = collection(db, "categories");
+  const q = query(
+    categoriesCollectionRef,
+    where("carouselGroup", "==", groupName),
+    orderBy("order")
+  );
 
-  const unsubscribe = query.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    q,
     (querySnapshot) => {
       const categories = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach((document) => {
         // Include document ID along with data
-        categories.push({ id: doc.id, ...doc.data() });
+        categories.push({ id: document.id, ...document.data() });
       });
       console.log(
         `LISTENER: Snapshot for group ${groupName}: ${categories.length} items`
@@ -83,20 +102,25 @@ export const listenToCategoryTopics = (categoryId, onDataReceived, onError) => {
     return () => {};
   }
 
-  const query = firestore()
-    .collection("topics")
-    .where("categoryId", "==", categoryId)
-    .where("parentTopicId", "==", null) // Filter for top-level items
-    .orderBy("order", "asc"); // Order results
+  // Use modular `collection`, `query`, `where`, and `orderBy`
+  const topicsCollectionRef = collection(db, "topics");
+  const q = query(
+    topicsCollectionRef,
+    where("categoryId", "==", categoryId),
+    where("parentTopicId", "==", null), // Filter for top-level items
+    orderBy("order", "asc") // Order results
+  );
 
-  const unsubscribe = query.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    q,
     (querySnapshot) => {
       console.log(
         `LISTENER CALLBACK (Success): listenToCategoryTopics for ${categoryId} received snapshot. Size: ${querySnapshot.size}`
       );
       const topics = [];
-      querySnapshot.forEach((doc) => {
-        topics.push({ id: doc.id, ...doc.data() });
+      querySnapshot.forEach((document) => {
+        topics.push({ id: document.id, ...document.data() });
       });
       if (typeof onDataReceived === "function") {
         onDataReceived(topics); // Pass the array of topic objects
@@ -145,19 +169,24 @@ export const listenToSubtopics = (parentTopicId, onDataReceived, onError) => {
     return () => {};
   }
 
-  const query = firestore()
-    .collection("topics")
-    .where("parentTopicId", "==", parentTopicId) // Filter by parent ID
-    .orderBy("order", "asc"); // Order results
+  // Use modular `collection`, `query`, `where`, and `orderBy`
+  const topicsCollectionRef = collection(db, "topics");
+  const q = query(
+    topicsCollectionRef,
+    where("parentTopicId", "==", parentTopicId), // Filter by parent ID
+    orderBy("order", "asc") // Order results
+  );
 
-  const unsubscribe = query.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    q,
     (querySnapshot) => {
       console.log(
         `LISTENER CALLBACK (Success): listenToSubtopics for parent ${parentTopicId} received snapshot. Size: ${querySnapshot.size}`
       );
       const children = [];
-      querySnapshot.forEach((doc) => {
-        children.push({ id: doc.id, ...doc.data() });
+      querySnapshot.forEach((document) => {
+        children.push({ id: document.id, ...document.data() });
       });
       if (typeof onDataReceived === "function") {
         onDataReceived(children); // Pass the array of child items
@@ -205,11 +234,15 @@ export function listenToStudyContent(contentId, onDataChange, onError) {
     return () => {};
   }
 
-  const docRef = firestore().collection("studyContent").doc(contentId);
+  // Use modular `doc` to get a document reference
+  const docRef = doc(db, "studyContent", contentId);
 
-  const unsubscribe = docRef.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    docRef,
     (docSnapshot) => {
-      if (docSnapshot.exists) {
+      if (docSnapshot.exists()) {
+        // docSnapshot.exists is a method in modular
         const studyData = { id: docSnapshot.id, ...docSnapshot.data() };
         console.log(
           `LISTENER: Snapshot for study content ${contentId}: Data received.`
@@ -261,19 +294,24 @@ export function listenToQuizQuestions(parentId, onDataChange, onError) {
     return () => {};
   }
 
-  const query = firestore()
-    .collection("quizQuestions")
-    .where("parentId", "==", parentId)
-    .orderBy("order", "asc"); // Order questions
+  // Use modular `collection`, `query`, `where`, and `orderBy`
+  const quizQuestionsCollectionRef = collection(db, "quizQuestions");
+  const q = query(
+    quizQuestionsCollectionRef,
+    where("parentId", "==", parentId),
+    orderBy("order", "asc") // Order questions
+  );
 
-  const unsubscribe = query.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    q,
     (querySnapshot) => {
       console.log(
         `LISTENER CALLBACK (Success): listenToQuizQuestions for parent ${parentId} received snapshot. Size: ${querySnapshot.size}`
       );
       const questions = [];
-      querySnapshot.forEach((doc) => {
-        questions.push({ id: doc.id, ...doc.data() });
+      querySnapshot.forEach((document) => {
+        questions.push({ id: document.id, ...document.data() });
       });
       if (typeof onDataChange === "function") {
         onDataChange(questions); // Pass fetched questions array
@@ -299,7 +337,6 @@ export function listenToQuizQuestions(parentId, onDataChange, onError) {
   return unsubscribe; // Return cleanup function
 }
 
-// --- NEW FUNCTION for fetching the main user document ---
 /**
  * Listens to the main document for the current authenticated user.
  * This document should contain the `perfectQuizCompletions` map and other user data.
@@ -325,11 +362,15 @@ export const listenToUserDocument = (onResult, onError) => {
   const userId = currentUser.uid;
   console.log(`LISTENER: Setting up for user document: ${userId}`);
 
-  const docRef = firestore().collection("users").doc(userId);
+  // Use modular `doc` to get a document reference
+  const userDocRef = doc(db, "users", userId);
 
-  const unsubscribe = docRef.onSnapshot(
+  // Use modular `onSnapshot`
+  const unsubscribe = onSnapshot(
+    userDocRef,
     (docSnapshot) => {
-      if (docSnapshot.exists) {
+      if (docSnapshot.exists()) {
+        // docSnapshot.exists is a method in modular
         const userData = {
           id: docSnapshot.id,
           ...docSnapshot.data(),
@@ -359,4 +400,3 @@ export const listenToUserDocument = (onResult, onError) => {
   );
   return unsubscribe;
 };
-// --- END OF NEW FUNCTION ---

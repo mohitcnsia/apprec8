@@ -1,35 +1,32 @@
-// config/firebaseConfig.js (for @react-native-firebase)
+// config/firebaseConfig.js
+import { getAuth } from "@react-native-firebase/auth";
+import {
+  getFirestore,
+  CACHE_SIZE_UNLIMITED,
+} from "@react-native-firebase/firestore";
+import { getApp, initializeApp } from "@react-native-firebase/app";
 
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+let app;
+try {
+  app = getApp();
+  console.log("firebaseConfig: Existing Firebase app instance retrieved.");
+} catch (e) {
+  app = initializeApp({});
+  console.log("firebaseConfig: Firebase app initialized.");
+}
 
-// Firebase App initializes automatically via native config files + plugin
+const db = getFirestore(app); // Pass the app instance
 
-// Get Firestore instance
-const db = firestore();
+try {
+  db.settings({
+    persistence: true,
+    cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+  });
+  console.log("firebaseConfig: Firestore settings applied.");
+} catch (error) {
+  console.warn("firebaseConfig: Could not apply Firestore settings:", error);
+}
 
-// Get Auth instance
-const authInstance = auth();
+const authInstance = getAuth(app);
 
-/*
-// Optional: Configure Firestore settings (like persistence)
-// It's best to call this EARLY and ONCE in your app's main entry point
-// (e.g., App.js or index.js) before any other Firestore usage.
-// Example for App.js:
-// import { useEffect } from 'react';
-// import firestore from '@react-native-firebase/firestore';
-//
-// function App() {
-//   useEffect(() => {
-//     firestore().settings({
-//       persistence: true, // default is true on mobile, but explicit is fine
-//       // cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED // Optional: -1 for unlimited
-//     }).then(() => console.log('Firestore persistence enabled'))
-//       .catch(err => console.error('Firestore persistence error:', err));
-//   }, []);
-//   // ... rest of App component
-// }
-*/
-
-// Export the instances for use throughout your app
-export { db, authInstance };
+export { db, authInstance, app };

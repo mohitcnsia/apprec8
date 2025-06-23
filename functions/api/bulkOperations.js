@@ -1,11 +1,30 @@
 // functions/api/bulkOperations.js
 const functions = require("firebase-functions");
-const { db, FieldValue } = require("../common/admin");
+// Import the admin SDK and then destructure modular functions from firebase-admin/firestore
+const { admin } = require("../common/admin"); // Assume this initializes admin correctly
+const {
+  collection,
+  doc,
+  query,
+  where,
+  orderBy, // Although not directly used in bulk ops, good to include if common
+  limit,
+  getDocs,
+  writeBatch, // Import writeBatch instead of accessing db.batch()
+  setDoc, // For batch.set()
+  updateDoc, // For batch.update()
+  deleteDoc, // For batch.delete()
+  FieldValue, // FieldValue itself is imported directly
+} = require("firebase-admin/firestore");
+
 const {
   region,
   runtimeOptions,
   longRuntimeOptions,
 } = require("../common/config");
+
+// Get the Firestore instance from the initialized admin app
+const firestore = admin.firestore();
 
 /** V1 HTTPS: Adds multiple category documents using a batch write. */
 exports.bulkAddCategories = functions
@@ -29,10 +48,15 @@ exports.bulkAddCategories = functions
           error: "Cannot process more than 500 categories in one batch.",
         });
       }
-      const batch = db.batch();
-      const categoriesCol = db.collection("categories");
+
+      // Use modular `writeBatch(firestore)`
+      const batch = writeBatch(firestore);
+      // Get the collection reference once outside the loop
+      const categoriesColRef = collection(firestore, "categories");
+
       let processedCount = 0;
       let skippedCount = 0;
+
       categoriesArray.forEach((catData) => {
         if (
           catData &&
@@ -48,7 +72,9 @@ exports.bulkAddCategories = functions
           catData.carouselGroup &&
           String(catData.carouselGroup).trim() !== ""
         ) {
-          const categoryRef = categoriesCol.doc(String(catData.id));
+          // Use modular `doc(collectionRef, docId)`
+          const categoryRef = doc(categoriesColRef, String(catData.id));
+          // Use modular `batch.set()` with the doc ref
           batch.set(
             categoryRef,
             {
@@ -80,13 +106,11 @@ exports.bulkAddCategories = functions
         });
       }
       await batch.commit();
-      return res
-        .status(201)
-        .send({
-          success: true,
-          processed: processedCount,
-          skipped: skippedCount,
-        });
+      return res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
       console.error("V1: Error bulk adding categories:", error);
       return res
@@ -106,23 +130,22 @@ exports.bulkAddTopics = functions
     try {
       const { topics: topicsArray } = req.body;
       if (!Array.isArray(topicsArray) || topicsArray.length === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Request body must contain a non-empty 'topics' array.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'topics' array.",
+        });
       }
       if (topicsArray.length > 500) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Cannot process more than 500 topics in one batch.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 topics in one batch.",
+        });
       }
-      const batch = db.batch();
-      const topicsCol = db.collection("topics");
+      // Use modular `writeBatch(firestore)`
+      const batch = writeBatch(firestore);
+      // Get the collection reference once outside the loop
+      const topicsColRef = collection(firestore, "topics");
+
       let processedCount = 0;
       let skippedCount = 0;
       topicsArray.forEach((topicData) => {
@@ -138,7 +161,9 @@ exports.bulkAddTopics = functions
           topicData.order !== null &&
           typeof topicData.order === "number"
         ) {
-          const topicRef = topicsCol.doc(String(topicData.id));
+          // Use modular `doc(collectionRef, docId)`
+          const topicRef = doc(topicsColRef, String(topicData.id));
+          // Use modular `batch.set()` with the doc ref
           batch.set(
             topicRef,
             {
@@ -167,22 +192,18 @@ exports.bulkAddTopics = functions
         }
       });
       if (processedCount === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "No valid topic data found to process.",
-            skipped: skippedCount,
-          });
-      }
-      await batch.commit();
-      return res
-        .status(201)
-        .send({
-          success: true,
-          processed: processedCount,
+        return res.status(400).send({
+          success: false,
+          error: "No valid topic data found to process.",
           skipped: skippedCount,
         });
+      }
+      await batch.commit();
+      return res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
       console.error("V1: Error bulk adding topics:", error);
       return res
@@ -202,23 +223,22 @@ exports.bulkAddStudyContent = functions
     try {
       const { studyItems: studyItemsArray } = req.body;
       if (!Array.isArray(studyItemsArray) || studyItemsArray.length === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Request body must contain a non-empty 'studyItems' array.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'studyItems' array.",
+        });
       }
       if (studyItemsArray.length > 500) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Cannot process more than 500 study items in one batch.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 study items in one batch.",
+        });
       }
-      const batch = db.batch();
-      const studyCol = db.collection("studyContent");
+      // Use modular `writeBatch(firestore)`
+      const batch = writeBatch(firestore);
+      // Get the collection reference once outside the loop
+      const studyColRef = collection(firestore, "studyContent");
+
       let processedCount = 0;
       let skippedCount = 0;
       studyItemsArray.forEach((itemData) => {
@@ -233,7 +253,9 @@ exports.bulkAddStudyContent = functions
           itemData.content &&
           String(itemData.content).trim() !== ""
         ) {
-          const studyRef = studyCol.doc(String(itemData.contentId));
+          // Use modular `doc(collectionRef, docId)`
+          const studyRef = doc(studyColRef, String(itemData.contentId));
+          // Use modular `batch.set()` with the doc ref
           batch.set(
             studyRef,
             {
@@ -257,22 +279,18 @@ exports.bulkAddStudyContent = functions
         }
       });
       if (processedCount === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "No valid study item data found to process.",
-            skipped: skippedCount,
-          });
-      }
-      await batch.commit();
-      return res
-        .status(201)
-        .send({
-          success: true,
-          processed: processedCount,
+        return res.status(400).send({
+          success: false,
+          error: "No valid study item data found to process.",
           skipped: skippedCount,
         });
+      }
+      await batch.commit();
+      return res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
       console.error("V1: Error bulk adding study content:", error);
       return res
@@ -292,23 +310,22 @@ exports.bulkAddQuizQuestions = functions
     try {
       const { questions: questionsArray } = req.body;
       if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Request body must contain a non-empty 'questions' array.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Request body must contain a non-empty 'questions' array.",
+        });
       }
       if (questionsArray.length > 500) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "Cannot process more than 500 questions in one batch.",
-          });
+        return res.status(400).send({
+          success: false,
+          error: "Cannot process more than 500 questions in one batch.",
+        });
       }
-      const batch = db.batch();
-      const quizCol = db.collection("quizQuestions");
+      // Use modular `writeBatch(firestore)`
+      const batch = writeBatch(firestore);
+      // Get the collection reference once outside the loop
+      const quizColRef = collection(firestore, "quizQuestions");
+
       let processedCount = 0;
       let skippedCount = 0;
       questionsArray.forEach((qData) => {
@@ -328,7 +345,9 @@ exports.bulkAddQuizQuestions = functions
           qData.order !== null &&
           typeof qData.order === "number"
         ) {
-          const newQuestionRef = quizCol.doc(); // Auto-generate ID
+          // Use modular `doc(collectionRef)` to auto-generate ID
+          const newQuestionRef = doc(quizColRef);
+          // Use modular `batch.set()` with the doc ref
           batch.set(newQuestionRef, {
             parentId: qData.parentId,
             question: qData.question,
@@ -347,22 +366,18 @@ exports.bulkAddQuizQuestions = functions
         }
       });
       if (processedCount === 0) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error: "No valid quiz question data found to process.",
-            skipped: skippedCount,
-          });
-      }
-      await batch.commit();
-      return res
-        .status(201)
-        .send({
-          success: true,
-          processed: processedCount,
+        return res.status(400).send({
+          success: false,
+          error: "No valid quiz question data found to process.",
           skipped: skippedCount,
         });
+      }
+      await batch.commit();
+      return res.status(201).send({
+        success: true,
+        processed: processedCount,
+        skipped: skippedCount,
+      });
     } catch (error) {
       console.error("V1: Error bulk adding quiz questions:", error);
       return res
@@ -411,30 +426,51 @@ exports.deleteAllDocuments = functions
           error: "Provide either 'valueToMatch' or 'valuesToMatch', not both.",
         });
       }
-      let query = db.collection(collectionName);
+
+      // Use modular `collection`, `query`, `where`
+      const targetCollectionRef = collection(firestore, collectionName);
+      let q;
       if (valueToMatch !== undefined) {
-        query = query.where(fieldToMatch, "==", valueToMatch);
+        q = query(targetCollectionRef, where(fieldToMatch, "==", valueToMatch));
       } else {
         // valuesToMatch must be valid here due to above checks
-        query = query.where(fieldToMatch, "in", valuesToMatch);
+        q = query(
+          targetCollectionRef,
+          where(fieldToMatch, "in", valuesToMatch)
+        );
       }
+
       const BATCH_SIZE = 499;
       let totalDeleted = 0;
       let snapshot;
       let iterations = 0;
-      const MAX_ITERATIONS = 100;
+      const MAX_ITERATIONS = 100; // Cap to prevent infinite loops
+
       do {
         iterations++;
         if (iterations > MAX_ITERATIONS) {
+          // Log and throw if it seems stuck
+          functions.logger.error(
+            `Delete operation for ${collectionName} with criteria ${fieldToMatch}/${JSON.stringify(
+              valueToMatch || valuesToMatch
+            )} exceeded MAX_ITERATIONS.`
+          );
           throw new Error("Delete operation took too long, potentially stuck.");
         }
-        snapshot = await query.limit(BATCH_SIZE).get();
+
+        // Use modular `query` with `limit` and `getDocs`
+        const limitedQuery = query(q, limit(BATCH_SIZE));
+        snapshot = await getDocs(limitedQuery);
+
         if (snapshot.empty) break;
-        const batch = db.batch();
-        snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+
+        // Use modular `writeBatch(firestore)`
+        const batch = writeBatch(firestore);
+        snapshot.docs.forEach((d) => batch.delete(d.ref)); // d.ref is still valid
         await batch.commit();
         totalDeleted += snapshot.size;
       } while (snapshot.size === BATCH_SIZE);
+
       return res
         .status(200)
         .send({ success: true, deletedCount: totalDeleted });
@@ -474,12 +510,10 @@ exports.updateFirestoreDocuments = functions
       typeof collectionName !== "string" ||
       collectionName.trim() === ""
     ) {
-      return res
-        .status(400)
-        .send({
-          success: false,
-          error: 'Bad Request: "collectionName" (string) is required.',
-        });
+      return res.status(400).send({
+        success: false,
+        error: 'Bad Request: "collectionName" (string) is required.',
+      });
     }
     const hasFieldsToUpdate =
       fields && typeof fields === "object" && Object.keys(fields).length > 0;
@@ -489,24 +523,20 @@ exports.updateFirestoreDocuments = functions
         !Array.isArray(deleteFields) ||
         !deleteFields.every((f) => typeof f === "string" && f.trim() !== "")
       ) {
-        return res
-          .status(400)
-          .send({
-            success: false,
-            error:
-              'Bad Request: "deleteFields" must be an array of non-empty strings.',
-          });
+        return res.status(400).send({
+          success: false,
+          error:
+            'Bad Request: "deleteFields" must be an array of non-empty strings.',
+        });
       }
       if (deleteFields.length > 0) hasFieldsToDelete = true;
     }
     if (!hasFieldsToUpdate && !hasFieldsToDelete) {
-      return res
-        .status(400)
-        .send({
-          success: false,
-          error:
-            'Bad Request: Either "fields" or "deleteFields" must be provided.',
-        });
+      return res.status(400).send({
+        success: false,
+        error:
+          'Bad Request: Either "fields" or "deleteFields" must be provided.',
+      });
     }
     const hasMatchCriteria =
       fieldToMatch &&
@@ -514,56 +544,57 @@ exports.updateFirestoreDocuments = functions
       fieldToMatch.trim() !== "" &&
       valueToMatch !== undefined;
     try {
-      let query;
+      // Use modular `collection` and `query`
+      const targetCollectionRef = collection(firestore, collectionName);
+      let q;
       let queryDescription;
       if (hasMatchCriteria) {
         queryDescription = `where "${fieldToMatch}" == ${JSON.stringify(
           valueToMatch
         )}`;
-        query = db
-          .collection(collectionName)
-          .where(fieldToMatch, "==", valueToMatch);
+        q = query(targetCollectionRef, where(fieldToMatch, "==", valueToMatch));
       } else {
         queryDescription = "ALL documents";
         if (confirmUpdateAll !== true) {
-          return res
-            .status(400)
-            .send({
-              success: false,
-              error:
-                'Bad Request: Modifying all documents requires "confirmUpdateAll": true.',
-            });
-        }
-        query = db.collection(collectionName);
-      }
-      const snapshot = await query.get();
-      if (snapshot.empty) {
-        return res
-          .status(200)
-          .send({
-            success: true,
-            message:
-              "Query successful, but no documents matched. No modifications performed.",
+          return res.status(400).send({
+            success: false,
+            error:
+              'Bad Request: Modifying all documents requires "confirmUpdateAll": true.',
           });
+        }
+        q = query(targetCollectionRef); // Query for all documents in collection
       }
+
+      // Use modular `getDocs`
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        return res.status(200).send({
+          success: true,
+          message:
+            "Query successful, but no documents matched. No modifications performed.",
+        });
+      }
+
       const MAX_BATCH_SIZE = 500;
-      let batch = db.batch();
+      let batch = writeBatch(firestore); // Use modular `writeBatch(firestore)`
       let documentsInBatch = 0;
       let totalModificationsCommitted = 0;
       const commitPromises = [];
-      for (const doc of snapshot.docs) {
+
+      for (const d of snapshot.docs) {
+        // Changed `doc` to `d` to avoid conflict with imported `doc`
         const updateData = {};
         if (hasFieldsToUpdate) Object.assign(updateData, fields);
         if (hasFieldsToDelete)
           deleteFields.forEach((fieldName) => {
-            updateData[fieldName] = FieldValue.delete();
+            updateData[fieldName] = FieldValue.delete(); // FieldValue.delete() is still correct
           });
-        batch.update(doc.ref, updateData);
+        batch.update(d.ref, updateData); // d.ref is still valid
         documentsInBatch++;
         if (documentsInBatch === MAX_BATCH_SIZE) {
           commitPromises.push(batch.commit());
           totalModificationsCommitted += documentsInBatch;
-          batch = db.batch();
+          batch = writeBatch(firestore); // Create a new modular batch
           documentsInBatch = 0;
         }
       }
@@ -572,12 +603,10 @@ exports.updateFirestoreDocuments = functions
         totalModificationsCommitted += documentsInBatch;
       }
       await Promise.all(commitPromises);
-      return res
-        .status(200)
-        .send({
-          success: true,
-          message: `Successfully modified ${totalModificationsCommitted} documents.`,
-        });
+      return res.status(200).send({
+        success: true,
+        message: `Successfully modified ${totalModificationsCommitted} documents.`,
+      });
     } catch (error) {
       functions.logger.error(
         `Error modifying documents in "${collectionName}" with criteria "${
@@ -585,12 +614,9 @@ exports.updateFirestoreDocuments = functions
         }":`,
         error
       );
-      // ... (error handling)
-      return res
-        .status(500)
-        .send({
-          success: false,
-          error: "Internal Server Error: Failed to modify documents.",
-        });
+      return res.status(500).send({
+        success: false,
+        error: "Internal Server Error: Failed to modify documents.",
+      });
     }
   });

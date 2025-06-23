@@ -1,7 +1,6 @@
 // hooks/useFirebaseAuth.js (Add exitGuestModeHandler)
 
 import { useEffect, useState, useCallback } from "react";
-import { Platform } from "react-native";
 import { authInstance as auth } from "../config/firebaseConfig"; // Adjust path if needed
 import { GoogleAuthProvider } from "@react-native-firebase/auth";
 import {

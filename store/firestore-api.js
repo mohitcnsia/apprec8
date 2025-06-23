@@ -1,8 +1,27 @@
 // src/store/firestore-api.js
 
-import firestore from "@react-native-firebase/firestore";
-import { authInstance } from "../config/firebaseConfig";
+import {
+  getFirestore, // To get the Firestore instance
+  collection, // To get a collection reference
+  doc, // To get a document reference
+  query, // To build queries with where/orderBy
+  where, // For where clauses
+  orderBy, // For orderBy clauses
+  getDocs, // To fetch query results
+  addDoc, // To add a new document
+  deleteDoc, // To delete a document
+  updateDoc, // To update a document
+  serverTimestamp, // For server timestamps
+  Timestamp, // For client-side timestamps
+} from "@react-native-firebase/firestore";
+import { getApp } from "@react-native-firebase/app"; // To get the default app instance
+import { authInstance } from "../config/firebaseConfig"; // Assuming this is already modular
 import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
+
+// Get the default Firebase app instance
+const app = getApp();
+// Get the Firestore instance from the app
+const db = getFirestore(app);
 
 const TASKS_COLLECTION = "tasks";
 
@@ -17,17 +36,19 @@ export async function fetchTasks() {
 
   try {
     console.log(`fetchTasks: Fetching tasks created by user: ${userId}`);
-    // Assuming 'creatorUid' is the field storing the task creator's ID.
-    // If you use 'userId' for this, change "creatorUid" to "userId" below.
-    const userTasksQuery = firestore()
-      .collection(TASKS_COLLECTION)
-      .where("userId", "==", userId) // Query for tasks created by the user
-      .orderBy("createdAt", "desc");
+    // Use modular `collection`, `query`, `where`, and `orderBy`
+    const tasksCollectionRef = collection(db, TASKS_COLLECTION);
+    const userTasksQuery = query(
+      tasksCollectionRef,
+      where("userId", "==", userId), // Query for tasks created by the user
+      orderBy("createdAt", "desc")
+    );
 
-    const userTasksSnapshot = await userTasksQuery.get();
-    const userTasksData = userTasksSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+    // Use modular `getDocs`
+    const userTasksSnapshot = await getDocs(userTasksQuery);
+    const userTasksData = userTasksSnapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
     }));
     allTasks = userTasksData;
     console.log(
@@ -39,15 +60,17 @@ export async function fetchTasks() {
         `fetchTasks: User ${userId} is Apprec8 Team Reviewer. Fetching team-assigned tasks (using assignToTeamBoolean).`
       );
       // MODIFIED QUERY: Look for tasks where assignToTeamBoolean is true
-      const teamAssignedTasksQuery = firestore()
-        .collection(TASKS_COLLECTION)
-        .where("assignToTeamBoolean", "==", true) // Query by the boolean flag
-        .orderBy("createdAt", "desc"); // Ensure consistent ordering
+      const teamAssignedTasksQuery = query(
+        tasksCollectionRef, // Reuse the collection reference
+        where("assignToTeamBoolean", "==", true), // Query by the boolean flag
+        orderBy("createdAt", "desc") // Ensure consistent ordering
+      );
 
-      const teamAssignedTasksSnapshot = await teamAssignedTasksQuery.get();
-      const teamTasksData = teamAssignedTasksSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      // Use modular `getDocs`
+      const teamAssignedTasksSnapshot = await getDocs(teamAssignedTasksQuery);
+      const teamTasksData = teamAssignedTasksSnapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
       }));
       console.log(
         `fetchTasks: Fetched ${teamTasksData.length} tasks with assignToTeamBoolean == true.`
@@ -105,17 +128,14 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
     const dataToSave = {
       ...otherDetails, // title, detail, completed
       creatorUid: userId, // Explicitly set who created the task
-      createdAt: firestore.FieldValue.serverTimestamp(),
-      lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
+      createdAt: serverTimestamp(), // Use modular `serverTimestamp()`
+      lastUpdatedAt: serverTimestamp(), // Use modular `serverTimestamp()`
       // Convert incoming ISO string dueDate to Firestore Timestamp
-      dueDate: firestore.Timestamp.fromDate(new Date(dueDate)),
+      dueDate: Timestamp.fromDate(new Date(dueDate)), // Use modular `Timestamp.fromDate()`
       // Store the boolean flag as it exists in your current Firestore documents
       assignToTeamBoolean: assignToTeamBoolean || false, // Ensure it's always a boolean
     };
 
-    // No need to set assignedTeamReviewerUid if your schema uses assignToTeamBoolean
-    // unless you want both for a future migration.
-    // For now, we stick to assignToTeamBoolean.
     if (assignToTeamBoolean === true) {
       console.log(
         `addTaskToFirestore: Task flagged for team assignment (assignToTeamBoolean: true)`
@@ -126,9 +146,9 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
       );
     }
 
-    const docRef = await firestore()
-      .collection(TASKS_COLLECTION)
-      .add(dataToSave);
+    // Use modular `collection` and `addDoc`
+    const tasksCollectionRef = collection(db, TASKS_COLLECTION);
+    const docRef = await addDoc(tasksCollectionRef, dataToSave);
 
     console.log(`Task added with ID: ${docRef.id} for user ${userId}`);
     return {
@@ -144,7 +164,9 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
 
 export async function deleteTaskFromFirestore(taskId) {
   try {
-    await firestore().collection(TASKS_COLLECTION).doc(taskId).delete();
+    // Use modular `doc` and `deleteDoc`
+    const taskDocRef = doc(db, TASKS_COLLECTION, taskId);
+    await deleteDoc(taskDocRef);
     console.log(`Task deleted with ID: ${taskId}`);
   } catch (error) {
     console.error(`Error deleting task ${taskId}:`, error);
@@ -159,15 +181,13 @@ export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
 
     const dataToUpdate = {
       ...otherDetailsToUpdate,
-      lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
+      lastUpdatedAt: serverTimestamp(), // Use modular `serverTimestamp()`
     };
 
     if (dueDate) {
-      dataToUpdate.dueDate = firestore.Timestamp.fromDate(new Date(dueDate));
+      dataToUpdate.dueDate = Timestamp.fromDate(new Date(dueDate)); // Use modular `Timestamp.fromDate()`
     }
 
-    // Since TaskEditor hides the switch on edit, assignToTeamBoolean might not be in updatedDataFromContext.
-    // If it is, it means you've enabled changing this on edit.
     if (assignToTeamBoolean !== undefined) {
       dataToUpdate.assignToTeamBoolean = assignToTeamBoolean;
     }
@@ -176,10 +196,9 @@ export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
     if ("creatorUid" in dataToUpdate) delete dataToUpdate.creatorUid;
     if ("createdAt" in dataToUpdate) delete dataToUpdate.createdAt;
 
-    await firestore()
-      .collection(TASKS_COLLECTION)
-      .doc(taskId)
-      .update(dataToUpdate);
+    // Use modular `doc` and `updateDoc`
+    const taskDocRef = doc(db, TASKS_COLLECTION, taskId);
+    await updateDoc(taskDocRef, dataToUpdate);
     console.log(`Task updated with ID: ${taskId}`);
   } catch (error) {
     console.error(`Error updating task ${taskId}:`, error);
