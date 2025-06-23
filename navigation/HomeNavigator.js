@@ -14,6 +14,9 @@ import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import LinksScreen from "../screens/LinksScreen";
 import ClockPracticeGenerator from "../components/ClockPracticeGenerator";
+import SudokuPracticeGenerator from "../components/SudokuPracticeGenerator";
+import Minesweeper from "../components/Minesweeper";
+import VocabBuilder from "../components/VocabBuilder";
 
 const Stack = createStackNavigator();
 
@@ -65,6 +68,27 @@ const ThemedHomeStack = () => {
       <Stack.Screen
         name="ClockPracticeGenerator"
         component={ClockPracticeGenerator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SudokuPracticeGenerator"
+        component={SudokuPracticeGenerator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Minesweeper"
+        component={Minesweeper}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="VocabBuilder"
+        component={VocabBuilder}
         options={{
           headerShown: false,
         }}

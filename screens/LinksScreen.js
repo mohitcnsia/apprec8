@@ -290,6 +290,15 @@ const LinksScreen = ({ route, navigation }) => {
       case "CLOCK":
         navigation.push("ClockPracticeGenerator", {});
         break;
+      case "SUDOKU":
+        navigation.push("SudokuPracticeGenerator", {});
+        break;
+      case "MINESWEEPER":
+        navigation.push("Minesweeper", {});
+        break;
+      case "VOCAB_BUILDER":
+        navigation.push("VocabBuilder", {});
+        break;
       case "ACTION_CONTACT_US":
         navigation.push("cntct");
         break;

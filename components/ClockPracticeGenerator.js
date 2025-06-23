@@ -1,26 +1,26 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView, // Keep ScrollView for the main content
   Dimensions,
   Alert,
 } from "react-native";
 import Svg, { Circle, Line, Text as SvgText } from "react-native-svg";
 import { useFocusEffect } from "@react-navigation/native";
-import { useTheme } from "../context/ThemeContext"; // Adjust path as needed based on your project structure
+import { useTheme } from "../context/ThemeContext";
+import InfoModal from "./common/InfoModal";
 
-const { width } = Dimensions.get("window");
-const CLOCK_SIZE = Math.min(width * 0.8, 300);
+const { width, height } = Dimensions.get("window");
+const isSmallScreen = height < 700;
+const CLOCK_SIZE = Math.min(width * 0.8, isSmallScreen ? 250 : 300);
 const CENTER = CLOCK_SIZE / 2;
-const BUTTON_AREA_HEIGHT = 100; // Approximate height for the fixed button area
+const NUMPAD_HEIGHT = isSmallScreen ? 180 : 220;
 
 const ClockPracticeGenerator = ({ navigation }) => {
-  const { theme, isDark } = useTheme(); // Use the theme hook
-  // C for Colors, consistent with QuizScreen
+  const { theme, isDark } = useTheme();
   const C = theme.appColors || theme;
 
   const [currentMode, setCurrentMode] = useState("basic");
@@ -28,7 +28,11 @@ const ClockPracticeGenerator = ({ navigation }) => {
   const [currentMinutes, setCurrentMinutes] = useState(15);
   const [guessHours, setGuessHours] = useState("");
   const [guessMinutes, setGuessMinutes] = useState("");
-  const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
+  const [feedback, setFeedback] = useState(null);
+  const [focusedField, setFocusedField] = useState("hours");
+
+  const hoursInputRef = useRef(null);
+  const minutesInputRef = useRef(null);
 
   const modes = [
     { key: "basic", label: "Basic Time" },
@@ -74,6 +78,16 @@ const ClockPracticeGenerator = ({ navigation }) => {
     generateRandomTime();
   }, [currentMode]);
 
+  // Auto-focus hours field when component mounts or resets
+  useEffect(() => {
+    if (feedback === null && hoursInputRef.current) {
+      setTimeout(() => {
+        hoursInputRef.current.focus();
+        setFocusedField("hours");
+      }, 100);
+    }
+  }, [feedback]);
+
   const generateRandomTime = () => {
     let hours, minutes;
     switch (currentMode) {
@@ -104,6 +118,66 @@ const ClockPracticeGenerator = ({ navigation }) => {
     setGuessHours("");
     setGuessMinutes("");
     setFeedback(null);
+    setFocusedField("hours");
+  };
+
+  const handleNumpadPress = (digit) => {
+    if (feedback !== null) return;
+
+    if (focusedField === "hours") {
+      if (guessHours.length < 2) {
+        const newHours = guessHours + digit;
+        setGuessHours(newHours);
+
+        // Auto-move to minutes field logic:
+        // - If first digit is 2-9, auto-advance (since valid hours are only 2-9 for single digit)
+        // - If first digit is 1, wait for second digit (could be 10, 11, or 12)
+        // - Always auto-advance after 2 digits
+        if (newHours.length === 1) {
+          const firstDigit = parseInt(digit);
+          if (firstDigit >= 2 && firstDigit <= 9) {
+            // Single digit hours 2-9, auto-advance
+            setFocusedField("minutes");
+            if (minutesInputRef.current) {
+              minutesInputRef.current.focus();
+            }
+          }
+          // If first digit is 1, don't auto-advance (user might want 10, 11, or 12)
+        } else if (newHours.length === 2) {
+          // Two digits entered, always move to minutes
+          setFocusedField("minutes");
+          if (minutesInputRef.current) {
+            minutesInputRef.current.focus();
+          }
+        }
+      }
+    } else if (focusedField === "minutes") {
+      if (guessMinutes.length < 2) {
+        setGuessMinutes(guessMinutes + digit);
+      }
+    }
+  };
+
+  const handleClear = () => {
+    if (feedback !== null) return;
+
+    if (focusedField === "hours") {
+      setGuessHours("");
+    } else if (focusedField === "minutes") {
+      setGuessMinutes("");
+      // If minutes field is cleared and becomes empty, move focus back to hours if hours is also empty
+      if (guessHours === "") {
+        setFocusedField("hours");
+        if (hoursInputRef.current) {
+          hoursInputRef.current.focus();
+        }
+      }
+    }
+  };
+
+  const handleFieldFocus = (field) => {
+    if (feedback !== null) return; // Don't allow focus changes after feedback is shown
+    setFocusedField(field);
   };
 
   const checkAnswer = () => {
@@ -148,7 +222,7 @@ const ClockPracticeGenerator = ({ navigation }) => {
 
   const renderClockNumbers = () => {
     const numbers = [];
-    const numberColor = C.textPrimary; // Use theme color
+    const numberColor = C.textPrimary;
 
     for (let i = 1; i <= 12; i++) {
       const angle = (i * 30 - 90) * (Math.PI / 180);
@@ -160,7 +234,7 @@ const ClockPracticeGenerator = ({ navigation }) => {
           key={i}
           x={x}
           y={y + 6}
-          fontSize="18"
+          fontSize={isSmallScreen ? "14" : "18"}
           fontWeight="bold"
           fill={numberColor}
           textAnchor="middle"
@@ -196,345 +270,341 @@ const ClockPracticeGenerator = ({ navigation }) => {
     return ticks;
   };
 
-  // Determine if the Check button should be disabled
-  const isCheckButtonDisabled =
-    guessHours.trim() === "" || guessMinutes.trim() === "";
+  const renderNumpad = () => {
+    return (
+      <View style={styles.numpadContainer}>
+        <View style={styles.numpadGrid}>
+          {/* First row: 1-6 */}
+          <View style={styles.numpadRow}>
+            {[1, 2, 3, 4, 5, 6].map((digit) => (
+              <TouchableOpacity
+                key={digit}
+                style={[styles.numpadButton, { backgroundColor: C.primary }]}
+                onPress={() => handleNumpadPress(digit.toString())}
+              >
+                <Text
+                  style={[styles.numpadButtonText, { color: C.buttonText }]}
+                >
+                  {digit}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-  return (
-    <View
-      style={[styles.fullScreenContainer, { backgroundColor: C.background }]}
-    >
-      {/* Horizontal ScrollView for the mode buttons */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.modeScrollContent}
-      >
-        <View style={styles.modeContainer}>
-          {modes.map((mode) => (
+          {/* Second row: 7, 8, 9, 0, Clear, Check/Next */}
+          <View style={styles.numpadRow}>
+            {[7, 8, 9].map((digit) => (
+              <TouchableOpacity
+                key={digit}
+                style={[styles.numpadButton, { backgroundColor: C.primary }]}
+                onPress={() => handleNumpadPress(digit.toString())}
+              >
+                <Text
+                  style={[styles.numpadButtonText, { color: C.buttonText }]}
+                >
+                  {digit}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+            {/* Zero button */}
             <TouchableOpacity
-              key={mode.key}
-              style={[
-                styles.modeButton,
-                currentMode === mode.key
-                  ? { backgroundColor: C.accent } // Active mode button
-                  : { backgroundColor: C.primary }, // Inactive mode button
-              ]}
-              onPress={() => {
-                setCurrentMode(mode.key);
-              }}
+              style={[styles.numpadButton, { backgroundColor: C.primary }]}
+              onPress={() => handleNumpadPress("0")}
             >
-              <Text style={[styles.modeButtonText, { color: C.buttonText }]}>
-                {mode.label}
+              <Text style={[styles.numpadButtonText, { color: C.buttonText }]}>
+                0
               </Text>
             </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
 
-      {/* Main content ScrollView */}
-      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
-        <View
-          style={[styles.clockContainer, { backgroundColor: C.cardBackground }]}
-        >
-          <Svg width={CLOCK_SIZE} height={CLOCK_SIZE}>
-            <Circle
-              cx={CENTER}
-              cy={CENTER}
-              r={CENTER - 10}
-              fill={C.cardBackground} // Clock face color
-              stroke={C.primary} // Clock border color
-              strokeWidth={8}
-            />
-            {/* Hour ticks - using C.buttonText for good contrast (white/light) */}
-            {renderTicks(12, 1, 0.9, 0.95, C.buttonText, 3)}
-            {/* Minute ticks - using C.buttonText (white/light) */}
-            {renderTicks(60, 1, 0.93, 0.95, C.buttonText, 1)}
-            {renderClockNumbers()}
-            <Line
-              x1={CENTER}
-              y1={CENTER}
-              x2={hourX}
-              y2={hourY}
-              stroke={C.primary} // Hour hand color
-              strokeWidth={6}
-              strokeLinecap="round"
-            />
-            <Line
-              x1={CENTER}
-              y1={CENTER}
-              x2={minuteX}
-              y2={minuteY}
-              stroke={C.primary} // Minute hand color
-              strokeWidth={4}
-              strokeLinecap="round"
-            />
-            <Circle cx={CENTER} cy={CENTER} r="6" fill={C.textPrimary} />
-            {/* Center dot */}
-          </Svg>
-        </View>
+            {/* Clear button */}
+            <TouchableOpacity
+              style={[styles.numpadButton, { backgroundColor: C.warning }]}
+              onPress={handleClear}
+            >
+              <Text style={[styles.numpadButtonText, { color: C.buttonText }]}>
+                ⌫
+              </Text>
+            </TouchableOpacity>
 
-        {/* Correct Answer shown immediately below the clock if feedback is 'wrong' */}
-        {feedback === "wrong" && (
-          <Text style={[styles.correctAnswer, { color: C.warning }]}>
-            Correct Time:
-            {`${currentHours}:${currentMinutes.toString().padStart(2, "0")}`}
-          </Text>
-        )}
-
-        {/* Spacer to push the question and input fields towards the bottom */}
-        <View style={styles.spacer} />
-
-        <Text style={[styles.question, { color: C.primary }]}>
-          What time is shown on the clock?
-        </Text>
-
-        <View style={styles.answerInputRow}>
-          <View style={styles.inputGroup}>
-            <TextInput
+            {/* Check/Next button */}
+            <TouchableOpacity
               style={[
-                styles.input,
+                styles.numpadButton,
                 {
-                  borderColor:
-                    feedback === "correct"
+                  backgroundColor:
+                    feedback === null
+                      ? guessHours && guessMinutes
+                        ? C.success
+                        : C.disabledBackground
+                      : feedback === "correct"
                       ? C.success
-                      : feedback === "wrong"
-                      ? C.warning
-                      : C.border,
-                  backgroundColor: C.inputBackground,
-                  color: C.inputText,
+                      : C.warning,
                 },
               ]}
-              value={guessHours}
-              onChangeText={setGuessHours}
-              placeholder="HH"
-              placeholderTextColor={C.placeholder}
-              keyboardType="numeric"
-              maxLength={2}
-              editable={feedback === null}
-            />
-            {feedback && (
-              <Text
-                style={[
-                  styles.icon,
-                  feedback === "correct"
-                    ? { color: C.success }
-                    : { color: C.warning },
-                ]}
-              >
-                {feedback === "correct" ? "✓" : "✗"}
+              onPress={feedback === null ? checkAnswer : generateRandomTime}
+              disabled={feedback === null && (!guessHours || !guessMinutes)}
+            >
+              <Text style={[styles.numpadButtonText, { color: C.buttonText }]}>
+                {feedback === null ? "✓" : "→"}
               </Text>
-            )}
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.timeSeparator, { color: C.textPrimary }]}>
-            :
-          </Text>
-          <View style={styles.inputGroup}>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: C.background }]}>
+      {/* Mode buttons - horizontal scrollable */}
+      <View style={styles.modeContainer}>
+        {modes.map((mode) => (
+          <TouchableOpacity
+            key={mode.key}
+            style={[
+              styles.modeButton,
+              currentMode === mode.key
+                ? { backgroundColor: C.accent }
+                : { backgroundColor: C.primary },
+            ]}
+            onPress={() => setCurrentMode(mode.key)}
+          >
+            <Text style={[styles.modeButtonText, { color: C.buttonText }]}>
+              {mode.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Clock */}
+      <View
+        style={[styles.clockContainer, { backgroundColor: C.cardBackground }]}
+      >
+        <Svg width={CLOCK_SIZE} height={CLOCK_SIZE}>
+          <Circle
+            cx={CENTER}
+            cy={CENTER}
+            r={CENTER - 10}
+            fill={C.cardBackground}
+            stroke={C.primary}
+            strokeWidth={6}
+          />
+          {renderTicks(12, 1, 0.9, 0.95, C.buttonText, 3)}
+          {renderTicks(60, 1, 0.93, 0.95, C.buttonText, 1)}
+          {renderClockNumbers()}
+          <Line
+            x1={CENTER}
+            y1={CENTER}
+            x2={hourX}
+            y2={hourY}
+            stroke={C.primary}
+            strokeWidth={5}
+            strokeLinecap="round"
+          />
+          <Line
+            x1={CENTER}
+            y1={CENTER}
+            x2={minuteX}
+            y2={minuteY}
+            stroke={C.primary}
+            strokeWidth={3}
+            strokeLinecap="round"
+          />
+          <Circle cx={CENTER} cy={CENTER} r="4" fill={C.textPrimary} />
+        </Svg>
+      </View>
+
+      {/* Question */}
+      <Text style={[styles.question, { color: C.primary }]}>
+        What time is shown on the clock?
+      </Text>
+
+      {/* Correct answer display */}
+      {feedback === "wrong" && (
+        <Text style={[styles.correctAnswer, { color: C.warning }]}>
+          {" "}
+          {`${currentHours}:${currentMinutes.toString().padStart(2, "0")}`}
+        </Text>
+      )}
+
+      {/* Input fields */}
+      <View style={styles.inputContainer}>
+        <TouchableOpacity onPress={() => handleFieldFocus("hours")}>
+          <TextInput
+            ref={hoursInputRef}
+            style={[
+              styles.input,
+              focusedField === "hours" && styles.focusedInput,
+              {
+                borderColor: focusedField === "hours" ? C.accent : C.border,
+                backgroundColor: C.inputBackground,
+                color: C.inputText,
+              },
+            ]}
+            value={guessHours}
+            onChangeText={() => {}} // Disabled direct text input
+            placeholder="HH"
+            placeholderTextColor={C.placeholder}
+            editable={false}
+            showSoftInputOnFocus={false}
+            onFocus={() => handleFieldFocus("hours")}
+            pointerEvents="none"
+          />
+        </TouchableOpacity>
+
+        <Text style={[styles.separator, { color: C.textPrimary }]}>:</Text>
+
+        <View style={styles.minutesContainer}>
+          <TouchableOpacity onPress={() => handleFieldFocus("minutes")}>
             <TextInput
+              ref={minutesInputRef}
               style={[
                 styles.input,
+                focusedField === "minutes" && styles.focusedInput,
                 {
-                  borderColor:
-                    feedback === "correct"
-                      ? C.success
-                      : feedback === "wrong"
-                      ? C.warning
-                      : C.border,
+                  borderColor: focusedField === "minutes" ? C.accent : C.border,
                   backgroundColor: C.inputBackground,
                   color: C.inputText,
                 },
               ]}
               value={guessMinutes}
-              onChangeText={setGuessMinutes}
+              onChangeText={() => {}} // Disabled direct text input
               placeholder="MM"
               placeholderTextColor={C.placeholder}
-              keyboardType="numeric"
-              maxLength={2}
-              editable={feedback === null}
+              editable={false}
+              showSoftInputOnFocus={false}
+              onFocus={() => handleFieldFocus("minutes")}
+              pointerEvents="none"
             />
-            {feedback && (
-              <Text
-                style={[
-                  styles.icon,
-                  feedback === "correct"
-                    ? { color: C.success }
-                    : { color: C.warning },
-                ]}
-              >
-                {feedback === "correct" ? "✓" : "✗"}
-              </Text>
-            )}
-          </View>
-        </View>
-      </ScrollView>
+          </TouchableOpacity>
 
-      <View
-        style={[
-          styles.fixedButtonContainer,
-          { backgroundColor: C.background, borderTopColor: C.borderLight },
-        ]}
-      >
-        {feedback === null ? (
-          <TouchableOpacity
-            style={[
-              styles.checkButton,
-              {
-                backgroundColor: isCheckButtonDisabled
-                  ? C.disabledBackground
-                  : C.primary, // Check button is primary color when enabled
-              },
-            ]}
-            onPress={checkAnswer}
-            disabled={isCheckButtonDisabled} // Disable if no input
-          >
-            <Text style={[styles.buttonText, { color: C.textOnSuccess }]}>
-              Check
+          {/* Single feedback icon after MM field */}
+          {feedback && (
+            <Text
+              style={[
+                styles.feedbackIcon,
+                { color: feedback === "correct" ? C.success : C.warning },
+              ]}
+            >
+              {feedback === "correct" ? "✓" : "✗"}
             </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[
-              styles.nextButton,
-              {
-                backgroundColor: feedback === "correct" ? C.success : C.warning, // Next button color changes based on feedback
-              },
-            ]}
-            onPress={generateRandomTime}
-          >
-            <Text style={[styles.buttonText, { color: C.buttonText }]}>
-              Next
-            </Text>
-          </TouchableOpacity>
-        )}
+          )}
+        </View>
       </View>
+
+      {/* Custom Numpad */}
+      {renderNumpad()}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  fullScreenContainer: {
+  container: {
     flex: 1,
-  },
-  // New style for the horizontal ScrollView content
-  modeScrollContent: {
-    paddingHorizontal: 15, // Add some padding on the sides
-    alignItems: "center", // Vertically center the buttons if they have different heights
-    paddingVertical: 10, // Add some vertical padding above/below the buttons
-    // Removed marginBottom as it will be handled by the outer ScrollView's padding
-  },
-  scrollContentContainer: {
-    flexGrow: 1, // Allows content to grow and push elements to bottom
-    padding: 20,
-    alignItems: "center",
-    paddingBottom: BUTTON_AREA_HEIGHT + 20, // Ensure content isn't hidden by the fixed button
-  },
-  spacer: {
-    flex: 1, // This view will take up all available space and push elements below it down
+    padding: 8,
+    justifyContent: "space-between",
   },
   modeContainer: {
     flexDirection: "row",
-    // flexWrap: "wrap", // Removed: buttons will now flow horizontally
+    flexWrap: "wrap",
     justifyContent: "center",
-    // marginBottom: 20, // Moved to modeScrollContent paddingVertical
+    marginBottom: 10,
+    paddingHorizontal: 5,
   },
   modeButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    margin: 5,
+    paddingVertical: isSmallScreen ? 8 : 10,
+    paddingHorizontal: isSmallScreen ? 12 : 15,
+    margin: 3,
     borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
   },
   modeButtonText: {
-    fontSize: 13,
+    fontSize: isSmallScreen ? 12 : 14,
     fontWeight: "600",
   },
   clockContainer: {
+    alignSelf: "center",
     borderRadius: CLOCK_SIZE / 2,
-    padding: 10,
-    marginBottom: 25,
+    padding: 8,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 3,
   },
   question: {
-    fontSize: 20,
+    fontSize: isSmallScreen ? 18 : 20,
     fontWeight: "bold",
-    marginBottom: 15,
     textAlign: "center",
+    marginVertical: 8,
   },
-  answerInputRow: {
+  inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-  },
-  inputGroup: {
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 8,
   },
   input: {
     borderWidth: 2,
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    fontSize: 22,
-    width: 70,
+    borderRadius: 8,
+    paddingVertical: isSmallScreen ? 8 : 10,
+    paddingHorizontal: 12,
+    fontSize: isSmallScreen ? 18 : 20,
+    width: isSmallScreen ? 50 : 60,
     textAlign: "center",
     fontWeight: "bold",
   },
-  icon: {
-    fontSize: 28,
-    marginLeft: 10,
-    marginRight: 5,
+  focusedInput: {
+    borderWidth: 3,
+  },
+  separator: {
+    fontSize: isSmallScreen ? 20 : 24,
+    marginHorizontal: 8,
     fontWeight: "bold",
   },
-  timeSeparator: {
-    fontSize: 24,
-    marginHorizontal: 5,
+  minutesContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  feedbackIcon: {
+    fontSize: isSmallScreen ? 20 : 24,
+    marginLeft: 8,
+    fontWeight: "bold",
   },
   correctAnswer: {
-    fontSize: 17,
-    marginTop: 5,
+    fontSize: isSmallScreen ? 18 : 20,
     fontWeight: "600",
     textAlign: "center",
+    marginVertical: 5,
   },
-  fixedButtonContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingVertical: 15,
+  numpadContainer: {
+    width: "100%",
+    paddingHorizontal: 10,
+  },
+  numpadGrid: {
+    width: "100%",
+  },
+  numpadRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  numpadButton: {
+    borderRadius: 30,
+    justifyContent: "center",
     alignItems: "center",
-    borderTopWidth: 1,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 8,
+    shadowRadius: 2,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 4,
+    height: isSmallScreen ? 45 : 55,
   },
-  checkButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    width: "80%",
-    alignItems: "center",
-  },
-  nextButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    width: "80%",
-    alignItems: "center",
-  },
-  buttonText: {
+  numpadButtonText: {
     fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "center",
+    fontSize: isSmallScreen ? 18 : 22,
   },
 });
 
