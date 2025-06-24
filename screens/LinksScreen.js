@@ -299,12 +299,16 @@ const LinksScreen = ({ route, navigation }) => {
       case "VOCAB_BUILDER":
         navigation.push("VocabBuilder", {});
         break;
+      case "SPELLBEE":
+        navigation.navigate("SpellingBeeGame", {});
+        break;
       case "ACTION_CONTACT_US":
         navigation.push("cntct");
         break;
       case "INFO_PAGE":
         navigation.navigate("DummyScreen", { title: item.title });
         break;
+
       default:
         console.warn(
           "LinksScreen: Unhandled item type or action for item:",

@@ -17,6 +17,7 @@ import ClockPracticeGenerator from "../components/ClockPracticeGenerator";
 import SudokuPracticeGenerator from "../components/SudokuPracticeGenerator";
 import Minesweeper from "../components/Minesweeper";
 import VocabBuilder from "../components/VocabBuilder";
+import SpellingBeeGame from "../components/SpellingBeeGame";
 
 const Stack = createStackNavigator();
 
@@ -89,6 +90,13 @@ const ThemedHomeStack = () => {
       <Stack.Screen
         name="VocabBuilder"
         component={VocabBuilder}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SpellingBeeGame"
+        component={SpellingBeeGame}
         options={{
           headerShown: false,
         }}
