@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import { useTheme } from "../context/ThemeContext";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -15,17 +16,34 @@ const DIFFICULTIES = {
   expert: { rows: 16, cols: 30, mines: 99 },
 };
 
+// This function's classic colors are preserved, but could also be themed.
+const getNumberColor = (num) => {
+  const colors = [
+    "",
+    "#1976D2",
+    "#388E3C",
+    "#D32F2F",
+    "#7B1FA2",
+    "#F57C00",
+    "#0097A7",
+    "#616161",
+    "#424242",
+  ];
+  return colors[num] || "#000";
+};
+
 const MinesweeperGame = () => {
+  const { theme } = useTheme(); // 2. Get theme from context
+  const styles = useMemo(() => getStyles(theme), [theme]); // 3. Create dynamic styles
+
   const [difficulty, setDifficulty] = useState("beginner");
   const [board, setBoard] = useState([]);
   const [gameState, setGameState] = useState("playing"); // playing, won, lost
-  const [mineCount, setMineCount] = useState(0);
   const [flagCount, setFlagCount] = useState(0);
   const [firstClick, setFirstClick] = useState(true);
 
   const { rows, cols, mines } = DIFFICULTIES[difficulty];
 
-  // Calculate cell size based on screen dimensions
   const calculateCellSize = () => {
     const availableWidth = screenWidth - 40; // padding
     const availableHeight = screenHeight - 200; // header and controls
@@ -59,7 +77,6 @@ const MinesweeperGame = () => {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * cols);
 
-      // Don't place mine on first click or if already has mine
       if (
         !newBoard[row][col].isMine &&
         !(row === firstClickRow && col === firstClickCol)
@@ -69,7 +86,6 @@ const MinesweeperGame = () => {
       }
     }
 
-    // Calculate neighbor mines
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (!newBoard[r][c].isMine) {
@@ -101,14 +117,13 @@ const MinesweeperGame = () => {
     const newBoard = createEmptyBoard();
     setBoard(newBoard);
     setGameState("playing");
-    setMineCount(mines);
     setFlagCount(0);
     setFirstClick(true);
   }, [createEmptyBoard, mines]);
 
   useEffect(() => {
     initializeGame();
-  }, [initializeGame]);
+  }, [difficulty, initializeGame]); // Re-initialize if difficulty changes
 
   const revealCell = (row, col) => {
     if (
@@ -119,9 +134,8 @@ const MinesweeperGame = () => {
       return;
     }
 
-    let newBoard = [...board];
+    let newBoard = board.map((r) => r.map((c) => ({ ...c })));
 
-    // Handle first click
     if (firstClick) {
       newBoard = placeMines(newBoard, row, col);
       setFirstClick(false);
@@ -133,7 +147,8 @@ const MinesweeperGame = () => {
         r >= rows ||
         c < 0 ||
         c >= cols ||
-        newBoard[r][c].isRevealed
+        newBoard[r][c].isRevealed ||
+        newBoard[r][c].isFlagged
       ) {
         return;
       }
@@ -142,22 +157,20 @@ const MinesweeperGame = () => {
 
       if (newBoard[r][c].isMine) {
         setGameState("lost");
-        // Reveal all mines
-        for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) {
-            if (newBoard[i][j].isMine) {
-              newBoard[i][j].isRevealed = true;
-            }
-          }
-        }
+        newBoard.forEach((row) =>
+          row.forEach((cell) => {
+            if (cell.isMine) cell.isRevealed = true;
+          })
+        );
         return;
       }
 
-      // If cell has no neighboring mines, reveal neighbors
       if (newBoard[r][c].neighborMines === 0) {
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
-            revealRecursive(r + dr, c + dc);
+            if (dr !== 0 || dc !== 0) {
+              revealRecursive(r + dr, c + dc);
+            }
           }
         }
       }
@@ -166,11 +179,10 @@ const MinesweeperGame = () => {
     revealRecursive(row, col);
     setBoard(newBoard);
 
-    // Check win condition
     const revealedCount = newBoard
       .flat()
       .filter((cell) => cell.isRevealed).length;
-    if (revealedCount === rows * cols - mines) {
+    if (revealedCount === rows * cols - mines && gameState === "playing") {
       setGameState("won");
     }
   };
@@ -179,23 +191,13 @@ const MinesweeperGame = () => {
     if (gameState !== "playing" || board[row][col].isRevealed) {
       return;
     }
-
     const newBoard = [...board];
     newBoard[row][col].isFlagged = !newBoard[row][col].isFlagged;
-
     const newFlagCount = newBoard
       .flat()
       .filter((cell) => cell.isFlagged).length;
     setFlagCount(newFlagCount);
     setBoard(newBoard);
-  };
-
-  const handleCellPress = (row, col) => {
-    revealCell(row, col);
-  };
-
-  const handleCellLongPress = (row, col) => {
-    toggleFlag(row, col);
   };
 
   const getCellContent = (cell) => {
@@ -208,33 +210,13 @@ const MinesweeperGame = () => {
 
   const getCellStyle = (cell) => {
     const baseStyle = [styles.cell, { width: cellSize, height: cellSize }];
-
     if (cell.isRevealed) {
-      if (cell.isMine) {
-        baseStyle.push(styles.mine);
-      } else {
-        baseStyle.push(styles.revealed);
-      }
+      if (cell.isMine) baseStyle.push(styles.mine);
+      else baseStyle.push(styles.revealed);
     } else {
       baseStyle.push(styles.hidden);
     }
-
     return baseStyle;
-  };
-
-  const getNumberColor = (num) => {
-    const colors = [
-      "",
-      "#1976D2",
-      "#388E3C",
-      "#D32F2F",
-      "#7B1FA2",
-      "#F57C00",
-      "#0097A7",
-      "#616161",
-      "#424242",
-    ];
-    return colors[num] || "#000";
   };
 
   return (
@@ -255,7 +237,14 @@ const MinesweeperGame = () => {
           ]}
           onPress={() => setDifficulty("beginner")}
         >
-          <Text style={styles.buttonText}>Beginner</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              difficulty === "beginner" && styles.activeButtonText,
+            ]}
+          >
+            Beginner
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -264,7 +253,14 @@ const MinesweeperGame = () => {
           ]}
           onPress={() => setDifficulty("intermediate")}
         >
-          <Text style={styles.buttonText}>Intermediate</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              difficulty === "intermediate" && styles.activeButtonText,
+            ]}
+          >
+            Intermediate
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.resetButton} onPress={initializeGame}>
           <Text style={styles.buttonText}>New Game</Text>
@@ -279,8 +275,8 @@ const MinesweeperGame = () => {
                 <TouchableOpacity
                   key={`${rowIndex}-${colIndex}`}
                   style={getCellStyle(cell)}
-                  onPress={() => handleCellPress(rowIndex, colIndex)}
-                  onLongPress={() => handleCellLongPress(rowIndex, colIndex)}
+                  onPress={() => revealCell(rowIndex, colIndex)}
+                  onLongPress={() => toggleFlag(rowIndex, colIndex)}
                   activeOpacity={0.7}
                 >
                   <Text
@@ -291,7 +287,7 @@ const MinesweeperGame = () => {
                         color:
                           cell.isRevealed && !cell.isMine
                             ? getNumberColor(cell.neighborMines)
-                            : "#000",
+                            : theme.textPrimary,
                       },
                     ]}
                   >
@@ -319,113 +315,120 @@ const MinesweeperGame = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    alignItems: "center",
-    paddingTop: 50,
-    paddingHorizontal: 20,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  stats: {
-    flexDirection: "row",
-    gap: 20,
-  },
-  statText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#666",
-  },
-  controls: {
-    flexDirection: "row",
-    gap: 10,
-    marginBottom: 20,
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  difficultyButton: {
-    backgroundColor: "#ddd",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  activeDifficulty: {
-    backgroundColor: "#2196F3",
-  },
-  resetButton: {
-    backgroundColor: "#4CAF50",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  boardContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
-  board: {
-    borderWidth: 2,
-    borderColor: "#999",
-    backgroundColor: "#ccc",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  cell: {
-    borderWidth: 1,
-    borderColor: "#999",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  hidden: {
-    backgroundColor: "#ddd",
-  },
-  revealed: {
-    backgroundColor: "#fff",
-  },
-  mine: {
-    backgroundColor: "#ff5722",
-  },
-  cellText: {
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  instructions: {
-    alignItems: "center",
-    paddingVertical: 20,
-  },
-  instructionText: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-  },
-  winText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4CAF50",
-    marginTop: 10,
-  },
-  loseText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#f44336",
-    marginTop: 10,
-  },
-});
+const getStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      paddingTop: 50,
+      paddingHorizontal: 20,
+    },
+    header: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: theme.textPrimary,
+      marginBottom: 10,
+    },
+    stats: {
+      flexDirection: "row",
+      gap: 20,
+    },
+    statText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.textSecondary,
+    },
+    controls: {
+      flexDirection: "row",
+      gap: 10,
+      marginBottom: 20,
+      flexWrap: "wrap",
+      justifyContent: "center",
+    },
+    difficultyButton: {
+      backgroundColor: theme.cardBackground,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    activeDifficulty: {
+      backgroundColor: theme.primary,
+      borderColor: theme.primary,
+    },
+    resetButton: {
+      backgroundColor: theme.success,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
+      borderRadius: 20,
+    },
+    buttonText: {
+      color: theme.textSecondary,
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    activeButtonText: {
+      color: theme.buttonText,
+    },
+    boardContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      flex: 1,
+    },
+    board: {
+      borderWidth: 2,
+      borderColor: theme.border,
+      backgroundColor: theme.borderLight,
+    },
+    row: {
+      flexDirection: "row",
+    },
+    cell: {
+      borderWidth: 1,
+      borderColor: theme.border,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    hidden: {
+      backgroundColor: theme.disabledBackground,
+    },
+    revealed: {
+      backgroundColor: theme.cardBackground,
+    },
+    mine: {
+      backgroundColor: theme.warningBackground,
+    },
+    cellText: {
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    instructions: {
+      alignItems: "center",
+      paddingVertical: 20,
+    },
+    instructionText: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      textAlign: "center",
+    },
+    winText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.success,
+      marginTop: 10,
+    },
+    loseText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.warning,
+      marginTop: 10,
+    },
+  });
 
 export default MinesweeperGame;

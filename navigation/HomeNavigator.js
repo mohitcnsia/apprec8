@@ -14,7 +14,7 @@ import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import LinksScreen from "../screens/LinksScreen";
 import ClockPracticeGenerator from "../components/ClockPracticeGenerator";
-import SudokuPracticeGenerator from "../components/SudokuPracticeGenerator";
+import SudokuGame from "../components/SudokuGame";
 import Minesweeper from "../components/Minesweeper";
 import VocabBuilder from "../components/VocabBuilder";
 import SpellingBeeGame from "../components/SpellingBeeGame";
@@ -74,8 +74,8 @@ const ThemedHomeStack = () => {
         }}
       />
       <Stack.Screen
-        name="SudokuPracticeGenerator"
-        component={SudokuPracticeGenerator}
+        name="SudokuGame"
+        component={SudokuGame}
         options={{
           headerShown: false,
         }}

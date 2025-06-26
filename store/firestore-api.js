@@ -1,30 +1,123 @@
-// src/store/firestore-api.js
-
 import {
-  getFirestore, // To get the Firestore instance
-  collection, // To get a collection reference
-  doc, // To get a document reference
-  query, // To build queries with where/orderBy
-  where, // For where clauses
-  orderBy, // For orderBy clauses
-  getDocs, // To fetch query results
-  addDoc, // To add a new document
-  deleteDoc, // To delete a document
-  updateDoc, // To update a document
-  serverTimestamp, // For server timestamps
-  Timestamp, // For client-side timestamps
+  getFirestore,
+  collection,
+  doc,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  serverTimestamp,
+  Timestamp,
+  onSnapshot,
 } from "@react-native-firebase/firestore";
-import { getApp } from "@react-native-firebase/app"; // To get the default app instance
-import { authInstance } from "../config/firebaseConfig"; // Assuming this is already modular
+import { getApp } from "@react-native-firebase/app";
+import { authInstance } from "../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
 
-// Get the default Firebase app instance
 const app = getApp();
-// Get the Firestore instance from the app
 const db = getFirestore(app);
 
 const TASKS_COLLECTION = "tasks";
 
+/**
+ * Fetches all spelling bee puzzles from the 'gameSpellingBee' collection.
+ * @returns {Promise<Array<object>>} A promise that resolves to an array of puzzle objects.
+ */
+export async function fetchSpellingBeePuzzles() {
+  console.log("fetchSpellingBeePuzzles: Fetching all puzzles...");
+  const puzzlesRef = collection(db, "gameSpellingBee");
+  const puzzlesQuery = query(puzzlesRef); // No specific order needed for now
+
+  try {
+    const querySnapshot = await getDocs(puzzlesQuery);
+    const puzzles = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log(
+      `fetchSpellingBeePuzzles: Successfully fetched ${puzzles.length} puzzles.`
+    );
+    return puzzles;
+  } catch (error) {
+    console.error("Error fetching Spelling Bee puzzles:", error);
+    throw new Error(
+      "Could not load Spelling Bee puzzles. Please try again later."
+    );
+  }
+}
+
+/**
+ * Sets up a real-time listener for vocabulary game data.
+ * @param {(data: object) => void} onDataChange - Callback invoked with the full game data object.
+ * @param {(error: Error) => void} onError - Callback invoked on listener error.
+ * @returns {() => void} An unsubscribe function to detach the listener.
+ */
+export function listenToVocabGameData(onDataChange, onError) {
+  console.log("LISTENER: Setting up for Vocab Game data.");
+  const categoriesRef = collection(db, "gameVocabCategories");
+  const categoriesQuery = query(categoriesRef, orderBy("name"));
+
+  // This will be an array of unsubscribe functions for all word sub-collections
+  let wordListeners = [];
+
+  const mainListener = onSnapshot(
+    categoriesQuery,
+    async (querySnapshot) => {
+      // Unsubscribe from any previous word listeners to prevent memory leaks
+      wordListeners.forEach((unsubscribe) => unsubscribe());
+      wordListeners = []; // Reset the array
+
+      const gameData = {};
+      const categoryPromises = querySnapshot.docs.map((categoryDoc) => {
+        const categoryId = categoryDoc.id;
+        const categoryData = categoryDoc.data();
+
+        return new Promise((resolve) => {
+          const wordsRef = collection(
+            db,
+            "gameVocabCategories",
+            categoryId,
+            "words"
+          );
+          const wordsListener = onSnapshot(wordsRef, (wordsSnapshot) => {
+            const words = wordsSnapshot.docs.map((wordDoc) => wordDoc.data());
+
+            // Rebuild the entire gameData object on any change
+            gameData[categoryId] = {
+              name: categoryData.name,
+              words: words,
+            };
+
+            // We call onDataChange inside the innermost listener
+            // This might be called multiple times initially, but will stabilize
+            onDataChange({ ...gameData });
+            resolve(); // Resolve the promise for this category
+          });
+          wordListeners.push(wordsListener); // Add new listener to the array
+        });
+      });
+
+      await Promise.all(categoryPromises);
+      console.log("LISTENER: Initial data load for Vocab Game complete.");
+    },
+    (error) => {
+      console.error("LISTENER ERROR: Vocab Game categories: ", error);
+      onError(error);
+    }
+  );
+
+  // Return a function that unsubscribes from all listeners
+  return () => {
+    mainListener();
+    wordListeners.forEach((unsubscribe) => unsubscribe());
+  };
+}
+
+// --- EXISTING FUNCTIONS (Unchanged) ---
 export async function fetchTasks() {
   const currentUser = authInstance.currentUser;
   if (!currentUser) {
@@ -36,15 +129,13 @@ export async function fetchTasks() {
 
   try {
     console.log(`fetchTasks: Fetching tasks created by user: ${userId}`);
-    // Use modular `collection`, `query`, `where`, and `orderBy`
     const tasksCollectionRef = collection(db, TASKS_COLLECTION);
     const userTasksQuery = query(
       tasksCollectionRef,
-      where("userId", "==", userId), // Query for tasks created by the user
+      where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
 
-    // Use modular `getDocs`
     const userTasksSnapshot = await getDocs(userTasksQuery);
     const userTasksData = userTasksSnapshot.docs.map((d) => ({
       id: d.id,
@@ -59,14 +150,12 @@ export async function fetchTasks() {
       console.log(
         `fetchTasks: User ${userId} is Apprec8 Team Reviewer. Fetching team-assigned tasks (using assignToTeamBoolean).`
       );
-      // MODIFIED QUERY: Look for tasks where assignToTeamBoolean is true
       const teamAssignedTasksQuery = query(
-        tasksCollectionRef, // Reuse the collection reference
-        where("assignToTeamBoolean", "==", true), // Query by the boolean flag
-        orderBy("createdAt", "desc") // Ensure consistent ordering
+        tasksCollectionRef,
+        where("assignToTeamBoolean", "==", true),
+        orderBy("createdAt", "desc")
       );
 
-      // Use modular `getDocs`
       const teamAssignedTasksSnapshot = await getDocs(teamAssignedTasksQuery);
       const teamTasksData = teamAssignedTasksSnapshot.docs.map((d) => ({
         id: d.id,
@@ -76,13 +165,11 @@ export async function fetchTasks() {
         `fetchTasks: Fetched ${teamTasksData.length} tasks with assignToTeamBoolean == true.`
       );
 
-      // Merge and deduplicate tasks
       const taskMap = new Map();
       allTasks.forEach((task) => taskMap.set(task.id, task));
-      teamTasksData.forEach((task) => taskMap.set(task.id, task)); // Will overwrite/add
+      teamTasksData.forEach((task) => taskMap.set(task.id, task));
       allTasks = Array.from(taskMap.values());
 
-      // Re-sort the final merged list
       allTasks.sort((a, b) => {
         const dateA = a.createdAt?.toDate
           ? a.createdAt.toDate().getTime()
@@ -118,22 +205,19 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
     console.error("addTaskToFirestore: No user logged in.");
     throw new Error("User must be logged in to add tasks.");
   }
-  const userId = currentUser.uid; // This is the creator's UID
+  const userId = currentUser.uid;
 
   try {
-    // taskPayloadFromContext contains: { title, detail, dueDate (ISO string), completed, assignToTeamBoolean }
     const { assignToTeamBoolean, dueDate, ...otherDetails } =
       taskPayloadFromContext;
 
     const dataToSave = {
-      ...otherDetails, // title, detail, completed
-      creatorUid: userId, // Explicitly set who created the task
-      createdAt: serverTimestamp(), // Use modular `serverTimestamp()`
-      lastUpdatedAt: serverTimestamp(), // Use modular `serverTimestamp()`
-      // Convert incoming ISO string dueDate to Firestore Timestamp
-      dueDate: Timestamp.fromDate(new Date(dueDate)), // Use modular `Timestamp.fromDate()`
-      // Store the boolean flag as it exists in your current Firestore documents
-      assignToTeamBoolean: assignToTeamBoolean || false, // Ensure it's always a boolean
+      ...otherDetails,
+      creatorUid: userId,
+      createdAt: serverTimestamp(),
+      lastUpdatedAt: serverTimestamp(),
+      dueDate: Timestamp.fromDate(new Date(dueDate)),
+      assignToTeamBoolean: assignToTeamBoolean || false,
     };
 
     if (assignToTeamBoolean === true) {
@@ -146,15 +230,13 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
       );
     }
 
-    // Use modular `collection` and `addDoc`
     const tasksCollectionRef = collection(db, TASKS_COLLECTION);
     const docRef = await addDoc(tasksCollectionRef, dataToSave);
 
     console.log(`Task added with ID: ${docRef.id} for user ${userId}`);
     return {
       id: docRef.id,
-      ...dataToSave, // This will include FieldValues for timestamps
-      // TasksContext will handle converting these to client-side Dates
+      ...dataToSave,
     };
   } catch (error) {
     console.error(`Error adding task for user ${userId}:`, error);
@@ -164,7 +246,6 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
 
 export async function deleteTaskFromFirestore(taskId) {
   try {
-    // Use modular `doc` and `deleteDoc`
     const taskDocRef = doc(db, TASKS_COLLECTION, taskId);
     await deleteDoc(taskDocRef);
     console.log(`Task deleted with ID: ${taskId}`);
@@ -181,11 +262,11 @@ export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
 
     const dataToUpdate = {
       ...otherDetailsToUpdate,
-      lastUpdatedAt: serverTimestamp(), // Use modular `serverTimestamp()`
+      lastUpdatedAt: serverTimestamp(),
     };
 
     if (dueDate) {
-      dataToUpdate.dueDate = Timestamp.fromDate(new Date(dueDate)); // Use modular `Timestamp.fromDate()`
+      dataToUpdate.dueDate = Timestamp.fromDate(new Date(dueDate));
     }
 
     if (assignToTeamBoolean !== undefined) {
@@ -196,7 +277,6 @@ export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
     if ("creatorUid" in dataToUpdate) delete dataToUpdate.creatorUid;
     if ("createdAt" in dataToUpdate) delete dataToUpdate.createdAt;
 
-    // Use modular `doc` and `updateDoc`
     const taskDocRef = doc(db, TASKS_COLLECTION, taskId);
     await updateDoc(taskDocRef, dataToUpdate);
     console.log(`Task updated with ID: ${taskId}`);

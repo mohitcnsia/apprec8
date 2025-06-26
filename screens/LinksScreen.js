@@ -291,7 +291,7 @@ const LinksScreen = ({ route, navigation }) => {
         navigation.push("ClockPracticeGenerator", {});
         break;
       case "SUDOKU":
-        navigation.push("SudokuPracticeGenerator", {});
+        navigation.push("SudokuGame", {});
         break;
       case "MINESWEEPER":
         navigation.push("Minesweeper", {});
