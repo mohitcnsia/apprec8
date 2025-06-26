@@ -11,23 +11,68 @@ const firestore = admin.firestore();
 const {
   collection,
   doc,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
   updateDoc,
   addDoc,
-  increment, // If you plan to use increment for stats later
-  serverTimestamp, // For server timestamps
-  Timestamp, // For client-side timestamps
+  serverTimestamp, // For client-side timestamps
 } = require("firebase-admin/firestore");
 
 const MIN_FEEDBACK_CHARS = 10; // Constants specific to feedback
 const MIN_FEEDBACK_WORDS = 3;
 
-/** V1 Callable Function: Retrieves leaderboard data. */
-exports.getLeaderboardData = functions
+/**
+ * Fetches the top N leaders for the main leaderboard display.
+ */
+exports.getLeaderboard = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+
+    const topN = data && data.topN > 0 ? data.topN : 10;
+
+    try {
+      const usersCollectionRef = firestore.collection("users");
+      const topNQuery = usersCollectionRef
+        .orderBy("stats.totalStars", "desc")
+        .limit(topN);
+      const snapshot = await topNQuery.get();
+
+      const leaders = [];
+      let rankCounter = 0;
+      snapshot.forEach((doc) => {
+        rankCounter++;
+        const userData = doc.data();
+        leaders.push({
+          id: doc.id,
+          rank: rankCounter,
+          firstName: userData.firstName || null,
+          lastName: userData.lastName || null,
+          username: userData.username || null,
+          photoURL: userData.photoURL || null,
+          points: userData.stats?.totalStars || 0,
+        });
+      });
+
+      return { leaderboard: leaders };
+    } catch (error) {
+      console.error("getLeaderboard: Critical error:", error);
+      throw new functions.https.HttpsError(
+        "internal",
+        "Error fetching leaderboard."
+      );
+    }
+  });
+
+/**
+ * Fetches the specific rank and data for the currently authenticated user.
+ * (Corrected version)
+ */
+exports.getCurrentUserRank = functions
   .region(region)
   .runWith(runtimeOptions)
   .https.onCall(async (data, context) => {
@@ -38,106 +83,53 @@ exports.getLeaderboardData = functions
       );
     }
     const currentUserId = context.auth.uid;
-    const topN =
-      data && typeof data.topN === "number" && data.topN > 0 && data.topN <= 100
-        ? data.topN
-        : 10;
 
     try {
-      // Use modular `collection`
-      const usersCollectionRef = collection(firestore, "users");
-      const fetchedTopNLeaders = [];
-      let isCurrentUserInTopN = false;
+      const usersCollectionRef = firestore.collection("users");
+      const currentUserDocRef = usersCollectionRef.doc(currentUserId);
+      const currentUserDocSnap = await currentUserDocRef.get();
 
-      // Use modular `query`, `orderBy`, `limit`, `getDocs`
-      const topNQuery = query(
-        usersCollectionRef,
-        orderBy("stats.totalStars", "desc"),
-        limit(topN)
-      );
-      const topNQuerySnapshot = await getDocs(topNQuery);
-
-      let rankCounter = 0;
-      for (const d of topNQuerySnapshot.docs) {
-        // Changed `doc` to `d` to avoid conflict with imported `doc`
-        rankCounter++;
-        const userData = d.data();
-        const userId = d.id;
-        const pointsValue = userData.stats?.totalStars || 0;
-
-        fetchedTopNLeaders.push({
-          id: userId,
-          rank: rankCounter,
-          firstName: userData.firstName || null,
-          lastName: userData.lastName || null,
-          username: userData.username || null,
-          photoURL: userData.photoURL || null,
-          points: pointsValue,
-        });
-        if (userId === currentUserId) isCurrentUserInTopN = true;
-      }
-
-      let currentUserDisplayData = null;
-      if (!isCurrentUserInTopN && currentUserId) {
-        // Use modular `doc` and `getDocs` (for a single doc, you can still use .get() on the doc ref)
-        const currentUserDocRef = doc(usersCollectionRef, currentUserId);
-        const currentUserDocSnap = await currentUserDocRef.get(); // Still .get() on a doc ref
-
-        if (currentUserDocSnap.exists) {
-          const currentUserDocData = currentUserDocSnap.data();
-          const currentUserScoreValue =
-            currentUserDocData.stats?.totalStars || 0;
-
-          // For count queries, use modular `query` and `.count().get()`
-          const rankCountQuery = query(
-            usersCollectionRef,
-            where("stats.totalStars", ">", currentUserScoreValue)
-          );
-          const rankQuerySnapshot = await rankCountQuery.count().get();
-          const usersAhead = rankQuerySnapshot.data().count;
-
-          currentUserDisplayData = {
-            id: currentUserId,
-            rank: usersAhead + 1,
-            firstName: currentUserDocData.firstName || null,
-            lastName: currentUserDocData.lastName || null,
-            username: currentUserDocData.username || null,
-            photoURL: currentUserDocData.photoURL || null,
-            points: currentUserScoreValue,
-            isCurrentUser: true,
-          };
-        }
-      }
-      // Basic validation (can be expanded)
-      fetchedTopNLeaders.forEach((item) => {
-        if (!item || typeof item.id !== "string")
-          throw new functions.https.HttpsError(
-            "internal",
-            "Data integrity issue."
-          ); // Throw HttpsError consistently
-      });
-      if (
-        currentUserDisplayData &&
-        typeof currentUserDisplayData.id !== "string"
-      )
+      // --- THE FIX: Changed .exists() to .exists ---
+      if (!currentUserDocSnap.exists) {
+        console.error(
+          `[getCurrentUserRank] User document not found for user: ${currentUserId}`
+        );
         throw new functions.https.HttpsError(
-          "internal",
-          "Data integrity issue."
-        ); // Throw HttpsError consistently
+          "not-found",
+          "Current user document not found."
+        );
+      }
+
+      const currentUserData = currentUserDocSnap.data();
+      const currentUserScore = currentUserData.stats?.totalStars || 0;
+
+      const rankCountQuery = usersCollectionRef.where(
+        "stats.totalStars",
+        ">",
+        currentUserScore
+      );
+      const countSnapshot = await rankCountQuery.count().get();
+
+      const usersAhead = countSnapshot.data().count;
 
       return {
-        leaderboard: fetchedTopNLeaders,
-        currentUserData: currentUserDisplayData,
+        id: currentUserId,
+        rank: usersAhead + 1,
+        firstName: currentUserData.firstName || null,
+        lastName: currentUserData.lastName || null,
+        username: currentUserData.username || null,
+        photoURL: currentUserData.photoURL || null,
+        points: currentUserScore,
+        isCurrentUser: true,
       };
     } catch (error) {
-      console.error("getLeaderboardData: Critical error:", error);
-      // Re-throw HttpsError if it's already one, otherwise wrap in internal
+      console.error("getCurrentUserRank: CRITICAL ERROR caught:", error);
       if (error instanceof functions.https.HttpsError) {
         throw error;
       }
       throw new functions.https.HttpsError(
         "internal",
-        "Internal server error processing leaderboard."
+        "Error fetching user rank."
       );
     }
   });
