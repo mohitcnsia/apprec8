@@ -217,8 +217,6 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         gradientContainer: { flex: 1 },
         container: {
           flex: 1,
-          padding: 16,
-          paddingTop: Platform.OS === "android" ? 40 : 50,
         },
         loadingContainer: {
           flex: 1,
@@ -241,7 +239,12 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           marginTop: 5,
           fontFamily: "delius",
         },
-        scrollContainer: { flexGrow: 1, paddingBottom: 20 },
+        scrollContainer: {
+          flexGrow: 1,
+          paddingHorizontal: 16, // For left and right spacing
+          paddingTop: Platform.OS === "android" ? 40 : 50, // Keep original top padding
+          paddingBottom: 60, // A larger bottom padding to prevent clipping
+        },
         profileSection: { alignItems: "center", marginBottom: 30 },
         profileImageContainer: { position: "relative", marginBottom: 8 },
         profileImage: {
@@ -571,7 +574,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         </Pressable>
         {/* --- ADD THIS NEW BUTTON --- */}
         {/* The __DEV__ global variable ensures this only ever renders in development mode */}
-        {__DEV__ && (
+        {/* {__DEV__ && (
           <Pressable
             onPress={handleResetSeenMessages}
             style={({ pressed }) => [
@@ -593,7 +596,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
               </Text>
             </View>
           </Pressable>
-        )}
+        )} */}
         {/* --- END OF NEW BUTTON --- */}
         <Pressable
           onPress={helpPressHandler}
