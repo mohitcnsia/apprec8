@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -32,7 +33,7 @@ const getNumberColor = (num) => {
   return colors[num] || "#000";
 };
 
-const MinesweeperGame = () => {
+const MinesweeperGame = ({ navigation }) => {
   const { theme } = useTheme(); // 2. Get theme from context
   const styles = useMemo(() => getStyles(theme), [theme]); // 3. Create dynamic styles
 
@@ -120,6 +121,29 @@ const MinesweeperGame = () => {
     setFlagCount(0);
     setFirstClick(true);
   }, [createEmptyBoard, mines]);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Get the parent navigator which controls the tab bar
+      const parent = navigation.getParent();
+
+      // Hide the tab bar when the game screen is focused
+      parent?.setOptions({
+        tabBarStyle: { display: "none" },
+      });
+
+      // This is the cleanup function that runs when you leave the screen
+      return () =>
+        parent?.setOptions({
+          // Re-apply the correct THEMED style when showing the tab bar again
+          tabBarStyle: {
+            display: "flex", // Make it visible again
+            backgroundColor: theme.tabBarBackground, // Use the theme's background color
+            borderTopColor: theme.border, // Use the theme's border color
+          },
+        });
+    }, [navigation, theme]) // Add theme to the dependency array
+  );
 
   useEffect(() => {
     initializeGame();

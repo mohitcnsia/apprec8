@@ -73,6 +73,21 @@ const CarouselItem = React.memo(
         case "QUIZ":
           navigation.push("Quiz", { quizContentId: item.id });
           break;
+        case "CLOCK":
+          navigation.push("ClockPracticeGenerator", {});
+          break;
+        case "SUDOKU":
+          navigation.push("SudokuGame", {});
+          break;
+        case "MINESWEEPER":
+          navigation.push("Minesweeper", {});
+          break;
+        case "VOCAB_BUILDER":
+          navigation.push("VocabBuilder", {});
+          break;
+        case "SPELLBEE":
+          navigation.navigate("SpellingBeeGame", {});
+          break;
         case "COURSE":
         case "COMPLEX":
         case "ACTIVITY":

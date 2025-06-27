@@ -44,34 +44,25 @@ const ClockPracticeGenerator = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      // Get the parent navigator which controls the tab bar
       const parent = navigation.getParent();
-      if (parent) {
-        parent.setOptions({ tabBarStyle: { display: "none" } });
-      } else {
-        try {
-          navigation.setOptions({ tabBarStyle: { display: "none" } });
-        } catch (err) {
-          /*ignore*/
-        }
-      }
-      return () => {
-        if (parent) {
-          parent.setOptions({
-            tabBarStyle: {
-              display: "flex",
-              backgroundColor: C.tabBarBackground,
-              borderTopColor: C.border,
-            },
-          });
-        } else {
-          try {
-            navigation.setOptions({ tabBarStyle: { display: "flex" } });
-          } catch (err) {
-            /*ignore*/
-          }
-        }
-      };
-    }, [navigation, C.tabBarBackground, C.border])
+
+      // Hide the tab bar when the game screen is focused
+      parent?.setOptions({
+        tabBarStyle: { display: "none" },
+      });
+
+      // This is the cleanup function that runs when you leave the screen
+      return () =>
+        parent?.setOptions({
+          // Re-apply the correct THEMED style when showing the tab bar again
+          tabBarStyle: {
+            display: "flex", // Make it visible again
+            backgroundColor: theme.tabBarBackground, // Use the theme's background color
+            borderTopColor: theme.border, // Use the theme's border color
+          },
+        });
+    }, [navigation, theme]) // Add theme to the dependency array
   );
 
   useEffect(() => {

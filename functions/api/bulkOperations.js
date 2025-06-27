@@ -50,7 +50,7 @@ exports.bulkAddCategories = functions
       }
 
       // Use modular `writeBatch(firestore)`
-      const batch = writeBatch(firestore);
+      const batch = firestore.batch();
       // Get the collection reference once outside the loop
       const categoriesColRef = collection(firestore, "categories");
 
@@ -142,7 +142,7 @@ exports.bulkAddTopics = functions
         });
       }
       // Use modular `writeBatch(firestore)`
-      const batch = writeBatch(firestore);
+      const batch = firestore.batch();
       // Get the collection reference once outside the loop
       const topicsColRef = collection(firestore, "topics");
 
@@ -235,7 +235,7 @@ exports.bulkAddStudyContent = functions
         });
       }
       // Use modular `writeBatch(firestore)`
-      const batch = writeBatch(firestore);
+      const batch = firestore.batch();
       // Get the collection reference once outside the loop
       const studyColRef = collection(firestore, "studyContent");
 
@@ -322,7 +322,7 @@ exports.bulkAddQuizQuestions = functions
         });
       }
       // Use modular `writeBatch(firestore)`
-      const batch = writeBatch(firestore);
+      const batch = firestore.batch();
       // Get the collection reference once outside the loop
       const quizColRef = collection(firestore, "quizQuestions");
 
@@ -465,7 +465,7 @@ exports.deleteAllDocuments = functions
         if (snapshot.empty) break;
 
         // Use modular `writeBatch(firestore)`
-        const batch = writeBatch(firestore);
+        const batch = firestore.batch();
         snapshot.docs.forEach((d) => batch.delete(d.ref)); // d.ref is still valid
         await batch.commit();
         totalDeleted += snapshot.size;
@@ -576,7 +576,7 @@ exports.updateFirestoreDocuments = functions
       }
 
       const MAX_BATCH_SIZE = 500;
-      let batch = writeBatch(firestore); // Use modular `writeBatch(firestore)`
+      let batch = writeBatch(); // Use modular `writeBatch(firestore)`
       let documentsInBatch = 0;
       let totalModificationsCommitted = 0;
       const commitPromises = [];
@@ -594,7 +594,7 @@ exports.updateFirestoreDocuments = functions
         if (documentsInBatch === MAX_BATCH_SIZE) {
           commitPromises.push(batch.commit());
           totalModificationsCommitted += documentsInBatch;
-          batch = writeBatch(firestore); // Create a new modular batch
+          batch = writeBatch(); // Create a new modular batch
           documentsInBatch = 0;
         }
       }

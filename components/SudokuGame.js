@@ -15,12 +15,12 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { generatePuzzle } from "../components/utils/sudokuGenerator";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { useFocusEffect } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 const gridSize = width - 64;
 const cellSize = (gridSize - 6) / 9;
 
-const SudokuGame = () => {
+const SudokuGame = ({ navigation }) => {
   const { theme, isDark } = useTheme();
   const styles = useMemo(() => getStyles(theme, isDark), [theme, isDark]);
 
@@ -64,6 +64,29 @@ const SudokuGame = () => {
       setIsLoading(false);
     }, 100);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Get the parent navigator which controls the tab bar
+      const parent = navigation.getParent();
+
+      // Hide the tab bar when the game screen is focused
+      parent?.setOptions({
+        tabBarStyle: { display: "none" },
+      });
+
+      // This is the cleanup function that runs when you leave the screen
+      return () =>
+        parent?.setOptions({
+          // Re-apply the correct THEMED style when showing the tab bar again
+          tabBarStyle: {
+            display: "flex", // Make it visible again
+            backgroundColor: theme.tabBarBackground, // Use the theme's background color
+            borderTopColor: theme.border, // Use the theme's border color
+          },
+        });
+    }, [navigation, theme]) // Add theme to the dependency array
+  );
 
   useEffect(() => {
     initializeNewGame();
