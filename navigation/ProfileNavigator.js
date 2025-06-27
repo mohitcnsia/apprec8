@@ -15,6 +15,7 @@ import TaskDetails from "../screens/task/TaskDetails"; // Adjust path
 import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
 import TasksContextProvider from "../store/tasks-context"; // Adjust path
 import DummyScreen from "../screens/DummyScreen"; // << ENSURE THIS IMPORT IS CORRECT AND UNCOMMENTED
+import MessageCenterScreen from "../screens/profile/MessageCenterScreen";
 
 // Import other screens like Apprec8Reader, Quiz if they are part of this stack
 // For example:
@@ -81,6 +82,11 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
               title: "Edit Profile",
               headerShown: false,
             }}
+          />
+          <Stack.Screen
+            name="MessageCenter"
+            component={MessageCenterScreen}
+            options={{ title: "My Messages" }} // Set the header title
           />
           <Stack.Screen
             name="DeleteAccountConfirmation"

@@ -285,3 +285,48 @@ export async function updateTaskInFirestore(taskId, updatedDataFromContext) {
     throw error;
   }
 }
+
+/**
+ * Sets up a real-time listener for a user's message inbox.
+ * Messages are ordered with the newest first.
+ * @param {string} userId The ID of the user whose messages to fetch.
+ * @param {(messages: Array<object>) => void} onDataChange - Callback invoked with the messages array.
+ * @param {(error: Error) => void} onError - Callback invoked on listener error.
+ * @returns {() => void} An unsubscribe function to detach the listener.
+ */
+export function listenToUserMessages(userId, onDataChange, onError) {
+  console.log(`LISTENER: Setting up for messages for user: ${userId}`);
+  if (!userId) {
+    onError(new Error("Invalid user ID provided to listenToUserMessages."));
+    return () => {}; // Return no-op unsubscribe
+  }
+
+  const messagesRef = collection(db, "users", userId, "messages");
+  const q = query(messagesRef, orderBy("receivedAt", "desc"));
+
+  const unsubscribe = onSnapshot(
+    q,
+    (querySnapshot) => {
+      const messages = [];
+      querySnapshot.forEach((doc) => {
+        messages.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(
+        `LISTENER: Snapshot for user messages: ${messages.length} items`
+      );
+      onDataChange(messages);
+    },
+    (error) => {
+      console.error(`LISTENER ERROR: User messages for ${userId}:`, error);
+      // Check for the common missing index error
+      if (error.code?.includes("failed-precondition")) {
+        console.error(
+          `Firestore index likely missing for the messages query. The error log should contain a link to create it.`
+        );
+      }
+      onError(error);
+    }
+  );
+
+  return unsubscribe; // Return the cleanup function
+}

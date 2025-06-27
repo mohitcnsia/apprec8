@@ -1,9 +1,7 @@
-// src/AppContent.js
-import React, { useEffect, useState } from "react"; // Added useState
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
-import firestore from "@react-native-firebase/firestore";
 import { Provider as PaperProvider } from "react-native-paper";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
@@ -12,9 +10,12 @@ import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
 import { useTheme } from "./context/ThemeContext";
 
-const MIN_LOADER_DISPLAY_TIME = 3000; // 3 seconds
+// --- NEW: Imports for In-App Messaging ---
+import { useInAppMessaging } from "./hooks/useInAppMessaging";
+import InAppMessageModal from "./components/common/InAppMessageModal";
 
-// Helper component for themed status bar
+const MIN_LOADER_DISPLAY_TIME = 3000;
+
 const ThemedStatusBar = () => {
   const { theme, isDark } = useTheme();
   const statusBarColor =
@@ -33,16 +34,21 @@ const ThemedStatusBar = () => {
 const AppContent = () => {
   const { theme, isDark, isThemeLoaded } = useTheme();
   const [minimumLoaderTimeElapsed, setMinimumLoaderTimeElapsed] =
-    useState(false); // New state
+    useState(false);
+
+  const {
+    isLoading: isMessageLoading,
+    messageToShow,
+    handleClose,
+    updateUrl,
+  } = useInAppMessaging();
 
   useEffect(() => {
-    // Start a timer to ensure the loader is shown for at least MIN_LOADER_DISPLAY_TIME
     const timer = setTimeout(() => {
       setMinimumLoaderTimeElapsed(true);
     }, MIN_LOADER_DISPLAY_TIME);
-
-    return () => clearTimeout(timer); // Cleanup timer on unmount
-  }, []); // Empty dependency array ensures this runs only once on mount
+    return () => clearTimeout(timer);
+  }, []);
 
   const [fontsLoaded, fontError] = useFonts({
     rouge: require("./assets/fonts/RougeScript-Regular.ttf"),
@@ -53,6 +59,7 @@ const AppContent = () => {
     nunitoBold: require("./assets/fonts/Nunito-Bold.ttf"),
   });
 
+  // --- RESTORED: Full destructuring of all auth functions ---
   const {
     user,
     isGuest,
@@ -89,7 +96,7 @@ const AppContent = () => {
     if (typeof authError !== "undefined" && authError)
       console.error("Auth Hook Error:", authError);
     console.log(
-      `>>> AppContent State Check: fontsLoaded=${fontsLoaded}, authLoading=${authLoading}, isThemeLoaded=${isThemeLoaded}, minimumLoaderTimeElapsed=${minimumLoaderTimeElapsed}`
+      `>>> AppContent State Check: fontsLoaded=${fontsLoaded}, authLoading=${authLoading}, isThemeLoaded=${isThemeLoaded}, minimumLoaderTimeElapsed=${minimumLoaderTimeElapsed}, isMessageLoading=${isMessageLoading}`
     );
   }, [
     fontsLoaded,
@@ -98,19 +105,33 @@ const AppContent = () => {
     fontError,
     authError,
     minimumLoaderTimeElapsed,
+    isMessageLoading,
   ]);
 
-  // Update the loading condition
+  // --- UPDATED: Main loading condition now includes the message check ---
   if (
     !fontsLoaded ||
     authLoading ||
     !isThemeLoaded ||
-    !minimumLoaderTimeElapsed
+    !minimumLoaderTimeElapsed ||
+    isMessageLoading
   ) {
     return (
       <View style={styles.loaderContainer}>
         <CalmLoader />
       </View>
+    );
+  }
+
+  // This is the check for the in-app message, which takes priority.
+  if (messageToShow) {
+    return (
+      <InAppMessageModal
+        isVisible={true}
+        message={messageToShow}
+        onClose={handleClose}
+        updateUrl={updateUrl}
+      />
     );
   }
 
@@ -121,6 +142,7 @@ const AppContent = () => {
       <ThemedStatusBar />
       <View style={styles.container}>
         {user || isGuest ? (
+          // --- RESTORED: All props are now correctly passed ---
           <BottomTabNavigator
             isGuest={isGuest}
             signoutHandler={signoutHandler}
@@ -128,6 +150,7 @@ const AppContent = () => {
             user={user}
           />
         ) : (
+          // --- RESTORED: All props are now correctly passed ---
           <AuthScreen
             externalError={authError}
             isAuthLoading={authLoading}

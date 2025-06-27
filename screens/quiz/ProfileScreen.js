@@ -21,6 +21,9 @@ import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 import { authInstance } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SEEN_MESSAGES_KEY } from "../../hooks/useInAppMessaging";
+import InfoModal from "../../components/common/InfoModal";
 
 const generateAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -44,7 +47,11 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  // No longer need isDeletingAccount state here
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [infoModalContent, setInfoModalContent] = useState({
+    title: "",
+    message: "",
+  });
 
   const currentAuthUser = authInstance.currentUser;
   const userId = currentAuthUser?.uid;
@@ -123,6 +130,27 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
     userData?.photoURL ||
     currentAuthUser?.photoURL ||
     generateAvatarUrl(displayName);
+
+  const handleResetSeenMessages = async () => {
+    try {
+      await AsyncStorage.removeItem(SEEN_MESSAGES_KEY);
+      // Set the content for the modal
+      setInfoModalContent({
+        title: "Success",
+        message:
+          "The 'seen messages' list has been cleared. Please completely restart your app to see the pop-up again.",
+      });
+      // Show the modal
+      setInfoModalVisible(true);
+    } catch (error) {
+      console.error("Failed to reset seen messages:", error);
+      setInfoModalContent({
+        title: "Error",
+        message: "Could not clear the seen messages list.",
+      });
+      setInfoModalVisible(true);
+    }
+  };
 
   const enrollmentDate = useMemo(() => {
     let dateToFormat = null;
@@ -529,6 +557,45 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           </View>
         </Pressable>
         <Pressable
+          onPress={() => navigation.navigate("MessageCenter")} // <-- This is the new code
+          style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
+        >
+          <View style={styles.cardContent}>
+            <MaterialCommunityIcons
+              name="email-outline"
+              size={22}
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardText}>My Messages</Text>
+          </View>
+        </Pressable>
+        {/* --- ADD THIS NEW BUTTON --- */}
+        {/* The __DEV__ global variable ensures this only ever renders in development mode */}
+        {__DEV__ && (
+          <Pressable
+            onPress={handleResetSeenMessages}
+            style={({ pressed }) => [
+              styles.card,
+              { backgroundColor: "#333" },
+              pressed && styles.pressedCard,
+            ]}
+          >
+            <View style={styles.cardContent}>
+              <MaterialCommunityIcons
+                name="bug-check-outline"
+                size={22}
+                style={[styles.cardIcon, { color: "#fff" }]}
+              />
+              <Text
+                style={[styles.cardText, { color: "#fff", fontWeight: "bold" }]}
+              >
+                DEV: Reset Seen Messages
+              </Text>
+            </View>
+          </Pressable>
+        )}
+        {/* --- END OF NEW BUTTON --- */}
+        <Pressable
           onPress={helpPressHandler}
           style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
         >
@@ -605,6 +672,12 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
           }}
         />
       </ScrollView>
+      <InfoModal
+        visible={infoModalVisible}
+        title={infoModalContent.title}
+        message={infoModalContent.message}
+        onDismiss={() => setInfoModalVisible(false)}
+      />
     </LinearGradient>
   );
 };
