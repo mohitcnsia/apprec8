@@ -4,20 +4,23 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { useFocusEffect } from "@react-navigation/native";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
+// --- Game Configuration ---
 const DIFFICULTIES = {
   beginner: { rows: 9, cols: 9, mines: 10 },
   intermediate: { rows: 16, cols: 16, mines: 40 },
   expert: { rows: 16, cols: 30, mines: 99 },
 };
 
-// This function's classic colors are preserved, but could also be themed.
+// A fixed cell size ensures tap targets are always large enough.
+const CELL_SIZE = 35;
+
+// Helper function to get the color for the number in a cell
 const getNumberColor = (num) => {
   const colors = [
     "",
@@ -33,28 +36,25 @@ const getNumberColor = (num) => {
   return colors[num] || "#000";
 };
 
+// --- Game Component ---
 const MinesweeperGame = ({ navigation }) => {
-  const { theme } = useTheme(); // 2. Get theme from context
-  const styles = useMemo(() => getStyles(theme), [theme]); // 3. Create dynamic styles
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
 
+  // --- State Management ---
   const [difficulty, setDifficulty] = useState("beginner");
   const [board, setBoard] = useState([]);
-  const [gameState, setGameState] = useState("playing"); // playing, won, lost
+  const [gameState, setGameState] = useState("playing"); // 'playing', 'won', 'lost'
   const [flagCount, setFlagCount] = useState(0);
   const [firstClick, setFirstClick] = useState(true);
 
   const { rows, cols, mines } = DIFFICULTIES[difficulty];
 
-  const calculateCellSize = () => {
-    const availableWidth = screenWidth - 40; // padding
-    const availableHeight = screenHeight - 200; // header and controls
-    const cellWidth = Math.floor(availableWidth / cols);
-    const cellHeight = Math.floor(availableHeight / rows);
-    return Math.min(cellWidth, cellHeight, 40);
-  };
+  // --- Game Logic ---
 
-  const cellSize = calculateCellSize();
-
+  /**
+   * Creates a new, empty board based on the current difficulty.
+   */
   const createEmptyBoard = useCallback(() => {
     return Array(rows)
       .fill(null)
@@ -70,14 +70,16 @@ const MinesweeperGame = ({ navigation }) => {
       );
   }, [rows, cols]);
 
+  /**
+   * Places mines randomly on the board, avoiding the first-clicked cell.
+   * After placing mines, it calculates the number of neighboring mines for each cell.
+   */
   const placeMines = (board, firstClickRow, firstClickCol) => {
     const newBoard = board.map((row) => row.map((cell) => ({ ...cell })));
     let minesPlaced = 0;
-
     while (minesPlaced < mines) {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * cols);
-
       if (
         !newBoard[row][col].isMine &&
         !(row === firstClickRow && col === firstClickCol)
@@ -86,7 +88,7 @@ const MinesweeperGame = ({ navigation }) => {
         minesPlaced++;
       }
     }
-
+    // Calculate neighbor mines
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (!newBoard[r][c].isMine) {
@@ -110,45 +112,46 @@ const MinesweeperGame = ({ navigation }) => {
         }
       }
     }
-
     return newBoard;
   };
 
+  /**
+   * Initializes or resets the game to its starting state.
+   */
   const initializeGame = useCallback(() => {
     const newBoard = createEmptyBoard();
     setBoard(newBoard);
     setGameState("playing");
     setFlagCount(0);
     setFirstClick(true);
-  }, [createEmptyBoard, mines]);
+  }, [createEmptyBoard]);
 
-  useFocusEffect(
-    useCallback(() => {
-      // Get the parent navigator which controls the tab bar
-      const parent = navigation.getParent();
-
-      // Hide the tab bar when the game screen is focused
-      parent?.setOptions({
-        tabBarStyle: { display: "none" },
-      });
-
-      // This is the cleanup function that runs when you leave the screen
-      return () =>
-        parent?.setOptions({
-          // Re-apply the correct THEMED style when showing the tab bar again
-          tabBarStyle: {
-            display: "flex", // Make it visible again
-            backgroundColor: theme.tabBarBackground, // Use the theme's background color
-            borderTopColor: theme.border, // Use the theme's border color
-          },
-        });
-    }, [navigation, theme]) // Add theme to the dependency array
-  );
-
+  // Reset game when difficulty changes
   useEffect(() => {
     initializeGame();
-  }, [difficulty, initializeGame]); // Re-initialize if difficulty changes
+  }, [difficulty, initializeGame]);
 
+  // Hide the tab bar on this screen
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({ tabBarStyle: { display: "none" } });
+      return () =>
+        parent?.setOptions({
+          tabBarStyle: {
+            display: "flex",
+            backgroundColor: theme.tabBarBackground,
+            borderTopColor: theme.border,
+          },
+        });
+    }, [navigation, theme])
+  );
+
+  /**
+   * Handles the logic for revealing a cell.
+   * If it's the first click, it places the mines first.
+   * It recursively reveals adjacent cells if an empty cell is clicked.
+   */
   const revealCell = (row, col) => {
     if (
       gameState !== "playing" ||
@@ -157,9 +160,7 @@ const MinesweeperGame = ({ navigation }) => {
     ) {
       return;
     }
-
     let newBoard = board.map((r) => r.map((c) => ({ ...c })));
-
     if (firstClick) {
       newBoard = placeMines(newBoard, row, col);
       setFirstClick(false);
@@ -181,8 +182,8 @@ const MinesweeperGame = ({ navigation }) => {
 
       if (newBoard[r][c].isMine) {
         setGameState("lost");
-        newBoard.forEach((row) =>
-          row.forEach((cell) => {
+        newBoard.forEach((boardRow) =>
+          boardRow.forEach((cell) => {
             if (cell.isMine) cell.isRevealed = true;
           })
         );
@@ -201,7 +202,6 @@ const MinesweeperGame = ({ navigation }) => {
     };
 
     revealRecursive(row, col);
-    setBoard(newBoard);
 
     const revealedCount = newBoard
       .flat()
@@ -209,8 +209,12 @@ const MinesweeperGame = ({ navigation }) => {
     if (revealedCount === rows * cols - mines && gameState === "playing") {
       setGameState("won");
     }
+    setBoard(newBoard);
   };
 
+  /**
+   * Handles toggling a flag on a cell via long press.
+   */
   const toggleFlag = (row, col) => {
     if (gameState !== "playing" || board[row][col].isRevealed) {
       return;
@@ -224,6 +228,8 @@ const MinesweeperGame = ({ navigation }) => {
     setBoard(newBoard);
   };
 
+  // --- Rendering Helpers ---
+
   const getCellContent = (cell) => {
     if (cell.isFlagged) return "🚩";
     if (!cell.isRevealed) return "";
@@ -233,7 +239,7 @@ const MinesweeperGame = ({ navigation }) => {
   };
 
   const getCellStyle = (cell) => {
-    const baseStyle = [styles.cell, { width: cellSize, height: cellSize }];
+    const baseStyle = [styles.cell, { width: CELL_SIZE, height: CELL_SIZE }];
     if (cell.isRevealed) {
       if (cell.isMine) baseStyle.push(styles.mine);
       else baseStyle.push(styles.revealed);
@@ -243,13 +249,19 @@ const MinesweeperGame = ({ navigation }) => {
     return baseStyle;
   };
 
+  // --- Component Render ---
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Minesweeper</Text>
         <View style={styles.stats}>
           <Text style={styles.statText}>Mines: {mines - flagCount}</Text>
           <Text style={styles.statText}>Status: {gameState}</Text>
+        </View>
+
+        <View style={styles.instructions}>
+          <Text style={styles.instructionText}>
+            Tap to reveal • Long press to flag
+          </Text>
         </View>
       </View>
 
@@ -292,42 +304,45 @@ const MinesweeperGame = ({ navigation }) => {
       </View>
 
       <View style={styles.boardContainer}>
-        <View style={styles.board}>
-          {board.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {row.map((cell, colIndex) => (
-                <TouchableOpacity
-                  key={`${rowIndex}-${colIndex}`}
-                  style={getCellStyle(cell)}
-                  onPress={() => revealCell(rowIndex, colIndex)}
-                  onLongPress={() => toggleFlag(rowIndex, colIndex)}
-                  activeOpacity={0.7}
-                >
-                  <Text
-                    style={[
-                      styles.cellText,
-                      {
-                        fontSize: cellSize * 0.6,
-                        color:
-                          cell.isRevealed && !cell.isMine
-                            ? getNumberColor(cell.neighborMines)
-                            : theme.textPrimary,
-                      },
-                    ]}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          <View style={styles.board}>
+            {board.map((row, rowIndex) => (
+              <View key={rowIndex} style={styles.row}>
+                {row.map((cell, colIndex) => (
+                  <TouchableOpacity
+                    key={`${rowIndex}-${colIndex}`}
+                    style={getCellStyle(cell)}
+                    onPress={() => revealCell(rowIndex, colIndex)}
+                    onLongPress={() => toggleFlag(rowIndex, colIndex)}
+                    activeOpacity={0.7}
                   >
-                    {getCellContent(cell)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          ))}
-        </View>
+                    <Text
+                      style={[
+                        styles.cellText,
+                        {
+                          fontSize: CELL_SIZE * 0.6,
+                          color:
+                            cell.isRevealed && !cell.isMine
+                              ? getNumberColor(cell.neighborMines)
+                              : theme.textPrimary,
+                        },
+                      ]}
+                    >
+                      {getCellContent(cell)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       </View>
 
-      <View style={styles.instructions}>
-        <Text style={styles.instructionText}>
-          Tap to reveal • Long press to flag
-        </Text>
+      <View style={styles.footer}>
         {gameState === "won" && (
           <Text style={styles.winText}>🎉 You Won! 🎉</Text>
         )}
@@ -335,37 +350,50 @@ const MinesweeperGame = ({ navigation }) => {
           <Text style={styles.loseText}>💥 Game Over 💥</Text>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
+// --- Styles ---
 const getStyles = (theme) =>
   StyleSheet.create({
+    /**
+     * ✅ FIX: The main container no longer has horizontal padding.
+     * This allows the board container to use the full screen width.
+     */
     container: {
       flex: 1,
       backgroundColor: theme.background,
       alignItems: "center",
-      paddingTop: 50,
-      paddingHorizontal: 20,
     },
+    /**
+     * ✅ FIX: Padding is now applied directly to the header,
+     * controls, and footer to keep them from touching the screen edges.
+     */
     header: {
       alignItems: "center",
+      marginTop: 20,
       marginBottom: 20,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: "bold",
-      color: theme.textPrimary,
-      marginBottom: 10,
+      width: "100%",
+      paddingHorizontal: 20,
     },
     stats: {
       flexDirection: "row",
-      gap: 20,
+      justifyContent: "space-around",
+      width: "100%",
     },
     statText: {
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: "600",
       color: theme.textSecondary,
+    },
+    instructions: {
+      marginTop: 15,
+    },
+    instructionText: {
+      fontSize: 14,
+      color: theme.textSecondary,
+      textAlign: "center",
     },
     controls: {
       flexDirection: "row",
@@ -373,6 +401,7 @@ const getStyles = (theme) =>
       marginBottom: 20,
       flexWrap: "wrap",
       justifyContent: "center",
+      paddingHorizontal: 20,
     },
     difficultyButton: {
       backgroundColor: theme.cardBackground,
@@ -393,7 +422,7 @@ const getStyles = (theme) =>
       borderRadius: 20,
     },
     buttonText: {
-      color: theme.textSecondary,
+      color: theme.textPrimary,
       fontWeight: "600",
       fontSize: 14,
     },
@@ -401,20 +430,30 @@ const getStyles = (theme) =>
       color: theme.buttonText,
     },
     boardContainer: {
+      flex: 1,
+      width: "100%",
+    },
+    /**
+     * ✅ FIX: Padding is added inside the scroll view. This creates a
+     * visual margin so the board doesn't touch the screen edges,
+     * preventing any visual clipping.
+     */
+    scrollViewContent: {
+      flexGrow: 1,
       alignItems: "center",
       justifyContent: "center",
-      flex: 1,
+      padding: 10,
     },
     board: {
       borderWidth: 2,
-      borderColor: theme.border,
+      borderColor: theme.borderLight,
       backgroundColor: theme.borderLight,
     },
     row: {
       flexDirection: "row",
     },
     cell: {
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderColor: theme.border,
       alignItems: "center",
       justifyContent: "center",
@@ -432,26 +471,21 @@ const getStyles = (theme) =>
       fontWeight: "bold",
       textAlign: "center",
     },
-    instructions: {
+    footer: {
+      height: 50,
+      justifyContent: "center",
       alignItems: "center",
-      paddingVertical: 20,
-    },
-    instructionText: {
-      fontSize: 14,
-      color: theme.textSecondary,
-      textAlign: "center",
+      paddingHorizontal: 20,
     },
     winText: {
-      fontSize: 18,
+      fontSize: 22,
       fontWeight: "bold",
       color: theme.success,
-      marginTop: 10,
     },
     loseText: {
-      fontSize: 18,
+      fontSize: 22,
       fontWeight: "bold",
       color: theme.warning,
-      marginTop: 10,
     },
   });
 

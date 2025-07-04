@@ -11,56 +11,35 @@ import {
   ActivityIndicator,
   ScrollView,
   Button,
+  TouchableWithoutFeedback,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../context/ThemeContext";
 import HexButton from "../components/common/HexButton";
 import { fetchSpellingBeePuzzles } from "../store/firestore-api";
+import GameHeader from "../components/common/GameHeader";
 
 const { width } = Dimensions.get("window");
-const ASYNC_STORAGE_CACHE_KEY = "spellingBeeFoundWordsCache";
-
-// This small, hardcoded list remains as a fast, initial, offline dictionary.
-const commonWordsWithMeaning = {
-  ABLE: "Having the power, skill, or means to do something",
-  CABLE: "A thick rope of wire or fiber",
-  BLAME: "To hold responsible for something bad",
-  BEAM: "A ray of light or a wooden support",
-  MEAL: "Food eaten at a particular time",
-  CALM: "Not excited, nervous, or upset",
-  SCALE: "A device for measuring weight",
-  GRACE: "Smooth and attractive movement",
-  RANGE: "A set of different things of the same type",
-  HELP: "To make it easier for someone to do something",
-  LEAP: "To jump high or far",
-  SHAPE: "The form of something",
-  CLEAR: "Easy to understand or see through",
-  LEARN: "To gain knowledge or skill",
-  GREAT: "Very good or large in size",
-};
+// ✅ FIX: Updated cache key to v4. This invalidates any old, faulty cache
+// and ensures only correct definitions are stored from now on.
+const ASYNC_STORAGE_CACHE_KEY = "spellingBeeCache_v4";
 
 const SpellingBeeGame = ({ navigation }) => {
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
-  // Data Fetching State
+  // State declarations
   const [puzzles, setPuzzles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Word Cache State
-  const [foundWordsCache, setFoundWordsCache] = useState(new Set());
-
-  // Game State
+  const [foundWordsCache, setFoundWordsCache] = useState(new Map());
   const [currentSet, setCurrentSet] = useState(0);
   const [foundWords, setFoundWords] = useState([]);
   const [currentWord, setCurrentWord] = useState("");
   const [message, setMessage] = useState("");
   const [score, setScore] = useState(0);
   const [isValidating, setIsValidating] = useState(false);
-
-  // UI State
   const [showRules, setShowRules] = useState(false);
   const [showSuccessCheck, setShowSuccessCheck] = useState(false);
   const [selectedWordMeaning, setSelectedWordMeaning] = useState(null);
@@ -70,22 +49,16 @@ const SpellingBeeGame = ({ navigation }) => {
     setIsLoading(true);
     setError(null);
     try {
-      // Fetch puzzles and load cache from storage in parallel
       const [fetchedPuzzles, cachedWordsData] = await Promise.all([
         fetchSpellingBeePuzzles(),
         AsyncStorage.getItem(ASYNC_STORAGE_CACHE_KEY),
       ]);
-
       if (fetchedPuzzles.length === 0) {
         throw new Error("No Spelling Bee puzzles found in the database.");
       }
       setPuzzles(fetchedPuzzles);
-
       if (cachedWordsData) {
-        setFoundWordsCache(new Set(JSON.parse(cachedWordsData)));
-        console.log(
-          `Loaded ${JSON.parse(cachedWordsData).length} words from cache.`
-        );
+        setFoundWordsCache(new Map(JSON.parse(cachedWordsData)));
       }
     } catch (err) {
       setError(err.message);
@@ -100,82 +73,77 @@ const SpellingBeeGame = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Get the parent navigator which controls the tab bar
       const parent = navigation.getParent();
-
-      // Hide the tab bar when the game screen is focused
-      parent?.setOptions({
-        tabBarStyle: { display: "none" },
-      });
-
-      // This is the cleanup function that runs when you leave the screen
-      return () =>
+      parent?.setOptions({ tabBarStyle: { display: "none" } });
+      return () => {
         parent?.setOptions({
-          // Re-apply the correct THEMED style when showing the tab bar again
           tabBarStyle: {
-            display: "flex", // Make it visible again
-            backgroundColor: theme.tabBarBackground, // Use the theme's background color
-            borderTopColor: theme.border, // Use the theme's border color
+            display: "flex",
+            backgroundColor: theme.tabBarBackground,
+            borderTopColor: theme.border,
           },
         });
-    }, [navigation, theme]) // Add theme to the dependency array
+      };
+    }, [navigation, theme])
   );
 
   const validateWordWithMeaning = useCallback(
     async (word) => {
       const upperWord = word.toUpperCase();
 
-      // New validation flow
       if (foundWordsCache.has(upperWord)) {
-        console.log(`'${upperWord}' found in AsyncStorage cache.`);
-        return {
-          isValid: true,
-          meaning: "You've found this word before!",
-          source: "cache",
-        };
-      }
-      if (commonWordsWithMeaning[upperWord]) {
-        console.log(`'${upperWord}' found in local common words.`);
-        return {
-          isValid: true,
-          meaning: commonWordsWithMeaning[upperWord],
-          source: "offline",
-        };
+        const cachedItem = foundWordsCache.get(upperWord);
+        // Check if the cached data is in the correct 'object' format.
+        if (typeof cachedItem === "object" && cachedItem !== null) {
+          return { isValid: true, ...cachedItem, source: "cache" };
+        }
       }
 
-      // If not in cache, try API
       try {
         const response = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
         );
+
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
-            // --- Cache the newly found word ---
-            const updatedCache = new Set(foundWordsCache).add(upperWord);
-            await AsyncStorage.setItem(
-              ASYNC_STORAGE_CACHE_KEY,
-              JSON.stringify(Array.from(updatedCache))
-            );
-            setFoundWordsCache(updatedCache);
-            console.log(`'${upperWord}' validated by API and saved to cache.`);
-            // --- End Caching ---
+            const partsOfSpeech = new Set();
+            const meanings = [];
 
-            const firstEntry = data[0];
-            const firstMeaning = firstEntry.meanings?.[0];
-            const firstDefinition = firstMeaning?.definitions?.[0];
-            return {
-              isValid: true,
-              meaning: firstDefinition?.definition || "A valid English word.",
-              partOfSpeech: firstMeaning?.partOfSpeech || "",
-              source: "api",
-            };
+            // Loop through all entries provided by the API to get all meanings.
+            data.forEach((entry) => {
+              entry.meanings?.forEach((meaning) => {
+                partsOfSpeech.add(meaning.partOfSpeech);
+                const definition = meaning.definitions[0]?.definition;
+                if (definition) {
+                  meanings.push(`- ${definition}`);
+                }
+              });
+            });
+
+            if (meanings.length > 0) {
+              const result = {
+                meaning: meanings.join("\n\n"), // Add space between definitions
+                partOfSpeech: Array.from(partsOfSpeech).join(", "),
+              };
+
+              const updatedCache = new Map(foundWordsCache).set(
+                upperWord,
+                result
+              );
+              await AsyncStorage.setItem(
+                ASYNC_STORAGE_CACHE_KEY,
+                JSON.stringify(Array.from(updatedCache.entries()))
+              );
+              setFoundWordsCache(updatedCache);
+
+              return { isValid: true, ...result, source: "api" };
+            }
           }
         }
-        return { isValid: false, meaning: null, source: "api" };
+        return { isValid: false, source: "api" };
       } catch (error) {
-        console.log("Dictionary API error or offline:", error);
-        return { isValid: false, meaning: null, source: "offline" };
+        return { isValid: false, source: "offline" };
       }
     },
     [foundWordsCache]
@@ -206,9 +174,7 @@ const SpellingBeeGame = ({ navigation }) => {
         return;
       }
     }
-
     setIsValidating(true);
-    setMessage("Checking word...");
     try {
       const result = await validateWordWithMeaning(word);
       if (result.isValid) {
@@ -218,32 +184,22 @@ const SpellingBeeGame = ({ navigation }) => {
           partOfSpeech: result.partOfSpeech || "",
           source: result.source,
         };
-        setFoundWords((prev) => [...prev, wordData]);
+        setFoundWords((prev) => [wordData, ...prev]);
         setScore((prev) => prev + word.length);
-        setCurrentWord("");
-        setMessage(`Great job! "${word}" is correct!`);
         setShowSuccessCheck(true);
         setTimeout(() => {
-          setMessage(
-            `"${word}": ${result.meaning.substring(0, 50)}${
-              result.meaning.length > 50 ? "..." : ""
-            }`
-          );
-          setTimeout(() => {
-            setMessage("");
-            setShowSuccessCheck(false);
-          }, 3000);
+          setShowSuccessCheck(false);
         }, 1500);
       } else {
         setMessage("Word not found in dictionary!");
         setTimeout(() => setMessage(""), 2000);
       }
     } catch (error) {
-      console.error("Submit Word Error:", error);
       setMessage("Error checking word. Try again!");
       setTimeout(() => setMessage(""), 2000);
     } finally {
       setIsValidating(false);
+      setCurrentWord("");
     }
   };
 
@@ -258,7 +214,6 @@ const SpellingBeeGame = ({ navigation }) => {
     setTimeout(() => setMessage(""), 2000);
   };
 
-  // --- Unchanged Functions: addLetter, deleteLetter, showWordMeaning, getHint, getRank etc. ---
   const addLetter = (letter) => {
     if (currentWord.length < 20) {
       setCurrentWord((prev) => prev + letter);
@@ -295,7 +250,42 @@ const SpellingBeeGame = ({ navigation }) => {
     return { rank: "Beginner", icon: "leaf", color: "#6b7280" };
   };
 
-  // --- Render Logic ---
+  const headerControls = [
+    { iconName: "lightbulb-on-outline", size: 28, onPress: getHint },
+    { iconName: "dice-multiple-outline", size: 28, onPress: newGame },
+    { iconName: "information-outline", onPress: () => setShowRules(true) },
+    {
+      iconName: isDark ? "white-balance-sunny" : "moon-waning-crescent",
+      onPress: toggleTheme,
+    },
+  ];
+
+  // Reusable Modal component for better UX
+  const AppModal = ({ visible, onClose, title, children }) => (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPressOut={onClose} // Close on tapping the background
+      >
+        <TouchableWithoutFeedback>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{title}</Text>
+              {/* ✅ FIX: The cross (close) button has been removed. */}
+            </View>
+            {children}
+          </View>
+        </TouchableWithoutFeedback>
+      </TouchableOpacity>
+    </Modal>
+  );
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -318,7 +308,6 @@ const SpellingBeeGame = ({ navigation }) => {
     );
   }
 
-  // Need to handle the case where puzzles array might still be empty after loading
   const currentPuzzle = puzzles[currentSet];
   if (!currentPuzzle) {
     return (
@@ -329,6 +318,7 @@ const SpellingBeeGame = ({ navigation }) => {
       </SafeAreaView>
     );
   }
+
   const { letters, center: centerLetter } = currentPuzzle;
   const currentRank = getRank();
   const PADDING_HORIZONTAL_CONTENT = 24;
@@ -345,187 +335,73 @@ const SpellingBeeGame = ({ navigation }) => {
     MAX_LETTER_BUTTON_SIZE
   );
 
-  const MeaningModal = () => (
-    <Modal
-      visible={showMeaningModal}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={() => setShowMeaningModal(false)}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>{selectedWordMeaning?.word}</Text>
-            <TouchableOpacity
-              onPress={() => setShowMeaningModal(false)}
-              style={styles.closeButton}
-            >
-              <MaterialCommunityIcons
-                name="close"
-                size={24}
-                color={theme.textPrimary}
-              />
-            </TouchableOpacity>
-          </View>
-          {selectedWordMeaning && (
-            <View>
-              {selectedWordMeaning.partOfSpeech && (
-                <Text style={styles.partOfSpeech}>
-                  {selectedWordMeaning.partOfSpeech}
-                </Text>
-              )}
-              <Text style={styles.meaningText}>
-                {selectedWordMeaning.meaning}
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
-    </Modal>
-  );
-  const RulesModal = () => (
-    <Modal
-      visible={showRules}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={() => setShowRules(false)}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>How to Play</Text>
-            <TouchableOpacity
-              onPress={() => setShowRules(false)}
-              style={styles.closeButton}
-            >
-              <MaterialCommunityIcons
-                name="close"
-                size={24}
-                color={theme.textPrimary}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rulesContainer}>
-            <Text style={styles.ruleText}>• Make words using the letters</Text>
-            <Text style={styles.ruleText}>
-              • Words must be at least 4 letters long
-            </Text>
-            <Text style={styles.ruleText}>
-              • Every word must contain the center letter (red)
-            </Text>
-            <Text style={styles.ruleText}>
-              • Tap letters to build words, then submit!
-            </Text>
-            <Text style={styles.ruleText}>
-              • Score points based on word length
-            </Text>
-            <Text style={styles.ruleText}>
-              • Tap found words to see their meanings! 📚
-            </Text>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
+      <GameHeader rightControls={headerControls} />
       <View style={styles.mainGameContainer}>
-        <View style={styles.topSectionFlex}>
-          <View style={styles.topControlsRow}>
-            <TouchableOpacity onPress={getHint} style={styles.iconButton}>
-              <MaterialCommunityIcons
-                name="lightbulb-on-outline"
-                size={28}
-                color={theme.primary}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={newGame} style={styles.iconButton}>
-              <MaterialCommunityIcons
-                name="dice-multiple-outline"
-                size={28}
-                color={theme.primary}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setShowRules(true)}
-              style={styles.iconButton}
-            >
-              <MaterialCommunityIcons
-                name="information-outline"
-                size={24}
-                color={theme.primary}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleTheme} style={styles.iconButton}>
-              <MaterialCommunityIcons
-                name={isDark ? "white-balance-sunny" : "moon-waning-crescent"}
-                size={24}
-                color={theme.primary}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.statsPanel}>
-            <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>Score</Text>
-                <Text style={[styles.statValue, { color: theme.primary }]}>
-                  {score}
-                </Text>
-              </View>
-              <View style={styles.statItem}>
-                <MaterialCommunityIcons
-                  name={currentRank.icon}
-                  size={24}
-                  color={currentRank.color}
-                />
-                <Text style={[styles.rankText, { color: currentRank.color }]}>
-                  {currentRank.rank}
-                </Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>Words</Text>
-                <Text style={[styles.statValue, { color: theme.primary }]}>
-                  {foundWords.length}
-                </Text>
-              </View>
+        <View style={styles.statsPanel}>
+          <View style={styles.statsRow}>
+            <View style={styles.statItem}>
+              <Text style={styles.statLabel}>Score</Text>
+              <Text style={[styles.statValue, { color: theme.primary }]}>
+                {score}
+              </Text>
             </View>
-            {foundWords.length > 0 && (
-              <View style={styles.foundWordsSection}>
-                <ScrollView style={styles.wordsScrollView}>
-                  <View style={styles.wordsContainer}>
-                    {foundWords.map((wordData, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => showWordMeaning(wordData)}
-                        style={styles.wordChip}
-                      >
-                        <Text style={styles.wordChipText}>{wordData.word}</Text>
-                        <MaterialCommunityIcons
-                          name="book-open-variant"
-                          size={12}
-                          color={theme.textOnPrimary}
-                          style={styles.bookIcon}
-                        />
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </ScrollView>
-              </View>
-            )}
+            <View style={styles.statItem}>
+              <MaterialCommunityIcons
+                name={currentRank.icon}
+                size={24}
+                color={currentRank.color}
+              />
+              <Text style={[styles.rankText, { color: currentRank.color }]}>
+                {currentRank.rank}
+              </Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statLabel}>Words</Text>
+              <Text style={[styles.statValue, { color: theme.primary }]}>
+                {foundWords.length}
+              </Text>
+            </View>
           </View>
-          {message && (
-            <View style={styles.messagePanel}>
-              <Text style={styles.messageText}>{message}</Text>
+          {foundWords.length > 0 && (
+            <View style={styles.foundWordsSection}>
+              <ScrollView
+                contentContainerStyle={styles.wordsContainer}
+                showsVerticalScrollIndicator={false}
+              >
+                {foundWords.map((wordData, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => showWordMeaning(wordData)}
+                    style={styles.wordChip}
+                  >
+                    <Text style={styles.wordChipText}>{wordData.word}</Text>
+                    <MaterialCommunityIcons
+                      name="book-open-variant"
+                      size={12}
+                      color={theme.textOnPrimary}
+                      style={styles.bookIcon}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
           )}
         </View>
-        <View style={styles.currentWordPanel}>
-          <Text style={styles.currentWord}>
-            {currentWord || "Start spelling..."}
-          </Text>
-        </View>
-        <View style={styles.bottomSection}>
+
+        {message && (
+          <View style={styles.messagePanel}>
+            <Text style={styles.messageText}>{message}</Text>
+          </View>
+        )}
+
+        <View style={styles.bottomContainer}>
+          <View style={styles.currentWordPanel}>
+            <Text style={styles.currentWord}>
+              {currentWord || "Start spelling..."}
+            </Text>
+          </View>
           <View style={styles.hexagonContainer}>
             <View style={styles.hexagonRow}>
               {[letters[0], letters[1]].map((letter, index) => (
@@ -577,7 +453,6 @@ const SpellingBeeGame = ({ navigation }) => {
               ))}
             </View>
           </View>
-          <View style={styles.separator} />
           <View style={styles.submitButtonRow}>
             <TouchableOpacity
               onPress={deleteLetter}
@@ -607,13 +482,50 @@ const SpellingBeeGame = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <RulesModal />
-      <MeaningModal />
+
+      <AppModal
+        visible={showRules}
+        onClose={() => setShowRules(false)}
+        title="How to Play"
+      >
+        <View style={styles.rulesContainer}>
+          <Text style={styles.ruleText}>
+            • Make words using the letters provided.
+          </Text>
+          <Text style={styles.ruleText}>
+            • Words must be at least 4 letters long.
+          </Text>
+          <Text style={styles.ruleText}>
+            • Every word must contain the center letter (red).
+          </Text>
+          <Text style={styles.ruleText}>
+            • Tap on found words to see their meanings! 📚
+          </Text>
+        </View>
+      </AppModal>
+
+      <AppModal
+        visible={showMeaningModal}
+        onClose={() => setShowMeaningModal(false)}
+        title={selectedWordMeaning?.word}
+      >
+        {selectedWordMeaning && (
+          <View>
+            {selectedWordMeaning.partOfSpeech && (
+              <Text style={styles.partOfSpeech}>
+                {selectedWordMeaning.partOfSpeech}
+              </Text>
+            )}
+            <Text style={styles.meaningText}>
+              {selectedWordMeaning.meaning}
+            </Text>
+          </View>
+        )}
+      </AppModal>
     </SafeAreaView>
   );
 };
 
-// Stylesheet remains the same as previously provided...
 const getStyles = (theme) =>
   StyleSheet.create({
     container: { flex: 1, backgroundColor: theme.background },
@@ -632,83 +544,72 @@ const getStyles = (theme) =>
     },
     mainGameContainer: {
       flex: 1,
-      padding: 12,
-      justifyContent: "space-between",
-    },
-    topSectionFlex: {
-      flex: 1,
-      alignSelf: "center",
-      width: "100%",
+      paddingHorizontal: 16,
       paddingBottom: 16,
     },
-    topControlsRow: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      alignItems: "center",
-      marginBottom: 8,
-    },
     statsPanel: {
+      flex: 1,
       borderRadius: 12,
       padding: 12,
-      marginBottom: 16,
+      marginBottom: 12,
       backgroundColor: theme.cardBackground,
       shadowColor: theme.shadowColor,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 3,
+      overflow: "hidden",
     },
     statsRow: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "space-around",
       alignItems: "center",
       marginBottom: 12,
     },
     statItem: { alignItems: "center" },
     statLabel: { fontSize: 10, opacity: 0.75, color: theme.textSecondary },
-    statValue: { fontSize: 18, fontWeight: "bold", color: theme.primary },
-    rankText: { fontSize: 14, fontWeight: "bold" },
+    statValue: { fontSize: 18, fontFamily: "nunitoBold", color: theme.primary },
+    rankText: { fontSize: 14, fontFamily: "nunitoBold" },
     foundWordsSection: {
+      flex: 1,
       borderTopWidth: 1,
-      paddingTop: 8,
+      paddingTop: 12,
       borderTopColor: theme.border,
     },
-    wordsScrollView: {},
     wordsContainer: {
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "center",
-      gap: 4,
-      paddingHorizontal: 4,
+      gap: 6,
     },
     wordChip: {
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      borderRadius: 12,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 16,
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 4,
       backgroundColor: theme.primary,
     },
     wordChipText: {
-      fontSize: 10,
-      fontWeight: "bold",
+      fontSize: 14,
+      fontFamily: "nunito",
       color: theme.textOnPrimary,
     },
-    bookIcon: { marginLeft: 4 },
+    bookIcon: { marginLeft: 5 },
     messagePanel: {
       borderRadius: 8,
-      padding: 8,
-      backgroundColor: theme.accent,
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
-      marginTop: "auto",
-      marginBottom: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      backgroundColor: theme.primary,
+      marginBottom: 12,
+      alignSelf: "center",
     },
-    messageText: { color: theme.textOnPrimary, textAlign: "center" },
+    messageText: {
+      color: theme.textOnPrimary,
+      textAlign: "center",
+      fontFamily: "nunitoBold",
+    },
+    bottomContainer: {},
     currentWordPanel: {
       borderRadius: 12,
       padding: 12,
@@ -716,65 +617,43 @@ const getStyles = (theme) =>
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: theme.cardBackground,
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
       marginBottom: 16,
     },
     currentWord: {
-      fontSize: 20,
-      fontWeight: "bold",
+      fontSize: 22,
+      fontFamily: "nunitoBold",
       letterSpacing: 2,
       color: theme.primary,
     },
-    iconButton: {
-      padding: 4,
-      borderRadius: 8,
-      backgroundColor: theme.cardBackground,
-    },
-    bottomSection: {
-      width: "100%",
-      paddingHorizontal: 12,
-      alignItems: "center",
-    },
     hexagonContainer: { alignItems: "center", marginBottom: 16 },
     hexagonRow: { flexDirection: "row", justifyContent: "center", gap: 4 },
-    separator: {
-      height: 1,
-      width: "100%",
-      marginBottom: 16,
-      backgroundColor: theme.border,
-    },
     submitButtonRow: {
       flexDirection: "row",
       width: "100%",
       justifyContent: "center",
-      gap: 8,
+      gap: 16,
     },
     backspaceButton: {
-      width: "15%",
-      borderWidth: 2,
+      width: 60,
+      height: 60,
       borderRadius: 30,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: theme.cardBackground,
-      borderColor: theme.primary,
+      borderColor: theme.border,
+      borderWidth: 1,
     },
     checkButton: {
-      paddingVertical: 12,
-      borderRadius: 12,
-      borderWidth: 1,
+      height: 60,
+      borderRadius: 30,
       justifyContent: "center",
       alignItems: "center",
       flex: 1,
       backgroundColor: theme.primary,
-      borderColor: theme.primary,
     },
     checkButtonText: {
       fontSize: 18,
-      fontWeight: "bold",
+      fontFamily: "nunitoBold",
       color: theme.textOnPrimary,
     },
     disabledButton: { opacity: 0.5 },
@@ -787,7 +666,7 @@ const getStyles = (theme) =>
       backgroundColor: "rgba(0, 0, 0, 0.6)",
       justifyContent: "center",
       alignItems: "center",
-      padding: 16,
+      padding: 24,
     },
     modalContent: {
       borderRadius: 16,
@@ -795,34 +674,33 @@ const getStyles = (theme) =>
       width: "100%",
       maxWidth: 350,
       backgroundColor: theme.cardBackground,
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 5,
     },
     modalHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
       marginBottom: 16,
     },
-    modalTitle: { fontSize: 20, fontWeight: "bold", color: theme.primary },
-    closeButton: {
-      padding: 4,
-      borderRadius: 4,
-      backgroundColor: theme.borderLight,
+    modalTitle: {
+      fontSize: 22,
+      fontFamily: "nunitoBold",
+      color: theme.primary,
+      textAlign: "center", // Center title now that close button is gone
     },
     rulesContainer: { gap: 12 },
-    ruleText: { fontSize: 14, color: theme.textPrimary },
+    ruleText: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimary },
     partOfSpeech: {
       fontSize: 14,
+      fontFamily: "nunito",
       fontStyle: "italic",
       marginBottom: 8,
       textTransform: "capitalize",
       color: theme.primary,
+      opacity: 0.8,
     },
-    meaningText: { fontSize: 16, lineHeight: 22, color: theme.textPrimary },
+    meaningText: {
+      fontSize: 16,
+      lineHeight: 24,
+      fontFamily: "nunito",
+      color: theme.textPrimary,
+    },
   });
 
 export default SpellingBeeGame;

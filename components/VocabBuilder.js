@@ -21,13 +21,11 @@ const VocabBuilder = ({ navigation }) => {
   const { theme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
-  // Data fetching state
+  // All state and functions remain the same...
   const [wordCategories, setWordCategories] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gameStatus, setGameStatus] = useState("loading");
-
-  // Game state
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentWord, setCurrentWord] = useState("");
   const [currentHint, setCurrentHint] = useState("");
@@ -36,10 +34,8 @@ const VocabBuilder = ({ navigation }) => {
   const [score, setScore] = useState(0);
   const [showMessage, setShowMessage] = useState("");
   const [usedWords, setUsedWords] = useState([]);
-
   const maxWrongGuesses = 6;
 
-  // Set up the real-time listener
   useEffect(() => {
     const unsubscribe = listenToVocabGameData(
       (data) => {
@@ -58,52 +54,22 @@ const VocabBuilder = ({ navigation }) => {
         setGameStatus("error");
       }
     );
-
-    // Cleanup: detach the listener when the component unmounts
     return () => unsubscribe();
-  }, [gameStatus]); // Rerun if gameStatus changes from loading/error
-
-  // Fetch all game data on component mount
-  const loadGameData = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await fetchVocabGameData();
-      setWordCategories(data);
-      setGameStatus("category-select");
-    } catch (err) {
-      setError(err.message);
-      setGameStatus("error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadGameData();
-  }, []);
+  }, [gameStatus]);
 
   useFocusEffect(
     useCallback(() => {
-      // Get the parent navigator which controls the tab bar
       const parent = navigation.getParent();
-
-      // Hide the tab bar when the game screen is focused
-      parent?.setOptions({
-        tabBarStyle: { display: "none" },
-      });
-
-      // This is the cleanup function that runs when you leave the screen
+      parent?.setOptions({ tabBarStyle: { display: "none" } });
       return () =>
         parent?.setOptions({
-          // Re-apply the correct THEMED style when showing the tab bar again
           tabBarStyle: {
-            display: "flex", // Make it visible again
-            backgroundColor: theme.tabBarBackground, // Use the theme's background color
-            borderTopColor: theme.border, // Use the theme's border color
+            display: "flex",
+            backgroundColor: theme.tabBarBackground,
+            borderTopColor: theme.border,
           },
         });
-    }, [navigation, theme]) // Add theme to the dependency array
+    }, [navigation, theme])
   );
 
   const selectCategory = (categoryKey) => {
@@ -122,13 +88,11 @@ const VocabBuilder = ({ navigation }) => {
     const availableWords = category.words.filter(
       (w) => !usedWords.includes(w.word)
     );
-
     if (availableWords.length === 0) {
       setGameStatus("category-complete");
       setShowMessage(`🎉 Amazing! You completed all ${category.name} words!`);
       return;
     }
-
     const randomWord =
       availableWords[Math.floor(Math.random() * availableWords.length)];
     setCurrentWord(randomWord.word);
@@ -147,10 +111,8 @@ const VocabBuilder = ({ navigation }) => {
 
   const guessLetter = (letter) => {
     if (guessedLetters.includes(letter) || gameStatus !== "playing") return;
-
     const newGuessedLetters = [...guessedLetters, letter];
     setGuessedLetters(newGuessedLetters);
-
     if (!currentWord.includes(letter)) {
       const newWrongGuesses = wrongGuesses + 1;
       setWrongGuesses(newWrongGuesses);
@@ -167,7 +129,6 @@ const VocabBuilder = ({ navigation }) => {
         setScore(score + 1);
         setUsedWords([...usedWords, currentWord]);
         setShowMessage(`🎉 Correct! It was ${currentWord}!`);
-        // We are not awarding points to Firebase for now, as requested
       }
     }
   };
@@ -177,13 +138,13 @@ const VocabBuilder = ({ navigation }) => {
       .split("")
       .map((letter) => (guessedLetters.includes(letter) ? letter : "_"))
       .join(" ");
+
   const getRescueCharacter = () => {
     const progress = Math.max(0, maxWrongGuesses - wrongGuesses);
     const characters = ["😵", "😰", "😟", "😐", "🙂", "😊", "🤗"];
     return characters[progress] || "😵";
   };
 
-  // --- RENDER STATES ---
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -194,13 +155,11 @@ const VocabBuilder = ({ navigation }) => {
       </SafeAreaView>
     );
   }
-
   if (error) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
           <Text style={styles.errorText}>{error}</Text>
-          {/* No retry button needed as listener will retry automatically */}
         </View>
       </SafeAreaView>
     );
@@ -267,7 +226,7 @@ const VocabBuilder = ({ navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <View style={styles.header}>
+          <View style={styles.statsContainer}>
             <Text style={styles.title}>🧠 Word Learning</Text>
             <Text style={styles.score}>Words Learned: {score}</Text>
           </View>
@@ -281,9 +240,9 @@ const VocabBuilder = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.topSection}>
-          <View style={styles.header}>
+          <View style={styles.statsContainer}>
             <Text style={styles.title}>
-              🧠 {wordCategories[selectedCategory]?.name}
+              {wordCategories[selectedCategory]?.name}
             </Text>
             <Text style={styles.score}>Words Learned: {score}</Text>
           </View>
@@ -398,10 +357,10 @@ const getStyles = (theme) =>
       alignItems: "center",
       paddingBottom: 10,
     },
-    header: {
+    statsContainer: {
       alignItems: "center",
       marginBottom: 15,
-      paddingTop: 5,
+      paddingTop: 15,
     },
     title: {
       fontSize: 26,

@@ -5,9 +5,7 @@ import {
   Text,
   StyleSheet,
   Button,
-  Linking,
   TouchableOpacity,
-  Alert,
   FlatList,
 } from "react-native";
 import {
