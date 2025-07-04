@@ -2,7 +2,7 @@
 
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import QuestScreen from "../screens/QuestScreen"; // Adjust path if needed
+import QuestScreen from "../screens/quest/QuestScreen"; // Adjust path if needed
 import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
 
 // Import your existing game/quiz screens here
