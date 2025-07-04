@@ -8,6 +8,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import StudyNavigator from "./StudyNavigator";
 import HomeNavigator from "./HomeNavigator";
 import ProfileNavigator from "./ProfileNavigator";
+import QuestNavigator from "./QuestNavigator";
 import { useTheme } from "../context/ThemeContext"; // <<< KEEP THIS
 import StatsScreen from "../screens/quiz/StatsScreen";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -52,16 +53,23 @@ function BottomTabNavigator({
           let iconName;
           // Determine icon based on route name (ensure names match Tab.Screen names)
           if (route.name === "Apprec8") {
-            // Changed from 'HomeTab'/'HomeRoot' to match actual Screen name
             iconName = focused ? "home" : "home-outline";
+            return <Ionicons name={iconName} size={size} color={color} />;
           } else if (route.name === "Study") {
-            // Changed from 'StudyTab'/'StudyRoot'
             iconName = focused ? "book" : "book-outline";
+            return <Ionicons name={iconName} size={size} color={color} />;
           } else if (route.name === "Profile") {
-            // Changed from 'ProfileTab'/'ProfileRoot'
             iconName = focused ? "person-circle" : "person-circle-outline";
+            return <Ionicons name={iconName} size={size} color={color} />;
+          } else if (route.name === "Quest") {
+            // <<< 2. ADD icon logic for the new tab
+            iconName = focused ? "map" : "map-outline";
+            return <Ionicons name={iconName} size={size} color={color} />;
+          } else if (route.name === "Stats") {
+            return (
+              <MaterialIcons name="leaderboard" color={color} size={size} />
+            );
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
@@ -81,6 +89,13 @@ function BottomTabNavigator({
         options={{
           title: "Study", // Sets the label
           // tabBarIcon is handled in screenOptions
+        }}
+      />
+      <Tab.Screen
+        name="Quest"
+        component={QuestNavigator} // Use the new QuestNavigator
+        options={{
+          title: "Quest", // This is the label under the icon
         }}
       />
       <Tab.Screen
