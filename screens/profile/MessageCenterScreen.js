@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  Button,
+  Linking,
   SafeAreaView,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
@@ -18,20 +20,40 @@ const MessageItem = ({ item }) => {
 
   // Format the date nicely
   const receivedDate = item.receivedAt?.toDate
-    ? item.receivedAt
-        .toDate()
-        .toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })
+    ? item.receivedAt.toDate().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
     : "Just now";
+
+  const handleActionPress = () => {
+    if (item.actionUrl) {
+      Linking.canOpenURL(item.actionUrl).then((supported) => {
+        if (supported) {
+          Linking.openURL(item.actionUrl);
+        } else {
+          console.log(`Don't know how to open this URL: ${item.actionUrl}`);
+        }
+      });
+    }
+  };
 
   return (
     <View style={styles.messageCard}>
       <Text style={styles.messageTitle}>{item.title}</Text>
       <Text style={styles.messageBody}>{item.body}</Text>
-      <Text style={styles.messageDate}>{receivedDate}</Text>
+      {item.actionUrl ? (
+        <View style={styles.actionButtonContainer}>
+          <Button
+            title={item.primaryButton?.text || "Check it out"}
+            onPress={handleActionPress}
+            color={theme.primary}
+          />
+        </View>
+      ) : (
+        <Text style={styles.messageDate}>{receivedDate}</Text>
+      )}
     </View>
   );
 };
@@ -155,6 +177,10 @@ const getStyles = (theme) =>
       color: theme.textSecondary,
       textAlign: "right",
       fontStyle: "italic",
+    },
+    actionButtonContainer: {
+      marginTop: 10,
+      alignItems: "flex-start",
     },
   });
 

@@ -22,7 +22,7 @@ export const useInAppMessaging = () => {
   const [messageToShow, setMessageToShow] = useState(null);
   const [updateUrl, setUpdateUrl] = useState(""); // State to hold the correct update URL
 
-  const saveMessageToInbox = async (message) => {
+  const saveMessageToInbox = async (message, urlToSave) => {
     const userId = authInstance.currentUser?.uid;
     if (!userId || !message.messageId) return;
 
@@ -39,6 +39,7 @@ export const useInAppMessaging = () => {
 
       const messageForDb = {
         ...message,
+        actionUrl: urlToSave || "", // Add the action URL here
         isRead: false,
         receivedAt: serverTimestamp(),
         expireAt: Timestamp.fromDate(expirationDate),
@@ -124,7 +125,7 @@ export const useInAppMessaging = () => {
             : [];
 
           if (!seenMessages.includes(message.messageId)) {
-            await saveMessageToInbox(message);
+            await saveMessageToInbox(message, platformUpdateUrl);
             setMessageToShow(message);
           } else {
             console.log(`Message ${message.messageId} has already been seen.`);
