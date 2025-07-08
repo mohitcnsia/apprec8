@@ -1,5 +1,7 @@
+// src/hooks/useQuizEngine.js
+
 import { useReducer, useEffect } from "react";
-import { listenToV2QuizQuestions } from "../services/firestoreContentApi"; // Adjust path if needed
+import { listenToV2QuizQuestions } from "../services/firestoreContentApi"; // Adjust path
 
 /**
  * A helper function to shuffle an array.
@@ -54,10 +56,11 @@ function quizReducer(state, action) {
     case "FETCH_ERROR":
       return { ...state, status: "error", error: action.payload };
     case "START_QUIZ":
+      return { ...state, status: "answering" };
     case "RESTART_QUIZ":
       return {
         ...initialState,
-        status: "answering",
+        status: "ready",
         questions: state.questions,
         config: state.config,
         mode: state.mode,
@@ -120,8 +123,27 @@ function quizReducer(state, action) {
         status: "answering",
         currentIndex: action.payload.index,
       };
-    case "SUBMIT_EXAM":
-      return { ...state, status: "finished" };
+    case "SUBMIT_EXAM": {
+      // Calculate the final score for the exam based on the user's answers.
+      const finalScore = state.questions.reduce((totalScore, question) => {
+        // Find the text content of the correct option for the current question.
+        const correctAnswerContent = question.options.find(
+          (opt) => opt.isCorrect
+        )?.content;
+
+        // Check if the user's answer for this question matches the correct answer.
+        if (state.userAnswers[question.id] === correctAnswerContent) {
+          // If correct, add the question's star value (or a default of 10) to the score.
+          return totalScore + (question.stars || 10);
+        }
+
+        // Otherwise, keep the score as is.
+        return totalScore;
+      }, 0); // Start the calculation with an initial score of 0.
+
+      // Return the new state, updating the status and the calculated score.
+      return { ...state, status: "finished", score: finalScore };
+    }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }

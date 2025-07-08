@@ -1,4 +1,8 @@
-import React, { useEffect, useMemo, useRef } from "react";
+/**
+ * All necessary imports for the component.
+ * Make sure useState is included from 'react'.
+ */
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,7 +19,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-// --- Import the new hook and custom components ---
 import { useQuizEngine } from "../../hooks/useQuizEngine";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
@@ -32,17 +35,26 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const C = theme.appColors || theme;
   const { quiz, mode } = route.params;
 
-  // All complex logic is now handled by this single hook
   const { state, dispatch } = useQuizEngine(quiz, mode);
   const { status, questions, error, currentIndex } = state;
 
-  const confettiRef = useRef(null);
+  // --- START OF REVISED FIX ---
 
+  // 1. Declare the state variable to manage confetti visibility.
+  // The previous error "Property 'isConfettiVisible' doesn't exist" happens
+  // if this line is missing or misplaced.
+  const [isConfettiVisible, setConfettiVisible] = useState(false);
+
+  // 2. Use a single, clean effect.
+  // When the quiz status changes to 'finished', this hook will trigger a
+  // re-render to show the confetti animation.
   useEffect(() => {
     if (status === "finished") {
-      confettiRef.current?.play();
+      setConfettiVisible(true);
     }
   }, [status]);
+
+  // --- END OF REVISED FIX ---
 
   const handleContinueToExplanation = () => {
     const currentQuestion = questions[currentIndex];
@@ -60,6 +72,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
+        container: { flex: 1 },
         centered: {
           flex: 1,
           justifyContent: "center",
@@ -72,12 +85,8 @@ const QuizScreenV2 = ({ route, navigation }) => {
           textAlign: "center",
           marginBottom: 15,
         },
-        quizContainer: {
-          flexGrow: 1,
-          padding: 15,
-          paddingTop: 60,
-          paddingBottom: 120,
-        },
+        scrollableContainer: { flex: 1 },
+        scrollContent: { flexGrow: 1, padding: 15, paddingTop: 60 },
         footer: { padding: 15, paddingTop: 5, backgroundColor: "transparent" },
         progressText: {
           color: C.textOnPrimary || "white",
@@ -155,7 +164,6 @@ const QuizScreenV2 = ({ route, navigation }) => {
   );
 
   const renderContent = () => {
-    // This function is now much cleaner, only responsible for UI
     const currentQuestion = questions[currentIndex];
     switch (status) {
       case "loading":
@@ -200,8 +208,11 @@ const QuizScreenV2 = ({ route, navigation }) => {
           currentQuestion.id
         );
         return (
-          <View style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={styles.quizContainer}>
+          <View style={styles.scrollableContainer}>
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={styles.scrollContent}
+            >
               <Text style={styles.progressText}>
                 Question {currentIndex + 1} of {questions.length}
               </Text>
@@ -269,7 +280,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
       }
       case "reviewing": {
         return (
-          <ScrollView contentContainerStyle={styles.quizContainer}>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
             <Text style={styles.progressText}>Review Your Answers</Text>
             {questions.map((q, index) => {
               const isMarked = state.markedForReview.includes(q.id);
@@ -371,15 +382,25 @@ const QuizScreenV2 = ({ route, navigation }) => {
       style={{ flex: 1 }}
     >
       {renderContent()}
-      {status === "finished" && (
+
+      {/* --- START OF REVISED FIX --- */}
+      {/* 3. Conditionally render the LottieView and use its props to control behavior.
+           - `autoPlay={true}` will start the animation as soon as it's rendered.
+           - `onAnimationFinish` will hide the component after it plays,
+             preventing it from blocking the buttons.
+      */}
+      {isConfettiVisible && (
         <LottieView
-          ref={confettiRef}
           source={require("../../assets/animations/confetti.json")}
+          autoPlay={true}
           loop={false}
-          autoPlay={false}
           style={styles.lottieOverlay}
+          onAnimationFinish={() => {
+            setConfettiVisible(false);
+          }}
         />
       )}
+      {/* --- END OF REVISED FIX --- */}
     </LinearGradient>
   );
 };
