@@ -400,3 +400,103 @@ export const listenToUserDocument = (onResult, onError) => {
   );
   return unsubscribe;
 };
+
+/**
+ * Sets up a real-time listener for V2 quiz questions linked to a specific quiz ID.
+ * Fetches documents from the 'questions' collection where 'quizId' matches.
+ * This function is designed for the V2 quiz schema.
+ *
+ * @param {string} quizId - The ID of the quiz document in the 'quizzes' collection.
+ * @param {(questions: Array<object>) => void} onUpdate - Callback invoked with the array of questions.
+ * @param {(error: Error) => void} onError - Callback invoked on listener error.
+ * @returns {() => void} An unsubscribe function to detach the listener.
+ */
+export const listenToV2QuizQuestions = (quizId, onUpdate, onError) => {
+  console.log(
+    `LISTENER: Setting up for V2 quiz questions for quizId: ${quizId}`
+  );
+  // Validate input
+  if (!quizId || typeof quizId !== "string") {
+    console.error("listenToV2QuizQuestions: Invalid quizId provided.");
+    if (typeof onError === "function") {
+      onError(new Error("Invalid ID for fetching V2 quiz questions."));
+    }
+    return () => {};
+  }
+
+  // Use the modular syntax, consistent with the rest of the file
+  const questionsCollectionRef = collection(db, "questions");
+  const q = query(questionsCollectionRef, where("quizId", "==", quizId));
+
+  const unsubscribe = onSnapshot(
+    q,
+    (querySnapshot) => {
+      console.log(
+        `LISTENER CALLBACK (Success): listenToV2QuizQuestions for quiz ${quizId} received snapshot. Size: ${querySnapshot.size}`
+      );
+      if (querySnapshot.empty) {
+        onUpdate([]);
+        return;
+      }
+      const fetchedQuestions = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      if (typeof onUpdate === "function") {
+        onUpdate(fetchedQuestions);
+      }
+    },
+    (error) => {
+      console.error(
+        `LISTENER CALLBACK (Error): listenToV2QuizQuestions for quiz ${quizId} FAILED.`,
+        error
+      );
+      if (typeof onError === "function") {
+        onError(error);
+      }
+    }
+  );
+
+  return unsubscribe; // Return the cleanup function
+};
+
+/**
+ * Listens to a single quiz attempt document for the current user.
+ * This provides real-time updates on their mastery level, high score, etc. for one quiz.
+ *
+ * @param {string} quizId - The ID of the quiz to get the user's progress for.
+ * @param {(attempt: object | null) => void} onData - Callback with the attempt data or null if it doesn't exist.
+ * @param {(error: Error) => void} onError - Callback for any errors.
+ * @returns {() => void} An unsubscribe function to detach the listener.
+ */
+export const listenToUserQuizAttempt = (quizId, onData, onError) => {
+  const currentUser = authInstance.currentUser;
+  if (!currentUser) {
+    const err = new Error("No authenticated user found.");
+    console.error("listenToUserQuizAttempt:", err);
+    onError(err);
+    return () => {};
+  }
+
+  const docRef = doc(db, "users", currentUser.uid, "quizAttempts", quizId);
+
+  const unsubscribe = onSnapshot(
+    docRef,
+    (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        onData({ id: docSnapshot.id, ...docSnapshot.data() });
+      } else {
+        // It's not an error if a user hasn't attempted a quiz yet.
+        onData(null);
+      }
+    },
+    (error) => {
+      console.error(`LISTENER ERROR: User quiz attempt for ${quizId}:`, error);
+      if (typeof onError === "function") {
+        onError(error);
+      }
+    }
+  );
+
+  return unsubscribe;
+};

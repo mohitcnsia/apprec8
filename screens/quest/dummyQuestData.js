@@ -40,5 +40,6 @@ export const questData = [
     type: "Quiz",
     status: "unlocked", // 'completed', 'unlocked', 'locked'
     title: "Alphabet Master",
+    quizId: "alphabet_quiz_01",
   },
 ];

@@ -161,24 +161,40 @@ const QuestScreen = () => {
     setShowConfetti(true);
     animation.current?.play(0);
   };
-  const handleNodePress = (item) => {
-    if (item.status !== "unlocked") return;
-    // NOTE: Your completion logic needs to be reversed as well.
-    // Completing "Alphabet Master" (index 6) should unlock "Listen & Spell" (index 5).
-    const updatedData = [...questData];
-    const completedIndex = updatedData.findIndex((q) => q.id === item.id);
 
-    if (completedIndex !== -1) {
-      updatedData[completedIndex].status = "completed";
-      // Unlock the previous item in the array if it exists
-      if (completedIndex > 0) {
-        updatedData[completedIndex - 1].status = "unlocked";
-      }
+  const handleNodePress = (item) => {
+    // A node must be unlocked to be interactive
+    if (item.status !== "unlocked") {
+      console.log(`Node "${item.title}" is locked.`);
+      return;
     }
 
-    setQuestData(updatedData);
-    setShowConfetti(true);
-    animation.current?.play(0);
+    // Check if the pressed node is a Quiz and has a quizId
+    if (item.type === "Quiz" && item.quizId) {
+      console.log(`Navigating to Quiz: ${item.title}`);
+
+      // Navigate to our new details screen
+      navigation.navigate("QuizDetails", {
+        // <-- CHANGE THIS
+        quiz: {
+          id: item.quizId,
+          title: item.title,
+          description: item.description || `A quiz about ${item.title}.`, // Pass a description
+          config: item.config || {
+            shuffleQuestions: true,
+            shuffleOptions: true,
+          },
+        },
+      });
+    } else {
+      // Handle other activity types here in the future
+      alert(
+        `Activity "${item.title}" of type "${item.type}" is not ready yet.`
+      );
+
+      // For testing, we can keep the old logic to see the map update
+      // handleActivityCompletion(item.id);
+    }
   };
 
   const getNodeStyles = (status, itemType) => {

@@ -1,57 +1,56 @@
-// navigation/BottomTabNavigator.js
-
-import React from "react"; // Import React
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import { NavigationContainer } from "@react-navigation/native"; // <<< REMOVE THIS LINE
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native"; // <-- IMPORT THIS HELPER
 import Ionicons from "@expo/vector-icons/Ionicons";
-// import { Colors } from "../config/colors"; // <<< REMOVE THIS LINE
-import StudyNavigator from "./StudyNavigator";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import HomeNavigator from "./HomeNavigator";
+import StudyNavigator from "./StudyNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
-import { useTheme } from "../context/ThemeContext"; // <<< KEEP THIS
 import StatsScreen from "../screens/quiz/StatsScreen";
-import { MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
 const Tab = createBottomTabNavigator();
 
-// Props received from AppContent (remain the same)
 function BottomTabNavigator({
   isGuest,
   signoutHandler,
   exitGuestModeHandler,
   user,
 }) {
-  const { theme } = useTheme(); // Get theme object
+  const { theme } = useTheme();
 
   return (
-    // <<< REMOVE NavigationContainer wrapper >>>
-    // <NavigationContainer>
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        // Use function form to access route
-        headerShown: false, // Keep headers hidden for tabs
-        // --- CORRECTED Tab Bar Styling ---
-        tabBarStyle: {
-          backgroundColor: theme.tabBarBackground, // Use specific theme key
-          borderTopColor: theme.border || "transparent", // Use theme border color (or transparent)
-          // Add other styles like height if needed
-        },
-        tabBarActiveTintColor: theme.tabBarActiveTint, // Use specific theme key
-        tabBarInactiveTintColor: theme.tabBarInactiveTint, // Use specific theme key
-        // --- End Corrected Tab Bar Styling ---
-
-        // Scene background (keep this)
+        headerShown: false,
+        tabBarActiveTintColor: theme.tabBarActiveTint,
+        tabBarInactiveTintColor: theme.tabBarInactiveTint,
         sceneContainerStyle: { backgroundColor: theme.background },
 
-        // --- Optional: Remove or theme unused header styles ---
-        // headerStyle: { backgroundColor: theme.headerBackground }, // Example if header shown
-        // headerTintColor: theme.headerTint, // Example if header shown
-        // --- End Optional ---
+        // This is the core logic that will be applied to ALL tabs
+        tabBarStyle: ((route) => {
+          // This function checks the active screen inside a navigator
+          const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+
+          // List of screens where the tab bar should be HIDDEN
+          const immersiveScreens = ["QuizDetails", "QuizV2"];
+
+          // If the current screen is in our immersive list, hide the tab bar
+          if (immersiveScreens.includes(routeName)) {
+            return { display: "none" };
+          }
+
+          // Otherwise, show it with the normal theme styles
+          return {
+            backgroundColor: theme.tabBarBackground,
+            borderTopColor: theme.border || "transparent",
+          };
+        })(route), // Immediately invoke the function with the route
 
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          // Determine icon based on route name (ensure names match Tab.Screen names)
           if (route.name === "Apprec8") {
             iconName = focused ? "home" : "home-outline";
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -62,7 +61,6 @@ function BottomTabNavigator({
             iconName = focused ? "person-circle" : "person-circle-outline";
             return <Ionicons name={iconName} size={size} color={color} />;
           } else if (route.name === "Quest") {
-            // <<< 2. ADD icon logic for the new tab
             iconName = focused ? "map" : "map-outline";
             return <Ionicons name={iconName} size={size} color={color} />;
           } else if (route.name === "Stats") {
@@ -73,51 +71,30 @@ function BottomTabNavigator({
         },
       })}
     >
-      {/* Home Tab */}
       <Tab.Screen
-        name="Apprec8" // Ensure this name is used in tabBarIcon logic
+        name="Apprec8"
         component={HomeNavigator}
-        options={{
-          title: "Home", // Sets the label below the icon
-          // tabBarIcon is handled in screenOptions
-        }}
+        options={{ title: "Home" }}
       />
-      {/* Study Tab */}
       <Tab.Screen
-        name="Study" // Ensure this name is used in tabBarIcon logic
+        name="Study"
         component={StudyNavigator}
-        options={{
-          title: "Study", // Sets the label
-          // tabBarIcon is handled in screenOptions
-        }}
+        options={{ title: "Study" }}
       />
+
+      {/* The Quest tab no longer needs a custom options prop, as it's handled in screenOptions */}
       <Tab.Screen
         name="Quest"
-        component={QuestNavigator} // Use the new QuestNavigator
-        options={{
-          title: "Quest", // This is the label under the icon
-        }}
+        component={QuestNavigator}
+        options={{ title: "Quest" }}
       />
+
       <Tab.Screen
         name="Stats"
-        component={StatsScreen} // Use the placeholder StatsScreen
-        // initialParams={{ title: "Leaderboard" }} // Not needed for placeholder
-        options={{
-          title: "Stats", // Or "Leaderboard"
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="leaderboard" color={color} size={size} />
-          ),
-        }}
+        component={StatsScreen}
+        options={{ title: "Stats" }}
       />
-      {/* Profile Tab */}
-      <Tab.Screen
-        name="Profile" // Ensure this name is used in tabBarIcon logic
-        options={{
-          title: "Profile", // Sets the label
-          // tabBarIcon is handled in screenOptions
-        }}
-        // Children function to pass props (this part is correct)
-      >
+      <Tab.Screen name="Profile" options={{ title: "Profile" }}>
         {() => (
           <ProfileNavigator
             isGuest={isGuest}
@@ -127,7 +104,6 @@ function BottomTabNavigator({
         )}
       </Tab.Screen>
     </Tab.Navigator>
-    // </NavigationContainer> // <<< REMOVE NavigationContainer wrapper >>>
   );
 }
 
