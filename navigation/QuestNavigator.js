@@ -10,6 +10,7 @@ import QuestScreen from "../screens/quest/QuestScreen";
 import QuizDetailsScreen from "../screens/quiz/QuizDetailsScreen";
 import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
 import ExplanationScreen from "../screens/quiz/ExplanationScreen";
+import ResultsScreen from "../screens/common/ResultsScreen";
 
 const Stack = createStackNavigator();
 
@@ -37,8 +38,9 @@ const QuestNavigator = () => {
     >
       <Stack.Screen name="QuestMap" component={QuestScreen} />
       <Stack.Screen name="QuizDetails" component={QuizDetailsScreen} />
-      <Stack.Screen name="QuizV2" component={QuizScreenV2} />
+      <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} />
       <Stack.Screen name="Explanation" component={ExplanationScreen} />
+      <Stack.Screen name="ResultsScreen" component={ResultsScreen} />
     </Stack.Navigator>
   );
 };

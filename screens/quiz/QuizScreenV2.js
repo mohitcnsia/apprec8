@@ -1,71 +1,95 @@
 /**
- * All necessary imports for the component.
- * Make sure useState is included from 'react'.
+ * @file QuizScreenV2.js
+ * @description The main UI for the V2 Quiz. It now passes final score data
+ * to the generic ResultsScreen and lets it handle the UI logic.
  */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   View,
   StyleSheet,
   Text,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
-import {
-  ActivityIndicator as PaperActivityIndicator,
-  Button as PaperButton,
-} from "react-native-paper";
+import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import LottieView from "lottie-react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import { useTheme } from "../../context/ThemeContext";
 import { useQuizEngine } from "../../hooks/useQuizEngine";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 
-/**
- * The main UI component for the V2 Quiz experience.
- * It uses the useQuizEngine hook to manage state and focuses only on rendering.
- * @param {object} props
- * @param {object} props.route - React Navigation route object.
- * @param {object} props.navigation - React Navigation navigation object.
- */
 const QuizScreenV2 = ({ route, navigation }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
   const { quiz, mode } = route.params;
 
   const { state, dispatch } = useQuizEngine(quiz, mode);
-  const { status, questions, error, currentIndex } = state;
+  const { status, questions, error, currentIndex, score } = state;
 
-  // --- START OF REVISED FIX ---
-
-  // 1. Declare the state variable to manage confetti visibility.
-  // The previous error "Property 'isConfettiVisible' doesn't exist" happens
-  // if this line is missing or misplaced.
-  const [isConfettiVisible, setConfettiVisible] = useState(false);
-
-  // 2. Use a single, clean effect.
-  // When the quiz status changes to 'finished', this hook will trigger a
-  // re-render to show the confetti animation.
   useEffect(() => {
     if (status === "finished") {
-      setConfettiVisible(true);
-    }
-  }, [status]);
+      const maxPossibleScore = questions.reduce(
+        (sum, q) => sum + (q.stars || 10),
+        0
+      );
+      const isPerfectScore = maxPossibleScore > 0 && score === maxPossibleScore;
 
-  // --- END OF REVISED FIX ---
+      const resultParams = {
+        title: "Quiz Complete!",
+        message: "Great effort, {username}!",
+        finalScore: score,
+        maxPossibleScore: maxPossibleScore,
+        metrics: [
+          {
+            label: "Final Score",
+            value: `${score} / ${maxPossibleScore} Stars`,
+          },
+        ],
+        actions: [
+          {
+            label: "Play Again",
+            onPress: () => navigation.replace("QuizScreenV2", { quiz, mode }),
+            mode: "contained",
+          },
+          {
+            label: "Exit",
+            onPress: () => navigation.popToTop(),
+            mode: "outlined",
+          },
+        ],
+        effects: { confetti: isPerfectScore },
+        submissionContext: {
+          // UnComment this
+          // cloudFunctionName: "recordQuizResult",
+          /// And delete this///
+          cloudFunctionName: "DelteMeLater",
+          ///////
+          payload: {
+            quizId: quiz.id,
+            scoreAchieved: score,
+            maxScore: maxPossibleScore,
+            mode,
+            passingScore: 0,
+          },
+        },
+        feedbackContext: { type: "quiz_v2_overall", id: quiz.id },
+      };
+
+      navigation.replace("ResultsScreen", resultParams);
+    }
+  }, [status, navigation, questions, score, quiz, mode]);
 
   const handleContinueToExplanation = () => {
     const currentQuestion = questions[currentIndex];
     const isLastQuestion = currentIndex === questions.length - 1;
-    // Navigate to the explanation screen
     navigation.navigate("Explanation", {
       explanation: currentQuestion.explanation,
       isCorrect: state.wasCorrect,
       isLastQuestion: isLastQuestion,
     });
-    // Dispatch the action to advance the quiz state *after* navigating
     dispatch({ type: "NEXT_QUESTION" });
   };
 
@@ -94,24 +118,6 @@ const QuizScreenV2 = ({ route, navigation }) => {
           textAlign: "center",
           marginBottom: 15,
           fontFamily: "nunitoBold",
-        },
-        resultsContainer: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 20,
-        },
-        resultsTitle: {
-          fontSize: 24,
-          fontFamily: "nunitoBold",
-          color: C.textOnPrimary || "white",
-          marginBottom: 20,
-        },
-        resultsText: {
-          fontSize: 18,
-          fontFamily: "nunito",
-          color: C.textOnPrimary || "white",
-          marginBottom: 10,
         },
         reviewItem: {
           padding: 15,
@@ -150,15 +156,6 @@ const QuizScreenV2 = ({ route, navigation }) => {
           zIndex: 1,
           padding: 5,
         },
-        lottieOverlay: {
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          top: 0,
-          left: 0,
-          zIndex: 10,
-          pointerEvents: "none",
-        },
       }),
     [C]
   );
@@ -179,7 +176,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
         return (
           <View style={styles.centered}>
             {status === "loading" && (
-              <PaperActivityIndicator
+              <ActivityIndicator
                 animating={true}
                 size="large"
                 color="#FFFFFF"
@@ -348,31 +345,12 @@ const QuizScreenV2 = ({ route, navigation }) => {
           </ScrollView>
         );
       }
-      case "finished": {
+      default:
         return (
-          <View style={styles.resultsContainer}>
-            <Text style={styles.resultsTitle}>Quiz Complete!</Text>
-            <Text style={styles.resultsText}>Your Score: {state.score}</Text>
-            <PaperButton
-              mode="contained"
-              style={{ marginTop: 20 }}
-              onPress={() => dispatch({ type: "RESTART_QUIZ" })}
-            >
-              Play Again
-            </PaperButton>
-            <PaperButton
-              mode="text"
-              style={{ marginTop: 10 }}
-              labelStyle={{ color: "white" }}
-              onPress={() => navigation.popToTop()}
-            >
-              Finish
-            </PaperButton>
+          <View style={styles.centered}>
+            <ActivityIndicator animating={true} size="large" color="#FFFFFF" />
           </View>
         );
-      }
-      default:
-        return null;
     }
   };
 
@@ -382,25 +360,6 @@ const QuizScreenV2 = ({ route, navigation }) => {
       style={{ flex: 1 }}
     >
       {renderContent()}
-
-      {/* --- START OF REVISED FIX --- */}
-      {/* 3. Conditionally render the LottieView and use its props to control behavior.
-           - `autoPlay={true}` will start the animation as soon as it's rendered.
-           - `onAnimationFinish` will hide the component after it plays,
-             preventing it from blocking the buttons.
-      */}
-      {isConfettiVisible && (
-        <LottieView
-          source={require("../../assets/animations/confetti.json")}
-          autoPlay={true}
-          loop={false}
-          style={styles.lottieOverlay}
-          onAnimationFinish={() => {
-            setConfettiVisible(false);
-          }}
-        />
-      )}
-      {/* --- END OF REVISED FIX --- */}
     </LinearGradient>
   );
 };

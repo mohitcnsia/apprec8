@@ -126,20 +126,14 @@ function quizReducer(state, action) {
     case "SUBMIT_EXAM": {
       // Calculate the final score for the exam based on the user's answers.
       const finalScore = state.questions.reduce((totalScore, question) => {
-        // Find the text content of the correct option for the current question.
         const correctAnswerContent = question.options.find(
           (opt) => opt.isCorrect
         )?.content;
-
-        // Check if the user's answer for this question matches the correct answer.
         if (state.userAnswers[question.id] === correctAnswerContent) {
-          // If correct, add the question's star value (or a default of 10) to the score.
           return totalScore + (question.stars || 10);
         }
-
-        // Otherwise, keep the score as is.
         return totalScore;
-      }, 0); // Start the calculation with an initial score of 0.
+      }, 0);
 
       // Return the new state, updating the status and the calculated score.
       return { ...state, status: "finished", score: finalScore };

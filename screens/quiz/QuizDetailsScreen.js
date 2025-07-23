@@ -45,7 +45,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
   }, [quiz.id]);
 
   const onStartQuiz = (mode) => {
-    navigation.navigate("QuizV2", {
+    navigation.navigate("QuizScreenV2", {
       quiz: quiz,
       mode: mode,
     });
