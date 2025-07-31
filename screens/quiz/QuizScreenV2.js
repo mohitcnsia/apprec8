@@ -29,6 +29,16 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const { state, dispatch } = useQuizEngine(quiz, mode);
   const { status, questions, error, currentIndex, score } = state;
 
+  /**
+   * DOCUMENTATION:
+   * This hook runs when the quiz engine's status changes.
+   * When the status becomes "finished", we prepare the data for the ResultsScreen.
+   *
+   * THE CHANGE:
+   * The "Exit" button's onPress action is modified. Instead of just going back,
+   * it now navigates specifically to "QuestMap" and passes a parameter
+   * called `completedQuizId`. This is the signal the Quest Map will listen for.
+   */
   useEffect(() => {
     if (status === "finished") {
       const maxPossibleScore = questions.reduce(
@@ -56,7 +66,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
           },
           {
             label: "Exit",
-            onPress: () => navigation.popToTop(),
+            onPress: () =>
+              navigation.navigate("QuestMap", {
+                completedQuizId: quiz.id,
+              }),
             mode: "outlined",
           },
         ],

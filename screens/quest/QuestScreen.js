@@ -1,3 +1,14 @@
+/**
+ * @file QuestScreen.js
+ * @description The main screen for the Duolingo-style quest map.
+ *
+ * MODIFICATIONS:
+ * 1. Imported `useRoute` hook from React Navigation to access route params.
+ * 2. Added a new `useEffect` hook that listens for `route.params.completedQuizId`.
+ * 3. When a `completedQuizId` is received, it finds the corresponding node in `questData`.
+ * 4. It then calls `handleActivityCompletion` with the NODE's ID to update the map.
+ * 5. It clears the `completedQuizId` param to prevent the effect from running again.
+ */
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import {
   ScrollView,
@@ -7,9 +18,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-// Assuming useTheme is in a file like this
-// import { useTheme } from "../../context/ThemeContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { questData as initialQuestData } from "./dummyQuestData";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Svg, Path } from "react-native-svg";
@@ -46,6 +55,7 @@ const activityIcons = {
 
 const QuestScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const { theme } = useTheme();
 
   // --- State and Refs ---
@@ -54,6 +64,53 @@ const QuestScreen = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const animation = useRef(null);
   const scrollViewRef = useRef(null);
+
+  /**
+   * DOCUMENTATION:
+   * This is the "listener" hook. It runs whenever the route parameters change.
+   * 1. It checks if the `completedQuizId` parameter exists.
+   * 2. It finds the quest node that has that `quizId`.
+   * 3. It calls our `handleActivityCompletion` function with the node's ID.
+   * 4. It clears the parameter so this logic doesn't run again by accident.
+   */
+  useEffect(() => {
+    if (route.params?.completedQuizId) {
+      const completedQuizId = route.params.completedQuizId;
+
+      const completedNode = questData.find(
+        (node) => node.quizId === completedQuizId
+      );
+
+      if (completedNode && completedNode.status !== "completed") {
+        handleActivityCompletion(completedNode.id);
+      }
+
+      navigation.setParams({ completedQuizId: null });
+    }
+  }, [route.params?.completedQuizId]);
+
+  // --- Add a useEffect to handle quiz completion ---
+  useEffect(() => {
+    // Check if the screen was navigated to with a 'completedQuizId' param.
+    if (route.params?.completedQuizId) {
+      const completedQuizId = route.params.completedQuizId;
+
+      // Find the node in our questData that corresponds to the completed quiz.
+      const completedNode = questData.find(
+        (node) => node.quizId === completedQuizId
+      );
+
+      // If we found a matching node, and it's not already completed...
+      if (completedNode && completedNode.status !== "completed") {
+        // ...call the completion handler with the NODE's ID (e.g., 'node_1').
+        handleActivityCompletion(completedNode.id);
+      }
+
+      // Important: Clear the parameter so this doesn't run again
+      // if the user leaves and returns to the screen.
+      navigation.setParams({ completedQuizId: null });
+    }
+  }, [route.params?.completedQuizId]); // Effect dependencies
 
   // --- CORRECTED DYNAMIC SVG PATH ---
   const questPath = useMemo(() => {
@@ -134,37 +191,48 @@ const QuestScreen = () => {
     }, 300);
   }, [questData, scrollViewHeight]);
 
-  // --- Functions ---
-  const handleActivityCompletion = (completedActivityId) => {
-    const updatedData = [...questData];
-    const completedIndex = updatedData.findIndex(
-      (item) => item.id === completedActivityId
-    );
+  /**
+   * DOCUMENTATION:
+   * This function handles the logic for updating the quest map.
+   * It finds the completed node by its ID, marks it as 'completed',
+   * and then finds the next node in the list to mark as 'unlocked'.
+   * Using setQuestData with a function (prevData => ...) is the safest
+   * way to update state in React.
+   */
+  const handleActivityCompletion = (completedNodeId) => {
+    setQuestData((prevData) => {
+      const updatedData = [...prevData];
+      const completedIndex = updatedData.findIndex(
+        (item) => item.id === completedNodeId
+      );
 
-    // If the completed node is found in the array
-    if (completedIndex !== -1) {
-      // 1. Mark the current quest node as 'completed'
-      updatedData[completedIndex].status = "completed";
-
-      // 2. Unlock the next quest, which is the previous item in the array (e.g., index 5 after 6)
-      if (completedIndex > 0) {
-        const nextNode = updatedData[completedIndex - 1];
-        // Ensure the next node isn't the "Coming Soon!" placeholder
-        if (nextNode.title !== "Coming Soon!") {
-          nextNode.status = "unlocked";
+      if (completedIndex !== -1) {
+        updatedData[completedIndex].status = "completed";
+        // Unlock the previous node in the array (which is the next node visually)
+        if (completedIndex > 0) {
+          const nextNodeToUnlock = updatedData[completedIndex - 1];
+          if (nextNodeToUnlock.title !== "Coming Soon!") {
+            nextNodeToUnlock.status = "unlocked";
+          }
         }
       }
-    }
+      return updatedData;
+    });
 
-    // 3. Update the state to re-render the screen
-    setQuestData(updatedData);
-    setShowConfetti(true);
+    // Trigger confetti animation
+    // setShowConfetti(true);
     animation.current?.play(0);
   };
 
+  /**
+   * DOCUMENTATION:
+   * We are changing the condition to allow interaction if a node's
+   * status is 'unlocked' OR 'completed'. This lets users replay
+   * levels they have already finished.
+   */
   const handleNodePress = (item) => {
     // A node must be unlocked to be interactive
-    if (item.status !== "unlocked") {
+    if (item.status !== "unlocked" && item.status !== "completed") {
       console.log(`Node "${item.title}" is locked.`);
       return;
     }
@@ -175,7 +243,6 @@ const QuestScreen = () => {
 
       // Navigate to our new details screen
       navigation.navigate("QuizDetails", {
-        // <-- CHANGE THIS
         quiz: {
           id: item.quizId,
           title: item.title,
@@ -287,7 +354,9 @@ const QuestScreen = () => {
             >
               <TouchableOpacity
                 style={node}
-                disabled={item.status !== "unlocked"}
+                disabled={
+                  item.status !== "unlocked" && item.status !== "completed"
+                }
                 onPress={() => handleNodePress(item)}
               >
                 {icon}
