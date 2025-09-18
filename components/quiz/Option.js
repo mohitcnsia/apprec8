@@ -1,15 +1,15 @@
 // components/quiz/Option.js
 import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+// Assuming this path is correct for your project structure
 import { useTheme } from "../../context/ThemeContext";
 
 /**
- * A reusable component to display a single quiz answer option. It handles various
- * visual states (default, selected, correct, incorrect) and can render different
- * types of content like text or images.
+ * A reusable component to display a single quiz answer option. It now supports
+ * rendering image options with a text caption underneath.
  *
  * @param {object} props - The component props.
- * @param {object} props.option - The option object from the question, e.g., `{ type: 'text', content: 'Mars', isCorrect: true }`.
+ * @param {object} props.option - The option object, e.g., `{ type, content, mediaUrl, isCorrect }`.
  * @param {function} props.onPress - The function to call when the option is pressed.
  * @param {boolean} props.isSelected - Whether this option is the one currently selected by the user.
  * @param {boolean} props.showFeedback - True if the component should display feedback styles (correct/incorrect).
@@ -27,19 +27,25 @@ const Option = ({ option, onPress, isSelected, showFeedback, isCorrect }) => {
         viewBase: {
           borderWidth: 2,
           borderRadius: 25,
-          paddingHorizontal: 15,
+          padding: 12, // Use consistent padding for both types
           justifyContent: "center",
           alignItems: "center",
           minHeight: 50,
-          paddingVertical: 12,
-          overflow: "hidden",
+          overflow: "hidden", // Ensures image corners are rounded
         },
         textBase: {
           fontSize: 16,
           fontFamily: "nunitoBold",
           textAlign: "center",
         },
-        imageContent: { width: "100%", height: 100, borderRadius: 15 },
+        // --- CHANGE 1: Renamed style and adjusted margin ---
+        image: {
+          width: "100%",
+          height: 100,
+          borderRadius: 15,
+          marginBottom: 8, // Space between image and caption
+        },
+        // --- (The rest of your dynamic styles remain the same) ---
         optionViewDefault: {
           borderColor: C.primary,
           backgroundColor: C.cardBackground,
@@ -96,6 +102,10 @@ const Option = ({ option, onPress, isSelected, showFeedback, isCorrect }) => {
 
   const { view: viewStyle, text: textStyle } = getStyle();
 
+  // It's safer to provide a fallback to prevent crashes
+  const optionType = option?.type || "text";
+  const optionContent = option?.content || "";
+
   return (
     <TouchableOpacity
       style={styles.touchable}
@@ -104,14 +114,21 @@ const Option = ({ option, onPress, isSelected, showFeedback, isCorrect }) => {
       activeOpacity={0.7}
     >
       <View style={[styles.viewBase, viewStyle]}>
-        {option.type === "image" ? (
-          <Image
-            source={{ uri: option.content }}
-            style={styles.imageContent}
-            resizeMode="contain"
-          />
+        {/* --- CHANGE 2: Updated rendering logic --- */}
+        {optionType === "image" && option.mediaUrl ? (
+          // If the option is an image, render both the Image and Text
+          <>
+            <Image
+              source={{ uri: option.mediaUrl }}
+              style={styles.image}
+              resizeMode="contain"
+            />
+            {/* Also render the text, applying the dynamic text style */}
+            <Text style={[styles.textBase, textStyle]}>{optionContent}</Text>
+          </>
         ) : (
-          <Text style={[styles.textBase, textStyle]}>{option.content}</Text>
+          // Otherwise, just render the text as before
+          <Text style={[styles.textBase, textStyle]}>{optionContent}</Text>
         )}
       </View>
     </TouchableOpacity>

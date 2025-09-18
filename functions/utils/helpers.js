@@ -52,36 +52,47 @@ function isYesterdayUTC(timestamp1, timestamp2) {
   }
 }
 
-/** Helper function to infer basic schema from a Firestore document data object. */
-function inferSchemaFromData(data) {
-  if (!data || typeof data !== "object") return null;
-  const schema = {};
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const value = data[key];
-      const type = typeof value;
+/**
+ * DOCUMENTATION:
+ * Recursively infers the schema of a given data object.
+ * - For primitive types (string, number, boolean), it returns their type name.
+ * - For an array, it infers the schema of the first element and assumes all
+ * elements in the array follow that same structure.
+ * - For an object, it iterates over its keys and recursively calls itself
+ * on each value to build a nested schema object.
+ *
+ * @param {any} data - The data (object, array, or primitive) to infer a schema from.
+ * @returns {object|string} - The inferred schema.
+ */
+const inferSchemaFromData = (data) => {
+  // --- CHANGE 1: Handle null and primitive types ---
+  if (data === null || typeof data !== "object") {
+    return typeof data;
+  }
 
-      if (value === null) {
-        schema[key] = "null";
-      } else if (type === "object") {
-        if (value instanceof admin.firestore.Timestamp) {
-          schema[key] = "Timestamp";
-        } else if (value instanceof admin.firestore.GeoPoint) {
-          schema[key] = "GeoPoint";
-        } else if (value instanceof admin.firestore.DocumentReference) {
-          schema[key] = "Reference";
-        } else if (Array.isArray(value)) {
-          schema[key] = "array";
-        } else {
-          schema[key] = "object";
-        }
-      } else {
-        schema[key] = type;
-      }
+  // --- CHANGE 2: Handle arrays ---
+  if (Array.isArray(data)) {
+    // If the array is empty, we can't know the structure of its elements.
+    if (data.length === 0) {
+      return "array (empty)";
+    }
+    // Otherwise, assume all elements have the same schema as the first one.
+    // Recursively call this function on the first element.
+    return [inferSchemaFromData(data[0])];
+  }
+
+  // --- CHANGE 3: Handle objects ---
+  const schema = {};
+  // Loop through each key in the object
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      const value = data[key];
+      // Recursively call this function for each value to handle nesting.
+      schema[key] = inferSchemaFromData(value);
     }
   }
   return schema;
-}
+};
 
 /** Helper function to count words for feedback text validation. */
 const countFeedbackWords = (str) => {

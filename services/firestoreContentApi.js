@@ -500,3 +500,48 @@ export const listenToUserQuizAttempt = (quizId, onData, onError) => {
 
   return unsubscribe;
 };
+
+/**
+ * Sets up a real-time listener for all documents in the 'quest_nodes' collection.
+ * This fetches the structure of the entire quest map.
+ * Assumes quest node documents have an 'order' field for sorting.
+ *
+ * @param {(nodes: Array<object>) => void} onDataChange - Callback invoked with the sorted array of quest nodes.
+ * @param {(error: Error) => void} onError - Callback invoked on listener error.
+ * @returns {() => void} An unsubscribe function to detach the listener.
+ */
+export function listenToQuestNodes(onDataChange, onError) {
+  console.log("LISTENER: Setting up for all quest nodes.");
+
+  // Create a query to get all documents from the 'quest_nodes' collection
+  const questNodesCollectionRef = collection(db, "quest_nodes");
+  const q = query(questNodesCollectionRef, orderBy("order", "asc")); // Sort by the 'order' field
+
+  const unsubscribe = onSnapshot(
+    q,
+    (querySnapshot) => {
+      console.log(
+        `LISTENER CALLBACK (Success): listenToQuestNodes received snapshot. Size: ${querySnapshot.size}`
+      );
+      const nodes = [];
+      querySnapshot.forEach((document) => {
+        nodes.push({ id: document.id, ...document.data() });
+      });
+
+      if (typeof onDataChange === "function") {
+        onDataChange(nodes); // Pass the sorted array of nodes
+      }
+    },
+    (error) => {
+      console.error(
+        "LISTENER CALLBACK (Error): listenToQuestNodes FAILED.",
+        error
+      );
+      if (typeof onError === "function") {
+        onError(error);
+      }
+    }
+  );
+
+  return unsubscribe; // Return the cleanup function
+}

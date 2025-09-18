@@ -2,24 +2,24 @@
 import React, { useMemo } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
+// Assuming this path is correct for your project structure
 import { useTheme } from "../../context/ThemeContext";
 
 /**
  * Renders the main content of a question (e.g., text, image) within a styled Card.
- * This component dynamically chooses the correct element to display based on the
- * 'type' field of the question content.
+ * This component now displays an image above the question text if the question's
+ * `type` is 'image' and a `mediaUrl` is provided.
  *
  * @param {object} props - The component props.
  * @param {object} props.question - The full question object from our Firestore schema.
- * It expects a `question.question` property containing the `{type, content}` object.
  * @returns {React.ReactElement} A styled card displaying the question.
  */
 const QuestionCard = ({ question }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
-  const questionContent = question.question;
+  // It's safer to provide a fallback to prevent crashes if question.question is undefined
+  const questionContent = question.question || { type: "text", content: "" };
 
-  // Memoize styles to prevent re-calculation on every render
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -32,7 +32,7 @@ const QuestionCard = ({ question }) => {
           justifyContent: "center",
           elevation: 2,
         },
-        cardContent: { padding: 15 },
+        cardContent: { padding: 15, alignItems: "center" }, // Center content
         questionText: {
           fontSize: 20,
           lineHeight: 28,
@@ -40,10 +40,12 @@ const QuestionCard = ({ question }) => {
           fontFamily: "nunitoBold",
           color: C.textPrimary,
         },
-        imageContent: {
+        // --- CHANGE 1: Renamed style for clarity and added margin ---
+        image: {
           width: "100%",
           height: 180,
           borderRadius: 8,
+          marginBottom: 15, // Add space between image and text
         },
       }),
     [C]
@@ -52,16 +54,20 @@ const QuestionCard = ({ question }) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
-        {questionContent.type === "image" ? (
+        {/* --- CHANGE 2: Updated rendering logic --- */}
+        {/* First, check if the question is an image type and has a mediaUrl */}
+        {questionContent.type === "image" && questionContent.mediaUrl && (
           <Image
-            source={{ uri: questionContent.content }}
-            style={styles.imageContent}
+            // Use the new 'mediaUrl' property for the image source
+            source={{ uri: questionContent.mediaUrl }}
+            style={styles.image}
             resizeMode="contain"
           />
-        ) : (
-          // Default to Text for 'text' or any other type
-          <Text style={styles.questionText}>{questionContent.content}</Text>
         )}
+
+        {/* The question text is now always displayed. */}
+        {/* If there's an image, it will appear below it. */}
+        <Text style={styles.questionText}>{questionContent.content}</Text>
       </Card.Content>
     </Card>
   );

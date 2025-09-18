@@ -153,19 +153,37 @@ function quizReducer(state, action) {
 export const useQuizEngine = (quiz, mode) => {
   const [state, dispatch] = useReducer(quizReducer, initialState);
 
+  /**
+   * DOCUMENTATION:
+   * This hook fetches the questions for the given quiz from Firestore.
+   *
+   * THE CHANGE:
+   * We've added a line to check for `quiz.config?.shuffleQuestions`. If it's true,
+   * we shuffle the entire `fetchedQuestions` array before processing it.
+   * This ensures the order of questions is randomized for each new attempt if the
+   * config requires it.
+   */
   useEffect(() => {
     if (!quiz?.id) {
       dispatch({ type: "FETCH_ERROR", payload: "No quiz specified." });
       return;
     }
+
     const unsubscribe = listenToV2QuizQuestions(
       quiz.id,
       (fetchedQuestions) => {
         if (fetchedQuestions?.length > 0) {
+          // --- THIS IS THE CHANGE ---
+          // First, check if the question order should be shuffled.
+          const questionsToLoad = quiz.config?.shuffleQuestions
+            ? shuffleArray(fetchedQuestions)
+            : fetchedQuestions;
+
+          // Then, dispatch the success action with the (potentially) shuffled list.
           dispatch({
             type: "FETCH_SUCCESS",
             payload: {
-              questions: fetchedQuestions.map((q) => ({
+              questions: questionsToLoad.map((q) => ({
                 ...q,
                 options: quiz.config?.shuffleOptions
                   ? shuffleArray(q.options)
