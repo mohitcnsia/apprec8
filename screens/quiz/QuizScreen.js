@@ -189,7 +189,9 @@ const QuizScreen = ({ route, navigation }) => {
             //let sQ = shuffleArray(fetchedQuestions);
             let sQ = fetchedQuestions;
             const c =
-              sQ.length < 20 ? Math.min(sQ.length, MAX_QUESTIONS) : sQ.length;
+              sQ.length < 20
+                ? Math.min(sQ.length, MAX_QUESTIONS)
+                : MAX_QUESTIONS; //sQ.length;
             const selQ = sQ.slice(0, c);
             const fQ = selQ.map((q, index) => ({
               ...q,

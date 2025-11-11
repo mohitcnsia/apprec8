@@ -6,6 +6,7 @@ const { region, runtimeOptions } = require("../common/config");
 const { isSameUTCDate, isYesterdayUTC } = require("../utils/helpers");
 
 /** V1 Callable Function: Records quiz result, calculates stats/stars/streak. */
+// functions/callable/quizActions.js
 exports.recordQuizResult = functions
   .region(region)
   .runWith(runtimeOptions)
@@ -16,10 +17,12 @@ exports.recordQuizResult = functions
         "User must be authenticated."
       );
     }
+
     const userId = context.auth.uid;
-    const { quizId, scoreAchieved, passingScore, maxScore } = data;
-    const now = admin.firestore.Timestamp.now(); // Firestore Timestamp for 'now'
-    const serverTimestamp = FieldValue.serverTimestamp(); // For fields like lastUpdatedAt
+    const { quizId, scoreAchieved, passingScore, maxScore, isSpecialQuiz } =
+      data;
+    const now = admin.firestore.Timestamp.now();
+    const serverTimestamp = FieldValue.serverTimestamp();
 
     if (
       quizId == null ||
@@ -30,60 +33,35 @@ exports.recordQuizResult = functions
     ) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "Missing or invalid quiz result data, including maxScore."
+        "Missing or invalid quiz result data."
       );
     }
 
-    if (scoreAchieved < passingScore) {
-      return {
-        status: "not_passed",
-        message: "Score below passing threshold.",
-      };
-    }
-
     const userRef = db.collection("users").doc(userId);
-    const quizAttemptRef = db
-      .collection("users")
-      .doc(userId)
-      .collection("quizAttempts")
-      .doc(quizId);
+    const quizAttemptRef = userRef.collection("quizAttempts").doc(quizId);
 
     try {
-      let starsEarnedThisQuiz = 0,
-        dailyBonusAwarded = 0,
-        quizPerfStars = 0;
-      let calculatedNewStreak = 0,
-        finalTotalStars = 0;
+      let starsEarnedThisQuiz = 0;
+      let quizPerfStars = 0;
+      let dailyBonusAwarded = 0;
+      let specialExtraStars = 0;
+      let finalTotalStars = 0;
+      let calculatedNewStreak = 0;
 
       await db.runTransaction(async (transaction) => {
         const userSnap = await transaction.get(userRef);
         const attemptSnap = await transaction.get(quizAttemptRef);
 
-        if (!userSnap.exists) {
-          throw new Error(`User document not found for ${userId}.`);
-        }
-        const userData = userSnap.data();
-        if (!userData.stats) {
-          // Initialize stats if they don't exist, including perfectQuizCompletions map
-          // This is a good place to ensure the map structure exists.
-          // However, more robust initialization should happen on user creation.
-          // For this function, we'll assume stats and perfectQuizCompletions might be missing and handle it.
-          userData.stats = { totalStars: 0, currentStreak: 0 }; // Basic init
-          userData.perfectQuizCompletions = {}; // Initialize if not present
-          console.warn(
-            `User ${userId} stats were missing. Initialized basic stats. Consider robust init on user creation.`
-          );
-        }
-        // Ensure perfectQuizCompletions map exists on userData for the logic below
-        if (!userData.perfectQuizCompletions) {
-          userData.perfectQuizCompletions = {};
-        }
+        if (!userSnap.exists) throw new Error(`User not found: ${userId}`);
 
-        const currentStats = userData.stats;
-        const currentTotalStars = currentStats.totalStars || 0;
-        const currentStreak = currentStats.currentStreak || 0;
+        const userData = userSnap.data();
+        const currentStats = userData.stats || {
+          totalStars: 0,
+          currentStreak: 0,
+        };
         const lastActivityTS = currentStats.lastActivityCompletionDate;
         const lastDailyBonusTS = currentStats.lastDailyBonusDate;
+        const lastSpecialBonusMap = userData.perfectQuizCompletions || {};
 
         const isFirstTimePassingThisQuiz =
           !attemptSnap.exists || !attemptSnap.data()?.passed;
@@ -92,7 +70,7 @@ exports.recordQuizResult = functions
         const currentHighestScore = existingAttemptData.highestScore || 0;
         const percentage = (scoreAchieved / maxScore) * 100;
 
-        // Star calculation (existing logic)
+        // Existing star calculation
         if (isFirstTimePassingThisQuiz) {
           if (percentage === 100) quizPerfStars = 10;
           else if (percentage >= 90) quizPerfStars = 5;
@@ -102,6 +80,7 @@ exports.recordQuizResult = functions
           else quizPerfStars = 1;
         }
 
+        // Daily bonus
         if (
           percentage === 100 &&
           (lastDailyBonusTS === null || !isSameUTCDate(lastDailyBonusTS, now))
@@ -109,84 +88,78 @@ exports.recordQuizResult = functions
           dailyBonusAwarded = 5;
         }
 
+        // Special quiz extra stars (50) once per day per quiz
+        if (isSpecialQuiz) {
+          const lastSpecialBonusTS = lastSpecialBonusMap[quizId];
+          if (!lastSpecialBonusTS || !isSameUTCDate(lastSpecialBonusTS, now)) {
+            specialExtraStars = 40;
+            lastSpecialBonusMap[quizId] = now;
+          }
+        }
+
+        starsEarnedThisQuiz =
+          quizPerfStars + dailyBonusAwarded + specialExtraStars;
+        finalTotalStars = currentStats.totalStars + starsEarnedThisQuiz;
+
+        // Update streak
         if (lastActivityTS && isYesterdayUTC(lastActivityTS, now)) {
-          calculatedNewStreak = currentStreak + 1;
+          calculatedNewStreak = currentStats.currentStreak + 1;
         } else if (lastActivityTS && isSameUTCDate(lastActivityTS, now)) {
-          calculatedNewStreak = currentStreak;
+          calculatedNewStreak = currentStats.currentStreak;
         } else {
           calculatedNewStreak = 1;
         }
 
-        starsEarnedThisQuiz = quizPerfStars + dailyBonusAwarded;
-        finalTotalStars = currentTotalStars + starsEarnedThisQuiz;
-
-        // Prepare updates for the user's main document stats
+        // Prepare user update
         const updatesForUserDoc = {
           "stats.totalStars": finalTotalStars,
           "stats.lastQuizCompletionDate": now,
           "stats.lastActivityCompletionDate": now,
           "stats.currentStreak": calculatedNewStreak,
+          perfectQuizCompletions: lastSpecialBonusMap,
           lastUpdatedAt: serverTimestamp,
         };
         if (isFirstTimePassingThisQuiz) {
           updatesForUserDoc["stats.totalQuizzesCompleted"] =
             FieldValue.increment(1);
         }
-        if (dailyBonusAwarded > 0) {
+        if (dailyBonusAwarded > 0)
           updatesForUserDoc["stats.lastDailyBonusDate"] = now;
-        }
 
-        // Prepare data for the individual quizAttempt document
-        let attemptDataUpdates = {
-          quizId: quizId,
+        // Prepare attempt update
+        const attemptDataUpdates = {
+          quizId,
           attempts: attemptCount,
           lastAttemptDate: now,
           highestScore: Math.max(currentHighestScore, scoreAchieved),
           passed: true,
         };
+        if (!attemptSnap.exists) attemptDataUpdates.firstAttemptDate = now;
 
-        if (!attemptSnap.exists) {
-          attemptDataUpdates.firstAttemptDate = now;
-        }
-
-        // --- MODIFIED SECTION for perfect scores ---
-        if (scoreAchieved === maxScore && maxScore > 0) {
-          // 1. Update the detailed quizAttempt document
-          attemptDataUpdates.dateOfLastPerfectScore = now;
-
-          // 2. ADDITIONALLY: Update the summary map in the main user document
-          // Using dot notation to update a specific field in the map
-          const perfectQuizCompletionPath = `perfectQuizCompletions.${quizId}`;
-          updatesForUserDoc[perfectQuizCompletionPath] = now;
-        } else if (existingAttemptData.dateOfLastPerfectScore) {
-          // If current score isn't 100%, retain existing dateOfLastPerfectScore in detailed attempt
+        if (percentage === 100) attemptDataUpdates.dateOfLastPerfectScore = now;
+        else if (existingAttemptData.dateOfLastPerfectScore) {
           attemptDataUpdates.dateOfLastPerfectScore =
             existingAttemptData.dateOfLastPerfectScore;
-          // The perfectQuizCompletions map in userDoc is NOT touched in this case,
-          // preserving its last 100% timestamp until a new 100% is achieved.
         }
-        // --- END OF MODIFIED SECTION ---
 
-        transaction.update(userRef, updatesForUserDoc); // Update user's global stats & perfectQuizCompletions map
-
-        if (!attemptSnap.exists) {
+        transaction.update(userRef, updatesForUserDoc);
+        if (!attemptSnap.exists)
           transaction.set(quizAttemptRef, attemptDataUpdates);
-        } else {
-          transaction.update(quizAttemptRef, attemptDataUpdates);
-        }
-      }); // End of Transaction
+        else transaction.update(quizAttemptRef, attemptDataUpdates);
+      });
 
       return {
         status: "success",
         starsAwarded: starsEarnedThisQuiz,
-        dailyBonusAwarded,
         quizPerfStars,
+        dailyBonusAwarded,
+        specialExtraStars,
         currentStreak: calculatedNewStreak,
         totalStars: finalTotalStars,
       };
     } catch (error) {
       console.error(
-        `recordQuizResult: Transaction error for user ${userId}, quiz ${quizId}:`,
+        `recordQuizResult error for user ${userId}, quiz ${quizId}:`,
         error
       );
       throw new functions.https.HttpsError(
