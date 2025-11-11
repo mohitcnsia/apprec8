@@ -15,7 +15,6 @@ import {
   ActivityIndicator,
   PanResponder,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getSpecialQuizIds } from "../../utils/specialQuizCache";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,6 +26,7 @@ import FeedbackFAB from "../../components/common/FeedbackFAB";
 const screenWidth = Dimensions.get("window").width;
 const imageDiameter = screenWidth * 0.7;
 const DEFAULT_PASSING_SCORE = 1;
+
 const recordQuizResult = functions().httpsCallable("recordQuizResult");
 
 const TRIPLE_TAP_INTERVAL = 300;
@@ -38,6 +38,7 @@ const QuizResultScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
 
+  const [username, setUsername] = useState("User");
   const {
     score = 0,
     totalQuestions = 0,
@@ -47,72 +48,105 @@ const QuizResultScreen = ({ route, navigation }) => {
   } = route.params || {};
   const maxScore = route.params?.maxScore ?? totalQuestions;
 
-  const [username, setUsername] = useState("User");
-  const [submitStatus, setSubmitStatus] = useState("idle");
   const [submitError, setSubmitError] = useState(null);
-  const [starsEarned, setStarsEarned] = useState(0);
+  const [submitStatus, setSubmitStatus] = useState("idle");
+
+  // Breakdown state
+  const [starsBreakdown, setStarsBreakdown] = useState({
+    quizPerfStars: 0,
+    dailyBonusAwarded: 0,
+    specialBonusAwarded: 0,
+    starsAwarded: 0,
+    totalStars: 0,
+  });
 
   const [isFabVisibleByGesture, setIsFabVisibleByGesture] = useState(false);
   const tapCountRef = useRef(0);
   const lastTapTimestampRef = useRef(0);
   const gestureTimerRef = useRef(null);
+
   const isFabContextActive = !!quizId;
 
-  // Initialize username
   useEffect(() => {
     const currentUser = authInstance.currentUser;
     if (currentUser?.displayName) setUsername(currentUser.displayName);
     else if (currentUser?.email) setUsername(currentUser.email.split("@")[0]);
     else setUsername("User");
-
+    setIsFabVisibleByGesture(false);
     tapCountRef.current = 0;
     clearTimeout(gestureTimerRef.current);
     return () => clearTimeout(gestureTimerRef.current);
   }, [route.params]);
 
-  // Submit quiz result
   const submitQuizResult = useCallback(async () => {
-    if (!quizId) return;
+    const specialQuizIds = await getSpecialQuizIds();
+    const isSpecialQuiz = specialQuizIds.includes(quizId);
+
     const currentUser = authInstance.currentUser;
     if (!currentUser) {
       setSubmitStatus("skipped");
       return;
     }
+    if (!quizId) {
+      setSubmitError("Cannot save result: Quiz ID missing.");
+      setSubmitStatus("error");
+      return;
+    }
+    if (score < passingScore) {
+      setSubmitStatus("skipped");
+      return;
+    }
+    if (submitStatus !== "idle") return;
 
-    // Fetch special quiz IDs from AsyncStorage cache
-    const specialQuizIds = await getSpecialQuizIds();
-    const isSpecialQuiz = specialQuizIds.includes(quizId);
-
-    const resultData = {
-      quizId,
-      scoreAchieved: score,
-      passingScore,
-      maxScore,
-      isSpecialQuiz,
-    };
+    setSubmitStatus("submitting");
+    setSubmitError(null);
 
     try {
-      setSubmitStatus("submitting");
-      const result = await recordQuizResult(resultData);
+      const resultData = {
+        quizId,
+        scoreAchieved: score,
+        passingScore,
+        maxScore,
+      };
+      const result = await recordQuizResult({ ...resultData, isSpecialQuiz });
+
       if (result?.data?.status === "success") {
-        setStarsEarned(result.data.starsAwarded);
+        const {
+          starsAwarded,
+          dailyBonusAwarded,
+          specialBonusAwarded,
+          quizPerfStars,
+          totalStars,
+        } = result.data;
+
+        setStarsBreakdown({
+          starsAwarded,
+          dailyBonusAwarded,
+          specialBonusAwarded,
+          quizPerfStars,
+          totalStars,
+        });
+
         setSubmitStatus("success");
       } else if (result?.data?.status === "not_passed") {
         setSubmitStatus("skipped");
       } else {
-        setSubmitError(result?.data?.message || "Unexpected server response");
+        setSubmitError(result?.data?.message || "Unexpected server response.");
         setSubmitStatus("error");
       }
     } catch (error) {
-      setSubmitError(error.message || "Failed to save quiz result");
+      setSubmitError(
+        error.details?.message ||
+          error.message ||
+          "Failed to save quiz results."
+      );
       setSubmitStatus("error");
     }
-  }, [quizId, score, passingScore, maxScore]);
+  }, [quizId, score, passingScore, maxScore, submitStatus]);
 
-  // Trigger submit on mount
   useEffect(() => {
     if (submitStatus === "idle") submitQuizResult();
-  }, [submitStatus, submitQuizResult]);
+  }, [route.params, submitQuizResult, submitStatus]);
 
   const handlePlayAgain = () => {
     if (quizId) {
@@ -126,7 +160,6 @@ const QuizResultScreen = ({ route, navigation }) => {
     }
   };
 
-  // Triple tap pan responder for FAB
   const cornerTapPanResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => isFabContextActive,
@@ -134,26 +167,39 @@ const QuizResultScreen = ({ route, navigation }) => {
         isFabContextActive &&
         Math.abs(gestureState.dx) < TAP_SLOP_THRESHOLD &&
         Math.abs(gestureState.dy) < TAP_SLOP_THRESHOLD,
-      onPanResponderRelease: () => {
-        const now = Date.now();
-        clearTimeout(gestureTimerRef.current);
-        if (
-          tapCountRef.current === 0 ||
-          now - lastTapTimestampRef.current > TRIPLE_TAP_INTERVAL * 1.5
-        ) {
-          tapCountRef.current = 1;
-        } else {
-          tapCountRef.current++;
-        }
-        lastTapTimestampRef.current = now;
-
-        if (tapCountRef.current === 3) {
-          setIsFabVisibleByGesture((prev) => !prev);
+      onPanResponderRelease: (evt, gestureState) => {
+        if (!isFabContextActive) {
           tapCountRef.current = 0;
-        } else if (tapCountRef.current > 0) {
-          gestureTimerRef.current = setTimeout(() => {
+          clearTimeout(gestureTimerRef.current);
+          return;
+        }
+        if (
+          Math.abs(gestureState.dx) < TAP_SLOP_THRESHOLD &&
+          Math.abs(gestureState.dy) < TAP_SLOP_THRESHOLD
+        ) {
+          const now = Date.now();
+          clearTimeout(gestureTimerRef.current);
+          if (
+            tapCountRef.current === 0 ||
+            now - lastTapTimestampRef.current > TRIPLE_TAP_INTERVAL * 1.5
+          ) {
+            tapCountRef.current = 1;
+          } else {
+            tapCountRef.current++;
+          }
+          lastTapTimestampRef.current = now;
+          if (tapCountRef.current === 3) {
+            setIsFabVisibleByGesture((prev) => !prev);
             tapCountRef.current = 0;
-          }, TRIPLE_TAP_RESET_TIMEOUT);
+          } else if (tapCountRef.current > 0) {
+            gestureTimerRef.current = setTimeout(
+              () => (tapCountRef.current = 0),
+              TRIPLE_TAP_RESET_TIMEOUT
+            );
+          }
+        } else {
+          tapCountRef.current = 0;
+          clearTimeout(gestureTimerRef.current);
         }
       },
       onPanResponderTerminate: () => {
@@ -166,6 +212,7 @@ const QuizResultScreen = ({ route, navigation }) => {
 
   const scoreText =
     totalQuestions > 0 ? `${score} / ${totalQuestions}` : `${score}`;
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -179,7 +226,7 @@ const QuizResultScreen = ({ route, navigation }) => {
         header: {
           fontSize: 30,
           fontFamily: "pacifico",
-          color: C.textPrimaryOnGradient || "#FFFFFF",
+          color: C.textPrimaryOnGradient || C.primaryWhite || "#FFFFFF",
           marginBottom: 20,
           textAlign: "center",
         },
@@ -187,14 +234,21 @@ const QuizResultScreen = ({ route, navigation }) => {
           fontSize: 18,
           marginBottom: 5,
           textAlign: "center",
-          color: C.textPrimaryOnGradient || "#FFFFFF",
+          color: C.textPrimaryOnGradient || C.primaryWhite || "#FFFFFF",
           fontFamily: "delius",
         },
         highlight: {
           fontFamily: "deliusBold",
-          color: C.accent || "#f12b15",
+          color: C.accent || C.appAccent || "#f12b15",
           fontSize: 20,
         },
+        starText: { color: "#4CAF50", fontFamily: "deliusBold", fontSize: 20 },
+        breakdownText: {
+          color: "#4CAF50",
+          fontFamily: "deliusBold",
+          fontSize: 16,
+        },
+        starsText: { marginLeft: 4 },
         imageContainer: {
           height: imageDiameter,
           width: imageDiameter,
@@ -202,45 +256,31 @@ const QuizResultScreen = ({ route, navigation }) => {
           resizeMode: "cover",
           marginBottom: 20,
           borderWidth: 2,
-          borderColor: C.textPrimaryOnGradient || "#FFFFFF",
+          borderColor: C.textPrimaryOnGradient || C.primaryWhite || "#FFFFFF",
         },
         statusContainer: {
-          minHeight: 50,
+          minHeight: 40,
           justifyContent: "center",
           alignItems: "center",
           marginVertical: 10,
         },
         errorText: {
-          color: C.warning || "#FF6B6B",
+          color: C.warning || C.appWarning || "#FF6B6B",
           textAlign: "center",
           fontFamily: "delius",
           fontSize: 14,
         },
         successText: {
-          color: C.success || "#4CAF50",
+          color: C.success || C.appSuccess || "#4CAF50",
           textAlign: "center",
           fontFamily: "deliusBold",
-          fontSize: 16,
+          fontSize: 14,
         },
         infoText: {
-          color: C.textSecondaryOnGradient || "#E0E0E0",
+          color: C.textSecondaryOnGradient || C.textSecondary || "#E0E0E0",
           textAlign: "center",
           fontFamily: "delius",
           fontSize: 14,
-        },
-        starsText: {
-          color: C.accent || "#FFD700",
-          textAlign: "center",
-          fontFamily: "deliusBold",
-          fontSize: 18,
-          marginVertical: 5,
-        },
-        starText: {
-          fontFamily: "deliusBold",
-          fontSize: 25,
-          color: "#4CAF50", // green
-          flexDirection: "row",
-          alignItems: "center",
         },
         buttonContainer: { width: "80%", alignItems: "center", marginTop: 15 },
         button: { marginTop: 15, paddingVertical: 5, width: "100%" },
@@ -278,14 +318,14 @@ const QuizResultScreen = ({ route, navigation }) => {
         />
         <Text style={styles.text}>Well done, {username}!</Text>
         <Text style={styles.text}>
-          You scored <Text style={styles.highlight}>{scoreText}</Text>.
+          You scored <Text style={styles.highlight}>{scoreText}</Text>
         </Text>
 
         <View style={styles.statusContainer}>
           {submitStatus === "submitting" && (
             <ActivityIndicator
               size="small"
-              color={C.textPrimaryOnGradient || "#FFFFFF"}
+              color={C.textPrimaryOnGradient || C.primaryWhite || "#FFFFFF"}
             />
           )}
           {submitStatus === "error" && (
@@ -293,38 +333,44 @@ const QuizResultScreen = ({ route, navigation }) => {
               {submitError || "Error saving results."}
             </Text>
           )}
-          {submitStatus === "success" && (
-            <>
-              <Text style={styles.successText}>Progress saved!</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 5,
-                }}
-              >
-                <Text style={styles.text}>You Earned </Text>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.starText,
-                    { color: "green", fontWeight: "bold", marginRight: 5 },
-                  ]}
-                >
-                  {starsEarned}
-                </Text>
-                <Text
-                  style={[styles.starsText, { fontSize: 18, color: "green" }]}
-                >
-                  🌟
-                </Text>
-              </View>
-            </>
-          )}
           {submitStatus === "skipped" && (
             <Text style={styles.infoText}>
               Result not saved (e.g., score too low).
             </Text>
+          )}
+
+          {submitStatus === "success" && (
+            <>
+              <Text style={styles.text}>
+                <Text style={styles.starText}>
+                  {starsBreakdown.starsAwarded} 🌟
+                </Text>
+              </Text>
+              {starsBreakdown.specialBonusAwarded > 0 && (
+                <Text style={styles.text}>
+                  Special Bonus:{" "}
+                  <Text style={styles.breakdownText}>
+                    {starsBreakdown.specialBonusAwarded}
+                  </Text>
+                </Text>
+              )}
+              {starsBreakdown.quizPerfStars > 0 && (
+                <Text style={styles.text}>
+                  Quiz Reward:{" "}
+                  <Text style={styles.breakdownText}>
+                    {starsBreakdown.quizPerfStars}
+                  </Text>
+                </Text>
+              )}
+              {starsBreakdown.dailyBonusAwarded > 0 && (
+                <Text style={styles.text}>
+                  Daily Bonus:{" "}
+                  <Text style={styles.breakdownText}>
+                    {starsBreakdown.dailyBonusAwarded}
+                  </Text>
+                </Text>
+              )}
+            </>
           )}
         </View>
 
@@ -335,18 +381,19 @@ const QuizResultScreen = ({ route, navigation }) => {
             labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }}
             onPress={handlePlayAgain}
             disabled={submitStatus === "submitting"}
-            buttonColor={C.success || "#4CAF50"}
-            textColor={C.buttonText || "#FFFFFF"}
+            buttonColor={C.success || C.appSuccess}
+            textColor={C.buttonText || C.primaryWhite}
           >
             Play Again
           </PaperButton>
+
           <PaperButton
             mode="outlined"
             style={[styles.button, styles.outlineButton]}
             labelStyle={{ fontFamily: "deliusBold", fontSize: 16 }}
             onPress={() => navigation.popToTop()}
             disabled={submitStatus === "submitting"}
-            textColor={C.textPrimaryOnGradient || "#FFFFFF"}
+            textColor={C.textPrimaryOnGradient || C.primaryWhite}
           >
             Exit
           </PaperButton>
