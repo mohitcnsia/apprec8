@@ -186,8 +186,10 @@ const QuizScreen = ({ route, navigation }) => {
       (fetchedQuestions) => {
         if (isMounted.current) {
           if (fetchedQuestions && fetchedQuestions.length > 0) {
-            let sQ = shuffleArray(fetchedQuestions);
-            const c = Math.min(sQ.length, MAX_QUESTIONS);
+            //let sQ = shuffleArray(fetchedQuestions);
+            let sQ = fetchedQuestions;
+            const c =
+              sQ.length < 20 ? Math.min(sQ.length, MAX_QUESTIONS) : sQ.length;
             const selQ = sQ.slice(0, c);
             const fQ = selQ.map((q, index) => ({
               ...q,
