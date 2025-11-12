@@ -8,14 +8,20 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Button,
+  ScrollView,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import {
   fetchVocabGameData,
   listenToVocabGameData,
 } from "../store/firestore-api";
+import functions from "@react-native-firebase/functions";
+import * as Speech from "expo-speech"; // 👈 Import for speaker
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+// Define the new generic star function
+const awardStars = functions().httpsCallable("awardStars");
 
 const VocabBuilder = ({ navigation }) => {
   const { theme } = useTheme();
@@ -34,7 +40,20 @@ const VocabBuilder = ({ navigation }) => {
   const [score, setScore] = useState(0);
   const [showMessage, setShowMessage] = useState("");
   const [usedWords, setUsedWords] = useState([]);
+
+  // New state for star messages
+  const [milestoneMessage, setMilestoneMessage] = useState(null);
+
   const maxWrongGuesses = 6;
+
+  // 👇 Speaker function
+  const speakWord = () => {
+    // We speak the `currentWord` which is stored in state
+    Speech.speak(currentWord, {
+      language: "en-US", // Use US English
+      rate: 0.9, // Speak slightly slower for clarity
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = listenToVocabGameData(
@@ -89,6 +108,8 @@ const VocabBuilder = ({ navigation }) => {
       (w) => !usedWords.includes(w.word)
     );
     if (availableWords.length === 0) {
+      // This is now handled by the 'complete' milestone logic,
+      // but we keep this as a fallback.
       setGameStatus("category-complete");
       setShowMessage(`🎉 Amazing! You completed all ${category.name} words!`);
       return;
@@ -101,12 +122,14 @@ const VocabBuilder = ({ navigation }) => {
     setWrongGuesses(0);
     setGameStatus("playing");
     setShowMessage("");
+    setMilestoneMessage(null); // Clear star message
   };
 
   const resetToCategorySelect = () => {
     setGameStatus("category-select");
     setSelectedCategory(null);
     setScore(0);
+    setMilestoneMessage(null); // Clear star message
   };
 
   const guessLetter = (letter) => {
@@ -118,17 +141,60 @@ const VocabBuilder = ({ navigation }) => {
       setWrongGuesses(newWrongGuesses);
       if (newWrongGuesses >= maxWrongGuesses) {
         setGameStatus("lost");
-        setShowMessage(`😢 The word was: ${currentWord}`);
+        setShowMessage(`${currentWord}`);
       }
     } else {
       const isComplete = currentWord
         .split("")
         .every((l) => newGuessedLetters.includes(l));
+
+      // 👇 This is the final logic block for winning
       if (isComplete) {
         setGameStatus("won");
         setScore(score + 1);
-        setUsedWords([...usedWords, currentWord]);
-        setShowMessage(`🎉 Correct! It was ${currentWord}!`);
+
+        const newUsedWords = [...usedWords, currentWord];
+        setUsedWords(newUsedWords);
+
+        // 1. ALWAYS set the win message, even on milestones
+        setShowMessage(`${currentWord}`);
+
+        const totalWords = wordCategories[selectedCategory]?.words.length || 0;
+        const halfwayPoint = Math.ceil(totalWords / 2);
+
+        let starsToAward = 0;
+        let messageText = "";
+        let source = "";
+
+        // Check for "complete"
+        if (totalWords > 2 && newUsedWords.length === totalWords) {
+          starsToAward = 15; // You can change this reward
+          messageText = "Category Complete!";
+          source = "vocab_complete";
+          setGameStatus("category-complete");
+        }
+        // Check for "halfway"
+        else if (totalWords > 2 && newUsedWords.length === halfwayPoint) {
+          starsToAward = 5; // You can change this reward
+          messageText = "Halfway point!";
+          source = "vocab_halfway";
+        }
+
+        if (starsToAward > 0) {
+          // 2. SET MILESTONE MESSAGE (in addition to the win message)
+          setMilestoneMessage({ text: messageText, stars: starsToAward });
+
+          // 3. CALL FUNCTION IN BACKGROUND
+          awardStars({ starsAwarded: starsToAward, source: source })
+            .then((result) => {
+              console.log(
+                `Stars awarded successfully for ${source}. New total: ${result.data.totalStars}`
+              );
+            })
+            .catch((error) => {
+              console.error(`Failed to award stars for ${source}:`, error);
+            });
+        }
       }
     }
   };
@@ -165,21 +231,27 @@ const VocabBuilder = ({ navigation }) => {
     );
   }
 
+  // UPDATED for sorting and scrolling
   const renderCategorySelect = () => (
     <View style={styles.categorySelect}>
       <Text style={styles.categoryTitle}>Choose a Category!</Text>
-      <View style={styles.categories}>
-        {Object.entries(wordCategories).map(([key, category]) => (
-          <TouchableOpacity
-            key={key}
-            style={styles.categoryBtn}
-            onPress={() => selectCategory(key)}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.categoryBtnText}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView style={{ width: "100%" }}>
+        <View style={styles.categories}>
+          {Object.entries(wordCategories)
+            // Sort by the 'order' field numerically
+            .sort(([, catA], [, catB]) => catA.order - catB.order)
+            .map(([key, category]) => (
+              <TouchableOpacity
+                key={key}
+                style={styles.categoryBtn}
+                onPress={() => selectCategory(key)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.categoryBtnText}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+        </View>
+      </ScrollView>
     </View>
   );
 
@@ -256,6 +328,7 @@ const VocabBuilder = ({ navigation }) => {
               {wrongGuesses}/{maxWrongGuesses} wrong •{" "}
               {maxWrongGuesses - wrongGuesses} chances left
             </Text>
+            {/* 👇 Back to just the word display */}
             <Text style={styles.wordDisplay}>{getDisplayWord()}</Text>
           </View>
         </View>
@@ -266,26 +339,54 @@ const VocabBuilder = ({ navigation }) => {
               {wordCategories[selectedCategory]?.words.length || 0} words
             </Text>
           </View>
-          {showMessage && (
+
+          {/* 👇 FINAL MESSAGE BOX with Speaker Icon */}
+          {(showMessage || milestoneMessage) && (
             <View
               style={[
                 styles.message,
-                gameStatus === "won" && styles.messageWin,
+                (gameStatus === "won" || milestoneMessage) && styles.messageWin,
                 gameStatus === "lost" && styles.messageLose,
                 gameStatus === "category-complete" && styles.messageComplete,
               ]}
             >
-              <Text
-                style={[
-                  styles.messageText,
-                  gameStatus === "won" && styles.messageTextWin,
-                  gameStatus === "lost" && styles.messageTextLose,
-                  gameStatus === "category-complete" &&
-                    styles.messageTextComplete,
-                ]}
-              >
-                {showMessage}
-              </Text>
+              {/* Part 1: The Word Message (Win or Lose) + Speaker */}
+              {showMessage && (
+                <View style={styles.messageRow}>
+                  {/* Show speaker button only when word is revealed */}
+                  {(gameStatus === "won" ||
+                    gameStatus === "lost" ||
+                    gameStatus === "category-complete") && (
+                    <TouchableOpacity
+                      onPress={speakWord}
+                      style={styles.speakButtonInMessage}
+                    >
+                      <Text style={styles.speakButtonText}>🔊</Text>
+                    </TouchableOpacity>
+                  )}
+                  <Text
+                    style={[
+                      styles.messageText,
+                      gameStatus === "won" && styles.messageTextWin,
+                      gameStatus === "lost" && styles.messageTextLose,
+                      gameStatus === "category-complete" &&
+                        styles.messageTextComplete,
+                    ]}
+                  >
+                    {showMessage}
+                  </Text>
+                </View>
+              )}
+
+              {/* Part 2: The Star Message (Milestone) */}
+              {milestoneMessage && (
+                <Text style={styles.messageText}>
+                  {milestoneMessage.text}{" "}
+                  <Text style={styles.messageStarText}>
+                    {milestoneMessage.stars} 🌟
+                  </Text>
+                </Text>
+              )}
             </View>
           )}
         </View>
@@ -373,10 +474,11 @@ const getStyles = (theme) =>
       color: theme.textPrimary,
       fontWeight: "600",
     },
+    // UPDATED for scrolling layout
     categorySelect: {
       alignItems: "center",
       flex: 1,
-      justifyContent: "center",
+      // Removed justifyContent
     },
     categoryTitle: {
       fontSize: 22,
@@ -384,10 +486,16 @@ const getStyles = (theme) =>
       fontWeight: "bold",
       marginBottom: 25,
     },
+    // UPDATED for "scattered" layout
     categories: {
       width: "100%",
-      gap: 15,
+      gap: 10,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      paddingBottom: 20,
     },
+    // This style now works with flex-wrap automatically
     categoryBtn: {
       backgroundColor: theme.primary,
       paddingVertical: 15,
@@ -437,6 +545,7 @@ const getStyles = (theme) =>
       color: theme.textSecondary,
       marginBottom: 8,
     },
+    // 👇 Restored to original
     wordDisplay: {
       fontSize: 28,
       fontWeight: "bold",
@@ -538,6 +647,26 @@ const getStyles = (theme) =>
     },
     messageTextComplete: {
       color: theme.primary,
+    },
+    // NEW STYLE for the star message
+    messageStarText: {
+      color: theme.success, // Green color
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+    // 👇 STYLES for the speaker button in the message box
+    messageRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 10,
+    },
+    speakButtonInMessage: {
+      marginRight: 10,
+      padding: 5,
+    },
+    speakButtonText: {
+      fontSize: 30,
     },
   });
 

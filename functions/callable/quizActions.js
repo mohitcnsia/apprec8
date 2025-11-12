@@ -244,3 +244,89 @@ exports.penalizeQuizLeave = functions
       );
     }
   });
+
+/**
+ * V1 Callable Function: A generic function to award a specific number of stars
+ * to a user from any game source.
+ */
+exports.awardStars = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated."
+      );
+    }
+
+    const userId = context.auth.uid;
+    // e.g., { starsAwarded: 5, source: "vocab_halfway" }
+    const { starsAwarded, source } = data;
+    const now = admin.firestore.Timestamp.now();
+    const serverTimestamp = FieldValue.serverTimestamp();
+
+    if (
+      !starsAwarded ||
+      typeof starsAwarded !== "number" ||
+      starsAwarded <= 0
+    ) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "starsAwarded must be a positive number."
+      );
+    }
+
+    if (!source || typeof source !== "string") {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "A 'source' string is required for logging."
+      );
+    }
+
+    const userRef = db.collection("users").doc(userId);
+    console.log(
+      `Attempting to award ${starsAwarded} stars to user ${userId} for ${source}.`
+    );
+
+    try {
+      let finalTotalStars = 0;
+
+      await db.runTransaction(async (transaction) => {
+        const userSnap = await transaction.get(userRef);
+        if (!userSnap.exists) {
+          throw new Error(`User document not found for ${userId}.`);
+        }
+
+        const userData = userSnap.data();
+        const currentStats = userData.stats || { totalStars: 0 };
+        const currentTotalStars = currentStats.totalStars || 0;
+
+        finalTotalStars = currentTotalStars + starsAwarded;
+
+        // --- Updates for user document ---
+        const updatesForUserDoc = {
+          "stats.totalStars": finalTotalStars,
+          "stats.lastActivityCompletionDate": now, // Good for streaks
+          lastUpdatedAt: serverTimestamp,
+        };
+
+        transaction.update(userRef, updatesForUserDoc);
+      }); // end transaction
+
+      return {
+        status: "success",
+        starsAwarded: starsAwarded,
+        totalStars: finalTotalStars,
+      };
+    } catch (error) {
+      console.error(
+        `awardStars: Transaction error for user ${userId}, source ${source}:`,
+        error
+      );
+      throw new functions.https.HttpsError(
+        "internal",
+        error.message || "Failed to award stars."
+      );
+    }
+  });
