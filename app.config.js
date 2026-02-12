@@ -6,7 +6,7 @@ const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
   if (!newScheme) return existingTypes;
 
   const schemeExists = existingTypes.some((type) =>
-    type.CFBundleURLSchemes?.includes(newScheme)
+    type.CFBundleURLSchemes?.includes(newScheme),
   );
 
   if (schemeExists) {
@@ -38,7 +38,7 @@ export default ({ config }) => {
 
   if (!reversedClientIdScheme) {
     console.warn(
-      "⚠️ WARNING: IOS_REVERSED_CLIENT_ID is not defined in your .env file. iOS Google Sign-In might fail configuration."
+      "⚠️ WARNING: IOS_REVERSED_CLIENT_ID is not defined in your .env file. iOS Google Sign-In might fail configuration.",
     );
   }
 
@@ -69,7 +69,7 @@ export default ({ config }) => {
           ...config.ios?.infoPlist,
           CFBundleURLTypes: mergeCFBundleURLTypes(
             existingCFBundleURLTypes,
-            reversedClientIdScheme
+            reversedClientIdScheme,
           ),
         },
         // If your iOS icon is different from the main one, you can specify it here:
@@ -117,6 +117,7 @@ export default ({ config }) => {
         favicon: "./assets/favicon.png",
       },
       plugins: [
+        "expo-asset",
         "expo-font",
         "expo-secure-store",
         "@react-native-google-signin/google-signin",

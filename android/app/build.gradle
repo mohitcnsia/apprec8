@@ -92,8 +92,8 @@ android {
         applicationId 'com.mohitchilkoti.apprec8'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20001300
-        versionName "20.0.13"
+        versionCode 20001400
+        versionName "20.0.14"
     }
     signingConfigs {
         debug {
