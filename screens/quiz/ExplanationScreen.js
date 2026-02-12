@@ -20,7 +20,15 @@ const ExplanationScreen = ({ route, navigation }) => {
   const C = theme.appColors || theme;
 
   // Get the data passed from the QuizScreenV2
-  const { explanation, isCorrect, isLastQuestion } = route.params;
+  const { explanation, isCorrect, isLastQuestion, onNext } = route.params;
+
+  const handlePress = () => {
+    // 1. Tell the quiz engine to move to the next state
+    if (onNext) onNext();
+
+    // 2. Close the explanation screen
+    navigation.goBack();
+  };
 
   const styles = useMemo(
     () =>
@@ -34,7 +42,7 @@ const ExplanationScreen = ({ route, navigation }) => {
         },
         button: { borderRadius: 25, paddingVertical: 8, marginTop: 20 },
       }),
-    [C]
+    [C],
   );
 
   return (
@@ -53,7 +61,7 @@ const ExplanationScreen = ({ route, navigation }) => {
           <PaperButton
             mode="contained"
             style={styles.button}
-            onPress={() => navigation.goBack()} // Simply go back to the quiz screen
+            onPress={handlePress}
           >
             {isLastQuestion ? "Finish Quiz" : "Next Question"}
           </PaperButton>

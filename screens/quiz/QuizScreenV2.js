@@ -43,7 +43,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
     if (status === "finished") {
       const maxPossibleScore = questions.reduce(
         (sum, q) => sum + (q.stars || 10),
-        0
+        0,
       );
       const isPerfectScore = maxPossibleScore > 0 && score === maxPossibleScore;
 
@@ -102,8 +102,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
       explanation: currentQuestion.explanation,
       isCorrect: state.wasCorrect,
       isLastQuestion: isLastQuestion,
+      // onContinue: () => dispatch({ type: "NEXT_QUESTION" }),
+      onNext: () => dispatch({ type: "NEXT_QUESTION" }),
     });
-    dispatch({ type: "NEXT_QUESTION" });
+    // dispatch({ type: "NEXT_QUESTION" });
   };
 
   const styles = useMemo(
@@ -170,7 +172,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
           padding: 5,
         },
       }),
-    [C]
+    [C],
   );
 
   const renderContent = () => {
@@ -215,7 +217,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
       case "answering": {
         if (!currentQuestion) return null;
         const isMarkedForReview = state.markedForReview.includes(
-          currentQuestion.id
+          currentQuestion.id,
         );
         return (
           <View style={styles.scrollableContainer}>
