@@ -18,6 +18,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { useTheme } from "../../context/ThemeContext";
 import { useQuizEngine } from "../../hooks/useQuizEngine";
+import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 
@@ -27,7 +28,8 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const { quiz, mode } = route.params;
 
   const { state, dispatch } = useQuizEngine(quiz, mode);
-  const { status, questions, error, currentIndex, score } = state;
+  const { status, questions, error, currentIndex, score, lives } = state;
+  const { playSuccess, playFailure } = useSoundEffects();
 
   /**
    * DOCUMENTATION:
@@ -68,7 +70,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
             label: "Exit",
             onPress: () =>
               navigation.navigate("QuestMap", {
-                completedQuizId: quiz.id,
+                completedQuizId: mode === "exam" ? quiz.id : null,
               }),
             mode: "outlined",
           },
@@ -106,6 +108,16 @@ const QuizScreenV2 = ({ route, navigation }) => {
       onNext: () => dispatch({ type: "NEXT_QUESTION" }),
     });
     // dispatch({ type: "NEXT_QUESTION" });
+  };
+
+  const handleCheckAnswer = () => {
+    if (!state.selectedAnswer) return;
+    if (state.selectedAnswer.isCorrect) {
+      playSuccess();
+    } else {
+      playFailure();
+    }
+    dispatch({ type: "CHECK_ANSWER" });
   };
 
   const styles = useMemo(
@@ -171,6 +183,50 @@ const QuizScreenV2 = ({ route, navigation }) => {
           zIndex: 1,
           padding: 5,
         },
+        headerRow: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 15,
+        },
+        progressBarContainer: {
+          flex: 1,
+          height: 12,
+          backgroundColor: 'rgba(255,255,255,0.2)',
+          borderRadius: 6,
+          marginRight: 15,
+          overflow: 'hidden',
+        },
+        progressBarFill: {
+          height: '100%',
+          backgroundColor: '#58CC02', // Duolingo Green
+        },
+        heartsContainer: {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        heartsText: {
+          color: '#FF4B4B',
+          fontFamily: 'nunitoBold',
+          fontSize: 18,
+          marginLeft: 5,
+        },
+        footerCorrect: {
+          backgroundColor: 'rgba(88, 204, 2, 0.9)', // Green tint
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        },
+        footerIncorrect: {
+          backgroundColor: 'rgba(255, 75, 75, 0.9)', // Red tint
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        },
+        feedbackText: {
+          color: 'white',
+          fontFamily: 'nunitoBold',
+          fontSize: 20,
+          marginBottom: 10,
+        },
       }),
     [C],
   );
@@ -214,6 +270,37 @@ const QuizScreenV2 = ({ route, navigation }) => {
           </View>
         );
       }
+      case "failed": {
+        const titleColor = {
+          color: "#FF4B4B",
+          fontSize: 24,
+          textAlign: "center",
+          marginBottom: 10,
+          fontFamily: "nunitoBold",
+        };
+        return (
+          <View style={styles.centered}>
+            <Ionicons name="heart-dislike" size={64} color="#FF4B4B" style={{marginBottom: 20}} />
+            <Text style={titleColor}>Out of Hearts!</Text>
+            <Text style={[styles.progressText, {marginBottom: 30}]}>Don't worry, mistakes help you learn.</Text>
+            <PaperButton
+              mode="contained"
+              buttonColor="#FF4B4B"
+              onPress={() => dispatch({ type: "RESTART_QUIZ" })}
+            >
+              Try Again
+            </PaperButton>
+            <PaperButton
+              mode="outlined"
+              style={{marginTop: 15}}
+              textColor="white"
+              onPress={() => navigation.goBack()}
+            >
+              Quit
+            </PaperButton>
+          </View>
+        );
+      }
       case "answering": {
         if (!currentQuestion) return null;
         const isMarkedForReview = state.markedForReview.includes(
@@ -225,9 +312,17 @@ const QuizScreenV2 = ({ route, navigation }) => {
               style={{ flex: 1 }}
               contentContainerStyle={styles.scrollContent}
             >
-              <Text style={styles.progressText}>
-                Question {currentIndex + 1} of {questions.length}
-              </Text>
+              <View style={styles.headerRow}>
+                <View style={styles.progressBarContainer}>
+                  <View style={[styles.progressBarFill, { width: `${(currentIndex / questions.length) * 100}%` }]} />
+                </View>
+                {mode === "training" && (
+                  <View style={styles.heartsContainer}>
+                    <Ionicons name="heart" size={24} color="#FF4B4B" />
+                    <Text style={styles.heartsText}>{lives}</Text>
+                  </View>
+                )}
+              </View>
               {mode === "exam" && (
                 <TouchableOpacity
                   style={styles.markButton}
@@ -273,17 +368,24 @@ const QuizScreenV2 = ({ route, navigation }) => {
               ))}
             </ScrollView>
             {mode === "training" && (
-              <View style={styles.footer}>
+              <View style={[styles.footer, state.showFeedback && (state.wasCorrect ? styles.footerCorrect : styles.footerIncorrect)]}>
+                {state.showFeedback && (
+                  <Text style={styles.feedbackText}>
+                    {state.wasCorrect ? "Excellent!" : "Not quite!"}
+                  </Text>
+                )}
                 <PaperButton
                   mode="contained"
                   disabled={!state.selectedAnswer}
+                  buttonColor={state.showFeedback ? (state.wasCorrect ? 'white' : 'white') : C.primary}
+                  textColor={state.showFeedback ? (state.wasCorrect ? '#58CC02' : '#FF4B4B') : 'white'}
                   onPress={
                     state.showFeedback
                       ? handleContinueToExplanation
-                      : () => dispatch({ type: "CHECK_ANSWER" })
+                      : handleCheckAnswer
                   }
                 >
-                  {state.showFeedback ? "Continue to Explanation" : "Check"}
+                  {state.showFeedback ? "Continue" : "Check"}
                 </PaperButton>
               </View>
             )}

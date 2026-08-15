@@ -8,6 +8,7 @@ import {
   Paragraph,
   Button as PaperButton,
   ActivityIndicator,
+  Switch,
 } from "react-native-paper";
 import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
 

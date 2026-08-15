@@ -6,6 +6,8 @@ import {
   orderBy,
   doc,
   onSnapshot,
+  updateDoc,
+  arrayUnion,
 } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app"; // To get the default app instance
 // Assuming authInstance is correctly configured and exported from your firebase setup.
@@ -377,6 +379,7 @@ export const listenToUserDocument = (onResult, onError) => {
           // Ensure perfectQuizCompletions is at least an empty object if not present
           perfectQuizCompletions:
             docSnapshot.data()?.perfectQuizCompletions || {},
+          completedQuizzes: docSnapshot.data()?.completedQuizzes || [],
         };
         console.log(
           `LISTENER: Snapshot for user document ${userId}. Perfect completions map exists: ${!!userData.perfectQuizCompletions}`
@@ -545,3 +548,25 @@ export function listenToQuestNodes(onDataChange, onError) {
 
   return unsubscribe; // Return the cleanup function
 }
+
+/**
+ * Marks a quiz as completed for the authenticated user by appending it to the completedQuizzes array.
+ * @param {string} quizId - The ID of the quiz that was completed.
+ */
+export const markQuizCompleted = async (quizId) => {
+  const currentUser = authInstance.currentUser;
+  if (!currentUser) {
+    throw new Error("No user authenticated. Cannot mark quiz completed.");
+  }
+  
+  const userDocRef = doc(db, "users", currentUser.uid);
+  try {
+    await updateDoc(userDocRef, {
+      completedQuizzes: arrayUnion(quizId)
+    });
+    console.log(`Successfully marked quiz ${quizId} as completed.`);
+  } catch (error) {
+    console.error("Error marking quiz completed:", error);
+    throw error;
+  }
+};

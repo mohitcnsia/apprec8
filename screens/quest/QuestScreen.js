@@ -12,7 +12,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Svg, Path } from "react-native-svg";
 import LottieView from "lottie-react-native";
-import { listenToQuestNodes } from "../../services/firestoreContentApi";
+import { listenToQuestNodes, listenToUserDocument, markQuizCompleted } from "../../services/firestoreContentApi";
 
 // --- Mock Theme Hook ---
 const useTheme = () => ({
@@ -49,6 +49,8 @@ const QuestScreen = () => {
   const { theme } = useTheme();
 
   const [questData, setQuestData] = useState([]);
+  const [questNodesRaw, setQuestNodesRaw] = useState([]);
+  const [completedQuizzes, setCompletedQuizzes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
@@ -56,16 +58,12 @@ const QuestScreen = () => {
   const animation = useRef(null);
   const scrollViewRef = useRef(null);
 
-  // --- HOOK 1: Data fetching from Firestore ---
+  // --- HOOK 1: Data fetching from Firestore (Quest Nodes) ---
   useEffect(() => {
     setIsLoading(true);
     const unsubscribe = listenToQuestNodes(
       (nodes) => {
-        const initialNodesWithStatus = nodes.map((node, index) => ({
-          ...node,
-          status: index === 0 ? "unlocked" : "locked",
-        }));
-        setQuestData(initialNodesWithStatus.reverse());
+        setQuestNodesRaw(nodes.reverse());
         setIsLoading(false);
       },
       (err) => {
@@ -77,19 +75,61 @@ const QuestScreen = () => {
     return () => unsubscribe();
   }, []);
 
-  // --- HOOK 2: Listening for completed quizzes ---
+  // --- HOOK 1b: Data fetching from Firestore (User Document) ---
+  useEffect(() => {
+    const unsubscribe = listenToUserDocument(
+      (userData) => {
+        if (userData) {
+          setCompletedQuizzes(userData.completedQuizzes || []);
+        }
+      },
+      (err) => console.error(err)
+    );
+    return () => unsubscribe();
+  }, []);
+
+  // --- HOOK 1c: Combine Raw Nodes and Completed Quizzes to set Quest Data ---
+  useEffect(() => {
+    if (questNodesRaw.length === 0) return;
+
+    let hasFoundUnlocked = false;
+    
+    // Nodes are reversed (bottom-up view usually in maps). 
+    // We iterate from the "start" of the map to the "end". Wait, the original code reversed them.
+    // Let's assume the last element of the reversed array is the "first" node in the journey? No, usually the first element is the start (at the top or bottom).
+    // The original code did: index === 0 ? 'unlocked' : 'locked' on the raw array, then reversed it.
+    // So the FIRST node fetched (before reverse) is the start.
+    
+    // We will map over the raw nodes (before reverse).
+    const rawUnreversed = [...questNodesRaw].reverse();
+    const processedNodes = rawUnreversed.map((node) => {
+      if (completedQuizzes.includes(node.quizId)) {
+        return { ...node, status: "completed" };
+      }
+      
+      if (!hasFoundUnlocked && node.title !== "Coming Soon!") {
+        hasFoundUnlocked = true;
+        return { ...node, status: "unlocked" };
+      }
+
+      return { ...node, status: "locked" };
+    });
+
+    setQuestData(processedNodes.reverse());
+  }, [questNodesRaw, completedQuizzes]);
+
+  // --- HOOK 2: Listening for completed quizzes from navigation ---
   useEffect(() => {
     if (route.params?.completedQuizId) {
       const completedQuizId = route.params.completedQuizId;
-      const completedNode = questData.find(
-        (node) => node.quizId === completedQuizId
-      );
-      if (completedNode && completedNode.status !== "completed") {
-        handleActivityCompletion(completedNode.id);
+      if (!completedQuizzes.includes(completedQuizId)) {
+        markQuizCompleted(completedQuizId);
+        setShowConfetti(true);
+        animation.current?.play(0);
       }
       navigation.setParams({ completedQuizId: null });
     }
-  }, [route.params?.completedQuizId, questData]);
+  }, [route.params?.completedQuizId, completedQuizzes]);
 
   // --- HOOK 3: Path calculation ---
   const questPath = useMemo(() => {
@@ -133,24 +173,14 @@ const QuestScreen = () => {
 
   // --- SECTION 2: ALL FUNCTION DEFINITIONS ---
   const handleActivityCompletion = (completedNodeId) => {
-    setQuestData((prevData) => {
-      const updatedData = [...prevData];
-      const completedIndex = updatedData.findIndex(
-        (item) => item.id === completedNodeId
-      );
-      if (completedIndex !== -1) {
-        updatedData[completedIndex].status = "completed";
-        if (completedIndex > 0) {
-          const nextNodeToUnlock = updatedData[completedIndex - 1];
-          if (nextNodeToUnlock.title !== "Coming Soon!") {
-            nextNodeToUnlock.status = "unlocked";
-          }
-        }
-      }
-      return updatedData;
-    });
-    setShowConfetti(true);
-    animation.current?.play(0);
+    // This is now handled mostly by the useEffect and markQuizCompleted.
+    // Keeping for backwards compatibility if called elsewhere.
+    const completedNode = questData.find((node) => node.id === completedNodeId);
+    if (completedNode && completedNode.quizId) {
+       markQuizCompleted(completedNode.quizId);
+       setShowConfetti(true);
+       animation.current?.play(0);
+    }
   };
 
   const handleNodePress = (item) => {

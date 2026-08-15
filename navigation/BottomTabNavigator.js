@@ -10,6 +10,7 @@ import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
 import StatsScreen from "../screens/quiz/StatsScreen";
 import { useTheme } from "../context/ThemeContext";
+import { useV2 } from "../context/V2Context";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,6 +21,7 @@ function BottomTabNavigator({
   user,
 }) {
   const { theme } = useTheme();
+  const { isV2Enabled } = useV2();
 
   return (
     <Tab.Navigator
@@ -83,11 +85,13 @@ function BottomTabNavigator({
       />
 
       {/* The Quest tab no longer needs a custom options prop, as it's handled in screenOptions */}
-      <Tab.Screen
-        name="Quest"
-        component={QuestNavigator}
-        options={{ title: "Quest" }}
-      />
+      {isV2Enabled && (
+        <Tab.Screen
+          name="Quest"
+          component={QuestNavigator}
+          options={{ title: "Quest" }}
+        />
+      )}
 
       <Tab.Screen
         name="Stats"

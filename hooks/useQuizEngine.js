@@ -23,12 +23,13 @@ const shuffleArray = (array) => {
  * All state properties for the quiz engine.
  */
 const initialState = {
-  status: "loading",
+  status: "loading", // can be loading, ready, answering, reviewing, finished, failed
   mode: "training",
   questions: [],
   config: {},
   currentIndex: 0,
   score: 0,
+  lives: 5, // Initialize with 5 lives
   error: null,
   selectedAnswer: null,
   showFeedback: false,
@@ -64,6 +65,7 @@ function quizReducer(state, action) {
         questions: state.questions,
         config: state.config,
         mode: state.mode,
+        lives: 5,
       };
     case "SELECT_ANSWER":
       return { ...state, selectedAnswer: action.payload.selectedOption };
@@ -74,11 +76,13 @@ function quizReducer(state, action) {
       const newScore = isCorrect
         ? state.score + (currentQuestion.stars || 10)
         : state.score;
+      const newLives = isCorrect ? state.lives : Math.max(0, state.lives - 1);
       return {
         ...state,
         showFeedback: true,
         wasCorrect: isCorrect,
         score: newScore,
+        lives: newLives,
       };
     }
     case "ANSWER_AND_ADVANCE": {
@@ -98,6 +102,9 @@ function quizReducer(state, action) {
       };
     }
     case "NEXT_QUESTION": {
+      if (state.lives <= 0) {
+        return { ...state, status: "failed" };
+      }
       const isLastQuestion = state.currentIndex === state.questions.length - 1;
       if (isLastQuestion) {
         return { ...state, status: "finished" };

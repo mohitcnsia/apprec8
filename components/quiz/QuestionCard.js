@@ -2,6 +2,8 @@
 import React, { useMemo } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
+import { Video, ResizeMode } from 'expo-av';
+import YoutubeIframe from 'react-native-youtube-iframe';
 // Assuming this path is correct for your project structure
 import { useTheme } from "../../context/ThemeContext";
 
@@ -51,6 +53,13 @@ const QuestionCard = ({ question }) => {
     [C]
   );
 
+  const getYoutubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
@@ -63,6 +72,27 @@ const QuestionCard = ({ question }) => {
             style={styles.image}
             resizeMode="contain"
           />
+        )}
+
+        {/* Support for video questions (MP4 or YouTube) */}
+        {questionContent.type === "video" && questionContent.mediaUrl && (
+          getYoutubeId(questionContent.mediaUrl) ? (
+            <View style={{ width: '100%', marginBottom: 15, borderRadius: 8, overflow: 'hidden' }}>
+              <YoutubeIframe
+                height={200}
+                play={false}
+                videoId={getYoutubeId(questionContent.mediaUrl)}
+              />
+            </View>
+          ) : (
+            <Video
+              source={{ uri: questionContent.mediaUrl }}
+              style={styles.image}
+              useNativeControls
+              resizeMode={ResizeMode.CONTAIN}
+              isLooping={false}
+            />
+          )
         )}
 
         {/* The question text is now always displayed. */}

@@ -21,6 +21,7 @@ import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 import { authInstance } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
+import { useV2 } from "../../context/V2Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SEEN_MESSAGES_KEY } from "../../hooks/useInAppMessaging";
 import InfoModal from "../../components/common/InfoModal";
@@ -41,6 +42,7 @@ const defaultStatsValues = {
 
 const ProfileScreen = ({ navigation, signoutHandler }) => {
   const { theme, toggleTheme, isDark } = useTheme();
+  const { isV2Enabled, toggleV2 } = useV2();
   const [modalVisible, setModalVisible] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userStats, setUserStats] = useState(defaultStatsValues);
@@ -634,6 +636,33 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
               ios_backgroundColor={theme.switchTrackOff || "#767577"}
               onValueChange={toggleTheme}
               value={isDark}
+            />
+          </View>
+        </View>
+        
+        <View style={styles.themeToggleCard}>
+          <View style={styles.themeToggleContent}>
+            <View style={styles.themeToggleLabelContainer}>
+              <Ionicons
+                name="flask-outline"
+                size={24}
+                style={styles.cardIcon}
+              />
+              <Text style={styles.themeToggleText}>Quest Mode (V2)</Text>
+            </View>
+            <Switch
+              trackColor={{
+                false: theme.switchTrackOff || "#767577",
+                true: theme.switchTrackOn || "#81b0ff",
+              }}
+              thumbColor={
+                isV2Enabled
+                  ? theme.switchThumbOn || "#f5dd4b"
+                  : theme.switchThumbOff || "#f4f3f4"
+              }
+              ios_backgroundColor={theme.switchTrackOff || "#767577"}
+              onValueChange={toggleV2}
+              value={isV2Enabled}
             />
           </View>
         </View>
