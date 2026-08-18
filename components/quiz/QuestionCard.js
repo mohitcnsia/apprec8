@@ -1,8 +1,8 @@
 // components/quiz/QuestionCard.js
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Card } from "react-native-paper";
-import { Video, ResizeMode } from 'expo-av';
+import { Card, IconButton } from "react-native-paper";
+import { Video, ResizeMode, Audio } from 'expo-av';
 import YoutubeIframe from 'react-native-youtube-iframe';
 // Assuming this path is correct for your project structure
 import { useTheme } from "../../context/ThemeContext";
@@ -21,6 +21,44 @@ const QuestionCard = ({ question }) => {
   const C = theme.appColors || theme;
   // It's safer to provide a fallback to prevent crashes if question.question is undefined
   const questionContent = question.question || { type: "text", content: "" };
+
+  const [sound, setSound] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    return sound ? () => {
+      sound.unloadAsync();
+    } : undefined;
+  }, [sound]);
+
+  const handlePlayAudio = async () => {
+    if (sound) {
+      if (isPlaying) {
+        await sound.pauseAsync();
+        setIsPlaying(false);
+      } else {
+        await sound.playAsync();
+        setIsPlaying(true);
+      }
+    } else {
+      try {
+        const { sound: newSound } = await Audio.Sound.createAsync(
+          { uri: questionContent.mediaUrl },
+          { shouldPlay: true }
+        );
+        setSound(newSound);
+        setIsPlaying(true);
+        newSound.setOnPlaybackStatusUpdate((status) => {
+          if (status.didJustFinish) {
+            setIsPlaying(false);
+            newSound.setPositionAsync(0);
+          }
+        });
+      } catch (error) {
+        console.error("Failed to load audio", error);
+      }
+    }
+  };
 
   const styles = useMemo(
     () =>
@@ -82,6 +120,11 @@ const QuestionCard = ({ question }) => {
                 height={200}
                 play={false}
                 videoId={getYoutubeId(questionContent.mediaUrl)}
+                initialPlayerParams={{
+                  modestbranding: true,
+                  rel: false,
+                  iv_load_policy: 3,
+                }}
               />
             </View>
           ) : (
@@ -93,6 +136,18 @@ const QuestionCard = ({ question }) => {
               isLooping={false}
             />
           )
+        )}
+
+        {/* Support for audio questions */}
+        {questionContent.type === "audio" && questionContent.mediaUrl && (
+          <View style={{ alignItems: 'center', marginBottom: 15 }}>
+            <IconButton
+              icon={isPlaying ? "pause-circle" : "play-circle"}
+              size={50}
+              iconColor={C.primary}
+              onPress={handlePlayAudio}
+            />
+          </View>
         )}
 
         {/* The question text is now always displayed. */}

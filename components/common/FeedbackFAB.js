@@ -43,7 +43,14 @@ const issueCategories = [
  * @property {string} [parentId]
  * @property {string} [titlePreview]
  */
-const FeedbackFAB = ({ contentContext, visible = true }) => {
+const FeedbackFAB = ({
+  contentContext = null,
+  style = {},
+  visible = true,
+  customFabStyle = {},
+  customIcon = "message-outline",
+  extraActions = [],
+}) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme; // Consolidate theme access
   const [fabOpen, setFabOpen] = useState(false);
@@ -248,6 +255,11 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
     },
   ].reverse(); // Reversed so "Report Issue" is often at the top of the expanded list
 
+  const combinedActions = [
+    ...extraActions,
+    ...fabActions,
+  ];
+
   // Define styles inside the component or ensure C (theme colors) is stable
   const styles = StyleSheet.create({
     modalContainer: {
@@ -292,6 +304,7 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
     // FAB main button style
     fabStyleForMainButton: {
       backgroundColor: C.fabBackground || C.primary,
+      ...customFabStyle,
     },
     // Dropdown styles
     dropdownAnchor: {
@@ -305,10 +318,8 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
       backgroundColor: C.inputBackground || C.background || "transparent",
     },
     dropdownAnchorText: {
-      fontSize: 16, // Match TextInput font size
-      color: selectedIssueCategory
-        ? C.inputText || C.textPrimary
-        : C.placeholder || C.textSecondary,
+      color: C.textPrimary || "#000000",
+      fontSize: 16,
     },
     dropdownErrorBorder: {
       borderColor: C.appWarning || C.errorRed || "#B00020", // Highlight if error related to category
@@ -446,15 +457,12 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
                 placeholderTextColor={C.placeholder || C.textSecondary}
                 theme={{
                   colors: {
-                    // Pass theme colors to ensure Paper TextInput is themed correctly
-                    text: C.inputText || C.textPrimary || "#000000",
+                    text: C.textPrimary || "#000000",
                     placeholder: C.placeholder || C.textSecondary || "#757575",
-                    primary: C.appPrimary || C.primary || "#6200EE", // Used for active outline, label
-                    background:
-                      C.inputBackground || C.background || "transparent", // Input field background
-                    onSurface: C.inputText || C.textPrimary || "#000000", // Text color on surface variants
-                    outline: C.border || C.placeholder || "#757575", // Border color
-                    // Add other theme overrides if needed for Paper components
+                    primary: C.primary || "#6200EE", 
+                    background: C.inputBackground || C.background || "transparent",
+                    onSurface: C.textPrimary || "#000000", 
+                    outline: C.border || C.placeholder || "#757575", 
                   },
                 }}
               />
@@ -509,10 +517,11 @@ const FeedbackFAB = ({ contentContext, visible = true }) => {
 
       {/* The actual FAB Group */}
       <FAB.Group
+        style={style}
         open={fabOpen}
         visible={visible} // Controlled by parent screen's gesture state
-        icon={fabOpen ? "close-circle-outline" : "message-plus-outline"}
-        actions={fabActions}
+        icon={fabOpen ? "close-circle-outline" : customIcon}
+        actions={combinedActions}
         onStateChange={onFabStateChange}
         onPress={() => {
           // Only toggle if the FAB is meant to be visible (prop `visible` is true)

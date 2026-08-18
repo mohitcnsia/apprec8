@@ -17,7 +17,7 @@ exports.recordQuizResult = functions
       );
     }
     const userId = context.auth.uid;
-    const { quizId, scoreAchieved, passingScore, maxScore } = data;
+    const { quizId, scoreAchieved, passingScore, maxScore, mode } = data;
     const now = admin.firestore.Timestamp.now(); // Firestore Timestamp for 'now'
     const serverTimestamp = FieldValue.serverTimestamp(); // For fields like lastUpdatedAt
 
@@ -32,6 +32,13 @@ exports.recordQuizResult = functions
         "invalid-argument",
         "Missing or invalid quiz result data, including maxScore."
       );
+    }
+
+    if (mode === "training") {
+      return {
+        status: "success",
+        message: "Training mode results are not recorded on the server.",
+      };
     }
 
     if (scoreAchieved < passingScore) {
@@ -92,14 +99,31 @@ exports.recordQuizResult = functions
         const currentHighestScore = existingAttemptData.highestScore || 0;
         const percentage = (scoreAchieved / maxScore) * 100;
 
-        // Star calculation (existing logic)
-        if (isFirstTimePassingThisQuiz) {
-          if (percentage === 100) quizPerfStars = 10;
-          else if (percentage >= 90) quizPerfStars = 5;
-          else quizPerfStars = 3;
+        // Check for 7-day spaced repetition reward
+        let isSpacedRepetitionReward = false;
+        if (!isFirstTimePassingThisQuiz && percentage === 100 && existingAttemptData.dateOfLastPerfectScore) {
+          const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+          const lastPerfectMs = existingAttemptData.dateOfLastPerfectScore.toMillis();
+          if (now.toMillis() - lastPerfectMs >= SEVEN_DAYS_MS) {
+            isSpacedRepetitionReward = true;
+          }
+        }
+
+        // Strict Anti-Farming Star Calculation
+        if (percentage === 100) {
+          if (isFirstTimePassingThisQuiz) {
+            if (attemptCount === 1) {
+              quizPerfStars = 15; // Flawless first try!
+            } else {
+              quizPerfStars = 10; // Finally mastered it
+            }
+          } else if (isSpacedRepetitionReward) {
+            quizPerfStars = 10; // Spaced repetition reward
+          } else {
+            quizPerfStars = 0; // Already mastered within 7 days, no farming!
+          }
         } else {
-          if (percentage === 100) quizPerfStars = 2;
-          else quizPerfStars = 1;
+          quizPerfStars = 0; // Must achieve 100% to earn stars
         }
 
         if (

@@ -49,6 +49,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
     navigation.navigate("QuizScreenV2", {
       quiz: quiz,
       mode: mode,
+      isFirstAttempt: !attempt,
     });
   };
 

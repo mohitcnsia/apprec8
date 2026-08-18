@@ -38,34 +38,48 @@ This document outlines how to build and run the Apprec8 application both locally
 
 ## 2. Building for Google Play (Production)
 
-The app is configured to use EAS (Expo Application Services) for cloud builds, as defined in `eas.json`.
+The app is configured to use EAS (Expo Application Services) for builds. While EAS can build in the cloud, you can build locally to avoid Expo server wait times. 
 
-### Prerequisites for Building
-1. You must be logged into EAS CLI:
+### Prerequisites for Local Building
+1. You must have **Android Studio** and the **Android SDK** installed and configured on your machine.
+2. You must be logged into EAS CLI:
    ```bash
    eas login
    ```
-2. Ensure your Firebase config (`google-services.json` and `.env` variables) are correctly set up, as `app.config.js` relies on them.
+3. Ensure your Firebase config (`google-services.json` and `.env` variables) are correctly set up, as `app.config.js` relies on them.
 
-### Triggering a Production Build
+### Step 1: Increment the App Version
+Before creating a new build for the Play Store, you **must** increment the app version in `app.config.js`. Check the `main` branch to ensure you are incrementing from the most recent production version.
 
-To create an Android App Bundle (`.aab`) which is required for the Google Play Store:
+1. Open `app.config.js`.
+2. Locate the version variables and increment the `patchVersion` (or `minorVersion`/`majorVersion` as needed):
+   ```javascript
+   const majorVersion = 20;
+   const minorVersion = 0;
+   const patchVersion = 9; // Increment this number
+   const buildIteration = 0; 
+   ```
+   *Note: The `androidVersionCode` is automatically calculated based on these variables, so updating the patch version will automatically satisfy Google Play's requirement for a higher version code.*
+
+### Step 2: Triggering a Local Production Build
+
+To create an Android App Bundle (`.aab`) locally, which is required for the Google Play Store, run:
 
 ```bash
-eas build --platform android --profile production
+npx eas build --profile production --platform android --local
 ```
 
 **What this does:**
-- It looks at the `production` profile in `eas.json`.
-- It sets `buildType: "app-bundle"` and `developmentClient: false`.
-- It builds the app on Expo's cloud servers.
-- Once complete, it will provide a link to download the `.aab` file.
+- It looks at the `production` profile in `eas.json` (`buildType: "app-bundle"`, `distribution: "store"`).
+- The `--local` flag forces EAS to use your machine's local Android SDK to compile the app instead of waiting in the Expo cloud queue.
+- It will prompt you for your Android Keystore password if it needs to sign the release.
+- Once complete, it will generate an `.aab` file in your project directory (e.g., `build/apprec8-xyz.aab`).
 
-### Submitting to Google Play
+### Step 3: Submitting to Google Play
 
-You can download the `.aab` file from the Expo dashboard and upload it manually to the Google Play Console, OR you can automate the submission using EAS Submit:
-
-```bash
-eas submit --platform android --profile production
-```
-*(You will need to have configured a Google Play Service Account key in your Expo dashboard for automated submissions).*
+1. Log in to your [Google Play Console](https://play.google.com/console).
+2. Select **Apprec8**.
+3. In the left menu, navigate to **Release > Production** (or Internal Testing).
+4. Click **Create new release**.
+5. Drag and drop the newly generated `.aab` file into the "App bundles" section.
+6. Add your release notes, click **Save**, **Review release**, and **Start rollout**.

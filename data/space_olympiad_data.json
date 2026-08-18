@@ -1,0 +1,1632 @@
+{
+  "category": {
+    "id": "space-science",
+    "title": "Space Science Olympiad",
+    "type": "COURSE",
+    "order": 10,
+    "description": "Preparation for EHF National Space Science Olympiad",
+    "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop"
+  },
+  "quizzes": [
+    {
+      "id": "space-level-1",
+      "title": "Level 1: The Solar System",
+      "order": 1,
+      "config": {
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "maxLives": 5
+      },
+      "questions": [
+        {
+          "question": "What is the closest star to Earth?",
+          "options": [
+            {
+              "content": "Sirius",
+              "isCorrect": false
+            },
+            {
+              "content": "The Sun",
+              "isCorrect": true
+            },
+            {
+              "content": "Proxima Centauri",
+              "isCorrect": false
+            },
+            {
+              "content": "Polaris (North Star)",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The Sun is actually a star! It is the closest star to Earth and the center of our solar system.",
+            "trivia": "The Sun is so huge that you could fit about 1.3 million Earths inside it!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg"
+          }
+        },
+        {
+          "question": "Which of these planets is the smallest in our Solar System and closest to the Sun?",
+          "options": [
+            {
+              "content": "Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Mercury",
+              "isCorrect": true
+            },
+            {
+              "content": "Mars",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Mercury is the smallest planet in our solar system and the closest to the Sun.",
+            "trivia": "Even though it's the closest to the Sun, Mercury is NOT the hottest planet. Venus is hotter because of its thick atmosphere!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mercury_in_true_color.jpg"
+          }
+        },
+        {
+          "question": "In August 2023, India made history by landing Chandrayaan-3 near which part of the Moon?",
+          "options": [
+            {
+              "content": "The North Pole",
+              "isCorrect": false
+            },
+            {
+              "content": "The Equator",
+              "isCorrect": false
+            },
+            {
+              "content": "The South Pole",
+              "isCorrect": true
+            },
+            {
+              "content": "The Dark Side",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Chandrayaan-3's Vikram lander successfully touched down near the lunar south pole.",
+            "trivia": "India became the first country ever to land a spacecraft near the Moon's rugged south pole!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/8/87/Chandrayaan-3_Vikram_Lander_from_Pragyan_Rover.jpg"
+          }
+        },
+        {
+          "question": "What causes day and night on Earth?",
+          "options": [
+            {
+              "content": "The Earth spinning on its axis",
+              "isCorrect": true
+            },
+            {
+              "content": "The Sun moving around the Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "The Moon blocking the Sun",
+              "isCorrect": false
+            },
+            {
+              "content": "Clouds covering the sky",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "As the Earth rotates on its axis, one side faces the Sun (Day) while the other side faces away (Night).",
+            "trivia": "The Earth spins incredibly fast! If you are standing on the equator, you are moving at about 1,000 miles per hour!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg"
+          }
+        },
+        {
+          "question": "What is the name of ISRO's upcoming mission that aims to send Indian astronauts into space?",
+          "options": [
+            {
+              "content": "Mangalyaan",
+              "isCorrect": false
+            },
+            {
+              "content": "Gaganyaan",
+              "isCorrect": true
+            },
+            {
+              "content": "Aditya-L1",
+              "isCorrect": false
+            },
+            {
+              "content": "Astrosat",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The Gaganyaan mission is designed to demonstrate human spaceflight capability by launching a crew into an orbit of 400 km.",
+            "trivia": "'Gaganyaan' means 'Celestial Vehicle' in Sanskrit. The Indian astronauts training for this mission are called 'Gaganauts'!",
+            "mediaType": "video",
+            "mediaUrl": "https://www.youtube.com/watch?v=F07_VjF0jHk"
+          }
+        },
+        {
+          "question": "Which planet is known as the 'Red Planet' because of rusty iron dust on its surface?",
+          "options": [
+            {
+              "content": "Venus",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            },
+            {
+              "content": "Mars",
+              "isCorrect": true
+            },
+            {
+              "content": "Uranus",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Mars appears red because its surface is covered in iron oxide, which is the exact same material that makes rust on Earth!",
+            "trivia": "Mars is home to Olympus Mons, the largest volcano in the entire solar system. It is nearly three times taller than Mount Everest!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg"
+          }
+        },
+        {
+          "question": "Who was the first Indian citizen to travel into space?",
+          "options": [
+            {
+              "content": "Kalpana Chawla",
+              "isCorrect": false
+            },
+            {
+              "content": "Sunita Williams",
+              "isCorrect": false
+            },
+            {
+              "content": "Rakesh Sharma",
+              "isCorrect": true
+            },
+            {
+              "content": "Ravish Malhotra",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Wing Commander Rakesh Sharma flew aboard the Soviet Soyuz T-11 rocket in 1984, becoming the first Indian in space.",
+            "trivia": "When the Indian Prime Minister asked him how India looked from space, he famously replied 'Sare Jahan Se Achha' (Better than the entire world)!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Rakesh_Sharma_in_1984.jpg/800px-Rakesh_Sharma_in_1984.jpg"
+          }
+        },
+        {
+          "question": "Why does the Moon shine brightly in the night sky?",
+          "options": [
+            {
+              "content": "It makes its own light",
+              "isCorrect": false
+            },
+            {
+              "content": "It reflects light from the Sun",
+              "isCorrect": true
+            },
+            {
+              "content": "It reflects light from the Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "It is covered in glowing rocks",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The Moon doesn't emit its own light. It acts like a giant mirror in space, reflecting the Sun's light down to Earth.",
+            "trivia": "The footprints left by Apollo astronauts on the Moon will probably stay there for millions of years because there is no wind to blow them away!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg"
+          }
+        },
+        {
+          "question": "Which is the largest planet in our Solar System, famous for its Great Red Spot?",
+          "options": [
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": true
+            },
+            {
+              "content": "Neptune",
+              "isCorrect": false
+            },
+            {
+              "content": "Earth",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Jupiter is a gas giant and by far the largest planet in our solar system.",
+            "trivia": "The Great Red Spot on Jupiter is actually a giant, swirling storm that is larger than Earth and has been raging for hundreds of years!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg"
+          }
+        },
+        {
+          "question": "Where is the main Asteroid Belt located in our Solar System?",
+          "options": [
+            {
+              "content": "Between Earth and Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "Between Mars and Jupiter",
+              "isCorrect": true
+            },
+            {
+              "content": "Past Pluto",
+              "isCorrect": false
+            },
+            {
+              "content": "Between Mercury and Venus",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The main asteroid belt is a ring of rocky debris orbiting the Sun between the inner and outer planets.",
+            "trivia": "Even though there are millions of asteroids in the belt, if you gathered them all together, they would still be smaller than our Moon!",
+            "mediaType": "video",
+            "mediaUrl": "https://www.youtube.com/watch?v=kYjY-W12NlQ"
+          }
+        },
+        {
+          "id": "q_extra_1_l1",
+          "question": "What is the largest planet in our solar system?",
+          "options": [
+            {
+              "content": "Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": true
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Jupiter is the largest planet in our solar system, with a mass more than two and a half times that of all the other planets in the solar system combined.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_2_l1",
+          "question": "Which planet is known as the Red Planet?",
+          "options": [
+            {
+              "content": "Venus",
+              "isCorrect": false
+            },
+            {
+              "content": "Mars",
+              "isCorrect": true
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Mars is often called the Red Planet because iron oxide on its surface gives it a reddish appearance.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_3_l1",
+          "question": "What is the name of our galaxy?",
+          "options": [
+            {
+              "content": "Andromeda",
+              "isCorrect": false
+            },
+            {
+              "content": "Milky Way",
+              "isCorrect": true
+            },
+            {
+              "content": "Triangulum",
+              "isCorrect": false
+            },
+            {
+              "content": "Sombrero",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Our solar system is located in the Milky Way galaxy.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_4_l1",
+          "question": "Which planet has the most prominent ring system?",
+          "options": [
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": true
+            },
+            {
+              "content": "Uranus",
+              "isCorrect": false
+            },
+            {
+              "content": "Neptune",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Saturn is famous for its extensive and bright ring system.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_5_l1",
+          "question": "What is the hottest planet in our solar system?",
+          "options": [
+            {
+              "content": "Mercury",
+              "isCorrect": false
+            },
+            {
+              "content": "Venus",
+              "isCorrect": true
+            },
+            {
+              "content": "Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Venus is the hottest planet due to its thick atmosphere which creates a strong greenhouse effect.",
+          "difficulty": 2,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_6_l1",
+          "question": "Dummy Space Question 6 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_7_l1",
+          "question": "Dummy Space Question 7 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_8_l1",
+          "question": "Dummy Space Question 8 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_9_l1",
+          "question": "Dummy Space Question 9 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_10_l1",
+          "question": "Dummy Space Question 10 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_11_l1",
+          "question": "Dummy Space Question 11 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_12_l1",
+          "question": "Dummy Space Question 12 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_13_l1",
+          "question": "Dummy Space Question 13 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_14_l1",
+          "question": "Dummy Space Question 14 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_15_l1",
+          "question": "Dummy Space Question 15 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        }
+      ]
+    },
+    {
+      "id": "space-level-2",
+      "title": "Level 2: Moons and Eclipses",
+      "order": 2,
+      "config": {
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "maxLives": 4
+      },
+      "questions": [
+        {
+          "question": "Which planet in our solar system has the most known moons?",
+          "options": [
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": true
+            },
+            {
+              "content": "Uranus",
+              "isCorrect": false
+            },
+            {
+              "content": "Neptune",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Saturn currently holds the record for the most known moons in the solar system, officially surpassing Jupiter recently.",
+            "trivia": "Saturn has over 140 known moons! The largest one is Titan, which is actually bigger than the planet Mercury.",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg"
+          }
+        },
+        {
+          "question": "What is the famous comet that can be seen from Earth every 75-76 years?",
+          "options": [
+            {
+              "content": "Hale-Bopp",
+              "isCorrect": false
+            },
+            {
+              "content": "Shoemaker-Levy 9",
+              "isCorrect": false
+            },
+            {
+              "content": "Halley's Comet",
+              "isCorrect": true
+            },
+            {
+              "content": "Encke",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Halley's Comet is a 'short-period' comet visible from Earth every 75\u201376 years.",
+            "trivia": "The famous author Mark Twain was born shortly after Halley's Comet appeared in 1835, and he predicted he would 'go out with it' in 1910\u2014and he was right!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Lspn_comet_halley.jpg"
+          }
+        },
+        {
+          "question": "Which of these is the largest dwarf planet in our solar system?",
+          "options": [
+            {
+              "content": "Pluto",
+              "isCorrect": true
+            },
+            {
+              "content": "Ceres",
+              "isCorrect": false
+            },
+            {
+              "content": "Makemake",
+              "isCorrect": false
+            },
+            {
+              "content": "Eris",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Pluto is the largest known dwarf planet by volume, although Eris is slightly more massive.",
+            "trivia": "In 2006, Pluto was reclassified from a 'planet' to a 'dwarf planet' because it hasn't cleared its neighboring region of other objects.",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Pluto_in_True_Color_-_High-Res.jpg"
+          }
+        },
+        {
+          "question": "What is a 'shooting star' actually called in astronomy when it enters Earth's atmosphere?",
+          "options": [
+            {
+              "content": "Asteroid",
+              "isCorrect": false
+            },
+            {
+              "content": "Meteor",
+              "isCorrect": true
+            },
+            {
+              "content": "Comet",
+              "isCorrect": false
+            },
+            {
+              "content": "Meteorite",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "When space rocks burn up in Earth's atmosphere causing a bright streak of light, they are called Meteors.",
+            "trivia": "If a meteor survives its fiery journey and hits the ground, it is then called a 'Meteorite'!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/6/61/Meteor_burst.jpg"
+          }
+        },
+        {
+          "question": "Which moon is the only place beyond Earth where humans have set foot?",
+          "options": [
+            {
+              "content": "Europa",
+              "isCorrect": false
+            },
+            {
+              "content": "Titan",
+              "isCorrect": false
+            },
+            {
+              "content": "The Moon (Luna)",
+              "isCorrect": true
+            },
+            {
+              "content": "Phobos",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Earth's Moon (also called Luna) is the only celestial body visited by humans, starting with the Apollo 11 mission in 1969.",
+            "trivia": "A total of 12 people have walked on the Moon, all of them American astronauts during the Apollo program.",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Apollo_11_first_step.jpg"
+          }
+        },
+        {
+          "id": "q_extra_1_l2",
+          "question": "What is the largest planet in our solar system?",
+          "options": [
+            {
+              "content": "Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": true
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Jupiter is the largest planet in our solar system, with a mass more than two and a half times that of all the other planets in the solar system combined.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_2_l2",
+          "question": "Which planet is known as the Red Planet?",
+          "options": [
+            {
+              "content": "Venus",
+              "isCorrect": false
+            },
+            {
+              "content": "Mars",
+              "isCorrect": true
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Mars is often called the Red Planet because iron oxide on its surface gives it a reddish appearance.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_3_l2",
+          "question": "What is the name of our galaxy?",
+          "options": [
+            {
+              "content": "Andromeda",
+              "isCorrect": false
+            },
+            {
+              "content": "Milky Way",
+              "isCorrect": true
+            },
+            {
+              "content": "Triangulum",
+              "isCorrect": false
+            },
+            {
+              "content": "Sombrero",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Our solar system is located in the Milky Way galaxy.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_4_l2",
+          "question": "Which planet has the most prominent ring system?",
+          "options": [
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            },
+            {
+              "content": "Saturn",
+              "isCorrect": true
+            },
+            {
+              "content": "Uranus",
+              "isCorrect": false
+            },
+            {
+              "content": "Neptune",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Saturn is famous for its extensive and bright ring system.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_5_l2",
+          "question": "What is the hottest planet in our solar system?",
+          "options": [
+            {
+              "content": "Mercury",
+              "isCorrect": false
+            },
+            {
+              "content": "Venus",
+              "isCorrect": true
+            },
+            {
+              "content": "Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "Jupiter",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Venus is the hottest planet due to its thick atmosphere which creates a strong greenhouse effect.",
+          "difficulty": 2,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_6_l2",
+          "question": "Dummy Space Question 6 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_7_l2",
+          "question": "Dummy Space Question 7 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_8_l2",
+          "question": "Dummy Space Question 8 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_9_l2",
+          "question": "Dummy Space Question 9 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_10_l2",
+          "question": "Dummy Space Question 10 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_11_l2",
+          "question": "Dummy Space Question 11 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_12_l2",
+          "question": "Dummy Space Question 12 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_13_l2",
+          "question": "Dummy Space Question 13 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_14_l2",
+          "question": "Dummy Space Question 14 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        },
+        {
+          "id": "q_extra_15_l2",
+          "question": "Dummy Space Question 15 for testing random pool?",
+          "options": [
+            {
+              "content": "Wrong A",
+              "isCorrect": false
+            },
+            {
+              "content": "Wrong B",
+              "isCorrect": false
+            },
+            {
+              "content": "Correct C",
+              "isCorrect": true
+            },
+            {
+              "content": "Wrong D",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "This is a dummy question added to increase the pool size for random selection testing.",
+          "difficulty": 1,
+          "type": "multiple-choice"
+        }
+      ]
+    },
+    {
+      "id": "space-level-3",
+      "title": "Level 3: Galaxies and Stars",
+      "order": 3,
+      "config": {
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "maxLives": 3
+      },
+      "questions": [
+        {
+          "question": "What was the name of the first artificial satellite launched into space?",
+          "options": [
+            {
+              "content": "Apollo 1",
+              "isCorrect": false
+            },
+            {
+              "content": "Sputnik 1",
+              "isCorrect": true
+            },
+            {
+              "content": "Explorer 1",
+              "isCorrect": false
+            },
+            {
+              "content": "Vostok 1",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Sputnik 1 was launched by the Soviet Union in 1957, marking the beginning of the Space Age.",
+            "trivia": "It was about the size of a beach ball and its only job was to transmit a simple 'beep-beep' radio signal back to Earth!",
+            "mediaType": "video",
+            "mediaUrl": "https://www.youtube.com/watch?v=KvyH4lqXq90"
+          }
+        },
+        {
+          "question": "What was the primary goal of India's historic Mangalyaan (Mars Orbiter Mission)?",
+          "options": [
+            {
+              "content": "To land a rover on Mars",
+              "isCorrect": false
+            },
+            {
+              "content": "To orbit Mars and study its surface and atmosphere",
+              "isCorrect": true
+            },
+            {
+              "content": "To bring Martian soil back to Earth",
+              "isCorrect": false
+            },
+            {
+              "content": "To send astronauts to Mars",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Mangalyaan was an orbital mission designed to study Martian topography, morphology, and the atmosphere.",
+            "trivia": "ISRO achieved this on its very first attempt, and it was the most cost-effective Mars mission ever done\u2014costing less than the Hollywood movie 'Gravity'!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Mars_Orbiter_Mission_%28Mangalyaan%29.jpg"
+          }
+        },
+        {
+          "question": "Which space telescope was launched in 1990 and has taken some of the most famous deep-space photos?",
+          "options": [
+            {
+              "content": "James Webb Space Telescope",
+              "isCorrect": false
+            },
+            {
+              "content": "Hubble Space Telescope",
+              "isCorrect": true
+            },
+            {
+              "content": "Kepler Space Telescope",
+              "isCorrect": false
+            },
+            {
+              "content": "Spitzer Space Telescope",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The Hubble Space Telescope orbits Earth above the atmosphere, allowing it to capture incredibly clear images of the universe.",
+            "trivia": "When Hubble was first launched, its primary mirror had a tiny flaw (1/50th the thickness of a human hair) which made images blurry until astronauts fixed it in space!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
+          }
+        },
+        {
+          "question": "Who was the first woman to travel into space?",
+          "options": [
+            {
+              "content": "Sally Ride",
+              "isCorrect": false
+            },
+            {
+              "content": "Kalpana Chawla",
+              "isCorrect": false
+            },
+            {
+              "content": "Valentina Tereshkova",
+              "isCorrect": true
+            },
+            {
+              "content": "Mae Jemison",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Soviet cosmonaut Valentina Tereshkova became the first woman in space in 1963 aboard the Vostok 6.",
+            "trivia": "During her mission, she orbited the Earth 48 times and spent almost 3 days in space!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/Valentina_Tereshkova_portrait.jpg"
+          }
+        },
+        {
+          "question": "Which female astronaut holds the record for the longest single spaceflight by a woman?",
+          "options": [
+            {
+              "content": "Christina Koch",
+              "isCorrect": true
+            },
+            {
+              "content": "Peggy Whitson",
+              "isCorrect": false
+            },
+            {
+              "content": "Sunita Williams",
+              "isCorrect": false
+            },
+            {
+              "content": "Jessica Meir",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "NASA astronaut Christina Koch spent 328 consecutive days on the International Space Station.",
+            "trivia": "She also participated in the first all-female spacewalk with her colleague Jessica Meir!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/9/91/Christina_Hammock_Koch.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "space-level-4",
+      "title": "Level 4: Space Physics and Exploration",
+      "order": 4,
+      "config": {
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "maxLives": 3
+      },
+      "questions": [
+        {
+          "question": "What is the name of the galaxy that contains our Solar System?",
+          "options": [
+            {
+              "content": "Andromeda",
+              "isCorrect": false
+            },
+            {
+              "content": "Triangulum",
+              "isCorrect": false
+            },
+            {
+              "content": "The Milky Way",
+              "isCorrect": true
+            },
+            {
+              "content": "Sombrero",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "We live in the Milky Way, a barred spiral galaxy containing an estimated 100-400 billion stars.",
+            "trivia": "If you look up at a very dark night sky, the Milky Way looks like a hazy, glowing band of milk stretched across the stars.",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/4/43/ESO-VLT-Laser-phot-33a-07.jpg"
+          }
+        },
+        {
+          "question": "What is a black hole?",
+          "options": [
+            {
+              "content": "A star that produces dark light",
+              "isCorrect": false
+            },
+            {
+              "content": "A region of space where gravity is so strong that not even light can escape",
+              "isCorrect": true
+            },
+            {
+              "content": "An empty void between galaxies",
+              "isCorrect": false
+            },
+            {
+              "content": "A planet with no sun",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "A black hole is incredibly dense with gravity so intense that it sucks in everything around it, including light.",
+            "trivia": "The boundary around a black hole where nothing can escape is terrifyingly called the 'Event Horizon'.",
+            "mediaType": "video",
+            "mediaUrl": "https://www.youtube.com/watch?v=e-P5IFTqB98"
+          }
+        },
+        {
+          "question": "What is the closest major galaxy to the Milky Way?",
+          "options": [
+            {
+              "content": "Andromeda Galaxy",
+              "isCorrect": true
+            },
+            {
+              "content": "Whirlpool Galaxy",
+              "isCorrect": false
+            },
+            {
+              "content": "Pinwheel Galaxy",
+              "isCorrect": false
+            },
+            {
+              "content": "Large Magellanic Cloud",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "The Andromeda Galaxy is our closest large galactic neighbor, located about 2.5 million light-years away.",
+            "trivia": "The Milky Way and Andromeda are currently rushing toward each other and will eventually crash and merge into one giant galaxy billions of years from now!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg"
+          }
+        },
+        {
+          "question": "What unit of measurement is used to measure the immense distances between stars?",
+          "options": [
+            {
+              "content": "Kilometers",
+              "isCorrect": false
+            },
+            {
+              "content": "Miles",
+              "isCorrect": false
+            },
+            {
+              "content": "Light-years",
+              "isCorrect": true
+            },
+            {
+              "content": "Astronomical Units (AU)",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "A light-year is the distance that light travels in one Earth year, which is nearly 6 trillion miles!",
+            "trivia": "Because light takes time to travel, when you look at a star that is 10 light-years away, you are actually seeing how it looked 10 years ago in the past!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Alpha_Centauri_relative_sizes.png"
+          }
+        },
+        {
+          "question": "What are exoplanets?",
+          "options": [
+            {
+              "content": "Planets that have exploded",
+              "isCorrect": false
+            },
+            {
+              "content": "Planets that orbit stars outside our solar system",
+              "isCorrect": true
+            },
+            {
+              "content": "Dwarf planets like Pluto",
+              "isCorrect": false
+            },
+            {
+              "content": "Planets made entirely of gas",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "An exoplanet (extrasolar planet) is any planet that orbits a star other than our own Sun.",
+            "trivia": "Scientists have discovered thousands of exoplanets! Some are strange worlds where it rains glass sideways, or planets made mostly of diamond!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/5/52/Kepler-186f_artist_concept.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "space-level-5",
+      "title": "Level 5: Planetary Facts",
+      "order": 5,
+      "config": {
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "maxLives": 3
+      },
+      "questions": [
+        {
+          "question": "Which fundamental force is responsible for keeping the planets in orbit around the Sun?",
+          "options": [
+            {
+              "content": "Electromagnetism",
+              "isCorrect": false
+            },
+            {
+              "content": "Strong Nuclear Force",
+              "isCorrect": false
+            },
+            {
+              "content": "Gravity",
+              "isCorrect": true
+            },
+            {
+              "content": "Weak Nuclear Force",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Gravity is the invisible force of attraction between all masses in the universe, keeping planets tethered to their stars.",
+            "trivia": "Without gravity, if you jumped up, you would float off into space and never come down!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Newtons_law_of_universal_gravitation.svg"
+          }
+        },
+        {
+          "question": "According to Albert Einstein, gravity is actually the curving of what?",
+          "options": [
+            {
+              "content": "Magnetic fields",
+              "isCorrect": false
+            },
+            {
+              "content": "Dark matter",
+              "isCorrect": false
+            },
+            {
+              "content": "Spacetime",
+              "isCorrect": true
+            },
+            {
+              "content": "Light waves",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "In his General Theory of Relativity, Einstein showed that massive objects like the Sun warp the fabric of space and time around them.",
+            "trivia": "Imagine putting a heavy bowling ball on a trampoline. It creates a dip. If you roll a marble on the trampoline, it orbits the dip. That's exactly how gravity works in spacetime!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/2/22/Spacetime_lattice_analogy.svg"
+          }
+        },
+        {
+          "question": "What happens to time as you get closer to a massive object with intense gravity, like a black hole?",
+          "options": [
+            {
+              "content": "Time speeds up",
+              "isCorrect": false
+            },
+            {
+              "content": "Time slows down (Time Dilation)",
+              "isCorrect": true
+            },
+            {
+              "content": "Time goes backwards",
+              "isCorrect": false
+            },
+            {
+              "content": "Time completely stops immediately",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "This effect is called 'gravitational time dilation'. Gravity literally stretches time, making it move slower relative to an observer further away.",
+            "trivia": "Because of this, your head is actually aging very, very slightly faster than your feet because your feet are closer to Earth's gravity!",
+            "mediaType": "video",
+            "mediaUrl": "https://www.youtube.com/watch?v=PdqlKqXbH7I"
+          }
+        },
+        {
+          "question": "What is the speed of light in a vacuum?",
+          "options": [
+            {
+              "content": "Approx 300,000 km per second",
+              "isCorrect": true
+            },
+            {
+              "content": "Approx 300,000 km per hour",
+              "isCorrect": false
+            },
+            {
+              "content": "Approx 1 million km per second",
+              "isCorrect": false
+            },
+            {
+              "content": "Approx 343 meters per second",
+              "isCorrect": false
+            }
+          ],
+          "explanation": {
+            "text": "Light travels at a blistering speed of 299,792 kilometers per second (or about 186,000 miles per second) in a vacuum.",
+            "trivia": "It is the ultimate speed limit of the universe! Nothing with mass can ever travel faster than the speed of light.",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Speed_of_light_from_Earth_to_Moon.gif/800px-Speed_of_light_from_Earth_to_Moon.gif"
+          }
+        },
+        {
+          "question": "What mysterious invisible substance makes up about 85% of the matter in the universe, holding galaxies together?",
+          "options": [
+            {
+              "content": "Antimatter",
+              "isCorrect": false
+            },
+            {
+              "content": "Neutrinos",
+              "isCorrect": false
+            },
+            {
+              "content": "Dark Energy",
+              "isCorrect": false
+            },
+            {
+              "content": "Dark Matter",
+              "isCorrect": true
+            }
+          ],
+          "explanation": {
+            "text": "Dark Matter does not emit, absorb, or reflect light, but scientists know it exists because of its gravitational pull on visible galaxies.",
+            "trivia": "Even though it makes up most of the universe, scientists still don't know exactly what Dark Matter is made of!",
+            "mediaType": "image",
+            "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Dark_Matter_Distribution_in_the_Universe.jpg"
+          }
+        }
+      ]
+    }
+  ]
+}

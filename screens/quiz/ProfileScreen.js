@@ -16,6 +16,9 @@ import {
   Alert, // Keep Alert if used elsewhere, though not for delete button directly here now
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import SeedDataFixButton from "../../components/quiz/SeedDataFixButton";
+import SeedQuestNodesButton from "../../components/quiz/SeedQuestNodesButton";
+import SeedDataButton from "../../components/quiz/SeedDataButton";
 import firestore from "@react-native-firebase/firestore";
 import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is correct
 import ConfirmationModal from "../../components/common/ConfirmationModel";
@@ -668,6 +671,9 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         </View>
 
         {/* REMOVED Delete Account Button from here */}
+        <SeedDataFixButton />
+        <SeedQuestNodesButton />
+        <SeedDataButton />
 
         {typeof signoutHandler === "function" && (
           <Pressable

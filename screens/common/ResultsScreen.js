@@ -92,7 +92,7 @@ const ResultsScreen = ({ route, navigation }) => {
     ],
     effects = {},
     submissionContext = null,
-    // feedbackContext has been removed
+    missedQuestions = [],
   } = route.params || {};
 
   const asset = getResultAsset(route.params);
@@ -241,7 +241,29 @@ const ResultsScreen = ({ route, navigation }) => {
           zIndex: 10,
           pointerEvents: "none",
         },
-        // tripleTapZone style has been removed
+        practiceContainer: {
+          width: "90%",
+          backgroundColor: "rgba(255, 255, 255, 0.15)",
+          borderRadius: 15,
+          padding: 15,
+          marginVertical: 15,
+          borderWidth: 1,
+          borderColor: "rgba(255, 255, 255, 0.3)",
+        },
+        practiceHeader: {
+          fontFamily: "deliusBold",
+          fontSize: 18,
+          color: C.textPrimaryOnGradient || "#FFFFFF",
+          marginBottom: 10,
+          textAlign: "center",
+        },
+        practiceItem: {
+          fontFamily: "delius",
+          fontSize: 15,
+          color: C.textSecondaryOnGradient || "#E0E0E0",
+          marginBottom: 8,
+          paddingLeft: 10,
+        },
       }),
     [C]
   );
@@ -282,6 +304,16 @@ const ResultsScreen = ({ route, navigation }) => {
               </Text>
             ))}
           </View>
+          
+          {missedQuestions && missedQuestions.length > 0 && (
+            <View style={styles.practiceContainer}>
+              <Text style={styles.practiceHeader}>Needs Practice 📚</Text>
+              {missedQuestions.map((qText, idx) => (
+                <Text key={idx} style={styles.practiceItem}>• {qText}</Text>
+              ))}
+            </View>
+          )}
+
           <View style={styles.statusContainer}>
             {submitStatus === "submitting" && (
               <ActivityIndicator

@@ -15,6 +15,8 @@ import {
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useTheme } from "../../context/ThemeContext";
 import { useQuizEngine } from "../../hooks/useQuizEngine";
@@ -23,11 +25,12 @@ import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 
 const QuizScreenV2 = ({ route, navigation }) => {
+  const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const C = theme.appColors || theme;
-  const { quiz, mode } = route.params;
+  const { quiz, mode, isFirstAttempt } = route.params;
 
-  const { state, dispatch } = useQuizEngine(quiz, mode);
+  const { state, dispatch } = useQuizEngine(quiz, mode, isFirstAttempt);
   const { status, questions, error, currentIndex, score, lives } = state;
   const { playSuccess, playFailure } = useSoundEffects();
 
@@ -43,21 +46,28 @@ const QuizScreenV2 = ({ route, navigation }) => {
    */
   useEffect(() => {
     if (status === "finished") {
-      const maxPossibleScore = questions.reduce(
-        (sum, q) => sum + (q.stars || 10),
-        0,
-      );
-      const isPerfectScore = maxPossibleScore > 0 && score === maxPossibleScore;
+      let maxPossibleScore;
+      if (mode === "exam") {
+        maxPossibleScore = 10;
+      } else {
+        maxPossibleScore = questions.reduce(
+          (sum, q) => sum + (q.stars || 10),
+          0,
+        );
+      }
+      
+      const isPerfectScore = score >= maxPossibleScore; // In exam, it can be 15 which is >= 10
 
       const resultParams = {
         title: "Quiz Complete!",
         message: "Great effort, {username}!",
         finalScore: score,
-        maxPossibleScore: maxPossibleScore,
+        maxPossibleScore: mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore,
+        missedQuestions: state.missedQuestions || [],
         metrics: [
           {
             label: "Final Score",
-            value: `${score} / ${maxPossibleScore} Stars`,
+            value: `${score} / ${mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore} Stars`,
           },
         ],
         actions: [
@@ -70,17 +80,17 @@ const QuizScreenV2 = ({ route, navigation }) => {
             label: "Exit",
             onPress: () =>
               navigation.navigate("QuestMap", {
-                completedQuizId: mode === "exam" ? quiz.id : null,
+                completedQuizId: (mode === "exam" && score >= maxPossibleScore) ? quiz.id : null,
               }),
             mode: "outlined",
           },
         ],
         effects: { confetti: isPerfectScore },
-        submissionContext: {
+        submissionContext: mode === "training" ? null : {
           // UnComment this
-          // cloudFunctionName: "recordQuizResult",
+          cloudFunctionName: "recordQuizResult",
           /// And delete this///
-          cloudFunctionName: "DelteMeLater",
+          // cloudFunctionName: "DelteMeLater",
           ///////
           payload: {
             quizId: quiz.id,
@@ -104,20 +114,43 @@ const QuizScreenV2 = ({ route, navigation }) => {
       explanation: currentQuestion.explanation,
       isCorrect: state.wasCorrect,
       isLastQuestion: isLastQuestion,
-      // onContinue: () => dispatch({ type: "NEXT_QUESTION" }),
+      quizId: quiz.id,
+      questionId: currentQuestion.id,
       onNext: () => dispatch({ type: "NEXT_QUESTION" }),
     });
     // dispatch({ type: "NEXT_QUESTION" });
   };
 
-  const handleCheckAnswer = () => {
+  const handleCheckAnswer = async () => {
     if (!state.selectedAnswer) return;
-    if (state.selectedAnswer.isCorrect) {
+    const isCorrect = state.selectedAnswer.isCorrect;
+    const currentQuestion = questions[currentIndex];
+    
+    if (isCorrect) {
       playSuccess();
     } else {
       playFailure();
     }
     dispatch({ type: "CHECK_ANSWER" });
+
+    // Update Local Question Analytics
+    try {
+      const statsKey = `quizStats_${quiz.id}`;
+      const statsJson = await AsyncStorage.getItem(statsKey);
+      let stats = statsJson ? JSON.parse(statsJson) : {};
+      
+      const qStats = stats[currentQuestion.id] || { seen: 0, correct: 0, wrong: 0 };
+      qStats.seen += 1;
+      if (isCorrect) {
+        qStats.correct += 1;
+      } else {
+        qStats.wrong += 1;
+      }
+      stats[currentQuestion.id] = qStats;
+      await AsyncStorage.setItem(statsKey, JSON.stringify(stats));
+    } catch (e) {
+      console.warn("Failed to save local question stats:", e);
+    }
   };
 
   const styles = useMemo(
@@ -137,8 +170,8 @@ const QuizScreenV2 = ({ route, navigation }) => {
           marginBottom: 15,
         },
         scrollableContainer: { flex: 1 },
-        scrollContent: { flexGrow: 1, padding: 15, paddingTop: 60 },
-        footer: { padding: 15, paddingTop: 5, backgroundColor: "transparent" },
+        scrollContent: { flexGrow: 1, padding: 15, paddingTop: 60, paddingBottom: Math.max(40, insets.bottom + 20) },
+        footer: { padding: 15, paddingTop: 5, paddingBottom: Math.max(40, insets.bottom + 20), backgroundColor: "transparent" },
         progressText: {
           color: C.textOnPrimary || "white",
           fontSize: 16,
@@ -228,7 +261,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
           marginBottom: 10,
         },
       }),
-    [C],
+    [C, insets.bottom],
   );
 
   const renderContent = () => {
@@ -341,31 +374,37 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 </TouchableOpacity>
               )}
               <QuestionCard question={currentQuestion} />
-              {currentQuestion.options.map((option, index) => (
-                <Option
-                  key={index}
-                  option={option}
-                  onPress={() => {
-                    if (mode === "training") {
-                      dispatch({
-                        type: "SELECT_ANSWER",
-                        payload: { selectedOption: option },
-                      });
-                    } else {
-                      dispatch({
-                        type: "ANSWER_AND_ADVANCE",
-                        payload: {
-                          questionId: currentQuestion.id,
-                          selectedOption: option,
-                        },
-                      });
-                    }
-                  }}
-                  isSelected={state.selectedAnswer?.content === option.content}
-                  showFeedback={state.showFeedback}
-                  isCorrect={option.isCorrect}
-                />
-              ))}
+              
+              {/* Spacer to push options to the bottom (Thumb Zone) */}
+              <View style={{ flex: 1 }} />
+
+              <View style={{ marginTop: 10, paddingBottom: 10 }}>
+                {currentQuestion.options.map((option, index) => (
+                  <Option
+                    key={index}
+                    option={option}
+                    onPress={() => {
+                      if (mode === "training") {
+                        dispatch({
+                          type: "SELECT_ANSWER",
+                          payload: { selectedOption: option },
+                        });
+                      } else {
+                        dispatch({
+                          type: "ANSWER_AND_ADVANCE",
+                          payload: {
+                            questionId: currentQuestion.id,
+                            selectedOption: option,
+                          },
+                        });
+                      }
+                    }}
+                    isSelected={state.selectedAnswer?.content === option.content}
+                    showFeedback={state.showFeedback}
+                    isCorrect={option.isCorrect}
+                  />
+                ))}
+              </View>
             </ScrollView>
             {mode === "training" && (
               <View style={[styles.footer, state.showFeedback && (state.wasCorrect ? styles.footerCorrect : styles.footerIncorrect)]}>
@@ -455,7 +494,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
             <PaperButton
               mode="contained"
               style={{ marginTop: 20 }}
-              onPress={() => dispatch({ type: "SUBMIT_EXAM" })}
+              onPress={() => dispatch({ type: "SUBMIT_EXAM", payload: { isFirstAttempt } })}
             >
               Submit Exam
             </PaperButton>

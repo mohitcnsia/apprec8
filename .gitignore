@@ -216,3 +216,4 @@ fix_*.patch
 /packages/**/types_generated/
 components/utils/markdownUtil.js
 data/temp.md
+*.aab
