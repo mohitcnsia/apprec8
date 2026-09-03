@@ -11,6 +11,9 @@ import QuizDetailsScreen from "../screens/quiz/QuizDetailsScreen";
 import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
 import ExplanationScreen from "../screens/quiz/ExplanationScreen";
 import ResultsScreen from "../screens/common/ResultsScreen";
+import Apprec8Reader from "../components/common/reader/Apprec8Reader";
+import VocabBuilder from "../components/VocabBuilder";
+import SpellingBeeGame from "../components/SpellingBeeGame";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +44,9 @@ const QuestNavigator = () => {
       <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} />
       <Stack.Screen name="Explanation" component={ExplanationScreen} />
       <Stack.Screen name="ResultsScreen" component={ResultsScreen} />
+      <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} />
+      <Stack.Screen name="VocabBuilder" component={VocabBuilder} />
+      <Stack.Screen name="SpellingBeeGame" component={SpellingBeeGame} />
     </Stack.Navigator>
   );
 };

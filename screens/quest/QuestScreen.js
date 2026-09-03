@@ -35,6 +35,9 @@ const PADDING_HORIZONTAL = 30;
 const { width: screenWidth } = Dimensions.get("window");
 const activityIcons = {
   Quiz: "school",
+  Study: "book",
+  VocabBuilder: "text",
+  SpellingBee: "pencil",
   SoundSpell: "musical-notes",
   Minesweeper: "keypad",
   Sudoku: "grid",
@@ -198,6 +201,15 @@ const QuestScreen = () => {
             shuffleOptions: true,
           },
         },
+      });
+    } else if (item.type === "VocabBuilder") {
+      navigation.navigate("VocabBuilder", { completedQuizId: item.quizId, contentId: item.contentId });
+    } else if (item.type === "SpellingBee") {
+      navigation.navigate("SpellingBeeGame", { completedQuizId: item.quizId, contentId: item.contentId });
+    } else if (item.type === "Study" && item.contentId) {
+      navigation.navigate("Apprec8Reader", { 
+        contentId: item.contentId, 
+        completedQuizId: item.quizId 
       });
     } else {
       alert(

@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Button,
+  ScrollView,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import {
@@ -17,9 +18,11 @@ import {
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-const VocabBuilder = ({ navigation }) => {
+const VocabBuilder = ({ route, navigation }) => {
   const { theme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
+  const completedQuizId = route?.params?.completedQuizId;
+  const contentId = route?.params?.contentId;
 
   // All state and functions remain the same...
   const [wordCategories, setWordCategories] = useState(null);
@@ -42,7 +45,13 @@ const VocabBuilder = ({ navigation }) => {
         if (Object.keys(data).length > 0) {
           setWordCategories(data);
           if (gameStatus === "loading" || gameStatus === "error") {
-            setGameStatus("category-select");
+            if (contentId && data[contentId]) {
+              // Auto-start if contentId is provided from Quest Map
+              setSelectedCategory(contentId);
+              setGameStatus("playing");
+            } else {
+              setGameStatus("category-select");
+            }
           }
         }
         setIsLoading(false);
@@ -99,9 +108,17 @@ const VocabBuilder = ({ navigation }) => {
     setCurrentHint(randomWord.hint);
     setGuessedLetters([]);
     setWrongGuesses(0);
-    setGameStatus("playing");
+    if (gameStatus !== "playing") {
+      setGameStatus("playing");
+    }
     setShowMessage("");
   };
+
+  useEffect(() => {
+    if (selectedCategory && wordCategories && gameStatus === "playing" && !currentWord && !showMessage) {
+      startNewWord(selectedCategory);
+    }
+  }, [selectedCategory, wordCategories, gameStatus]);
 
   const resetToCategorySelect = () => {
     setGameStatus("category-select");
@@ -230,7 +247,9 @@ const VocabBuilder = ({ navigation }) => {
             <Text style={styles.title}>🧠 Word Learning</Text>
             <Text style={styles.score}>Words Learned: {score}</Text>
           </View>
-          {renderCategorySelect()}
+          <ScrollView contentContainerStyle={styles.categorySelectScroll}>
+            {renderCategorySelect()}
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
@@ -299,7 +318,15 @@ const VocabBuilder = ({ navigation }) => {
               <Text style={styles.actionBtnText}>🎯 Next Word</Text>
             </TouchableOpacity>
           )}
-          {gameStatus === "category-complete" && (
+          {gameStatus === "category-complete" && completedQuizId ? (
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={() => navigation.navigate("QuestMap", { completedQuizId })}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.actionBtnText}>⭐ Continue Quest</Text>
+            </TouchableOpacity>
+          ) : gameStatus === "category-complete" && !completedQuizId ? (
             <TouchableOpacity
               style={styles.actionBtn}
               onPress={resetToCategorySelect}
@@ -307,7 +334,7 @@ const VocabBuilder = ({ navigation }) => {
             >
               <Text style={styles.actionBtnText}>🏆 Choose New Category</Text>
             </TouchableOpacity>
-          )}
+          ) : null}
           {gameStatus === "playing" && (
             <View style={styles.alphabetContainer}>{renderAlphabet()}</View>
           )}
@@ -373,10 +400,14 @@ const getStyles = (theme) =>
       color: theme.textPrimary,
       fontWeight: "600",
     },
+    categorySelectScroll: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingBottom: 20,
+    },
     categorySelect: {
       alignItems: "center",
-      flex: 1,
-      justifyContent: "center",
+      width: '100%',
     },
     categoryTitle: {
       fontSize: 22,

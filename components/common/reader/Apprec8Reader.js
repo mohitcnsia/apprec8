@@ -39,6 +39,7 @@ const Apprec8Reader = ({ route, navigation }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
   const contentId = route?.params?.contentId;
+  const completedQuizId = route?.params?.completedQuizId;
 
   const isMounted = useRef(true);
   const [studyData, setStudyData] = useState(null);
@@ -539,6 +540,15 @@ const Apprec8Reader = ({ route, navigation }) => {
                 </View>
               )
             )}
+          </View>
+        )}
+        {completedQuizId && (
+          <View style={{ marginTop: 30, marginBottom: 20, alignItems: 'center' }}>
+            <Button 
+              title="Mark as Read & Continue" 
+              onPress={() => navigation.navigate("QuestMap", { completedQuizId })} 
+              color={C.primary || "#58CC02"}
+            />
           </View>
         )}
       </ScrollView>

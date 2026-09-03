@@ -25,11 +25,12 @@ const { width } = Dimensions.get("window");
 // and ensures only correct definitions are stored from now on.
 const ASYNC_STORAGE_CACHE_KEY = "spellingBeeCache_v4";
 
-const SpellingBeeGame = ({ navigation }) => {
+const SpellingBeeGame = ({ route, navigation }) => {
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
   // State declarations
+  const completedQuizId = route?.params?.completedQuizId;
   const [puzzles, setPuzzles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,6 +58,14 @@ const SpellingBeeGame = ({ navigation }) => {
         throw new Error("No Spelling Bee puzzles found in the database.");
       }
       setPuzzles(fetchedPuzzles);
+      
+      const contentId = route?.params?.contentId;
+      if (contentId) {
+        const matchingIndex = fetchedPuzzles.findIndex(p => p.id === contentId);
+        if (matchingIndex !== -1) {
+          setCurrentSet(matchingIndex);
+        }
+      }
       if (cachedWordsData) {
         setFoundWordsCache(new Map(JSON.parse(cachedWordsData)));
       }
@@ -480,6 +489,15 @@ const SpellingBeeGame = ({ navigation }) => {
               )}
             </TouchableOpacity>
           </View>
+          {completedQuizId && foundWords.length >= 1 && (
+            <View style={{ marginTop: 20, marginBottom: 10, alignItems: 'center' }}>
+              <Button
+                title="Finish & Continue Quest"
+                onPress={() => navigation.navigate("QuestMap", { completedQuizId })}
+                color={theme.primary}
+              />
+            </View>
+          )}
         </View>
       </View>
 

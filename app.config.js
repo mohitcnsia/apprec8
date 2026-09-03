@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 15; // Incremented from 14 (production)
+  const patchVersion = 17; // Incremented from 16
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =
