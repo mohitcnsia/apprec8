@@ -1,6 +1,8 @@
 // components/quiz/Apprec8ReaderV2.js
 import React, { useMemo, useRef, useEffect, useState } from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Modal, Pressable, Dimensions } from "react-native";
+import { Image } from "expo-image";
+import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../context/ThemeContext";
 import MarkdownDisplay from "react-native-markdown-display";
 import LottieView from "lottie-react-native";
@@ -26,10 +28,12 @@ const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
   }, [isCorrect]);
 
   const [mediaError, setMediaError] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Reset media error state if the explanation changes (e.g. moving to a new question)
   useEffect(() => {
     setMediaError(false);
+    setIsFullScreen(false);
   }, [explanation]);
 
   const expData = typeof explanation === 'string' ? { text: explanation } : (explanation || {});
@@ -92,13 +96,15 @@ const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
         )}
 
         {/* Rich Media Section */}
-        {!mediaError && expData.mediaType === 'image' && expData.mediaUrl && (
-          <Image
-            source={{ uri: expData.mediaUrl }}
-            style={[styles.mediaImage, { borderColor: C.borderLight }]}
-            resizeMode="cover"
-            onError={() => setMediaError(true)}
-          />
+        {expData.mediaType === 'image' && expData.mediaUrl && (
+          <Pressable onPress={() => setIsFullScreen(true)}>
+            <Image
+              source={{ uri: expData.mediaUrl }}
+              style={[styles.mediaImage, { borderColor: C.borderLight }]}
+              contentFit="contain"
+              cachePolicy="disk"
+            />
+          </Pressable>
         )}
         
         {!mediaError && expData.mediaType === 'video' && expData.mediaUrl && (
@@ -129,6 +135,33 @@ const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
         )}
 
       </View>
+
+      {/* Full Screen Image Modal */}
+      {expData.mediaType === 'image' && expData.mediaUrl && (
+        <Modal
+          visible={isFullScreen}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsFullScreen(false)}
+        >
+          <View style={styles.fullScreenOverlay}>
+            <ImageViewer
+              imageUrls={[{ url: expData.mediaUrl }]}
+              backgroundColor="rgba(0,0,0,0.95)"
+              renderIndicator={() => null}
+              enableSwipeDown={true}
+              onCancel={() => setIsFullScreen(false)}
+            />
+            
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setIsFullScreen(false)}
+            >
+              <Text style={styles.closeButtonText}>✕ Close</Text>
+            </Pressable>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
@@ -163,10 +196,11 @@ const styles = StyleSheet.create({
   },
   mediaImage: {
     width: "100%",
-    height: 200,
+    aspectRatio: 1.25, // Automatically scales height based on width, using more space natively
     borderRadius: 16,
     marginBottom: 15,
     borderWidth: 2,
+    backgroundColor: 'rgba(0,0,0,0.05)', // Subtle background if image is transparent
   },
   videoContainer: {
     width: "100%",
@@ -196,6 +230,42 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#8A6A00", // Rich dark brown/gold
     lineHeight: 22,
+  },
+  fullScreenOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.95)',
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 60,
+    alignSelf: 'center',
+    zIndex: 100,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImageContainer: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: "100%",
+    height: "100%",
   },
 });
 

@@ -217,3 +217,4 @@ fix_*.patch
 components/utils/markdownUtil.js
 data/temp.md
 *.aab
+data/media_backup/

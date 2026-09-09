@@ -100,6 +100,17 @@ const SpellingBeeGame = ({ route, navigation }) => {
     async (word) => {
       const upperWord = word.toUpperCase();
 
+      // Check if puzzle has custom valid words
+      const currentPuzzle = puzzles[currentSet];
+      if (currentPuzzle && currentPuzzle.validWords) {
+        const meaning = currentPuzzle.validWords[upperWord];
+        if (meaning) {
+          return { isValid: true, meaning, partOfSpeech: "Space Term", source: "puzzle" };
+        } else {
+          return { isValid: false, source: "puzzle" };
+        }
+      }
+
       if (foundWordsCache.has(upperWord)) {
         const cachedItem = foundWordsCache.get(upperWord);
         // Check if the cached data is in the correct 'object' format.
@@ -177,12 +188,22 @@ const SpellingBeeGame = ({ route, navigation }) => {
     }
     const wordLetters = word.split("");
     for (let letter of wordLetters) {
-      if (!letters.includes(letter)) {
+      if (!letters.includes(letter) && letter !== centerLetter) {
         setMessage("Word contains invalid letters!");
         setTimeout(() => setMessage(""), 2000);
         return;
       }
     }
+    
+    const currentPuzzle = puzzles[currentSet];
+    if (currentPuzzle && currentPuzzle.validWords) {
+      if (!currentPuzzle.validWords[word]) {
+        setMessage("Not a valid space word for this puzzle!");
+        setTimeout(() => setMessage(""), 2000);
+        return;
+      }
+    }
+
     setIsValidating(true);
     try {
       const result = await validateWordWithMeaning(word);
@@ -236,6 +257,24 @@ const SpellingBeeGame = ({ route, navigation }) => {
     setShowMeaningModal(true);
   };
   const getHint = () => {
+    const currentPuzzle = puzzles[currentSet];
+    if (currentPuzzle && currentPuzzle.validWords) {
+      // Find a word the user hasn't found yet
+      const unfoundWords = Object.keys(currentPuzzle.validWords).filter(
+        (vw) => !foundWords.some((fw) => fw.word === vw)
+      );
+      if (unfoundWords.length > 0) {
+        const randomWord = unfoundWords[Math.floor(Math.random() * unfoundWords.length)];
+        const meaning = currentPuzzle.validWords[randomWord];
+        setMessage(`Hint: ${meaning}`);
+        setTimeout(() => setMessage(""), 5000);
+      } else {
+        setMessage("You found all the words!");
+        setTimeout(() => setMessage(""), 2000);
+      }
+      return;
+    }
+
     const hintWords = [
       "Try words ending in -ING, -ED, or -ER",
       "Look for common prefixes like UN-, RE-, or IN-",

@@ -1,0 +1,166 @@
+quiz,question,mediaType,url,status,detail
+Level 1: The Solar System,What is the closest star to Earth?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA's_Solar_Dynamics_Observatory_-_20100819.jpg,OK,image/jpeg
+Level 1: The Solar System,Which of these planets is the smallest in our Solar System and closest,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Mercury_in_true_color.jpg,OK,image/jpeg
+Level 1: The Solar System,"In August 2023, India made history by landing Chandrayaan-3 near which",image,https://upload.wikimedia.org/wikipedia/commons/8/87/Chandrayaan-3_Vikram_Lander_from_Pragyan_Rover.jpg,BROKEN,HTTP 404
+Level 1: The Solar System,What causes day and night on Earth?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/The_Earth_seen_from_Apollo_17.jpg,OK,image/jpeg
+Level 1: The Solar System,What is the name of ISRO's upcoming mission that aims to send Indian a,video,https://www.youtube.com/watch?v=F07_VjF0jHk,BROKEN,oEmbed returned 404 (private/deleted/removed)
+Level 1: The Solar System,Which planet is known as the 'Red Planet' because of rusty iron dust o,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/OSIRIS_Mars_true_color.jpg,OK,image/jpeg
+Level 1: The Solar System,Who was the first Indian citizen to travel into space?,image,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Rakesh_Sharma_in_1984.jpg/800px-Rakesh_Sharma_in_1984.jpg,BROKEN,HTTP 400
+Level 1: The Solar System,Why does the Moon shine brightly in the night sky?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/FullMoon2010.jpg,OK,image/jpeg
+Level 1: The Solar System,"Which is the largest planet in our Solar System, famous for its Great ",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter_and_its_shrunken_Great_Red_Spot.jpg,OK,image/jpeg
+Level 1: The Solar System,Where is the main Asteroid Belt located in our Solar System?,video,https://www.youtube.com/watch?v=kYjY-W12NlQ,BROKEN,oEmbed returned 404 (private/deleted/removed)
+Level 1: The Solar System,Which planet is the hottest in our solar system?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Venus-real_color.jpg,OK,image/jpeg
+Level 1: The Solar System,Which planet spins almost completely on its side?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Uranus2.jpg,OK,image/jpeg
+Level 1: The Solar System,Which is the farthest official planet from the Sun?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg,OK,image/jpeg
+Level 1: The Solar System,"Which planet is famous for having the most spectacular, bright ring sy",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Saturn_during_Equinox.jpg,OK,image/jpeg
+Level 1: The Solar System,"What is the name of the largest volcano in the solar system, located o",image,https://upload.wikimedia.org/wikipedia/commons/2/23/Olympus_Mons_alt.jpg,BROKEN,HTTP 404
+Level 1: The Solar System,What is the continuous stream of charged particles flowing out from th,image,https://upload.wikimedia.org/wikipedia/commons/6/67/Solar_wind.jpg,BROKEN,HTTP 404
+Level 1: The Solar System,What do we call the bubble-like region of space dominated by the Sun's,image,https://upload.wikimedia.org/wikipedia/commons/6/69/Heliosphere_diagram.jpg,BROKEN,HTTP 429
+Level 1: The Solar System,What is a 'Light Year'?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/FullMoon2010.jpg,OK,image/jpeg
+Level 1: The Solar System,Which of these is a dwarf planet located in the main asteroid belt?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Ceres_-_RC3_-_Haulani_Crater_(22381131691)_(cropped).jpg,OK,image/jpeg
+Level 1: The Solar System,Which human-made spacecraft is currently the farthest from Earth?,image,https://upload.wikimedia.org/wikipedia/commons/d/d2/Voyager_spacecraft_model.png,BROKEN,HTTP 429
+Level 1: The Solar System,"Which planet has the shortest day, spinning on its axis in just under ",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter.jpg,OK,image/jpeg
+Level 1: The Solar System,What is Valles Marineris?,image,https://upload.wikimedia.org/wikipedia/commons/6/6c/Valles_Marineris_on_Mars.jpg,BROKEN,HTTP 404
+Level 1: The Solar System,Which planet rotates backwards compared to most other planets?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Venus_globe.jpg,OK,image/jpeg
+Level 1: The Solar System,What is the theoretical spherical shell of icy objects at the very out,image,https://upload.wikimedia.org/wikipedia/commons/e/e4/Oort_cloud.png,BROKEN,HTTP 429
+Level 1: The Solar System,What are comets primarily made of?,image,https://upload.wikimedia.org/wikipedia/commons/d/df/Comet_NEOWISE_July_18_2020.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Which planet in our solar system has the most known moons?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Saturn_during_Equinox.jpg,OK,image/jpeg
+Level 2: Moons and Eclipses,What is the famous comet that can be seen from Earth every 75-76 years,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Lspn_comet_halley.jpg,OK,image/jpeg
+Level 2: Moons and Eclipses,Which of these is the largest dwarf planet in our solar system?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Pluto_in_True_Color_-_High-Res.jpg,OK,image/jpeg
+Level 2: Moons and Eclipses,What is a 'shooting star' actually called in astronomy when it enters ,image,https://upload.wikimedia.org/wikipedia/commons/6/61/Meteor_burst.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Which moon is the only place beyond Earth where humans have set foot?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Apollo_11_first_step.jpg,OK,image/jpeg
+Level 2: Moons and Eclipses,What happens during a Solar Eclipse?,image,https://upload.wikimedia.org/wikipedia/commons/c/c3/Solar_eclipse_1999_4_NR.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,What causes a Lunar Eclipse?,image,https://upload.wikimedia.org/wikipedia/commons/9/90/Lunar_eclipse_April_15_2014_California_by_Alfredo_Garcia_Jr.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Which of Jupiter's moons is the largest moon in the entire solar syste,image,"https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Ganymede,_moon_of_Jupiter,_NASA.jpg",OK,image/jpeg
+Level 2: Moons and Eclipses,Which moon of Jupiter is famous for its hundreds of erupting volcanoes,image,https://upload.wikimedia.org/wikipedia/commons/4/4e/Io_highest_resolution_true_color.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Which moon of Saturn has a thick atmosphere and lakes of liquid methan,image,https://upload.wikimedia.org/wikipedia/commons/0/07/Titan_in_true_color.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,What are the names of Mars' two small moons?,image,https://upload.wikimedia.org/wikipedia/commons/5/5c/Phobos_and_Deimos.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,What is the primary cause of ocean tides on Earth?,video,https://www.youtube.com/watch?v=3R-iwOnKgjc,BROKEN,oEmbed returned 404 (private/deleted/removed)
+Level 2: Moons and Eclipses,Why does the Moon appear to change shape (phases) over the course of a,image,https://upload.wikimedia.org/wikipedia/commons/a/a2/Moon_phases_en.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,What do we call a 'Supermoon'?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/FullMoon2010.jpg,OK,image/jpeg
+Level 2: Moons and Eclipses,"During an eclipse, what is the 'Umbra'?",image,https://upload.wikimedia.org/wikipedia/commons/4/41/Geometry_of_a_Lunar_Eclipse.svg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Which moon of Saturn is famous for shooting massive geysers of water i,image,https://upload.wikimedia.org/wikipedia/commons/8/87/Enceladus_geysers_PIA07799.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,What is an 'Annular Solar Eclipse'?,image,https://upload.wikimedia.org/wikipedia/commons/f/fb/Annular_Eclipse._Taken_from_Middlegate%2C_Nevada_on_May_20%2C_2012.jpg,BROKEN,HTTP 429
+Level 2: Moons and Eclipses,Why don't we have a solar eclipse every single month during the New Mo,video,https://www.youtube.com/watch?v=kYjY-W12NlQ,BROKEN,oEmbed returned 404 (private/deleted/removed)
+Level 2: Moons and Eclipses,"Which large moon of Neptune has a retrograde orbit, meaning it orbits ",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Triton_moon_mosaic_Voyager_2_(large).jpg,ERROR,"HTTPSConnectionPool(host='cdn.jsdelivr.net', port=443): Read timed out. (read timeout=10)"
+Level 2: Moons and Eclipses,What is sometimes called a 'Blood Moon'?,image,https://upload.wikimedia.org/wikipedia/commons/9/90/Lunar_eclipse_April_15_2014_California_by_Alfredo_Garcia_Jr.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What type of galaxy is the Milky Way?,image,https://upload.wikimedia.org/wikipedia/commons/0/09/Milky_Way_Galaxy.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What is the closest major galaxy to the Milky Way?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Andromeda_Galaxy_(with_h-alpha).jpg,OK,image/jpeg
+Level 3: Galaxies and Stars,What is formed when a massive star collapses under its own gravity at ,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Black_hole_-_Messier_87_crop_max_res.jpg,OK,image/jpeg
+Level 3: Galaxies and Stars,What is a massive explosion that occurs at the end of a very large sta,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Keplers_supernova.jpg,OK,image/jpeg
+Level 3: Galaxies and Stars,What is a 'Nebula'?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Eagle_nebula_pillars.jpg,OK,image/jpeg
+Level 3: Galaxies and Stars,What color are the hottest stars in the universe?,image,https://upload.wikimedia.org/wikipedia/commons/1/10/Pleiades_large.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What is an exoplanet?,image,https://upload.wikimedia.org/wikipedia/commons/6/6c/Exoplanet_Comparison.png,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,Which star is famous for remaining almost perfectly stationary in the ,image,https://upload.wikimedia.org/wikipedia/commons/e/ee/Polaris_system.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What is the name of the brightest star in Earth's night sky?,image,https://upload.wikimedia.org/wikipedia/commons/c/c6/Sirius_A_and_B_Hubble_photo.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,"What do we call a small, incredibly dense star that remains after a su",image,https://upload.wikimedia.org/wikipedia/commons/d/d4/Neutron_star_illustration.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What is a rapidly spinning neutron star that emits beams of electromag,image,https://upload.wikimedia.org/wikipedia/commons/3/30/Pulsar_schematic.svg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,Which of these is the closest star system to our Solar System?,image,https://upload.wikimedia.org/wikipedia/commons/3/3f/Alpha_Centauri_system.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What is the term for a theoretical region in space where matter is fal,image,https://upload.wikimedia.org/wikipedia/commons/e/ea/Black_Hole_Accretion_Disk.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,"What is the boundary around a black hole beyond which nothing, not eve",image,https://upload.wikimedia.org/wikipedia/commons/8/8c/Black_Hole_Event_Horizon.jpg,BROKEN,HTTP 429
+Level 3: Galaxies and Stars,What are groups of stars that form imaginary shapes or pictures in the,image,https://upload.wikimedia.org/wikipedia/commons/c/ce/Orion_constellation_map.svg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,What was the name of the very first artificial satellite launched into,image,https://upload.wikimedia.org/wikipedia/commons/b/be/Sputnik_1.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,What is the primary goal of India's historic Mangalyaan mission?,image,https://upload.wikimedia.org/wikipedia/commons/e/ee/Mars_Orbiter_Mission_-_Mangalyaan.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,"Which space telescope, launched in 1990, has taken some of the most fa",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/HST-SM4.jpeg,OK,image/jpeg
+Level 4: Space Physics and Exploration,Who was the first woman to travel into space?,image,https://upload.wikimedia.org/wikipedia/commons/e/ea/Valentina_Tereshkova_portrait.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,Which fundamental force is responsible for keeping the planets in orbi,image,https://upload.wikimedia.org/wikipedia/commons/5/53/Gravity_action-reaction.png,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,"According to Albert Einstein's Theory of General Relativity, gravity i",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Spacetime_curvature.png,OK,image/png
+Level 4: Space Physics and Exploration,What happens to time as you get extremely close to a massive object wi,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Spacetime_curvature.png,OK,image/png
+Level 4: Space Physics and Exploration,What mysterious invisible substance makes up about 85% of the matter i,image,https://upload.wikimedia.org/wikipedia/commons/d/d4/Dark_matter_halo.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,What is the speed of light in a vacuum?,image,https://upload.wikimedia.org/wikipedia/commons/a/af/Light_dispersion_conceptual.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,What is the mysterious force that is causing the expansion of the univ,image,https://upload.wikimedia.org/wikipedia/commons/a/ad/Cosmological_expansion.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,Which space telescope was launched in 2021 as the scientific successor,image,https://upload.wikimedia.org/wikipedia/commons/4/41/James_Webb_Space_Telescope_model.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,What was the name of the first human to walk on the Moon?,video,https://www.youtube.com/watch?v=RMINSD7MmT4,BROKEN,oEmbed returned 404 (private/deleted/removed)
+Level 4: Space Physics and Exploration,Who was the first human to ever journey into outer space?,image,https://upload.wikimedia.org/wikipedia/commons/e/ea/Yuri_Gagarin.jpg,BROKEN,HTTP 429
+Level 4: Space Physics and Exploration,"What is the name of the large, habitable artificial satellite continuo",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/International_Space_Station_after_undocking_of_STS-132.jpg,OK,image/jpeg
+Level 4: Space Physics and Exploration,What phenomenon occurs when light from a distant galaxy is stretched t,image,https://upload.wikimedia.org/wikipedia/commons/c/c5/Redshift_blueshift.svg,BROKEN,HTTP 429
+Level 5: Planetary Facts,Which planet is known to have the most extreme seasons in the solar sy,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Uranus2.jpg,OK,image/jpeg
+Level 5: Planetary Facts,Which planet has a giant storm called the 'Great Red Spot' that has be,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter_and_its_shrunken_Great_Red_Spot.jpg,OK,image/jpeg
+Level 5: Planetary Facts,"Which planet is the least dense in the solar system, so light that it ",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Saturn_during_Equinox.jpg,OK,image/jpeg
+Level 5: Planetary Facts,"Which planet is covered in thick clouds of sulfuric acid, making its s",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/PIA23791-Venus-NewlyProcessedView-20200608.jpg,OK,image/jpeg
+Level 5: Planetary Facts,What gives the planet Mars its reddish appearance?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/OSIRIS_Mars_true_color.jpg,OK,image/jpeg
+Level 5: Planetary Facts,"Which planet has the fastest winds in the solar system, reaching up to",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg,OK,image/jpeg
+Level 5: Planetary Facts,Which two planets in our solar system do not have any moons?,image,https://upload.wikimedia.org/wikipedia/commons/3/3f/Mercury_and_Venus.png,BROKEN,HTTP 429
+Level 5: Planetary Facts,Which planet has a hexagonal-shaped storm at its north pole?,image,https://upload.wikimedia.org/wikipedia/commons/a/af/Saturn_Hexagon.jpg,BROKEN,HTTP 429
+Level 5: Planetary Facts,On which planet does it theoretically 'rain diamonds' due to extreme h,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg,OK,image/jpeg
+Level 5: Planetary Facts,"Which planet experiences extreme temperature fluctuations, dropping to",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Mercury_in_true_color.jpg,OK,image/jpeg
+Level 5: Planetary Facts,What is the name of the largest dwarf planet located in the Kuiper Bel,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Pluto_in_True_Color_-_High-Res.jpg,OK,image/jpeg
+Level 5: Planetary Facts,Which planet's magnetic field is so powerful that it creates intense r,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter.jpg,OK,image/jpeg
+Level 5: Planetary Facts,What makes Earth unique compared to all other planets in our solar sys,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/The_Earth_seen_from_Apollo_17.jpg,OK,image/jpeg
+Level 5: Planetary Facts,"Which planet is famous for having a large, dark spot in its atmosphere",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg,OK,image/jpeg
+Level 5: Planetary Facts,Which planet has a 'day' that is longer than its 'year'?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Venus_globe.jpg,OK,image/jpeg
+"Level 6: Comets, Asteroids, and Meteors",What is the difference between an asteroid and a comet?,image,https://upload.wikimedia.org/wikipedia/commons/2/23/Comet_Hale-Bopp_1995O1.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",Where is the main Asteroid Belt located in our Solar System?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/InnerSolarSystem-en.png,OK,image/png
+"Level 6: Comets, Asteroids, and Meteors",What do we call a meteoroid that survives its passage through the Eart,image,https://upload.wikimedia.org/wikipedia/commons/3/36/Hoba_Meteorite.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",What is a 'Shooting Star' actually?,image,https://upload.wikimedia.org/wikipedia/commons/4/4b/Meteor_in_the_night_sky.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",Which famous comet is visible from Earth every 75-76 years?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Lspn_comet_halley.jpg,OK,image/jpeg
+"Level 6: Comets, Asteroids, and Meteors",What is the Oort Cloud?,image,https://upload.wikimedia.org/wikipedia/commons/3/30/Oort_cloud_and_solar_system.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors","What is the largest object in the asteroid belt, which is also classif",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Ceres_-_RC3_-_Haulani_Crater_(22381131691)_(cropped).jpg,OK,image/jpeg
+"Level 6: Comets, Asteroids, and Meteors","When Earth passes through the trail of debris left behind by a comet, ",image,https://upload.wikimedia.org/wikipedia/commons/5/52/Meteorid_shower_1_edit.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors","What is the solid, central part of a comet called?",image,https://upload.wikimedia.org/wikipedia/commons/8/8c/Comet_67P_on_19_September_2014_NavCam_mosaic.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",Which space agency successfully landed a probe (Philae) on a comet for,image,https://upload.wikimedia.org/wikipedia/commons/8/8f/Philae_lander.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",What does a Near-Earth Object (NEO) refer to?,image,https://upload.wikimedia.org/wikipedia/commons/7/75/Asteroid_belt.svg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",NASA's DART mission was a historic planetary defense test. What did th,image,https://upload.wikimedia.org/wikipedia/commons/0/07/DART_Spacecraft.png,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",What is the Kuiper Belt?,image,https://upload.wikimedia.org/wikipedia/commons/d/d4/Kuiper_belt_-_Oort_cloud-en.svg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",What caused the extinction of the non-avian dinosaurs 66 million years,image,https://upload.wikimedia.org/wikipedia/commons/5/53/Asteroid_falling_to_Earth.jpg,BROKEN,HTTP 429
+"Level 6: Comets, Asteroids, and Meteors",Why do comets have two distinct tails?,image,https://upload.wikimedia.org/wikipedia/commons/2/23/Comet_Hale-Bopp_1995O1.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,Who was the first person to use a telescope to observe the night sky?,image,"https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Justus_Sustermans_-_Portrait_of_Galileo_Galilei,_1636.jpg",OK,image/jpeg
+Level 7: The History of Astronomy,What did Nicolaus Copernicus propose that changed our understanding of,image,https://upload.wikimedia.org/wikipedia/commons/c/cb/Copernicus.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,What is the Geocentric model of the universe?,image,https://upload.wikimedia.org/wikipedia/commons/0/07/Ptolemaic_system_2_%28psf%29.png,BROKEN,HTTP 429
+Level 7: The History of Astronomy,"Who discovered the three laws of planetary motion, proving that planet",image,https://upload.wikimedia.org/wikipedia/commons/d/d4/Johannes_Kepler_1610.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,Which ancient civilization is credited with creating the first known a,image,https://upload.wikimedia.org/wikipedia/commons/2/23/Babylonian_clay_tablet_with_cuneiform.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,"Who formulated the Universal Law of Gravitation, explaining what keeps",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/GodfreyKneller-IsaacNewton-1689.jpg,OK,image/jpeg
+Level 7: The History of Astronomy,What incredible discovery did Edwin Hubble make in the 1920s?,image,https://upload.wikimedia.org/wikipedia/commons/4/4c/Edwin_Hubble.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,Which ancient Greek astronomer accurately calculated the circumference,image,https://upload.wikimedia.org/wikipedia/commons/8/86/Eratosthenes_measure_of_Earth_circumference.svg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,"Which instrument, often made of brass, was used by ancient sailors and",image,https://upload.wikimedia.org/wikipedia/commons/8/8c/Astrolabium_1.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,Who was the astronomer that discovered the planet Uranus in 1781?,image,https://upload.wikimedia.org/wikipedia/commons/9/91/William_Herschel01.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,How was the planet Neptune discovered in 1846?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg,OK,image/jpeg
+Level 7: The History of Astronomy,What did the ancient structure of Stonehenge likely serve as for early,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Stonehenge2007_07_30.jpg,OK,image/jpeg
+Level 7: The History of Astronomy,Who was the female astronomer that discovered Cepheid variable stars c,image,https://upload.wikimedia.org/wikipedia/commons/7/77/Henrietta_Swan_Leavitt.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,What massive radio telescope in Puerto Rico was instrumental in radar ,image,https://upload.wikimedia.org/wikipedia/commons/6/6b/Arecibo_Observatory_Aerial_View.jpg,BROKEN,HTTP 429
+Level 7: The History of Astronomy,What famous comet was proven to be the same object returning periodica,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Lspn_comet_halley.jpg,OK,image/jpeg
+Level 8: Rockets and Spacecraft,Which force must a rocket overcome to lift off the ground?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Soyuz_TMA-9_launch.jpg,OK,image/jpeg
+Level 8: Rockets and Spacecraft,"What is the name of the most powerful rocket ever successfully flown, ",image,https://upload.wikimedia.org/wikipedia/commons/1/1d/Starship_Flight_3_Liftoff.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,Which massive rocket was used by NASA to send astronauts to the Moon d,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Apollo_11_Launch_-_GPN-2000-000630.jpg,OK,image/jpeg
+Level 8: Rockets and Spacecraft,What was the name of the NASA spacecraft program that operated as reus,image,https://upload.wikimedia.org/wikipedia/commons/d/d6/Space_Shuttle_Atlantis_landing.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,What is 'escape velocity'?,image,https://upload.wikimedia.org/wikipedia/commons/6/69/Escape_velocity.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,Which space probe holds the record for being the farthest human-made o,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Voyager_spacecraft_model.png,OK,image/png
+Level 8: Rockets and Spacecraft,India's Chandrayaan-3 made history by landing near which part of the M,image,https://upload.wikimedia.org/wikipedia/commons/9/9f/Chandrayaan-3_Lander.png,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,What does a spacecraft's 'heat shield' protect it from?,image,https://upload.wikimedia.org/wikipedia/commons/d/d4/Apollo_13_Command_Module.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,"What is the primary function of a space rover, like Curiosity or Perse",image,https://upload.wikimedia.org/wikipedia/commons/f/fa/Martian_rover_Curiosity_using_ChemCam_M-100_focus_stacked_-_tight_crop.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,What fuel is traditionally mixed with liquid oxygen in the main engine,image,https://upload.wikimedia.org/wikipedia/commons/c/c5/Space_Shuttle_Main_Engine.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,What happens if a spacecraft goes faster than the orbital velocity whi,image,https://upload.wikimedia.org/wikipedia/commons/1/11/Orbital_mechanics.png,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,"Which space agency is responsible for the Galileo, Cassini, and Juno m",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/NASA_logo.svg,OK,image/svg+xml
+Level 8: Rockets and Spacecraft,What is an 'Orbital Trajectory'?,image,https://upload.wikimedia.org/wikipedia/commons/6/69/Gravity_assist.png,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,Which part of a multi-stage rocket carries the astronauts or satellite,image,https://upload.wikimedia.org/wikipedia/commons/5/53/Falcon_Heavy_Fairing.jpg,BROKEN,HTTP 429
+Level 8: Rockets and Spacecraft,"What is the term for space debris (old satellites, rocket parts) orbit",image,https://upload.wikimedia.org/wikipedia/commons/a/af/Debris-LEO1280.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What theory describes the origin of the universe as a rapid expansion ,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/CMB_Timeline300_no_WMAP.jpg,OK,image/jpeg
+Level 9: The Universe and Cosmology,Roughly how old do scientists believe the universe is?,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/CMB_Timeline300_no_WMAP.jpg,OK,image/jpeg
+Level 9: The Universe and Cosmology,What is the 'Cosmic Microwave Background'?,image,https://upload.wikimedia.org/wikipedia/commons/3/3c/Ilc_9yr_moll4096.png,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What unit of measurement is most commonly used by astronomers to measu,image,https://upload.wikimedia.org/wikipedia/commons/a/af/Light_dispersion_conceptual.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What is the name of our home supercluster of galaxies?,image,https://upload.wikimedia.org/wikipedia/commons/8/87/Earth%27s_Location_in_the_Universe_SMALLER_%28JPEG%29.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What will eventually happen to our Sun in about 5 billion years?,image,https://upload.wikimedia.org/wikipedia/commons/9/90/Sun_red_giant.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What is a 'Wormhole' in theoretical physics?,image,https://upload.wikimedia.org/wikipedia/commons/5/5e/Wormhole_travel.png,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What is the 'Observable Universe'?,image,https://upload.wikimedia.org/wikipedia/commons/8/87/Earth%27s_Location_in_the_Universe_SMALLER_%28JPEG%29.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What is a quasar?,image,https://upload.wikimedia.org/wikipedia/commons/c/c5/Artist%27s_rendering_of_ULAS_J1120%2B0641.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,Which of these is the most abundant element in the universe?,image,https://upload.wikimedia.org/wikipedia/commons/e/ea/Hydrogen_discharge_tube.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,What do scientists call the theoretical 'end' of the universe where ev,image,https://upload.wikimedia.org/wikipedia/commons/a/ad/Cosmological_expansion.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,Who is the theoretical physicist who proposed that black holes aren't ,image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Stephen_Hawking.StarChild.jpg,OK,image/jpeg
+Level 9: The Universe and Cosmology,What does a 'light-year' measure?,image,https://upload.wikimedia.org/wikipedia/commons/a/af/Light_dispersion_conceptual.jpg,BROKEN,HTTP 429
+Level 9: The Universe and Cosmology,"What is the study of the origin, evolution, and eventual fate of the u",image,https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/CMB_Timeline300_no_WMAP.jpg,OK,image/jpeg
+Level 9: The Universe and Cosmology,What is 'String Theory'?,image,https://upload.wikimedia.org/wikipedia/commons/1/1d/Calabi_yau_formatted.svg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What does 'SETI' stand for?,image,https://upload.wikimedia.org/wikipedia/commons/1/14/Allen_Telescope_Array.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What is the 'Goldilocks Zone' (Habitable Zone) in astronomy?,image,https://upload.wikimedia.org/wikipedia/commons/2/2f/Habitable_zone-en.svg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,Which moon in our solar system is considered one of the best places to,image,https://upload.wikimedia.org/wikipedia/commons/e/e4/Europa-moon.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What is the famous 'Drake Equation' used to estimate?,image,https://upload.wikimedia.org/wikipedia/commons/9/91/Drake_equation.svg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,"What famous contradiction asks: 'If the universe is so vast and old, w",image,https://upload.wikimedia.org/wikipedia/commons/1/18/Are_we_alone%3F.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,Saturn's moon Enceladus shoots giant geysers of what substance into sp,image,https://upload.wikimedia.org/wikipedia/commons/7/77/Enceladus_plumes.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What are 'Extremophiles'?,image,https://upload.wikimedia.org/wikipedia/commons/e/e0/Tardigrade.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,Which space telescope was explicitly designed to discover Earth-size e,image,https://upload.wikimedia.org/wikipedia/commons/d/de/Kepler_space_telescope.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What is the 'Wow! Signal'?,image,https://upload.wikimedia.org/wikipedia/commons/2/29/Wow_signal.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What are 'Biosignatures' in astronomy?,image,https://upload.wikimedia.org/wikipedia/commons/7/77/Exoplanet_Atmosphere.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,"Which of these moons has a thick atmosphere, lakes of liquid methane, ",image,https://upload.wikimedia.org/wikipedia/commons/e/ec/Titan_in_true_color.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What is Panspermia?,image,https://upload.wikimedia.org/wikipedia/commons/4/4b/Meteor_in_the_night_sky.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,Why do astronomers mostly use Radio Waves to listen for alien intellig,image,https://upload.wikimedia.org/wikipedia/commons/6/6b/Arecibo_Observatory_Aerial_View.jpg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,What message did the Arecibo Observatory broadcast into space in 1974?,image,https://upload.wikimedia.org/wikipedia/commons/3/30/Arecibo_message.svg,BROKEN,HTTP 429
+Level 10: The Search for Extraterrestrial Life,"If we discover a microbial fossil on Mars, what would it prove?",image,https://upload.wikimedia.org/wikipedia/commons/f/fa/Martian_rover_Curiosity_using_ChemCam_M-100_focus_stacked_-_tight_crop.jpg,BROKEN,HTTP 429

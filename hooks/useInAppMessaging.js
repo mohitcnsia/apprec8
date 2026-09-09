@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import Constants from "expo-constants";
 import { Platform } from "react-native";
 import remoteConfig from "@react-native-firebase/remote-config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -116,8 +117,28 @@ export const useInAppMessaging = () => {
 
         // This logic correctly handles showing the message only if it hasn't been seen
         if (message.type === "hard_update") {
-          // You would add version checking logic here for a real hard update
-          setMessageToShow(message);
+          // Version checking logic for hard updates
+          const currentVersion = Constants.expoConfig?.version || Constants.manifest?.version || "0.0.0";
+          const minVersion = message.min_version || "99.99.99"; // Require update if min_version is missing but type is hard_update
+
+          const currentParts = currentVersion.split(".").map(Number);
+          const minParts = minVersion.split(".").map(Number);
+
+          let needsUpdate = false;
+          for (let i = 0; i < 3; i++) {
+            const curr = currentParts[i] || 0;
+            const min = minParts[i] || 0;
+            if (curr < min) {
+              needsUpdate = true;
+              break;
+            } else if (curr > min) {
+              break;
+            }
+          }
+
+          if (needsUpdate) {
+            setMessageToShow(message);
+          }
         } else {
           const seenMessagesRaw = await AsyncStorage.getItem(SEEN_MESSAGES_KEY);
           const seenMessages = seenMessagesRaw

@@ -1,6 +1,7 @@
 // components/quiz/QuestionCard.js
 import React, { useMemo, useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { Card, IconButton } from "react-native-paper";
 import { Video, ResizeMode, Audio } from 'expo-av';
 import YoutubeIframe from 'react-native-youtube-iframe';
@@ -108,7 +109,8 @@ const QuestionCard = ({ question }) => {
             // Use the new 'mediaUrl' property for the image source
             source={{ uri: questionContent.mediaUrl }}
             style={styles.image}
-            resizeMode="contain"
+            contentFit="contain"
+            cachePolicy="disk"
           />
         )}
 
