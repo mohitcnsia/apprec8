@@ -146,8 +146,7 @@
 ## Future TODOs
 - **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
 - **Reading node type** (Apprec8Reader with built-in questions). Must be in the Nov 6 build.
-- **Security (before the 50 students start):** content collections (`categories`, `topics`, `studyContent`, `quizQuestions`, `questions`, game collections) allow `write: if true` for anyone. `/questions` also has two conflicting blocks (write true + write false = open). Lock writes to the admin. The old seed buttons write from the client, so they would need the admin account too.
-- **Seed buttons visible to every user:** `SeedDataFixButton`, `SeedQuestNodesButton`, `SeedDataButton` render on Profile for all users. Gate them behind the admin UID like `SeedEnglishQuestButton`.
+- **Deploy Firestore rules (owner, manual):** `firebase deploy --only firestore:rules --project apprec8-ca229`. Local `firestore.rules` now locks all content writes to the admin (`isAdmin()`) and adds the quest rules. Before this change it matched the live rules exactly. `firestore.rules` is gitignored; consider tracking it in git.
 - **`.exists` bug:** `WordInspectorScreen.js:102` and `ProfileScreen.js:91` use `snap.exists` without `()`. In this Firebase version it's a method, so the check is always true.
 - **IEO data fixes:** `4ieo11-topic8-quiz4` has one question whose answer doesn't match any option (quote marks). `4ieo9-quiz`, `tenses-boss-1`, `tenses-boss-1-quiz` have no questions. No `4ieo9-study` page exists (English Quest uses its own Adverbs page).
 - **English Quest tile image:** currently reuses the IEO tile image. Make a proper one and host it on the media_backup CDN.
