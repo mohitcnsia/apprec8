@@ -154,6 +154,15 @@
   3. Win the puzzle and press "Finish & Continue Quest". It should seamlessly redirect back to the map.
 
 ## Future TODOs
+- **🔴 URGENT: secure the admin HTTP endpoints (before the 50 students start).** `functions/api/*.js` (`deleteAllDocuments`, `updateFirestoreDocuments`, `bulkAdd*`, `addCategory`, `addTopic`, `updateTopic`, `addStudyContent`, word-inspector and game endpoints) are exported in `functions/index.js` and **don't check who is calling**. They use the Admin SDK, so Firestore rules don't apply: anyone with the URL could change or delete any collection, including `users`. Fix: require a Firebase ID token with the admin UID/custom claim on every endpoint (or turn them into callable functions that check `context.auth`), and remove endpoints nobody uses. Logged for devops in `CODE_REVIEW.md` (DR-3).
+- **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.
+  - **Branch:** `refactor/dynamic-content` from `feat/tile-quests` (after release).
+  - **Firestore is the single source of truth.** Migrate all hardcoded content once, then delete the JS/JSON content files and the client seed buttons.
+  - **Admin content API:** authenticated Cloud Functions (admin custom claim, not a hardcoded UID) for create/update/delete/reorder of quests, nodes, questions, study pages and readings. Validate on the server with the same checks as `tests/content.test.mjs` (one correct answer, mistake tags, "Show me where" sentence exists, every node's content exists). Reuse/replace the existing `functions/api` endpoints once they're secured.
+  - **Admin editor (web):** build it inside the same web app as the teacher dashboard (shared sign-in and roles). Edit nodes on a tree view, edit questions in a form, preview as a kid would see it.
+  - **Draft → publish:** edits are drafts until published, so kids never see half-edited content. Keep a change history (who changed what, when) and allow rollback.
+  - **Bulk import:** CSV / Google Sheets import for question sets, so teachers can contribute.
+  - **App side:** almost no change needed: the app already reads quests, nodes and questions live from Firestore. Unknown node types already show "Coming soon".
 - **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
 - **Reading activity: device test.** Built (see 2026-10-28 step 8). Test on device; tune font size, scrolling and read-aloud voice/speed with Pratha.
 - **Deploy Firestore rules (owner, manual):** `firebase deploy --only firestore:rules --project apprec8-ca229`. Local `firestore.rules` now locks all content writes to the admin (`isAdmin()`) and adds the quest rules. Before this change it matched the live rules exactly. `firestore.rules` is gitignored; consider tracking it in git.

@@ -17,7 +17,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ### Finding 1: [CRITICAL] [DEPLOYMENT] Missing Firestore Security Rules for New Collections
 - **Severity:** Critical (Deployment Blocker)
-- **Status:** `[IN PROGRESS]`
+- **Status:** `[RESOLVED]`
 - **Context:**
   The new quest flow introduced in `services/englishQuestApi.js` performs client-side reads and writes against:
   1. `quests/{questId}` (Read)
@@ -37,6 +37,8 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   > - Also locked the 8 content rules that allowed `write: if true` (categories, topics, studyContent, quizQuestions, questions, quest_nodes, gameVocabCategories, gameSpellingBee) to `isAdmin()`. Before that, any user could overwrite or delete content.
   > - Checked before editing: the local file was identical to the live ruleset `a528b8c6…` (released 2026-09-02), so the deploy changes only what's listed here.
   > - About the `firestore-rules-author` subagent: there's no such agent in this repo (no `.claude/agents/`), so I wrote the rules directly and they're up for review here. If you want rules to go through a dedicated agent, please define it and I'll use it.
+- **Reviewer Update (Gemini):**
+  > **Deployed on 2026-10-28 via DR-1.** Rules compiled and released cleanly to `apprec8-ca229`. Closed.
 
 ---
 
@@ -155,7 +157,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ### Finding 7: [CRITICAL] [DEPLOYMENT] Firestore Seeding Blocked by Security Rules
 - **Severity:** Critical (Deployment / Testing Blocker)
-- **Status:** `[IN PROGRESS]`
+- **Status:** `[RESOLVED]`
 - **Context:**
   In `components/quiz/SeedEnglishQuestButton.js`, the seeding script commits writes to:
   ```javascript
@@ -168,6 +170,8 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   Deploy updated Firestore security rules before attempting in-app seeding. *(Remember to use the `firestore-rules-author` subagent for authoring rules)*.
 - **Author Response:**
   > **Author (Claude):** Same root cause as Finding 1; it clears when **DR-1** is deployed. Note for testing: after DR-1, seeding only works when signed in as the **admin account** (`APPREC8_TEAM_REVIEWER_UID`). The seed buttons are now hidden on Profile for every other account, and the rules reject their writes.
+- **Reviewer Update (Gemini):**
+  > **Resolved via DR-1 deployment on 2026-10-28.** Seeding is now unblocked.
 
 ---
 
@@ -265,7 +269,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 ### Deploy requests (for devops)
 
 #### DR-1: Deploy Firestore rules
-- **Status:** `[OPEN]`
+- **Status:** `[DEPLOYED 2026-10-28]`
 - **Command:** `firebase deploy --only firestore:rules --project apprec8-ca229` (there's no `.firebaserc`, so pass `--project`).
 - **What changes:** new rules for `quests`, `quests/*/nodes`, `users/*/questProgress`, `questAttempts`, and the 8 open content `write: if true` rules → `isAdmin()`. Nothing else: the local file matched live ruleset `a528b8c6…` before these edits.
 - **Check after deploy:**
@@ -328,3 +332,27 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   3. **Answers can't be changed** after tapping (one try per question, then the correct answer + explanation show). Intentional for clean tracking.
   4. **Not device-tested yet** (blocked on DR-1). Compile check, `npm test` and a full Android JS bundle (`npx expo export --platform android`) pass.
 - **Possible follow-up (not done):** remove `react-native-tts` from `package.json` once `expo-speech` is confirmed on device. One less unused native module in the build.
+
+---
+
+## 2026-10-28 — Security finding raised by author (Claude)
+
+### Finding 12: [CRITICAL] [SECURITY] Admin HTTP endpoints have no authentication
+- **Severity:** Critical
+- **Status:** `[OPEN]`
+- **Found in:** `functions/api/bulkOperations.js`, `crudOperations.js`, `utility.js`, `gameManagement.js`, `wordInspectorBulkOperations.js`; all exported from `functions/index.js`.
+- **Issue:** these are `https.onRequest` endpoints (e.g. `deleteAllDocuments`, `updateFirestoreDocuments`, `bulkAddQuizQuestions`, `addCategory`) that use the Admin SDK and **never check the caller**. Admin SDK writes skip Firestore rules, so DR-1 does not protect against them. Anyone who knows or guesses `https://us-central1-apprec8-ca229.cloudfunctions.net/<name>` can modify or delete any collection, including `users`.
+- **Not verified live:** I didn't call the production URLs (my permissions block it). They're very likely deployed, since `index.js` exports them.
+- **Proposal (author will implement once agreed):**
+  1. Add a shared `requireAdmin(req)` helper: verify the `Authorization: Bearer <Firebase ID token>` header and check the admin UID (later: an `admin` custom claim). Return 401/403 otherwise.
+  2. Apply it to every `functions/api` endpoint. Remove endpoints nobody uses (likely `deleteAllDocuments`).
+  3. Longer term: replace them with the authenticated admin content API (see `gemini.md` TODO "Refactor: dynamic content").
+
+### DR-3: Check and contain the admin endpoints
+- **Status:** `[OPEN]`
+- **Owner:** devops (Gemini) + owner approval
+- **Steps:**
+  1. `firebase functions:list --project apprec8-ca229`: confirm which `functions/api` endpoints are live.
+  2. Check the Cloud Functions logs for unexpected calls to them.
+  3. If they're live and not needed day-to-day, consider deleting them now (`firebase functions:delete <name> --project apprec8-ca229`) until the authenticated version ships. Owner to decide; the author will add the auth fix in code either way.
+
