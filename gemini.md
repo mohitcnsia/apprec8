@@ -83,7 +83,7 @@
 **Tracking (record from day one; dashboard comes later)**
 - Sign-in required for quests. Later: class codes for teachers, roll number/display name, parent links.
 - Per attempt: student, quest, node, start/end time, score, and per question: chosen option, correct?, time taken, mistake label.
-- Score calculated server-side (Cloud Function) so it can't be faked.
+- Scoring is client-side for the Nov 10 release (decided 2026-10-28, CODE_REVIEW Finding 2): answer keys already reach the phone for instant feedback, so server scoring alone wouldn't stop cheating. Attempts are create-only and store per-answer time, so faked runs are visible.
 - Dashboard: web (Firebase Hosting) with role-based access (teacher → class, parent → child, admin → all). Starts simple.
 
 **Reporting mistakes in content (review of `FeedbackFAB` done 2026-10-28)**
@@ -155,6 +155,7 @@
 - **English Quest, batch 1: test on device.** Code is done (see 2026-10-28). Deploy rules, seed, play through Unit 0 with Pratha, fix issues.
 - **Word Bank (next release after Nov 10):** separate vocabulary feature with packs, per-word mastery, spaced-repetition daily review and a spell bee mode. Seed from the existing `4ieo11` vocabulary quizzes plus easier starter words.
 - **Dashboard v1 (web, after Nov 6):** who played, scores, time, mistakes, reported issues.
+- **Server-checked unit tests (after Nov 10, only if tests become formally graded):** callable `submitQuestAttempt` that scores unit tests against a server-only `questionKeys` collection.
 - **Auto-generated review nodes (after Nov 10):** the tree grows "Fix your mistakes" nodes from each kid's wrong answers, so kids come back to review after finishing.
 - **Daily quiz + push notifications (after Nov 10):** needs `@react-native-firebase/messaging` (native change → app release). Daily mix pulls from the kid's mistakes.
 - **Fix Spelling Bee:** The game is a mess and was removed from the Quest Map on 2026-10-28. Fix `SpellingBeeGame.js` before adding its nodes back. The `gameSpellingBee` puzzles are still seeded but nothing uses them yet.
