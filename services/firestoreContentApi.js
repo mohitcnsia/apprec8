@@ -423,6 +423,9 @@ export const listenToUserDocument = (onResult, onError) => {
  */
 export const convertV1QuestionToV2 = (id, quizId, data) => {
   const options = Array.isArray(data.options) ? data.options : [];
+  // Compare loosely: old data sometimes has extra or trailing spaces.
+  const normalize = (value) => String(value ?? "").trim().replace(/\s+/g, " ");
+  const answer = normalize(data.answer);
   const explanationText = Array.isArray(data.explanation)
     ? data.explanation.join("\n\n")
     : data.explanation || "";
@@ -440,7 +443,7 @@ export const convertV1QuestionToV2 = (id, quizId, data) => {
     options: options.map((opt) => ({
       type: "text",
       content: String(opt),
-      isCorrect: String(opt) === String(data.answer),
+      isCorrect: answer !== "" && normalize(opt) === answer,
     })),
     explanation: explanationText ? { text: explanationText } : null,
     sourceFormat: "v1",

@@ -74,10 +74,10 @@ async function updateNodeProgress(questId, nodeId, { percent, passed }) {
     bestPercent: Math.max(previousBest, percent),
     lastPlayedAt: serverTimestamp(),
   };
-  if (passed && previous.status !== "completed") {
-    nodeUpdate.status = "completed";
-    nodeUpdate.completedAt = serverTimestamp();
-  }
+  // Once completed, a node stays completed (a later failed replay never re-locks it).
+  const alreadyCompleted = previous.status === "completed";
+  if (passed || alreadyCompleted) nodeUpdate.status = "completed";
+  if (passed && !alreadyCompleted) nodeUpdate.completedAt = serverTimestamp();
 
   await setDoc(
     progressRef,

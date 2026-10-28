@@ -3,7 +3,9 @@
 ## Project Ground Rules & Architecture
 1. **Media Asset Management:** All images must be hosted on the `data/media_backup` GitHub repository to save space, and accessed via `cdn.jsdelivr.net` links (e.g., `https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/[filename]`). Avoid direct Wikimedia links as they are prone to breaking or rate-limiting.
 2. **Release Strategy:** Differentiate between dynamic data updates (updating `space_olympiad_data.json` and seeding Firestore via the "Update Quest Map" button) which do NOT require an app update, versus native/UI changes (like bumping `expo-image` or adding `react-native-image-zoom-viewer`) which DO require a production build.
-3. **Database Seeding:** Any new Quest Map Nodes or Study Content must have BOTH their `quest_nodes` entry and their `study_content`/`categories`/`topics` payload added to the seeding script (`components/quiz/SeedQuestNodesButton.js`) so they can be pushed to Firestore without causing blank screens.
+3. **Database Seeding:** Every node must ship together with its content, or it opens to a blank screen.
+   - **Space Olympiad (legacy):** `quest_nodes` entry + `studyContent`/`categories`/`topics` payload in `components/quiz/SeedQuestNodesButton.js`.
+   - **Tile quests (English Quest and future ones):** node in `quests/{questId}/nodes` + its study page (`studyContent`) or questions (`questions`, or reused `quizQuestions`) in `data/englishQuestData.js`, seeded by `components/quiz/SeedEnglishQuestButton.js`. Never add tile-quest nodes to `quest_nodes` (old app builds load all of it).
 4. **Target Audience (Kids):** The content is designed for kids (Space Olympiad). All answers, images, and reading materials (like the biographies) must be engaging, highly visual, and kid-friendly.
 
 ## 2026-10-28

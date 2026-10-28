@@ -91,7 +91,8 @@ const CarouselItem = React.memo(
         case "QUEST":
           // Tile-based quest (e.g. English Quest). The category id is the quest id
           // unless the category sets `questId`.
-          navigation.push("EnglishQuestIntro", { questId: item.questId || item.id });
+          // navigate (not push) so a double tap doesn't stack two intro screens.
+          navigation.navigate("EnglishQuestIntro", { questId: item.questId || item.id });
           break;
         case "COURSE":
         case "COMPLEX":

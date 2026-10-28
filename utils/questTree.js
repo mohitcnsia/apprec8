@@ -16,6 +16,12 @@
 //   - Leaf types this app version doesn't know show as "comingSoon" (never crash).
 
 export const KNOWN_LEAF_TYPES = ["study", "quiz"];
+// Unit (trunk) nodes are unit tests. A future unit kind that this app version
+// doesn't know (or a unit with no test) shows as "Coming soon".
+export const KNOWN_UNIT_TYPES = ["test"];
+
+const isPlayableUnit = (unit) =>
+  KNOWN_UNIT_TYPES.includes(unit.type || "test") && !!unit.quizId;
 
 export const DEFAULT_LEAF_PASS_PERCENT = 60;
 export const DEFAULT_UNIT_PASS_PERCENT = 70;
@@ -49,7 +55,7 @@ export function buildQuestTree(nodes = [], progressNodes = {}) {
   const builtUnits = units.map((unit) => {
     const unitDone = isCompleted(progressNodes, unit.id);
     let status;
-    if (unit.comingSoon) status = "comingSoon"; // always shown as a teaser
+    if (unit.comingSoon || !isPlayableUnit(unit)) status = "comingSoon"; // always shown as a teaser
     else if (!previousUnitPassed) status = "locked";
     else if (unitDone) status = "completed";
     else status = "unlocked";
@@ -125,7 +131,7 @@ export function buildQuestTree(nodes = [], progressNodes = {}) {
     units: builtUnits,
     currentUnitId,
     stats: {
-      unitsTotal: units.filter((u) => !u.comingSoon).length,
+      unitsTotal: units.filter((u) => !u.comingSoon && isPlayableUnit(u)).length,
       unitsDone: builtUnits.filter((u) => u.status === "completed").length,
       leavesTotal: leaves.length,
       leavesDone,

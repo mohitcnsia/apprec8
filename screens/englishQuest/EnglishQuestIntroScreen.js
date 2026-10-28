@@ -101,7 +101,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             <Text style={styles.progressTitle}>Please sign in to play</Text>
             <Text style={styles.progressText}>
               Your progress is saved to your account, so you can continue on any phone and your
-              teacher or parent can see how you are doing. Go to Profile to sign in.
+              teacher or parent can see how you are doing.
             </Text>
           </View>
         )}
@@ -128,6 +128,20 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>{renderBody()}</ScrollView>
+
+      {/* Guests: take them to the Profile tab, which shows the sign-in screen for guests. */}
+      {!user && !error ? (
+        <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
+          <TouchableOpacity
+            style={styles.startButton}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate("Profile")}
+          >
+            <Ionicons name="log-in-outline" size={22} color="#0B3D2E" />
+            <Text style={styles.startText}>Sign in to play</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
 
       {/* Big button in the thumb zone */}
       {user && tree && !error ? (

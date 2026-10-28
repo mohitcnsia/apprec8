@@ -42,8 +42,11 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 ## Rules of the project
 1. **Images**: host in `data/media_backup` (GitHub repo `mohitcnsia/media_backup`) and link via
    `https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/<file>`. Don't link Wikimedia directly.
-2. **Seeding**: every new quest node needs both its `quest_nodes` entry *and* its content
-   (`studyContent` / `categories` / `topics` / `quizQuestions`) in `SeedQuestNodesButton.js`, or the node opens to a blank screen.
+2. **Seeding**: every node needs its content seeded with it, or it opens to a blank screen.
+   Space (legacy): `quest_nodes` + content in `SeedQuestNodesButton.js`. Tile quests: `quests/{questId}/nodes` + content
+   in `data/englishQuestData.js` via `SeedEnglishQuestButton.js`. Never put tile-quest nodes in `quest_nodes`.
+7. **Team workflow**: Claude implements; Gemini reviews and handles deploys/builds. Reviews go in `CODE_REVIEW.md`;
+   Claude answers each finding under "Author Response" and files "Deploy requests" there. Claude does not deploy to production.
 3. **Content vs native release**: content changes (JSON + seeding to Firestore) ship without an app update.
    Native/dependency/UI changes need a production build.
 4. **Audience is kids**: text, images and explanations must be kid-friendly, visual and engaging.
