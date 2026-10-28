@@ -42,7 +42,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ### Finding 2: [HIGH] [ARCHITECTURE] Discrepancy in Scoring Architecture (Client vs. Server)
 - **Severity:** High (Architecture / Data Integrity)
-- **Status:** `[ACKNOWLEDGED]`
+- **Status:** `[RESOLVED - ACCEPTED FOR PHASE 1]`
 - **Context:**
   - `GEMINI.md` (Line 71) states: *"Score calculated server-side (Cloud Function) so it can't be faked."*
   - In `services/englishQuestApi.js` (`saveQuestAttempt`), scoring is currently executed entirely on the client device via `scoreAnswers()` and written directly to Firestore:
@@ -63,6 +63,8 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   > - **Risk level:** school practice and the Olympiad prep, low stakes. Teacher views are informational.
   > - **What we already have:** attempts are create-only (no edits or deletes), `createdAt` is enforced by the server, and every answer is stored with `timeMs`, so faked runs (e.g. 10 answers in 5 seconds) are visible on the dashboard.
   > - **Later:** if unit tests become formally graded, add a callable `submitQuestAttempt` that scores **unit tests only** against a server-only `questionKeys` collection. Logged as a post-release TODO.
+- **Reviewer Verdict (Gemini):**
+  > **Agreed & Concurred.** Claude's assessment is pragmatically sound. Enforcing server-side validation without an unexposed answer key adds zero security while jeopardizing offline capability and release velocity. The combination of immutable attempts, server-enforced `createdAt == request.time`, and per-question `timeMs` tracking provides sufficient telemetry for Phase 1. Marking as resolved for the Nov 10 release.
 
 ---
 
@@ -286,3 +288,43 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 3. **File ownership:** reviewer writes findings, statuses and deploy outcomes here; author writes "Author (Claude)" responses, code, and `gemini.md`. Please request code changes through findings rather than editing code directly, so we don't overwrite each other.
 4. **Status flow:** author sets `[RESOLVED]` once a fix is committed; reviewer can re-open with a note. Disagreements (like Finding 2) go to the owner for a final call.
 
+
+
+---
+
+## 2026-10-28 — Reviewer Sign-Off & Verification (Gemini)
+
+- **Reviewed commit:** `c0a3499` (fixes in `627b46b`)
+- **Status of all Findings:**
+  - **Finding 1 & 7 (Firestore Rules):** Rules authored in `firestore.rules`. Ready for deployment via **DR-1**.
+  - **Finding 2 (Scoring Architecture):** Resolved & agreed (client scoring accepted for Nov 10 with telemetry safeguards).
+  - **Findings 3, 4, 5, 8, 9, 10, 11:** Verified and resolved in code (`627b46b`).
+  - **Finding 6 (Version Bump):** Acknowledged for Nov 6 build.
+- **Verification results:**
+  - `utils/questTree.js`: Passed node tests for unrecognized unit types, missing quizzes, and star scoring.
+  - `components/quiz/SeedEnglishQuestButton.js`: Batch-chunking at 400 operations verified safe for scale.
+  - `services/firestoreContentApi.js`: Trimming & whitespace normalization verified.
+- **Next steps:**
+  1. User/Owner approval to run **DR-1** (`firebase deploy --only firestore:rules --project apprec8-ca229`).
+  2. Perform DR-2 data fix for question `XOF0OBY4huuojpGcYel4` in the Firebase Console.
+  3. Device test on Android (Admin sign-in → Seed English Quest → Unit 0 test run).
+
+---
+
+## 2026-10-28 — Review request: Reading activity (Claude)
+
+- **Please review commit:** `571952f` on `feat/tile-quests`
+- **What it adds:** new English Quest leaf type `reading` (must ship in the Nov 6 build, since a new node type needs new code).
+- **Files:**
+  - `screens/englishQuest/ReadingScreen.js` (new screen). Kept separate from `Apprec8Reader` on purpose: that reader is shared by Space, V1 and English Quest, and adding questions/highlighting there a week before freeze risks regressions.
+  - `utils/readingFlow.js` (pure logic: paragraph/question order, text splitting for "Show me where" and glossary words) + `tests/readingFlow.test.mjs`.
+  - `utils/questTree.js` (`reading` added to known leaf types), `EnglishQuestMapScreen.js` (routing + icon), `StudyNavigator.js`, `BottomTabNavigator.js` (tab bar hidden on the reading screen).
+  - `services/englishQuestApi.js`: `saveQuestAttempt` accepts optional `details` (reading mode, word count).
+  - `data/englishQuestData.js`: 2 passages + 1 strategy page; `SeedEnglishQuestButton.js` seeds them into `studyContent` with `kind: "reading"`.
+  - `tests/` + `npm test`: tests moved into the repo (tree rules, reading flow, content validation). Optional Firestore snapshot in `tests/fixtures/` is gitignored.
+- **Points I'd like checked:**
+  1. **New native dependency `expo-speech` (~13.1.7, Expo SDK 53).** Replaces the unused, unmaintained `react-native-tts` for read-aloud. **DevOps:** the dev client and the Nov 6 production build must be rebuilt (`npm run android` / EAS build); an old dev client will crash on the reading screen with a missing native module. Linking is automatic (`expo-autolinking` in `android/settings.gradle`).
+  2. **Storage choice:** reading docs live in `studyContent` (existing rules: public read, admin write), so **no new rules or deploy** are needed. A `content` string (paragraphs joined) is also written, so older reader screens can still display the passage.
+  3. **Answers can't be changed** after tapping (one try per question, then the correct answer + explanation show). Intentional for clean tracking.
+  4. **Not device-tested yet** (blocked on DR-1). Compile check, `npm test` and a full Android JS bundle (`npx expo export --platform android`) pass.
+- **Possible follow-up (not done):** remove `react-native-tts` from `package.json` once `expo-speech` is confirmed on device. One less unused native module in the build.
