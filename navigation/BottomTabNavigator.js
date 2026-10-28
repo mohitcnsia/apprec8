@@ -37,7 +37,14 @@ function BottomTabNavigator({
           const routeName = getFocusedRouteNameFromRoute(route) ?? "";
 
           // List of screens where the tab bar should be HIDDEN
-          const immersiveScreens = ["QuizDetails", "QuizScreenV2", "Explanation", "ResultsScreen"];
+          const immersiveScreens = [
+            "QuizDetails",
+            "QuizScreenV2",
+            "Explanation",
+            "ResultsScreen",
+            "EnglishQuestIntro",
+            "EnglishQuestMap",
+          ];
 
           // If the current screen is in our immersive list, hide the tab bar
           if (immersiveScreens.includes(routeName)) {

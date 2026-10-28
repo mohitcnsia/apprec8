@@ -40,6 +40,8 @@ const Apprec8Reader = ({ route, navigation }) => {
   const C = theme.appColors || theme;
   const contentId = route?.params?.contentId;
   const completedQuizId = route?.params?.completedQuizId;
+  // Set by tile-based quests (English Quest): { questId, nodeId, returnTo }
+  const questContext = route?.params?.questContext;
 
   const isMounted = useRef(true);
   const [studyData, setStudyData] = useState(null);
@@ -542,7 +544,21 @@ const Apprec8Reader = ({ route, navigation }) => {
             )}
           </View>
         )}
-        {completedQuizId && (
+        {questContext && (
+          <View style={{ marginTop: 30, marginBottom: 20, alignItems: 'center' }}>
+            <Button
+              title="I've read it! Back to Quest"
+              onPress={() =>
+                navigation.navigate(questContext.returnTo || "EnglishQuestMap", {
+                  questId: questContext.questId,
+                  completedNodeId: questContext.nodeId,
+                })
+              }
+              color={C.primary || "#58CC02"}
+            />
+          </View>
+        )}
+        {!questContext && completedQuizId && (
           <View style={{ marginTop: 30, marginBottom: 20, alignItems: 'center' }}>
             <Button 
               title="Mark as Read & Continue" 

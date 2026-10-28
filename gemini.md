@@ -6,7 +6,97 @@
 3. **Database Seeding:** Any new Quest Map Nodes or Study Content must have BOTH their `quest_nodes` entry and their `study_content`/`categories`/`topics` payload added to the seeding script (`components/quiz/SeedQuestNodesButton.js`) so they can be pushed to Firestore without causing blank screens.
 4. **Target Audience (Kids):** The content is designed for kids (Space Olympiad). All answers, images, and reading materials (like the biographies) must be engaging, highly visual, and kid-friendly.
 
-## 2026-09-08 (Current Session)
+## 2026-10-28
+- **Goal:** Review project docs, set up `CLAUDE.md`, and clean up the Quest Map.
+- **Completed Steps:**
+  1. Reviewed all markdown docs and created `CLAUDE.md` (commands, layout, Firestore collections, project rules, release steps). Agreed that daily progress and TODOs are logged in this file.
+  2. Removed the 4 Spelling Bee nodes (`game-spell-1` to `game-spell-4`) from the quest node list in `SeedQuestNodesButton.js`. The Spelling Bee game itself is buggy right now.
+  3. Noted doc mismatches: the study collection is `studyContent` in code (not `study_content`). Android `versionCode`/`versionName` in `android/app/build.gradle` are hardcoded and must be bumped by hand along with `app.config.js`.
+  4. Created branch `feat/tile-quests` from `jul-features` (20.0.22). This becomes the primary branch; the previous AAB is the rollback plan. (`main` is only the initial commit.)
+  5. Agreed the plan for the **English Olympiad (IEO) quest** (see "Plan: English Olympiad Quest" below).
+  6. **Built English Quest, batch 1 (code):**
+     - `services/firestoreContentApi.js`: `listenToV2QuizQuestions` falls back to old V1 `quizQuestions` and converts them (`convertV1QuestionToV2`). Checked against Firestore: 3,113 IEO questions in 137 quizzes; only 1 skipped (answer/option quote mismatch in `4ieo11-topic8-quiz4`).
+     - `utils/questTree.js`: unlock rules (unit test passes → next unit; branches open with their unit; leaves unlock in order; unknown node types → "Coming soon"). Tested with Node.
+     - `services/englishQuestApi.js`: quest/nodes/progress listeners, `saveQuestAttempt` (every answer + time + mistake tag → `questAttempts`), progress in `users/{uid}/questProgress/{questId}`.
+     - `screens/englishQuest/`: `EnglishQuestIntroScreen` (asks guests to sign in), `EnglishQuestMapScreen` (tree: trunk of unit tests, swipeable branch rows, stars, auto-scroll to current unit), `questColors.js`.
+     - `QuizScreenV2`: optional `questContext` param → records answers and time, saves attempt on finish / out of hearts, "Back to Quest" exit. Space quest flow unchanged.
+     - `Apprec8Reader`: optional `questContext` → "I've read it! Back to Quest" button.
+     - Study tab: new "Quests" carousel (`carouselGroup: "quest"`, only read by the new app), tile type `QUEST` in `CustomCarousal`. Screens registered in `StudyNavigator`; tab bar hidden on them.
+     - Content `data/englishQuestData.js`: Unit 0 Sentences (2 new study pages, 4 new quizzes, unit test), Unit 1 Parts of Speech (7 branches reusing IEO content + new Adverbs page/quiz + new unit test), Unit 2 "Coming soon". 60 new questions, every wrong option has a `mistakeTag`.
+     - `SeedEnglishQuestButton` on Profile, visible only to the admin account (`APPREC8_TEAM_REVIEWER_UID`).
+     - `firestore.rules`: added rules for `quests`, `questProgress`, `questAttempts` (**not deployed yet**).
+     - Checks: all changed files compile; full Android JS bundle builds (`npx expo export --platform android`); data validation script passes (unique ids, one correct answer, mistake tags, all referenced content exists).
+- **How to test:**
+  1. Press "Update Quest Map to Full Space Olympiad". Seeding deletes all existing `quest_nodes` first, so the Spelling Bee nodes disappear.
+  2. Check the map goes straight from Level 4 to the U. R. Rao biography (and likewise around Levels 8, 14, 18), and progression still unlocks correctly.
+  3. English Quest: deploy rules (`firebase deploy --only firestore:rules`), run `npm run android`, sign in with the admin account, press **Update English Quest** on Profile. The Study tab shows a **Quests** row with the English Quest tile → intro → tree. Play "Sentence or not?", then check `questAttempts` and `users/{uid}/questProgress/english-quest` in the Firebase console. Pass the Unit 0 test (≥70%) and check Unit 1 opens.
+
+### Plan: English Olympiad Quest (agreed 2026-10-28)
+**Who:** Anyone who wants to learn. Main pilot users: Class 5 IEO kids (incl. Pratha) and ~50 Class 10 students whose teacher will track them. Android only. Both groups start on the same day (date TBD). App is public, so no consent flow for now.
+
+**Release date: 10 November 2026.** App code freeze + Play Store submission by **6 November** (store review takes 1–3+ days). Content can be seeded after release.
+
+**Entry & navigation**
+- Quests open from a **tile** (Study tab carousels), not from the bottom bar. The Quest tab stays as it is, hidden behind the V2 switch (off by default).
+- **New, separate tile named "English Quest"** in a new `carouselGroup: "quest"` that only the new app reads. The existing IEO tile (`categories/ieo`) is **not modified**, so kids can keep using it. If the new quest breaks, delete/hide the new tile in Firestore; no release needed.
+- Tile → intro → **one mixed tree** (no separate tracks).
+- **Tree layout:** a vertical trunk of units. Reaching a trunk node unlocks its horizontal, swipeable row of branches. Leaves get harder the further out they are, and kids don't have to finish every leaf. The **trunk node is the unit test**; passing it unlocks the next trunk node. Branch depth earns stars and is tracked.
+- **The tree holds grammar + reading only** (both are finite skill ladders). Each unit has 1–2 reading leaves whose passages grow with the grammar level. The map auto-scrolls so the next node sits near the kid's thumb.
+- **Vocabulary is NOT in the tree** (decided 2026-10-28). It grows without limit and words get forgotten, so a "done once" tree is the wrong model. It becomes a separate **Word Bank** (next release, not Nov 10):
+  - Word packs on a shelf (Starter → IEO L1 → IEO L2 → Achievers, ~20 words each), unlocked in order.
+  - Per-word mastery (new → learning → known → mastered; mastered only after being right on several separate days).
+  - Daily review via spaced repetition; the future daily notification opens this.
+  - Spell bee = a mode on the same words (hear the word, pick the spelling).
+  - Later the tree can get "Word check" leaves that pull 5 words from the kid's own Word Bank (variety without the tree owning vocab content).
+  - Until then, kids keep using the vocabulary quizzes in the old IEO tile.
+
+**Release scope for Nov 10**
+- In: English Quest tree (grammar + reading), answer/time recording, 🚩 report button.
+- Out: Word Bank (next release), dashboard (web, not tied to the app release; ships after, and shows data recorded from day one).
+- **Code freeze rule:** content can be seeded any time, but every node *type* needed in the coming weeks must be in the Nov 6 build (quiz, study, reading-with-questions, unit test). Unknown node types must render as "Coming soon", not crash, so future types don't break older builds.
+- Stay about **two units ahead** of the fastest kid (they may do 2–3 levels a day).
+- V1 tile/list screens stay untouched (reusable for short lists with a header image).
+
+**Reuse existing content (big time saver)**
+- The `ieo` category already has 202 topics: Nouns, Pronouns, Verbs, Tenses (7 sub-sections), Articles (done); Prepositions, Conjunctions, Adjectives, Adverbs (in progress); Vocabulary (10 themed groups, ~80 quizzes = the ~450 past-paper words); Word & Structure (10 mixed quizzes).
+- Old quizzes live in `quizQuestions` (V1 format: `parentId`, string `options`, `answer`, `explanation` array). The V2 quiz screen reads `questions` (`quizId`, `options: [{content, isCorrect}]`). Add a converter in `listenToV2QuizQuestions` that falls back to `quizQuestions` when `questions` is empty. No changes to old data.
+- Old questions have no mistake labels; the dashboard shows the chosen option for those. Add labels gradually.
+
+**Rollback safety (old AAB must keep working on the same Firestore)**
+- New quest data lives in `quests/{questId}` + `quests/{questId}/nodes`, never in `quest_nodes` (the old app loads all of `quest_nodes`, and the old seed button deletes all of it).
+- The new tile uses a new `carouselGroup: "quest"` that only the new app reads (old app would show "not yet defined" for an unknown tile type).
+- New seed button only writes the English quest; it never touches Space data.
+
+**Content areas** (grammar + reading live in the tree; vocabulary is the separate Word Bank, see above)
+1. **Grammar (zero → master):** 0 Sentence basics · 1 Parts of speech · 2 Articles & determiners · 3 Subject-verb agreement · 4–5 Tenses · 6 Modals · 7 Gerunds/infinitives/participles · 8 Clauses & connectors (incl. conditionals) · 9 Voice · 10 Reported speech · 11 Transformation & question tags · 12 Error spotting → Mastery Test. Covers the Class 10 teacher's list (tenses, determiners, modals, clauses, voice, transformation).
+2. **Reading:** uses Apprec8Reader with built-in questions (not the quiz screen). Ideas: questions between paragraphs for beginners, full passage + 5 IEO-style questions later; "show me where" highlights the proving sentence; tap a word for its meaning; read-aloud via `react-native-tts`. Passages grow from ~80 to ~400 words. Strategy pages for each IEO question type (incorrect statement, Statement I/II, word in context, sequencing).
+3. **Vocabulary / Spell Bee → Word Bank (next release):** built from the ~450 past-paper words in the `4ieo11` quizzes plus easier starter words. Spelling = app speaks the word, kid picks the correct spelling from 4 (no typing).
+
+**Rules**
+- **Multiple choice only** (typing on a phone is hard). Free-text past-paper questions get converted to MCQ.
+- **No skipping.** Everyone starts at Level 0; older kids just move faster. Keeps tracking clean and avoids placement logic.
+- **Mistake labels:** every wrong option is tagged with the error it represents (e.g. `sv-agreement`, `wrong-time-frame`), so the dashboard can show *kinds* of mistakes.
+- **Original content only.** IEO (SOF) and CBSE papers are used as guides for style/difficulty; questions are reworded, never copied.
+
+**Tracking (record from day one; dashboard comes later)**
+- Sign-in required for quests. Later: class codes for teachers, roll number/display name, parent links.
+- Per attempt: student, quest, node, start/end time, score, and per question: chosen option, correct?, time taken, mistake label.
+- Score calculated server-side (Cloud Function) so it can't be faked.
+- Dashboard: web (Firebase Hosting) with role-based access (teacher → class, parent → child, admin → all). Starts simple.
+
+**Reporting mistakes in content (review of `FeedbackFAB` done 2026-10-28)**
+- Current state: `components/common/FeedbackFAB.js` → callable `submitFeedback` → `userFeedback` collection. Used in V1 QuizScreen (hidden behind a gesture), result/explanation screens and Apprec8Reader.
+- Problems: (1) not in `QuizScreenV2`, so quest players can't report; (2) the server drops `issueCategory`; (3) server needs ≥3 words but the app only checks 10 chars, so short reports fail; (4) hard to discover in V1; (5) nobody views the reports.
+- Plan: a 🚩 Report button on every question → reason chips (Wrong answer · Spelling mistake · Confusing question · Image broken · Other), optional text → saves quizId, questionId and the chosen option. Fix (2) and (3) in the function, keeping it compatible with the old app (functions deploy, separate from the app release). Show a "Reported issues" list with status in the dashboard.
+
+**Delivery in batches / timeline**
+- Oct 28–31: old-quiz converter, tree map screen, intro, new tile, attempt recording, 🚩 report button. Grammar tree wired to existing content + new **Level 0** (study page + ~10 MCQs with mistake labels).
+- Nov 1–3: the owner + Pratha test, fixes.
+- Nov 4–5: Reading v1 (Apprec8Reader with built-in questions, a few passages). All node types done.
+- Nov 6: code freeze, production build, Play Store.
+- Nov 7 onward: content-only additions by seeding; dashboard v1 (web).
+
+## 2026-09-08
 - **Goal:** Automate Wikipedia image downloading for 100 new ISRO Space Olympiad questions, and fix quest map progression blockers.
 - **Steps:**
   1. Developed Python/JS scripts to map 100 ISRO question answers to specific Wikipedia subjects, fetch their images using Wikipedia's API, and download them to `data/media_backup/`.
@@ -54,6 +144,19 @@
   3. Win the puzzle and press "Finish & Continue Quest". It should seamlessly redirect back to the map.
 
 ## Future TODOs
+- **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
+- **Reading node type** (Apprec8Reader with built-in questions). Must be in the Nov 6 build.
+- **Security (before the 50 students start):** content collections (`categories`, `topics`, `studyContent`, `quizQuestions`, `questions`, game collections) allow `write: if true` for anyone. `/questions` also has two conflicting blocks (write true + write false = open). Lock writes to the admin. The old seed buttons write from the client, so they would need the admin account too.
+- **Seed buttons visible to every user:** `SeedDataFixButton`, `SeedQuestNodesButton`, `SeedDataButton` render on Profile for all users. Gate them behind the admin UID like `SeedEnglishQuestButton`.
+- **`.exists` bug:** `WordInspectorScreen.js:102` and `ProfileScreen.js:91` use `snap.exists` without `()`. In this Firebase version it's a method, so the check is always true.
+- **IEO data fixes:** `4ieo11-topic8-quiz4` has one question whose answer doesn't match any option (quote marks). `4ieo9-quiz`, `tenses-boss-1`, `tenses-boss-1-quiz` have no questions. No `4ieo9-study` page exists (English Quest uses its own Adverbs page).
+- **English Quest tile image:** currently reuses the IEO tile image. Make a proper one and host it on the media_backup CDN.
+- **English Quest, batch 1: test on device.** Code is done (see 2026-10-28). Deploy rules, seed, play through Unit 0 with Pratha, fix issues.
+- **Word Bank (next release after Nov 10):** separate vocabulary feature with packs, per-word mastery, spaced-repetition daily review and a spell bee mode. Seed from the existing `4ieo11` vocabulary quizzes plus easier starter words.
+- **Dashboard v1 (web, after Nov 6):** who played, scores, time, mistakes, reported issues.
+- **Auto-generated review nodes (after Nov 10):** the tree grows "Fix your mistakes" nodes from each kid's wrong answers, so kids come back to review after finishing.
+- **Daily quiz + push notifications (after Nov 10):** needs `@react-native-firebase/messaging` (native change → app release). Daily mix pulls from the kid's mistakes.
+- **Fix Spelling Bee:** The game is a mess and was removed from the Quest Map on 2026-10-28. Fix `SpellingBeeGame.js` before adding its nodes back. The `gameSpellingBee` puzzles are still seeded but nothing uses them yet.
 - **Study Content Revamp:** Study content is hardcoded and very poor. We need to add significant content with at least 2-3 images and possibly a YouTube video. Add a 1000-word kid-friendly biography of all prominent space scientists and astronauts. Cover their early life, struggles, how they studied despite their limited resources, and made it big for their country.
 - **Image Optimization:** Use Squoosh (or a similar tool) to compress all images. Keep large images for a zoomed-in view when kids click on them, but use compressed versions by default to speed things up and save bandwidth.
 - **Reading Nodes Creation:** Use the new images (Apollo launch, Isaac Newton, etc.) to write fun articles as reading nodes. Create lots of good reading material and quizzes around topics like "Best space scientist every kid should know", "Most famous astronauts", "Most successful space missions", and "Famous rockets".

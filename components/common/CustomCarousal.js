@@ -88,6 +88,11 @@ const CarouselItem = React.memo(
         case "SPELLBEE":
           navigation.navigate("SpellingBeeGame", {});
           break;
+        case "QUEST":
+          // Tile-based quest (e.g. English Quest). The category id is the quest id
+          // unless the category sets `questId`.
+          navigation.push("EnglishQuestIntro", { questId: item.questId || item.id });
+          break;
         case "COURSE":
         case "COMPLEX":
         case "ACTIVITY":

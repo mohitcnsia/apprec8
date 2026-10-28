@@ -8,6 +8,7 @@ import {
   onSnapshot,
   updateDoc,
   arrayUnion,
+  getDocs,
 } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app"; // To get the default app instance
 // Assuming authInstance is correctly configured and exported from your firebase setup.
@@ -414,6 +415,52 @@ export const listenToUserDocument = (onResult, onError) => {
  * @param {(error: Error) => void} onError - Callback invoked on listener error.
  * @returns {() => void} An unsubscribe function to detach the listener.
  */
+/**
+ * Converts one V1 `quizQuestions` document into the V2 question shape used by QuizScreenV2.
+ * V1: { question: string, options: string[], answer: string, explanation: string|string[], image? }
+ * V2: { question: {type, content, mediaUrl?}, options: [{type, content, isCorrect}], answer, explanation: {text} }
+ * Exported for testing.
+ */
+export const convertV1QuestionToV2 = (id, quizId, data) => {
+  const options = Array.isArray(data.options) ? data.options : [];
+  const explanationText = Array.isArray(data.explanation)
+    ? data.explanation.join("\n\n")
+    : data.explanation || "";
+
+  return {
+    id,
+    quizId,
+    order: Number(data.order) || 0,
+    answer: data.answer,
+    question: {
+      type: data.image ? "image" : "text",
+      content: typeof data.question === "string" ? data.question : String(data.question ?? ""),
+      ...(data.image ? { mediaUrl: data.image } : {}),
+    },
+    options: options.map((opt) => ({
+      type: "text",
+      content: String(opt),
+      isCorrect: String(opt) === String(data.answer),
+    })),
+    explanation: explanationText ? { text: explanationText } : null,
+    sourceFormat: "v1",
+  };
+};
+
+/** One-time read of V1 questions (`quizQuestions` where parentId == quizId), converted to V2. */
+const fetchV1QuestionsAsV2 = async (quizId) => {
+  const v1Query = query(
+    collection(db, "quizQuestions"),
+    where("parentId", "==", quizId)
+  );
+  const snapshot = await getDocs(v1Query);
+  return snapshot.docs
+    .map((d) => convertV1QuestionToV2(d.id, quizId, d.data()))
+    // Skip broken questions that have no correct option, so a kid never gets stuck.
+    .filter((q) => q.options.some((o) => o.isCorrect))
+    .sort((a, b) => a.order - b.order);
+};
+
 export const listenToV2QuizQuestions = (quizId, onUpdate, onError) => {
   console.log(
     `LISTENER: Setting up for V2 quiz questions for quizId: ${quizId}`
@@ -438,7 +485,13 @@ export const listenToV2QuizQuestions = (quizId, onUpdate, onError) => {
         `LISTENER CALLBACK (Success): listenToV2QuizQuestions for quiz ${quizId} received snapshot. Size: ${querySnapshot.size}`
       );
       if (querySnapshot.empty) {
-        onUpdate([]);
+        // No V2 questions: fall back to old V1 questions (e.g. the IEO quizzes).
+        fetchV1QuestionsAsV2(quizId)
+          .then((v1Questions) => onUpdate(v1Questions))
+          .catch((error) => {
+            console.error("listenToV2QuizQuestions: V1 fallback failed.", error);
+            if (typeof onError === "function") onError(error);
+          });
         return;
       }
       const fetchedQuestions = querySnapshot.docs.map((doc) => ({

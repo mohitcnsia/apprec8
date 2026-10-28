@@ -3,7 +3,7 @@
  * @description The main UI for the V2 Quiz. It now passes final score data
  * to the generic ResultsScreen and lets it handle the UI logic.
  */
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -23,16 +23,76 @@ import { useQuizEngine } from "../../hooks/useQuizEngine";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
+import { saveQuestAttempt } from "../../services/englishQuestApi";
 
 const QuizScreenV2 = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const C = theme.appColors || theme;
-  const { quiz, mode, isFirstAttempt } = route.params;
+  // questContext is only set by tile-based quests (English Quest):
+  // { questId, nodeId, passPercent, returnTo }
+  const { quiz, mode, isFirstAttempt, questContext } = route.params;
 
   const { state, dispatch } = useQuizEngine(quiz, mode, isFirstAttempt);
   const { status, questions, error, currentIndex, score, lives } = state;
   const { playSuccess, playFailure } = useSoundEffects();
+
+  // --- Answer recording for quests (who answered what, and how fast) ---
+  const answerLogRef = useRef({}); // questionId -> answer entry
+  const questionShownAtRef = useRef(Date.now());
+  const quizStartedAtRef = useRef(null);
+  const attemptSavedRef = useRef(false);
+
+  useEffect(() => {
+    if (status === "answering") {
+      if (!quizStartedAtRef.current) quizStartedAtRef.current = Date.now();
+      questionShownAtRef.current = Date.now();
+    }
+  }, [status, currentIndex]);
+
+  const logAnswer = (question, option) => {
+    if (!questContext || !question || !option) return;
+    const previous = answerLogRef.current[question.id];
+    const timeMs = Date.now() - questionShownAtRef.current;
+    answerLogRef.current[question.id] = {
+      questionId: question.id,
+      questionText: question.question?.content || "",
+      chosen: option.content,
+      correctAnswer: question.options.find((o) => o.isCorrect)?.content || null,
+      isCorrect: !!option.isCorrect,
+      // In exam mode a kid can come back and change an answer; add up the time.
+      timeMs: (previous?.timeMs || 0) + timeMs,
+      mistakeTag: option.isCorrect ? null : option.mistakeTag || null,
+      changedAnswer: !!previous,
+    };
+  };
+
+  const saveAttemptOnce = (outcome) => {
+    if (!questContext || attemptSavedRef.current) return;
+    attemptSavedRef.current = true;
+    saveQuestAttempt({
+      questId: questContext.questId,
+      nodeId: questContext.nodeId,
+      quizId: quiz.id,
+      mode,
+      answers: Object.values(answerLogRef.current),
+      totalQuestions: questions.length,
+      passPercent: questContext.passPercent ?? 60,
+      startedAt: quizStartedAtRef.current,
+      outcome,
+    });
+  };
+
+  // Out of hearts still counts as an attempt (useful for teachers).
+  useEffect(() => {
+    if (status === "failed") saveAttemptOnce("outOfHearts");
+    // "Try Again" restarts the quiz: allow a new attempt to be saved.
+    if (status === "ready") {
+      attemptSavedRef.current = false;
+      answerLogRef.current = {};
+      quizStartedAtRef.current = null;
+    }
+  }, [status]);
 
   /**
    * DOCUMENTATION:
@@ -46,6 +106,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
    */
   useEffect(() => {
     if (status === "finished") {
+      saveAttemptOnce("finished");
       let maxPossibleScore;
       if (mode === "exam") {
         maxPossibleScore = 10;
@@ -73,15 +134,19 @@ const QuizScreenV2 = ({ route, navigation }) => {
         actions: [
           {
             label: "Play Again",
-            onPress: () => navigation.replace("QuizScreenV2", { quiz, mode }),
+            onPress: () => navigation.replace("QuizScreenV2", { quiz, mode, questContext }),
             mode: "contained",
           },
           {
-            label: "Exit",
+            label: questContext ? "Back to Quest" : "Exit",
             onPress: () =>
-              navigation.navigate("QuestMap", {
-                completedQuizId: (mode === "exam" && score >= maxPossibleScore) ? quiz.id : null,
-              }),
+              questContext
+                ? navigation.navigate(questContext.returnTo || "EnglishQuestMap", {
+                    questId: questContext.questId,
+                  })
+                : navigation.navigate("QuestMap", {
+                    completedQuizId: (mode === "exam" && score >= maxPossibleScore) ? quiz.id : null,
+                  }),
             mode: "outlined",
           },
         ],
@@ -125,7 +190,8 @@ const QuizScreenV2 = ({ route, navigation }) => {
     if (!state.selectedAnswer) return;
     const isCorrect = state.selectedAnswer.isCorrect;
     const currentQuestion = questions[currentIndex];
-    
+    logAnswer(currentQuestion, state.selectedAnswer);
+
     if (isCorrect) {
       playSuccess();
     } else {
@@ -390,6 +456,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
                           payload: { selectedOption: option },
                         });
                       } else {
+                        logAnswer(currentQuestion, option);
                         dispatch({
                           type: "ANSWER_AND_ADVANCE",
                           payload: {

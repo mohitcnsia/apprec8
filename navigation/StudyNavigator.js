@@ -17,6 +17,11 @@ import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import LinksScreen from "../screens/LinksScreen";
 import DummyScreen from "../screens/DummyScreen";
 import WordInspectorScreen from "../screens/WordInspectorScreen";
+import EnglishQuestIntroScreen from "../screens/englishQuest/EnglishQuestIntroScreen";
+import EnglishQuestMapScreen from "../screens/englishQuest/EnglishQuestMapScreen";
+import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
+import ExplanationScreen from "../screens/quiz/ExplanationScreen";
+import ResultsScreen from "../screens/common/ResultsScreen";
 
 const Stack = createStackNavigator();
 
@@ -105,6 +110,12 @@ const ThemedStudyStack = () => {
           headerShown: false,
         }}
       />
+      {/* --- Tile-based quests (English Quest) --- */}
+      <Stack.Screen name="EnglishQuestIntro" component={EnglishQuestIntroScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EnglishQuestMap" component={EnglishQuestMapScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} options={{ headerShown: false }} />
+      <Stack.Screen name="Explanation" component={ExplanationScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ResultsScreen" component={ResultsScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

@@ -18,11 +18,13 @@ import {
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import SeedDataFixButton from "../../components/quiz/SeedDataFixButton";
 import SeedQuestNodesButton from "../../components/quiz/SeedQuestNodesButton";
+import SeedEnglishQuestButton from "../../components/quiz/SeedEnglishQuestButton";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
 import firestore from "@react-native-firebase/firestore";
 import { helpTopics } from "../../data/app-topic-data"; // Assuming this path is correct
 import ConfirmationModal from "../../components/common/ConfirmationModel";
 import { authInstance } from "../../config/firebaseConfig";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { useTheme } from "../../context/ThemeContext";
 import { useV2 } from "../../context/V2Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -59,6 +61,8 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
   });
 
   const currentAuthUser = authInstance.currentUser;
+  const isAdminUser =
+    !!APPREC8_TEAM_REVIEWER_UID && currentAuthUser?.uid === APPREC8_TEAM_REVIEWER_UID;
   const userId = currentAuthUser?.uid;
 
   const getDisplayName = (userDoc, authUser) => {
@@ -671,9 +675,15 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         </View>
 
         {/* REMOVED Delete Account Button from here */}
-        <SeedDataFixButton />
-        <SeedQuestNodesButton />
-        <SeedDataButton />
+        {/* Content seeding: admin only (Firestore rules also block everyone else) */}
+        {isAdminUser && (
+          <>
+            <SeedDataFixButton />
+            <SeedQuestNodesButton />
+            <SeedEnglishQuestButton />
+            <SeedDataButton />
+          </>
+        )}
 
         {typeof signoutHandler === "function" && (
           <Pressable

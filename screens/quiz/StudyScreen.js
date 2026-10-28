@@ -24,6 +24,7 @@ const formatCategoryDataForCarousel = (category) => ({
   duration: category.duration || "",
   author: category.author || "",
   type: category.type || "COURSE",
+  questId: category.questId || null,
 });
 
 function StudyScreen({ navigation }) {
@@ -34,6 +35,9 @@ function StudyScreen({ navigation }) {
   const [classroomCategories, setClassroomCategories] = useState([]);
   const [popularReadCategories, setPopularReadCategories] = useState([]);
   const [popularQuizCategories, setPopularQuizCategories] = useState([]);
+  // Tile-based quests (English Quest). Uses carouselGroup "quest", which older
+  // app versions never read, so these tiles are invisible to them.
+  const [questCategories, setQuestCategories] = useState([]);
 
   // UPDATED STATE: Store the whole user document or specifically the completions map
   // Let's store userData and extract the map from it.
@@ -121,6 +125,17 @@ function StudyScreen({ navigation }) {
       (e) => handleListenerError(e, "Popular Quizzes")
     );
 
+    // Quest tiles: not counted in the loading state, and errors don't block the screen.
+    const unsubQuests = listenToCategoriesByGroup(
+      "quest",
+      (data) => {
+        if (isMountedRef.current) {
+          setQuestCategories(data.map(formatCategoryDataForCarousel));
+        }
+      },
+      (e) => console.warn("StudyScreen: quest tiles failed to load", e)
+    );
+
     // Setup listener for user document if user is logged in
     let unsubUserDocument = () => {};
     if (userId) {
@@ -150,6 +165,7 @@ function StudyScreen({ navigation }) {
       unsubClassroom();
       unsubReads();
       unsubQuizzes();
+      unsubQuests();
       unsubUserDocument(); // Cleanup the user document listener
     };
   }, [userId]); // Rerun effect if userId changes
@@ -221,6 +237,16 @@ function StudyScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
+        {questCategories.length > 0 && (
+          <CustomCarousel
+            title="Quests"
+            data={questCategories}
+            navigation={navigation}
+            perfectQuizCompletions={perfectQuizCompletions}
+            customWidth={50}
+            customHeight={180}
+          />
+        )}
         {olympiadCategories.length > 0 && (
           <CustomCarousel
             title="Olympiad"
