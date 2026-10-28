@@ -218,3 +218,6 @@ components/utils/markdownUtil.js
 data/temp.md
 *.aab
 data/media_backup/
+
+# Local Firestore snapshot used by tests/content.test.mjs (optional, not committed)
+tests/fixtures/

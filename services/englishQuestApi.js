@@ -105,6 +105,7 @@ export function markStudyNodeCompleted(questId, nodeId) {
  * @param {number} p.passPercent
  * @param {number} p.startedAt - ms timestamp when the quiz started
  * @param {"finished"|"outOfHearts"} p.outcome
+ * @param {object} [p.details] - extra info for this activity type
  * @returns {Promise<{ percent: number, passed: boolean } | null>}
  */
 export async function saveQuestAttempt(p) {
@@ -132,6 +133,7 @@ export async function saveQuestAttempt(p) {
       startedAtMs: p.startedAt || null,
       durationMs: p.startedAt ? endedAt - p.startedAt : null,
       answers: p.answers,
+      details: p.details || null, // e.g. reading: { readingMode, wordCount }
       appVersion: Constants.expoConfig?.version || null,
       createdAt: serverTimestamp(),
     });

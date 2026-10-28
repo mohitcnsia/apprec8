@@ -19,6 +19,7 @@ import DummyScreen from "../screens/DummyScreen";
 import WordInspectorScreen from "../screens/WordInspectorScreen";
 import EnglishQuestIntroScreen from "../screens/englishQuest/EnglishQuestIntroScreen";
 import EnglishQuestMapScreen from "../screens/englishQuest/EnglishQuestMapScreen";
+import ReadingScreen from "../screens/englishQuest/ReadingScreen";
 import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
 import ExplanationScreen from "../screens/quiz/ExplanationScreen";
 import ResultsScreen from "../screens/common/ResultsScreen";
@@ -113,6 +114,7 @@ const ThemedStudyStack = () => {
       {/* --- Tile-based quests (English Quest) --- */}
       <Stack.Screen name="EnglishQuestIntro" component={EnglishQuestIntroScreen} options={{ headerShown: false }} />
       <Stack.Screen name="EnglishQuestMap" component={EnglishQuestMapScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ReadingScreen" component={ReadingScreen} options={{ headerShown: false }} />
       <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} options={{ headerShown: false }} />
       <Stack.Screen name="Explanation" component={ExplanationScreen} options={{ headerShown: false }} />
       <Stack.Screen name="ResultsScreen" component={ResultsScreen} options={{ headerShown: false }} />

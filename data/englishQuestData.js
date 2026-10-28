@@ -173,6 +173,37 @@ quick → quick**ly** · careful → careful**ly** · happy → happ**ily**
 - find the adverb in a sentence
 - tell an adverb from an adjective`,
   },
+  "eq-read-tips": {
+    name: "Reading Detective Tips",
+    author: "Apprec8",
+    content: `### 🕵️ Be a reading detective!
+
+Olympiad reading questions are not about remembering everything. They are about **finding the clue** in the passage.
+
+---
+
+### 1. 👀 Read the questions first
+Take a quick look at the questions before you read. Now you know what clues to look for!
+
+### 2. 🔑 Find the key word
+Pick an important word from the question (a name, a number, a place) and find it in the passage. The answer is usually close by.
+
+### 3. ❌ "Select the INCORRECT statement"
+Three options are **true** and one is **false**. Check each option against the passage. The one the passage does *not* say (or says the opposite of) is your answer.
+
+### 4. ⚖️ "Statement I and Statement II"
+Check each statement **separately**: true or false? Then pick the option that matches both answers.
+
+### 5. 📖 Word meaning
+Read the whole sentence around the word. Try each option in its place. Which one keeps the meaning?
+
+### 6. 🔢 Put events in order
+Find each event in the passage. The order in the passage is usually the order of the story.
+
+---
+
+> 💡 **Golden rule:** Answer from the **passage**, not from what you already know!`,
+  },
 };
 
 // ---------- Quizzes (new, V2 format) ----------
@@ -260,6 +291,61 @@ export const quizzes = {
   ],
 };
 
+// ---------- Reading passages (new, stored in studyContent with kind: "reading") ----------
+// evidence.text must be an exact sentence (or part) of paragraphs[evidence.paragraph].
+// Mistake tags for reading: detail-missed, not-in-passage, word-meaning, opposite-meaning,
+// statement-check, sequence, inference (+ the pos-* tags for grammar tie-ins).
+export const readings = {
+  "eq-read-paper-boat": {
+    name: "Tara's Paper Boat",
+    author: "Apprec8",
+    mode: "stepByStep",
+    glossary: {
+      puddles: "small pools of water on the ground",
+      stream: "a small, narrow flow of water",
+      bravely: "without being afraid",
+    },
+    paragraphs: [
+      "It rained all night in Tara's village. In the morning, the lane outside her house was full of puddles. Tara found an old newspaper and folded it carefully into a small boat.",
+      "She placed the boat in a stream of rainwater running beside the road. The boat wobbled at first, but then it floated bravely along. Tara ran beside it, laughing.",
+      "Suddenly, the boat reached a big puddle and began to sink. Tara felt sad for a moment. Then she smiled, ran home, and folded a stronger boat from thicker paper.",
+    ],
+    questions: [
+      { afterParagraph: 0, ...q("What did Tara use to make her boat?", "An old newspaper", [["A plastic bag", "not-in-passage"], ["A green leaf", "not-in-passage"], ["Thick cardboard", "detail-missed"]], "The story says: 'Tara found an old newspaper and folded it carefully into a small boat.'"), evidence: { paragraph: 0, text: "Tara found an old newspaper and folded it carefully into a small boat." } },
+      { afterParagraph: 1, ...q("What does 'wobbled' mean in the story?", "Moved unsteadily from side to side", [["Sank quickly", "word-meaning"], ["Flew up into the air", "word-meaning"], ["Stopped completely", "word-meaning"]], "The boat wobbled 'at first, but then it floated'. So it was shaky before it became steady."), evidence: { paragraph: 1, text: "The boat wobbled at first, but then it floated bravely along." } },
+      { afterParagraph: 2, ...q("What did Tara do after her boat sank?", "She made a stronger boat", [["She cried all day", "opposite-meaning"], ["She stopped playing", "inference"], ["She asked a friend for help", "not-in-passage"]], "She felt sad only 'for a moment'. Then she 'folded a stronger boat from thicker paper'."), evidence: { paragraph: 2, text: "Then she smiled, ran home, and folded a stronger boat from thicker paper." } },
+      { afterParagraph: 2, ...q("What does the story tell us about Tara?", "She does not give up easily", [["She is afraid of the rain", "inference"], ["She does not like boats", "inference"], ["She gets angry quickly", "inference"]], "When her boat sank, she didn't quit. She made a better one. That shows she doesn't give up."), evidence: { paragraph: 2, text: "Then she smiled, ran home, and folded a stronger boat from thicker paper." } },
+    ],
+  },
+  "eq-read-seed-library": {
+    name: "The Seed Library",
+    author: "Apprec8",
+    mode: "fullPassage",
+    glossary: {
+      varieties: "different kinds of something",
+      retired: "no longer working, usually because of age",
+      courtyard: "an open space surrounded by walls or buildings",
+      volunteers: "people who help without being paid",
+    },
+    paragraphs: [
+      "In a small town near the hills, there is an unusual library. It does not lend books. Instead, it lends seeds! The library was started by Mrs. Kamala Iyer, a retired science teacher, who noticed that many old varieties of vegetables were slowly disappearing from local farms.",
+      "The idea is simple. A visitor borrows a packet of seeds, such as tomato, brinjal or bitter gourd, and plants them at home. When the plants grow and produce fruit, the visitor saves some of the new seeds and returns them to the library. In this way, the collection grows larger every season.",
+      "Children are the library's most enthusiastic members. Every Saturday, they gather in the courtyard to sort seeds, write labels and draw pictures of the plants. Mrs. Iyer believes that a child who grows even one plant will respect farmers for the rest of their life.",
+      "However, running the library is not always easy. Some seeds are returned damp, and damp seeds can rot. So the volunteers now teach every borrower to dry seeds in the shade for a week before bringing them back.",
+      "Today, the seed library has more than two hundred members. Neighbouring villages have also started asking how they can build one of their own.",
+    ],
+    questions: [
+      { ...q("Why did Mrs. Iyer start the seed library?", "Old varieties of vegetables were disappearing from farms.", [["She wanted to sell seeds to farmers.", "not-in-passage"], ["The town had no book library.", "not-in-passage"], ["The children asked her to start it.", "detail-missed"]], "Paragraph 1 says she 'noticed that many old varieties of vegetables were slowly disappearing from local farms'."), evidence: { paragraph: 0, text: "who noticed that many old varieties of vegetables were slowly disappearing from local farms." } },
+      { ...q("Select the INCORRECT statement according to the passage.", "The library lends both books and seeds.", [["Borrowers return some new seeds to the library.", "statement-check"], ["Children sort seeds and write labels on Saturdays.", "statement-check"], ["Damp seeds can rot.", "statement-check"]], "The passage clearly says: 'It does not lend books.' The other three statements are true."), evidence: { paragraph: 0, text: "It does not lend books." } },
+      { ...q("Statement I: Seeds should be dried in direct sunlight before they are returned.\nStatement II: The seed library has more than two hundred members.", "Statement I is incorrect but Statement II is correct.", [["Statement I is correct but Statement II is incorrect.", "statement-check"], ["Both the statements are correct.", "statement-check"], ["Both the statements are incorrect.", "statement-check"]], "Seeds are dried 'in the shade', not in direct sunlight, so Statement I is wrong. Statement II matches the last paragraph."), evidence: { paragraph: 3, text: "So the volunteers now teach every borrower to dry seeds in the shade for a week before bringing them back." } },
+      { ...q("The word 'enthusiastic' in the passage is closest in meaning to ___.", "eager and excited", [["tired and bored", "opposite-meaning"], ["quiet and shy", "word-meaning"], ["angry and upset", "word-meaning"]], "The children gather every Saturday to sort, label and draw. They are eager and excited to help."), evidence: { paragraph: 2, text: "Children are the library's most enthusiastic members." } },
+      { ...q("Put these steps in the correct order:\n(1) The visitor saves some new seeds.\n(2) The visitor borrows a packet of seeds.\n(3) The seeds are returned to the library.\n(4) The plants grow and produce fruit.", "2, 4, 1, 3", [["1, 2, 3, 4", "sequence"], ["2, 1, 4, 3", "sequence"], ["4, 2, 1, 3", "sequence"]], "Borrow (2) → plants grow (4) → save seeds (1) → return them (3)."), evidence: { paragraph: 1, text: "When the plants grow and produce fruit, the visitor saves some of the new seeds and returns them to the library." } },
+      { ...q("What does Mrs. Iyer believe growing a plant teaches a child?", "To respect farmers", [["To become a scientist", "inference"], ["To sell vegetables", "not-in-passage"], ["To read more books", "not-in-passage"]], "She believes a child who grows even one plant 'will respect farmers for the rest of their life'."), evidence: { paragraph: 2, text: "Mrs. Iyer believes that a child who grows even one plant will respect farmers for the rest of their life." } },
+      { ...q("In the sentence 'Neighbouring villages have also started asking...', what part of speech is 'villages'?", "Noun", [["Verb", "pos-verb-mixup"], ["Adjective", "pos-adjective-mixup"], ["Adverb", "pos-adverb-mixup"]], "'villages' names places, so it is a noun. ('Neighbouring' describes them, so it is an adjective.)"), evidence: { paragraph: 4, text: "Neighbouring villages have also started asking how they can build one of their own." } },
+    ],
+  },
+};
+
 // ---------- The tree ----------
 // Units = trunk nodes (each is a unit test). Leaves belong to a unit + branch.
 // Leaves further out in a branch (higher `order`) are harder.
@@ -273,7 +359,7 @@ const leaf = (id, unitId, branchId, branchTitle, branchOrder, order, type, ref, 
   order,
   type,
   title,
-  ...(type === "study" ? { contentId: ref } : { quizId: ref }),
+  ...(type === "quiz" ? { quizId: ref } : { contentId: ref }), // study + reading use contentId
 });
 
 export const units = [
@@ -290,6 +376,7 @@ export const leaves = [
   leaf("eq-u0-b1", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 1, "study", "eq-u0-kinds-of-sentences", "Learn"),
   leaf("eq-u0-b2", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 2, "quiz", "eq-u0-four-kinds", "Four kinds"),
   leaf("eq-u0-b3", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 3, "quiz", "eq-u0-capitals-endmarks", "Capitals & end marks"),
+  leaf("eq-u0-rd1", "eq-u0", "u0-reading", "Reading", 2, 1, "reading", "eq-read-paper-boat", "Tara's paper boat"),
 
   // Unit 1: Parts of Speech (reuses existing IEO content)
   leaf("eq-u1-n1", "eq-u1", "u1-nouns", "Nouns", 0, 1, "study", "noun-intro-study", "Learn"),
@@ -340,4 +427,7 @@ export const leaves = [
 
   leaf("eq-u1-c1", "eq-u1", "u1-conjunctions", "Conjunctions", 6, 1, "study", "4ieo7-study", "Learn"),
   leaf("eq-u1-c2", "eq-u1", "u1-conjunctions", "Conjunctions", 6, 2, "quiz", "4ieo7-quiz", "Quiz"),
+
+  leaf("eq-u1-rd1", "eq-u1", "u1-reading", "Reading", 7, 1, "study", "eq-read-tips", "Detective tips"),
+  leaf("eq-u1-rd2", "eq-u1", "u1-reading", "Reading", 7, 2, "reading", "eq-read-seed-library", "The seed library"),
 ];

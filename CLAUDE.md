@@ -9,7 +9,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - `npx eas build --profile production --platform android --local` — Play Store `.aab`
 - `cd functions && npm run serve` — Functions emulator; `npm run deploy` to deploy (Node 22)
 - `firebase deploy --only firestore:rules` — needed before seeding if rules changed
-- No test suite or linter is configured.
+- `npm test` — Node tests in `tests/` for the English Quest logic and content (no linter configured).
 
 ## Layout
 - `App.js`, `AppContent.js`, `navigation/` — React Navigation (bottom tabs + per-tab stacks: Home, Study, Quest, Profile)
@@ -21,6 +21,8 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - **English Quest (tile-based quest):** `screens/englishQuest/` (intro + tree map), `utils/questTree.js` (unlock rules, pure),
   `services/englishQuestApi.js` (progress + attempt recording), content in `data/englishQuestData.js`,
   seeded by `components/quiz/SeedEnglishQuestButton.js` (admin only). Opened from a `QUEST` tile in the Study tab "Quests" row.
+  Leaf types: `study` (Apprec8Reader), `quiz` (QuizScreenV2), `reading` (`screens/englishQuest/ReadingScreen.js`, logic in
+  `utils/readingFlow.js`, content = `studyContent` doc with `kind: "reading"`). Read-aloud uses `expo-speech`.
 - `services/firestoreContentApi.js` — client reads (onSnapshot listeners)
 - `hooks/` — `useInAppMessaging` (Remote Config popups + hard update), `useQuizEngine`, `useSoundEffects`, `useFirebaseAuth`
 - `functions/` — `callable/` (recordQuizResult, getLeaderboard, submitFeedback…), `api/` (HTTP CRUD/bulk admin), `triggers/auth.js` (initializeNewUser)

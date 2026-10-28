@@ -28,10 +28,18 @@
      - `SeedEnglishQuestButton` on Profile, visible only to the admin account (`APPREC8_TEAM_REVIEWER_UID`).
      - `firestore.rules`: added rules for `quests`, `questProgress`, `questAttempts` (**not deployed yet**).
      - Checks: all changed files compile; full Android JS bundle builds (`npx expo export --platform android`); data validation script passes (unique ids, one correct answer, mistake tags, all referenced content exists).
+  7. Answered Gemini's review round 1 in `CODE_REVIEW.md` and fixed findings 3, 4, 5, 8, 9, 10, 11 (`627b46b`). Deploy requests DR-1 (rules) and DR-2 (one IEO question) filed for devops. Hid all seed buttons from non-admins and locked content writes to the admin in `firestore.rules` (not deployed yet).
+  8. **Built the Reading activity** (new leaf type `reading`, must ship in the Nov 6 build):
+     - `screens/englishQuest/ReadingScreen.js`: own screen (not inside Apprec8Reader, to avoid breaking Space/V1). Modes: `stepByStep` (paragraph → question → next paragraph) and `fullPassage` (read all → questions under the passage). "Show me where" highlights the proving sentence; underlined glossary words show their meaning; 🔊 read-aloud per paragraph; saves attempts like quizzes (+ `details.readingMode`, `details.wordCount`).
+     - Read-aloud uses **`expo-speech`** (new native dependency; `react-native-tts` was installed but unused and unmaintained). Needs a fresh native build (`npm run android`).
+     - `utils/readingFlow.js`: pure helpers (order of paragraphs/questions, text splitting for highlight + glossary).
+     - Content: reading documents live in `studyContent` with `kind: "reading"` (no new rules needed). Added "Tara's Paper Boat" (Unit 0, step by step, 4 Qs), "The Seed Library" (Unit 1, IEO style, 7 Qs) and a "Reading Detective Tips" study page.
+     - Tests moved into the repo: `npm test` runs `tests/` (tree rules, reading flow, content validation incl. every "Show me where" sentence exists). Optional Firestore snapshot in `tests/fixtures/` (gitignored).
 - **How to test:**
   1. Press "Update Quest Map to Full Space Olympiad". Seeding deletes all existing `quest_nodes` first, so the Spelling Bee nodes disappear.
   2. Check the map goes straight from Level 4 to the U. R. Rao biography (and likewise around Levels 8, 14, 18), and progression still unlocks correctly.
   3. English Quest: deploy rules (`firebase deploy --only firestore:rules`), run `npm run android`, sign in with the admin account, press **Update English Quest** on Profile. The Study tab shows a **Quests** row with the English Quest tile → intro → tree. Play "Sentence or not?", then check `questAttempts` and `users/{uid}/questProgress/english-quest` in the Firebase console. Pass the Unit 0 test (≥70%) and check Unit 1 opens.
+  4. Reading: in English Quest open Unit 0 → Reading → "Tara's paper boat". Check the next paragraph appears after each answer, "Show me where" highlights the sentence, underlined words show meanings, 🔊 reads aloud, and finishing saves a `questAttempts` doc with `mode: "reading"`. In Unit 1 try "The seed library" (full passage mode).
 
 ### Plan: English Olympiad Quest (agreed 2026-10-28)
 **Who:** Anyone who wants to learn. Main pilot users: Class 5 IEO kids (incl. Pratha) and ~50 Class 10 students whose teacher will track them. Android only. Both groups start on the same day (date TBD). App is public, so no consent flow for now.
@@ -147,7 +155,7 @@
 
 ## Future TODOs
 - **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
-- **Reading node type** (Apprec8Reader with built-in questions). Must be in the Nov 6 build.
+- **Reading activity: device test.** Built (see 2026-10-28 step 8). Test on device; tune font size, scrolling and read-aloud voice/speed with Pratha.
 - **Deploy Firestore rules (owner, manual):** `firebase deploy --only firestore:rules --project apprec8-ca229`. Local `firestore.rules` now locks all content writes to the admin (`isAdmin()`) and adds the quest rules. Before this change it matched the live rules exactly. `firestore.rules` is gitignored; consider tracking it in git.
 - **`.exists` bug:** `WordInspectorScreen.js:102` and `ProfileScreen.js:91` use `snap.exists` without `()`. In this Firebase version it's a method, so the check is always true.
 - **IEO data fixes:** `4ieo11-topic8-quiz4` has one question whose answer doesn't match any option (quote marks). `4ieo9-quiz`, `tenses-boss-1`, `tenses-boss-1-quiz` have no questions. No `4ieo9-study` page exists (English Quest uses its own Adverbs page).

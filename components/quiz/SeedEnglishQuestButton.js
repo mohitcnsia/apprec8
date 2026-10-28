@@ -2,7 +2,7 @@
 // Writes the English Quest to Firestore from data/englishQuestData.js.
 // Only touches English Quest data:
 //   quests/english-quest, quests/english-quest/nodes/*, categories/english-quest (tile),
-//   studyContent/<new page ids>, questions/<new quiz ids>-q*
+//   studyContent/<new page + reading ids>, questions/<new quiz ids>-q*
 // It never touches the Space quest (`quest_nodes`) or the old IEO content.
 
 import React, { useState } from "react";
@@ -15,6 +15,7 @@ import {
   quest,
   tile,
   studyPages,
+  readings,
   quizzes,
   units,
   leaves,
@@ -84,6 +85,19 @@ export default function SeedEnglishQuestButton() {
         });
       });
 
+      // 5b. Reading passages (studyContent with kind "reading"). `content` is a plain
+      // fallback so older reader screens can still show the passage.
+      Object.entries(readings).forEach(([id, r]) => {
+        batch.set(db.collection("studyContent").doc(id), {
+          ...r,
+          kind: "reading",
+          content: r.paragraphs.join("\n\n"),
+          coverImage: r.coverImage || null,
+          additionalImages: [],
+          lastUpdatedAt: now,
+        });
+      });
+
       // 6. New questions (V2 format)
       Object.entries(quizzes).forEach(([quizId, questions]) => {
         questions.forEach((question, index) => {
@@ -100,7 +114,7 @@ export default function SeedEnglishQuestButton() {
       const questionCount = Object.values(quizzes).reduce((s, qs) => s + qs.length, 0);
       Alert.alert(
         "English Quest updated",
-        `${units.length} units, ${leaves.length} steps, ${questionCount} new questions.`
+        `${units.length} units, ${leaves.length} steps, ${questionCount} new questions, ${Object.keys(readings).length} readings.`
       );
     } catch (e) {
       console.error("SeedEnglishQuestButton:", e);

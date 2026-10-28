@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tests/questTree.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tests/readingFlow.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tests/content.test.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
@@ -36,6 +37,7 @@
     "expo-linear-gradient": "~14.1.5",
     "expo-random": "^14.0.1",
     "expo-secure-store": "~14.2.4",
+    "expo-speech": "~13.1.7",
     "expo-status-bar": "~2.2.3",
     "expo-web-browser": "~14.2.0",
     "firebase": "^11.7.1",

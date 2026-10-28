@@ -15,7 +15,7 @@
 //   - Kids don't have to finish branches to take the unit test.
 //   - Leaf types this app version doesn't know show as "comingSoon" (never crash).
 
-export const KNOWN_LEAF_TYPES = ["study", "quiz"];
+export const KNOWN_LEAF_TYPES = ["study", "quiz", "reading"];
 // Unit (trunk) nodes are unit tests. A future unit kind that this app version
 // doesn't know (or a unit with no test) shows as "Coming soon".
 export const KNOWN_UNIT_TYPES = ["test"];
@@ -105,7 +105,7 @@ export function buildQuestTree(nodes = [], progressNodes = {}) {
               status: leafStatus,
               bestPercent: typeof best === "number" ? best : null,
               stars:
-                leaf.type === "quiz"
+                leaf.type === "quiz" || leaf.type === "reading"
                   ? starsForPercent(best, leaf.passPercent ?? DEFAULT_LEAF_PASS_PERCENT)
                   : done
                   ? 3

@@ -31,7 +31,7 @@ import {
 } from "../../utils/questTree";
 import { QUEST_COLORS } from "./questColors";
 
-const LEAF_ICONS = { study: "book", quiz: "create" };
+const LEAF_ICONS = { study: "book", quiz: "create", reading: "document-text" };
 
 const Stars = ({ count }) => (
   <View style={styles.starsRow}>
@@ -65,7 +65,7 @@ const LeafNode = ({ leaf, onPress }) => {
       <View style={circleStyle}>
         <Ionicons name={icon} size={24} color={isOpen ? "#0B3D2E" : "#E6ECE9"} />
       </View>
-      {leaf.type === "quiz" && status === "completed" ? <Stars count={leaf.stars} /> : <View style={{ height: 13 }} />}
+      {(leaf.type === "quiz" || leaf.type === "reading") && status === "completed" ? <Stars count={leaf.stars} /> : <View style={{ height: 13 }} />}
       <Text style={[styles.leafTitle, !isOpen && styles.dimText]} numberOfLines={2}>
         {leaf.title}
       </Text>
@@ -215,6 +215,16 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       navigation.navigate("Apprec8Reader", {
         contentId: leaf.contentId,
         questContext: { questId, nodeId: leaf.id, returnTo: "EnglishQuestMap" },
+      });
+    } else if (leaf.type === "reading") {
+      navigation.navigate("ReadingScreen", {
+        contentId: leaf.contentId,
+        questContext: {
+          questId,
+          nodeId: leaf.id,
+          passPercent: leaf.passPercent ?? DEFAULT_LEAF_PASS_PERCENT,
+          returnTo: "EnglishQuestMap",
+        },
       });
     } else if (leaf.type === "quiz") {
       openQuiz(leaf, {

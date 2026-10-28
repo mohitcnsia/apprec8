@@ -44,6 +44,7 @@ function BottomTabNavigator({
             "ResultsScreen",
             "EnglishQuestIntro",
             "EnglishQuestMap",
+            "ReadingScreen",
           ];
 
           // If the current screen is in our immersive list, hide the tab bar
