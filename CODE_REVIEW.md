@@ -401,3 +401,106 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 - **Owner decision on the hearts question (2026-10-30):** hearts are for **Training mode only**. Every English Quest quiz opens **Quiz Details** (as in Space), and the kid chooses Training or Exam. The `config.noHearts` change was removed again. Quiz Details now forwards `questContext` so results are recorded. Spec v2 in `gemini.md` updated.
 
 - **Bug found by the owner on device (2026-10-30):** `EnglishQuestIntroScreen` still imported the removed `buildQuestTree` → crash on opening the quest. Fixed (uses `buildQuestPath`). Compile and bundle checks don't catch missing named imports, so I added `tests/imports.test.mjs` (part of `npm test`): it verifies all 246 local named imports exist in their target files. It also found an unused, missing import in `components/VocabBuilder.js` (`fetchVocabGameData`, never called, now removed) and a dead dev file `components/common/reader/Apprec8ReaderTester.js` (not used by the app, listed as known).
+
+
+---
+
+## 2026-10-30 — Review: Spec v2 Step 1 Implementation (Gemini)
+
+- **Reviewed commits:** `824016c` through `880be35` on `feat/tile-quests`
+- **Scope:** Step 1 of Spec v2 — Map redesign (Space-style path + side rows, app theme, left-thumb positioning, Quiz Details integration).
+- **Files reviewed:**
+  - `screens/englishQuest/EnglishQuestMapScreen.js`
+  - `screens/englishQuest/EnglishQuestIntroScreen.js`
+  - `screens/englishQuest/ReadingScreen.js`
+  - `screens/quiz/QuizDetailsScreen.js`
+  - `utils/questTree.js`
+  - `data/englishQuestData.js`
+  - `components/quiz/SeedEnglishQuestButton.js`
+  - `tests/questTree.test.mjs`, `tests/imports.test.mjs`, `tests/readingFlow.test.mjs`, `tests/content.test.mjs`
+
+---
+
+### Requirements & Design System Alignment:
+- **Space-style Map Layout:** Verified. The map now renders a single dashed SVG path weaving gently along the left half (`17%` to `30%` of screen width), leaving the right half open for horizontal practice rows.
+- **Left-Thumb Auto-Scroll:** Verified. Uses `centerOf(i).y - viewportHeight * 0.7` to position the current active node ~70% down the viewport on load.
+- **Design System & Theming:** Verified. `questColors.js` is completely removed. `EnglishQuestMapScreen`, `EnglishQuestIntroScreen`, and `ReadingScreen` now all strictly consume `useTheme()` (`theme.gradientStart`, `theme.gradientEnd`, `theme.primary`, `theme.accent`, `theme.gold`, `theme.cardBackground`, etc.).
+- **Training vs. Exam Mode (Quiz Details):** Verified. Tapping any quiz activity routes through `QuizDetailsScreen` allowing the student to choose Training (hearts + instant hints) or Exam mode (no hearts), and `QuizDetailsScreen` properly forwards `questContext`.
+- **Test Integrity:** All test suites (`npm test`) pass cleanly, including the new `tests/imports.test.mjs` validating 246 local named imports.
+
+---
+
+### Finding 13: [LOW] [UX / SPEC] Confetti Animation on Map Completion & Branch Mastery
+- **Severity:** Low (Polish / Visual Reward)
+- **Status:** `[OPEN]`
+- **Context:**
+  Spec v2 specifies:
+  > *"Confetti on completion (as Space)... Branch mastered (all leaves done): main node turns gold with a crown + confetti."*
+- **Issue:**
+  While `ResultsScreen` triggers confetti on 100% scores, `EnglishQuestMapScreen.js` does not currently import `LottieView` or trigger confetti when returning to the map after completing a node or mastering a branch.
+- **Reviewer Recommendation:**
+  Add confetti playback via Lottie in `EnglishQuestMapScreen.js` (reusing `assets/animations/confetti.json` as in `screens/quest/QuestScreen.js`) triggered when a branch is mastered or a Unit Boss is completed.
+- **Author Response:**
+  > *(Author / Claude response here)*
+
+---
+
+### Finding 14: [LOW] [DEFENSIVE UX] Native ScrollView Layout Race Condition on Auto-Scroll
+- **Severity:** Low (Edge Case UX)
+- **Status:** `[OPEN]`
+- **Context:**
+  In `EnglishQuestMapScreen.js`:
+  ```javascript
+  useEffect(() => {
+    if (!tree || !viewportHeight || !tree.currentPathId) return;
+    if (lastScrolledTo.current === tree.currentPathId) return;
+    const i = tree.path.findIndex((p) => p.id === tree.currentPathId);
+    if (i < 0) return;
+    const y = Math.max(0, centerOf(i).y - viewportHeight * THUMB_ZONE);
+    lastScrolledTo.current = tree.currentPathId;
+    setTimeout(() => scrollRef.current?.scrollTo({ y, animated: true }), 300);
+  }, [tree, viewportHeight]);
+  ```
+- **Issue:**
+  On slower Android devices or during cold starts, native `ScrollView` content measurement can occasionally complete slightly after `viewportHeight` is recorded, which may result in `scrollTo` being ignored by the native layer.
+- **Reviewer Recommendation:**
+  In addition to the `300ms` timer, attach `onContentSizeChange` to the `ScrollView` (or a fallback check) to ensure `scrollTo` re-applies if the content was not ready when the initial layout fired.
+- **Author Response:**
+  > *(Author / Claude response here)*
+
+---
+
+### Finding 15: [INFO] [TESTING & DEPLOYMENT] Step ID Schema Change Requires Re-seeding
+- **Severity:** Info (Testing Notice)
+- **Status:** `[ACKNOWLEDGED]`
+- **Context:**
+  In `utils/questTree.js`, progress is now keyed by step IDs (`${nodeId}__${index}`) for main/practice steps, and node IDs for gate/boss nodes.
+- **Action for Testing:**
+  1. The Admin user must press **"Update English Quest"** on the Profile tab to seed the new node structure.
+  2. Any previous progress documents in `users/{uid}/questProgress/english-quest` from Batch 1 testing will be mismatched; testers should test with a fresh account or clear their progress document.
+- **Author Response:**
+  > *(Author / Claude response here)*
+
+---
+
+### Reviewer Verdict:
+**STEP 1 IS APPROVED.** The implementation adheres strictly to the requirements, eliminates previous UX issues, conforms to the app's global theme system, and passes all validation tests. Claude may proceed to **Step 2 (Gates)** once the author responses above are noted.
+
+---
+
+## 2026-10-30 — Review request: Spec v2 Step 2, gates (Claude)
+
+- **Please review commit:** `b76c398` on `feat/tile-quests`
+- **Owner feedback on Step 1 (device):** "What is a sentence?" completed; UI pleasing; next node and next leaf unlocked correctly.
+- **What Step 2 adds:**
+  - `utils/gateRules.js`: `drawBalanced` (≥2 per sub-topic, then random fill, shuffled; fresh set each try) and `evaluateGate` (pass = ≥ passPercent **and** no sub-topic with 0 correct; unanswered = wrong). Tests: 200 seeded draws + pass/fail cases.
+  - `useQuizEngine`: uses `drawBalanced` only when `quiz.config.balanceBy` is set (gates). Other quizzes unchanged.
+  - `QuizScreenV2`: gate result params for `ResultsScreen` (title "🎉 <next topic> unlocked!" or "So close!", per-sub-topic ✅/⚠️ lines, "Try for 100% to earn ⭐"). Retry = `navigation.replace` (fresh draw). The 2-fails lock is also applied to the Out-of-Hearts "Try Again".
+  - `englishQuestApi.updateNodeProgress`: gate attempts store `failsSinceLastPractice` (increment on fail, 0 on pass) and `weakSubtopics`. A practice leaf opened while glowing carries `resetGateId`; when it passes, that gate's counter resets to 0.
+  - Map: glowing leaves (gold ring, ✨ label), gate shows "Practise first" + 🔒 when locked; tapping explains why.
+  - Content: `eq-u1-nouns-gate-pool` and `eq-u1-verbs-gate-pool` (15 original questions each, sub-topic tagged, mistake tags on every wrong option). Content tests now validate gate pools (every question's sub-topic is named, ≥3 per sub-topic, pool ≥ draw count, every practice sub-topic named on its gate).
+- **Points to check:**
+  1. Stars: unchanged. Exam-mode attempts still call `recordQuizResult` (100% only, existing rules). Training mode gives no stars (existing behaviour).
+  2. A gate attempt that runs out of hearts counts as a fail, and sub-topics not reached show as weak (0 correct). Deliberate: simple and on the safe side.
+  3. Only Nouns and Verbs have gates so far. Other branches clear when their main node is done (content in Step 7).
+- **Needs a re-seed** ("Update English Quest", admin) to get the gate pools and sub-topic tags into Firestore. Not device-tested yet; all checks pass (`npm test`, compile, Android bundle).
