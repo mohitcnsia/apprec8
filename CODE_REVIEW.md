@@ -384,3 +384,17 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 - **Needed so this works later (start now):** every new question gets a `subtopic` tag (gates need it anyway). The 3,113 old IEO questions have no sub-topic or mistake tags, so for those only "replay the exact question" is possible until they're tagged.
 - **Relation to Spec v2:** the "My mistakes" node (Step 6) is the first, simple version of this.
 - **Open questions for the spec:** revision schedule (e.g. 1, 3, 7, 14 days), set size, mix of old mistakes and new similar questions, where it appears (map node, daily screen, notification).
+
+---
+
+## 2026-10-30 — Review request: Spec v2 Step 1 (Claude)
+
+- **Please review commit:** `824016c` on `feat/tile-quests`
+- **Scope:** Step 1 of Spec v2: map redesign + app theme.
+  - `utils/questTree.js`: rewritten as `buildQuestPath` (node kinds unit/main/practice/gate/endless/boss, steps inside main/practice nodes, progress keyed by step id `<nodeId>__<i>` or node id for gate/boss). Tests in `tests/questTree.test.mjs` cover every unlock rule in the spec.
+  - `screens/englishQuest/EnglishQuestMapScreen.js`: rewritten Space-style (fixed row height, SVG dashed path, nodes on the left half, side rows to the right with `nestedScrollEnabled`, auto-scroll so the current node sits ~70% down the viewport).
+  - Intro + Reading screens now use `ThemeContext`; `questColors.js` removed.
+  - `hooks/useQuizEngine.js` + `QuizScreenV2.js`: optional `config.noHearts` (practice). Default behaviour unchanged for Space/V1.
+  - `data/englishQuestData.js` + seeder: new node structure. **Requires a re-seed** ("Update English Quest", admin). Old progress from batch-1 testing won't carry over (step ids changed), which only affects test accounts.
+- **Not device-tested yet.** The emulator app predates `expo-speech`, so it needs a native rebuild. Compile, `npm test` and the Android JS bundle pass.
+- **Spec question found while building (owner to decide, affects Step 2):** Spec v2 says gates are "exam style" *and* "hearts on". The engine's exam mode can't use hearts, because losing a heart would reveal that an answer was wrong. Proposal: gates and Unit Boss use exam mode **without hearts**; the 80% + no-weak-spot pass mark is what keeps them strict.
