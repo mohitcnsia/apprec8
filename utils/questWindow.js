@@ -61,6 +61,7 @@ export function buildWindow({ path = [], units = [], currentPathId = null, expan
       const current = orderedUnits[currentIndex];
       // Use the boss's own title (what the kid sees on the map), else "<unit> Boss".
       const currentBoss = (itemsByUnit.get(current?.id) || []).find((e) => e.item.kind === "boss")?.item;
+      rows.push({
         type: "teaser",
         unitId: unit.id,
         title: unit.title,
