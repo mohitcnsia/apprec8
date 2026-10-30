@@ -836,6 +836,7 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Changed:** intro/map no longer listen to the quest/nodes; `useQuizEngine` uses the cache when `quiz.config.contentVersion` is set; `Apprec8Reader` + `ReadingScreen` use `loadStudyContent` (cache with a version, the old live listener without one); `updateNodeProgress` reuses the listener's progress (falls back to one read). The seeder sets `contentVersion: Date.now()`.
 - **Unchanged:** Space quest, V1 lists, QuizDetails attempts listener.
 - **Verified:** `npm test` (+ `cachePolicy`), compile, Android bundle. **On the emulator in airplane mode:** intro → map → Quiz Details → a full quiz all load.
+- **Correction (author):** the live quest doc has **no `contentVersion` yet** (last seeded with the old seeder). So in that offline test, my cache was bypassed and the content came from **Firestore's built-in offline cache**. That shows offline play works, but **not yet the read savings**. The new cache only kicks in after the next re-seed. Please re-test after re-seeding: open the map online once, then in airplane mode, and check the Firestore usage dashboard for reads per visit.
 - **Also fixed while testing:** lock icons were invisible in dark mode (grey on grey) → fixed dark grey; the "Keep practising" leaf keeps its name with ⏳.
 - **Points to check:**
   1. After a re-seed, phones refresh on the next quest open (new `contentVersion`); `knownIssues` changes show on the next map focus.
