@@ -108,6 +108,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
     });
   const backToQuest = () =>
     navigation.navigate(questContext?.returnTo || "EnglishQuestMap", { questId: questContext?.questId });
+  // Leave the quest entirely (back to the Study tab root) without the 3-step back chain.
+  const exitToStudy = () => navigation.popToTop();
+  const exitAction = { label: "Exit to Study", onPress: exitToStudy, mode: "text" };
 
   const buildGateResultParams = (submissionContext) => {
     const r = gateResultRef.current || getGateResult();
@@ -116,8 +119,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
     const weakNames = r.weak.map(nameOf);
     const canRetry = canRetryAfter(failsAfterThisAttempt(r.passed));
     const metrics = Object.entries(r.bySubtopic).map(([id, v]) => ({
-      label: `${v.correct === 0 ? "⚠️" : "✅"} ${nameOf(id)}`,
+      label: nameOf(id),
       value: `${v.correct}/${v.total}`,
+      status: v.correct === 0 ? "weak" : "passed", // ResultsScreen draws a vector icon
     }));
     if (r.passed) {
       return {
@@ -129,7 +133,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
         actions: [
           { label: "Back to Quest", onPress: backToQuest, mode: "contained" },
           { label: "Play again", onPress: () => retryGate(true), mode: "outlined" },
+          exitAction,
         ],
+        closeAction: exitToStudy,
         effects: { confetti: true },
         submissionContext,
         feedbackContext: { type: "quest_gate", id: quiz.id },
@@ -149,8 +155,13 @@ const QuizScreenV2 = ({ route, navigation }) => {
         ? [
             { label: weakNames.length ? `Go practise ${weakNames[0]}` : "Back to Quest", onPress: backToQuest, mode: "contained" },
             { label: "Try again", onPress: () => retryGate(false), mode: "outlined" },
+            exitAction,
           ]
-        : [{ label: weakNames.length ? `Go practise ${weakNames[0]}` : "Back to Quest", onPress: backToQuest, mode: "contained" }],
+        : [
+            { label: weakNames.length ? `Go practise ${weakNames[0]}` : "Back to Quest", onPress: backToQuest, mode: "contained" },
+            exitAction,
+          ],
+      closeAction: exitToStudy,
       effects: { confetti: false },
       submissionContext,
       feedbackContext: { type: "quest_gate", id: quiz.id },
@@ -223,7 +234,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
                   }),
             mode: "outlined",
           },
+          ...(questContext ? [exitAction] : []),
         ],
+        ...(questContext ? { closeAction: exitToStudy } : {}),
         effects: { confetti: isPerfectScore },
         submissionContext: mode === "training" ? null : {
           // UnComment this
@@ -533,7 +546,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
                   }
                 >
                   <Ionicons
-                    name={isMarkedForReview ? "flag" : "flag-outline"}
+                    name={isMarkedForReview ? "bookmark" : "bookmark-outline"}
                     size={28}
                     color={isMarkedForReview ? C.accent : "white"}
                   />
@@ -625,7 +638,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
                   >
                     {isMarked && (
                       <Ionicons
-                        name="flag"
+                        name="bookmark"
                         size={18}
                         color={C.accent}
                         style={{ marginRight: 8 }}

@@ -72,7 +72,7 @@ export default function ReportQuestionButton({
   return (
     <>
       <TouchableOpacity hitSlop={10} onPress={() => setOpen(true)} style={styles.chip} accessibilityLabel="Report a problem">
-        <Ionicons name="flag-outline" size={22} color={iconColor} />
+        <Ionicons name="alert-circle-outline" size={24} color={iconColor} />
       </TouchableOpacity>
 
       <Modal visible={open} transparent animationType="slide" onRequestClose={() => setOpen(false)}>

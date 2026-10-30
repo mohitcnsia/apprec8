@@ -20,10 +20,13 @@ import {
   Dimensions,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
@@ -77,6 +80,7 @@ const getResultAsset = (params) => {
 const ResultsScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
+  const insets = useSafeAreaInsets();
 
   // --- Destructure all props from the generic "Data Contract" ---
   const {
@@ -93,6 +97,7 @@ const ResultsScreen = ({ route, navigation }) => {
     effects = {},
     submissionContext = null,
     missedQuestions = [],
+    closeAction = null, // optional: shows an X (top right) that runs this (e.g. exit the quest)
   } = route.params || {};
 
   const asset = getResultAsset(route.params);
@@ -195,6 +200,8 @@ const ResultsScreen = ({ route, navigation }) => {
           fontSize: 20,
         },
         metricsContainer: { marginVertical: 15, alignItems: "center" },
+        metricRow: { flexDirection: "row", alignItems: "center", gap: 6, marginVertical: 2 },
+        closeButton: { position: "absolute", right: 16, zIndex: 20, padding: 4 },
         metricText: {
           fontSize: 16,
           color: C.textSecondaryOnGradient || "#E0E0E0",
@@ -297,12 +304,26 @@ const ResultsScreen = ({ route, navigation }) => {
             {message.replace("{username}", username)}
           </Text>
           <View style={styles.metricsContainer}>
-            {metrics.map((metric, index) => (
-              <Text key={index} style={styles.metricText}>
-                {metric.label}:{" "}
-                <Text style={styles.metricValue}>{metric.value}</Text>
-              </Text>
-            ))}
+            {metrics.map((metric, index) =>
+              metric.status ? (
+                // Structured status (English Quest gates): vector icon, no emoji
+                <View key={index} style={styles.metricRow}>
+                  <Ionicons
+                    name={metric.status === "weak" ? "alert-circle-outline" : "checkmark"}
+                    size={20}
+                    color={metric.status === "weak" ? C.warning || "#c86c62" : C.success || "#4CAF50"}
+                  />
+                  <Text style={styles.metricText}>
+                    {metric.label}: <Text style={styles.metricValue}>{metric.value}</Text>
+                  </Text>
+                </View>
+              ) : (
+                <Text key={index} style={styles.metricText}>
+                  {metric.label}:{" "}
+                  <Text style={styles.metricValue}>{metric.value}</Text>
+                </Text>
+              )
+            )}
           </View>
           
           {missedQuestions && missedQuestions.length > 0 && (
@@ -357,6 +378,17 @@ const ResultsScreen = ({ route, navigation }) => {
           </View>
         </ScrollView>
       </LinearGradient>
+
+      {closeAction ? (
+        <TouchableOpacity
+          onPress={closeAction}
+          hitSlop={12}
+          accessibilityLabel="Close"
+          style={[styles.closeButton, { top: insets.top + 10 }]}
+        >
+          <Ionicons name="close" size={28} color={C.textPrimaryOnGradient || "#FFFFFF"} />
+        </TouchableOpacity>
+      ) : null}
 
       {/* The Feedback FAB and its trigger zone have been completely removed from the JSX */}
       {isConfettiVisible && (
