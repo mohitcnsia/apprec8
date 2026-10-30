@@ -77,6 +77,7 @@ export function pluralQuestions(table = [], rng = Math.random) {
       explanation: { text: explainPlural(e) },
       subtopic: "singular-plural",
       generated: true,
+      generator: "plural",
     });
   }
   return out;
@@ -104,6 +105,7 @@ export function genderQuestions(table = [], rng = Math.random) {
         explanation: { text: `${e.masculine} (male) → ${e.feminine} (female).` },
         subtopic: "gender",
         generated: true,
+        generator: "nounGender",
       });
     }
     if (wrongM.length === 3) {
@@ -118,6 +120,7 @@ export function genderQuestions(table = [], rng = Math.random) {
         explanation: { text: `${e.feminine} (female) → ${e.masculine} (male).` },
         subtopic: "gender",
         generated: true,
+        generator: "nounGender",
       });
     }
   });

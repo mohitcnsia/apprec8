@@ -105,6 +105,7 @@ const ResultsScreen = ({ route, navigation }) => {
 
   // --- State Management ---
   const [username, setUsername] = useState("User");
+  const [starsAwarded, setStarsAwarded] = useState(0); // from recordQuizResult
   const [submitStatus, setSubmitStatus] = useState("idle");
   const [submitError, setSubmitError] = useState(null);
   const [isConfettiVisible, setConfettiVisible] = useState(false);
@@ -132,6 +133,7 @@ const ResultsScreen = ({ route, navigation }) => {
       );
       const result = await cloudFunction(submissionContext.payload);
       if (result?.data?.status === "success") {
+        setStarsAwarded(Number(result.data.starsAwarded) || 0);
         setSubmitStatus("success");
       } else {
         setSubmitError(
@@ -347,7 +349,9 @@ const ResultsScreen = ({ route, navigation }) => {
               <Text style={styles.errorText}>{submitError}</Text>
             )}
             {submitStatus === "success" && (
-              <Text style={styles.successText}>Progress saved!</Text>
+              <Text style={styles.successText}>
+                {starsAwarded > 0 ? `+${starsAwarded} ⭐ earned!` : "Progress saved!"}
+              </Text>
             )}
             {submitStatus === "skipped" && (
               <Text style={styles.infoText}>{savedNote || "Result not submitted."}</Text>

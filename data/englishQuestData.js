@@ -469,7 +469,11 @@ const endless = (branch, generators = []) => ({
   id: `${branch.id}-endless`, kind: "endless", unitId: branch.unitId, branchId: branch.id, title: `Keep practising`,
   generators,
 });
-const boss = (id, unitId, title, quizId, passPercent = 70) => ({ id, kind: "boss", unitId, title, quizId, passPercent });
+// story (RB-5c "Grammar Gremlin"): a playful mission shown on the Boss start card, to turn test
+// nerves into a rescue mission. Keep numbers out of it: the pass rule is added by the app.
+const boss = (id, unitId, title, quizId, story = null, passPercent = 70) => ({
+  id, kind: "boss", unitId, title, quizId, passPercent, ...(story ? { story } : {}),
+});
 
 // --- Unit 0: Sentences ---
 const u0a = main("eq-u0-sentence", "eq-u0", 0, "What is a sentence?", [study("eq-u0-what-is-sentence"), quiz("eq-u0-sentence-or-not")]);
@@ -495,7 +499,13 @@ export const nodes = [
   practice("eq-u0-kinds-p1", u0b, 1, "Capitals & end marks", "medium", [quiz("eq-u0-capitals-endmarks")]),
   endless(u0b),
   u0r,
-  boss("eq-u0-boss", "eq-u0", "Unit 0 Boss", "eq-u0-test"),
+  boss(
+    "eq-u0-boss",
+    "eq-u0",
+    "Unit 0 Boss",
+    "eq-u0-test",
+    "Oh no! 👾 The Grammar Gremlin sneaked into the Story Library and mixed up the sentences. Some lost their capital letters, some lost their full stops, and some are not even sentences any more! Help the librarian put every sentence back together before morning. 📚"
+  ),
 
   unit("eq-u1", 1, "Parts of Speech"),
   nouns,
@@ -549,7 +559,13 @@ export const nodes = [
   endless(conjunctions),
 
   u1r,
-  boss("eq-u1-boss", "eq-u1", "Unit 1 Boss", "eq-u1-test"),
+  boss(
+    "eq-u1-boss",
+    "eq-u1",
+    "Unit 1 Boss",
+    "eq-u1-test",
+    "Uh-oh! 👾 The Grammar Gremlin pulled the name tags off the animals in the Word Zoo. Nouns, verbs, adjectives and adverbs are running around and nobody knows who is who! Use your word-detective skills to put the right tag back on every word. 🦁"
+  ),
 
   unit("eq-u2", 2, "Articles & Determiners", { comingSoon: true }),
 ];

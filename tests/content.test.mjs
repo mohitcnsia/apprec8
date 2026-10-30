@@ -42,6 +42,10 @@ for (const n of nodes) {
   }
   if (n.kind === "practice") assert.ok(["easy", "medium", "hard"].includes(n.difficulty), `${n.id}: difficulty`);
   if (n.kind === "gate" || n.kind === "boss") assert.ok(quizExists(n.quizId), `${n.id}: missing quiz ${n.quizId}`);
+  if (n.kind === "boss" && n.story) {
+    assert.ok(n.story.length >= 40 && n.story.length <= 400, `${n.id}: story should be 40–400 characters`);
+    assert.ok(!/\d/.test(n.story), `${n.id}: keep numbers out of the story (the app adds the pass rule)`);
+  }
 }
 // ♾️ endless generators must point at existing word tables of the right type
 for (const e of nodes.filter((n) => n.kind === "endless")) {

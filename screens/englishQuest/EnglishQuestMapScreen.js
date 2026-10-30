@@ -28,6 +28,8 @@ import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
 import { buildWindow } from "../../utils/questWindow";
+import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
+import LottieView from "lottie-react-native";
 import {
   listenToQuestProgress,
   markStudyNodeCompleted,
@@ -101,6 +103,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const [quest, setQuest] = useState(null);
   const [nodes, setNodes] = useState(null);
   const [progress, setProgress] = useState({});
+  const [mistakes, setMistakes] = useState({}); // "My mistakes" list from the progress doc
+  const [showConfetti, setShowConfetti] = useState(false);
+  const progressLoadedRef = useRef(false);
+  const lastSnapshotRef = useRef(null);
   const [error, setError] = useState(null);
   const [viewportHeight, setViewportHeight] = useState(0);
 
@@ -130,7 +136,15 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     load(false);
     // Coming back to the map (e.g. after a quiz): re-check the quest doc for new known issues.
     const unsubFocus = navigation.addListener("focus", () => load(false));
-    const unsubProgress = listenToQuestProgress(questId, setProgress, onError);
+    const unsubProgress = listenToQuestProgress(
+      questId,
+      (nodesProgress, data) => {
+        progressLoadedRef.current = true;
+        setProgress(nodesProgress);
+        setMistakes(data?.mistakes || {});
+      },
+      onError
+    );
     return () => {
       alive = false;
       unsubFocus();
@@ -153,6 +167,19 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     [nodes, progress, unlockAll]
   );
   const count = tree?.path.length || 0;
+
+  // 🎉 Confetti only for NEW achievements (topic cleared, branch mastered, Unit Boss passed),
+  // like the Space quest. Not on first load, and not when tester "unlock all" changes the view.
+  useEffect(() => {
+    if (!tree || !progressLoadedRef.current) return;
+    if (unlockAll) {
+      lastSnapshotRef.current = null;
+      return;
+    }
+    const snap = achievementSnapshot(tree.path);
+    if (shouldCelebrate(lastSnapshotRef.current, snap)) setShowConfetti(true);
+    lastSnapshotRef.current = snap;
+  }, [tree, unlockAll]);
 
   // Map windowing (Duolingo-style): current unit in full, finished units as cards,
   // next unit as a teaser, the rest as one line. Logic in utils/questWindow.js.
@@ -248,6 +275,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       returnTo: "EnglishQuestMap",
       knownIssues,
       contentVersion: quest?.contentVersion ?? null, // lets quizzes/pages use the local cache
+      activity: "practice", // for "My mistakes"
+      branchId: node.branchId || null,
+      unitId: node.unitId || null,
       ...extraContext,
     };
     if (step.type === "study") {
@@ -284,8 +314,15 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
 
   const openTest = (node, passPercent) =>
     openQuizDetails(
-      { id: node.quizId, title: node.title },
-      { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap", knownIssues },
+      {
+        id: node.quizId,
+        title: node.title,
+        // RB-5c: the Boss's mission story, then the real pass rule.
+        description: node.story
+          ? `${node.story}\n\nScore ${passPercent}% or more to win and open the next unit.`
+          : undefined,
+      },
+      { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap", knownIssues, activity: "boss", unitId: node.unitId },
       passPercent
     );
 
@@ -346,6 +383,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         returnTo: "EnglishQuestMap",
         knownIssues,
         gate: true,
+        activity: "gate",
+        branchId: gate.branchId,
+        unitId: gate.unitId,
         nextTitle: next?.title || null,
         failsSoFar: gate.failsSinceLastPractice || 0,
         subtopicTitles: gate.subtopicTitles || {},
@@ -361,12 +401,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     openTest(bossItem, bossItem.passPercent ?? DEFAULT_BOSS_PASS_PERCENT);
   };
 
-  // ♾️ Keep practising: pool = this branch's main + practice quizzes (gate/boss questions are
-  // assessments and are never used for practice) + generated questions from word tables.
-  const onEndlessPress = (e, main) => {
-    if (e.status !== "unlocked") {
-      return explainClosed(e.status === "locked" ? "locked" : "comingSoon", `Finish "${main.title}" first.`);
-    }
+  // Pool of practice quizzes for one branch (main + practice leaves; never gate/boss questions).
+  const branchPoolOf = (main) => {
     const poolQuizIds = [];
     const poolSubtopics = {};
     const addQuizzes = (node) =>
@@ -378,6 +414,41 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       });
     addQuizzes(main);
     (main.practices || []).forEach(addQuizzes);
+    return { poolQuizIds, poolSubtopics, generators: main.endless?.generators || [] };
+  };
+
+  // 🔧 My mistakes (owner priority): replays the kid's wrong answers until 2 right in a row.
+  const mistakeCount = Object.keys(mistakes).length;
+  const openMistakes = () => {
+    const branchPools = {};
+    const unitBranches = {};
+    (tree?.path || [])
+      .filter((p) => p.kind === "main")
+      .forEach((main) => {
+        branchPools[main.branchId] = branchPoolOf(main);
+        unitBranches[main.unitId] = [...(unitBranches[main.unitId] || []), main.branchId];
+      });
+    navigation.navigate("EndlessPractice", {
+      mode: "mistakes",
+      questId,
+      nodeId: "my-mistakes",
+      title: "My mistakes",
+      mistakes,
+      branchPools,
+      unitBranches,
+      contentVersion: quest?.contentVersion ?? null,
+      knownIssues,
+      returnTo: "EnglishQuestMap",
+    });
+  };
+
+  // ♾️ Keep practising: pool = this branch's main + practice quizzes (gate/boss questions are
+  // assessments and are never used for practice) + generated questions from word tables.
+  const onEndlessPress = (e, main) => {
+    if (e.status !== "unlocked") {
+      return explainClosed(e.status === "locked" ? "locked" : "comingSoon", `Finish "${main.title}" first.`);
+    }
+    const { poolQuizIds, poolSubtopics } = branchPoolOf(main);
     navigation.navigate("EndlessPractice", {
       questId,
       nodeId: e.id,
@@ -388,6 +459,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       contentVersion: quest?.contentVersion ?? null,
       knownIssues,
       returnTo: "EnglishQuestMap",
+      branchId: main.branchId,
     });
   };
 
@@ -661,6 +733,30 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           </View>
         </ScrollView>
       )}
+
+      {showConfetti ? (
+        <LottieView
+          source={require("../../assets/animations/confetti.json")}
+          autoPlay
+          loop={false}
+          speed={2}
+          onAnimationFinish={() => setShowConfetti(false)}
+          style={styles.confetti}
+        />
+      ) : null}
+
+      {/* 🔧 My mistakes: bottom-right thumb zone, only when there's something to fix */}
+      {tree && mistakeCount > 0 ? (
+        <TouchableOpacity
+          style={[styles.mistakesButton, { bottom: insets.bottom + 20 }]}
+          onPress={openMistakes}
+          activeOpacity={0.85}
+          accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}
+        >
+          <Ionicons name="construct" size={20} color={theme.textOnPrimary || "#FFFFFF"} />
+          <Text style={styles.mistakesText}>My mistakes · {mistakeCount}</Text>
+        </TouchableOpacity>
+      ) : null}
     </LinearGradient>
   );
 }
@@ -716,6 +812,20 @@ const makeStyles = (theme) =>
     gateLabel: { fontFamily: "nunitoBold" },
 
     startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    confetti: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 10, pointerEvents: "none" },
+    mistakesButton: {
+      position: "absolute",
+      right: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 18,
+      borderRadius: 28,
+      backgroundColor: theme.primary,
+      elevation: 6,
+    },
+    mistakesText: { fontSize: 16, fontFamily: "nunitoBold", color: theme.textOnPrimary || "#FFFFFF" },
     unitCard: {
       marginHorizontal: 16,
       paddingVertical: 16,

@@ -15,11 +15,13 @@ import { useTheme } from "../../context/ThemeContext";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
+import ListenButtons from "../../components/quiz/ListenButtons";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { getQuizQuestions, getStudyDoc } from "../../services/contentCache";
 import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQuestApi";
 import { GENERATORS, nextEndlessQuestion } from "../../utils/generators";
 import { shuffle } from "../../utils/gateRules";
+import { buildMistakeItems, RIGHT_TO_CLEAR } from "../../utils/mistakes";
 
 const CHUNK_SIZE = 10;
 
@@ -34,7 +36,14 @@ export default function EndlessPracticeScreen({ route, navigation }) {
     contentVersion = null,
     knownIssues = {},
     returnTo = "EnglishQuestMap",
+    branchId = null,
+    // "My mistakes" mode (owner priority): same screen, questions come from the kid's mistakes.
+    mode = "endless", // "endless" | "mistakes"
+    mistakes = {}, // the progress doc's mistakes map
+    branchPools = {}, // branchId → { poolQuizIds, poolSubtopics, generators } (for topic mistakes)
+    unitBranches = {}, // unitId → [branchId] (Unit Boss mistakes have no branch)
   } = route.params || {};
+  const isMistakes = mode === "mistakes";
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme, insets), [theme, insets]);
@@ -51,6 +60,13 @@ export default function EndlessPracticeScreen({ route, navigation }) {
   const startedAtRef = useRef(Date.now());
   const shownAtRef = useRef(Date.now());
   const finishedRef = useRef(false);
+  // "My mistakes" session
+  const queueRef = useRef([]); // [{ question, mistakeKey }]
+  const rightRef = useRef({}); // mistakeKey → right answers in a row
+  const similarRef = useRef(() => []);
+  const keyRef = useRef(null); // mistakeKey of the current question
+  const [left, setLeft] = useState(0);
+  const fixedRef = useRef(0);
 
   // ---------- Load questions (cached, offline-friendly) ----------
   useEffect(() => {
@@ -58,6 +74,10 @@ export default function EndlessPracticeScreen({ route, navigation }) {
     (async () => {
       try {
         const hidden = new Set(Object.keys(knownIssues).filter((id) => knownIssues[id]?.status === "hidden"));
+        if (isMistakes) {
+          await loadMistakes(hidden);
+          return;
+        }
         const pool = [];
         for (const quizId of poolQuizIds) {
           const qs = (await getQuizQuestions(quizId, contentVersion).catch(() => [])) || [];
@@ -92,7 +112,85 @@ export default function EndlessPracticeScreen({ route, navigation }) {
     return () => {
       alive = false;
     };
+
+    async function loadMistakes(hidden) {
+      const entries = Object.values(mistakes);
+      const byId = new Map();
+      const all = []; // { ...question, branchId }
+      const loadQuiz = async (quizId, b, subtopicFallback) => {
+        const qs = (await getQuizQuestions(quizId, contentVersion).catch(() => [])) || [];
+        qs.forEach((q) => {
+          if (hidden.has(q.id) || !q.options?.some((o) => o.isCorrect)) return;
+          const item = { ...q, quizId, subtopic: q.subtopic || subtopicFallback || null, branchId: b };
+          if (!byId.has(q.id)) byId.set(q.id, item);
+          all.push(item);
+        });
+      };
+      const loadTable = async (table, type, b) => {
+        const doc = await getStudyDoc(table, contentVersion).catch(() => null);
+        const make = GENERATORS[type];
+        if (!doc?.entries || !make) return;
+        make(doc.entries).forEach((q) => {
+          if (hidden.has(q.id)) return;
+          const item = { ...q, quizId: table, branchId: b };
+          if (!byId.has(q.id)) byId.set(q.id, item);
+          all.push(item);
+        });
+      };
+      // Everything needed: exact questions + the branch pools for topic (gate/boss) mistakes.
+      const branchesNeeded = new Set();
+      const quizDone = new Set();
+      const tableDone = new Set();
+      for (const e of entries) {
+        if (e.kind === "topic") {
+          (e.branchId ? [e.branchId] : unitBranches[e.unitId] || []).forEach((b) => branchesNeeded.add(b));
+        } else if (e.generator && e.quizId && !tableDone.has(e.quizId)) {
+          tableDone.add(e.quizId);
+          await loadTable(e.quizId, e.generator, e.branchId);
+        } else if (e.quizId && !quizDone.has(e.quizId)) {
+          quizDone.add(e.quizId);
+          await loadQuiz(e.quizId, e.branchId, branchPools[e.branchId]?.poolSubtopics?.[e.quizId]);
+        }
+      }
+      for (const b of branchesNeeded) {
+        const bp = branchPools[b] || {};
+        for (const quizId of bp.poolQuizIds || []) {
+          if (!quizDone.has(quizId)) {
+            quizDone.add(quizId);
+            await loadQuiz(quizId, b, bp.poolSubtopics?.[quizId]);
+          }
+        }
+        for (const g of bp.generators || []) {
+          if (!tableDone.has(g.table)) {
+            tableDone.add(g.table);
+            await loadTable(g.table, g.type, b);
+          }
+        }
+      }
+      // Similar questions for a topic mistake: same branch(es), same sub-topic when known.
+      similarRef.current = (entry) => {
+        const branches = entry.branchId ? [entry.branchId] : unitBranches[entry.unitId] || [];
+        return all.filter((q) => branches.includes(q.branchId) && (!entry.subtopic || q.subtopic === entry.subtopic));
+      };
+      const items = buildMistakeItems(mistakes, { byId, similar: similarRef.current });
+      if (!alive) return;
+      if (!items.length) {
+        setError("No mistakes to fix right now. Great job! 🎉");
+        return;
+      }
+      rightRef.current = Object.fromEntries(Object.entries(mistakes).map(([k, e]) => [k, e.rightInARow || 0]));
+      queueRef.current = items;
+      setLeft(items.length);
+      showMistake(items[0]);
+    }
   }, []);
+
+  const showMistake = (item) => {
+    keyRef.current = item.mistakeKey;
+    setQuestion({ ...item.question, options: shuffle(item.question.options) });
+    setSelected(null);
+    shownAtRef.current = Date.now();
+  };
 
   // ---------- Recording ----------
   const flush = (final) => {
@@ -103,7 +201,9 @@ export default function EndlessPracticeScreen({ route, navigation }) {
         questId,
         nodeId,
         quizId: nodeId,
-        mode: "endless",
+        mode: isMistakes ? "mistakes" : "endless",
+        activity: isMistakes ? "mistakes" : "endless", // updates the "My mistakes" list
+        branchId,
         answers,
         totalQuestions: answers.length,
         passPercent: 0,
@@ -114,7 +214,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       });
       startedAtRef.current = Date.now();
     }
-    if (final) {
+    if (final && !isMistakes) {
       const t = totalsRef.current;
       const newAnswered = t.answered - t.savedAnswered;
       if (newAnswered > 0) {
@@ -161,11 +261,42 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       mistakeTag: isCorrect ? null : option.mistakeTag || null,
       subtopic: sub || null,
       generated: !!question.generated,
+      generator: question.generator || null,
+      quizId: question.quizId || null,
+      mistakeKey: isMistakes ? keyRef.current : undefined,
     });
+
+    // "My mistakes": 2 right in a row fixes it; a wrong answer starts the count again.
+    if (isMistakes) {
+      const k = keyRef.current;
+      const right = isCorrect ? (rightRef.current[k] || 0) + 1 : 0;
+      rightRef.current[k] = right;
+      if (right >= RIGHT_TO_CLEAR) {
+        queueRef.current = queueRef.current.filter((it) => it.mistakeKey !== k);
+        fixedRef.current += 1;
+        setLeft(queueRef.current.length);
+      }
+    }
     if (chunkRef.current.length >= CHUNK_SIZE) flush(false);
   };
 
   const onNext = () => {
+    if (isMistakes) {
+      const q = queueRef.current;
+      if (!q.length) return onStop();
+      // Move the current item to the back (if still there) so the next mistake comes up.
+      const i = q.findIndex((it) => it.mistakeKey === keyRef.current);
+      if (i >= 0 && q.length > 1) q.push(...q.splice(i, 1));
+      let next = q[0];
+      if (next.mistakeKey.startsWith("topic:")) {
+        // Topic (gate/boss) mistakes get a fresh similar question each time.
+        const entry = mistakes[next.mistakeKey];
+        const options = entry ? similarRef.current(entry) : [];
+        if (options.length) next = { ...next, question: options[Math.floor(Math.random() * options.length)] };
+      }
+      showMistake(next);
+      return;
+    }
     const r = nextEndlessQuestion(feed);
     setFeed(r.state);
     // Re-shuffle options each time a question comes back.
@@ -188,6 +319,28 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       .sort((a, b) => a[1].correct / a[1].total - b[1].correct / b[1].total)[0];
     const backToQuest = () => navigation.navigate(returnTo, { questId });
     const exitToStudy = () => navigation.popToTop();
+    if (isMistakes) {
+      const allFixed = queueRef.current.length === 0;
+      navigation.replace("ResultsScreen", {
+        title: allFixed ? "All mistakes fixed! 🎉" : "Great fixing! 🔧",
+        message: allFixed ? "You fixed every mistake. Brilliant!" : "Come back to fix the rest. Two right answers in a row fixes a mistake.",
+        metrics: [
+          { label: "Fixed today", value: String(fixedRef.current) },
+          { label: "Still to fix", value: String(queueRef.current.length) },
+          { label: "Right", value: `${t.correct} of ${t.answered}` },
+        ],
+        actions: [
+          ...(allFixed ? [] : [{ label: "Keep fixing", onPress: () => navigation.replace("EndlessPractice", { ...route.params, mistakes: currentMistakesAfterSession() }), mode: "contained" }]),
+          { label: "Back to Quest", onPress: () => navigation.navigate(returnTo, { questId }), mode: allFixed ? "contained" : "outlined" },
+          { label: "Exit to Study", onPress: () => navigation.popToTop(), mode: "text" },
+        ],
+        closeAction: () => navigation.popToTop(),
+        savedNote: "Progress saved ✓",
+        effects: { confetti: allFixed },
+        feedbackContext: { type: "quest_mistakes", id: questId },
+      });
+      return;
+    }
     navigation.replace("ResultsScreen", {
       title: "Great practice! 💪",
       message: `${title}`,
@@ -209,6 +362,16 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       effects: { confetti: t.bestStreak >= 10 },
       feedbackContext: { type: "quest_endless", id: nodeId },
     });
+  };
+
+  // The mistakes list as it is after this session (for "Keep fixing" without waiting for the listener).
+  const currentMistakesAfterSession = () => {
+    const keep = new Set(queueRef.current.map((it) => it.mistakeKey));
+    return Object.fromEntries(
+      Object.entries(mistakes)
+        .filter(([k]) => keep.has(k))
+        .map(([k, e]) => [k, { ...e, rightInARow: rightRef.current[k] || 0 }])
+    );
   };
 
   // ---------- UI ----------
@@ -243,7 +406,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
           options={question.options}
           quizId={question.quizId}
           chosen={selected?.content ?? null}
-          mode="endless"
+          mode={isMistakes ? "mistakes" : "endless"}
           questContext={{ questId, nodeId }}
           knownStatus={knownIssues?.[question.id]?.status}
           color={theme.textPrimaryOnGradient}
@@ -252,11 +415,15 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       <View style={styles.statsRow}>
         <Text style={styles.stat}>🔥 {stats.streak} in a row</Text>
         <Text style={styles.stat}>
-          ✓ {stats.correct} / {stats.answered}
+          {isMistakes ? `🔧 ${left} to fix` : `✓ ${stats.correct} / ${stats.answered}`}
         </Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
+        {/* RB-5b ear training (practice only) */}
+        <View style={styles.listenRow}>
+          <ListenButtons questionId={question.id} questionText={question.question?.content} options={question.options} />
+        </View>
         <QuestionCard question={question} />
         <View style={{ flex: 1 }} />
         <View style={{ marginTop: 10 }}>
@@ -293,7 +460,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
           disabled={!answered}
           activeOpacity={0.85}
         >
-          <Text style={styles.nextText}>Next</Text>
+          <Text style={styles.nextText}>{isMistakes && left === 0 ? "Finish" : "Next"}</Text>
           <Ionicons name="arrow-forward" size={20} color={theme.textOnPrimary || "#FFFFFF"} />
         </TouchableOpacity>
       </View>
@@ -311,6 +478,7 @@ const makeStyles = (theme, insets) =>
     statsRow: { flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 16, paddingTop: 6 },
     stat: { fontSize: 15, fontFamily: "nunitoBold", color: theme.gold },
     scroll: { flexGrow: 1, padding: 15, paddingBottom: 20 },
+    listenRow: { flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 },
     feedbackBox: { marginTop: 12, padding: 12, borderRadius: 14, backgroundColor: theme.cardBackground, gap: 4 },
     feedbackTitle: { fontSize: 17, fontFamily: "nunitoBold" },
     feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textPrimary, lineHeight: 21 },

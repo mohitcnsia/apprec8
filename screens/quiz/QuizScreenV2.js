@@ -24,6 +24,7 @@ import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
+import ListenButtons from "../../components/quiz/ListenButtons";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 
@@ -95,6 +96,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
       outcome,
       gateResult: isGate ? gateResultRef.current : null,
       resetGateId: questContext.resetGateId || null,
+      // "My mistakes": where this quiz sits (gate/boss mistakes are kept as topics)
+      activity: questContext.activity || "practice",
+      branchId: questContext.branchId || null,
+      unitId: questContext.unitId || null,
     });
   };
 
@@ -240,7 +245,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
         ],
         ...(questContext ? { closeAction: exitToStudy, savedNote: "Progress saved ✓" } : {}),
         effects: { confetti: isPerfectScore },
-        submissionContext: mode === "training" ? null : {
+        // Spec v2: every English Quest quiz reports (also Training) as mode "quest"; the server's
+        // existing rules decide stars (100% only, anti-farming). Space/V1 Training stays unreported.
+        submissionContext: mode === "training" && !questContext ? null : {
           // UnComment this
           cloudFunctionName: "recordQuizResult",
           /// And delete this///
@@ -250,7 +257,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
             quizId: quiz.id,
             scoreAchieved: score,
             maxScore: maxPossibleScore,
-            mode,
+            mode: questContext ? "quest" : mode,
             passingScore: 0,
           },
         },
@@ -554,6 +561,17 @@ const QuizScreenV2 = ({ route, navigation }) => {
                   />
                 </TouchableOpacity>
               )}
+              {/* RB-5b ear training: English Quest PRACTICE in Training only (never gates, Boss or Exam) */}
+              {mode === "training" && questContext?.activity === "practice" ? (
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 }}>
+                  <ListenButtons
+                    questionId={currentQuestion.id}
+                    questionText={currentQuestion.question?.content}
+                    options={currentQuestion.options}
+                    color="white"
+                  />
+                </View>
+              ) : null}
               <QuestionCard question={currentQuestion} />
               
               {/* Spacer to push options to the bottom (Thumb Zone) */}
