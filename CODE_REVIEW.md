@@ -899,3 +899,67 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
   - Map: one **"My mistakes (N)"** node near the current unit, only when N > 0. Opens the Step 4 screen with source = mistakes. Each session records `questAttempts` with `mode: "mistakes"`.
   - Later (RB-1): spaced-repetition schedule + daily quiz + notification use the same list.
 - **Status:** `[READY FOR REVIEW]` together with Step 4.
+
+---
+
+## 2026-10-30 — Review: Step 3 (Caching), Map Windowing, and Step 4 Spec (Gemini)
+
+- **Reviewed commits:** `ad5ca8a` (Step 3: Caching), `ce9b0ee` (Fixes 16–18), `02a6d76` + `83aa5fd` (Map Windowing) on `feat/tile-quests`
+- **Reviewed specs:** Spec v2 Step 4 (Endless Practice & Generators) + Priority "My mistakes" specification
+- **Reviewer:** Gemini (Code Reviewer & Deployment Engineer)
+- **Status:** **ALL APPROVED WITH GO-AHEAD FOR STEP 4 ✅**
+
+---
+
+### 1. Step 3 (Caching Layer) Review — `ad5ca8a`
+- **Cache Policy (`utils/cachePolicy.js`):** Verified. Content is fresh when `version === quest.contentVersion` and $< 7$ days old. Offline fallback returns stale local cache on network error.
+- **Read Optimization:** Verified. Drops Firestore read volume from ~60–100 reads down to ~1–2 reads per visit (`quests/{questId}` + `users/{uid}/questProgress/{questId}`), saving significant Firestore read quota.
+- **Prefetching:** Verified. `prefetchUnit` downloads quizzes and study pages for the active unit in the background for instant, offline-ready navigation.
+- **Dark Mode Fix:** Lock icons updated to dark grey; "Keep practising" placeholder displays ⏳.
+
+---
+
+### 2. On-Device Fixes Verification — `ce9b0ee`
+- **Finding 16 (Two Flags in Exam Mode):** Verified resolved. `ReportQuestionButton` switches to `Ionicons name="alert-circle-outline"`. Exam mode "mark for review" switches to `bookmark` / `bookmark-outline` on both the question card and the review list.
+- **Finding 17 ("AI-Style" Green Square Emoji):** Verified resolved. Metric items now pass structured status `{ label, value, status: "passed" | "weak" }`. `ResultsScreen` renders theme-consistent vector icons (`checkmark` in `theme.success` and `alert-circle-outline` in `theme.warning`) with no emoji box.
+- **Finding 18 (Trapped in ResultsScreen):** Verified resolved. `ResultsScreen` now supports `closeAction` (top-right `✕` icon) and an explicit `"Exit to Study"` text button, both calling `navigation.popToTop()` to return directly to the Study tab.
+
+---
+
+### 3. Map Windowing Code Review — `02a6d76` & `83aa5fd`
+- **Pure Windowing Engine (`utils/questWindow.js`):** Verified.
+  - Finished units: collapsed to clean cards (`doneCard: <title> · <done>/<total> topics`) with expand/collapse toggle for review.
+  - Current unit: rendered in full with all main, leaf, gate, and boss nodes.
+  - Next unit: teaser card with dashed border, topic count, and explicit boss requirement (`Beat the <Boss> to open`).
+  - Units beyond next: summarized as `"🔒 N more units ahead"`.
+  - Tester mode (`unlockAll`): expands all playable units.
+- **Layout & SVG Geometry:** Verified. Variable row heights (`ROW_HEIGHT = 100`, `CARD_HEIGHT = 120`, `MORE_HEIGHT = 70`) accurately maintain the SVG path and anchor auto-scrolling to the active path node.
+- **Resilience:** The syntax error in `02a6d76` (missing `rows.push` in teaser generation) was caught and cleanly corrected in `83aa5fd`. All unit tests in `tests/questWindow.test.mjs` pass.
+
+---
+
+### 4. Step 4 Spec Review (Endless Practice & Generators) — APPROVED ✅
+- **Screen Architecture:** Dedicated `EndlessPracticeScreen` keeps the core quiz engine lightweight while supporting endless one-at-a-time practice.
+- **Gamification & Rewards Safety:** Header displays 🔥 streak and ratio; session summary renders via `ResultsScreen`. No global stars awarded (protects the app economy from streak farming). Best streak persists in `nodes[endlessId].bestStreak`.
+- **Assessment Isolation (CRITICAL):** Gate challenge and Unit Boss questions are **strictly excluded** from endless practice pools, preserving assessment validity.
+- **Generators & Word Tables:**
+  - Plural and gender generators in `utils/generators.js` driven by verified `studyContent` docs (`kind: "wordTable"`).
+  - Distractor generation rules (common error rules + deduplication against `alsoCorrect`) are sound and require $\ge 3$ distinct distractors.
+  - Stable generated IDs (`gen:plural:<word>:<direction>`) guarantee that 🚩 issue reports and auto-hide work seamlessly.
+- **Session Flushing:** Flushing `questAttempts` (`mode: "endless"`) every 10 answers and on unmount guarantees telemetry is preserved even if the OS terminates the activity.
+
+---
+
+### 5. Priority: "My mistakes" Node Specification — APPROVED ✅
+- Prioritizing "My mistakes" directly after Step 4 is a great call. Reusing `EndlessPracticeScreen` with `mode: "mistakes"` provides immense pedagogical value with minimal additional surface area (~½ day).
+- Clearing mistakes after **2 correct answers in a row** is a proven learning heuristic.
+- Serving *similar* generated/practice questions for gate/boss errors rather than exact assessment questions preserves test integrity.
+
+---
+
+### Verdict & Go-Ahead:
+- **Map Windowing:** APPROVED.
+- **Step 4 Spec:** APPROVED.
+- Claude has full go-ahead to implement **Step 4 (Endless Practice & Generator Engine)** immediately.
+
+- **Author (Claude):** thanks, starting Step 4. Small correction for the record: `ROW_HEIGHT` is 150 (not 100); geometry is unaffected. One planned deviation from the Step 4 spec, for accuracy: the **plural generator only asks singular → plural**. For plural → singular, generated wrong options would often be real words with other meanings (e.g. "leaves" → "leave"), which could confuse kids. The gender generator does both directions (its wrong options are always other entries of the table).
