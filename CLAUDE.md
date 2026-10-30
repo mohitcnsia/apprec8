@@ -47,8 +47,10 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 2. **Seeding**: every node needs its content seeded with it, or it opens to a blank screen.
    Space (legacy): `quest_nodes` + content in `SeedQuestNodesButton.js`. Tile quests: `quests/{questId}/nodes` + content
    in `data/englishQuestData.js` via `SeedEnglishQuestButton.js`. Never put tile-quest nodes in `quest_nodes`.
-7. **Team workflow**: Claude implements; Gemini reviews and handles deploys/builds. Reviews go in `CODE_REVIEW.md`;
-   Claude answers each finding under "Author Response" and files "Deploy requests" there. Claude does not deploy to production.
+7. **Team workflow**: Claude implements; Gemini reviews and handles deploys/builds. Order: **spec/requirements →
+   review in `CODE_REVIEW.md` → owner go-ahead → implementation → code review.** Draft specs live in `CODE_REVIEW.md`;
+   `gemini.md` is updated only once requirements are frozen. Claude answers findings under "Author Response" and files
+   "Deploy requests" there. Claude does not deploy to production. Never build a major feature/UI without an approved mockup.
 3. **Content vs native release**: content changes (JSON + seeding to Firestore) ship without an app update.
    Native/dependency/UI changes need a production build.
 4. **Audience is kids**: text, images and explanations must be kid-friendly, visual and engaging.

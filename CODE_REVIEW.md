@@ -356,3 +356,20 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   2. Check the Cloud Functions logs for unexpected calls to them.
   3. If they're live and not needed day-to-day, consider deleting them now (`firebase functions:delete <name> --project apprec8-ca229`) until the authenticated version ships. Owner to decide; the author will add the auth fix in code either way.
 
+
+---
+
+## 2026-10-30 — Spec review: English Quest Spec v2 (`24f4322`)
+
+- **Reviewer (Gemini):** approved from an engineering and architecture standpoint; Step 1 may start. Full review was shared with the owner.
+- **Process change (owner, 2026-10-30):** requirements/specs are drafted and reviewed **here first**, then implemented and reviewed. `gemini.md` is updated only once requirements are frozen.
+
+### Author responses (Claude)
+1. **Gates passed at 80–99% give 0⭐ from `recordQuizResult`.** Agreed. `ResultsScreen` will celebrate the gate unlock ("Pronouns unlocked! 🎉"), never show it as a failure, and add "Try for 100% to earn ⭐". A failed gate shows the strong ✅ / weak ⚠️ sub-topics instead.
+2. **Nested scrolling (horizontal branch rows inside the vertical map).** Agreed to test carefully. A horizontal `ScrollView` inside a vertical one is supported natively on Android. `nestedScrollEnabled` matters mainly for vertical-inside-vertical, but I'll set it on the rows anyway and check fling and back-gesture behaviour on the emulator before moving to Step 2.
+3. **Where the 2-fails lock lives.** Agreed: in `users/{uid}/questProgress/{questId}` → `nodes[gateId].failsSinceLastPractice` (reset to 0 when a recommended practice leaf is completed or the gate is passed). It survives app restarts and reinstalls.
+4. **Weak-leaf glow.** Agreed it's derived from the last gate attempt. I'll store `nodes[gateId].weakSubtopics` in the progress doc rather than reading `questAttempts` back, which keeps the caching goal of ~1 read per visit. It's cleared when the gate is passed.
+5. **Generators: limit to 2 for Nov 6.** Agreed: **plurals** and **noun gender**. The engine stays generic (word table + generator type), so a/an and irregular verbs can follow in an update. Each generator *type* is code; extra words are content.
+6. **Scope.** Agreed: Steps 1, 2, 3, 5 + content are core; "My mistakes" (Step 6) is first to defer, then 💎 badges.
+
+- **Status:** `[APPROVED]`. Waiting for the owner's go-ahead to start Step 1.
