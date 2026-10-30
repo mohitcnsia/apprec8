@@ -93,6 +93,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
 
   const scrollRef = useRef(null);
   const lastScrolledTo = useRef(null);
+  const pendingScrollY = useRef(null); // re-applied when content size is known (slow devices)
 
   useEffect(() => {
     const onError = (e) => {
@@ -148,8 +149,17 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (i < 0) return;
     const y = Math.max(0, centerOf(i).y - viewportHeight * THUMB_ZONE);
     lastScrolledTo.current = tree.currentPathId;
+    pendingScrollY.current = y;
     setTimeout(() => scrollRef.current?.scrollTo({ y, animated: true }), 300);
   }, [tree, viewportHeight]);
+
+  // Fallback (CODE_REVIEW Finding 14): if native layout finishes after the timer, scroll again.
+  const onContentSizeChange = (_w, h) => {
+    const y = pendingScrollY.current;
+    if (typeof y !== "number" || h < y + viewportHeight * 0.5) return;
+    pendingScrollY.current = null;
+    scrollRef.current?.scrollTo({ y, animated: false });
+  };
 
   // ---------- Opening activities ----------
   const openStep = (node, step, passPercent, extraContext = {}) => {
@@ -422,6 +432,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         <ScrollView
           ref={scrollRef}
           onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)}
+          onContentSizeChange={onContentSizeChange}
           contentContainerStyle={{ height: contentHeight + insets.bottom }}
         >
           <Svg height={contentHeight} width={width} style={StyleSheet.absoluteFill}>
