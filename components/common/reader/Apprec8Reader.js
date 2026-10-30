@@ -23,7 +23,7 @@ import {
 import ImageViewer from "react-native-image-zoom-viewer";
 import Markdown from "react-native-markdown-display";
 
-import { listenToStudyContent } from "../../../services/firestoreContentApi";
+import { loadStudyContent } from "../../../services/contentCache";
 import { useTheme } from "../../../context/ThemeContext";
 import FeedbackFAB from "../FeedbackFAB";
 
@@ -87,8 +87,9 @@ const Apprec8Reader = ({ route, navigation }) => {
     setStudyData(null);
     isFabContextActiveRef.current = false;
 
-    const unsubscribe = listenToStudyContent(
+    const unsubscribe = loadStudyContent(
       contentId,
+      questContext?.contentVersion, // English Quest: cached (Step 3); otherwise live listener
       (data) => {
         if (isMounted.current) {
           if (data) {
@@ -118,7 +119,7 @@ const Apprec8Reader = ({ route, navigation }) => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [contentId, navigation]);
+  }, [contentId, navigation, questContext?.contentVersion]);
 
   const openImage = useCallback((imageUri) => {
     if (imageUri && typeof imageUri === "string" && imageUri.trim() !== "") {

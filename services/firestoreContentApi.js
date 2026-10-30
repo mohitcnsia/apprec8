@@ -451,7 +451,7 @@ export const convertV1QuestionToV2 = (id, quizId, data) => {
 };
 
 /** One-time read of V1 questions (`quizQuestions` where parentId == quizId), converted to V2. */
-const fetchV1QuestionsAsV2 = async (quizId) => {
+export const fetchV1QuestionsAsV2 = async (quizId) => {
   const v1Query = query(
     collection(db, "quizQuestions"),
     where("parentId", "==", quizId)
@@ -462,6 +462,16 @@ const fetchV1QuestionsAsV2 = async (quizId) => {
     // Skip broken questions that have no correct option, so a kid never gets stuck.
     .filter((q) => q.options.some((o) => o.isCorrect))
     .sort((a, b) => a.order - b.order);
+};
+
+/**
+ * One-time read of a quiz's questions (V2 `questions`, falling back to V1 `quizQuestions`).
+ * Used by the English Quest content cache (no live listener → fewer reads).
+ */
+export const fetchQuizQuestionsOnce = async (quizId) => {
+  const snap = await getDocs(query(collection(db, "questions"), where("quizId", "==", quizId)));
+  if (!snap.empty) return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  return fetchV1QuestionsAsV2(quizId);
 };
 
 export const listenToV2QuizQuestions = (quizId, onUpdate, onError) => {

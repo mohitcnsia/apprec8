@@ -47,6 +47,10 @@ export function listenToQuestTreeNodes(questId, onData, onError) {
   );
 }
 
+// Latest progress seen by the live listener, per user+quest. Lets saves skip the read-before-write
+// (Spec v2 Step 3: fewer reads). Falls back to one read if the listener hasn't delivered yet.
+const latestProgress = new Map(); // `${uid}/${questId}` -> nodes map
+
 /** Listens to the signed-in kid's progress in a quest. Returns {} for new kids. */
 export function listenToQuestProgress(questId, onData, onError) {
   const user = currentUser();
@@ -56,7 +60,11 @@ export function listenToQuestProgress(questId, onData, onError) {
   }
   return onSnapshot(
     doc(db, "users", user.uid, "questProgress", questId),
-    (snap) => onData(snap.exists() ? snap.data()?.nodes || {} : {}),
+    (snap) => {
+      const nodes = snap.exists() ? snap.data()?.nodes || {} : {};
+      latestProgress.set(`${user.uid}/${questId}`, nodes);
+      onData(nodes);
+    },
     (error) => onError?.(error)
   );
 }
@@ -70,8 +78,12 @@ async function updateNodeProgress(questId, nodeId, { percent, passed, gate = nul
   const user = currentUser();
   if (!user) return;
   const progressRef = doc(db, "users", user.uid, "questProgress", questId);
-  const snap = await getDoc(progressRef);
-  const previous = snap.exists() ? snap.data()?.nodes?.[nodeId] || {} : {};
+  let known = latestProgress.get(`${user.uid}/${questId}`);
+  if (!known) {
+    const snap = await getDoc(progressRef); // only if the map's listener hasn't loaded yet
+    known = snap.exists() ? snap.data()?.nodes || {} : {};
+  }
+  const previous = known[nodeId] || {};
   const previousBest = typeof previous.bestPercent === "number" ? previous.bestPercent : 0;
 
   const nodeUpdate = {
@@ -181,5 +193,6 @@ export async function saveQuestAttempt(p) {
 export async function resetMyQuestProgress(questId) {
   const user = currentUser();
   if (!user) return;
+  latestProgress.delete(`${user.uid}/${questId}`);
   await deleteDoc(doc(db, "users", user.uid, "questProgress", questId));
 }

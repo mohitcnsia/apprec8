@@ -64,7 +64,12 @@ export default function SeedEnglishQuestButton() {
 
       // 3. Quest info + tile
       // merge: keep server-written fields (knownIssues from 🚩 reports, reportSettings)
-      batch.set(db.collection("quests").doc(QUEST_ID), { ...quest, updatedAt: now }, { merge: true });
+      // contentVersion changes on every seed → every phone re-downloads content once (Step 3 cache).
+      batch.set(
+        db.collection("quests").doc(QUEST_ID),
+        { ...quest, contentVersion: Date.now(), updatedAt: now },
+        { merge: true }
+      );
       batch.set(db.collection("categories").doc(QUEST_ID), { ...tile, lastUpdatedAt: now }, { merge: true });
 
       // 4. Tree nodes

@@ -26,9 +26,8 @@ import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode } from "../../services/testerMode";
+import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
 import {
-  listenToQuest,
-  listenToQuestTreeNodes,
   listenToQuestProgress,
   markStudyNodeCompleted,
 } from "../../services/englishQuestApi";
@@ -51,6 +50,9 @@ const THUMB_ZONE = 0.7; // current node ends up ~70% down the visible map
 // Difficulty colours (visual only, Spec v2)
 const DIFFICULTY = { easy: "#58CC02", medium: "#FFB020", hard: "#FF4B4B" };
 const STEP_ICONS = { study: "book", quiz: "create", reading: "document-text" };
+// Locked/coming-soon circles use the theme's light grey background in BOTH themes,
+// so their icons need a fixed dark grey to stay visible (theme.textSecondary is the same grey in dark mode).
+const LOCKED_ICON = "#5A5A5A";
 
 // Main nodes weave gently along the left half, so the right half is free for side rows.
 const nodeX = (indexFromStart, width) => width * (indexFromStart % 2 === 0 ? 0.17 : 0.3);
@@ -108,13 +110,30 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       console.error("EnglishQuestMap:", e);
       setError("Could not load the quest. Please check your internet and try again.");
     };
-    const unsubs = [
-      listenToQuest(questId, setQuest, onError),
-      listenToQuestTreeNodes(questId, setNodes, onError),
-      listenToQuestProgress(questId, setProgress, onError),
-    ];
-    return () => unsubs.forEach((u) => u());
-  }, [questId]);
+    // Content comes from the local cache (Spec v2 Step 3): one read of the quest doc per visit,
+    // nodes reused from the phone while contentVersion matches. Progress stays live.
+    let alive = true;
+    const load = async (force) => {
+      try {
+        const q = await getQuest(questId, { force });
+        if (!alive) return;
+        setQuest(q);
+        const n = q ? await getQuestNodes(questId, q.contentVersion) : [];
+        if (alive) setNodes(n || []);
+      } catch (e) {
+        if (alive) onError(e);
+      }
+    };
+    load(false);
+    // Coming back to the map (e.g. after a quiz): re-check the quest doc for new known issues.
+    const unsubFocus = navigation.addListener("focus", () => load(false));
+    const unsubProgress = listenToQuestProgress(questId, setProgress, onError);
+    return () => {
+      alive = false;
+      unsubFocus();
+      unsubProgress();
+    };
+  }, [questId, navigation]);
 
   // A study page was finished: mark that step as completed.
   useEffect(() => {
@@ -131,6 +150,14 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     [nodes, progress, unlockAll]
   );
   const count = tree?.path.length || 0;
+
+  // Pre-download the current unit's quizzes and pages (instant + offline next steps).
+  const currentUnitId = tree?.path.find((p) => p.id === tree.currentPathId)?.unitId;
+  useEffect(() => {
+    if (nodes && currentUnitId && quest?.contentVersion != null) {
+      prefetchUnit(nodes, currentUnitId, quest.contentVersion);
+    }
+  }, [nodes, currentUnitId, quest?.contentVersion]);
   const contentHeight = PAD_TOP + count * ROW_HEIGHT + PAD_BOTTOM;
 
   // Row geometry: path[0] (the start) is the bottom row.
@@ -178,7 +205,15 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const hiddenIds = Object.keys(knownIssues).filter((id) => knownIssues[id]?.status === "hidden");
 
   const openStep = (node, step, passPercent, extraContext = {}) => {
-    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap", knownIssues, ...extraContext };
+    const questContext = {
+      questId,
+      nodeId: step.id,
+      passPercent,
+      returnTo: "EnglishQuestMap",
+      knownIssues,
+      contentVersion: quest?.contentVersion ?? null, // lets quizzes/pages use the local cache
+      ...extraContext,
+    };
     if (step.type === "study") {
       navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext });
     } else if (step.type === "reading") {
@@ -204,6 +239,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           ...(shortQuizzes && !config.balanceBy ? { questionCount: 3 } : {}),
           ...config,
           excludeIds: hiddenIds,
+          contentVersion: quest?.contentVersion ?? null, // cached questions (Step 3)
         },
       },
       questContext,
@@ -301,7 +337,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       case "unlocked":
         return { bg: theme.primary, icon: theme.textOnPrimary || "#FFFFFF", border: theme.primary };
       default:
-        return { bg: theme.disabledBackground, icon: theme.textSecondary, border: theme.border };
+        return { bg: theme.disabledBackground, icon: LOCKED_ICON, border: theme.border };
     }
   };
 
@@ -324,7 +360,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
               p.glow && [styles.leafGlow, { borderColor: theme.gold, shadowColor: theme.gold }],
             ]}
           >
-            <Ionicons name={icon} size={20} color={p.status === "completed" ? "#FFFFFF" : open ? diff : theme.textSecondary} />
+            <Ionicons name={icon} size={20} color={p.status === "completed" ? "#FFFFFF" : open ? diff : LOCKED_ICON} />
           </View>
           <View style={styles.starsRow}>
             {p.status === "completed"
@@ -359,11 +395,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       leaves.push(
         <TouchableOpacity key={e.id} style={styles.leafWrap} onPress={() => onEndlessPress(e)} activeOpacity={0.8}>
           <View style={[styles.leaf, { backgroundColor: theme.disabledBackground, borderColor: theme.border }]}>
-            <Ionicons name="infinite" size={22} color={theme.textSecondary} />
+            <Ionicons name={e.status === "comingSoon" ? "hourglass-outline" : "infinite"} size={22} color={LOCKED_ICON} />
           </View>
           <View style={styles.starsRow} />
           <Text style={styles.leafLabel} numberOfLines={2}>
-            {e.status === "comingSoon" ? "Coming soon" : e.title}
+            {e.title}
           </Text>
         </TouchableOpacity>
       );

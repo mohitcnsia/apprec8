@@ -21,11 +21,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { authInstance } from "../../config/firebaseConfig";
 import {
-  listenToQuest,
-  listenToQuestTreeNodes,
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
 import { buildQuestPath } from "../../utils/questTree";
+import { getQuest, getQuestNodes } from "../../services/contentCache";
 import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode, setTesterMode } from "../../services/testerMode";
 import { resetMyQuestProgress } from "../../services/englishQuestApi";
@@ -60,12 +59,26 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
       console.error("EnglishQuestIntro:", e);
       setError("Could not load the quest. Please check your internet and try again.");
     };
-    const unsubs = [
-      listenToQuest(questId, setQuest, onError),
-      listenToQuestTreeNodes(questId, setNodes, onError),
-      listenToQuestProgress(questId, setProgress, () => {}),
-    ];
-    return () => unsubs.forEach((u) => u());
+    // Content comes from the local cache (Spec v2 Step 3): one read of the quest doc per visit,
+    // nodes reused from the phone while contentVersion matches. Progress stays live.
+    let alive = true;
+    const load = async (force) => {
+      try {
+        const q = await getQuest(questId, { force });
+        if (!alive) return;
+        setQuest(q);
+        const n = q ? await getQuestNodes(questId, q.contentVersion) : [];
+        if (alive) setNodes(n || []);
+      } catch (e) {
+        if (alive) onError(e);
+      }
+    };
+    load(false);
+    const unsubProgress = listenToQuestProgress(questId, setProgress, () => {});
+    return () => {
+      alive = false;
+      unsubProgress();
+    };
   }, [questId]);
 
   const tree = useMemo(

@@ -4,6 +4,7 @@ import { useReducer, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listenToV2QuizQuestions } from "../services/firestoreContentApi"; // Adjust path
 import { drawBalanced } from "../utils/gateRules";
+import { getQuizQuestions } from "../services/contentCache";
 
 /**
  * A helper function to shuffle an array.
@@ -197,9 +198,7 @@ export const useQuizEngine = (quiz, mode) => {
       return;
     }
 
-    const unsubscribe = listenToV2QuizQuestions(
-      quiz.id,
-      async (allFetchedQuestions) => {
+    const handleQuestions = async (allFetchedQuestions) => {
         // Questions auto-hidden by 🚩 reports (quest knownIssues) are never shown.
         const excluded = new Set(quiz.config?.excludeIds || []);
         const fetchedQuestions = (allFetchedQuestions || []).filter((q) => !excluded.has(q.id));
@@ -273,14 +272,26 @@ export const useQuizEngine = (quiz, mode) => {
             payload: "This quiz has no questions yet.",
           });
         }
-      },
-      (err) => {
-        dispatch({
-          type: "FETCH_ERROR",
-          payload: err?.message || "Failed to load questions.",
-        });
-      }
-    );
+    };
+    const handleError = (err) => {
+      dispatch({
+        type: "FETCH_ERROR",
+        payload: err?.message || "Failed to load questions.",
+      });
+    };
+
+    // English Quest passes contentVersion: load once from the local cache (Spec v2 Step 3).
+    // Everything else (Space, V1) keeps the live listener as before.
+    if (quiz.config?.contentVersion != null) {
+      let cancelled = false;
+      getQuizQuestions(quiz.id, quiz.config.contentVersion)
+        .then((qs) => !cancelled && handleQuestions(qs || []))
+        .catch((e) => !cancelled && handleError(e));
+      return () => {
+        cancelled = true;
+      };
+    }
+    const unsubscribe = listenToV2QuizQuestions(quiz.id, handleQuestions, handleError);
     return () => unsubscribe();
   }, [quiz, mode]);
 

@@ -22,7 +22,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Speech from "expo-speech";
 
-import { listenToStudyContent } from "../../services/firestoreContentApi";
+import { loadStudyContent } from "../../services/contentCache";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { buildReadingFlow, nextCursor, splitParagraph, countWords } from "../../utils/readingFlow";
 import { scoreAnswers, starsForPercent, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
@@ -132,8 +132,9 @@ export default function ReadingScreen({ route, navigation }) {
   const scrollTarget = useRef(null); // { paragraph: number } | "end" | null
 
   useEffect(() => {
-    const unsub = listenToStudyContent(
+    const unsub = loadStudyContent(
       contentId,
+      questContext?.contentVersion,
       (data) => {
         if (!data || data.kind !== "reading") setError("This reading is not available yet.");
         else setDoc(data);
