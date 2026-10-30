@@ -135,13 +135,22 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             <Text style={styles.howText}>Only visible to tester accounts. Resets when the app restarts.</Text>
             <View style={styles.testerRow}>
               <Text style={styles.howText}>🔓 Unlock everything (view only)</Text>
-              <Switch value={tester.unlockAll} onValueChange={(v) => setTesterMode({ unlockAll: v })} />
+              <Switch
+                value={tester.unlockAll}
+                onValueChange={(v) => setTesterMode({ unlockAll: v })}
+                accessibilityLabel={`Unlock everything, ${tester.unlockAll ? "on" : "off"}`}
+              />
             </View>
             <View style={styles.testerRow}>
               <Text style={styles.howText}>⚡ Short quizzes (3 questions)</Text>
-              <Switch value={tester.shortQuizzes} onValueChange={(v) => setTesterMode({ shortQuizzes: v })} />
+              <Switch
+                value={tester.shortQuizzes}
+                onValueChange={(v) => setTesterMode({ shortQuizzes: v })}
+                accessibilityLabel={`Short quizzes, ${tester.shortQuizzes ? "on" : "off"}`}
+              />
             </View>
             <TouchableOpacity
+              accessibilityLabel="Reset my progress"
               style={styles.resetButton}
               onPress={() =>
                 Alert.alert("Reset my progress?", "This deletes YOUR English Quest progress only.", [
