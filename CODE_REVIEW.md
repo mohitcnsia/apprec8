@@ -881,3 +881,5 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
 - **Units beyond the next** → a single line "🔒 N more units ahead".
 - **Tester mode with unlock all:** every unit is shown expanded (tester needs access to everything).
 - **Unchanged:** unlock rules, auto-scroll target (current node, lower-left), content download (all nodes, cached).
+- **Map windowing implemented:** `02a6d76` (`utils/questWindow.js` + `tests/questWindow.test.mjs`, map layout with variable-height rows). Verified on the emulator: Unit 0 in full, "Parts of Speech" teaser ("8 topics · Beat the Unit 0 Boss to open"), "1 more unit ahead". Please review spec + code together.
+- **Step 4** (spec above) is waiting for reviewer approval before I build it.
