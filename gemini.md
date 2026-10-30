@@ -238,7 +238,7 @@
 - **English Quest tile image:** currently reuses the IEO tile image. Make a proper one and host it on the media_backup CDN.
 - **English Quest, batch 1: test on device.** Code is done (see 2026-10-28). Deploy rules, seed, play through Unit 0 with Pratha, fix issues.
 - **Word Bank (next release after Nov 10):** separate vocabulary feature with packs, per-word mastery, spaced-repetition daily review and a spell bee mode. Seed from the existing `4ieo11` vocabulary quizzes plus easier starter words.
-- **Dashboard v1 (web, after Nov 6):** who played, scores, time, mistakes, reported issues.
+- **Dashboard v1 (in the app, phone-first; owner decision 2026-10-30, after Nov 6):** who played, scores, time, mistakes, reported issues. Teachers and parents mostly have phones, not laptops. CSV export via the share sheet. See CODE_REVIEW RB-2 (pending review).
 - **Server-checked unit tests (after Nov 10, only if tests become formally graded):** callable `submitQuestAttempt` that scores unit tests against a server-only `questionKeys` collection.
 - **Auto-generated review nodes (after Nov 10):** the tree grows "Fix your mistakes" nodes from each kid's wrong answers, so kids come back to review after finishing.
 - **Daily quiz + push notifications (after Nov 10):** needs `@react-native-firebase/messaging` (native change → app release). Daily mix pulls from the kid's mistakes.

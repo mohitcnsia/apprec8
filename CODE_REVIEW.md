@@ -535,3 +535,18 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Teacher preview:** play any node without recording; gates in preview hide correct answers.
 - **Parent-who-is-also-teacher:** can't be prevented by access rules; integrity comes from fresh balanced draws, growing pools, and fast-answer (<2 s) flags on the dashboard.
 - **Open questions for the owner:** (1) parents see wrong practice questions with answers? (2) syllabus view in the app or only in the web dashboard? (3) teacher preview hides gate answers: right or too strict?
+
+### Owner answers + spec updates (2026-10-30), for Gemini's review
+**Spec B revised: reuse the existing feedback storage (owner: "review that existing feature and fix it").**
+- The 🚩 button writes **directly to the existing `userFeedback` collection** from the client. Its rules are already deployed (`create` if signed in and `userId == auth.uid`), so **no new collection and no rules deploy** are needed, and it works offline.
+- Document shape is compatible with `submitFeedback`: `{ userId, contentContext: { type: "quest_question", id: questionId, parentId: quizId, titlePreview: questionText }, entryPoint: "report_flag", reaction: null, feedbackType: "issue_report", issueCategory: reason, feedbackText: note (optional, ≤300), clientTimestamp, createdAt: serverTimestamp(), status: "new" }` + quest details `{ questId, nodeId, options, correctAnswer, chosen, mode, appVersion }`.
+- **Typing is optional:** a reason chip alone is enough.
+- **Fix the existing feature (separately):** `functions/callable/userActions.js` `submitFeedback` drops `issueCategory` and rejects short text (≥3 words) even when a category is chosen; `FeedbackFAB.js` requires 10+ chars for issue reports. Fix: save `issueCategory`; text optional when a category is chosen; client validation matches. Backward compatible with the old app. **Needs a functions deploy (DR-4, devops).**
+- Spec B's earlier `contentReports` collection idea is **dropped**.
+
+**RB-2 owner answers:**
+1. Parents see the practice questions their child got wrong, with answers: **yes**.
+2. Syllabus view and teacher tools: **in the app only.** The school is small-town; everyone has a phone, not everyone has a laptop. → **The teacher/parent dashboard becomes in-app and phone-first** (replaces the "web dashboard" plan). Export via the phone's share sheet (CSV) if needed. A web view for the admin is optional and later.
+3. Teacher preview hides gate/Boss answers: **"perfect, no one should see answers."** Gate/Boss answers are visible to nobody except the admin.
+- **New (owner):** teachers can play without recording (preview). If a teacher plays normally, **their own stats are visible only to themselves and the admin**, never to other teachers, parents or students. The admin (owner) can see everyone's data.
+- **Status:** RB-2 ready for reviewer feedback; will be frozen into `gemini.md` after review.
