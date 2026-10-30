@@ -505,3 +505,33 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   2. A gate attempt that runs out of hearts counts as a fail, and sub-topics not reached show as weak (0 correct). Deliberate: simple and on the safe side.
   3. Only Nouns and Verbs have gates so far. Other branches clear when their main node is done (content in Step 7).
 - **Needs a re-seed** ("Update English Quest", admin) to get the gate pools and sub-topic tags into Firestore. Not device-tested yet; all checks pass (`npm test`, compile, Android bundle).
+
+---
+
+## 2026-10-30 — Spec drafts for review (Claude): Tester mode + 🚩 Report v1
+
+Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner's account** (`mohitchilkoti@gmail.com`) + admin UID; Pratha plays as a normal kid (real data). Proposed to build **before Step 3 (caching)**, since both unblock testing.
+
+### Spec A: Tester mode (admin/tester accounts only)
+- **Who:** `APPREC8_TEAM_REVIEWER_UID` or a signed-in email in `TESTER_EMAILS` (new constant in `config/appConfig.js`: the owner's email). Everyone else never sees it.
+- **Where:** a "🧪 Tester" card on the English Quest intro screen.
+- **🔓 Unlock everything (view only):** `buildQuestPath(nodes, progress, { unlockAll: true })` shows every node/leaf/gate/boss as open. **Saved progress is not changed**; switching it off restores the real state. Attempts are still recorded (tests the recording too). Kept in memory, so it's off again after an app restart.
+- **⚡ Short quizzes:** in tester mode every quiz/gate draws 3 questions (gates: 1 per sub-topic, up to 4).
+- **🔄 Reset my progress:** deletes the tester's own `users/{uid}/questProgress/english-quest` after a confirm step (allowed by existing rules; own doc only).
+- **Tests:** unit test for `unlockAll` (all open, progress untouched).
+
+### Spec B: 🚩 Report a problem v1
+- **Where:** a 🚩 icon on every question in `QuizScreenV2` (practice, gate, Unit Boss; Training and Exam) and on every question in `ReadingScreen`. Study pages keep the existing `FeedbackFAB` for now.
+- **UI:** bottom sheet: "What's wrong with this question?" → reason chips **Wrong answer · Spelling / grammar · Confusing · Image or audio broken · Other** → optional note (max 300 chars) → **Send** → "Thanks! We'll check it." No minimum text. The kid is never blocked.
+- **Data:** new top-level collection **`contentReports`**, written directly from the client (works offline, sent when back online):
+  `{ userId, userName, questId, nodeId, quizId, questionId, questionText, options[], correctAnswer, chosen (null if not answered yet), mode, reason, note, appVersion, status: "new", createdAt }`
+- **Rules (needs a deploy, DR-4):** `create` only if signed in, `userId == auth.uid`, `createdAt == request.time`, `status == "new"`, `reason` is one of the 5 values, `note` ≤ 300 chars; `read`/`update` admin only; no delete.
+- **Not in v1:** admin list of reports (comes with the dashboard), editing content from a report (comes with RB-3, the dynamic content refactor).
+- **Why not reuse `submitFeedback`:** it drops `issueCategory`, rejects short text, needs network + a functions deploy, and is shared with the old app. A separate collection keeps the old feature untouched.
+
+### RB-2 (backlog draft, not frozen): Parents and teachers viewing content without helping kids cheat
+- **Principle:** practice answers can't be secret (Training mode reveals them by design). Protect **assessments** (gates, Unit Boss), not practice.
+- **Proposed visibility:** parent (linked to child) = progress, time, weak topics, Learn pages, practice questions the child got wrong *with* answers; teacher (linked to class) = the same for the class + syllabus view (units, topics, Learn pages, sample practice questions) + mistake patterns. **Gate/Boss pools are never shown** to parents or teachers (only described). After a child passes, that attempt's questions may be shown to their parent/teacher.
+- **Teacher preview:** play any node without recording; gates in preview hide correct answers.
+- **Parent-who-is-also-teacher:** can't be prevented by access rules; integrity comes from fresh balanced draws, growing pools, and fast-answer (<2 s) flags on the dashboard.
+- **Open questions for the owner:** (1) parents see wrong practice questions with answers? (2) syllabus view in the app or only in the web dashboard? (3) teacher preview hides gate answers: right or too strict?
