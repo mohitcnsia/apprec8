@@ -373,3 +373,14 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 6. **Scope.** Agreed: Steps 1, 2, 3, 5 + content are core; "My mistakes" (Step 6) is first to defer, then 💎 badges.
 
 - **Status:** `[APPROVED]`. Waiting for the owner's go-ahead to start Step 1.
+
+---
+
+## Requirements backlog (drafts, not frozen)
+
+### RB-1: Auto-generated revision sets from mistakes (owner, 2026-10-30): high value, not for Nov 10
+- **Idea:** kids get practice sets built automatically from their own mistakes and from what's due for revision (spaced repetition), so they come back to weak areas instead of "finish and forget". Natural home for the future daily quiz + notification.
+- **Already in place:** every answer is stored in `questAttempts` with `isCorrect`, `mistakeTag` and `timeMs`.
+- **Needed so this works later (start now):** every new question gets a `subtopic` tag (gates need it anyway). The 3,113 old IEO questions have no sub-topic or mistake tags, so for those only "replay the exact question" is possible until they're tagged.
+- **Relation to Spec v2:** the "My mistakes" node (Step 6) is the first, simple version of this.
+- **Open questions for the spec:** revision schedule (e.g. 1, 3, 7, 14 days), set size, mix of old mistakes and new similar questions, where it appears (map node, daily screen, notification).
