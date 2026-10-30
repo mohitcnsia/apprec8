@@ -432,7 +432,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ### Finding 13: [LOW] [UX / SPEC] Confetti Animation on Map Completion & Branch Mastery
 - **Severity:** Low (Polish / Visual Reward)
-- **Status:** `[OPEN]`
+- **Status:** `[ACCEPTED – Step 5]`
 - **Context:**
   Spec v2 specifies:
   > *"Confetti on completion (as Space)... Branch mastered (all leaves done): main node turns gold with a crown + confetti."*
@@ -441,13 +441,13 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 - **Reviewer Recommendation:**
   Add confetti playback via Lottie in `EnglishQuestMapScreen.js` (reusing `assets/animations/confetti.json` as in `screens/quest/QuestScreen.js`) triggered when a branch is mastered or a Unit Boss is completed.
 - **Author Response:**
-  > *(Author / Claude response here)*
+  > **Author (Claude):** Agreed it's in the spec. It's scheduled as **Step 5 (Rewards)** in the agreed build order (progress ring ✔ done, gold crown ✔ done, confetti + `recordQuizResult` with `mode: "quest"` pending), so I'm keeping the order rather than pulling it forward. Plan: reuse `assets/animations/confetti.json` with `LottieView` as in `QuestScreen.js`. Trigger it once on the map when a node becomes newly completed, a branch becomes mastered, or a Unit Boss is passed. The "newly" is detected by comparing progress before and after the screen regains focus, so it doesn't replay on every visit.
 
 ---
 
 ### Finding 14: [LOW] [DEFENSIVE UX] Native ScrollView Layout Race Condition on Auto-Scroll
 - **Severity:** Low (Edge Case UX)
-- **Status:** `[OPEN]`
+- **Status:** `[RESOLVED]`
 - **Context:**
   In `EnglishQuestMapScreen.js`:
   ```javascript
@@ -466,7 +466,7 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 - **Reviewer Recommendation:**
   In addition to the `300ms` timer, attach `onContentSizeChange` to the `ScrollView` (or a fallback check) to ensure `scrollTo` re-applies if the content was not ready when the initial layout fired.
 - **Author Response:**
-  > *(Author / Claude response here)*
+  > **Author (Claude):** Fixed in `0fef401`. The scroll target is kept in a ref and re-applied from `onContentSizeChange` once the content is tall enough to reach it, then cleared. The 300 ms timer stays as well. Note: the risk was low here, because the content height is fixed from the row count (`PAD_TOP + rows × ROW_HEIGHT + PAD_BOTTOM`), unlike Space, but the fallback is cheap.
 
 ---
 
@@ -479,12 +479,13 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   1. The Admin user must press **"Update English Quest"** on the Profile tab to seed the new node structure.
   2. Any previous progress documents in `users/{uid}/questProgress/english-quest` from Batch 1 testing will be mismatched; testers should test with a fresh account or clear their progress document.
 - **Author Response:**
-  > *(Author / Claude response here)*
+  > **Author (Claude):** Acknowledged. The owner re-seeded and completed "What is a sentence?" on device after Step 1 (next node + next leaf unlocked correctly). Old batch-1 progress keys are simply ignored by `buildQuestPath` (no crash), so test accounts just start fresh. **Step 2 needs one more re-seed** (gate pools + sub-topic tags); see the Step 2 review request below.
 
 ---
 
 ### Reviewer Verdict:
 **STEP 1 IS APPROVED.** The implementation adheres strictly to the requirements, eliminates previous UX issues, conforms to the app's global theme system, and passes all validation tests. Claude may proceed to **Step 2 (Gates)** once the author responses above are noted.
+- **Author (Claude):** responses added to Findings 13–15 (14 fixed in `0fef401`). Step 2 was built after the owner's go-ahead and is waiting for review below.
 
 ---
 
