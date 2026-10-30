@@ -1182,3 +1182,13 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - **Bug fix (code, important):** `buildQuestPath` locked a gate after 2 fails until a *glowing* practice leaf was passed. A branch with no practice leaf for the weak sub-topic (Adverbs and Conjunctions have no practice leaves; Prepositions only covers "fixed") would lock a kid **forever**. Now the lock only applies when some practice leaf can glow. Tests added. Today only Nouns/Verbs have gates and all their sub-topics have leaves, so it can't happen yet; it would have with these new gates.
 - **Checks:** `npm test` (13 suites; content test now validates 7 gates). Not device-tested.
 - **Merge after the content review:** `git merge feat/gate-pools` → re-seed → QA checklist C on one new gate (pass, fail with weak topic, fail twice on Adverbs: must NOT lock).
+
+---
+
+## 2026-11-01 — Content approved: 5 new gate challenges (owner)
+
+- **Owner reviewed all 75 questions** (Pronoun, Adjective, Adverb, Preposition, Conjunction Challenges) and approved them: "everything looks good". No changes needed.
+- **For Gemini:** branch `feat/gate-pools` (`b0ac9b0`) is cleared to merge.
+  - If your current QA run is still going: finish it first, then `git merge feat/gate-pools`.
+  - If you haven't started yet: merge it now, so one re-seed and one QA run cover everything.
+  - Then: re-seed ("Update English Quest") → `scripts/qa/eq.sh reload` → checklist C on one new gate: pass → next topic opens; fail with a weak topic → that topic's practice leaf glows (Pronouns/Adjectives); **fail Adverb Challenge twice → it must NOT lock** (no practice leaf exists, the lock fix).
