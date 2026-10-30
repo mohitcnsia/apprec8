@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import {
-  fetchVocabGameData,
   listenToVocabGameData,
 } from "../store/firestore-api";
 

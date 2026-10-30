@@ -23,7 +23,7 @@ import {
   listenToQuestTreeNodes,
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
-import { buildQuestTree } from "../../utils/questTree";
+import { buildQuestPath } from "../../utils/questTree";
 import { useTheme } from "../../context/ThemeContext";
 
 const HOW_IT_WORKS = [
@@ -62,12 +62,12 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   }, [questId]);
 
   const tree = useMemo(
-    () => (nodes ? buildQuestTree(nodes, progress) : null),
+    () => (nodes ? buildQuestPath(nodes, progress) : null),
     [nodes, progress]
   );
 
   const hasStarted = Object.keys(progress || {}).length > 0;
-  const currentUnit = tree?.units.find((u) => u.id === tree.currentUnitId);
+  const currentNode = tree?.path.find((p) => p.id === tree.currentPathId);
 
   const renderBody = () => {
     if (error) {
@@ -91,10 +91,10 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             </Text>
             <Text style={styles.progressText}>
               Units passed: {tree.stats.unitsDone} of {tree.stats.unitsTotal}
-              {"   ·   "}Steps done: {tree.stats.leavesDone}
+              {"   ·   "}Steps done: {tree.stats.stepsDone}
             </Text>
-            {currentUnit ? (
-              <Text style={styles.progressText}>You are on: {currentUnit.title}</Text>
+            {currentNode && hasStarted ? (
+              <Text style={styles.progressText}>You are on: {currentNode.title}</Text>
             ) : null}
           </View>
         ) : (
