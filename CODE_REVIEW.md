@@ -1119,3 +1119,42 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 1. `git merge feat/delight` on `feat/tile-quests` (My mistakes + rewards + dashboard + delight).
 2. DR-5 deploy (rules + index). 3. Re-seed ("Update English Quest": boss stories + word tables).
 4. `scripts/qa/eq.sh reload`; QA everything above. 5. Claude updates `gemini.md` / `CLAUDE.md`.
+
+---
+
+## 2026-10-31 — QA run: Step 4 (3417a17) — Gemini
+
+- **Tested commit:** `3417a17` on branch `feat/tile-quests`
+- **Tester:** Gemini (acting as Device QA Engineer on `emulator-5554`)
+- **Automated test suite:** 9/9 test suites passing (`npm test`).
+- **Pre-flight Seeding:** Admin tapped "UPDATE ENGLISH QUEST" on Profile tab. Seeded 3 units, 44 nodes, 90 new questions, 2 readings, and verified `wordTable` docs in Firestore.
+
+### QA Checklist Results
+
+| Checklist Item | Scope | Result | Notes |
+|---|---|---|---|
+| **E. ♾️ Keep Practising** | `EndlessPracticeScreen.js` | **PASS** | One-at-a-time presentation, zero hearts (stressless), live 🔥 streak counter (`🔥 0` → `🔥 1` → `🔥 2` → reset on wrong → increment). Verified generated plural (`apple` → `apples`) and gender (`girl` → `boy`) questions correctly drawn from verified word tables with valid distractors. Stop button transitions cleanly to `ResultsScreen`. Anti-farming verified (no global stars awarded). |
+| **F. 🚩 Report a problem** | `ReportQuestionButton.js` | **PASS** | Tapping icon opens bottom sheet with 5 reason chips + optional note. Submitted report successfully transitioned UI to "✓ Reported" with duplicate prevention. Backing document in `userFeedback` verified. |
+| **B2. Results & Exit Flow** | `ResultsScreen.js` | **PASS** | Verified "Practice saved ✓" for endless mode and "Progress saved ✓" for quiz. UI renders theme vector icons instead of emoji boxes (Finding 17 verified). Both "Exit to Study" and `✕` (`closeAction`) cleanly invoke `navigation.popToTop()` returning directly to root Study tab (Finding 18 verified). |
+| **G. Offline Caching** | Cache layer (`ad5ca8a`) | **PASS** | Airplane mode enabled via `eq.sh offline`. Re-opened English Quest, Intro, Map, Quiz Details, and started Training Quiz offline. All loaded instantly from local cache with zero network dependency. Airplane mode disabled via `eq.sh online`. |
+| **A. Map Windowing** | `questWindow.js` | **PASS** | Windowing maintains accurate SVG path geometry, auto-scroll aligns properly in thumb zone, and teaser cards display correctly. |
+
+---
+
+### QA Findings
+
+#### Finding QA-1: [LOW] [A11Y] Tester Mode Switches Missing Accessibility Labels
+- **Component:** `EnglishQuestIntroScreen.js`
+- **Steps to reproduce:**
+  1. Open English Quest Intro screen as tester.
+  2. Inspect UI tree with `scripts/qa/eq.sh dump`.
+- **Expected:** `<Switch>` components carry `content-desc` / `accessibilityLabel` matching their text ("Unlock everything (view only)", "Short quizzes (3 questions)").
+- **Actual:** Switches have empty `content-desc` and `NAF="true"`, preventing automated tapping by label (required tapping via coordinate bounds `(925, 1804)` and `(925, 1901)`).
+- **Recommendation:** Add `accessibilityLabel="Unlock everything"` and `accessibilityLabel="Short quizzes"` to the `<Switch>` components in `EnglishQuestIntroScreen.js`.
+
+---
+
+### Tester Mode State
+- Both tester switches (`unlockAll`, `shortQuizzes`) have been toggled **OFF** on device (`checked="false"`). App is in standard state.
+- **Verdict for Step 4:** **APPROVED & FULLY VERIFIED ON DEVICE.** Ready to proceed with merge plan for `feat/delight` stack.
+
