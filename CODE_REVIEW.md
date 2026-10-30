@@ -558,3 +558,17 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
   1. **One report per kid per question:** after sending, the 🚩 becomes "✓ Reported" for that question (stored locally in AsyncStorage, key `reported_<questionId>`). No extra reads or writes.
   2. **Grouped review:** the report list (in the in-app dashboard, later) groups by `contentContext.id` (question) → one row per question with reason counts ("Spelling × 12"). Marking it fixed closes all reports for that question. The report count doubles as priority.
 - **Not done:** checking the server for "already reported by someone" before sending. That would cost a read on every 🚩 tap, more than the write it saves.
+
+**Spec B addition: automatic "known issue" + auto-hide (owner approved 2026-10-30; in Nov 10 scope)**
+- **Why:** the owner reviews fixes every 2–3 days; manual marking doesn't scale. First 3–5 reports confirm a real problem; more add nothing.
+- **Server:** Firestore trigger `onQuestionReported` (onCreate on `userFeedback` where `entryPoint == "report_flag"`). In a transaction it updates `questionIssues/{questionId}`: `reporters.{uid} = { reason, answered: bool, at }` (deduplicated by kid), plus per-reason counts of **distinct kids**.
+- **Thresholds (settings, not code: `quests/{questId}.reportSettings`, defaults below):**
+  - **≥ 3 distinct kids, any reason → `known`.** Written to `quests/{questId}.knownIssues.{questionId} = { status: "known", reasons, since }`.
+  - **≥ 5 distinct kids with reason "Wrong answer" AND who answered the question → `hidden`.** Same map, `status: "hidden"`.
+- **App:** `knownIssues` comes with the quest doc that is read on every visit anyway (no extra reads). `known` → the 🚩 shows "🔧 We know about this one, fixing it! Thanks" and sends nothing. `hidden` → the question is filtered out before drawing (gates still draw balanced from the rest; a smaller pool just means a smaller draw).
+- **Anti-gaming:** the hide threshold is higher than the known threshold; only "Wrong answer" counts towards hiding; a report counts towards hiding only if sent from inside a quiz **after choosing an answer** (`chosen != null`). The admin gets a "hidden" list (dashboard; until then, Firestore console) and un-hide = remove the entry. Later, the dashboard flags patterns (same kids hiding several gate questions).
+- **Fix flow:** the admin fixes content → removes the `knownIssues` entry and clears `questionIssues/{questionId}` (by hand for now; part of the content editor later, RB-3). The question returns automatically.
+- **Rules:** `questionIssues`: read admin only, write never from clients (Admin SDK only). `quests` already allows writes by the admin only.
+- **Deploy (DR-4, devops):** new function `onQuestionReported` + the `submitFeedback` fixes + rules for `questionIssues`. Old app unaffected.
+- **Cost:** one function invocation + 2 small writes per report. Negligible (2M invocations/month free).
+- **Status:** `[READY FOR REVIEW]`. Spec A (tester mode) and Spec B (report + auto-marking) together.
