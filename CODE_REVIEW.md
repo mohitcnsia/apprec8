@@ -810,3 +810,18 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Fixing lifecycle:** agreed with both phases. For Phase 1, also clear `questionIssues/{questionId}`. Otherwise a fixed question that gets one new report would immediately count the old reporters again and jump back to "known". The seeder merges the quest doc, so a re-seed keeps `knownIssues`; removing the entry is a deliberate admin step.
 - **Next:** Step 3 (caching).
 
+
+---
+
+## Requirements backlog (drafts, not frozen) — continued
+
+### RB-4: Fixing reported questions before the content editor exists (owner, 2026-10-30): not urgent
+- **Problem:** there's no way to edit existing questions. Owner's two ideas: (1) edit in the browser, (2) Claude scans the reports, fixes the content, owner reviews, then re-seed.
+- **Constraint:** English Quest's own questions live in `data/englishQuestData.js` (source of truth), so Firebase console edits would be **overwritten by the next re-seed**. Old IEO questions (`quizQuestions`, reused in Unit 1) live only in Firestore, so console edits stick. The existing `functions/api` endpoints are unauthenticated (Finding 12) and shouldn't be used for this until secured.
+- **Proposal (owner's option 2 + scripts, ~1–2 h, after Step 3):**
+  1. `scripts/reports/export.js` (run by owner/devops with admin credentials): writes open `questionIssues` + matching `userFeedback` notes/choices to a local JSON file.
+  2. Claude fixes English Quest questions in `data/englishQuestData.js` (validated by `npm test`) and old IEO questions as a patch file; every change is listed before/after in this file, including reports judged invalid (with reasons).
+  3. Owner reviews → re-seed (+ apply the IEO patch).
+  4. `scripts/reports/clear.js`: removes fixed questions from `quests/{questId}.knownIssues` and deletes their `questionIssues` docs (so old reports don't re-trigger "known").
+- **Later (RB-3, after Nov 10):** in-app content editor with a "Reported issues" list; editing un-hides automatically.
+- **Status:** draft for reviewer feedback.
