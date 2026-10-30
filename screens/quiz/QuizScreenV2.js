@@ -24,6 +24,7 @@ import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
+import ListenButtons from "../../components/quiz/ListenButtons";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 
@@ -560,6 +561,17 @@ const QuizScreenV2 = ({ route, navigation }) => {
                   />
                 </TouchableOpacity>
               )}
+              {/* RB-5b ear training: English Quest PRACTICE in Training only (never gates, Boss or Exam) */}
+              {mode === "training" && questContext?.activity === "practice" ? (
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 }}>
+                  <ListenButtons
+                    questionId={currentQuestion.id}
+                    questionText={currentQuestion.question?.content}
+                    options={currentQuestion.options}
+                    color="white"
+                  />
+                </View>
+              ) : null}
               <QuestionCard question={currentQuestion} />
               
               {/* Spacer to push options to the bottom (Thumb Zone) */}

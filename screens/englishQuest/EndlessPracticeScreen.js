@@ -15,6 +15,7 @@ import { useTheme } from "../../context/ThemeContext";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
+import ListenButtons from "../../components/quiz/ListenButtons";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { getQuizQuestions, getStudyDoc } from "../../services/contentCache";
 import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQuestApi";
@@ -419,6 +420,10 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
+        {/* RB-5b ear training (practice only) */}
+        <View style={styles.listenRow}>
+          <ListenButtons questionId={question.id} questionText={question.question?.content} options={question.options} />
+        </View>
         <QuestionCard question={question} />
         <View style={{ flex: 1 }} />
         <View style={{ marginTop: 10 }}>
@@ -473,6 +478,7 @@ const makeStyles = (theme, insets) =>
     statsRow: { flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 16, paddingTop: 6 },
     stat: { fontSize: 15, fontFamily: "nunitoBold", color: theme.gold },
     scroll: { flexGrow: 1, padding: 15, paddingBottom: 20 },
+    listenRow: { flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 },
     feedbackBox: { marginTop: 12, padding: 12, borderRadius: 14, backgroundColor: theme.cardBackground, gap: 4 },
     feedbackTitle: { fontSize: 17, fontFamily: "nunitoBold" },
     feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textPrimary, lineHeight: 21 },

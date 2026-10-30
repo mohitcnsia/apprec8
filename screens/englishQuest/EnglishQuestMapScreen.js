@@ -314,7 +314,14 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
 
   const openTest = (node, passPercent) =>
     openQuizDetails(
-      { id: node.quizId, title: node.title },
+      {
+        id: node.quizId,
+        title: node.title,
+        // RB-5c: the Boss's mission story, then the real pass rule.
+        description: node.story
+          ? `${node.story}\n\nScore ${passPercent}% or more to win and open the next unit.`
+          : undefined,
+      },
       { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap", knownIssues, activity: "boss", unitId: node.unitId },
       passPercent
     );
