@@ -1,7 +1,9 @@
 // screens/englishQuest/EnglishQuestMapScreen.js
-// The quest tree. The trunk grows upwards: the first unit is at the bottom.
-// Each unit = one trunk node (the unit test) + horizontal, swipeable branch rows.
-// Leaves further out in a branch are harder. Unlock rules live in utils/questTree.js.
+// English Quest map (Spec v2, gemini.md): Space-quest style winding path that starts
+// at the bottom, in the app theme. One main node per branch on the path (left half),
+// with its side row (practice leaves → gate → keep practising) to the right.
+// On open, the current node is scrolled to the lower-left (left-thumb zone).
+// Unlock rules live in utils/questTree.js.
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -16,8 +18,11 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Svg, Path, Circle } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useTheme } from "../../context/ThemeContext";
 import {
   listenToQuest,
   listenToQuestTreeNodes,
@@ -25,133 +30,69 @@ import {
   markStudyNodeCompleted,
 } from "../../services/englishQuestApi";
 import {
-  buildQuestTree,
-  DEFAULT_LEAF_PASS_PERCENT,
-  DEFAULT_UNIT_PASS_PERCENT,
+  buildQuestPath,
+  DEFAULT_PRACTICE_PASS_PERCENT,
+  DEFAULT_GATE_PASS_PERCENT,
+  DEFAULT_BOSS_PASS_PERCENT,
 } from "../../utils/questTree";
-import { QUEST_COLORS } from "./questColors";
 
-const LEAF_ICONS = { study: "book", quiz: "create", reading: "document-text" };
+// --- Layout (fixed row heights keep the path and auto-scroll predictable, like the Space quest) ---
+const ROW_HEIGHT = 150;
+const MAIN_SIZE = 72;
+const BOSS_SIZE = 84;
+const LEAF_SIZE = 46;
+const PAD_TOP = 40;
+const PAD_BOTTOM = 90;
+const THUMB_ZONE = 0.7; // current node ends up ~70% down the visible map
 
-const Stars = ({ count }) => (
-  <View style={styles.starsRow}>
-    {[1, 2, 3].map((i) => (
-      <Ionicons
-        key={i}
-        name={i <= count ? "star" : "star-outline"}
-        size={11}
-        color={i <= count ? QUEST_COLORS.gold : "rgba(255,255,255,0.35)"}
-      />
-    ))}
-  </View>
-);
+// Difficulty colours (visual only, Spec v2)
+const DIFFICULTY = { easy: "#58CC02", medium: "#FFB020", hard: "#FF4B4B" };
+const STEP_ICONS = { study: "book", quiz: "create", reading: "document-text" };
 
-const LeafNode = ({ leaf, onPress }) => {
-  const { status } = leaf;
-  const isOpen = status === "unlocked" || status === "completed";
-  let icon = LEAF_ICONS[leaf.type] || "help";
-  if (status === "locked") icon = "lock-closed";
-  if (status === "comingSoon") icon = "hourglass-outline";
+// Main nodes weave gently along the left half, so the right half is free for side rows.
+const nodeX = (indexFromStart, width) => width * (indexFromStart % 2 === 0 ? 0.17 : 0.3);
 
-  const circleStyle = [
-    styles.leafCircle,
-    status === "completed" && styles.leafCompleted,
-    status === "unlocked" && styles.leafUnlocked,
-    (status === "locked" || status === "comingSoon") && styles.leafLocked,
-  ];
-
+const ProgressRing = ({ size, progress, color, track }) => {
+  const stroke = 4;
+  const r = size / 2 + 5;
+  const c = 2 * Math.PI * r;
+  const box = size + 14;
   return (
-    <TouchableOpacity style={styles.leafWrap} onPress={() => onPress(leaf)} activeOpacity={0.8}>
-      <View style={circleStyle}>
-        <Ionicons name={icon} size={24} color={isOpen ? "#0B3D2E" : "#E6ECE9"} />
-      </View>
-      {(leaf.type === "quiz" || leaf.type === "reading") && status === "completed" ? <Stars count={leaf.stars} /> : <View style={{ height: 13 }} />}
-      <Text style={[styles.leafTitle, !isOpen && styles.dimText]} numberOfLines={2}>
-        {leaf.title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-const BranchRow = ({ branch, onLeafPress }) => (
-  <View style={styles.branch}>
-    <View style={styles.branchHeader}>
-      <Ionicons name="leaf" size={14} color={QUEST_COLORS.branch} />
-      <Text style={styles.branchTitle}>{branch.title}</Text>
-      <Text style={styles.branchCount}>
-        {branch.completedCount}/{branch.leaves.length}
-      </Text>
-    </View>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.branchScroll}>
-      {branch.leaves.map((leaf, i) => (
-        <View key={leaf.id} style={styles.leafSlot}>
-          {i > 0 ? <View style={styles.branchLine} /> : null}
-          <LeafNode leaf={leaf} onPress={onLeafPress} />
-        </View>
-      ))}
-    </ScrollView>
-  </View>
-);
-
-const UnitBlock = ({ unit, index, onUnitPress, onLeafPress, onLayout }) => {
-  const { status } = unit;
-  let icon = "trophy";
-  if (status === "locked") icon = "lock-closed";
-  if (status === "comingSoon") icon = "hourglass-outline";
-  if (status === "completed") icon = "checkmark";
-
-  return (
-    <View onLayout={onLayout}>
-      {/* Trunk node = unit test (at the top of its unit, because the tree grows upward) */}
-      <View style={styles.trunkNodeRow}>
-        <TouchableOpacity onPress={() => onUnitPress(unit)} activeOpacity={0.8} style={{ alignItems: "center" }}>
-          <View
-            style={[
-              styles.trunkCircle,
-              status === "unlocked" && styles.trunkUnlocked,
-              status === "completed" && styles.trunkCompleted,
-              (status === "locked" || status === "comingSoon") && styles.trunkLocked,
-            ]}
-          >
-            <Ionicons name={icon} size={34} color={status === "locked" || status === "comingSoon" ? "#E6ECE9" : "#0B3D2E"} />
-          </View>
-          <Text style={styles.unitLabel}>
-            {status === "comingSoon" ? "Coming soon" : `Unit ${index} test`}
-          </Text>
-          <Text style={styles.unitTitle}>{unit.title}</Text>
-          {typeof unit.bestPercent === "number" ? (
-            <Text style={styles.unitScore}>Best: {unit.bestPercent}%</Text>
-          ) : null}
-        </TouchableOpacity>
-      </View>
-
-      {unit.branches.length > 0 ? (
-        <View style={[styles.branchesCard, status === "locked" && { opacity: 0.6 }]}>
-          {unit.branches.map((b) => (
-            <BranchRow key={b.branchId} branch={b} onLeafPress={onLeafPress} />
-          ))}
-        </View>
+    <Svg width={box} height={box} style={StyleSheet.absoluteFill}>
+      <Circle cx={box / 2} cy={box / 2} r={r} stroke={track} strokeWidth={stroke} fill="none" />
+      {progress > 0 ? (
+        <Circle
+          cx={box / 2}
+          cy={box / 2}
+          r={r}
+          stroke={color}
+          strokeWidth={stroke}
+          fill="none"
+          strokeDasharray={`${c * progress} ${c}`}
+          strokeLinecap="round"
+          rotation="-90"
+          origin={`${box / 2}, ${box / 2}`}
+        />
       ) : null}
-
-      {/* Trunk segment down to the previous unit */}
-      {index > 0 ? <View style={styles.trunkSegment} /> : null}
-    </View>
+    </Svg>
   );
 };
 
 export default function EnglishQuestMapScreen({ route, navigation }) {
   const { questId, completedNodeId } = route.params || {};
   const insets = useSafeAreaInsets();
-  const { height: screenHeight } = useWindowDimensions();
+  const { width } = useWindowDimensions();
+  const { theme } = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   const [quest, setQuest] = useState(null);
   const [nodes, setNodes] = useState(null);
   const [progress, setProgress] = useState({});
   const [error, setError] = useState(null);
+  const [viewportHeight, setViewportHeight] = useState(0);
 
   const scrollRef = useRef(null);
-  const unitY = useRef({});
-  const hasAutoScrolled = useRef(false);
+  const lastScrolledTo = useRef(null);
 
   useEffect(() => {
     const onError = (e) => {
@@ -166,7 +107,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     return () => unsubs.forEach((u) => u());
   }, [questId]);
 
-  // A study page was finished: mark it as completed.
+  // A study page was finished: mark that step as completed.
   useEffect(() => {
     if (completedNodeId) {
       markStudyNodeCompleted(questId, completedNodeId).catch((e) =>
@@ -176,132 +117,292 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     }
   }, [completedNodeId, questId, navigation]);
 
-  const tree = useMemo(() => (nodes ? buildQuestTree(nodes, progress) : null), [nodes, progress]);
-  // Show the last unit at the top, the first unit at the bottom.
-  const unitsTopDown = useMemo(() => (tree ? [...tree.units].reverse() : []), [tree]);
+  const tree = useMemo(() => (nodes ? buildQuestPath(nodes, progress) : null), [nodes, progress]);
+  const count = tree?.path.length || 0;
+  const contentHeight = PAD_TOP + count * ROW_HEIGHT + PAD_BOTTOM;
 
-  // Scroll once so the current unit sits in the lower part of the screen (thumb zone).
-  const tryAutoScroll = () => {
-    if (hasAutoScrolled.current || !tree?.currentUnitId) return;
-    const y = unitY.current[tree.currentUnitId];
-    if (typeof y !== "number") return;
-    hasAutoScrolled.current = true;
-    scrollRef.current?.scrollTo({ y: Math.max(0, y - screenHeight * 0.3), animated: false });
+  // Row geometry: path[0] (the start) is the bottom row.
+  const rowTop = (i) => PAD_TOP + (count - 1 - i) * ROW_HEIGHT;
+  const centerOf = (i) => {
+    const size = tree.path[i].kind === "boss" ? BOSS_SIZE : MAIN_SIZE;
+    return { x: nodeX(i, width), y: rowTop(i) + size / 2 + 8 };
   };
 
-  const openQuiz = (node, { quizId, mode, passPercent }) => {
+  const pathD = useMemo(() => {
+    if (!tree || count < 2) return "";
+    const pts = tree.path.map((_, i) => centerOf(i));
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      d += ` C ${a.x} ${a.y - 60}, ${b.x} ${b.y + 60}, ${b.x} ${b.y}`;
+    }
+    return d;
+  }, [tree, count, width]);
+
+  // Auto-scroll: put the current node in the lower-left thumb zone (re-runs when the current node changes).
+  useEffect(() => {
+    if (!tree || !viewportHeight || !tree.currentPathId) return;
+    if (lastScrolledTo.current === tree.currentPathId) return;
+    const i = tree.path.findIndex((p) => p.id === tree.currentPathId);
+    if (i < 0) return;
+    const y = Math.max(0, centerOf(i).y - viewportHeight * THUMB_ZONE);
+    lastScrolledTo.current = tree.currentPathId;
+    setTimeout(() => scrollRef.current?.scrollTo({ y, animated: true }), 300);
+  }, [tree, viewportHeight]);
+
+  // ---------- Opening activities ----------
+  const openStep = (node, step, passPercent) => {
+    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap" };
+    if (step.type === "study") {
+      navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext });
+    } else if (step.type === "reading") {
+      navigation.navigate("ReadingScreen", { contentId: step.contentId, questContext });
+    } else if (step.type === "quiz") {
+      navigation.navigate("QuizScreenV2", {
+        quiz: {
+          id: step.quizId,
+          title: node.title,
+          config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10, noHearts: true },
+        },
+        mode: "training",
+        isFirstAttempt: false,
+        questContext,
+      });
+    }
+  };
+
+  const openTest = (node, passPercent) => {
     navigation.navigate("QuizScreenV2", {
       quiz: {
-        id: quizId,
+        id: node.quizId,
         title: node.title,
-        config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10, maxLives: 5 },
+        config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10 },
       },
-      mode,
+      mode: "exam",
       isFirstAttempt: false,
       questContext: { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap" },
     });
   };
 
-  const onLeafPress = (leaf) => {
-    if (leaf.status === "locked") {
-      Alert.alert("Locked", "Finish the step before this one to open it.");
-      return;
+  const explainClosed = (status, lockedText) => {
+    if (status === "comingSoon") Alert.alert("Coming soon!", "This will be ready in a future update.");
+    else Alert.alert("Locked", lockedText);
+  };
+
+  const onMainPress = (item) => {
+    if (item.status === "locked" || item.status === "comingSoon") {
+      return explainClosed(item.status, "Pass the challenge before this one to open it.");
     }
-    if (leaf.status === "comingSoon") {
-      Alert.alert("Coming soon!", "This activity will be ready in a future update.");
-      return;
+    if (item.nextStep) openStep(item, item.nextStep, DEFAULT_PRACTICE_PASS_PERCENT);
+  };
+
+  const onPracticePress = (leaf, main) => {
+    if (leaf.status === "locked" || leaf.status === "comingSoon") {
+      return explainClosed(leaf.status, `Finish "${main.title}" first to open its practice.`);
     }
-    if (leaf.type === "study") {
-      navigation.navigate("Apprec8Reader", {
-        contentId: leaf.contentId,
-        questContext: { questId, nodeId: leaf.id, returnTo: "EnglishQuestMap" },
-      });
-    } else if (leaf.type === "reading") {
-      navigation.navigate("ReadingScreen", {
-        contentId: leaf.contentId,
-        questContext: {
-          questId,
-          nodeId: leaf.id,
-          passPercent: leaf.passPercent ?? DEFAULT_LEAF_PASS_PERCENT,
-          returnTo: "EnglishQuestMap",
-        },
-      });
-    } else if (leaf.type === "quiz") {
-      openQuiz(leaf, {
-        quizId: leaf.quizId,
-        mode: "training",
-        passPercent: leaf.passPercent ?? DEFAULT_LEAF_PASS_PERCENT,
-      });
+    if (leaf.nextStep) openStep(leaf, leaf.nextStep, leaf.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT);
+  };
+
+  const onGatePress = (gate, main) => {
+    if (gate.status === "locked" || gate.status === "comingSoon") {
+      return explainClosed(gate.status, `Finish "${main.title}" first to open its challenge.`);
+    }
+    const pass = gate.passPercent ?? DEFAULT_GATE_PASS_PERCENT;
+    Alert.alert(gate.title || "Challenge", `Score ${pass}% or more to open the next topic. Practice first if you like!`, [
+      { text: "Not yet", style: "cancel" },
+      { text: "Start", onPress: () => openTest(gate, pass) },
+    ]);
+  };
+
+  const onBossPress = (bossItem) => {
+    if (bossItem.status === "locked" || bossItem.status === "comingSoon") {
+      return explainClosed(bossItem.status, "Clear every topic in this unit to face the Unit Boss.");
+    }
+    const pass = bossItem.passPercent ?? DEFAULT_BOSS_PASS_PERCENT;
+    Alert.alert(bossItem.title || "Unit Boss", `A mix of the whole unit. Score ${pass}% or more to open the next unit.`, [
+      { text: "Not yet", style: "cancel" },
+      { text: "Start", onPress: () => openTest(bossItem, pass) },
+    ]);
+  };
+
+  const onEndlessPress = (e) =>
+    explainClosed(e.status === "locked" ? "locked" : "comingSoon", "Finish the main step first.");
+
+  // ---------- Rendering ----------
+  const circleColors = (status, { mastered } = {}) => {
+    if (mastered) return { bg: theme.gold, icon: "#3b0940", border: theme.gold };
+    switch (status) {
+      case "completed":
+        return { bg: theme.success, icon: "#FFFFFF", border: theme.success };
+      case "unlocked":
+        return { bg: theme.primary, icon: theme.textOnPrimary || "#FFFFFF", border: theme.primary };
+      default:
+        return { bg: theme.disabledBackground, icon: theme.textSecondary, border: theme.border };
     }
   };
 
-  const onUnitPress = (unit) => {
-    if (unit.status === "comingSoon") {
-      Alert.alert("Coming soon!", "New units are being added. Check back soon!");
-      return;
+  const renderSideRow = (item) => {
+    const leaves = [];
+    item.practices.forEach((p) => {
+      const open = p.status === "unlocked" || p.status === "completed";
+      const diff = DIFFICULTY[p.difficulty] || DIFFICULTY.easy;
+      const icon =
+        p.status === "completed" ? "checkmark" : p.status === "locked" ? "lock-closed" : p.status === "comingSoon" ? "hourglass-outline" : STEP_ICONS[p.nextStep?.type] || "create";
+      leaves.push(
+        <TouchableOpacity key={p.id} style={styles.leafWrap} onPress={() => onPracticePress(p, item)} activeOpacity={0.8}>
+          <View
+            style={[
+              styles.leaf,
+              {
+                backgroundColor: p.status === "completed" ? diff : open ? theme.cardBackground : theme.disabledBackground,
+                borderColor: open ? diff : theme.border,
+              },
+            ]}
+          >
+            <Ionicons name={icon} size={20} color={p.status === "completed" ? "#FFFFFF" : open ? diff : theme.textSecondary} />
+          </View>
+          <View style={styles.starsRow}>
+            {p.status === "completed"
+              ? [1, 2, 3].map((s) => (
+                  <Ionicons key={s} name={s <= p.stars ? "star" : "star-outline"} size={9} color={theme.gold} />
+                ))
+              : null}
+          </View>
+          <Text style={styles.leafLabel} numberOfLines={2}>
+            {p.title}
+          </Text>
+        </TouchableOpacity>
+      );
+    });
+    if (item.gate) {
+      const g = item.gate;
+      const c = circleColors(g.status);
+      leaves.push(
+        <TouchableOpacity key={g.id} style={styles.leafWrap} onPress={() => onGatePress(g, item)} activeOpacity={0.8}>
+          <View style={[styles.leaf, styles.gateLeaf, { backgroundColor: c.bg, borderColor: g.status === "unlocked" ? theme.accent : c.border }]}>
+            <Ionicons name={g.status === "locked" ? "lock-closed" : "shield-checkmark"} size={22} color={c.icon} />
+          </View>
+          <View style={styles.starsRow} />
+          <Text style={[styles.leafLabel, styles.gateLabel]} numberOfLines={2}>
+            {g.title || "Challenge"}
+          </Text>
+        </TouchableOpacity>
+      );
     }
-    if (unit.status === "locked") {
-      Alert.alert("Locked", "Pass the unit test below to open this unit.");
-      return;
+    if (item.endless) {
+      const e = item.endless;
+      leaves.push(
+        <TouchableOpacity key={e.id} style={styles.leafWrap} onPress={() => onEndlessPress(e)} activeOpacity={0.8}>
+          <View style={[styles.leaf, { backgroundColor: theme.disabledBackground, borderColor: theme.border }]}>
+            <Ionicons name="infinite" size={22} color={theme.textSecondary} />
+          </View>
+          <View style={styles.starsRow} />
+          <Text style={styles.leafLabel} numberOfLines={2}>
+            {e.status === "comingSoon" ? "Coming soon" : e.title}
+          </Text>
+        </TouchableOpacity>
+      );
     }
-    const passPercent = unit.passPercent ?? DEFAULT_UNIT_PASS_PERCENT;
-    Alert.alert(
-      `${unit.title}: Unit test`,
-      `Score ${passPercent}% or more to open the next unit. You can practise in the branches first.`,
-      [
-        { text: "Not yet", style: "cancel" },
-        { text: "Start test", onPress: () => openQuiz(unit, { quizId: unit.quizId, mode: "exam", passPercent }) },
-      ]
+    if (leaves.length === 0) return null;
+    return (
+      <ScrollView horizontal nestedScrollEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sideRowContent}>
+        {leaves}
+      </ScrollView>
+    );
+  };
+
+  const renderRow = (item, i) => {
+    const isBoss = item.kind === "boss";
+    const size = isBoss ? BOSS_SIZE : MAIN_SIZE;
+    const { x } = centerOf(i);
+    const isCurrent = item.id === tree.currentPathId;
+    const c = circleColors(item.status, { mastered: item.mastered || (isBoss && item.status === "completed") });
+
+    let icon;
+    if (item.status === "locked") icon = <Ionicons name="lock-closed" size={30} color={c.icon} />;
+    else if (item.status === "comingSoon" || item.kind === "comingSoon") icon = <Ionicons name="hourglass-outline" size={30} color={c.icon} />;
+    else if (isBoss) icon = <Ionicons name="trophy" size={38} color={c.icon} />;
+    else if (item.mastered) icon = <MaterialCommunityIcons name="crown" size={34} color={c.icon} />;
+    else if (item.status === "completed") icon = <Ionicons name="checkmark-sharp" size={34} color={c.icon} />;
+    else icon = <Ionicons name={STEP_ICONS[item.nextStep?.type] || "school"} size={30} color={c.icon} />;
+
+    const practiceProgress = item.kind === "main" && item.practices.length ? item.practiceDone / item.practices.length : 0;
+    const sideLeft = x + size / 2 + 16;
+
+    return (
+      <View key={item.id} style={[styles.row, { top: rowTop(i) }]}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => (isBoss ? onBossPress(item) : item.kind === "main" ? onMainPress(item) : explainClosed("comingSoon"))}
+          style={[styles.nodeHit, { left: x - size / 2 - 7, width: size + 14, height: size + 14 }]}
+        >
+          {item.kind === "main" && item.practices.length ? (
+            <ProgressRing size={size} progress={practiceProgress} color={theme.gold} track={theme.border} />
+          ) : null}
+          <View
+            style={[
+              styles.node,
+              { width: size, height: size, borderRadius: size / 2, backgroundColor: c.bg, borderColor: isCurrent ? theme.gold : c.border },
+              isCurrent && styles.currentNode,
+            ]}
+          >
+            {icon}
+          </View>
+        </TouchableOpacity>
+        <Text style={[styles.nodeTitle, { left: Math.max(4, x - 52), top: size + 18 }]} numberOfLines={2}>
+          {item.kind === "comingSoon" ? `Coming soon: ${item.title}` : item.title}
+        </Text>
+        {item.kind === "main" && item.status === "unlocked" && item.steps.length > 1 ? (
+          <Text style={[styles.stepBadge, { left: x - 20, top: size + 52 }]}>
+            {item.doneCount}/{item.steps.length}
+          </Text>
+        ) : null}
+        {item.kind === "main" ? (
+          <View style={[styles.sideRow, { left: sideLeft, top: size / 2 + 8 - LEAF_SIZE / 2 - 4 }]}>{renderSideRow(item)}</View>
+        ) : null}
+      </View>
     );
   };
 
   return (
-    <LinearGradient colors={QUEST_COLORS.background} style={styles.container}>
+    <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={26} color={QUEST_COLORS.text} />
+          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>
           {quest?.title || "Quest"}
         </Text>
         {tree ? (
-          <Text style={styles.headerStats}>
-            {tree.stats.unitsDone}/{tree.stats.unitsTotal}
-          </Text>
+          <View style={styles.headerStats}>
+            <Ionicons name="trophy" size={16} color={theme.gold} />
+            <Text style={styles.headerStatsText}>
+              {tree.stats.unitsDone}/{tree.stats.unitsTotal}
+            </Text>
+          </View>
         ) : null}
       </View>
 
       {error ? (
         <Text style={styles.message}>{error}</Text>
       ) : !tree ? (
-        <ActivityIndicator size="large" color={QUEST_COLORS.text} style={{ marginTop: 60 }} />
-      ) : tree.units.length === 0 ? (
-        <Text style={styles.message}>This quest has no units yet.</Text>
+        <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 60 }} />
+      ) : count === 0 ? (
+        <Text style={styles.message}>This quest has no steps yet.</Text>
       ) : (
         <ScrollView
           ref={scrollRef}
-          contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
-          onContentSizeChange={tryAutoScroll}
+          onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)}
+          contentContainerStyle={{ height: contentHeight + insets.bottom }}
         >
-          {unitsTopDown.map((unit) => {
-            const index = tree.units.findIndex((u) => u.id === unit.id);
-            return (
-              <UnitBlock
-                key={unit.id}
-                unit={unit}
-                index={index}
-                onUnitPress={onUnitPress}
-                onLeafPress={onLeafPress}
-                onLayout={(e) => {
-                  unitY.current[unit.id] = e.nativeEvent.layout.y;
-                  tryAutoScroll();
-                }}
-              />
-            );
-          })}
-          <View style={styles.rootRow}>
-            <Ionicons name="flag" size={22} color={QUEST_COLORS.gold} />
-            <Text style={styles.rootText}>Start here</Text>
+          <Svg height={contentHeight} width={width} style={StyleSheet.absoluteFill}>
+            <Path d={pathD} stroke={theme.border} strokeWidth={5} strokeDasharray="10" fill="transparent" />
+          </Svg>
+          {tree.path.map((item, i) => renderRow(item, i))}
+          <View style={[styles.startRow, { top: contentHeight - PAD_BOTTOM + 30, left: nodeX(0, width) - 30 }]}>
+            <Ionicons name="flag" size={18} color={theme.primary} />
+            <Text style={styles.startText}>Start</Text>
           </View>
         </ScrollView>
       )}
@@ -309,60 +410,53 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-    gap: 12,
-  },
-  headerTitle: { flex: 1, fontSize: 22, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
-  headerStats: { fontSize: 15, fontFamily: "nunitoBold", color: QUEST_COLORS.gold },
-  message: { fontSize: 16, fontFamily: "nunito", color: QUEST_COLORS.text, textAlign: "center", marginTop: 60, paddingHorizontal: 24 },
-  scroll: { paddingTop: 10 },
+const makeStyles = (theme) =>
+  StyleSheet.create({
+    container: { flex: 1 },
+    header: { flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingBottom: 10 },
+    headerTitle: { flex: 1, fontSize: 22, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
+    headerStats: { flexDirection: "row", alignItems: "center", gap: 4 },
+    headerStatsText: { fontSize: 15, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
+    message: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimaryOnGradient, textAlign: "center", marginTop: 60, paddingHorizontal: 24 },
 
-  trunkNodeRow: { alignItems: "center", paddingTop: 8, paddingBottom: 10 },
-  trunkCircle: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 5,
-    borderColor: QUEST_COLORS.trunk,
-  },
-  trunkUnlocked: { backgroundColor: QUEST_COLORS.gold },
-  trunkCompleted: { backgroundColor: QUEST_COLORS.green },
-  trunkLocked: { backgroundColor: QUEST_COLORS.locked },
-  unitLabel: { marginTop: 6, fontSize: 12, fontFamily: "nunitoBold", color: QUEST_COLORS.gold, textTransform: "uppercase" },
-  unitTitle: { fontSize: 18, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
-  unitScore: { fontSize: 13, fontFamily: "nunito", color: QUEST_COLORS.textSoft },
-  trunkSegment: { alignSelf: "center", width: 10, height: 36, backgroundColor: QUEST_COLORS.trunk, borderRadius: 5 },
+    row: { position: "absolute", left: 0, right: 0, height: ROW_HEIGHT },
+    nodeHit: { position: "absolute", top: 1, alignItems: "center", justifyContent: "center" },
+    node: { alignItems: "center", justifyContent: "center", borderWidth: 4, elevation: 5 },
+    currentNode: { borderWidth: 5, transform: [{ scale: 1.08 }] },
+    nodeTitle: {
+      position: "absolute",
+      width: 104,
+      textAlign: "center",
+      fontSize: 14,
+      fontFamily: "nunitoBold",
+      color: theme.textPrimaryOnGradient,
+    },
+    stepBadge: {
+      position: "absolute",
+      width: 40,
+      textAlign: "center",
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      color: theme.textSecondaryOnGradient,
+    },
 
-  branchesCard: {
-    marginHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 18,
-    backgroundColor: QUEST_COLORS.card,
-  },
-  branch: { paddingVertical: 6 },
-  branchHeader: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 14 },
-  branchTitle: { flex: 1, fontSize: 15, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
-  branchCount: { fontSize: 13, fontFamily: "nunito", color: QUEST_COLORS.textSoft },
-  branchScroll: { paddingHorizontal: 10, paddingTop: 8, alignItems: "flex-start" },
-  leafSlot: { flexDirection: "row", alignItems: "flex-start" },
-  branchLine: { width: 18, height: 4, marginTop: 26, backgroundColor: QUEST_COLORS.branch, borderRadius: 2 },
-  leafWrap: { width: 76, alignItems: "center" },
-  leafCircle: { width: 56, height: 56, borderRadius: 28, alignItems: "center", justifyContent: "center", borderWidth: 3, borderColor: "rgba(255,255,255,0.4)" },
-  leafUnlocked: { backgroundColor: QUEST_COLORS.gold, borderColor: "#FFFFFF" },
-  leafCompleted: { backgroundColor: QUEST_COLORS.green, borderColor: QUEST_COLORS.gold },
-  leafLocked: { backgroundColor: QUEST_COLORS.locked },
-  starsRow: { flexDirection: "row", marginTop: 2, height: 13 },
-  leafTitle: { marginTop: 2, fontSize: 11, fontFamily: "nunito", color: QUEST_COLORS.text, textAlign: "center" },
-  dimText: { color: "rgba(255,255,255,0.55)" },
+    sideRow: { position: "absolute", right: 0 },
+    sideRowContent: { paddingRight: 16, alignItems: "flex-start" },
+    leafWrap: { width: 66, alignItems: "center" },
+    leaf: {
+      width: LEAF_SIZE,
+      height: LEAF_SIZE,
+      borderRadius: LEAF_SIZE / 2,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 3,
+      elevation: 2,
+    },
+    gateLeaf: { borderRadius: 12 },
+    starsRow: { flexDirection: "row", height: 11, marginTop: 2 },
+    leafLabel: { fontSize: 10, fontFamily: "nunito", color: theme.textPrimaryOnGradient, textAlign: "center" },
+    gateLabel: { fontFamily: "nunitoBold" },
 
-  rootRow: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 16 },
-  rootText: { fontSize: 15, fontFamily: "nunitoBold", color: QUEST_COLORS.gold },
-});
+    startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    startText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.primary },
+  });

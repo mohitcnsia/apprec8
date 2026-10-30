@@ -17,8 +17,7 @@ import {
   studyPages,
   readings,
   quizzes,
-  units,
-  leaves,
+  nodes,
 } from "../../data/englishQuestData";
 
 const BATCH_LIMIT = 400; // below Firestore's hard limit of 500 writes per batch
@@ -68,7 +67,7 @@ export default function SeedEnglishQuestButton() {
       batch.set(db.collection("categories").doc(QUEST_ID), { ...tile, lastUpdatedAt: now }, { merge: true });
 
       // 4. Tree nodes
-      [...units, ...leaves].forEach(({ id, ...node }) => {
+      nodes.forEach(({ id, ...node }) => {
         batch.set(db.collection("quests").doc(QUEST_ID).collection("nodes").doc(id), {
           ...node,
           updatedAt: now,
@@ -114,7 +113,7 @@ export default function SeedEnglishQuestButton() {
       const questionCount = Object.values(quizzes).reduce((s, qs) => s + qs.length, 0);
       Alert.alert(
         "English Quest updated",
-        `${units.length} units, ${leaves.length} steps, ${questionCount} new questions, ${Object.keys(readings).length} readings.`
+        `${nodes.filter((n) => n.kind === "unit").length} units, ${nodes.length} nodes, ${questionCount} new questions, ${Object.keys(readings).length} readings.`
       );
     } catch (e) {
       console.error("SeedEnglishQuestButton:", e);

@@ -1,44 +1,82 @@
+// Tests for utils/questTree.js (Spec v2 path + unlock rules). Run: npm test
 import assert from "node:assert/strict";
-import { buildQuestTree, starsForPercent, scoreAnswers } from "../utils/questTree.js";
+import { buildQuestPath, stepId, starsForPercent, scoreAnswers } from "../utils/questTree.js";
+
 const nodes = [
-  { id: "u1", kind: "unit", unitOrder: 1, title: "U1", quizId: "t1" },
-  { id: "u0", kind: "unit", unitOrder: 0, title: "U0", quizId: "t0" },
-  { id: "u2", kind: "unit", unitOrder: 2, title: "U2", comingSoon: true },
-  { id: "a1", kind: "leaf", unitId: "u0", branchId: "A", branchOrder: 0, order: 1, type: "study" },
-  { id: "a2", kind: "leaf", unitId: "u0", branchId: "A", branchOrder: 0, order: 2, type: "quiz" },
-  { id: "b1", kind: "leaf", unitId: "u0", branchId: "B", branchOrder: 1, order: 1, type: "video" },
-  { id: "b2", kind: "leaf", unitId: "u0", branchId: "B", branchOrder: 1, order: 2, type: "quiz" },
-  { id: "c1", kind: "leaf", unitId: "u1", branchId: "C", branchOrder: 0, order: 1, type: "quiz" },
+  { id: "u0", kind: "unit", unitOrder: 0, title: "U0" },
+  { id: "u1", kind: "unit", unitOrder: 1, title: "U1" },
+  { id: "u2", kind: "unit", unitOrder: 2, title: "Soon", comingSoon: true },
+  // Unit 0, branch A (with gate) and branch B (no gate)
+  { id: "a", kind: "main", unitId: "u0", branchId: "A", branchOrder: 0, title: "A", steps: [{ type: "study", contentId: "s" }, { type: "quiz", quizId: "q" }] },
+  { id: "a-p1", kind: "practice", unitId: "u0", branchId: "A", order: 1, difficulty: "easy", steps: [{ type: "quiz", quizId: "p1" }] },
+  { id: "a-p2", kind: "practice", unitId: "u0", branchId: "A", order: 2, difficulty: "hard", steps: [{ type: "video" }] },
+  { id: "a-gate", kind: "gate", unitId: "u0", branchId: "A", quizId: "g", passPercent: 80 },
+  { id: "a-end", kind: "endless", unitId: "u0", branchId: "A" },
+  { id: "b", kind: "main", unitId: "u0", branchId: "B", branchOrder: 1, title: "B", steps: [{ type: "reading", contentId: "r" }] },
+  { id: "u0-boss", kind: "boss", unitId: "u0", quizId: "boss0" },
+  { id: "c", kind: "main", unitId: "u1", branchId: "C", branchOrder: 0, title: "C", steps: [{ type: "quiz", quizId: "c" }] },
+  { id: "u1-boss", kind: "boss", unitId: "u1", quizId: "boss1" },
 ];
-// Fresh kid
-let t = buildQuestTree(nodes, {});
-assert.deepEqual(t.units.map(u => u.id), ["u0","u1","u2"]);
-assert.deepEqual(t.units.map(u => u.status), ["unlocked","locked","comingSoon"]);
-const [A, B] = t.units[0].branches;
-assert.deepEqual(A.leaves.map(l => l.status), ["unlocked","locked"]);
-assert.deepEqual(B.leaves.map(l => l.status), ["comingSoon","locked"]); // unknown type never crashes
-assert.equal(t.units[1].branches[0].leaves[0].status, "locked");
-assert.equal(t.currentUnitId, "u0");
-// Study done, quiz 85%
-t = buildQuestTree(nodes, { a1: {status:"completed"}, a2: {status:"completed", bestPercent: 85} });
-assert.deepEqual(t.units[0].branches[0].leaves.map(l => [l.status, l.stars]), [["completed",3],["completed",2]]);
-// Unit test passed without finishing branch B -> unit 1 opens, unit 2 shows coming soon
-t = buildQuestTree(nodes, { u0: {status:"completed", bestPercent: 90} });
-assert.deepEqual(t.units.map(u => u.status), ["completed","unlocked","comingSoon"]);
-assert.equal(t.units[1].branches[0].leaves[0].status, "unlocked");
-assert.equal(t.currentUnitId, "u1");
+const done = (...keys) => Object.fromEntries(keys.map((k) => [k, { status: "completed", bestPercent: 100 }]));
+const statuses = (t) => t.path.map((p) => `${p.id}:${p.status}`);
+
+// 1. New kid: only the first main node is open; path order is start -> end.
+let t = buildQuestPath(nodes, {});
+assert.deepEqual(statuses(t), ["a:unlocked", "b:locked", "u0-boss:locked", "c:locked", "u1-boss:locked", "u2:comingSoon"]);
+assert.equal(t.currentPathId, "a");
+assert.equal(t.path[0].nextStep.type, "study");
+assert.deepEqual(t.path[0].practices.map((p) => p.status), ["locked", "locked"]);
+assert.equal(t.path[0].gate.status, "locked");
+
+// 2. Study done: main still in progress (1/2), next step is the quiz.
+t = buildQuestPath(nodes, done(stepId("a", 0)));
+assert.equal(t.path[0].status, "unlocked");
+assert.equal(t.path[0].doneCount, 1);
+assert.equal(t.path[0].nextStep.type, "quiz");
+
+// 3. Main done: side row opens (practice any order, unknown type = comingSoon), gate open, next branch still locked.
+t = buildQuestPath(nodes, done(stepId("a", 0), stepId("a", 1)));
+assert.equal(t.path[0].status, "completed");
+assert.deepEqual(t.path[0].practices.map((p) => p.status), ["unlocked", "comingSoon"]);
+assert.equal(t.path[0].gate.status, "unlocked");
+assert.equal(t.path[0].endless.status, "comingSoon"); // endless arrives in step 4
+assert.equal(t.path[1].status, "locked");
+assert.equal(t.currentPathId, "a"); // still on A: the gate is waiting
+
+// 4. Gate passed WITHOUT doing practice: next branch opens (practice stays optional).
+t = buildQuestPath(nodes, done(stepId("a", 0), stepId("a", 1), "a-gate"));
+assert.equal(t.path[0].cleared, true);
+assert.equal(t.path[0].mastered, false);
+assert.equal(t.path[1].status, "unlocked");
+assert.equal(t.currentPathId, "b");
+
+// 5. Branch without a gate is cleared by its main node -> boss opens; boss passed -> next unit opens.
+t = buildQuestPath(nodes, done(stepId("a", 0), stepId("a", 1), "a-gate", stepId("b", 0)));
+assert.equal(t.path[2].status, "unlocked");
+assert.equal(t.currentPathId, "u0-boss");
+t = buildQuestPath(nodes, done(stepId("a", 0), stepId("a", 1), "a-gate", stepId("b", 0), "u0-boss"));
+assert.deepEqual(statuses(t).slice(2, 4), ["u0-boss:completed", "c:unlocked"]);
+assert.equal(t.stats.unitsDone, 1);
 assert.equal(t.stats.unitsTotal, 2);
-// Stars and scoring
+
+// 6. Mastered = main + every practice + gate (a comingSoon practice blocks mastery until it exists).
+t = buildQuestPath(nodes.filter((n) => n.id !== "a-p2"), done(stepId("a", 0), stepId("a", 1), "a-gate", stepId("a-p1", 0)));
+assert.equal(t.path[0].mastered, true);
+assert.equal(t.path[0].practices[0].stars, 3);
+
+// 7. Everything done: current points at the last completed node, never null.
+const all = done(stepId("a", 0), stepId("a", 1), "a-gate", stepId("b", 0), "u0-boss", stepId("c", 0), "u1-boss");
+t = buildQuestPath(nodes, all);
+assert.equal(t.currentPathId, "u1-boss");
+
+// 8. Robustness: missing steps / unknown step on a main node -> comingSoon, never crash.
+t = buildQuestPath([{ id: "u", kind: "unit", unitOrder: 0 }, { id: "m", kind: "main", unitId: "u", branchId: "X", steps: [{ type: "hologram" }] }], {});
+assert.equal(t.path[0].status, "comingSoon");
+assert.deepEqual(buildQuestPath([], {}).path, []);
+
+// Stars + scoring helpers
 assert.equal(starsForPercent(59), 0); assert.equal(starsForPercent(60), 1);
-assert.equal(starsForPercent(100), 3); assert.equal(starsForPercent(undefined), 0);
-assert.deepEqual(scoreAnswers([{isCorrect:true},{isCorrect:false}], 4), {correctCount:1,total:4,percent:25});
-console.log("questTree: all tests passed");
-// Finding 5: unknown unit type or unit without a test -> coming soon, never playable
-const t2 = buildQuestTree([
-  { id: "x0", kind: "unit", unitOrder: 0, title: "OK", quizId: "t" },
-  { id: "x1", kind: "unit", unitOrder: 1, title: "Future", type: "boss-battle", quizId: "t" },
-  { id: "x2", kind: "unit", unitOrder: 2, title: "No test" },
-], { x0: { status: "completed" } });
-assert.deepEqual(t2.units.map(u => u.status), ["completed", "comingSoon", "comingSoon"]);
-assert.equal(t2.stats.unitsTotal, 1);
-console.log("unit guard: passed");
+assert.equal(starsForPercent(85), 2); assert.equal(starsForPercent(100), 3);
+assert.deepEqual(scoreAnswers([{ isCorrect: true }, { isCorrect: false }], 4), { correctCount: 1, total: 4, percent: 25 });
+
+console.log("questTree (Spec v2): all tests passed");

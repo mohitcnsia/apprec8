@@ -1,142 +1,213 @@
 // utils/questTree.js
-// Pure functions that turn quest nodes + a kid's progress into a tree with
-// locked / unlocked / completed states. No React or Firebase here, so it can be
-// tested with plain Node.
+// Pure functions (no React / Firebase) that turn quest nodes + a kid's progress
+// into the Space-style path with locked / unlocked / completed states.
+// Spec: gemini.md "Spec v2" (2026-10-30).
 //
-// Node shapes (from quests/{questId}/nodes):
-//   unit (trunk): { id, kind: "unit", unitOrder, title, quizId, passPercent, comingSoon? }
-//   leaf:         { id, kind: "leaf", unitId, branchId, branchTitle, branchOrder, order,
-//                   type: "study" | "quiz" | ..., contentId?, quizId?, passPercent? }
+// Node kinds (documents in quests/{questId}/nodes):
+//   unit      { id, kind: "unit", unitOrder, title, comingSoon? }
+//   main      { id, kind: "main", unitId, branchId, branchOrder, title, steps: [Step] }   <- on the path
+//   practice  { id, kind: "practice", unitId, branchId, order, title, difficulty, steps: [Step] }   <- side row
+//   gate      { id, kind: "gate", unitId, branchId, title, quizId, passPercent }          <- side row (last fixed item)
+//   endless   { id, kind: "endless", unitId, branchId, title }                            <- side row (end)
+//   boss      { id, kind: "boss", unitId, title, quizId, passPercent }                    <- on the path (end of unit)
+// Step = { type: "study" | "quiz" | "reading", contentId? , quizId? }
+//
+// Progress (users/{uid}/questProgress/{questId}.nodes) is keyed by:
+//   step id  `${nodeId}__${index}` for steps of main/practice nodes
+//   node id  for gate / boss nodes
 //
 // Rules:
-//   - Unit 0 is unlocked. Unit N unlocks when unit N-1's test is passed.
-//   - When a unit is unlocked, the first leaf of every branch is unlocked.
-//   - Inside a branch, each leaf unlocks when the previous leaf is completed.
-//   - Kids don't have to finish branches to take the unit test.
-//   - Leaf types this app version doesn't know show as "comingSoon" (never crash).
+//   - The first branch of the first unit is open.
+//   - A main node is done when all its steps are done. Then its practice leaves,
+//     gate and endless practice open. Practice leaves can be done in any order.
+//   - The next branch's main node opens when this branch's gate is passed
+//     (a branch without a gate is cleared when its main node is done).
+//   - The Unit Boss opens when the unit's last branch is cleared. Passing it opens the next unit.
+//   - Unknown step types / node kinds show as "comingSoon" (never crash in older app versions).
 
-export const KNOWN_LEAF_TYPES = ["study", "quiz", "reading"];
-// Unit (trunk) nodes are unit tests. A future unit kind that this app version
-// doesn't know (or a unit with no test) shows as "Coming soon".
-export const KNOWN_UNIT_TYPES = ["test"];
+export const KNOWN_STEP_TYPES = ["study", "quiz", "reading"];
+export const KNOWN_SIDE_KINDS = ["practice", "gate"]; // "endless" arrives in Spec v2 step 4
 
-const isPlayableUnit = (unit) =>
-  KNOWN_UNIT_TYPES.includes(unit.type || "test") && !!unit.quizId;
+export const DEFAULT_PRACTICE_PASS_PERCENT = 60;
+export const DEFAULT_GATE_PASS_PERCENT = 80;
+export const DEFAULT_BOSS_PASS_PERCENT = 70;
+// Kept for older callers (reading/quiz screens).
+export const DEFAULT_LEAF_PASS_PERCENT = DEFAULT_PRACTICE_PASS_PERCENT;
+export const DEFAULT_UNIT_PASS_PERCENT = DEFAULT_BOSS_PASS_PERCENT;
 
-export const DEFAULT_LEAF_PASS_PERCENT = 60;
-export const DEFAULT_UNIT_PASS_PERCENT = 70;
+export const stepId = (nodeId, index) => `${nodeId}__${index}`;
 
-/** Stars for a best score: 0 (not passed) to 3 (perfect). */
-export const starsForPercent = (percent, passPercent = DEFAULT_LEAF_PASS_PERCENT) => {
+/** Stars shown on the map for a best score: 0 (not passed) to 3 (perfect). */
+export const starsForPercent = (percent, passPercent = DEFAULT_PRACTICE_PASS_PERCENT) => {
   if (typeof percent !== "number" || percent < passPercent) return 0;
   if (percent >= 100) return 3;
   if (percent >= 80) return 2;
   return 1;
 };
 
-const isCompleted = (progressNodes, nodeId) =>
-  progressNodes?.[nodeId]?.status === "completed";
+const isDone = (progress, key) => progress?.[key]?.status === "completed";
+const bestOf = (progress, key) =>
+  typeof progress?.[key]?.bestPercent === "number" ? progress[key].bestPercent : null;
+const byNumber = (field) => (a, b) => (a[field] ?? 0) - (b[field] ?? 0);
+
+/** Builds step info for a main/practice node: which steps are done, which to open next. */
+function buildSteps(node, progress) {
+  const steps = (Array.isArray(node.steps) ? node.steps : []).map((s, i) => {
+    const id = stepId(node.id, i);
+    return {
+      ...s,
+      id,
+      known: KNOWN_STEP_TYPES.includes(s.type),
+      done: isDone(progress, id),
+      bestPercent: bestOf(progress, id),
+    };
+  });
+  const playable = steps.length > 0 && steps.every((s) => s.known);
+  const doneCount = steps.filter((s) => s.done).length;
+  const allDone = steps.length > 0 && doneCount === steps.length;
+  // Next step to open: first unfinished; when all done, the last quiz/reading (replay practice).
+  const nextStep =
+    steps.find((s) => !s.done) ||
+    [...steps].reverse().find((s) => s.type !== "study") ||
+    steps[0] ||
+    null;
+  const quizBest = steps.filter((s) => s.type !== "study").map((s) => s.bestPercent ?? 0);
+  return {
+    steps,
+    playable,
+    doneCount,
+    allDone,
+    nextStep,
+    bestPercent: quizBest.length ? Math.max(...quizBest) : null,
+  };
+}
 
 /**
  * @param {Array<object>} nodes - all nodes of one quest
- * @param {object} progressNodes - map nodeId -> { status, bestPercent, attempts }
- * @returns {{ units: Array<object>, currentUnitId: string|null, stats: object }}
+ * @param {object} progress - map key -> { status, bestPercent, ... }
+ * @returns {{ path: Array<object>, currentPathId: string|null, stats: object }}
+ *   path is ordered from the START (bottom of the map) to the END.
+ *   Path items: { kind: "main", ...main, status, side: [...] } | { kind: "boss", ... } | { kind: "comingSoon", ... }
  */
-export function buildQuestTree(nodes = [], progressNodes = {}) {
-  const units = nodes
-    .filter((n) => n.kind === "unit")
-    .sort((a, b) => (a.unitOrder ?? 0) - (b.unitOrder ?? 0));
-  const leaves = nodes.filter((n) => n.kind === "leaf");
+export function buildQuestPath(nodes = [], progress = {}) {
+  const units = nodes.filter((n) => n.kind === "unit").sort(byNumber("unitOrder"));
+  const path = [];
+  let previousUnitDone = true;
+  let currentPathId = null;
+  const stats = { unitsTotal: 0, unitsDone: 0, branchesTotal: 0, branchesMastered: 0, stepsDone: 0 };
 
-  let previousUnitPassed = true; // Unit 0 is always open
-  let currentUnitId = null;
-  let leavesDone = 0;
+  for (const unit of units) {
+    if (unit.comingSoon) {
+      path.push({ id: unit.id, kind: "comingSoon", unitId: unit.id, title: unit.title, status: "comingSoon" });
+      previousUnitDone = false;
+      continue;
+    }
+    stats.unitsTotal += 1;
+    const unitOpen = previousUnitDone;
+    const inUnit = nodes.filter((n) => n.unitId === unit.id);
+    const mains = inUnit.filter((n) => n.kind === "main").sort(byNumber("branchOrder"));
+    const boss = inUnit.find((n) => n.kind === "boss");
 
-  const builtUnits = units.map((unit) => {
-    const unitDone = isCompleted(progressNodes, unit.id);
-    let status;
-    if (unit.comingSoon || !isPlayableUnit(unit)) status = "comingSoon"; // always shown as a teaser
-    else if (!previousUnitPassed) status = "locked";
-    else if (unitDone) status = "completed";
-    else status = "unlocked";
+    let previousBranchCleared = unitOpen;
+    for (const main of mains) {
+      stats.branchesTotal += 1;
+      const s = buildSteps(main, progress);
+      stats.stepsDone += s.doneCount;
 
-    // The current unit is the furthest unit the kid can work on.
-    if (status === "unlocked" || status === "completed") currentUnitId = unit.id;
+      let status;
+      if (!s.playable) status = previousBranchCleared ? "comingSoon" : "locked";
+      else if (!previousBranchCleared) status = "locked";
+      else if (s.allDone) status = "completed";
+      else status = "unlocked";
 
-    const unitOpen = status === "unlocked" || status === "completed";
+      const sideOpen = status === "completed";
+      const sideNodes = inUnit.filter((n) => n.branchId === main.branchId && n.kind !== "main");
 
-    // Group leaves into branches.
-    const branchMap = new Map();
-    leaves
-      .filter((l) => l.unitId === unit.id)
-      .forEach((leaf) => {
-        if (!branchMap.has(leaf.branchId)) {
-          branchMap.set(leaf.branchId, {
-            branchId: leaf.branchId,
-            title: leaf.branchTitle || leaf.branchId,
-            branchOrder: leaf.branchOrder ?? 0,
-            leaves: [],
-          });
-        }
-        branchMap.get(leaf.branchId).leaves.push(leaf);
+      const practices = sideNodes
+        .filter((n) => n.kind === "practice")
+        .sort(byNumber("order"))
+        .map((p) => {
+          const ps = buildSteps(p, progress);
+          stats.stepsDone += ps.doneCount;
+          let pStatus;
+          if (!sideOpen) pStatus = "locked";
+          else if (!ps.playable) pStatus = "comingSoon";
+          else if (ps.allDone) pStatus = "completed";
+          else pStatus = "unlocked";
+          const passPercent = p.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT;
+          return {
+            ...p,
+            ...ps,
+            status: pStatus,
+            stars: ps.allDone ? starsForPercent(ps.bestPercent ?? 100, passPercent) : 0,
+          };
+        });
+
+      const gateNode = sideNodes.find((n) => n.kind === "gate");
+      let gate = null;
+      if (gateNode) {
+        const passed = isDone(progress, gateNode.id);
+        const playable = !!gateNode.quizId;
+        gate = {
+          ...gateNode,
+          status: !sideOpen ? "locked" : !playable ? "comingSoon" : passed ? "completed" : "unlocked",
+          bestPercent: bestOf(progress, gateNode.id),
+        };
+      }
+
+      const endlessNode = sideNodes.find((n) => n.kind === "endless");
+      const endless = endlessNode
+        ? { ...endlessNode, status: !sideOpen ? "locked" : KNOWN_SIDE_KINDS.includes("endless") ? "unlocked" : "comingSoon" }
+        : null;
+
+      // Branch is cleared when its gate is passed (or, without a gate, when the main node is done).
+      const cleared = status === "completed" && (gate ? gate.status === "completed" : true);
+      const mastered =
+        cleared && practices.every((p) => p.status === "completed");
+      if (mastered) stats.branchesMastered += 1;
+
+      // The kid's current node: first main node that is open but not finished,
+      // or a finished main node whose gate is still waiting.
+      if (!currentPathId && (status === "unlocked" || (status === "completed" && !cleared))) {
+        currentPathId = main.id;
+      }
+
+      path.push({
+        ...main,
+        ...s,
+        kind: "main",
+        status,
+        practices,
+        gate,
+        endless,
+        cleared,
+        mastered,
+        practiceDone: practices.filter((p) => p.status === "completed").length,
       });
+      previousBranchCleared = cleared;
+    }
 
-    const branches = [...branchMap.values()]
-      .sort((a, b) => a.branchOrder - b.branchOrder)
-      .map((branch) => {
-        let previousDone = true;
-        const builtLeaves = branch.leaves
-          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-          .map((leaf) => {
-            const done = isCompleted(progressNodes, leaf.id);
-            let leafStatus;
-            if (!unitOpen || !previousDone) leafStatus = "locked";
-            else if (!KNOWN_LEAF_TYPES.includes(leaf.type)) leafStatus = "comingSoon";
-            else if (done) leafStatus = "completed";
-            else leafStatus = "unlocked";
+    let unitDone = false;
+    if (boss) {
+      const passed = isDone(progress, boss.id);
+      const bossStatus = !previousBranchCleared ? "locked" : !boss.quizId ? "comingSoon" : passed ? "completed" : "unlocked";
+      unitDone = bossStatus === "completed";
+      if (!currentPathId && bossStatus === "unlocked") currentPathId = boss.id;
+      path.push({ ...boss, kind: "boss", status: bossStatus, bestPercent: bestOf(progress, boss.id) });
+    } else {
+      unitDone = previousBranchCleared; // a unit without a boss is done when its last branch is cleared
+    }
+    if (unitDone) stats.unitsDone += 1;
+    previousUnitDone = unitDone;
+  }
 
-            if (done) leavesDone += 1;
-            // A coming-soon leaf blocks the ones after it in this app version.
-            previousDone = done;
+  // Everything finished: point at the last playable node.
+  if (!currentPathId) {
+    const last = [...path].reverse().find((p) => p.status === "completed");
+    currentPathId = last ? last.id : path[0]?.id ?? null;
+  }
 
-            const best = progressNodes?.[leaf.id]?.bestPercent;
-            return {
-              ...leaf,
-              status: leafStatus,
-              bestPercent: typeof best === "number" ? best : null,
-              stars:
-                leaf.type === "quiz" || leaf.type === "reading"
-                  ? starsForPercent(best, leaf.passPercent ?? DEFAULT_LEAF_PASS_PERCENT)
-                  : done
-                  ? 3
-                  : 0,
-            };
-          });
-        const completedCount = builtLeaves.filter((l) => l.status === "completed").length;
-        return { ...branch, leaves: builtLeaves, completedCount };
-      });
-
-    previousUnitPassed = status === "completed";
-
-    const best = progressNodes?.[unit.id]?.bestPercent;
-    return {
-      ...unit,
-      status,
-      branches,
-      bestPercent: typeof best === "number" ? best : null,
-    };
-  });
-
-  return {
-    units: builtUnits,
-    currentUnitId,
-    stats: {
-      unitsTotal: units.filter((u) => !u.comingSoon && isPlayableUnit(u)).length,
-      unitsDone: builtUnits.filter((u) => u.status === "completed").length,
-      leavesTotal: leaves.length,
-      leavesDone,
-    },
-  };
+  return { path, currentPathId, stats };
 }
 
 /** Score from an answer log: { correctCount, total, percent }. */

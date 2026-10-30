@@ -26,23 +26,23 @@ import { listenToStudyContent } from "../../services/firestoreContentApi";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { buildReadingFlow, nextCursor, splitParagraph, countWords } from "../../utils/readingFlow";
 import { scoreAnswers, starsForPercent, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
-import { QUEST_COLORS } from "./questColors";
+import { useTheme } from "../../context/ThemeContext";
 
+// Semantic colours (same in light and dark). Everything else comes from the app theme.
 const COLORS = {
-  paper: "#FFFDF5",
-  ink: "#2B2B2B",
   highlight: "#FFE58A",
-  glossary: "#145A3C",
   correct: "#58CC02",
   wrong: "#FF4B4B",
 };
 
 const Paragraph = ({ text, highlightText, glossary, onWordPress, speaking, onSpeak }) => {
+  const { theme } = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const segments = useMemo(() => splitParagraph(text, highlightText, glossary), [text, highlightText, glossary]);
   return (
     <View style={styles.paperCard}>
       <TouchableOpacity style={styles.speakButton} onPress={onSpeak} hitSlop={10}>
-        <Ionicons name={speaking ? "stop-circle" : "volume-high"} size={22} color={COLORS.glossary} />
+        <Ionicons name={speaking ? "stop-circle" : "volume-high"} size={22} color={theme.primary} />
       </TouchableOpacity>
       <Text style={styles.paragraphText}>
         {segments.map((s, i) => (
@@ -60,6 +60,8 @@ const Paragraph = ({ text, highlightText, glossary, onWordPress, speaking, onSpe
 };
 
 const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe }) => {
+  const { theme } = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const answered = !!answer;
   return (
     <View style={styles.questionCard}>
@@ -92,7 +94,7 @@ const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe }) => {
           {question.explanation?.text ? <Text style={styles.feedbackText}>{question.explanation.text}</Text> : null}
           {question.evidence?.text ? (
             <TouchableOpacity style={styles.showMeButton} onPress={onShowMe}>
-              <Ionicons name="search" size={16} color={COLORS.glossary} />
+              <Ionicons name="search" size={16} color={theme.primary} />
               <Text style={styles.showMeText}>Show me where</Text>
             </TouchableOpacity>
           ) : null}
@@ -103,6 +105,8 @@ const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe }) => {
 };
 
 export default function ReadingScreen({ route, navigation }) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const { contentId, questContext } = route.params || {};
   const insets = useSafeAreaInsets();
 
@@ -269,7 +273,7 @@ export default function ReadingScreen({ route, navigation }) {
     return (
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
         <TouchableOpacity style={styles.footerButton} onPress={onPress} disabled={saving} activeOpacity={0.85}>
-          {saving ? <ActivityIndicator color="#0B3D2E" /> : <Text style={styles.footerText}>{label}</Text>}
+          {saving ? <ActivityIndicator color={theme.textOnPrimary} /> : <Text style={styles.footerText}>{label}</Text>}
         </TouchableOpacity>
       </View>
     );
@@ -286,7 +290,7 @@ export default function ReadingScreen({ route, navigation }) {
         </Text>
         <View style={{ flexDirection: "row", marginVertical: 8 }}>
           {[1, 2, 3].map((i) => (
-            <Ionicons key={i} name={i <= stars ? "star" : "star-outline"} size={30} color={QUEST_COLORS.gold} />
+            <Ionicons key={i} name={i <= stars ? "star" : "star-outline"} size={30} color={theme.gold} />
           ))}
         </View>
         {!result.passed ? (
@@ -297,7 +301,7 @@ export default function ReadingScreen({ route, navigation }) {
         </TouchableOpacity>
         {!result.passed ? (
           <TouchableOpacity style={[styles.footerButton, styles.secondaryButton]} onPress={restart}>
-            <Text style={[styles.footerText, { color: QUEST_COLORS.text }]}>Try again</Text>
+            <Text style={[styles.footerText, { color: theme.textPrimaryOnGradient }]}>Try again</Text>
           </TouchableOpacity>
         ) : null}
       </View>
@@ -306,7 +310,7 @@ export default function ReadingScreen({ route, navigation }) {
 
   const body = () => {
     if (error) return <Text style={styles.message}>{error}</Text>;
-    if (!doc || !flow) return <ActivityIndicator size="large" color={QUEST_COLORS.text} style={{ marginTop: 60 }} />;
+    if (!doc || !flow) return <ActivityIndicator size="large" color={theme.textPrimaryOnGradient} style={{ marginTop: 60 }} />;
     const gateIndex = flow.items.findIndex((it) => it.kind === "gate");
     let questionNumber = 0;
     return (
@@ -367,7 +371,7 @@ export default function ReadingScreen({ route, navigation }) {
   };
 
   return (
-    <LinearGradient colors={QUEST_COLORS.background} style={styles.container}>
+    <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
           onPress={() => {
@@ -376,7 +380,7 @@ export default function ReadingScreen({ route, navigation }) {
           }}
           hitSlop={12}
         >
-          <Ionicons name="arrow-back" size={26} color={QUEST_COLORS.text} />
+          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Reading</Text>
       </View>
@@ -397,32 +401,33 @@ export default function ReadingScreen({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (theme) =>
+  StyleSheet.create({
   container: { flex: 1 },
   header: { flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingBottom: 8 },
-  headerTitle: { fontSize: 20, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
+  headerTitle: { fontSize: 20, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
   scroll: { paddingHorizontal: 16, paddingBottom: 140 },
-  title: { fontSize: 26, fontFamily: "nunitoBold", color: QUEST_COLORS.text, marginTop: 4 },
-  subtitle: { fontSize: 13, fontFamily: "nunito", color: QUEST_COLORS.textSoft, marginBottom: 12 },
-  message: { fontSize: 16, fontFamily: "nunito", color: QUEST_COLORS.text, textAlign: "center", marginTop: 60, paddingHorizontal: 24 },
+  title: { fontSize: 26, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient, marginTop: 4 },
+  subtitle: { fontSize: 13, fontFamily: "nunito", color: theme.textSecondaryOnGradient, marginBottom: 12 },
+  message: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimaryOnGradient, textAlign: "center", marginTop: 60, paddingHorizontal: 24 },
 
-  paperCard: { backgroundColor: COLORS.paper, borderRadius: 16, padding: 16, paddingTop: 14, marginBottom: 12 },
+  paperCard: { backgroundColor: theme.cardBackground, borderRadius: 16, padding: 16, paddingTop: 14, marginBottom: 12 },
   speakButton: { alignSelf: "flex-end", marginBottom: 2 },
-  paragraphText: { fontSize: 18, lineHeight: 29, fontFamily: "nunito", color: COLORS.ink },
-  highlight: { backgroundColor: COLORS.highlight },
-  glossaryWord: { color: COLORS.glossary, fontFamily: "nunitoBold", textDecorationLine: "underline", textDecorationStyle: "dotted" },
+  paragraphText: { fontSize: 18, lineHeight: 29, fontFamily: "nunito", color: theme.textPrimary },
+  highlight: { backgroundColor: COLORS.highlight, color: "#000000" },
+  glossaryWord: { color: theme.primary, fontFamily: "nunitoBold", textDecorationLine: "underline", textDecorationStyle: "dotted" },
 
-  sectionLabel: { fontSize: 14, fontFamily: "nunitoBold", color: QUEST_COLORS.gold, textTransform: "uppercase", marginVertical: 8 },
-  questionCard: { backgroundColor: QUEST_COLORS.card, borderRadius: 16, padding: 14, marginBottom: 12 },
-  questionNumber: { fontSize: 12, fontFamily: "nunitoBold", color: QUEST_COLORS.gold, textTransform: "uppercase" },
-  questionText: { fontSize: 17, fontFamily: "nunitoBold", color: QUEST_COLORS.text, marginVertical: 8, lineHeight: 24 },
+  sectionLabel: { fontSize: 14, fontFamily: "nunitoBold", color: theme.gold, textTransform: "uppercase", marginVertical: 8 },
+  questionCard: { backgroundColor: theme.cardBackground, borderRadius: 16, padding: 14, marginBottom: 12 },
+  questionNumber: { fontSize: 12, fontFamily: "nunitoBold", color: theme.gold, textTransform: "uppercase" },
+  questionText: { fontSize: 17, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient, marginVertical: 8, lineHeight: 24 },
   option: { backgroundColor: "#FFFFFF", borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14, marginTop: 8 },
   optionCorrect: { backgroundColor: COLORS.correct },
   optionWrong: { backgroundColor: COLORS.wrong },
-  optionText: { fontSize: 16, fontFamily: "nunito", color: COLORS.ink },
+  optionText: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimary },
   feedback: { marginTop: 12, gap: 6 },
   feedbackTitle: { fontSize: 17, fontFamily: "nunitoBold" },
-  feedbackText: { fontSize: 15, fontFamily: "nunito", color: QUEST_COLORS.textSoft, lineHeight: 21 },
+  feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 21 },
   showMeButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -434,21 +439,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginTop: 4,
   },
-  showMeText: { fontSize: 14, fontFamily: "nunitoBold", color: COLORS.glossary },
+  showMeText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.primary },
 
-  footer: { position: "absolute", left: 0, right: 0, bottom: 0, paddingHorizontal: 16, paddingTop: 10, backgroundColor: "rgba(11,61,46,0.92)" },
-  footerButton: { backgroundColor: QUEST_COLORS.gold, borderRadius: 28, paddingVertical: 14, alignItems: "center", marginTop: 8, alignSelf: "stretch" },
-  secondaryButton: { backgroundColor: "transparent", borderWidth: 2, borderColor: QUEST_COLORS.gold },
-  footerText: { fontSize: 18, fontFamily: "nunitoBold", color: "#0B3D2E" },
+  footer: { position: "absolute", left: 0, right: 0, bottom: 0, paddingHorizontal: 16, paddingTop: 10, backgroundColor: theme.background + "EE" },
+  footerButton: { backgroundColor: theme.primary, borderRadius: 28, paddingVertical: 14, alignItems: "center", marginTop: 8, alignSelf: "stretch" },
+  secondaryButton: { backgroundColor: "transparent", borderWidth: 2, borderColor: theme.primary },
+  footerText: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textOnPrimary },
 
-  resultCard: { backgroundColor: QUEST_COLORS.card, borderRadius: 16, padding: 18, alignItems: "center", marginTop: 8 },
-  resultTitle: { fontSize: 24, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
-  resultScore: { fontSize: 16, fontFamily: "nunito", color: QUEST_COLORS.textSoft, marginTop: 4 },
-  resultHint: { fontSize: 14, fontFamily: "nunito", color: QUEST_COLORS.textSoft, textAlign: "center", marginBottom: 4 },
+  resultCard: { backgroundColor: theme.cardBackground, borderRadius: 16, padding: 18, alignItems: "center", marginTop: 8 },
+  resultTitle: { fontSize: 24, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
+  resultScore: { fontSize: 16, fontFamily: "nunito", color: theme.textSecondaryOnGradient, marginTop: 4 },
+  resultHint: { fontSize: 14, fontFamily: "nunito", color: theme.textSecondaryOnGradient, textAlign: "center", marginBottom: 4 },
 
   modalBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 32 },
-  modalCard: { backgroundColor: COLORS.paper, borderRadius: 18, padding: 20, alignItems: "center", gap: 8 },
-  modalWord: { fontSize: 24, fontFamily: "nunitoBold", color: COLORS.glossary, textTransform: "capitalize" },
-  modalMeaning: { fontSize: 17, fontFamily: "nunito", color: COLORS.ink, textAlign: "center", lineHeight: 24 },
+  modalCard: { backgroundColor: theme.cardBackground, borderRadius: 18, padding: 20, alignItems: "center", gap: 8 },
+  modalWord: { fontSize: 24, fontFamily: "nunitoBold", color: theme.primary, textTransform: "capitalize" },
+  modalMeaning: { fontSize: 17, fontFamily: "nunito", color: theme.textPrimary, textAlign: "center", lineHeight: 24 },
   modalHint: { fontSize: 12, fontFamily: "nunito", color: "#888" },
 });

@@ -346,88 +346,97 @@ export const readings = {
   },
 };
 
-// ---------- The tree ----------
-// Units = trunk nodes (each is a unit test). Leaves belong to a unit + branch.
-// Leaves further out in a branch (higher `order`) are harder.
-const leaf = (id, unitId, branchId, branchTitle, branchOrder, order, type, ref, title) => ({
-  id,
-  kind: "leaf",
-  unitId,
-  branchId,
-  branchTitle,
-  branchOrder,
-  order,
-  type,
-  title,
-  ...(type === "quiz" ? { quizId: ref } : { contentId: ref }), // study + reading use contentId
+// ---------- The quest path (Spec v2, see gemini.md) ----------
+// unit     = a group of branches, ends with a Unit Boss
+// main     = node on the path (Learn + warm-up). Steps run in order.
+// practice = optional side leaf (any order), difficulty easy | medium | hard
+// gate     = harder quiz; passing it opens the next branch (Step 2 adds pools + sub-topic rules)
+// endless  = "Keep practising" (Spec v2 Step 4; shows "Coming soon" until then)
+// boss     = Unit Boss on the path; passing it opens the next unit
+const study = (contentId) => ({ type: "study", contentId });
+const quiz = (quizId) => ({ type: "quiz", quizId });
+const reading = (contentId) => ({ type: "reading", contentId });
+
+const unit = (id, unitOrder, title, extra = {}) => ({ id, kind: "unit", unitOrder, title, ...extra });
+const main = (id, unitId, branchOrder, title, steps) => ({ id, kind: "main", unitId, branchId: id, branchOrder, title, steps });
+const practice = (id, branch, order, title, difficulty, steps) => ({
+  id, kind: "practice", unitId: branch.unitId, branchId: branch.id, order, title, difficulty, steps,
 });
+const gate = (id, branch, title, quizId, passPercent = 80) => ({
+  id, kind: "gate", unitId: branch.unitId, branchId: branch.id, title, quizId, passPercent,
+});
+const endless = (branch) => ({
+  id: `${branch.id}-endless`, kind: "endless", unitId: branch.unitId, branchId: branch.id, title: `Keep practising`,
+});
+const boss = (id, unitId, title, quizId, passPercent = 70) => ({ id, kind: "boss", unitId, title, quizId, passPercent });
 
-export const units = [
-  { id: "eq-u0", kind: "unit", unitOrder: 0, title: "Sentences", quizId: "eq-u0-test", passPercent: 70 },
-  { id: "eq-u1", kind: "unit", unitOrder: 1, title: "Parts of Speech", quizId: "eq-u1-test", passPercent: 70 },
-  { id: "eq-u2", kind: "unit", unitOrder: 2, title: "Articles & Determiners", comingSoon: true },
-];
+// --- Unit 0: Sentences ---
+const u0a = main("eq-u0-sentence", "eq-u0", 0, "What is a sentence?", [study("eq-u0-what-is-sentence"), quiz("eq-u0-sentence-or-not")]);
+const u0b = main("eq-u0-kinds", "eq-u0", 1, "Kinds of sentences", [study("eq-u0-kinds-of-sentences"), quiz("eq-u0-four-kinds")]);
+const u0r = main("eq-u0-reading", "eq-u0", 2, "Reading: Tara's paper boat", [reading("eq-read-paper-boat")]);
 
-export const leaves = [
-  // Unit 0: Sentences (new content)
-  leaf("eq-u0-a1", "eq-u0", "u0-sentence", "What is a sentence?", 0, 1, "study", "eq-u0-what-is-sentence", "Learn"),
-  leaf("eq-u0-a2", "eq-u0", "u0-sentence", "What is a sentence?", 0, 2, "quiz", "eq-u0-sentence-or-not", "Sentence or not?"),
-  leaf("eq-u0-a3", "eq-u0", "u0-sentence", "What is a sentence?", 0, 3, "quiz", "eq-u0-subject-predicate", "Subject & predicate"),
-  leaf("eq-u0-b1", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 1, "study", "eq-u0-kinds-of-sentences", "Learn"),
-  leaf("eq-u0-b2", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 2, "quiz", "eq-u0-four-kinds", "Four kinds"),
-  leaf("eq-u0-b3", "eq-u0", "u0-kinds", "Kinds of sentences", 1, 3, "quiz", "eq-u0-capitals-endmarks", "Capitals & end marks"),
-  leaf("eq-u0-rd1", "eq-u0", "u0-reading", "Reading", 2, 1, "reading", "eq-read-paper-boat", "Tara's paper boat"),
+// --- Unit 1: Parts of Speech (reuses IEO content) ---
+const nouns = main("eq-u1-nouns", "eq-u1", 0, "Nouns", [study("noun-intro-study"), quiz("noun-intro-quiz")]);
+const pronouns = main("eq-u1-pronouns", "eq-u1", 1, "Pronouns", [study("ieo-pronouns-intro-study"), quiz("ieo-pronouns-intro-quiz")]);
+const verbs = main("eq-u1-verbs", "eq-u1", 2, "Verbs", [study("verbs-intro-study"), quiz("verbs-intro-quiz")]);
+const adjectives = main("eq-u1-adjectives", "eq-u1", 3, "Adjectives", [study("4ieo8-study"), quiz("4ieo8-quiz")]);
+const adverbs = main("eq-u1-adverbs", "eq-u1", 4, "Adverbs", [study("eq-u1-adverbs"), quiz("eq-u1-adverbs-quiz")]);
+const prepositions = main("eq-u1-prepositions", "eq-u1", 5, "Prepositions", [study("4ieo6-study"), quiz("4ieo6-quiz")]);
+const conjunctions = main("eq-u1-conjunctions", "eq-u1", 6, "Conjunctions", [study("4ieo7-study"), quiz("4ieo7-quiz")]);
+const u1r = main("eq-u1-reading", "eq-u1", 7, "Reading: The seed library", [study("eq-read-tips"), reading("eq-read-seed-library")]);
 
-  // Unit 1: Parts of Speech (reuses existing IEO content)
-  leaf("eq-u1-n1", "eq-u1", "u1-nouns", "Nouns", 0, 1, "study", "noun-intro-study", "Learn"),
-  leaf("eq-u1-n2", "eq-u1", "u1-nouns", "Nouns", 0, 2, "quiz", "noun-intro-quiz", "What is a noun?"),
-  leaf("eq-u1-n3", "eq-u1", "u1-nouns", "Nouns", 0, 3, "study", "noun-basic-study", "Common & proper"),
-  leaf("eq-u1-n4", "eq-u1", "u1-nouns", "Nouns", 0, 4, "quiz", "noun-basic-quiz", "Basic nouns"),
-  leaf("eq-u1-n5", "eq-u1", "u1-nouns", "Nouns", 0, 5, "study", "noun-sing-plu-study", "Singular & plural"),
-  leaf("eq-u1-n6", "eq-u1", "u1-nouns", "Nouns", 0, 6, "quiz", "noun-sing-plu-quiz", "Plural quiz"),
-  leaf("eq-u1-n7", "eq-u1", "u1-nouns", "Nouns", 0, 7, "study", "noun-gender-study", "Gender"),
-  leaf("eq-u1-n8", "eq-u1", "u1-nouns", "Nouns", 0, 8, "quiz", "noun-gender-quiz", "Gender quiz"),
-  leaf("eq-u1-n9", "eq-u1", "u1-nouns", "Nouns", 0, 9, "study", "noun-adv-study", "Advanced nouns"),
-  leaf("eq-u1-n10", "eq-u1", "u1-nouns", "Nouns", 0, 10, "quiz", "noun-adv-quiz", "Advanced quiz"),
-  leaf("eq-u1-n11", "eq-u1", "u1-nouns", "Nouns", 0, 11, "quiz", "noun-boss-1", "Noun boss"),
+export const nodes = [
+  unit("eq-u0", 0, "Sentences"),
+  u0a,
+  practice("eq-u0-sentence-p1", u0a, 1, "Subject & predicate", "medium", [quiz("eq-u0-subject-predicate")]),
+  endless(u0a),
+  u0b,
+  practice("eq-u0-kinds-p1", u0b, 1, "Capitals & end marks", "medium", [quiz("eq-u0-capitals-endmarks")]),
+  endless(u0b),
+  u0r,
+  boss("eq-u0-boss", "eq-u0", "Unit 0 Boss", "eq-u0-test"),
 
-  leaf("eq-u1-p1", "eq-u1", "u1-pronouns", "Pronouns", 1, 1, "study", "ieo-pronouns-intro-study", "Learn"),
-  leaf("eq-u1-p2", "eq-u1", "u1-pronouns", "Pronouns", 1, 2, "quiz", "ieo-pronouns-intro-quiz", "What is a pronoun?"),
-  leaf("eq-u1-p3", "eq-u1", "u1-pronouns", "Pronouns", 1, 3, "study", "ieo-pronouns-basic-study", "Personal & possessive"),
-  leaf("eq-u1-p4", "eq-u1", "u1-pronouns", "Pronouns", 1, 4, "quiz", "ieo-pronouns-basic-quiz", "Basic quiz"),
-  leaf("eq-u1-p5", "eq-u1", "u1-pronouns", "Pronouns", 1, 5, "study", "ieo-pronouns-adv-1-study", "Reflexive & more"),
-  leaf("eq-u1-p6", "eq-u1", "u1-pronouns", "Pronouns", 1, 6, "quiz", "ieo-pronouns-adv-1-quiz", "Advanced quiz 1"),
-  leaf("eq-u1-p7", "eq-u1", "u1-pronouns", "Pronouns", 1, 7, "study", "ieo-pronouns-adv-2-study", "Relative & more"),
-  leaf("eq-u1-p8", "eq-u1", "u1-pronouns", "Pronouns", 1, 8, "quiz", "ieo-pronouns-adv-2-quiz", "Advanced quiz 2"),
+  unit("eq-u1", 1, "Parts of Speech"),
+  nouns,
+  practice("eq-u1-nouns-p1", nouns, 1, "Common & proper", "easy", [study("noun-basic-study"), quiz("noun-basic-quiz")]),
+  practice("eq-u1-nouns-p2", nouns, 2, "Singular & plural", "easy", [study("noun-sing-plu-study"), quiz("noun-sing-plu-quiz")]),
+  practice("eq-u1-nouns-p3", nouns, 3, "Gender", "medium", [study("noun-gender-study"), quiz("noun-gender-quiz")]),
+  practice("eq-u1-nouns-p4", nouns, 4, "Gender 2", "medium", [quiz("noun-gender-quiz-l2")]),
+  practice("eq-u1-nouns-p5", nouns, 5, "Advanced nouns", "hard", [study("noun-adv-study"), quiz("noun-adv-quiz")]),
+  gate("eq-u1-nouns-gate", nouns, "Noun Challenge", "noun-boss-1"), // temporary pool until Step 2 gate pools
+  endless(nouns),
 
-  leaf("eq-u1-v1", "eq-u1", "u1-verbs", "Verbs", 2, 1, "study", "verbs-intro-study", "Learn"),
-  leaf("eq-u1-v2", "eq-u1", "u1-verbs", "Verbs", 2, 2, "quiz", "verbs-intro-quiz", "What is a verb?"),
-  leaf("eq-u1-v3", "eq-u1", "u1-verbs", "Verbs", 2, 3, "study", "verbs-link-study", "Action & linking"),
-  leaf("eq-u1-v4", "eq-u1", "u1-verbs", "Verbs", 2, 4, "quiz", "verbs-link-quiz", "Linking quiz"),
-  leaf("eq-u1-v5", "eq-u1", "u1-verbs", "Verbs", 2, 5, "study", "verbs-trans-study", "Transitive"),
-  leaf("eq-u1-v6", "eq-u1", "u1-verbs", "Verbs", 2, 6, "quiz", "verbs-trans-quiz", "Transitive quiz"),
-  leaf("eq-u1-v7", "eq-u1", "u1-verbs", "Verbs", 2, 7, "study", "verbs-finite-study", "Finite & non-finite"),
-  leaf("eq-u1-v8", "eq-u1", "u1-verbs", "Verbs", 2, 8, "quiz", "verbs-finite-quiz", "Finite quiz"),
-  leaf("eq-u1-v9", "eq-u1", "u1-verbs", "Verbs", 2, 9, "quiz", "verbs-boss-1", "Verb boss 1"),
-  leaf("eq-u1-v10", "eq-u1", "u1-verbs", "Verbs", 2, 10, "quiz", "verbs-boss-2", "Verb boss 2"),
+  pronouns,
+  practice("eq-u1-pronouns-p1", pronouns, 1, "Personal & possessive", "easy", [study("ieo-pronouns-basic-study"), quiz("ieo-pronouns-basic-quiz")]),
+  practice("eq-u1-pronouns-p2", pronouns, 2, "Reflexive & more", "medium", [study("ieo-pronouns-adv-1-study"), quiz("ieo-pronouns-adv-1-quiz")]),
+  practice("eq-u1-pronouns-p3", pronouns, 3, "Relative & more", "hard", [study("ieo-pronouns-adv-2-study"), quiz("ieo-pronouns-adv-2-quiz")]),
+  endless(pronouns),
 
-  leaf("eq-u1-j1", "eq-u1", "u1-adjectives", "Adjectives", 3, 1, "study", "4ieo8-study", "Learn"),
-  leaf("eq-u1-j2", "eq-u1", "u1-adjectives", "Adjectives", 3, 2, "quiz", "4ieo8-quiz", "Quiz 1"),
-  leaf("eq-u1-j3", "eq-u1", "u1-adjectives", "Adjectives", 3, 3, "quiz", "4ieo8-quiz-2", "Quiz 2"),
-  leaf("eq-u1-j4", "eq-u1", "u1-adjectives", "Adjectives", 3, 4, "study", "4ieo8-adj-degrees", "Degrees"),
-  leaf("eq-u1-j5", "eq-u1", "u1-adjectives", "Adjectives", 3, 5, "quiz", "4ieo8-adj-degrees-q1", "Degrees quiz"),
+  verbs,
+  practice("eq-u1-verbs-p1", verbs, 1, "Action & linking", "easy", [study("verbs-link-study"), quiz("verbs-link-quiz")]),
+  practice("eq-u1-verbs-p2", verbs, 2, "Transitive", "medium", [study("verbs-trans-study"), quiz("verbs-trans-quiz")]),
+  practice("eq-u1-verbs-p3", verbs, 3, "Finite & non-finite", "hard", [study("verbs-finite-study"), quiz("verbs-finite-quiz")]),
+  practice("eq-u1-verbs-p4", verbs, 4, "Verb boss", "hard", [quiz("verbs-boss-1")]),
+  gate("eq-u1-verbs-gate", verbs, "Verb Challenge", "verbs-boss-2"), // temporary pool until Step 2 gate pools
+  endless(verbs),
 
-  leaf("eq-u1-d1", "eq-u1", "u1-adverbs", "Adverbs", 4, 1, "study", "eq-u1-adverbs", "Learn"),
-  leaf("eq-u1-d2", "eq-u1", "u1-adverbs", "Adverbs", 4, 2, "quiz", "eq-u1-adverbs-quiz", "Adverb quiz"),
+  adjectives,
+  practice("eq-u1-adjectives-p1", adjectives, 1, "More adjectives", "easy", [quiz("4ieo8-quiz-2")]),
+  practice("eq-u1-adjectives-p2", adjectives, 2, "Degrees", "medium", [study("4ieo8-adj-degrees"), quiz("4ieo8-adj-degrees-q1")]),
+  endless(adjectives),
 
-  leaf("eq-u1-r1", "eq-u1", "u1-prepositions", "Prepositions", 5, 1, "study", "4ieo6-study", "Learn"),
-  leaf("eq-u1-r2", "eq-u1", "u1-prepositions", "Prepositions", 5, 2, "quiz", "4ieo6-quiz", "Quiz"),
-  leaf("eq-u1-r3", "eq-u1", "u1-prepositions", "Prepositions", 5, 3, "study", "4ieo6-fixed-prep", "Fixed prepositions"),
-  leaf("eq-u1-r4", "eq-u1", "u1-prepositions", "Prepositions", 5, 4, "quiz", "4ieo6-fixed-prep-quiz", "Fixed quiz"),
+  adverbs,
+  endless(adverbs),
 
-  leaf("eq-u1-c1", "eq-u1", "u1-conjunctions", "Conjunctions", 6, 1, "study", "4ieo7-study", "Learn"),
-  leaf("eq-u1-c2", "eq-u1", "u1-conjunctions", "Conjunctions", 6, 2, "quiz", "4ieo7-quiz", "Quiz"),
+  prepositions,
+  practice("eq-u1-prepositions-p1", prepositions, 1, "Fixed prepositions", "medium", [study("4ieo6-fixed-prep"), quiz("4ieo6-fixed-prep-quiz")]),
+  endless(prepositions),
 
-  leaf("eq-u1-rd1", "eq-u1", "u1-reading", "Reading", 7, 1, "study", "eq-read-tips", "Detective tips"),
-  leaf("eq-u1-rd2", "eq-u1", "u1-reading", "Reading", 7, 2, "reading", "eq-read-seed-library", "The seed library"),
+  conjunctions,
+  endless(conjunctions),
+
+  u1r,
+  boss("eq-u1-boss", "eq-u1", "Unit 1 Boss", "eq-u1-test"),
+
+  unit("eq-u2", 2, "Articles & Determiners", { comingSoon: true }),
 ];

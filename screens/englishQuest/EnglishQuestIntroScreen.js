@@ -24,7 +24,7 @@ import {
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
 import { buildQuestTree } from "../../utils/questTree";
-import { QUEST_COLORS } from "./questColors";
+import { useTheme } from "../../context/ThemeContext";
 
 const HOW_IT_WORKS = [
   { icon: "trophy", text: "Each unit ends with a unit test. Pass it to climb to the next unit." },
@@ -33,6 +33,8 @@ const HOW_IT_WORKS = [
 ];
 
 export default function EnglishQuestIntroScreen({ route, navigation }) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const { questId } = route.params || {};
   const insets = useSafeAreaInsets();
   const user = authInstance.currentUser;
@@ -72,7 +74,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
       return <Text style={styles.message}>{error}</Text>;
     }
     if (!quest || !tree) {
-      return <ActivityIndicator size="large" color={QUEST_COLORS.text} style={{ marginTop: 40 }} />;
+      return <ActivityIndicator size="large" color={theme.textPrimaryOnGradient} style={{ marginTop: 40 }} />;
     }
     return (
       <>
@@ -97,7 +99,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
           </View>
         ) : (
           <View style={styles.progressCard}>
-            <Ionicons name="person-circle-outline" size={36} color={QUEST_COLORS.gold} />
+            <Ionicons name="person-circle-outline" size={36} color={theme.gold} />
             <Text style={styles.progressTitle}>Please sign in to play</Text>
             <Text style={styles.progressText}>
               Your progress is saved to your account, so you can continue on any phone and your
@@ -110,7 +112,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
           <Text style={styles.howTitle}>How it works</Text>
           {HOW_IT_WORKS.map((item) => (
             <View key={item.icon} style={styles.howRow}>
-              <Ionicons name={item.icon} size={20} color={QUEST_COLORS.gold} />
+              <Ionicons name={item.icon} size={20} color={theme.gold} />
               <Text style={styles.howText}>{item.text}</Text>
             </View>
           ))}
@@ -120,10 +122,10 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   };
 
   return (
-    <LinearGradient colors={QUEST_COLORS.background} style={styles.container}>
+    <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={26} color={QUEST_COLORS.text} />
+          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
         </TouchableOpacity>
       </View>
 
@@ -137,7 +139,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             activeOpacity={0.85}
             onPress={() => navigation.navigate("Profile")}
           >
-            <Ionicons name="log-in-outline" size={22} color="#0B3D2E" />
+            <Ionicons name="log-in-outline" size={22} color={theme.textOnPrimary} />
             <Text style={styles.startText}>Sign in to play</Text>
           </TouchableOpacity>
         </View>
@@ -152,7 +154,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             onPress={() => navigation.navigate("EnglishQuestMap", { questId })}
           >
             <Text style={styles.startText}>{hasStarted ? "Continue" : "Start the Quest"}</Text>
-            <Ionicons name="arrow-forward" size={22} color="#0B3D2E" />
+            <Ionicons name="arrow-forward" size={22} color={theme.textOnPrimary} />
           </TouchableOpacity>
         </View>
       ) : null}
@@ -160,31 +162,32 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (theme) =>
+  StyleSheet.create({
   container: { flex: 1 },
   header: { paddingHorizontal: 16, paddingBottom: 8 },
   scroll: { paddingHorizontal: 20, paddingBottom: 40 },
   hero: { width: "100%", aspectRatio: 16 / 9, borderRadius: 16, marginBottom: 16 },
-  title: { fontSize: 30, fontFamily: "nunitoBold", color: QUEST_COLORS.text, marginBottom: 6 },
-  description: { fontSize: 16, fontFamily: "nunito", color: QUEST_COLORS.textSoft, lineHeight: 22 },
-  message: { fontSize: 16, fontFamily: "nunito", color: QUEST_COLORS.text, textAlign: "center", marginTop: 40 },
+  title: { fontSize: 30, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient, marginBottom: 6 },
+  description: { fontSize: 16, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 22 },
+  message: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimaryOnGradient, textAlign: "center", marginTop: 40 },
   progressCard: {
     marginTop: 20,
     padding: 16,
     borderRadius: 16,
-    backgroundColor: QUEST_COLORS.card,
+    backgroundColor: theme.cardBackground,
     alignItems: "flex-start",
     gap: 6,
   },
-  progressTitle: { fontSize: 18, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
-  progressText: { fontSize: 15, fontFamily: "nunito", color: QUEST_COLORS.textSoft, lineHeight: 21 },
-  howCard: { marginTop: 16, padding: 16, borderRadius: 16, backgroundColor: QUEST_COLORS.card, gap: 10 },
-  howTitle: { fontSize: 18, fontFamily: "nunitoBold", color: QUEST_COLORS.text },
+  progressTitle: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
+  progressText: { fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 21 },
+  howCard: { marginTop: 16, padding: 16, borderRadius: 16, backgroundColor: theme.cardBackground, gap: 10 },
+  howTitle: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient },
   howRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  howText: { flex: 1, fontSize: 15, fontFamily: "nunito", color: QUEST_COLORS.textSoft, lineHeight: 21 },
+  howText: { flex: 1, fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 21 },
   footer: { paddingHorizontal: 20, paddingTop: 12 },
   startButton: {
-    backgroundColor: QUEST_COLORS.gold,
+    backgroundColor: theme.primary,
     borderRadius: 30,
     paddingVertical: 16,
     flexDirection: "row",
@@ -192,5 +195,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  startText: { fontSize: 20, fontFamily: "nunitoBold", color: "#0B3D2E" },
+  startText: { fontSize: 20, fontFamily: "nunitoBold", color: theme.textOnPrimary },
 });
