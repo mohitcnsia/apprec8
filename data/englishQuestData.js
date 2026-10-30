@@ -276,6 +276,41 @@ export const quizzes = {
     q("Which sentence has an adverb of frequency (how often)?", "Rohan always reads before bed.", [["Rohan reads a long book.", "pos-adverb-mixup"], ["Rohan reads in his room.", "pos-adverb-mixup"], ["Rohan is a good reader.", "pos-adverb-mixup"]], "'always' tells HOW OFTEN Rohan reads."),
     q("Pick the correct sentence.", "He answered the question correctly.", [["He answered the question correct.", "pos-adjective-mixup"], ["He answered the question correctness.", "pos-noun-mixup"], ["He answered correct the question.", "pos-adjective-mixup"]], "To describe HOW he answered (a verb), we need the adverb 'correctly'."),
   ],
+  // ---- Gate pools (Spec v2 Step 2): 15 questions each, every question tagged with a sub-topic ----
+  "eq-u1-nouns-gate-pool": [
+    { subtopic: "common-proper", ...q("Which word is a PROPER noun? 'The children visited the Taj Mahal last summer.'", "Taj Mahal", [["children", "proper-common-mixup"], ["summer", "proper-common-mixup"], ["visited", "pos-verb-mixup"]], "'Taj Mahal' is the name of one special place, so it is a proper noun and starts with capital letters.") },
+    { subtopic: "common-proper", ...q("Which sentence writes the proper noun correctly?", "My uncle lives in Kolkata.", [["My Uncle lives in kolkata.", "proper-common-mixup"], ["my uncle lives in Kolkata.", "missing-capital"], ["My uncle lives in kolkata.", "proper-common-mixup"]], "'Kolkata' is a proper noun (a city's name), so it needs a capital K. 'uncle' is a common noun here.") },
+    { subtopic: "common-proper", ...q("Which word is a COMMON noun? 'Ravi gave his dog a bath on Sunday.'", "dog", [["Ravi", "proper-common-mixup"], ["Sunday", "proper-common-mixup"], ["gave", "pos-verb-mixup"]], "'dog' names any dog, not one special dog, so it is a common noun. Ravi and Sunday are proper nouns.") },
+    { subtopic: "common-proper", ...q("In 'The Ganga is a holy river', which words are nouns?", "Ganga and river", [["holy and river", "pos-adjective-mixup"], ["is and river", "pos-verb-mixup"], ["Only Ganga", "proper-common-mixup"]], "'Ganga' is a proper noun and 'river' is a common noun. 'holy' is an adjective that describes the river.") },
+    { subtopic: "singular-plural", ...q("What is the plural of 'child'?", "children", [["childs", "plural-rule-error"], ["childes", "plural-rule-error"], ["childrens", "plural-rule-error"]], "'child' has a special plural: children. 'childrens' is never correct.") },
+    { subtopic: "singular-plural", ...q("Choose the correct plural: 'one leaf, two ___'", "leaves", [["leafs", "plural-rule-error"], ["leafes", "plural-rule-error"], ["leaf", "plural-rule-error"]], "Many words ending in -f change to -ves: leaf → leaves, wolf → wolves.") },
+    { subtopic: "singular-plural", ...q("Which word stays the SAME in singular and plural?", "sheep", [["goose", "plural-rule-error"], ["mouse", "plural-rule-error"], ["tooth", "plural-rule-error"]], "One sheep, two sheep. The others change: geese, mice, teeth.") },
+    { subtopic: "singular-plural", ...q("What is the plural of 'potato'?", "potatoes", [["potatos", "plural-rule-error"], ["potatoe", "plural-rule-error"], ["potatoies", "plural-rule-error"]], "Some words ending in -o add -es: potato → potatoes, tomato → tomatoes.") },
+    { subtopic: "gender", ...q("What is the feminine of 'nephew'?", "niece", [["nephewess", "gender-error"], ["aunt", "gender-error"], ["cousin", "gender-error"]], "nephew (male) → niece (female). An aunt is the sister of your parent.") },
+    { subtopic: "gender", ...q("What do we call a male duck?", "drake", [["duckling", "gender-error"], ["gander", "gender-error"], ["cob", "gender-error"]], "A male duck is a drake. A gander is a male goose, a cob is a male swan, and a duckling is a baby duck.") },
+    { subtopic: "gender", ...q("Which noun is COMMON gender (it can be male or female)?", "teacher", [["king", "gender-error"], ["actress", "gender-error"], ["uncle", "gender-error"]], "A teacher can be a man or a woman. King and uncle are masculine; actress is feminine.") },
+    { subtopic: "gender", ...q("Which pair (masculine – feminine) is correct?", "horse – mare", [["bull – mare", "gender-error"], ["cock – cow", "gender-error"], ["stag – duck", "gender-error"]], "horse – mare is correct. The others should be bull – cow, cock – hen, stag – doe.") },
+    { subtopic: "advanced", ...q("Which word is an ABSTRACT noun?", "honesty", [["honest", "pos-adjective-mixup"], ["table", "abstract-concrete-mixup"], ["river", "abstract-concrete-mixup"]], "You can't see or touch honesty. It is an idea, so it is an abstract noun. 'honest' is the adjective.") },
+    { subtopic: "advanced", ...q("Fill in the collective noun: 'A ___ of fish swam past the boat.'", "school", [["flock", "collective-noun-error"], ["herd", "collective-noun-error"], ["pack", "collective-noun-error"]], "A group of fish is a school (or shoal). Flock is for birds, herd for cattle, pack for wolves.") },
+    { subtopic: "advanced", ...q("Which noun is UNCOUNTABLE?", "milk", [["bottle", "countable-uncountable-mixup"], ["apple", "countable-uncountable-mixup"], ["chair", "countable-uncountable-mixup"]], "We can't say 'two milks'. We say 'two glasses of milk'. Bottles, apples and chairs can be counted.") },
+  ],
+  "eq-u1-verbs-gate-pool": [
+    { subtopic: "action-linking", ...q("Which word is a LINKING verb? 'The soup tastes delicious.'", "tastes", [["soup", "pos-noun-mixup"], ["delicious", "pos-adjective-mixup"], ["The", "action-linking-mixup"]], "'tastes' links the soup to how it is (delicious). It is not an action the soup does.") },
+    { subtopic: "action-linking", ...q("In which sentence is 'smell' an ACTION verb?", "The dog smelled the bone.", [["The flowers smell sweet.", "action-linking-mixup"], ["This milk smells sour.", "action-linking-mixup"], ["The room smells fresh.", "action-linking-mixup"]], "The dog is doing the smelling, so it is an action. In the others, 'smell' links the subject to a describing word.") },
+    { subtopic: "action-linking", ...q("Find the action verb: 'Meena quickly climbed the tall tree.'", "climbed", [["quickly", "pos-adverb-mixup"], ["tall", "pos-adjective-mixup"], ["tree", "pos-noun-mixup"]], "'climbed' is what Meena did. 'quickly' tells how, 'tall' describes the tree.") },
+    { subtopic: "action-linking", ...q("Which sentence has a LINKING verb?", "My brother is a doctor.", [["My brother cooks dinner.", "action-linking-mixup"], ["My brother runs fast.", "action-linking-mixup"], ["My brother wrote a letter.", "action-linking-mixup"]], "'is' links 'my brother' to what he is (a doctor). The other verbs are actions.") },
+    { subtopic: "action-linking", ...q("'She became a famous singer.' What kind of verb is 'became'?", "A linking verb", [["An action verb", "action-linking-mixup"], ["A helping verb", "action-linking-mixup"], ["It is not a verb", "pos-verb-mixup"]], "'became' links 'she' to 'a famous singer'. It shows a change of state, not an action.") },
+    { subtopic: "transitive", ...q("Which sentence has a TRANSITIVE verb (a verb with an object)?", "Rahul kicked the ball.", [["The baby slept.", "transitive-intransitive-mixup"], ["Birds fly.", "transitive-intransitive-mixup"], ["The sun rises.", "transitive-intransitive-mixup"]], "Kicked what? The ball. The verb has an object, so it is transitive.") },
+    { subtopic: "transitive", ...q("Which sentence has an INTRANSITIVE verb (no object)?", "The guests arrived late.", [["The guests ate the cake.", "transitive-intransitive-mixup"], ["The guests brought gifts.", "transitive-intransitive-mixup"], ["The guests thanked the host.", "transitive-intransitive-mixup"]], "Arrived what? Nothing. 'late' only tells when. So 'arrived' is intransitive.") },
+    { subtopic: "transitive", ...q("Find the OBJECT of the verb: 'Grandma knitted a warm sweater.'", "a warm sweater", [["Grandma", "subject-predicate-mixup"], ["knitted", "pos-verb-mixup"], ["warm", "pos-adjective-mixup"]], "Knitted what? A warm sweater. That is the object. Grandma is the subject.") },
+    { subtopic: "transitive", ...q("'The children laughed.' The verb 'laughed' is ___.", "intransitive", [["transitive", "transitive-intransitive-mixup"], ["a linking verb", "action-linking-mixup"], ["a helping verb", "transitive-intransitive-mixup"]], "Laughed what? There is no object, so the verb is intransitive.") },
+    { subtopic: "transitive", ...q("In which sentence is 'ran' TRANSITIVE?", "She ran a small shop.", [["She ran to school.", "transitive-intransitive-mixup"], ["She ran very fast.", "transitive-intransitive-mixup"], ["She ran in the park.", "transitive-intransitive-mixup"]], "Ran what? A small shop. 'ran' has an object only in this sentence.") },
+    { subtopic: "finite", ...q("Which verb is FINITE? 'He wants to swim in the lake.'", "wants", [["to swim", "finite-nonfinite-mixup"], ["lake", "pos-noun-mixup"], ["in", "pos-preposition-mixup"]], "'wants' changes with the subject (I want, he wants). 'to swim' never changes, so it is non-finite.") },
+    { subtopic: "finite", ...q("Find the NON-FINITE verb: 'I enjoy reading comics.'", "reading", [["enjoy", "finite-nonfinite-mixup"], ["comics", "pos-noun-mixup"], ["I", "pos-pronoun-mixup"]], "'reading' is a gerund (verb + -ing used as a noun). It doesn't change with the subject, so it is non-finite.") },
+    { subtopic: "finite", ...q("Choose the correct finite verb: 'My sister ___ the piano every evening.'", "plays", [["play", "sv-agreement"], ["playing", "finite-nonfinite-mixup"], ["to play", "finite-nonfinite-mixup"]], "A finite verb agrees with its subject: 'My sister plays'. 'playing' and 'to play' can't be the main verb alone.") },
+    { subtopic: "finite", ...q("In 'We saw the kite flying high', which verb is FINITE?", "saw", [["flying", "finite-nonfinite-mixup"], ["kite", "pos-noun-mixup"], ["high", "pos-adverb-mixup"]], "'saw' is the main verb of the sentence. 'flying' is a participle (non-finite).") },
+    { subtopic: "finite", ...q("Which group of words is NOT a complete sentence because it has no finite verb?", "Running in the rain.", [["She is running in the rain.", "finite-nonfinite-mixup"], ["They ran in the rain.", "finite-nonfinite-mixup"], ["He runs in the rain.", "finite-nonfinite-mixup"]], "'Running' alone is non-finite. A sentence needs a finite verb like 'is running', 'ran' or 'runs'.") },
+  ],
   // Unit 1 test: mixed parts of speech
   "eq-u1-test": [
     q("Which word is a NOUN? 'The honest farmer found a golden coin.'", "farmer", [["honest", "pos-adjective-mixup"], ["found", "pos-verb-mixup"], ["golden", "pos-adjective-mixup"]], "'farmer' names a person, so it is a noun."),
@@ -362,9 +397,11 @@ const main = (id, unitId, branchOrder, title, steps) => ({ id, kind: "main", uni
 const practice = (id, branch, order, title, difficulty, steps) => ({
   id, kind: "practice", unitId: branch.unitId, branchId: branch.id, order, title, difficulty, steps,
 });
-const gate = (id, branch, title, quizId, passPercent = 80) => ({
+const gate = (id, branch, title, quizId, subtopicTitles, passPercent = 80) => ({
   id, kind: "gate", unitId: branch.unitId, branchId: branch.id, title, quizId, passPercent,
+  drawCount: 10, subtopicTitles, // { [subtopicId]: "Title shown on the result screen" }
 });
+const withSubtopic = (node, subtopic) => ({ ...node, subtopic });
 const endless = (branch) => ({
   id: `${branch.id}-endless`, kind: "endless", unitId: branch.unitId, branchId: branch.id, title: `Keep practising`,
 });
@@ -398,12 +435,17 @@ export const nodes = [
 
   unit("eq-u1", 1, "Parts of Speech"),
   nouns,
-  practice("eq-u1-nouns-p1", nouns, 1, "Common & proper", "easy", [study("noun-basic-study"), quiz("noun-basic-quiz")]),
-  practice("eq-u1-nouns-p2", nouns, 2, "Singular & plural", "easy", [study("noun-sing-plu-study"), quiz("noun-sing-plu-quiz")]),
-  practice("eq-u1-nouns-p3", nouns, 3, "Gender", "medium", [study("noun-gender-study"), quiz("noun-gender-quiz")]),
-  practice("eq-u1-nouns-p4", nouns, 4, "Gender 2", "medium", [quiz("noun-gender-quiz-l2")]),
-  practice("eq-u1-nouns-p5", nouns, 5, "Advanced nouns", "hard", [study("noun-adv-study"), quiz("noun-adv-quiz")]),
-  gate("eq-u1-nouns-gate", nouns, "Noun Challenge", "noun-boss-1"), // temporary pool until Step 2 gate pools
+  withSubtopic(practice("eq-u1-nouns-p1", nouns, 1, "Common & proper", "easy", [study("noun-basic-study"), quiz("noun-basic-quiz")]), "common-proper"),
+  withSubtopic(practice("eq-u1-nouns-p2", nouns, 2, "Singular & plural", "easy", [study("noun-sing-plu-study"), quiz("noun-sing-plu-quiz")]), "singular-plural"),
+  withSubtopic(practice("eq-u1-nouns-p3", nouns, 3, "Gender", "medium", [study("noun-gender-study"), quiz("noun-gender-quiz")]), "gender"),
+  withSubtopic(practice("eq-u1-nouns-p4", nouns, 4, "Gender 2", "medium", [quiz("noun-gender-quiz-l2")]), "gender"),
+  withSubtopic(practice("eq-u1-nouns-p5", nouns, 5, "Advanced nouns", "hard", [study("noun-adv-study"), quiz("noun-adv-quiz")]), "advanced"),
+  gate("eq-u1-nouns-gate", nouns, "Noun Challenge", "eq-u1-nouns-gate-pool", {
+    "common-proper": "Common & proper",
+    "singular-plural": "Singular & plural",
+    gender: "Gender",
+    advanced: "Advanced nouns",
+  }),
   endless(nouns),
 
   pronouns,
@@ -413,11 +455,15 @@ export const nodes = [
   endless(pronouns),
 
   verbs,
-  practice("eq-u1-verbs-p1", verbs, 1, "Action & linking", "easy", [study("verbs-link-study"), quiz("verbs-link-quiz")]),
-  practice("eq-u1-verbs-p2", verbs, 2, "Transitive", "medium", [study("verbs-trans-study"), quiz("verbs-trans-quiz")]),
-  practice("eq-u1-verbs-p3", verbs, 3, "Finite & non-finite", "hard", [study("verbs-finite-study"), quiz("verbs-finite-quiz")]),
+  withSubtopic(practice("eq-u1-verbs-p1", verbs, 1, "Action & linking", "easy", [study("verbs-link-study"), quiz("verbs-link-quiz")]), "action-linking"),
+  withSubtopic(practice("eq-u1-verbs-p2", verbs, 2, "Transitive", "medium", [study("verbs-trans-study"), quiz("verbs-trans-quiz")]), "transitive"),
+  withSubtopic(practice("eq-u1-verbs-p3", verbs, 3, "Finite & non-finite", "hard", [study("verbs-finite-study"), quiz("verbs-finite-quiz")]), "finite"),
   practice("eq-u1-verbs-p4", verbs, 4, "Verb boss", "hard", [quiz("verbs-boss-1")]),
-  gate("eq-u1-verbs-gate", verbs, "Verb Challenge", "verbs-boss-2"), // temporary pool until Step 2 gate pools
+  gate("eq-u1-verbs-gate", verbs, "Verb Challenge", "eq-u1-verbs-gate-pool", {
+    "action-linking": "Action & linking",
+    transitive: "Transitive",
+    finite: "Finite & non-finite",
+  }),
   endless(verbs),
 
   adjectives,

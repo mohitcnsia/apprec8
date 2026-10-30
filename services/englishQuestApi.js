@@ -60,8 +60,12 @@ export function listenToQuestProgress(questId, onData, onError) {
   );
 }
 
-/** Updates one node in the kid's progress. Keeps the best score. */
-async function updateNodeProgress(questId, nodeId, { percent, passed }) {
+/**
+ * Updates one node in the kid's progress. Keeps the best score.
+ * gate:        { weak: string[] } for gate attempts (stores fails + weak sub-topics)
+ * resetGateId: a practice leaf that was glowing was passed → that gate's fail counter resets
+ */
+async function updateNodeProgress(questId, nodeId, { percent, passed, gate = null, resetGateId = null }) {
   const user = currentUser();
   if (!user) return;
   const progressRef = doc(db, "users", user.uid, "questProgress", questId);
@@ -79,11 +83,23 @@ async function updateNodeProgress(questId, nodeId, { percent, passed }) {
   if (passed || alreadyCompleted) nodeUpdate.status = "completed";
   if (passed && !alreadyCompleted) nodeUpdate.completedAt = serverTimestamp();
 
-  await setDoc(
-    progressRef,
-    { nodes: { [nodeId]: nodeUpdate }, updatedAt: serverTimestamp() },
-    { merge: true }
-  );
+  // Gate memory (Spec v2): fails since last practice + weak sub-topics for the glow.
+  if (gate) {
+    if (passed || alreadyCompleted) {
+      nodeUpdate.failsSinceLastPractice = 0;
+      nodeUpdate.weakSubtopics = [];
+    } else {
+      nodeUpdate.failsSinceLastPractice = increment(1);
+      nodeUpdate.weakSubtopics = gate.weak || [];
+    }
+  }
+
+  const nodesUpdate = { [nodeId]: nodeUpdate };
+  if (resetGateId && passed && resetGateId !== nodeId) {
+    nodesUpdate[resetGateId] = { failsSinceLastPractice: 0 };
+  }
+
+  await setDoc(progressRef, { nodes: nodesUpdate, updatedAt: serverTimestamp() }, { merge: true });
 }
 
 /** Marks a study page as read (completed). */
@@ -106,14 +122,21 @@ export function markStudyNodeCompleted(questId, nodeId) {
  * @param {number} p.startedAt - ms timestamp when the quiz started
  * @param {"finished"|"outOfHearts"} p.outcome
  * @param {object} [p.details] - extra info for this activity type
+ * @param {object} [p.gateResult] - evaluateGate() result for gate attempts
+ * @param {string} [p.resetGateId] - gate whose fail counter resets if this attempt passes
  * @returns {Promise<{ percent: number, passed: boolean } | null>}
  */
 export async function saveQuestAttempt(p) {
   const user = currentUser();
   if (!user) return null;
   try {
-    const { correctCount, total, percent } = scoreAnswers(p.answers, p.totalQuestions);
-    const passed = p.outcome === "finished" && percent >= p.passPercent;
+    const scored = scoreAnswers(p.answers, p.totalQuestions);
+    const gate = p.gateResult || null;
+    // Gates use their own rule (score + every sub-topic). Out of hearts never passes.
+    const correctCount = gate ? gate.correctCount : scored.correctCount;
+    const total = gate ? gate.total : scored.total;
+    const percent = gate ? gate.percent : scored.percent;
+    const passed = p.outcome === "finished" && (gate ? gate.passed : percent >= p.passPercent);
     const endedAt = Date.now();
 
     await addDoc(collection(db, "questAttempts"), {
@@ -133,12 +156,19 @@ export async function saveQuestAttempt(p) {
       startedAtMs: p.startedAt || null,
       durationMs: p.startedAt ? endedAt - p.startedAt : null,
       answers: p.answers,
-      details: p.details || null, // e.g. reading: { readingMode, wordCount }
+      details: gate
+        ? { ...(p.details || {}), gate: { bySubtopic: gate.bySubtopic, weak: gate.weak } }
+        : p.details || null, // e.g. reading: { readingMode, wordCount }
       appVersion: Constants.expoConfig?.version || null,
       createdAt: serverTimestamp(),
     });
 
-    await updateNodeProgress(p.questId, p.nodeId, { percent, passed });
+    await updateNodeProgress(p.questId, p.nodeId, {
+      percent,
+      passed,
+      gate: gate ? { weak: gate.weak } : null,
+      resetGateId: p.resetGateId || null,
+    });
     return { percent, passed };
   } catch (error) {
     console.error("saveQuestAttempt failed:", error);

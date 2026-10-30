@@ -3,6 +3,7 @@
 import { useReducer, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listenToV2QuizQuestions } from "../services/firestoreContentApi"; // Adjust path
+import { drawBalanced } from "../utils/gateRules";
 
 /**
  * A helper function to shuffle an array.
@@ -231,10 +232,17 @@ export const useQuizEngine = (quiz, mode) => {
             let questionsToLoad = quiz.config?.shuffleQuestions
               ? sortedQuestions
               : fetchedQuestions;
-              
-            // 4. Slice to max questions for practice session
+
+            // 4. Pick the questions for this session.
             const maxQuestions = quiz.config?.questionCount || 10;
-            if (questionsToLoad.length > maxQuestions) {
+            if (quiz.config?.balanceBy) {
+              // English Quest gates: a fresh, balanced draw every attempt (e.g. >= 2 per sub-topic).
+              questionsToLoad = drawBalanced(fetchedQuestions, {
+                count: maxQuestions,
+                groupBy: quiz.config.balanceBy,
+                minPerGroup: quiz.config.minPerGroup || 2,
+              });
+            } else if (questionsToLoad.length > maxQuestions) {
               questionsToLoad = questionsToLoad.slice(0, maxQuestions);
             }
 

@@ -74,6 +74,21 @@ t = buildQuestPath([{ id: "u", kind: "unit", unitOrder: 0 }, { id: "m", kind: "m
 assert.equal(t.path[0].status, "comingSoon");
 assert.deepEqual(buildQuestPath([], {}).path, []);
 
+// 9. Gate memory: fails + weak sub-topics make matching practice leaves glow; 2 fails lock retries.
+const gnodes = nodes.map((n) => (n.id === "a-p1" ? { ...n, subtopic: "gender" } : n));
+const mainDone = done(stepId("a", 0), stepId("a", 1));
+t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { failsSinceLastPractice: 1, weakSubtopics: ["gender"] } });
+assert.equal(t.path[0].gate.retryLocked, false);
+assert.equal(t.path[0].practices[0].glow, true);
+assert.equal(t.path[0].practices[1].glow, false);
+t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { failsSinceLastPractice: 2, weakSubtopics: ["gender"] } });
+assert.equal(t.path[0].gate.retryLocked, true);
+assert.equal(t.path[0].gate.status, "unlocked"); // still shown as open, the lock is explained on tap
+// Passing the gate clears glow and lock
+t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { status: "completed", failsSinceLastPractice: 0, weakSubtopics: ["gender"] } });
+assert.equal(t.path[0].practices[0].glow, false);
+assert.equal(t.path[0].gate.retryLocked, false);
+
 // Stars + scoring helpers
 assert.equal(starsForPercent(59), 0); assert.equal(starsForPercent(60), 1);
 assert.equal(starsForPercent(85), 2); assert.equal(starsForPercent(100), 3);

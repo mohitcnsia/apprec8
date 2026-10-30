@@ -44,6 +44,22 @@ for (const n of nodes) {
   if (n.kind === "gate" || n.kind === "boss") assert.ok(quizExists(n.quizId), `${n.id}: missing quiz ${n.quizId}`);
 }
 for (const b of mainIds) assert.ok(nodes.filter(n => n.kind === "gate" && n.branchId === b).length <= 1, `${b}: more than one gate`);
+// Gate pools (Spec v2 Step 2): every question tagged with a known sub-topic, enough questions to draw
+// a fresh balanced test, and every practice sub-topic of the branch named on the gate.
+for (const g of nodes.filter(n => n.kind === "gate")) {
+  const pool = D.quizzes[g.quizId];
+  if (!pool) continue; // reused old quiz (no sub-topics yet)
+  const titles = g.subtopicTitles || {};
+  assert.ok(Object.keys(titles).length > 0, `${g.id}: subtopicTitles missing`);
+  assert.ok(pool.length >= (g.drawCount || 10), `${g.id}: pool smaller than drawCount`);
+  pool.forEach((q, i) => assert.ok(titles[q.subtopic], `${g.id} q${i+1}: sub-topic '${q.subtopic}' not in subtopicTitles`));
+  for (const t of Object.keys(titles)) {
+    assert.ok(pool.filter(q => q.subtopic === t).length >= 3, `${g.id}: sub-topic '${t}' needs at least 3 questions`);
+  }
+  nodes.filter(n => n.kind === "practice" && n.branchId === g.branchId && n.subtopic)
+    .forEach(p => assert.ok(titles[p.subtopic], `${p.id}: sub-topic '${p.subtopic}' not named on ${g.id}`));
+  console.log(`gate ${g.id}: ${pool.length} questions, sub-topics ${Object.keys(titles).map(t => `${t}=${pool.filter(q => q.subtopic === t).length}`).join(" ")}`);
+}
 import { buildReadingFlow, countWords } from "../utils/readingFlow.js";
 for (const [id, r] of Object.entries(D.readings)) {
   assert.ok(["stepByStep", "fullPassage"].includes(r.mode), `${id}: bad mode`);

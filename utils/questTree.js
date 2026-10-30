@@ -25,6 +25,8 @@
 //   - The Unit Boss opens when the unit's last branch is cleared. Passing it opens the next unit.
 //   - Unknown step types / node kinds show as "comingSoon" (never crash in older app versions).
 
+import { MAX_FAILS_BEFORE_PRACTICE } from "./gateRules.js";
+
 export const KNOWN_STEP_TYPES = ["study", "quiz", "reading"];
 export const KNOWN_SIDE_KINDS = ["practice", "gate"]; // "endless" arrives in Spec v2 step 4
 
@@ -123,6 +125,24 @@ export function buildQuestPath(nodes = [], progress = {}) {
       const sideOpen = status === "completed";
       const sideNodes = inUnit.filter((n) => n.branchId === main.branchId && n.kind !== "main");
 
+      const gateNode = sideNodes.find((n) => n.kind === "gate");
+      let gate = null;
+      if (gateNode) {
+        const passed = isDone(progress, gateNode.id);
+        const playable = !!gateNode.quizId;
+        const fails = progress?.[gateNode.id]?.failsSinceLastPractice || 0;
+        const weakSubtopics = passed ? [] : progress?.[gateNode.id]?.weakSubtopics || [];
+        gate = {
+          ...gateNode,
+          status: !sideOpen ? "locked" : !playable ? "comingSoon" : passed ? "completed" : "unlocked",
+          bestPercent: bestOf(progress, gateNode.id),
+          failsSinceLastPractice: fails,
+          weakSubtopics,
+          // Spec v2: after 2 fails the next try needs one glowing practice leaf first.
+          retryLocked: !passed && fails >= MAX_FAILS_BEFORE_PRACTICE,
+        };
+      }
+
       const practices = sideNodes
         .filter((n) => n.kind === "practice")
         .sort(byNumber("order"))
@@ -139,21 +159,11 @@ export function buildQuestPath(nodes = [], progress = {}) {
             ...p,
             ...ps,
             status: pStatus,
+            // Glows when the last gate attempt found this sub-topic weak.
+            glow: !!gate && !!p.subtopic && gate.weakSubtopics.includes(p.subtopic) && pStatus !== "locked",
             stars: ps.allDone ? starsForPercent(ps.bestPercent ?? 100, passPercent) : 0,
           };
         });
-
-      const gateNode = sideNodes.find((n) => n.kind === "gate");
-      let gate = null;
-      if (gateNode) {
-        const passed = isDone(progress, gateNode.id);
-        const playable = !!gateNode.quizId;
-        gate = {
-          ...gateNode,
-          status: !sideOpen ? "locked" : !playable ? "comingSoon" : passed ? "completed" : "unlocked",
-          bestPercent: bestOf(progress, gateNode.id),
-        };
-      }
 
       const endlessNode = sideNodes.find((n) => n.kind === "endless");
       const endless = endlessNode

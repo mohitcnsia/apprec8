@@ -152,8 +152,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   }, [tree, viewportHeight]);
 
   // ---------- Opening activities ----------
-  const openStep = (node, step, passPercent) => {
-    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap" };
+  const openStep = (node, step, passPercent, extraContext = {}) => {
+    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap", ...extraContext };
     if (step.type === "study") {
       navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext });
     } else if (step.type === "reading") {
@@ -164,13 +164,15 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   };
 
   // Like the Space quest: Quiz Details lets the kid choose Training (hearts, instant feedback) or Exam.
-  const openQuizDetails = ({ id, title }, questContext, passPercent) => {
+  const openQuizDetails = ({ id, title, description, config = {} }, questContext, passPercent) => {
     navigation.navigate("QuizDetails", {
       quiz: {
         id,
         title,
-        description: `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`,
-        config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10 },
+        description:
+          description ||
+          `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`,
+        config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10, ...config },
       },
       questContext,
     });
@@ -199,14 +201,49 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (leaf.status === "locked" || leaf.status === "comingSoon") {
       return explainClosed(leaf.status, `Finish "${main.title}" first to open its practice.`);
     }
-    if (leaf.nextStep) openStep(leaf, leaf.nextStep, leaf.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT);
+    if (leaf.nextStep) {
+      openStep(
+        leaf,
+        leaf.nextStep,
+        leaf.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT,
+        leaf.glow && main.gate ? { resetGateId: main.gate.id } : {}
+      );
+    }
   };
 
   const onGatePress = (gate, main) => {
     if (gate.status === "locked" || gate.status === "comingSoon") {
       return explainClosed(gate.status, `Finish "${main.title}" first to open its challenge.`);
     }
-    openTest(gate, gate.passPercent ?? DEFAULT_GATE_PASS_PERCENT);
+    if (gate.retryLocked) {
+      Alert.alert(
+        "Practise first",
+        "You've tried this challenge twice. Practise one of the glowing topics, then you can try again. You can do it!"
+      );
+      return;
+    }
+    const passPercent = gate.passPercent ?? DEFAULT_GATE_PASS_PERCENT;
+    const index = tree.path.findIndex((p) => p.id === main.id);
+    const next = tree.path.slice(index + 1).find((p) => p.kind === "main" || p.kind === "boss");
+    openQuizDetails(
+      {
+        id: gate.quizId,
+        title: gate.title || "Challenge",
+        description: `Score ${passPercent}% or more, with at least one right answer in every topic, to open the next step. Every try has new questions.`,
+        config: { balanceBy: "subtopic", minPerGroup: 2, questionCount: gate.drawCount || 10 },
+      },
+      {
+        questId,
+        nodeId: gate.id,
+        passPercent,
+        returnTo: "EnglishQuestMap",
+        gate: true,
+        nextTitle: next?.title || null,
+        failsSoFar: gate.failsSinceLastPractice || 0,
+        subtopicTitles: gate.subtopicTitles || {},
+      },
+      passPercent
+    );
   };
 
   const onBossPress = (bossItem) => {
@@ -248,6 +285,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
                 backgroundColor: p.status === "completed" ? diff : open ? theme.cardBackground : theme.disabledBackground,
                 borderColor: open ? diff : theme.border,
               },
+              p.glow && [styles.leafGlow, { borderColor: theme.gold, shadowColor: theme.gold }],
             ]}
           >
             <Ionicons name={icon} size={20} color={p.status === "completed" ? "#FFFFFF" : open ? diff : theme.textSecondary} />
@@ -259,8 +297,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
                 ))
               : null}
           </View>
-          <Text style={styles.leafLabel} numberOfLines={2}>
-            {p.title}
+          <Text style={[styles.leafLabel, p.glow && styles.glowLabel]} numberOfLines={2}>
+            {p.glow ? `✨ ${p.title}` : p.title}
           </Text>
         </TouchableOpacity>
       );
@@ -271,11 +309,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       leaves.push(
         <TouchableOpacity key={g.id} style={styles.leafWrap} onPress={() => onGatePress(g, item)} activeOpacity={0.8}>
           <View style={[styles.leaf, styles.gateLeaf, { backgroundColor: c.bg, borderColor: g.status === "unlocked" ? theme.accent : c.border }]}>
-            <Ionicons name={g.status === "locked" ? "lock-closed" : "shield-checkmark"} size={22} color={c.icon} />
+            <Ionicons name={g.status === "locked" || g.retryLocked ? "lock-closed" : "shield-checkmark"} size={22} color={c.icon} />
           </View>
           <View style={styles.starsRow} />
           <Text style={[styles.leafLabel, styles.gateLabel]} numberOfLines={2}>
-            {g.title || "Challenge"}
+            {g.retryLocked ? "Practise first" : g.title || "Challenge"}
           </Text>
         </TouchableOpacity>
       );
@@ -443,6 +481,8 @@ const makeStyles = (theme) =>
       elevation: 2,
     },
     gateLeaf: { borderRadius: 12 },
+    leafGlow: { borderWidth: 4, elevation: 8, shadowOpacity: 0.9, shadowRadius: 8, shadowOffset: { width: 0, height: 0 } },
+    glowLabel: { fontFamily: "nunitoBold", color: theme.gold },
     starsRow: { flexDirection: "row", height: 11, marginTop: 2 },
     leafLabel: { fontSize: 10, fontFamily: "nunito", color: theme.textPrimaryOnGradient, textAlign: "center" },
     gateLabel: { fontFamily: "nunitoBold" },

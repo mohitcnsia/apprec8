@@ -24,6 +24,7 @@ import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
+import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 
 const QuizScreenV2 = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
@@ -63,13 +64,24 @@ const QuizScreenV2 = ({ route, navigation }) => {
       // In exam mode a kid can come back and change an answer; add up the time.
       timeMs: (previous?.timeMs || 0) + timeMs,
       mistakeTag: option.isCorrect ? null : option.mistakeTag || null,
+      subtopic: question.subtopic || null,
       changedAnswer: !!previous,
     };
   };
 
+  // Gates (English Quest): pass = score >= passPercent AND at least one right in every sub-topic.
+  const isGate = !!questContext?.gate;
+  const gateResultRef = useRef(null);
+  const getGateResult = () =>
+    evaluateGate(Object.values(answerLogRef.current), questions, {
+      passPercent: questContext?.passPercent ?? 80,
+      requireEverySubtopic: true,
+    });
+
   const saveAttemptOnce = (outcome) => {
     if (!questContext || attemptSavedRef.current) return;
     attemptSavedRef.current = true;
+    if (isGate) gateResultRef.current = getGateResult();
     saveQuestAttempt({
       questId: questContext.questId,
       nodeId: questContext.nodeId,
@@ -80,7 +92,68 @@ const QuizScreenV2 = ({ route, navigation }) => {
       passPercent: questContext.passPercent ?? 60,
       startedAt: quizStartedAtRef.current,
       outcome,
+      gateResult: isGate ? gateResultRef.current : null,
+      resetGateId: questContext.resetGateId || null,
     });
+  };
+
+  // Retry a gate with a fresh draw (remount), honouring the 2-fails lock.
+  const failsAfterThisAttempt = (passed) => (passed ? 0 : (questContext?.failsSoFar || 0) + 1);
+  const retryGate = (passed) =>
+    navigation.replace("QuizScreenV2", {
+      quiz,
+      mode,
+      questContext: { ...questContext, failsSoFar: failsAfterThisAttempt(passed) },
+    });
+  const backToQuest = () =>
+    navigation.navigate(questContext?.returnTo || "EnglishQuestMap", { questId: questContext?.questId });
+
+  const buildGateResultParams = (submissionContext) => {
+    const r = gateResultRef.current || getGateResult();
+    const titles = questContext.subtopicTitles || {};
+    const nameOf = (id) => titles[id] || id;
+    const weakNames = r.weak.map(nameOf);
+    const canRetry = canRetryAfter(failsAfterThisAttempt(r.passed));
+    const metrics = Object.entries(r.bySubtopic).map(([id, v]) => ({
+      label: `${v.correct === 0 ? "⚠️" : "✅"} ${nameOf(id)}`,
+      value: `${v.correct}/${v.total}`,
+    }));
+    if (r.passed) {
+      return {
+        title: `🎉 ${questContext.nextTitle ? `${questContext.nextTitle} unlocked!` : "Challenge passed!"}`,
+        message: `${quiz.title}: ${r.correctCount}/${r.total} (${r.percent}%)${r.percent < 100 ? "\nTry for 100% to earn ⭐" : ""}`,
+        finalScore: r.correctCount,
+        maxPossibleScore: r.total,
+        metrics,
+        actions: [
+          { label: "Back to Quest", onPress: backToQuest, mode: "contained" },
+          { label: "Play again", onPress: () => retryGate(true), mode: "outlined" },
+        ],
+        effects: { confetti: true },
+        submissionContext,
+        feedbackContext: { type: "quest_gate", id: quiz.id },
+      };
+    }
+    const passPercent = questContext.passPercent ?? 80;
+    const lines = [`You need ${passPercent}% and at least one right answer in every topic.`];
+    if (weakNames.length) lines.push(`Practise "${weakNames.join('", "')}" first.`);
+    if (!canRetry) lines.push("Practise a glowing topic on the map, then you can try again.");
+    return {
+      title: `So close! ${r.correctCount}/${r.total} (${r.percent}%)`,
+      message: lines.join("\n"),
+      finalScore: r.correctCount,
+      maxPossibleScore: r.total,
+      metrics,
+      actions: canRetry
+        ? [
+            { label: weakNames.length ? `Go practise ${weakNames[0]}` : "Back to Quest", onPress: backToQuest, mode: "contained" },
+            { label: "Try again", onPress: () => retryGate(false), mode: "outlined" },
+          ]
+        : [{ label: weakNames.length ? `Go practise ${weakNames[0]}` : "Back to Quest", onPress: backToQuest, mode: "contained" }],
+      effects: { confetti: false },
+      submissionContext,
+      feedbackContext: { type: "quest_gate", id: quiz.id },
+    };
   };
 
   // Out of hearts still counts as an attempt (useful for teachers).
@@ -168,7 +241,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
         feedbackContext: { type: "quiz_v2_overall", id: quiz.id },
       };
 
-      navigation.replace("ResultsScreen", resultParams);
+      navigation.replace(
+        "ResultsScreen",
+        isGate ? buildGateResultParams(resultParams.submissionContext) : resultParams
+      );
     }
   }, [status, navigation, questions, score, quiz, mode]);
 
@@ -382,13 +458,19 @@ const QuizScreenV2 = ({ route, navigation }) => {
             <Ionicons name="heart-dislike" size={64} color="#FF4B4B" style={{marginBottom: 20}} />
             <Text style={titleColor}>Out of Hearts!</Text>
             <Text style={[styles.progressText, {marginBottom: 30}]}>Don't worry, mistakes help you learn.</Text>
-            <PaperButton
-              mode="contained"
-              buttonColor="#FF4B4B"
-              onPress={() => dispatch({ type: "RESTART_QUIZ" })}
-            >
-              Try Again
-            </PaperButton>
+            {!isGate || canRetryAfter(failsAfterThisAttempt(false)) ? (
+              <PaperButton
+                mode="contained"
+                buttonColor="#FF4B4B"
+                onPress={() => (isGate ? retryGate(false) : dispatch({ type: "RESTART_QUIZ" }))}
+              >
+                Try Again
+              </PaperButton>
+            ) : (
+              <Text style={[styles.progressText, { marginBottom: 10 }]}>
+                Practise a glowing topic on the map, then try this challenge again.
+              </Text>
+            )}
             <PaperButton
               mode="outlined"
               style={{marginTop: 15}}
