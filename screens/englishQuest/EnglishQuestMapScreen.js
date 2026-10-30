@@ -27,6 +27,7 @@ import { authInstance } from "../../config/firebaseConfig";
 import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
+import { buildWindow } from "../../utils/questWindow";
 import {
   listenToQuestProgress,
   markStudyNodeCompleted,
@@ -44,6 +45,8 @@ const MAIN_SIZE = 72;
 const BOSS_SIZE = 84;
 const LEAF_SIZE = 46;
 const PAD_TOP = 40;
+const CARD_HEIGHT = 120; // collapsed finished unit / next-unit teaser
+const MORE_HEIGHT = 70; // "N more units ahead"
 const PAD_BOTTOM = 90;
 const THUMB_ZONE = 0.7; // current node ends up ~70% down the visible map
 
@@ -151,25 +154,58 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   );
   const count = tree?.path.length || 0;
 
+  // Map windowing (Duolingo-style): current unit in full, finished units as cards,
+  // next unit as a teaser, the rest as one line. Logic in utils/questWindow.js.
+  const [expandedUnits, setExpandedUnits] = useState([]);
+  const toggleUnit = (unitId) =>
+    setExpandedUnits((list) => (list.includes(unitId) ? list.filter((u) => u !== unitId) : [...list, unitId]));
+  const win = useMemo(
+    () =>
+      tree && nodes
+        ? buildWindow({
+            path: tree.path,
+            units: nodes.filter((n) => n.kind === "unit"),
+            currentPathId: tree.currentPathId,
+            expanded: expandedUnits,
+            unlockAll,
+          })
+        : { rows: [], currentUnitId: null },
+    [tree, nodes, expandedUnits, unlockAll]
+  );
+  const rows = win.rows;
+
   // Pre-download the current unit's quizzes and pages (instant + offline next steps).
-  const currentUnitId = tree?.path.find((p) => p.id === tree.currentPathId)?.unitId;
+  const currentUnitId = win.currentUnitId;
   useEffect(() => {
     if (nodes && currentUnitId && quest?.contentVersion != null) {
       prefetchUnit(nodes, currentUnitId, quest.contentVersion);
     }
   }, [nodes, currentUnitId, quest?.contentVersion]);
-  const contentHeight = PAD_TOP + count * ROW_HEIGHT + PAD_BOTTOM;
 
-  // Row geometry: path[0] (the start) is the bottom row.
-  const rowTop = (i) => PAD_TOP + (count - 1 - i) * ROW_HEIGHT;
-  const centerOf = (i) => {
-    const size = tree.path[i].kind === "boss" ? BOSS_SIZE : MAIN_SIZE;
-    return { x: nodeX(i, width), y: rowTop(i) + size / 2 + 8 };
+  // Row geometry: rows[0] (the start) is at the bottom.
+  const rowHeight = (r) => (r.type === "node" ? ROW_HEIGHT : r.type === "more" ? MORE_HEIGHT : CARD_HEIGHT);
+  const layout = useMemo(() => {
+    const tops = new Array(rows.length);
+    let y = PAD_TOP;
+    for (let j = rows.length - 1; j >= 0; j--) {
+      tops[j] = y;
+      y += rowHeight(rows[j]);
+    }
+    return { tops, total: y + PAD_BOTTOM };
+  }, [rows]);
+  const contentHeight = layout.total;
+  const anchorOf = (j) => {
+    const r = rows[j];
+    if (r.type === "node") {
+      const size = r.item.kind === "boss" ? BOSS_SIZE : MAIN_SIZE;
+      return { x: nodeX(r.pathIndex, width), y: layout.tops[j] + size / 2 + 8 };
+    }
+    return { x: width * 0.24, y: layout.tops[j] + rowHeight(r) / 2 }; // hidden behind the card
   };
 
   const pathD = useMemo(() => {
-    if (!tree || count < 2) return "";
-    const pts = tree.path.map((_, i) => centerOf(i));
+    if (rows.length < 2) return "";
+    const pts = rows.map((_, j) => anchorOf(j));
     let d = `M ${pts[0].x} ${pts[0].y}`;
     for (let i = 1; i < pts.length; i++) {
       const a = pts[i - 1];
@@ -177,19 +213,19 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       d += ` C ${a.x} ${a.y - 60}, ${b.x} ${b.y + 60}, ${b.x} ${b.y}`;
     }
     return d;
-  }, [tree, count, width]);
+  }, [rows, layout, width]);
 
   // Auto-scroll: put the current node in the lower-left thumb zone (re-runs when the current node changes).
   useEffect(() => {
     if (!tree || !viewportHeight || !tree.currentPathId) return;
     if (lastScrolledTo.current === tree.currentPathId) return;
-    const i = tree.path.findIndex((p) => p.id === tree.currentPathId);
-    if (i < 0) return;
-    const y = Math.max(0, centerOf(i).y - viewportHeight * THUMB_ZONE);
+    const j = rows.findIndex((r) => r.type === "node" && r.item.id === tree.currentPathId);
+    if (j < 0) return;
+    const y = Math.max(0, anchorOf(j).y - viewportHeight * THUMB_ZONE);
     lastScrolledTo.current = tree.currentPathId;
     pendingScrollY.current = y;
     setTimeout(() => scrollRef.current?.scrollTo({ y, animated: true }), 300);
-  }, [tree, viewportHeight]);
+  }, [tree, rows, viewportHeight]);
 
   // Fallback (CODE_REVIEW Finding 14): if native layout finishes after the timer, scroll again.
   const onContentSizeChange = (_w, h) => {
@@ -412,10 +448,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     );
   };
 
-  const renderRow = (item, i) => {
+  const renderRow = (item, i, top) => {
     const isBoss = item.kind === "boss";
     const size = isBoss ? BOSS_SIZE : MAIN_SIZE;
-    const { x } = centerOf(i);
+    const x = nodeX(i, width);
     const isCurrent = item.id === tree.currentPathId;
     const c = circleColors(item.status, { mastered: item.mastered || (isBoss && item.status === "completed") });
 
@@ -431,7 +467,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     const sideLeft = x + size / 2 + 16;
 
     return (
-      <View key={item.id} style={[styles.row, { top: rowTop(i) }]}>
+      <View key={item.id} style={[styles.row, { top }]}>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => (isBoss ? onBossPress(item) : item.kind === "main" ? onMainPress(item) : explainClosed("comingSoon"))}
@@ -461,6 +497,54 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         {item.kind === "main" ? (
           <View style={[styles.sideRow, { left: sideLeft, top: size / 2 + 8 - LEAF_SIZE / 2 - 4 }]}>{renderSideRow(item)}</View>
         ) : null}
+      </View>
+    );
+  };
+
+  const renderCard = (r, top) => {
+    if (r.type === "more") {
+      return (
+        <View key="more" style={[styles.row, styles.moreRow, { top, height: MORE_HEIGHT }]}>
+          <Ionicons name="lock-closed" size={16} color={theme.textSecondaryOnGradient} />
+          <Text style={styles.moreText}>
+            {r.count} more {r.count === 1 ? "unit" : "units"} ahead
+          </Text>
+        </View>
+      );
+    }
+    const isDone = r.type === "doneCard";
+    const subtitle = isDone
+      ? `${r.topicsDone}/${r.topicsTotal} topics · ${r.expanded ? "Tap to hide" : "Tap to review"}`
+      : r.comingSoon
+      ? "Coming soon"
+      : `${r.topicsTotal} topics · Beat the ${r.needs || "Unit Boss"} to open`;
+    const card = (
+      <View style={[styles.unitCard, !isDone && styles.teaserCard]}>
+        <Ionicons
+          name={isDone ? "checkmark-circle" : r.comingSoon ? "hourglass-outline" : "lock-closed"}
+          size={30}
+          color={isDone ? theme.success : LOCKED_ICON}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.unitCardTitle} numberOfLines={1}>
+            {r.title}
+          </Text>
+          <Text style={styles.unitCardSub} numberOfLines={1}>
+            {subtitle}
+          </Text>
+        </View>
+        {isDone ? <Ionicons name={r.expanded ? "chevron-down" : "chevron-up"} size={20} color={theme.textSecondaryOnGradient} /> : null}
+      </View>
+    );
+    return (
+      <View key={`${r.type}-${r.unitId}`} style={[styles.row, { top, height: CARD_HEIGHT, justifyContent: "center" }]}>
+        {isDone ? (
+          <TouchableOpacity activeOpacity={0.85} onPress={() => toggleUnit(r.unitId)}>
+            {card}
+          </TouchableOpacity>
+        ) : (
+          card
+        )}
       </View>
     );
   };
@@ -504,7 +588,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           <Svg height={contentHeight} width={width} style={StyleSheet.absoluteFill}>
             <Path d={pathD} stroke={theme.border} strokeWidth={5} strokeDasharray="10" fill="transparent" />
           </Svg>
-          {tree.path.map((item, i) => renderRow(item, i))}
+          {rows.map((r, j) =>
+            r.type === "node" ? renderRow(r.item, r.pathIndex, layout.tops[j]) : renderCard(r, layout.tops[j])
+          )}
           <View style={[styles.startRow, { top: contentHeight - PAD_BOTTOM + 30, left: nodeX(0, width) - 30 }]}>
             <Ionicons name="flag" size={18} color={theme.primary} />
             <Text style={styles.startText}>Start</Text>
@@ -565,6 +651,22 @@ const makeStyles = (theme) =>
     gateLabel: { fontFamily: "nunitoBold" },
 
     startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    unitCard: {
+      marginHorizontal: 16,
+      paddingVertical: 16,
+      paddingHorizontal: 16,
+      borderRadius: 18,
+      backgroundColor: theme.cardBackground,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      elevation: 3,
+    },
+    teaserCard: { borderWidth: 2, borderStyle: "dashed", borderColor: theme.border },
+    unitCardTitle: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textPrimary },
+    unitCardSub: { fontSize: 13, fontFamily: "nunito", color: theme.textSecondary, marginTop: 2 },
+    moreRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+    moreText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.textSecondaryOnGradient },
     testerBanner: {
       marginHorizontal: 16,
       marginBottom: 6,
