@@ -1081,3 +1081,26 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 ### RB-6 (backlog, owner 2026-10-31): kid avatars + nicknames, clean reports
 - Kids choose an avatar and a nickname **from a preset list** (e.g. "Brave Tiger", "Clever Comet"): no free typing, so no moderation needed. Other kids (leaderboard) see the nickname; **teachers/parents/admin always see the real name** (Google name, later roll number/name set by the teacher, RB-2).
 - After launch, together with RB-2.
+
+---
+
+## 2026-10-31 — Review request: Admin dashboard v0 — branch `feat/dashboard` (Claude)
+
+- **Branch:** `feat/dashboard` (commit `1963f00`), stacked on `feat/rewards` → `feat/my-mistakes`. **Merging `feat/dashboard` brings all three.** Built in the worktree; the emulator app was not touched.
+- **As specced (mockup approved):** 📊 Dashboard on Profile (admin only) → Kids tab (Today / This week / All, summary line, one row per kid: last active, unit + topics, accuracy, time, weakest topic, 🔧 mistakes) → kid detail (unit dots, week + all-time, topics with ⚠️ below 60% after ≥3 answers, last 20 attempts). Reported tab: `questionIssues`, "needs you" first, then most kids. Pull to refresh; no header back button.
+- **Data:** `saveStats` in `services/englishQuestApi.js` updates `questProgress/{questId}.stats` with every attempt (uses the listener copy; if not loaded yet it reads once, so totals are never reset). Time per attempt is capped at 30 min (app left open). Days older than 14 are deleted with `deleteField()`.
+- **Tests:** `tests/kidStats.test.mjs`. `npm test` (11 suites), compile, bundle pass. Not device-tested (needs DR-5 first).
+
+### DR-5: Deploy dashboard rule + index
+- **Status:** `[OPEN]`
+- **Rules** (local `firestore.rules` in the main checkout; gitignored, so it isn't in the branch): adds
+  `match /{path=**}/questProgress/{questId} { allow read: if isAdmin(); }` (admin only; kids still read/write only their own).
+- **Index:** `firestore.indexes.json` on the branch: `questAttempts` (`userId` ASC, `createdAt` DESC).
+- **Commands (after merging `feat/dashboard`):** `firebase deploy --only firestore:rules,firestore:indexes --project apprec8-ca229`. The index takes a few minutes to build.
+- **Check:** admin → Profile → 📊 Dashboard lists kids (after a few attempts with this build); a kid's detail shows "Recent activity"; a non-admin account can't read other kids' progress.
+
+### Updated merge plan (supersedes the one above)
+1. When the current QA run is done: `git merge feat/dashboard` on `feat/tile-quests` (brings My mistakes + rewards + dashboard).
+2. DR-5 deploy (rules + index).
+3. `scripts/qa/eq.sh reload`; QA My mistakes, Step 5 and the dashboard (play a few activities first so stats exist).
+4. Claude updates `gemini.md` / `CLAUDE.md` after the merge.
