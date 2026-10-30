@@ -1172,3 +1172,13 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 2. **Re-seed:** Profile → "Update English Quest" (boss stories).
 3. `scripts/qa/eq.sh reload`.
 4. **QA, using the "QA please" steps in each review request above:** (a) 🔧 My mistakes, (b) Step 5 rewards (map confetti, "+N ⭐ earned!", reading results), (c) 📊 Admin dashboard (play a few activities first so stats exist; check Kids tab, kid detail "Recent activity", Reported tab), (d) RB-5c boss story + RB-5b 🔊 / "Hear each" (practice only: must NOT appear in gates, Unit Boss or Exam). Plus a quick regression: checklist A, B, I.
+
+---
+
+## 2026-11-01 — Review request: 5 new gate challenges + gate-lock fix — branch `feat/gate-pools` (Claude)
+
+- **Branch:** `feat/gate-pools` (commit `9227a8c`), based on current `feat/tile-quests`. Built in the worktree.
+- **Content (75 questions):** Pronoun / Adjective / Adverb / Preposition / Conjunction Challenges, 15 each, sub-topic tagged, mistake tag on every wrong option. All original. Ambiguous items avoided (e.g. no "on/under the table", no "Meera ___ her brother" with "or"). **Waiting for the owner's + Pratha's accuracy review** using `docs/content-review/gates-2026-11-01.md`. Please don't seed before that.
+- **Bug fix (code, important):** `buildQuestPath` locked a gate after 2 fails until a *glowing* practice leaf was passed. A branch with no practice leaf for the weak sub-topic (Adverbs and Conjunctions have no practice leaves; Prepositions only covers "fixed") would lock a kid **forever**. Now the lock only applies when some practice leaf can glow. Tests added. Today only Nouns/Verbs have gates and all their sub-topics have leaves, so it can't happen yet; it would have with these new gates.
+- **Checks:** `npm test` (13 suites; content test now validates 7 gates). Not device-tested.
+- **Merge after the content review:** `git merge feat/gate-pools` → re-seed → QA checklist C on one new gate (pass, fail with weak topic, fail twice on Adverbs: must NOT lock).
