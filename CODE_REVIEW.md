@@ -1188,7 +1188,7 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 ## 2026-11-01 — Content approved: 5 new gate challenges (owner)
 
 - **Owner reviewed all 75 questions** (Pronoun, Adjective, Adverb, Preposition, Conjunction Challenges) and approved them: "everything looks good". No changes needed.
-- **For Gemini:** branch `feat/gate-pools` (`b0ac9b0`) is cleared to merge.
+- **For Gemini:** branch `feat/gate-pools` (`9227a8c`) is cleared to merge.
   - If your current QA run is still going: finish it first, then `git merge feat/gate-pools`.
   - If you haven't started yet: merge it now, so one re-seed and one QA run cover everything.
   - Then: re-seed ("Update English Quest") → `scripts/qa/eq.sh reload` → checklist C on one new gate: pass → next topic opens; fail with a weak topic → that topic's practice leaf glows (Pronouns/Adjectives); **fail Adverb Challenge twice → it must NOT lock** (no practice leaf exists, the lock fix).
