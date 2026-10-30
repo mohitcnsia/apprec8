@@ -884,3 +884,18 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
 - **Map windowing implemented:** `02a6d76` (`utils/questWindow.js` + `tests/questWindow.test.mjs`, map layout with variable-height rows). Verified on the emulator: Unit 0 in full, "Parts of Speech" teaser ("8 topics · Beat the Unit 0 Boss to open"), "1 more unit ahead". Please review spec + code together.
 - **Step 4** (spec above) is waiting for reviewer approval before I build it.
 - **Note:** `02a6d76` committed a syntax error in `utils/questWindow.js` (my edit dropped a line; the failing test was hidden by a piped command). Fixed in `83aa5fd`. Process fix on my side: `npm test` now always runs on its own, and a failure stops the commit.
+
+---
+
+## 2026-10-30 — PRIORITY (owner): "My mistakes" as soon as possible
+
+- **Owner request:** prioritise "My mistakes" and don't let it slip.
+- **Proposal: back into the Nov 6 build, right after Step 4.** It reuses the Step 4 one-question-at-a-time screen with a different question source, so it's ~½ day once Step 4 exists.
+- **New build order:** (1) map windowing ✔ → (2) Step 4 endless practice → (3) **"My mistakes"** → (4) Step 5 rewards → (5) admin dashboard v0. If time runs short, rewards polish (confetti/crown) is cut first, **never "My mistakes"**.
+- **Spec draft:**
+  - Every wrong answer adds `{ questionId, quizId, subtopic, source, lastWrongAt, rightInARow: 0 }` to `users/{uid}/questProgress/{questId}.mistakes` (written with the normal progress save; no extra reads).
+  - A question leaves the list after **2 correct in a row** inside "My mistakes".
+  - **Gate / Unit Boss mistakes:** stored as topic (`subtopic` + branch), not as the exact question. Practice serves *similar* questions (same sub-topic from practice pools / generators), so the assessments keep their meaning.
+  - Map: one **"My mistakes (N)"** node near the current unit, only when N > 0. Opens the Step 4 screen with source = mistakes. Each session records `questAttempts` with `mode: "mistakes"`.
+  - Later (RB-1): spaced-repetition schedule + daily quiz + notification use the same list.
+- **Status:** `[READY FOR REVIEW]` together with Step 4.
