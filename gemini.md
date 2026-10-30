@@ -108,6 +108,14 @@
   3. English Quest: deploy rules (`firebase deploy --only firestore:rules`), run `npm run android`, sign in with the admin account, press **Update English Quest** on Profile. The Study tab shows a **Quests** row with the English Quest tile → intro → tree. Play "Sentence or not?", then check `questAttempts` and `users/{uid}/questProgress/english-quest` in the Firebase console. Pass the Unit 0 test (≥70%) and check Unit 1 opens.
   4. Reading: in English Quest open Unit 0 → Reading → "Tara's paper boat". Check the next paragraph appears after each answer, "Show me where" highlights the sentence, underlined words show meanings, 🔊 reads aloud, and finishing saves a `questAttempts` doc with `mode: "reading"`. In Unit 1 try "The seed library" (full passage mode).
 
+### RB-2 frozen: parents and teachers (agreed 2026-10-30, reviewed by Gemini)
+- **Dashboard in the app, phone-first** (teachers and parents mostly have phones). CSV export via the share sheet.
+- **Parent** (linked to child): progress, time, weak topics, Learn pages, and the practice questions their child got wrong *with* answers.
+- **Teacher** (linked to class): the same for the class, plus a syllabus view (units, topics, Learn pages, sample practice questions) and mistake patterns.
+- **Gate/Unit Boss questions and answers are visible to nobody except the admin.** Teacher preview plays nodes without recording and hides gate/Boss answers.
+- **Teachers' own stats** (if they play normally) are visible only to themselves and the admin.
+- The admin (owner) can see everyone's data.
+
 ### Plan: English Olympiad Quest (agreed 2026-10-28)
 **Who:** Anyone who wants to learn. Main pilot users: Class 5 IEO kids (incl. Pratha) and ~50 Class 10 students whose teacher will track them. Android only. Both groups start on the same day (date TBD). App is public, so no consent flow for now.
 

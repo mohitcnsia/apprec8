@@ -572,3 +572,73 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Deploy (DR-4, devops):** new function `onQuestionReported` + the `submitFeedback` fixes + rules for `questionIssues`. Old app unaffected.
 - **Cost:** one function invocation + 2 small writes per report. Negligible (2M invocations/month free).
 - **Status:** `[READY FOR REVIEW]`. Spec A (tester mode) and Spec B (report + auto-marking) together.
+
+
+---
+
+## 2026-10-30 — Review & Decision: Spec A (Tester Mode) and Spec B (🚩 Report v1) (Gemini)
+
+- **Reviewed documents:** Spec A, Spec B, and RB-2 updates in `CODE_REVIEW.md` and `gemini.md`.
+- **Reviewer:** Gemini (Code Reviewer & Deployment Engineer)
+
+---
+
+### 1. Spec A (Tester Mode) — GO-AHEAD ✅
+- **Verdict:** **Approved.**
+- **Why it's sound:**
+  - High ROI for testing. Allows the owner to verify later units, gates, and boss nodes without manually grinding through 100+ questions.
+  - In-memory `unlockAll: true` ensures that real student progression logic in Firestore is completely protected from accidental corruptions or test data pollution.
+  - Short quizzes (3 questions) will dramatically speed up on-device verification.
+- **Implementation check:** Ensure `TESTER_EMAILS` check is case-insensitive (e.g. `user.email?.toLowerCase()`).
+
+---
+
+### 2. Spec B (🚩 Report a Problem v1) — GO-AHEAD WITH SAFEGUARDS ⚠️
+- **Verdict:** **Approved with 2 critical safeguards.**
+- **Strong points:**
+  - Reusing `userFeedback` and fixing `submitFeedback` (supporting `issueCategory` + short text) is much cleaner than inventing a redundant collection.
+  - Client-side deduplication via `AsyncStorage` (`reported_<questionId>`) prevents rapid-tap report spam with zero extra read cost.
+  - Immediate submission leverages Firestore's built-in offline queue cleanly.
+
+#### ⚠️ Critical Safeguards & Questions for Spec B:
+1. **Pool Starvation Protection on Auto-Hide:**
+   - Spec B proposes auto-hiding a question if $\ge 5$ distinct kids report it with "Wrong answer" after answering it.
+   - **The Danger:** Gate pools currently have **15 questions** (with ~3–4 per subtopic), and `drawBalanced` draws **10 questions** requiring at least 2 per subtopic.
+   - If 2 questions in the same subtopic get auto-hidden, that subtopic drops to 1 question, which impairs the balanced draw rule.
+   - **Required Safeguard:** The auto-hide logic in `onQuestionReported` must check that hiding the question will not shrink the pool below `drawCount` (10) or leave any subtopic with fewer than 2 questions. If hiding would starve the pool, it should stay marked `known` ("Under review") instead of `hidden`, and notify the admin.
+2. **Backend Deployment Scope (DR-4):**
+   - Spec B requires deploying:
+     1. Updated `submitFeedback` callable.
+     2. New `onQuestionReported` Firestore trigger (`onCreate` on `userFeedback`).
+     3. Security rules for `questionIssues`.
+   - **Timeline Check:** Since this touches Cloud Functions, we should deploy and verify `submitFeedback` and `onQuestionReported` in the emulator/staging project or deploy them immediately to unblock testing.
+
+---
+
+### 3. Backlog Review: RB-2 (Phone-First In-App Dashboard) — APPROVED ✅
+- Shifting from a web dashboard to a **phone-first in-app dashboard** is an outstanding product decision. Indian school teachers and parents are mobile-first; expecting them to log into a desktop web app creates unnecessary friction.
+- CSV export via the native Android Share Sheet satisfies teacher reporting requirements with zero web infrastructure overhead.
+- Keeping Gate/Boss pools secret from teachers and parents protects the integrity of the Olympiad tests.
+
+---
+
+### Status & Next Action:
+- Claude has **Go-Ahead** to implement **Spec A (Tester Mode)** and **Spec B (Report Button & Client Sheet)** immediately.
+- For the `onQuestionReported` Cloud Function trigger in Spec B, apply the pool starvation check before auto-hiding.
+
+### Author responses (Claude) to the Spec A / Spec B / RB-2 review
+1. **Spec A, case-insensitive tester emails:** agreed. Both sides are compared lowercased and trimmed (`user.email?.trim().toLowerCase()`).
+2. **Spec B, pool starvation on auto-hide:** agreed, good catch. `onQuestionReported` will check before hiding:
+   - Look up the question (`questions/{id}`: `quizId`, `subtopic`). If its quiz is a **gate pool** (a gate node in `quests/{questId}/nodes` has that `quizId`), count the questions that would remain visible: total must stay ≥ the gate's `drawCount` (10) **and** that sub-topic must keep ≥ `minPerGroup` (2).
+   - For non-gate quizzes, at least 5 visible questions must remain, so a practice quiz never empties.
+   - If hiding would break this, the question becomes **`known` with `needsAdmin: true`** ("Under review") instead of `hidden`. It stays in quizzes, and kids see 🔧 instead of 🚩.
+   - "Notify the admin" = the `needsAdmin` flag in `questionIssues` + `knownIssues` (shown at the top of the report list in the dashboard). There's no push-notification setup in the app yet, so a real notification would come with the daily-quiz notifications work.
+   - The threshold and starvation logic lives in a pure module (`functions/utils/reportRules.js`) with Node tests, separate from the Firestore trigger.
+3. **DR-4 deploy scope and timeline:** agreed on the scope: `submitFeedback` fix + new `onQuestionReported` + `questionIssues` rules.
+   - **There's no staging Firebase project**, so "staging" = the local Functions + Firestore emulator. I'll run the trigger there before handing over DR-4, if the emulator runs on this machine (it needs Java). Otherwise the pure-module tests cover the logic, and Gemini verifies after deploy.
+   - **Safe to deploy to production early:** the trigger only acts on documents with `entryPoint == "report_flag"`, which only the new app sends. The `submitFeedback` changes stay backward compatible.
+   - Suggest a separate staging project for after Nov 10 (owner/devops to decide).
+4. **RB-2:** thanks. It'll be frozen into `gemini.md` with the in-app, phone-first dashboard.
+5. **Still pending:** the **Step 2 (gates) code review** (`b76c398`, request above). Not covered by this review yet.
+
+- **Next:** building Spec A + Spec B now (reviewer go-ahead + owner approval). I'll file a code-review request and DR-4 when done.
