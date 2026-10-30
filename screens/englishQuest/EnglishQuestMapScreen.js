@@ -412,7 +412,13 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       const icon =
         p.status === "completed" ? "checkmark" : p.status === "locked" ? "lock-closed" : p.status === "comingSoon" ? "hourglass-outline" : STEP_ICONS[p.nextStep?.type] || "create";
       leaves.push(
-        <TouchableOpacity key={p.id} style={styles.leafWrap} onPress={() => onPracticePress(p, item)} activeOpacity={0.8}>
+        <TouchableOpacity
+          key={p.id}
+          style={styles.leafWrap}
+          onPress={() => onPracticePress(p, item)}
+          activeOpacity={0.8}
+          accessibilityLabel={`Practice: ${p.title}, ${p.status}`}
+        >
           <View
             style={[
               styles.leaf,
@@ -442,7 +448,13 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       const g = item.gate;
       const c = circleColors(g.status);
       leaves.push(
-        <TouchableOpacity key={g.id} style={styles.leafWrap} onPress={() => onGatePress(g, item)} activeOpacity={0.8}>
+        <TouchableOpacity
+          key={g.id}
+          style={styles.leafWrap}
+          onPress={() => onGatePress(g, item)}
+          activeOpacity={0.8}
+          accessibilityLabel={`Challenge: ${g.title || "Challenge"}, ${g.retryLocked ? "practise first" : g.status}`}
+        >
           <View style={[styles.leaf, styles.gateLeaf, { backgroundColor: c.bg, borderColor: g.status === "unlocked" ? theme.accent : c.border }]}>
             <Ionicons name={g.status === "locked" || g.retryLocked ? "lock-closed" : "shield-checkmark"} size={22} color={c.icon} />
           </View>
@@ -457,7 +469,13 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       const e = item.endless;
       const open = e.status === "unlocked";
       leaves.push(
-        <TouchableOpacity key={e.id} style={styles.leafWrap} onPress={() => onEndlessPress(e, item)} activeOpacity={0.8}>
+        <TouchableOpacity
+          key={e.id}
+          style={styles.leafWrap}
+          onPress={() => onEndlessPress(e, item)}
+          activeOpacity={0.8}
+          accessibilityLabel={`Keep practising: ${item.title}, ${e.status}`}
+        >
           <View
             style={[
               styles.leaf,
@@ -513,6 +531,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           activeOpacity={0.85}
           onPress={() => (isBoss ? onBossPress(item) : item.kind === "main" ? onMainPress(item) : explainClosed("comingSoon"))}
           style={[styles.nodeHit, { left: x - size / 2 - 7, width: size + 14, height: size + 14 }]}
+          accessibilityLabel={`${isBoss ? "Boss" : "Topic"}: ${item.title}, ${item.mastered ? "mastered" : item.status}`}
         >
           {item.kind === "main" && item.practices.length ? (
             <ProgressRing size={size} progress={practiceProgress} color={theme.gold} track={theme.border} />
@@ -580,7 +599,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     return (
       <View key={`${r.type}-${r.unitId}`} style={[styles.row, { top, height: CARD_HEIGHT, justifyContent: "center" }]}>
         {isDone ? (
-          <TouchableOpacity activeOpacity={0.85} onPress={() => toggleUnit(r.unitId)}>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => toggleUnit(r.unitId)}
+            accessibilityLabel={`Finished unit: ${r.title}, ${r.expanded ? "tap to hide" : "tap to review"}`}
+          >
             {card}
           </TouchableOpacity>
         ) : (

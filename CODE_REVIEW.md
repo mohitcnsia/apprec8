@@ -1021,3 +1021,13 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 
 - **Nov 6 order stays:** "My mistakes" (priority) → Step 5 rewards → admin dashboard v0. Then RB-5c, then RB-5b if time remains. Cut order if late: RB-5b → rewards polish → never "My mistakes".
 - **Status:** RB-5 reviewed; owner to confirm, then freeze into `gemini.md`.
+
+---
+
+## 2026-10-31 — QA handover to Gemini (owner request)
+- **Owner:** device testing moves to Gemini (saves author usage, speeds things up).
+- **For Gemini:** `docs/qa/QA_PLAYBOOK.md` (rules, setup, checklist A–I, reporting format) + `scripts/qa/eq.sh` (taps by visible text or accessibility label: `eq.sh tap "Continue"`, `eq.sh has "…"`, `eq.sh texts`). Map nodes now have accessibility labels (`Topic: …`, `Challenge: …`, `Keep practising: …`), which also helps kids who use TalkBack.
+- **Author still does:** `npm test`, compile, Android bundle, plus quick spot checks; full device runs are Gemini's.
+- **First QA run requested:** Step 4 (`3417a17`): checklist E + F + B2, after a re-seed (word tables). Please also re-run G with the new cache active (after the re-seed).
+- **RB-5:** owner confirmed the ideas; author's timing/sizing adopted (see the table above and `gemini.md`).
+
