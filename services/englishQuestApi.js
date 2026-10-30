@@ -26,6 +26,7 @@ import Constants from "expo-constants";
 import { authInstance } from "../config/firebaseConfig";
 import { scoreAnswers } from "../utils/questTree";
 import { mistakeUpdates } from "../utils/mistakes";
+import { updateStats } from "../utils/kidStats";
 
 const db = getFirestore(getApp());
 
@@ -53,6 +54,7 @@ export function listenToQuestTreeNodes(questId, onData, onError) {
 // (Spec v2 Step 3: fewer reads). Falls back to one read if the listener hasn't delivered yet.
 const latestProgress = new Map(); // `${uid}/${questId}` -> nodes map
 const latestMistakes = new Map(); // `${uid}/${questId}` -> mistakes map ("My mistakes")
+const latestStats = new Map(); // `${uid}/${questId}` -> stats summary (admin dashboard)
 
 /** Listens to the signed-in kid's progress in a quest. Returns {} for new kids. */
 export function listenToQuestProgress(questId, onData, onError) {
@@ -68,6 +70,7 @@ export function listenToQuestProgress(questId, onData, onError) {
       const nodes = data.nodes || {};
       latestProgress.set(`${user.uid}/${questId}`, nodes);
       latestMistakes.set(`${user.uid}/${questId}`, data.mistakes || {});
+      latestStats.set(`${user.uid}/${questId}`, data.stats || {});
       onData(nodes, data); // 2nd arg: whole doc (e.g. data.mistakes for "My mistakes")
     },
     (error) => onError?.(error)
@@ -185,6 +188,7 @@ export async function saveQuestAttempt(p) {
     });
 
     await saveMistakes(p);
+    await saveStats(p, endedAt);
 
     if (!p.skipProgress) {
       await updateNodeProgress(p.questId, p.nodeId, {
@@ -206,6 +210,8 @@ export async function resetMyQuestProgress(questId) {
   const user = currentUser();
   if (!user) return;
   latestProgress.delete(`${user.uid}/${questId}`);
+  latestMistakes.delete(`${user.uid}/${questId}`);
+  latestStats.delete(`${user.uid}/${questId}`);
   await deleteDoc(doc(db, "users", user.uid, "questProgress", questId));
 }
 
@@ -266,5 +272,39 @@ async function saveMistakes(p) {
     );
   } catch (e) {
     console.warn("saveMistakes failed:", e);
+  }
+}
+
+/**
+ * Admin dashboard summary: updates users/{uid}/questProgress/{questId}.stats from one attempt.
+ * Uses the listener's copy; if the map's listener hasn't loaded yet, reads the doc once
+ * (never overwrite real totals with a fresh, empty summary). Never throws.
+ */
+async function saveStats(p, endedAt) {
+  const user = currentUser();
+  if (!user || !p.answers?.length) return;
+  try {
+    const key = `${user.uid}/${p.questId}`;
+    const ref = doc(db, "users", user.uid, "questProgress", p.questId);
+    let prev = latestStats.get(key);
+    if (!prev) {
+      const snap = await getDoc(ref);
+      prev = snap.exists() ? snap.data()?.stats || {} : {};
+    }
+    const next = updateStats(prev, p.answers, {
+      now: endedAt,
+      durationMs: p.startedAt ? endedAt - p.startedAt : 0,
+      questId: p.questId,
+      userName: user.displayName || null,
+    });
+    latestStats.set(key, next);
+    // Days that dropped out of the 14-day window must be deleted (a merge would keep them).
+    const daily = { ...next.daily };
+    Object.keys(prev.daily || {}).forEach((d) => {
+      if (!(d in next.daily)) daily[d] = deleteField();
+    });
+    await setDoc(ref, { stats: { ...next, daily } }, { merge: true });
+  } catch (e) {
+    console.warn("saveStats failed:", e);
   }
 }

@@ -678,6 +678,16 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
         {/* Content seeding: admin only (Firestore rules also block everyone else) */}
         {isAdminUser && (
           <>
+            <Pressable
+              onPress={() => navigation.navigate("AdminDashboard")}
+              accessibilityLabel="Dashboard"
+              style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
+            >
+              <View style={styles.cardContent}>
+                <MaterialCommunityIcons name="view-dashboard-outline" size={22} color={theme.textPrimary} />
+                <Text style={styles.cardText}>📊 Dashboard</Text>
+              </View>
+            </Pressable>
             <SeedDataFixButton />
             <SeedQuestNodesButton />
             <SeedEnglishQuestButton />

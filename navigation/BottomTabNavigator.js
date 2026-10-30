@@ -46,6 +46,8 @@ function BottomTabNavigator({
             "EnglishQuestMap",
             "ReadingScreen",
             "EndlessPractice",
+            "AdminDashboard",
+            "AdminKidDetail",
           ];
 
           // If the current screen is in our immersive list, hide the tab bar

@@ -16,6 +16,8 @@ import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
 import TasksContextProvider from "../store/tasks-context"; // Adjust path
 import DummyScreen from "../screens/DummyScreen"; // << ENSURE THIS IMPORT IS CORRECT AND UNCOMMENTED
 import MessageCenterScreen from "../screens/profile/MessageCenterScreen";
+import AdminDashboardScreen from "../screens/admin/AdminDashboardScreen";
+import AdminKidDetailScreen from "../screens/admin/AdminKidDetailScreen";
 
 // Import other screens like Apprec8Reader, Quiz if they are part of this stack
 // For example:
@@ -83,6 +85,9 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
               headerShown: false,
             }}
           />
+          {/* Admin dashboard v0 (admin only; button on Profile). No header: Android back. */}
+          <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="AdminKidDetail" component={AdminKidDetailScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name="MessageCenter"
             component={MessageCenterScreen}
