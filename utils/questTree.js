@@ -87,11 +87,13 @@ function buildSteps(node, progress) {
 /**
  * @param {Array<object>} nodes - all nodes of one quest
  * @param {object} progress - map key -> { status, bestPercent, ... }
+ * @param {{ unlockAll?: boolean }} [options] - unlockAll (tester mode): every node shown as open.
+ *   Only the view changes; progress is never modified.
  * @returns {{ path: Array<object>, currentPathId: string|null, stats: object }}
  *   path is ordered from the START (bottom of the map) to the END.
  *   Path items: { kind: "main", ...main, status, side: [...] } | { kind: "boss", ... } | { kind: "comingSoon", ... }
  */
-export function buildQuestPath(nodes = [], progress = {}) {
+export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false } = {}) {
   const units = nodes.filter((n) => n.kind === "unit").sort(byNumber("unitOrder"));
   const path = [];
   let previousUnitDone = true;
@@ -105,7 +107,7 @@ export function buildQuestPath(nodes = [], progress = {}) {
       continue;
     }
     stats.unitsTotal += 1;
-    const unitOpen = previousUnitDone;
+    const unitOpen = previousUnitDone || unlockAll;
     const inUnit = nodes.filter((n) => n.unitId === unit.id);
     const mains = inUnit.filter((n) => n.kind === "main").sort(byNumber("branchOrder"));
     const boss = inUnit.find((n) => n.kind === "boss");
@@ -118,11 +120,11 @@ export function buildQuestPath(nodes = [], progress = {}) {
 
       let status;
       if (!s.playable) status = previousBranchCleared ? "comingSoon" : "locked";
-      else if (!previousBranchCleared) status = "locked";
+      else if (!previousBranchCleared && !unlockAll) status = "locked";
       else if (s.allDone) status = "completed";
       else status = "unlocked";
 
-      const sideOpen = status === "completed";
+      const sideOpen = status === "completed" || (unlockAll && status !== "comingSoon");
       const sideNodes = inUnit.filter((n) => n.branchId === main.branchId && n.kind !== "main");
 
       const gateNode = sideNodes.find((n) => n.kind === "gate");
@@ -200,7 +202,8 @@ export function buildQuestPath(nodes = [], progress = {}) {
     let unitDone = false;
     if (boss) {
       const passed = isDone(progress, boss.id);
-      const bossStatus = !previousBranchCleared ? "locked" : !boss.quizId ? "comingSoon" : passed ? "completed" : "unlocked";
+      const bossStatus =
+        !previousBranchCleared && !unlockAll ? "locked" : !boss.quizId ? "comingSoon" : passed ? "completed" : "unlocked";
       unitDone = bossStatus === "completed";
       if (!currentPathId && bossStatus === "unlocked") currentPathId = boss.id;
       path.push({ ...boss, kind: "boss", status: bossStatus, bestPercent: bestOf(progress, boss.id) });

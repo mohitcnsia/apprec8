@@ -18,6 +18,7 @@ import {
   getDoc,
   serverTimestamp,
   increment,
+  deleteDoc,
 } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import Constants from "expo-constants";
@@ -174,4 +175,11 @@ export async function saveQuestAttempt(p) {
     console.error("saveQuestAttempt failed:", error);
     return null;
   }
+}
+
+/** Tester mode: deletes the signed-in user's own progress in a quest (rules allow own doc only). */
+export async function resetMyQuestProgress(questId) {
+  const user = currentUser();
+  if (!user) return;
+  await deleteDoc(doc(db, "users", user.uid, "questProgress", questId));
 }

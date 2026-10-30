@@ -15,3 +15,16 @@ if (!UID_FROM_ENV) {
   // You might throw an error or have a default behavior,
   // but for a UID, not having it is usually a critical issue.
 }
+
+/**
+ * Tester accounts for English Quest "Tester mode" (Spec A, CODE_REVIEW.md).
+ * Compared case-insensitively. The admin (APPREC8_TEAM_REVIEWER_UID) is always a tester.
+ */
+export const TESTER_EMAILS = ["mohitchilkoti@gmail.com"];
+
+export const isTesterUser = (user) => {
+  if (!user) return false;
+  if (APPREC8_TEAM_REVIEWER_UID && user.uid === APPREC8_TEAM_REVIEWER_UID) return true;
+  const email = (user.email || "").trim().toLowerCase();
+  return !!email && TESTER_EMAILS.map((e) => e.trim().toLowerCase()).includes(email);
+};

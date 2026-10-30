@@ -89,6 +89,16 @@ t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { status: "completed", fails
 assert.equal(t.path[0].practices[0].glow, false);
 assert.equal(t.path[0].gate.retryLocked, false);
 
+// 10. Tester mode (unlockAll): everything open, coming-soon stays, progress object untouched.
+const before = JSON.stringify({});
+const prog = {};
+t = buildQuestPath(nodes, prog, { unlockAll: true });
+assert.deepEqual(statuses(t), ["a:unlocked", "b:unlocked", "u0-boss:unlocked", "c:unlocked", "u1-boss:unlocked", "u2:comingSoon"]);
+assert.deepEqual(t.path[0].practices.map((p) => p.status), ["unlocked", "comingSoon"]);
+assert.equal(t.path[0].gate.status, "unlocked");
+assert.equal(JSON.stringify(prog), before, "progress must not change");
+assert.equal(t.stats.unitsDone, 0, "stats still reflect real progress");
+
 // Stars + scoring helpers
 assert.equal(starsForPercent(59), 0); assert.equal(starsForPercent(60), 1);
 assert.equal(starsForPercent(85), 2); assert.equal(starsForPercent(100), 3);

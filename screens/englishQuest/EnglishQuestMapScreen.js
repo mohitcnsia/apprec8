@@ -23,6 +23,9 @@ import { Svg, Path, Circle } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
+import { authInstance } from "../../config/firebaseConfig";
+import { isTesterUser } from "../../config/appConfig";
+import { useTesterMode } from "../../services/testerMode";
 import {
   listenToQuest,
   listenToQuestTreeNodes,
@@ -84,6 +87,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const { width } = useWindowDimensions();
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  // Tester mode (Spec A): only for tester accounts; view-only unlock + short quizzes.
+  const testerSettings = useTesterMode();
+  const isTester = isTesterUser(authInstance.currentUser);
+  const unlockAll = isTester && testerSettings.unlockAll;
+  const shortQuizzes = isTester && testerSettings.shortQuizzes;
 
   const [quest, setQuest] = useState(null);
   const [nodes, setNodes] = useState(null);
@@ -118,7 +126,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     }
   }, [completedNodeId, questId, navigation]);
 
-  const tree = useMemo(() => (nodes ? buildQuestPath(nodes, progress) : null), [nodes, progress]);
+  const tree = useMemo(
+    () => (nodes ? buildQuestPath(nodes, progress, { unlockAll }) : null),
+    [nodes, progress, unlockAll]
+  );
   const count = tree?.path.length || 0;
   const contentHeight = PAD_TOP + count * ROW_HEIGHT + PAD_BOTTOM;
 
@@ -182,7 +193,13 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         description:
           description ||
           `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`,
-        config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10, ...config },
+        config: {
+          shuffleQuestions: true,
+          shuffleOptions: true,
+          questionCount: 10,
+          ...(shortQuizzes && !config.balanceBy ? { questionCount: 3 } : {}),
+          ...config,
+        },
       },
       questContext,
     });
@@ -240,7 +257,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         id: gate.quizId,
         title: gate.title || "Challenge",
         description: `Score ${passPercent}% or more, with at least one right answer in every topic, to open the next step. Every try has new questions.`,
-        config: { balanceBy: "subtopic", minPerGroup: 2, questionCount: gate.drawCount || 10 },
+        config: shortQuizzes
+          ? // Tester: one question per sub-topic (max 4), still balanced.
+            { balanceBy: "subtopic", minPerGroup: 1, questionCount: Math.min(4, Object.keys(gate.subtopicTitles || {}).length || 3) }
+          : { balanceBy: "subtopic", minPerGroup: 2, questionCount: gate.drawCount || 10 },
       },
       {
         questId,
@@ -422,6 +442,12 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         ) : null}
       </View>
 
+      {isTester && (unlockAll || shortQuizzes) ? (
+        <Text style={styles.testerBanner}>
+          🧪 Tester mode{unlockAll ? " · everything unlocked (view only)" : ""}{shortQuizzes ? " · short quizzes" : ""}
+        </Text>
+      ) : null}
+
       {error ? (
         <Text style={styles.message}>{error}</Text>
       ) : !tree ? (
@@ -499,5 +525,17 @@ const makeStyles = (theme) =>
     gateLabel: { fontFamily: "nunitoBold" },
 
     startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    testerBanner: {
+      marginHorizontal: 16,
+      marginBottom: 6,
+      paddingVertical: 4,
+      paddingHorizontal: 10,
+      borderRadius: 10,
+      overflow: "hidden",
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      color: "#000000",
+      backgroundColor: theme.gold,
+    },
     startText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.primary },
   });

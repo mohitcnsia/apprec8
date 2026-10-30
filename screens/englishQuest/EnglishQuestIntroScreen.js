@@ -11,6 +11,8 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Switch,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +26,9 @@ import {
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
 import { buildQuestPath } from "../../utils/questTree";
+import { isTesterUser } from "../../config/appConfig";
+import { useTesterMode, setTesterMode } from "../../services/testerMode";
+import { resetMyQuestProgress } from "../../services/englishQuestApi";
 import { useTheme } from "../../context/ThemeContext";
 
 const HOW_IT_WORKS = [
@@ -38,6 +43,8 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   const { questId } = route.params || {};
   const insets = useSafeAreaInsets();
   const user = authInstance.currentUser;
+  const isTester = isTesterUser(user);
+  const tester = useTesterMode();
 
   const [quest, setQuest] = useState(null);
   const [nodes, setNodes] = useState(null);
@@ -107,6 +114,36 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             </Text>
           </View>
         )}
+
+        {isTester ? (
+          <View style={styles.howCard}>
+            <Text style={styles.howTitle}>🧪 Tester mode</Text>
+            <Text style={styles.howText}>Only visible to tester accounts. Resets when the app restarts.</Text>
+            <View style={styles.testerRow}>
+              <Text style={styles.howText}>🔓 Unlock everything (view only)</Text>
+              <Switch value={tester.unlockAll} onValueChange={(v) => setTesterMode({ unlockAll: v })} />
+            </View>
+            <View style={styles.testerRow}>
+              <Text style={styles.howText}>⚡ Short quizzes (3 questions)</Text>
+              <Switch value={tester.shortQuizzes} onValueChange={(v) => setTesterMode({ shortQuizzes: v })} />
+            </View>
+            <TouchableOpacity
+              style={styles.resetButton}
+              onPress={() =>
+                Alert.alert("Reset my progress?", "This deletes YOUR English Quest progress only.", [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Reset",
+                    style: "destructive",
+                    onPress: () => resetMyQuestProgress(questId).catch((e) => Alert.alert("Reset failed", e.message)),
+                  },
+                ])
+              }
+            >
+              <Text style={styles.resetText}>🔄 Reset my progress</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
 
         <View style={styles.howCard}>
           <Text style={styles.howTitle}>How it works</Text>
@@ -186,6 +223,9 @@ const makeStyles = (theme) =>
   howRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   howText: { flex: 1, fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 21 },
   footer: { paddingHorizontal: 20, paddingTop: 12 },
+  testerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+  resetButton: { alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: theme.warning || "#c86c62" },
+  resetText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.warning || "#c86c62" },
   startButton: {
     backgroundColor: theme.primary,
     borderRadius: 30,
