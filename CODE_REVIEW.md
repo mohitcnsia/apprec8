@@ -550,3 +550,11 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 3. Teacher preview hides gate/Boss answers: **"perfect, no one should see answers."** Gate/Boss answers are visible to nobody except the admin.
 - **New (owner):** teachers can play without recording (preview). If a teacher plays normally, **their own stats are visible only to themselves and the admin**, never to other teachers, parents or students. The admin (owner) can see everyone's data.
 - **Status:** RB-2 ready for reviewer feedback; will be frozen into `gemini.md` after review.
+
+**Spec B addition: cost and duplicate reports (owner concern, 2026-10-30)**
+- **Owner concern:** offline/batched sync to save cost; many kids reporting the same mistake (e.g. 100 reports for one typo).
+- **Decision proposed by author: send immediately, no hourly/daily batching.** One report = one Firestore write. Free tier is 20,000 writes/day, then about $0.18 per 100k. 50 kids × 5 reports/day ≈ 250 writes/day, about 1% of the free tier. Offline is already covered: Firestore queues writes made offline on the device and sends them when the connection returns. Custom batching would risk losing reports (Android kills background apps), delay fixes, and add code before the freeze, for no real saving.
+- **Duplicates:**
+  1. **One report per kid per question:** after sending, the 🚩 becomes "✓ Reported" for that question (stored locally in AsyncStorage, key `reported_<questionId>`). No extra reads or writes.
+  2. **Grouped review:** the report list (in the in-app dashboard, later) groups by `contentContext.id` (question) → one row per question with reason counts ("Spelling × 12"). Marking it fixed closes all reports for that question. The report count doubles as priority.
+- **Not done:** checking the server for "already reported by someone" before sending. That would cost a read on every 🚩 tap, more than the write it saves.
