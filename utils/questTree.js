@@ -28,7 +28,7 @@
 import { MAX_FAILS_BEFORE_PRACTICE } from "./gateRules.js";
 
 export const KNOWN_STEP_TYPES = ["study", "quiz", "reading"];
-export const KNOWN_SIDE_KINDS = ["practice", "gate"]; // "endless" arrives in Spec v2 step 4
+export const KNOWN_SIDE_KINDS = ["practice", "gate", "endless"];
 
 export const DEFAULT_PRACTICE_PASS_PERCENT = 60;
 export const DEFAULT_GATE_PASS_PERCENT = 80;
@@ -169,7 +169,12 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false } 
 
       const endlessNode = sideNodes.find((n) => n.kind === "endless");
       const endless = endlessNode
-        ? { ...endlessNode, status: !sideOpen ? "locked" : KNOWN_SIDE_KINDS.includes("endless") ? "unlocked" : "comingSoon" }
+        ? {
+            ...endlessNode,
+            status: !sideOpen ? "locked" : "unlocked",
+            bestStreak: progress?.[endlessNode.id]?.bestStreak || 0,
+            answered: progress?.[endlessNode.id]?.answered || 0,
+          }
         : null;
 
       // Branch is cleared when its gate is passed (or, without a gate, when the main node is done).

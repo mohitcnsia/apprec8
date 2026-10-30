@@ -39,7 +39,7 @@ t = buildQuestPath(nodes, done(stepId("a", 0), stepId("a", 1)));
 assert.equal(t.path[0].status, "completed");
 assert.deepEqual(t.path[0].practices.map((p) => p.status), ["unlocked", "comingSoon"]);
 assert.equal(t.path[0].gate.status, "unlocked");
-assert.equal(t.path[0].endless.status, "comingSoon"); // endless arrives in step 4
+assert.equal(t.path[0].endless.status, "unlocked"); // ♾️ opens with the side row (Step 4)
 assert.equal(t.path[1].status, "locked");
 assert.equal(t.currentPathId, "a"); // still on A: the gate is waiting
 

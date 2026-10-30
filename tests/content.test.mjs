@@ -43,6 +43,14 @@ for (const n of nodes) {
   if (n.kind === "practice") assert.ok(["easy", "medium", "hard"].includes(n.difficulty), `${n.id}: difficulty`);
   if (n.kind === "gate" || n.kind === "boss") assert.ok(quizExists(n.quizId), `${n.id}: missing quiz ${n.quizId}`);
 }
+// ♾️ endless generators must point at existing word tables of the right type
+for (const e of nodes.filter((n) => n.kind === "endless")) {
+  (e.generators || []).forEach((g) => {
+    const t = D.wordTables?.[g.table];
+    assert.ok(t, `${e.id}: missing word table ${g.table}`);
+    assert.equal(t.tableType, g.type, `${e.id}: table ${g.table} is ${t.tableType}, not ${g.type}`);
+  });
+}
 for (const b of mainIds) assert.ok(nodes.filter(n => n.kind === "gate" && n.branchId === b).length <= 1, `${b}: more than one gate`);
 // Gate pools (Spec v2 Step 2): every question tagged with a known sub-topic, enough questions to draw
 // a fresh balanced test, and every practice sub-topic of the branch named on the gate.

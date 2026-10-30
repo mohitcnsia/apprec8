@@ -136,6 +136,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
           exitAction,
         ],
         closeAction: exitToStudy,
+        savedNote: "Progress saved ✓",
         effects: { confetti: true },
         submissionContext,
         feedbackContext: { type: "quest_gate", id: quiz.id },
@@ -162,6 +163,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
             exitAction,
           ],
       closeAction: exitToStudy,
+      savedNote: "Progress saved ✓",
       effects: { confetti: false },
       submissionContext,
       feedbackContext: { type: "quest_gate", id: quiz.id },
@@ -236,7 +238,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
           },
           ...(questContext ? [exitAction] : []),
         ],
-        ...(questContext ? { closeAction: exitToStudy } : {}),
+        ...(questContext ? { closeAction: exitToStudy, savedNote: "Progress saved ✓" } : {}),
         effects: { confetti: isPerfectScore },
         submissionContext: mode === "training" ? null : {
           // UnComment this

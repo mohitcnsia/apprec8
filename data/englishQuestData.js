@@ -381,6 +381,67 @@ export const readings = {
   },
 };
 
+// ---------- Word tables for generated practice (Spec v2 Step 4) ----------
+// Stored as studyContent docs with kind "wordTable". CONTENT ACCURACY FIRST:
+// - plural: only words where every generated wrong option is clearly wrong. Left out on purpose:
+//   unchanged plurals (sheep, deer, fish), person (peoples), belief (believes), roof (rooves).
+// - nounGender: each masculine and each feminine appears ONCE (no "mare" for both horse and stallion).
+export const wordTables = {
+  "eq-wt-plural": {
+    name: "Plural nouns",
+    tableType: "plural",
+    entries: [
+      // add -s
+      { singular: "book", plural: "books" }, { singular: "pen", plural: "pens" }, { singular: "cat", plural: "cats" },
+      { singular: "tree", plural: "trees" }, { singular: "girl", plural: "girls" }, { singular: "apple", plural: "apples" },
+      { singular: "chair", plural: "chairs" }, { singular: "river", plural: "rivers" }, { singular: "kite", plural: "kites" },
+      { singular: "flower", plural: "flowers" },
+      // add -es (s, ss, sh, ch, x)
+      { singular: "box", plural: "boxes" }, { singular: "bus", plural: "buses", alsoCorrect: ["busses"] },
+      { singular: "class", plural: "classes" }, { singular: "dish", plural: "dishes" }, { singular: "brush", plural: "brushes" },
+      { singular: "bench", plural: "benches" }, { singular: "watch", plural: "watches" }, { singular: "fox", plural: "foxes" },
+      { singular: "glass", plural: "glasses" }, { singular: "church", plural: "churches" }, { singular: "peach", plural: "peaches" },
+      // -o
+      { singular: "potato", plural: "potatoes" }, { singular: "tomato", plural: "tomatoes" }, { singular: "hero", plural: "heroes" },
+      { singular: "echo", plural: "echoes" }, { singular: "piano", plural: "pianos" }, { singular: "photo", plural: "photos" },
+      { singular: "radio", plural: "radios" }, { singular: "kangaroo", plural: "kangaroos" },
+      // consonant + y → ies
+      { singular: "baby", plural: "babies" }, { singular: "city", plural: "cities" }, { singular: "lady", plural: "ladies" },
+      { singular: "story", plural: "stories" }, { singular: "party", plural: "parties" }, { singular: "butterfly", plural: "butterflies" },
+      { singular: "family", plural: "families" }, { singular: "country", plural: "countries" },
+      // vowel + y → add -s
+      { singular: "boy", plural: "boys" }, { singular: "key", plural: "keys" }, { singular: "day", plural: "days" },
+      { singular: "toy", plural: "toys" }, { singular: "monkey", plural: "monkeys" }, { singular: "donkey", plural: "donkeys" },
+      // -f / -fe → -ves
+      { singular: "leaf", plural: "leaves" }, { singular: "wolf", plural: "wolves" }, { singular: "knife", plural: "knives" },
+      { singular: "wife", plural: "wives" }, { singular: "life", plural: "lives" }, { singular: "half", plural: "halves" },
+      { singular: "loaf", plural: "loaves" }, { singular: "shelf", plural: "shelves" }, { singular: "thief", plural: "thieves" },
+      { singular: "calf", plural: "calves" }, { singular: "scarf", plural: "scarves", alsoCorrect: ["scarfs"] },
+      { singular: "hoof", plural: "hooves", alsoCorrect: ["hoofs"] },
+      // -f that just adds -s
+      { singular: "chief", plural: "chiefs" }, { singular: "cliff", plural: "cliffs" }, { singular: "giraffe", plural: "giraffes" },
+      // special plurals
+      { singular: "child", plural: "children" }, { singular: "man", plural: "men" }, { singular: "woman", plural: "women" },
+      { singular: "tooth", plural: "teeth" }, { singular: "foot", plural: "feet" }, { singular: "goose", plural: "geese" },
+      { singular: "mouse", plural: "mice" }, { singular: "ox", plural: "oxen" },
+    ],
+  },
+  "eq-wt-gender": {
+    name: "Gender of nouns",
+    tableType: "nounGender",
+    entries: [
+      ["king", "queen"], ["prince", "princess"], ["emperor", "empress"], ["husband", "wife"], ["father", "mother"],
+      ["son", "daughter"], ["brother", "sister"], ["uncle", "aunt"], ["nephew", "niece"], ["grandfather", "grandmother"],
+      ["gentleman", "lady"], ["monk", "nun"], ["wizard", "witch"], ["actor", "actress"], ["waiter", "waitress"],
+      ["host", "hostess"], ["hero", "heroine"], ["god", "goddess"], ["duke", "duchess"], ["headmaster", "headmistress"],
+      ["landlord", "landlady"], ["man", "woman"], ["boy", "girl"], ["bridegroom", "bride"], ["lad", "lass"],
+      ["lion", "lioness"], ["tiger", "tigress"], ["peacock", "peahen"], ["fox", "vixen"], ["stag", "doe"],
+      ["ram", "ewe"], ["bull", "cow"], ["cock", "hen"], ["horse", "mare"], ["drake", "duck"],
+      ["gander", "goose"], ["colt", "filly"], ["boar", "sow"],
+    ].map(([masculine, feminine]) => ({ masculine, feminine })),
+  },
+};
+
 // ---------- The quest path (Spec v2, see gemini.md) ----------
 // unit     = a group of branches, ends with a Unit Boss
 // main     = node on the path (Learn + warm-up). Steps run in order.
@@ -402,8 +463,11 @@ const gate = (id, branch, title, quizId, subtopicTitles, passPercent = 80) => ({
   drawCount: 10, subtopicTitles, // { [subtopicId]: "Title shown on the result screen" }
 });
 const withSubtopic = (node, subtopic) => ({ ...node, subtopic });
-const endless = (branch) => ({
+// generators: [{ type: "plural" | "nounGender", table: <wordTable id> }]; pool = the branch's
+// main + practice quizzes (gate/boss questions are never used, they're assessments).
+const endless = (branch, generators = []) => ({
   id: `${branch.id}-endless`, kind: "endless", unitId: branch.unitId, branchId: branch.id, title: `Keep practising`,
+  generators,
 });
 const boss = (id, unitId, title, quizId, passPercent = 70) => ({ id, kind: "boss", unitId, title, quizId, passPercent });
 
@@ -446,7 +510,10 @@ export const nodes = [
     gender: "Gender",
     advanced: "Advanced nouns",
   }),
-  endless(nouns),
+  endless(nouns, [
+    { type: "plural", table: "eq-wt-plural" },
+    { type: "nounGender", table: "eq-wt-gender" },
+  ]),
 
   pronouns,
   practice("eq-u1-pronouns-p1", pronouns, 1, "Personal & possessive", "easy", [study("ieo-pronouns-basic-study"), quiz("ieo-pronouns-basic-quiz")]),

@@ -16,6 +16,7 @@ import {
   tile,
   studyPages,
   readings,
+  wordTables,
   quizzes,
   nodes,
 } from "../../data/englishQuestData";
@@ -101,6 +102,11 @@ export default function SeedEnglishQuestButton() {
           additionalImages: [],
           lastUpdatedAt: now,
         });
+      });
+
+      // 5c. Word tables for generated practice (studyContent with kind "wordTable")
+      Object.entries(wordTables).forEach(([id, t]) => {
+        batch.set(db.collection("studyContent").doc(id), { ...t, kind: "wordTable", lastUpdatedAt: now });
       });
 
       // 6. New questions (V2 format)

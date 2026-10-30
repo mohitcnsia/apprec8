@@ -98,6 +98,7 @@ const ResultsScreen = ({ route, navigation }) => {
     submissionContext = null,
     missedQuestions = [],
     closeAction = null, // optional: shows an X (top right) that runs this (e.g. exit the quest)
+    savedNote = null, // optional: shown instead of "Result not submitted." when the caller saved results itself
   } = route.params || {};
 
   const asset = getResultAsset(route.params);
@@ -349,7 +350,7 @@ const ResultsScreen = ({ route, navigation }) => {
               <Text style={styles.successText}>Progress saved!</Text>
             )}
             {submitStatus === "skipped" && (
-              <Text style={styles.infoText}>Result not submitted.</Text>
+              <Text style={styles.infoText}>{savedNote || "Result not submitted."}</Text>
             )}
           </View>
           <View style={styles.buttonContainer}>

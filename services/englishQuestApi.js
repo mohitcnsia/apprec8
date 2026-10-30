@@ -137,6 +137,7 @@ export function markStudyNodeCompleted(questId, nodeId) {
  * @param {object} [p.details] - extra info for this activity type
  * @param {object} [p.gateResult] - evaluateGate() result for gate attempts
  * @param {string} [p.resetGateId] - gate whose fail counter resets if this attempt passes
+ * @param {boolean} [p.skipProgress] - record answers only (endless practice never "completes")
  * @returns {Promise<{ percent: number, passed: boolean } | null>}
  */
 export async function saveQuestAttempt(p) {
@@ -176,12 +177,14 @@ export async function saveQuestAttempt(p) {
       createdAt: serverTimestamp(),
     });
 
-    await updateNodeProgress(p.questId, p.nodeId, {
-      percent,
-      passed,
-      gate: gate ? { weak: gate.weak } : null,
-      resetGateId: p.resetGateId || null,
-    });
+    if (!p.skipProgress) {
+      await updateNodeProgress(p.questId, p.nodeId, {
+        percent,
+        passed,
+        gate: gate ? { weak: gate.weak } : null,
+        resetGateId: p.resetGateId || null,
+      });
+    }
     return { percent, passed };
   } catch (error) {
     console.error("saveQuestAttempt failed:", error);
@@ -195,4 +198,29 @@ export async function resetMyQuestProgress(questId) {
   if (!user) return;
   latestProgress.delete(`${user.uid}/${questId}`);
   await deleteDoc(doc(db, "users", user.uid, "questProgress", questId));
+}
+
+/**
+ * ♾️ Keep practising: keeps the best streak and total answered for the branch's endless node.
+ * Never marks it "completed" (practice has no end). Uses the in-memory progress (no extra read).
+ */
+export async function updateEndlessStats(questId, nodeId, { bestStreak = 0, answered = 0 }) {
+  const user = currentUser();
+  if (!user || !answered) return;
+  const known = latestProgress.get(`${user.uid}/${questId}`) || {};
+  const prevBest = known[nodeId]?.bestStreak || 0;
+  await setDoc(
+    doc(db, "users", user.uid, "questProgress", questId),
+    {
+      nodes: {
+        [nodeId]: {
+          bestStreak: Math.max(prevBest, bestStreak),
+          answered: increment(answered),
+          lastPlayedAt: serverTimestamp(),
+        },
+      },
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
 }

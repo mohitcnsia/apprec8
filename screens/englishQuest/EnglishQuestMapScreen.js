@@ -361,8 +361,35 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     openTest(bossItem, bossItem.passPercent ?? DEFAULT_BOSS_PASS_PERCENT);
   };
 
-  const onEndlessPress = (e) =>
-    explainClosed(e.status === "locked" ? "locked" : "comingSoon", "Finish the main step first.");
+  // ♾️ Keep practising: pool = this branch's main + practice quizzes (gate/boss questions are
+  // assessments and are never used for practice) + generated questions from word tables.
+  const onEndlessPress = (e, main) => {
+    if (e.status !== "unlocked") {
+      return explainClosed(e.status === "locked" ? "locked" : "comingSoon", `Finish "${main.title}" first.`);
+    }
+    const poolQuizIds = [];
+    const poolSubtopics = {};
+    const addQuizzes = (node) =>
+      (node.steps || []).forEach((s) => {
+        if (s.type === "quiz" && s.quizId && !poolQuizIds.includes(s.quizId)) {
+          poolQuizIds.push(s.quizId);
+          if (node.subtopic) poolSubtopics[s.quizId] = node.subtopic;
+        }
+      });
+    addQuizzes(main);
+    (main.practices || []).forEach(addQuizzes);
+    navigation.navigate("EndlessPractice", {
+      questId,
+      nodeId: e.id,
+      title: `Keep practising: ${main.title}`,
+      poolQuizIds,
+      poolSubtopics,
+      generators: e.generators || [],
+      contentVersion: quest?.contentVersion ?? null,
+      knownIssues,
+      returnTo: "EnglishQuestMap",
+    });
+  };
 
   // ---------- Rendering ----------
   const circleColors = (status, { mastered } = {}) => {
@@ -428,12 +455,26 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     }
     if (item.endless) {
       const e = item.endless;
+      const open = e.status === "unlocked";
       leaves.push(
-        <TouchableOpacity key={e.id} style={styles.leafWrap} onPress={() => onEndlessPress(e)} activeOpacity={0.8}>
-          <View style={[styles.leaf, { backgroundColor: theme.disabledBackground, borderColor: theme.border }]}>
-            <Ionicons name={e.status === "comingSoon" ? "hourglass-outline" : "infinite"} size={22} color={LOCKED_ICON} />
+        <TouchableOpacity key={e.id} style={styles.leafWrap} onPress={() => onEndlessPress(e, item)} activeOpacity={0.8}>
+          <View
+            style={[
+              styles.leaf,
+              open
+                ? { backgroundColor: theme.cardBackground, borderColor: theme.primary }
+                : { backgroundColor: theme.disabledBackground, borderColor: theme.border },
+            ]}
+          >
+            <Ionicons
+              name={e.status === "comingSoon" ? "hourglass-outline" : open ? "infinite" : "lock-closed"}
+              size={22}
+              color={open ? theme.primary : LOCKED_ICON}
+            />
           </View>
-          <View style={styles.starsRow} />
+          <View style={styles.starsRow}>
+            {open && e.bestStreak > 0 ? <Text style={styles.streakBadge}>🔥{e.bestStreak}</Text> : null}
+          </View>
           <Text style={styles.leafLabel} numberOfLines={2}>
             {e.title}
           </Text>
@@ -644,6 +685,7 @@ const makeStyles = (theme) =>
       elevation: 2,
     },
     gateLeaf: { borderRadius: 12 },
+    streakBadge: { fontSize: 9, fontFamily: "nunitoBold", color: theme.gold },
     leafGlow: { borderWidth: 4, elevation: 8, shadowOpacity: 0.9, shadowRadius: 8, shadowOffset: { width: 0, height: 0 } },
     glowLabel: { fontFamily: "nunitoBold", color: theme.gold },
     starsRow: { flexDirection: "row", height: 11, marginTop: 2 },
