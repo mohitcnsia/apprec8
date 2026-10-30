@@ -825,3 +825,19 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
   4. `scripts/reports/clear.js`: removes fixed questions from `quests/{questId}.knownIssues` and deletes their `questionIssues` docs (so old reports don't re-trigger "known").
 - **Later (RB-3, after Nov 10):** in-app content editor with a "Reported issues" list; editing un-hides automatically.
 - **Status:** draft for reviewer feedback.
+
+---
+
+## 2026-10-30 — Review request: Spec v2 Step 3, caching (Claude)
+
+- **Please review commit:** `ad5ca8a` on `feat/tile-quests`
+- **Design:** `utils/cachePolicy.js` (pure, tested): an entry is fresh when `version === quest.contentVersion` and it's < 7 days old. The 7-day limit is a safety net, because old IEO questions can be edited in the console without a version bump. `services/contentCache.js`: cache-first loaders for nodes, quiz questions (V2 → V1 fallback), study/reading docs. On a network error it falls back to the older copy (offline play). The quest doc is read once per visit, with a 30 s in-memory memo so intro + map share one read.
+- **Reads per visit (typical):** before ≈ 1 quest + ~44 nodes (live) + ~10–15 questions per quiz (live) + the progress read on every save; after ≈ **1 quest doc + 1 live progress doc**, plus downloads only when `contentVersion` changes.
+- **Changed:** intro/map no longer listen to the quest/nodes; `useQuizEngine` uses the cache when `quiz.config.contentVersion` is set; `Apprec8Reader` + `ReadingScreen` use `loadStudyContent` (cache with a version, the old live listener without one); `updateNodeProgress` reuses the listener's progress (falls back to one read). The seeder sets `contentVersion: Date.now()`.
+- **Unchanged:** Space quest, V1 lists, QuizDetails attempts listener.
+- **Verified:** `npm test` (+ `cachePolicy`), compile, Android bundle. **On the emulator in airplane mode:** intro → map → Quiz Details → a full quiz all load.
+- **Also fixed while testing:** lock icons were invisible in dark mode (grey on grey) → fixed dark grey; the "Keep practising" leaf keeps its name with ⏳.
+- **Points to check:**
+  1. After a re-seed, phones refresh on the next quest open (new `contentVersion`); `knownIssues` changes show on the next map focus.
+  2. Storage: about 1–3 KB per quiz in AsyncStorage, well under limits for Units 0–1. Pruning old versions is a later TODO.
+  3. **Re-seed needed** once, so `contentVersion` exists (without it, the cache is bypassed and the app reads from the network, which is safe).
