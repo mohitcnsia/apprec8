@@ -826,6 +826,38 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Later (RB-3, after Nov 10):** in-app content editor with a "Reported issues" list; editing un-hides automatically.
 - **Status:** draft for reviewer feedback.
 
+### RB-5: Stressless Engagement & Kid-Delight Proposals (Gemini & Owner, 2026-10-30)
+- **Goal:** Transform school/Olympiad prep into a stressless, confidence-building experience for kids (Class 5 & 10) with zero-cost virality for Indian parents and effortless utility for teachers.
+- **Status:** Drafted by Gemini, endorsed by owner; queued for Claude's technical review and sizing.
+
+#### 1. RB-5a: WhatsApp-Ready Certificate of Mastery (Share Sheet, ₹0 Cost)
+- **Concept:** When a child completes a Unit Boss (or masters all practice leaves in a branch), generate a clean, colorful, kid-friendly Certificate (e.g. *"Pratha has mastered Parts of Speech — Class 5 English Champion!"*).
+- **Cost & Tech:** **₹0 / $0 forever.** Does NOT use WhatsApp Business Cloud API. Generates an image locally via `react-native-view-shot` and invokes native Android Share Sheet (`Share.share(...)`). The parent taps WhatsApp, shares directly to family/school groups from their own account.
+- **Impact:** High organic word-of-mouth in small-town school communities; immense pride for parents.
+- **Sizing:** ~½ day (local SVG/PNG certificate template + Share call on ResultsScreen).
+
+#### 2. RB-5b: Audio "Ear Training" Grammar Check (`expo-speech`)
+- **Concept:** In tricky grammar topics (Subject-Verb agreement, Articles, Prepositions), kids often struggle with formal rules but can instinctively tell when spoken English "sounds right". Add a small 🔊 "Listen to sentence" icon on question cards.
+- **Cost & Tech:** Zero network cost. Uses existing native `expo-speech` already bundled in the app.
+- **Impact:** Trains natural linguistic intuition for second-language learners without rote memorization.
+- **Sizing:** ~2–3 hours (toggle button on `QuestionCard.js` calling `Speech.speak`).
+
+#### 3. RB-5c: "Grammar Gremlin" Narrative Framing for Boss Battles
+- **Concept:** Unit Boss quizzes can induce test anxiety. Wrap them in a playful mini-story narrative: *"The Grammar Gremlin mixed up the labels in the Town Library! Answer 5 questions correctly to put the books back on their shelves before morning!"*
+- **Cost & Tech:** Zero code changes to quiz logic; purely content-level intro text and illustration on the Boss start card.
+- **Impact:** Converts evaluation anxiety into an empowering rescue mission.
+- **Sizing:** Content-only (~1 hour per unit boss).
+
+#### 4. RB-5d: Classroom "Team Streak" (Collaborative Warm-Up)
+- **Concept:** For the ~50 Class 10 pilot students, teacher launches a 5-minute warm-up in Endless Practice. The class works toward a **collective streak** (e.g. *"Class 10-A achieved a combined 120 correct streak today!"*).
+- **Impact:** Replaces toxic individual competition/shaming with teamwork; gives teachers a 5-minute silent focus tool with zero grading burden.
+- **Sizing:** Post-Nov 10 (can ship with RB-2 teacher dashboard).
+
+#### 5. RB-5e: "Secret Rule" Stamps in a Detective Notebook
+- **Concept:** Mastering a branch unlocks a "Secret Grammar Rule" stamp in an in-app Detective Notebook (e.g. *"Rule #4: Most -f words change to -ves (Leaf → Leaves), but Chefs and Roofs are undercover rebels who just add -s!"*).
+- **Impact:** Fosters intrinsic collection drive and gives kids "insider knowledge" to share with peers.
+- **Sizing:** ~½ day (simple stamp grid viewer in profile/quest).
+
 ---
 
 ## 2026-10-30 — Review request: Spec v2 Step 3, caching (Claude)
@@ -963,3 +995,15 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
 - Claude has full go-ahead to implement **Step 4 (Endless Practice & Generator Engine)** immediately.
 
 - **Author (Claude):** thanks, starting Step 4. Small correction for the record: `ROW_HEIGHT` is 150 (not 100); geometry is unaffected. One planned deviation from the Step 4 spec, for accuracy: the **plural generator only asks singular → plural**. For plural → singular, generated wrong options would often be real words with other meanings (e.g. "leaves" → "leave"), which could confuse kids. The gender generator does both directions (its wrong options are always other entries of the table).
+
+---
+
+## 2026-10-31 — Review request: Spec v2 Step 4, Keep practising + generators (Claude)
+
+- **Please review commit:** `3417a17` on `feat/tile-quests`
+- **As specced, with one deviation already noted:** the plural generator asks singular → plural only (accuracy). Word tables leave out unchanged plurals (sheep, deer, fish), person ("peoples"), belief ("believes"), roof ("rooves"), so a generated wrong option can never be correct or a confusing real word.
+- **Tests:** `tests/generators.test.mjs` checks every one of the 66 plural words and 38 gender pairs (one correct option, 3 distinct wrong ones, none of them a correct form, unique ids, each gender word appears once, answers match the table) + the endless feed (no repeats within 10, ~50/50 mix, tiny pools). Content test checks every endless generator points to an existing table of the right type.
+- **Device test (emulator):** ♾️ on "What is a sentence?" opens; correct/wrong feedback with explanations; streak and count update; Next; Stop → summary with Keep going / Back to Quest / Exit to Study / ✕.
+- **Found while testing:** `ResultsScreen` said "Result not submitted." whenever no star check runs (all Training-mode quizzes too), although the quest saves the attempt itself. Added an optional `savedNote` ("Practice saved ✓" / "Progress saved ✓") for English Quest; Space/V1 unchanged.
+- **Needs a re-seed** (admin: "Update English Quest") so the word tables exist in Firestore. Until then, Nouns' ♾️ uses its quiz pool only (no crash).
+- **Next:** "My mistakes" (priority), reusing this screen.
