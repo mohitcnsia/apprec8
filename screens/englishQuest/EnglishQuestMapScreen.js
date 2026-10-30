@@ -468,9 +468,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   return (
     <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
-        </TouchableOpacity>
+        {/* No back button: Android back gesture/button, as in the Space quest. */}
         <Text style={styles.headerTitle} numberOfLines={1}>
           {quest?.title || "Quest"}
         </Text>

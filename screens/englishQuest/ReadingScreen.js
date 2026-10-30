@@ -385,15 +385,7 @@ export default function ReadingScreen({ route, navigation }) {
   return (
     <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <TouchableOpacity
-          onPress={() => {
-            Speech.stop();
-            navigation.goBack();
-          }}
-          hitSlop={12}
-        >
-          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
-        </TouchableOpacity>
+        {/* No back button: Android back gesture/button. Read-aloud stops when the screen closes. */}
         <Text style={styles.headerTitle}>Reading</Text>
       </View>
 

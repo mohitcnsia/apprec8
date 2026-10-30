@@ -31,9 +31,10 @@ import { resetMyQuestProgress } from "../../services/englishQuestApi";
 import { useTheme } from "../../context/ThemeContext";
 
 const HOW_IT_WORKS = [
-  { icon: "trophy", text: "Each unit ends with a unit test. Pass it to climb to the next unit." },
-  { icon: "leaf", text: "Branches are practice. The further out a leaf is, the harder it gets." },
-  { icon: "star", text: "Score well to earn up to 3 stars on every quiz." },
+  { icon: "book", text: "Each topic starts with a short Learn page and a warm-up quiz." },
+  { icon: "shield-checkmark", text: "Pass the topic's Challenge to open the next topic. Practice leaves are optional and help you get ready." },
+  { icon: "trophy", text: "Beat the Unit Boss to open the next unit." },
+  { icon: "star", text: "Score 100% in Exam mode to earn stars ⭐" },
 ];
 
 export default function EnglishQuestIntroScreen({ route, navigation }) {
@@ -173,11 +174,8 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
 
   return (
     <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={26} color={theme.textPrimaryOnGradient} />
-        </TouchableOpacity>
-      </View>
+      {/* No back button: Android back gesture/button, as in the Space quest. */}
+      <View style={{ height: insets.top + 16 }} />
 
       <ScrollView contentContainerStyle={styles.scroll}>{renderBody()}</ScrollView>
 
