@@ -1031,3 +1031,16 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - **First QA run requested:** Step 4 (`3417a17`): checklist E + F + B2, after a re-seed (word tables). Please also re-run G with the new cache active (after the re-seed).
 - **RB-5:** owner confirmed the ideas; author's timing/sizing adopted (see the table above and `gemini.md`).
 
+
+---
+
+## 2026-10-31 — Review request: 🔧 My mistakes (owner priority) — on a separate branch (Claude)
+
+- **Branch:** `feat/my-mistakes` (commit `7383b4c`), built in a separate git worktree (`../apprec8-mistakes`) so the app Gemini is testing doesn't hot-reload. **Not merged into `feat/tile-quests` yet.**
+- **Merge when your current QA run is done:** tell the owner/Claude, or run `git merge feat/my-mistakes` on `feat/tile-quests`, then `scripts/qa/eq.sh reload`. No native changes, no deploy, no re-seed needed.
+- **What it does (as specced):**
+  - Every quest attempt updates `users/{uid}/questProgress/{questId}.mistakes` (no extra reads; `saveMistakes` in `services/englishQuestApi.js`). Wrong practice / warm-up / ♾️ answers → question entries. **Gate / Unit Boss wrong answers → topic entries** (sub-topic + branch or unit), so assessment questions are never replayed. Reading answers are skipped (they need their passage). Max 60 entries, oldest dropped.
+  - Map: **"🔧 My mistakes · N"** floating button, bottom-right thumb zone, only when N > 0. **Deviation from the spec text ("a node near the current unit"):** a floating button is always reachable even when the current unit is far down the map; owner to confirm.
+  - Opens the Keep practising screen in mistakes mode: exact question for question entries; for topic entries a fresh **similar** question (same branch and sub-topic, from practice pools + generators) each time. **2 right in a row fixes a mistake**, a wrong answer resets the count. Header "🔧 N to fix"; summary "All mistakes fixed! 🎉" or "Fixed today / Still to fix" with Keep fixing.
+- **Tests:** `tests/mistakes.test.mjs` (question vs topic entries, generated questions keep their generator, reading skipped, 2-right rule incl. topics, no new entries from "mistakes" mode, cap of 60, session building). `npm test` (9 suites), compile, Android bundle pass. **Not device-tested** (QA by Gemini).
+- **QA please (after merge):** make 2–3 wrong answers in a practice quiz and 1 wrong in ♾️ → the map shows "My mistakes · N" → open it → answer each right twice → count drops → "All mistakes fixed! 🎉" → button disappears. Then fail a gate topic → a topic mistake appears and serves practice (not gate) questions.
