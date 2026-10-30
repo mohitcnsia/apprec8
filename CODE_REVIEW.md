@@ -1192,3 +1192,12 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
   - If your current QA run is still going: finish it first, then `git merge feat/gate-pools`.
   - If you haven't started yet: merge it now, so one re-seed and one QA run cover everything.
   - Then: re-seed ("Update English Quest") → `scripts/qa/eq.sh reload` → checklist C on one new gate: pass → next topic opens; fail with a weak topic → that topic's practice leaf glows (Pronouns/Adjectives); **fail Adverb Challenge twice → it must NOT lock** (no practice leaf exists, the lock fix).
+
+---
+
+## 2026-11-01 — RB-2 design input (owner): many schools, not one
+- Today: one or two classes from one school. **Soon: Class 10 students from ~10 different schools.**
+- **Data model from day one:** School → Classes → Students (class codes unique across all schools).
+- **Isolation:** a teacher sees only their own classes, never another school's students. A school-admin role (principal/coordinator) later sees all classes in their school. The app admin (owner) sees everything, filterable by school and class.
+- **Comparisons across schools** are admin-only.
+- **Owner direction (2026-11-01):** functionality first; content will be added weekly once the features are in place. Next: Finding 12 security fix → Nov 6 release prep → RB-2 spec (with this multi-school model) for owner approval.
