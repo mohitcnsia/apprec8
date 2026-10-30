@@ -244,7 +244,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
         ],
         ...(questContext ? { closeAction: exitToStudy, savedNote: "Progress saved ✓" } : {}),
         effects: { confetti: isPerfectScore },
-        submissionContext: mode === "training" ? null : {
+        // Spec v2: every English Quest quiz reports (also Training) as mode "quest"; the server's
+        // existing rules decide stars (100% only, anti-farming). Space/V1 Training stays unreported.
+        submissionContext: mode === "training" && !questContext ? null : {
           // UnComment this
           cloudFunctionName: "recordQuizResult",
           /// And delete this///
@@ -254,7 +256,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
             quizId: quiz.id,
             scoreAchieved: score,
             maxScore: maxPossibleScore,
-            mode,
+            mode: questContext ? "quest" : mode,
             passingScore: 0,
           },
         },

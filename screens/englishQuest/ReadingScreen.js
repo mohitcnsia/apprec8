@@ -25,7 +25,7 @@ import * as Speech from "expo-speech";
 import { loadStudyContent } from "../../services/contentCache";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { buildReadingFlow, nextCursor, splitParagraph, countWords } from "../../utils/readingFlow";
-import { scoreAnswers, starsForPercent, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
+import { scoreAnswers, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
 import { useTheme } from "../../context/ThemeContext";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
 
@@ -121,7 +121,6 @@ export default function ReadingScreen({ route, navigation }) {
   const [highlight, setHighlight] = useState(null); // { paragraph, text }
   const [glossaryWord, setGlossaryWord] = useState(null);
   const [speakingIndex, setSpeakingIndex] = useState(null);
-  const [result, setResult] = useState(null); // { percent, passed, correctCount, total }
   const [saving, setSaving] = useState(false);
 
   const scrollRef = useRef(null);
@@ -238,18 +237,38 @@ export default function ReadingScreen({ route, navigation }) {
       });
       setSaving(false);
     }
-    setResult(localResult);
-    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
-  };
-
-  const restart = () => {
-    Speech.stop();
-    setAnswers({});
-    setHighlight(null);
-    setResult(null);
-    startedAtRef.current = Date.now();
-    setCursor(flow.startCursor);
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    // Spec v2 Step 5: the shared ResultsScreen (also submits to recordQuizResult for stars).
+    const exitToStudy = () => navigation.popToTop();
+    navigation.replace("ResultsScreen", {
+      title: localResult.passed ? "Great reading! 📚" : "Good try!",
+      message: `${doc.name}: ${localResult.correctCount} of ${localResult.total} correct (${localResult.percent}%)${
+        localResult.passed ? (localResult.percent < 100 ? "\nScore 100% to earn ⭐" : "") : '\nRead the passage again and use "Show me where" to find the answers.'
+      }`,
+      metrics: [
+        { label: "Right", value: `${localResult.correctCount}/${localResult.total}` },
+        { label: "Words read", value: String(countWords(paragraphs)) },
+      ],
+      actions: [
+        ...(localResult.passed ? [] : [{ label: "Try again", onPress: () => navigation.replace("ReadingScreen", route.params), mode: "contained" }]),
+        { label: questContext ? "Back to Quest" : "Done", onPress: backToQuest, mode: localResult.passed ? "contained" : "outlined" },
+        ...(questContext ? [{ label: "Exit to Study", onPress: exitToStudy, mode: "text" }] : []),
+      ],
+      ...(questContext ? { closeAction: exitToStudy } : {}),
+      effects: { confetti: localResult.percent === 100 },
+      submissionContext: questContext
+        ? {
+            cloudFunctionName: "recordQuizResult",
+            payload: {
+              quizId: contentId,
+              scoreAchieved: localResult.correctCount,
+              maxScore: localResult.total,
+              mode: "quest",
+              passingScore: 0,
+            },
+          }
+        : null,
+      feedbackContext: { type: "quest_reading", id: contentId },
+    });
   };
 
   const backToQuest = () =>
@@ -259,7 +278,7 @@ export default function ReadingScreen({ route, navigation }) {
 
   // ---- Footer button (thumb zone) ----
   const renderFooter = () => {
-    if (!flow || result) return null;
+    if (!flow) return null;
     const isLast = cursor >= flow.items.length - 1;
     let label = null;
     let onPress = null;
@@ -280,35 +299,6 @@ export default function ReadingScreen({ route, navigation }) {
         <TouchableOpacity style={styles.footerButton} onPress={onPress} disabled={saving} activeOpacity={0.85}>
           {saving ? <ActivityIndicator color={theme.textOnPrimary} /> : <Text style={styles.footerText}>{label}</Text>}
         </TouchableOpacity>
-      </View>
-    );
-  };
-
-  const renderResult = () => {
-    if (!result) return null;
-    const stars = starsForPercent(result.percent, questContext?.passPercent ?? DEFAULT_LEAF_PASS_PERCENT);
-    return (
-      <View style={styles.resultCard}>
-        <Text style={styles.resultTitle}>{result.passed ? "Great reading! 📚" : "Good try!"}</Text>
-        <Text style={styles.resultScore}>
-          {result.correctCount} of {result.total} correct ({result.percent}%)
-        </Text>
-        <View style={{ flexDirection: "row", marginVertical: 8 }}>
-          {[1, 2, 3].map((i) => (
-            <Ionicons key={i} name={i <= stars ? "star" : "star-outline"} size={30} color={theme.gold} />
-          ))}
-        </View>
-        {!result.passed ? (
-          <Text style={styles.resultHint}>Read the passage again and use "Show me where" to find the answers.</Text>
-        ) : null}
-        <TouchableOpacity style={styles.footerButton} onPress={backToQuest}>
-          <Text style={styles.footerText}>{questContext ? "Back to Quest" : "Done"}</Text>
-        </TouchableOpacity>
-        {!result.passed ? (
-          <TouchableOpacity style={[styles.footerButton, styles.secondaryButton]} onPress={restart}>
-            <Text style={[styles.footerText, { color: theme.textPrimaryOnGradient }]}>Try again</Text>
-          </TouchableOpacity>
-        ) : null}
       </View>
     );
   };
@@ -377,7 +367,6 @@ export default function ReadingScreen({ route, navigation }) {
             />
           );
         })}
-        {renderResult()}
       </ScrollView>
     );
   };

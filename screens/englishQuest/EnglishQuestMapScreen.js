@@ -28,6 +28,8 @@ import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
 import { buildWindow } from "../../utils/questWindow";
+import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
+import LottieView from "lottie-react-native";
 import {
   listenToQuestProgress,
   markStudyNodeCompleted,
@@ -102,6 +104,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const [nodes, setNodes] = useState(null);
   const [progress, setProgress] = useState({});
   const [mistakes, setMistakes] = useState({}); // "My mistakes" list from the progress doc
+  const [showConfetti, setShowConfetti] = useState(false);
+  const progressLoadedRef = useRef(false);
+  const lastSnapshotRef = useRef(null);
   const [error, setError] = useState(null);
   const [viewportHeight, setViewportHeight] = useState(0);
 
@@ -134,6 +139,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     const unsubProgress = listenToQuestProgress(
       questId,
       (nodesProgress, data) => {
+        progressLoadedRef.current = true;
         setProgress(nodesProgress);
         setMistakes(data?.mistakes || {});
       },
@@ -161,6 +167,19 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     [nodes, progress, unlockAll]
   );
   const count = tree?.path.length || 0;
+
+  // 🎉 Confetti only for NEW achievements (topic cleared, branch mastered, Unit Boss passed),
+  // like the Space quest. Not on first load, and not when tester "unlock all" changes the view.
+  useEffect(() => {
+    if (!tree || !progressLoadedRef.current) return;
+    if (unlockAll) {
+      lastSnapshotRef.current = null;
+      return;
+    }
+    const snap = achievementSnapshot(tree.path);
+    if (shouldCelebrate(lastSnapshotRef.current, snap)) setShowConfetti(true);
+    lastSnapshotRef.current = snap;
+  }, [tree, unlockAll]);
 
   // Map windowing (Duolingo-style): current unit in full, finished units as cards,
   // next unit as a teaser, the rest as one line. Logic in utils/questWindow.js.
@@ -708,6 +727,17 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         </ScrollView>
       )}
 
+      {showConfetti ? (
+        <LottieView
+          source={require("../../assets/animations/confetti.json")}
+          autoPlay
+          loop={false}
+          speed={2}
+          onAnimationFinish={() => setShowConfetti(false)}
+          style={styles.confetti}
+        />
+      ) : null}
+
       {/* 🔧 My mistakes: bottom-right thumb zone, only when there's something to fix */}
       {tree && mistakeCount > 0 ? (
         <TouchableOpacity
@@ -775,6 +805,7 @@ const makeStyles = (theme) =>
     gateLabel: { fontFamily: "nunitoBold" },
 
     startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    confetti: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 10, pointerEvents: "none" },
     mistakesButton: {
       position: "absolute",
       right: 16,

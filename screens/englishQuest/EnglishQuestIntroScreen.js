@@ -34,7 +34,7 @@ const HOW_IT_WORKS = [
   { icon: "book", text: "Each topic starts with a short Learn page and a warm-up quiz." },
   { icon: "shield-checkmark", text: "Pass the topic's Challenge to open the next topic. Practice leaves are optional and help you get ready." },
   { icon: "trophy", text: "Beat the Unit Boss to open the next unit." },
-  { icon: "star", text: "Score 100% in Exam mode to earn stars ⭐" },
+  { icon: "star", text: "Score 100% on a quiz or reading to earn stars ⭐" },
 ];
 
 export default function EnglishQuestIntroScreen({ route, navigation }) {
