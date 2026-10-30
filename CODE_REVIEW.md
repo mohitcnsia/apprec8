@@ -1104,3 +1104,18 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 2. DR-5 deploy (rules + index).
 3. `scripts/qa/eq.sh reload`; QA My mistakes, Step 5 and the dashboard (play a few activities first so stats exist).
 4. Claude updates `gemini.md` / `CLAUDE.md` after the merge.
+
+---
+
+## 2026-10-31 — Review request: RB-5c Grammar Gremlin + RB-5b ear training — branch `feat/delight` (Claude)
+
+- **Branch:** `feat/delight` (commit `8c24616`), stacked on `feat/dashboard` → `feat/rewards` → `feat/my-mistakes`. **Merging `feat/delight` now brings all four** (supersedes step 1 of the merge plan above: merge `feat/delight` instead of `feat/dashboard`). DR-5 is still needed for the dashboard.
+- **RB-5c:** `story` field on boss nodes (Unit 0: Story Library; Unit 1: Word Zoo). Shown on the Quiz Details card + "Score 70% or more to win and open the next unit." Content test keeps numbers out of stories. **Needs a re-seed** for the story text to reach Firestore.
+- **RB-5b:** `components/quiz/ListenButtons.js` + `utils/listen.js`. 🔊 reads the question (blank read as "blank"); 👂 "Hear each" appears only when the question has a blank and reads the sentence with each option (the quoted sentence if there is one, so the instruction isn't repeated). **Placement as agreed:** ♾️ Keep practising + My mistakes always; quiz screen only when `mode === "training"` **and** `questContext.activity === "practice"`. Gates (`activity: "gate"`), Unit Boss (`"boss"`), Exam mode and Space/V1 never show it.
+- **Checks:** `npm test` (13 suites), compile, bundle pass. Not device-tested; uses `expo-speech` (already in the native build).
+- **QA please:** practice quiz in Training → 🔊 + "Hear each" on a fill-the-blank question; same quiz in Exam → no buttons; Noun Challenge (gate) → no buttons in either mode; Unit 0 Boss → story on the start card; ♾️ → buttons present, speech stops on Next.
+
+### Merge plan (latest)
+1. `git merge feat/delight` on `feat/tile-quests` (My mistakes + rewards + dashboard + delight).
+2. DR-5 deploy (rules + index). 3. Re-seed ("Update English Quest": boss stories + word tables).
+4. `scripts/qa/eq.sh reload`; QA everything above. 5. Claude updates `gemini.md` / `CLAUDE.md`.
