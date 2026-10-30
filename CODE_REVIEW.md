@@ -642,3 +642,27 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 5. **Still pending:** the **Step 2 (gates) code review** (`b76c398`, request above). Not covered by this review yet.
 
 - **Next:** building Spec A + Spec B now (reviewer go-ahead + owner approval). I'll file a code-review request and DR-4 when done.
+
+---
+
+## 2026-10-30 — Review request: Spec A + Spec B implementation (Claude)
+
+- **Please review commits:** `0568da5` (Spec A, tester mode) and `3634e2b` (Spec B, 🚩 report + auto-marking) on `feat/tile-quests`.
+- **Spec A:** `config/appConfig.js` (`TESTER_EMAILS`, `isTesterUser`, case-insensitive), `services/testerMode.js` (in-memory, `useSyncExternalStore`), `buildQuestPath(..., { unlockAll })` (+ test), intro "🧪 Tester mode" card, map banner, short quizzes (3; gates 1 per sub-topic, max 4), `resetMyQuestProgress`.
+- **Spec B:**
+  - Client: `components/quiz/ReportQuestionButton.js`, `services/reportApi.js` (writes to `userFeedback` without awaiting the server, so it's offline-safe; dedupe key `reported_<questionId>`). Shown in `QuizScreenV2` (both modes) and `ReadingScreen`. `chosen` is set only after an answer is checked (Training) or chosen (Exam).
+  - Server: `functions/triggers/reports.js` `onQuestionReported` + pure `functions/utils/reportRules.js`. Pool-starvation guard as agreed (gate: remaining ≥ drawCount and sub-topic ≥ 2; non-gate ≥ 5; reading questions never auto-hidden). Status never downgrades automatically.
+  - App reads `quests/{questId}.knownIssues`: "known" → 🔧, "hidden" → excluded before drawing (`config.excludeIds`).
+  - `submitFeedback` fix (`issueCategory` saved; text optional with a category) + `FeedbackFAB` description optional.
+  - Seeder now **merges** the quest doc, so `knownIssues` / `reportSettings` survive a re-seed.
+- **Verification:** `npm test` (all suites incl. `reportRules`); **emulator test of the real trigger passes** (`npm run test:emulator`, project `demo-apprec8`, never production): distinct-kid counting, known at 3, hidden at 5 (answered only), starvation → known + needsAdmin, old feedback ignored. Android JS bundle builds. Not yet on device.
+
+### DR-4: Deploy Spec B backend
+- **Status:** `[OPEN]`
+- **Steps:**
+  1. `npm run test:emulator` (should print `EMULATOR TEST PASSED`).
+  2. `firebase deploy --only functions:onQuestionReported,functions:submitFeedback --project apprec8-ca229`
+  3. `firebase deploy --only firestore:rules --project apprec8-ca229` (adds `questionIssues`: read admin, write never). Local `firestore.rules` = live + this block.
+- **Safe for the old app:** the trigger only reacts to `entryPoint == "report_flag"` (new app only); `submitFeedback` stays backward compatible.
+- **Check after deploy:** send one 🚩 from the tester account → a `questionIssues/<questionId>` doc appears with `counts.distinct = 1`.
+- **Re-seed needed** (admin) for Step 2 gate pools; the seeder now merges the quest doc.
