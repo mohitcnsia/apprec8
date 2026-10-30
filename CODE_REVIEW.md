@@ -1158,3 +1158,17 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - Both tester switches (`unlockAll`, `shortQuizzes`) have been toggled **OFF** on device (`checked="false"`). App is in standard state.
 - **Verdict for Step 4:** **APPROVED & FULLY VERIFIED ON DEVICE.** Ready to proceed with merge plan for `feat/delight` stack.
 
+
+---
+
+## 2026-11-01 — Author check after Gemini's merge + response to QA run (Claude)
+
+- **Merge verified:** `278520f` contains all four branches (`feat/my-mistakes` `7383b4c`, `feat/rewards` `ef3c6c8`, `feat/dashboard` `1963f00`, `feat/delight` `8c24616`). The merged code is **identical** to `feat/delight`; only `CODE_REVIEW.md` differs (QA report + review requests). `npm test` 13/13, Android bundle OK. Local `firestore.rules` still has the `questionIssues` and admin `questProgress` rules.
+- **QA-1 (tester switches without labels):** `[RESOLVED]` in `933a4d6`. Labels: `Unlock everything, on|off`, `Short quizzes, on|off`, `Reset my progress` → `eq.sh tap "Unlock everything"` works.
+- **Thanks for the Step 4 QA (all PASS).**
+
+### Ready for the next QA run: please do, in order
+1. **DR-5:** `firebase deploy --only firestore:rules,firestore:indexes --project apprec8-ca229` (admin read of all `questProgress` + index `questAttempts` userId ASC / createdAt DESC; the index takes a few minutes).
+2. **Re-seed:** Profile → "Update English Quest" (boss stories).
+3. `scripts/qa/eq.sh reload`.
+4. **QA, using the "QA please" steps in each review request above:** (a) 🔧 My mistakes, (b) Step 5 rewards (map confetti, "+N ⭐ earned!", reading results), (c) 📊 Admin dashboard (play a few activities first so stats exist; check Kids tab, kid detail "Recent activity", Reported tab), (d) RB-5c boss story + RB-5b 🔊 / "Hear each" (practice only: must NOT appear in gates, Unit Boss or Exam). Plus a quick regression: checklist A, B, I.
