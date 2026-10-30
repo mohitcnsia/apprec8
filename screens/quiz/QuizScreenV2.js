@@ -95,6 +95,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
       outcome,
       gateResult: isGate ? gateResultRef.current : null,
       resetGateId: questContext.resetGateId || null,
+      // "My mistakes": where this quiz sits (gate/boss mistakes are kept as topics)
+      activity: questContext.activity || "practice",
+      branchId: questContext.branchId || null,
+      unitId: questContext.unitId || null,
     });
   };
 

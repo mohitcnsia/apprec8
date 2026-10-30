@@ -19,11 +19,13 @@ import {
   serverTimestamp,
   increment,
   deleteDoc,
+  deleteField,
 } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import Constants from "expo-constants";
 import { authInstance } from "../config/firebaseConfig";
 import { scoreAnswers } from "../utils/questTree";
+import { mistakeUpdates } from "../utils/mistakes";
 
 const db = getFirestore(getApp());
 
@@ -50,6 +52,7 @@ export function listenToQuestTreeNodes(questId, onData, onError) {
 // Latest progress seen by the live listener, per user+quest. Lets saves skip the read-before-write
 // (Spec v2 Step 3: fewer reads). Falls back to one read if the listener hasn't delivered yet.
 const latestProgress = new Map(); // `${uid}/${questId}` -> nodes map
+const latestMistakes = new Map(); // `${uid}/${questId}` -> mistakes map ("My mistakes")
 
 /** Listens to the signed-in kid's progress in a quest. Returns {} for new kids. */
 export function listenToQuestProgress(questId, onData, onError) {
@@ -61,9 +64,11 @@ export function listenToQuestProgress(questId, onData, onError) {
   return onSnapshot(
     doc(db, "users", user.uid, "questProgress", questId),
     (snap) => {
-      const nodes = snap.exists() ? snap.data()?.nodes || {} : {};
+      const data = snap.exists() ? snap.data() || {} : {};
+      const nodes = data.nodes || {};
       latestProgress.set(`${user.uid}/${questId}`, nodes);
-      onData(nodes);
+      latestMistakes.set(`${user.uid}/${questId}`, data.mistakes || {});
+      onData(nodes, data); // 2nd arg: whole doc (e.g. data.mistakes for "My mistakes")
     },
     (error) => onError?.(error)
   );
@@ -138,6 +143,8 @@ export function markStudyNodeCompleted(questId, nodeId) {
  * @param {object} [p.gateResult] - evaluateGate() result for gate attempts
  * @param {string} [p.resetGateId] - gate whose fail counter resets if this attempt passes
  * @param {boolean} [p.skipProgress] - record answers only (endless practice never "completes")
+ * @param {string} [p.activity] - "practice" | "gate" | "boss" | "endless" | "mistakes" | "reading" (for "My mistakes")
+ * @param {string} [p.branchId] / [p.unitId] - where the activity sits on the map
  * @returns {Promise<{ percent: number, passed: boolean } | null>}
  */
 export async function saveQuestAttempt(p) {
@@ -176,6 +183,8 @@ export async function saveQuestAttempt(p) {
       appVersion: Constants.expoConfig?.version || null,
       createdAt: serverTimestamp(),
     });
+
+    await saveMistakes(p);
 
     if (!p.skipProgress) {
       await updateNodeProgress(p.questId, p.nodeId, {
@@ -223,4 +232,39 @@ export async function updateEndlessStats(questId, nodeId, { bestStreak = 0, answ
     },
     { merge: true }
   );
+}
+
+/**
+ * "My mistakes": updates users/{uid}/questProgress/{questId}.mistakes from one attempt's answers.
+ * Wrong answers are added (gate/boss as topics), and inside "My mistakes" 2 right in a row clears one.
+ * Uses the listener's copy of the list (no extra read). Never throws.
+ */
+async function saveMistakes(p) {
+  const user = currentUser();
+  if (!user || !p.activity) return;
+  try {
+    const key = `${user.uid}/${p.questId}`;
+    const current = latestMistakes.get(key) || {};
+    const updates = mistakeUpdates(current, p.answers, {
+      mode: p.activity,
+      quizId: p.quizId,
+      branchId: p.branchId || null,
+      unitId: p.unitId || null,
+    });
+    const keys = Object.keys(updates);
+    if (!keys.length) return;
+    const payload = {};
+    keys.forEach((k) => (payload[k] = updates[k] === null ? deleteField() : updates[k]));
+    // Keep the local copy in step so several saves in a row don't lose each other's changes.
+    const next = { ...current };
+    keys.forEach((k) => (updates[k] === null ? delete next[k] : (next[k] = updates[k])));
+    latestMistakes.set(key, next);
+    await setDoc(
+      doc(db, "users", user.uid, "questProgress", p.questId),
+      { mistakes: payload, updatedAt: serverTimestamp() },
+      { merge: true }
+    );
+  } catch (e) {
+    console.warn("saveMistakes failed:", e);
+  }
 }

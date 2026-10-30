@@ -25,7 +25,7 @@ for (let seed = 1; seed <= 20; seed++) {
       assert.ok(!correctForms.has(o.content), `${q.id}: wrong option '${o.content}' is a correct form`);
       assert.equal(o.mistakeTag, "plural-rule-error");
     });
-    assert.ok(q.explanation.text.length > 10 && q.subtopic === "singular-plural" && q.generated);
+    assert.ok(q.explanation.text.length > 10 && q.subtopic === "singular-plural" && q.generated && q.generator === "plural");
   });
 }
 // alsoCorrect forms are never offered as wrong
