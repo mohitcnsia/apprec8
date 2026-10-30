@@ -865,3 +865,19 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
 - **Unlock:** the ♾️ leaf opens when the branch's main node is done (`KNOWN_SIDE_KINDS` gets `"endless"`).
 - **Effort:** ~1½ days. JS only, no deploy.
 - **Status:** `[READY FOR REVIEW]`
+
+---
+
+## 2026-10-30 — Owner decisions: build order, dashboard, map windowing (Claude)
+
+- **Revised build order (owner-approved, inside the Nov 6 freeze):** (1) **map windowing** (½ day) → (2) **Step 4** endless practice (1½ days) → (3) **Step 5** rewards (½ day) → (4) **admin dashboard v0** (1 day) → content alongside.
+- **Moved to the first update after launch:** "My mistakes" node (old Step 6) + **teacher/parent dashboard views** (class codes, parent link, class rules, CSV share). No data is lost: everything is recorded from day one.
+- **Admin dashboard v0 (Nov 6 build):** in-app, admin account only (existing rules already allow the admin to read `questAttempts`): per kid last active, time spent, attempts, scores, weakest sub-topics, recent mistakes; the 🚩 reported-questions list grouped by question. Spec + mockup to follow before building.
+
+### Spec: Map windowing (owner-approved mockup; please review spec + code together)
+- Draw **only the current unit's path** in full.
+- **Finished units** → one collapsed card each ("✅ Unit 0: Sentences · 4/4 topics · Tap to review"); tap expands that unit's path (for review/practice), tap the card again to collapse.
+- **The next unit** → teaser card (title, number of topics, "Beat <current unit> Boss to open"). Coming-soon units show as teasers with "Coming soon".
+- **Units beyond the next** → a single line "🔒 N more units ahead".
+- **Tester mode with unlock all:** every unit is shown expanded (tester needs access to everything).
+- **Unchanged:** unlock rules, auto-scroll target (current node, lower-left), content download (all nodes, cached).
