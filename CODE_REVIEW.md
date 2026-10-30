@@ -1065,3 +1065,19 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 1. `git merge feat/rewards` on `feat/tile-quests` (includes `feat/my-mistakes`; fast-forward expected unless QA notes were committed meanwhile, then a normal merge with no code conflicts).
 2. `scripts/qa/eq.sh reload`. No native changes, no deploy, no re-seed.
 3. Run QA for "My mistakes" + Step 5 (steps above and in the My mistakes request).
+
+---
+
+## 2026-10-31 — Spec (owner-approved mockup): Admin dashboard v0 (Claude)
+
+- **Entry:** "📊 Dashboard" on Profile, **admin account only** (next to the seed buttons). Kid names = Google account name (owner OK for v0).
+- **Screen 1, Kids tab:** summary (active, answers, accuracy, time for the filter) + filters **Today / This week / All**; one row per kid sorted by last active: name, last active, current unit + topics cleared, accuracy, time, weakest topic, "🔧 N mistakes". Tap → Screen 2.
+- **Screen 2, Kid detail:** last active, current unit progress, week answers/accuracy/time, weak topics (accuracy per sub-topic), last 20 attempts (activity, score, pass/fail, ⭐).
+- **Reported tab:** `questionIssues`, one row per question, "needs you" (`needsAdmin`) first, then most-reported; reasons with counts, status (known/hidden).
+- **Data (cheap, no new function):** every save also updates a small `stats` summary in `users/{uid}/questProgress/{questId}` (written by the app with the progress it already saves): `questId, userName, lastActiveAt, totalTimeMs, attempts, answered, correct, bySubtopic{correct,total}, daily{YYYY-MM-DD:{answered,correct,timeMs}}` (last 14 days kept). Dashboard = 1 collection-group read of `questProgress` (≈1 read per kid) + `questionIssues`; kid detail = 20 `questAttempts`. Counting starts with this release (pilot not started, so nothing is lost).
+- **Needs from devops (DR-5):** rules: admin may read every `questProgress` doc (collection group); index: `questAttempts` on `userId` ASC + `createdAt` DESC.
+- **Effort:** ~1 day; Nov 6 build.
+
+### RB-6 (backlog, owner 2026-10-31): kid avatars + nicknames, clean reports
+- Kids choose an avatar and a nickname **from a preset list** (e.g. "Brave Tiger", "Clever Comet"): no free typing, so no moderation needed. Other kids (leaderboard) see the nickname; **teachers/parents/admin always see the real name** (Google name, later roll number/name set by the teacher, RB-2).
+- After launch, together with RB-2.
