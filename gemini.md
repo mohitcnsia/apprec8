@@ -221,6 +221,11 @@
   3. Win the puzzle and press "Finish & Continue Quest". It should seamlessly redirect back to the map.
 
 ## Future TODOs
+- **Retire old IEO, Maths and Science content once English Quest is stable (owner, 2026-10-30).** Order matters, because **English Quest Unit 1 still reuses old IEO content** (~20 `quizQuestions` quizzes + ~18 `studyContent` pages for Nouns, Pronouns, Verbs, Adjectives, Prepositions, Conjunctions, via the V1 converter):
+  1. Copy every reused quiz/page into English Quest's own data (V2 `questions` format), adding `subtopic` + `mistakeTag` to each question (also needed for RB-1 revision sets), and apply fixes from 🚩 reports.
+  2. Point Unit 1 at the copies; `npm test` (content test lists every reused id) must pass with no reused IEO ids left.
+  3. Then remove the `ieo` tile and its topics/quizzes, and delete the V1 converter in `listenToV2QuizQuestions`.
+  4. Maths (`imo`) and Science (`nso`) follow the same path once they have their own quests (nothing in English Quest depends on them).
 - **Cost assessment for 1,000 active kids + what can be removed (owner, 2026-10-30).**
   - **Model per feature:** Firestore reads/writes per session (map, quizzes, reading, Space quest, V1 lists, leaderboard, Word Inspector, games), Cloud Function invocations (`recordQuizResult`, feedback, report trigger, leaderboard), Auth, Storage/CDN bandwidth for images, Remote Config. Use the Firebase usage dashboard for real numbers from the pilot (50 students) and scale up.
   - **Scenarios:** 1,000 daily active kids × 1–3 sessions/day; best case (with Step 3 caching) vs today; monthly cost in ₹ against the Firebase free tier and Blaze pricing.
