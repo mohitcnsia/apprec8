@@ -173,8 +173,12 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   };
 
   // ---------- Opening activities ----------
+  // 🚩 auto-marked questions (quest.knownIssues): "known" → 🔧, "hidden" → left out of quizzes.
+  const knownIssues = quest?.knownIssues || {};
+  const hiddenIds = Object.keys(knownIssues).filter((id) => knownIssues[id]?.status === "hidden");
+
   const openStep = (node, step, passPercent, extraContext = {}) => {
-    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap", ...extraContext };
+    const questContext = { questId, nodeId: step.id, passPercent, returnTo: "EnglishQuestMap", knownIssues, ...extraContext };
     if (step.type === "study") {
       navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext });
     } else if (step.type === "reading") {
@@ -199,6 +203,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           questionCount: 10,
           ...(shortQuizzes && !config.balanceBy ? { questionCount: 3 } : {}),
           ...config,
+          excludeIds: hiddenIds,
         },
       },
       questContext,
@@ -208,7 +213,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const openTest = (node, passPercent) =>
     openQuizDetails(
       { id: node.quizId, title: node.title },
-      { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap" },
+      { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap", knownIssues },
       passPercent
     );
 
@@ -267,6 +272,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         nodeId: gate.id,
         passPercent,
         returnTo: "EnglishQuestMap",
+        knownIssues,
         gate: true,
         nextTitle: next?.title || null,
         failsSoFar: gate.failsSinceLastPractice || 0,

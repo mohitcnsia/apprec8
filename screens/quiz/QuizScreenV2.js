@@ -23,6 +23,7 @@ import { useQuizEngine } from "../../hooks/useQuizEngine";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
+import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 
@@ -497,6 +498,23 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 <View style={styles.progressBarContainer}>
                   <View style={[styles.progressBarFill, { width: `${(currentIndex / questions.length) * 100}%` }]} />
                 </View>
+                <ReportQuestionButton
+                  questionId={currentQuestion.id}
+                  questionText={currentQuestion.question?.content}
+                  options={currentQuestion.options}
+                  quizId={quiz.id}
+                  chosen={
+                    mode === "exam"
+                      ? state.userAnswers[currentQuestion.id] ?? null
+                      : state.showFeedback
+                      ? state.selectedAnswer?.content ?? null
+                      : null
+                  }
+                  mode={mode}
+                  questContext={questContext}
+                  knownStatus={questContext?.knownIssues?.[currentQuestion.id]?.status}
+                  color="white"
+                />
                 {mode === "training" && (
                   <View style={styles.heartsContainer}>
                     <Ionicons name="heart" size={24} color="#FF4B4B" />

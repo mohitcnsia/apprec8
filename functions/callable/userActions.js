@@ -153,6 +153,7 @@ exports.submitFeedback = functions
       feedbackText,
       feedbackType,
       clientTimestamp,
+      issueCategory,
     } = data;
 
     if (
@@ -180,8 +181,10 @@ exports.submitFeedback = functions
     // ... (other validations for reaction, feedbackText, feedbackType, isTextStrictlyRequired as in your original file)
 
     const trimmedFeedbackText = (feedbackText || "").trim();
+    // Typing is optional when a category is chosen (kids find typing hard). Fix 2026-10-30.
+    const hasCategory = typeof issueCategory === "string" && issueCategory.trim().length > 0;
     const isTextStrictlyRequired =
-      feedbackType === "issue_report" || entryPoint === "feedback_fab";
+      !hasCategory && (feedbackType === "issue_report" || entryPoint === "feedback_fab");
     if (
       isTextStrictlyRequired &&
       (trimmedFeedbackText.length < MIN_FEEDBACK_CHARS ||
@@ -204,6 +207,7 @@ exports.submitFeedback = functions
       reaction,
       feedbackText: trimmedFeedbackText,
       feedbackType,
+      issueCategory: hasCategory ? issueCategory.trim() : null, // was silently dropped before 2026-10-30
       clientTimestamp: clientTimestamp || null,
       createdAt: serverTimestamp(), // Use modular `serverTimestamp()`
       status: "new",

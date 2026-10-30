@@ -63,7 +63,8 @@ export default function SeedEnglishQuestButton() {
       }
 
       // 3. Quest info + tile
-      batch.set(db.collection("quests").doc(QUEST_ID), { ...quest, updatedAt: now });
+      // merge: keep server-written fields (knownIssues from 🚩 reports, reportSettings)
+      batch.set(db.collection("quests").doc(QUEST_ID), { ...quest, updatedAt: now }, { merge: true });
       batch.set(db.collection("categories").doc(QUEST_ID), { ...tile, lastUpdatedAt: now }, { merge: true });
 
       // 4. Tree nodes

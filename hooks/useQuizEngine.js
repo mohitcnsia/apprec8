@@ -199,7 +199,10 @@ export const useQuizEngine = (quiz, mode) => {
 
     const unsubscribe = listenToV2QuizQuestions(
       quiz.id,
-      async (fetchedQuestions) => {
+      async (allFetchedQuestions) => {
+        // Questions auto-hidden by 🚩 reports (quest knownIssues) are never shown.
+        const excluded = new Set(quiz.config?.excludeIds || []);
+        const fetchedQuestions = (allFetchedQuestions || []).filter((q) => !excluded.has(q.id));
         if (fetchedQuestions?.length > 0) {
           try {
             // 1. Load Local Stats

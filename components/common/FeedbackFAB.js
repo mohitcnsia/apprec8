@@ -124,12 +124,7 @@ const FeedbackFAB = ({
         setTextInputError("Please select an issue category.");
         return false;
       }
-      if (feedbackText.trim().length < MIN_CHARS_ISSUE_DESC) {
-        setTextInputError(
-          `Please describe the issue (min ${MIN_CHARS_ISSUE_DESC} characters).`
-        );
-        return false;
-      }
+      // Description is optional once a category is chosen (typing is hard for kids).
     } else if (modalMode === "dislike") {
       if (feedbackText.trim().length < MIN_CHARS_DISLIKE_COMMENT) {
         setTextInputError(
@@ -221,7 +216,7 @@ const FeedbackFAB = ({
 
   let placeholderText = "Optional comment...";
   if (modalMode === "report_issue") {
-    placeholderText = `Describe the issue (min ${MIN_CHARS_ISSUE_DESC}, max ${MAX_CHARS_COMMENT} chars)...`;
+    placeholderText = `Tell us more (optional, max ${MAX_CHARS_COMMENT} chars)...`;
   } else if (modalMode === "dislike") {
     placeholderText = `What can be improved? (min ${MIN_CHARS_DISLIKE_COMMENT}, max ${MAX_CHARS_COMMENT} chars)...`;
   } else if (modalMode === "like") {
@@ -487,9 +482,7 @@ const FeedbackFAB = ({
                         feedbackText.trim().length <
                           MIN_CHARS_DISLIKE_COMMENT) ||
                       // Disable if 'report_issue' and category or description is missing/too short
-                      (modalMode === "report_issue" &&
-                        (!selectedIssueCategory ||
-                          feedbackText.trim().length < MIN_CHARS_ISSUE_DESC))
+                      (modalMode === "report_issue" && !selectedIssueCategory)
                     }
                     style={styles.buttonStyle}
                     buttonColor={C.appPrimary || C.primary} // Themed button color

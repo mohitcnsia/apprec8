@@ -27,6 +27,7 @@ import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { buildReadingFlow, nextCursor, splitParagraph, countWords } from "../../utils/readingFlow";
 import { scoreAnswers, starsForPercent, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
 import { useTheme } from "../../context/ThemeContext";
+import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
 
 // Semantic colours (same in light and dark). Everything else comes from the app theme.
 const COLORS = {
@@ -59,13 +60,16 @@ const Paragraph = ({ text, highlightText, glossary, onWordPress, speaking, onSpe
   );
 };
 
-const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe }) => {
+const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe, report }) => {
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const answered = !!answer;
   return (
     <View style={styles.questionCard}>
-      <Text style={styles.questionNumber}>Question {number}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <Text style={styles.questionNumber}>Question {number}</Text>
+        {report ? <ReportQuestionButton {...report} chosen={answer?.chosen ?? null} options={question.options} questionText={question.question?.content} /> : null}
+      </View>
       <Text style={styles.questionText}>{question.question?.content}</Text>
       {question.options.map((opt) => {
         const isChosen = answered && answer.chosen === opt.content;
@@ -362,6 +366,13 @@ export default function ReadingScreen({ route, navigation }) {
               answer={answers[item.index]}
               onAnswer={(opt) => onAnswer(item.index, opt)}
               onShowMe={() => showMeWhere(q)}
+              report={{
+                questionId: `${contentId}-q${item.index + 1}`,
+                quizId: contentId,
+                mode: "reading",
+                questContext,
+                knownStatus: questContext?.knownIssues?.[`${contentId}-q${item.index + 1}`]?.status,
+              }}
             />
           );
         })}

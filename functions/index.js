@@ -1,5 +1,6 @@
 // Import functions from their new locations
 const authTriggers = require("./triggers/auth");
+const reportTriggers = require("./triggers/reports");
 const crudOperationsApi = require("./api/crudOperations");
 const bulkOperationsApi = require("./api/bulkOperations");
 const utilityApi = require("./api/utility");
@@ -11,6 +12,7 @@ const gameManagementApi = require("./api/gameManagement");
 // Export all functions for Firebase to discover
 module.exports = {
   ...authTriggers,
+  ...reportTriggers,
   ...crudOperationsApi,
   ...bulkOperationsApi,
   ...utilityApi,
