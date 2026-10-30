@@ -1044,3 +1044,24 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
   - Opens the Keep practising screen in mistakes mode: exact question for question entries; for topic entries a fresh **similar** question (same branch and sub-topic, from practice pools + generators) each time. **2 right in a row fixes a mistake**, a wrong answer resets the count. Header "🔧 N to fix"; summary "All mistakes fixed! 🎉" or "Fixed today / Still to fix" with Keep fixing.
 - **Tests:** `tests/mistakes.test.mjs` (question vs topic entries, generated questions keep their generator, reading skipped, 2-right rule incl. topics, no new entries from "mistakes" mode, cap of 60, session building). `npm test` (9 suites), compile, Android bundle pass. **Not device-tested** (QA by Gemini).
 - **QA please (after merge):** make 2–3 wrong answers in a practice quiz and 1 wrong in ♾️ → the map shows "My mistakes · N" → open it → answer each right twice → count drops → "All mistakes fixed! 🎉" → button disappears. Then fail a gate topic → a topic mistake appears and serves practice (not gate) questions.
+
+---
+
+## 2026-10-31 — Review request: Spec v2 Step 5, rewards — branch `feat/rewards` (Claude)
+
+- **Branch:** `feat/rewards` (commit `ef3c6c8`), **stacked on `feat/my-mistakes`** (both touch the map + quiz screen). Merging `feat/rewards` brings both. Built in the worktree; the emulator app was not touched.
+- **Already done in Step 1:** progress ring, gold crown for mastered branches.
+- **New:**
+  1. **Map confetti** for *new* achievements only: topic cleared, branch mastered, Unit Boss passed (`utils/celebrate.js` + tests). Not on first load (waits for progress to load), not when tester "unlock all" changes the view, never when progress goes down.
+  2. **Stars:** every English Quest quiz now reports to `recordQuizResult` as `mode: "quest"`, **including Training** (per frozen Spec v2: "every quest activity reports"). Server rules unchanged (stars only at 100%, first time / after 7 days, daily bonus). Space and V1 Training still don't report.
+  3. **Reading** results moved to the shared `ResultsScreen` (Try again / Back to Quest / Exit / ✕) and report for stars (`quizId` = reading id).
+  4. `ResultsScreen` shows **"+N ⭐ earned!"** using `starsAwarded` (benefits Space too).
+- **Heads-up for the owner:** the intro text previously said "100% in Exam mode". It now says "100% on a quiz or reading", matching the spec. If stars should be Exam-only, it's a one-line revert.
+- **Server note (no deploy):** `recordQuizResult` counts any non-`training` mode, so `"quest"` works today. Side effect: quest activities also update `totalQuizzesCompleted` + streak, which seems right.
+- **Checks:** `npm test` (10 suites), compile, Android bundle pass. Not device-tested.
+- **QA please (after merge):** clear a topic (gate pass) → confetti on return to the map; reopen the map → no confetti; get 100% on a practice quiz in Training → "+N ⭐ earned!" (first time); finish a reading → shared results screen with Try again (if not passed) / Back to Quest / ✕.
+
+### Merge plan (when the current QA run is done)
+1. `git merge feat/rewards` on `feat/tile-quests` (includes `feat/my-mistakes`; fast-forward expected unless QA notes were committed meanwhile, then a normal merge with no code conflicts).
+2. `scripts/qa/eq.sh reload`. No native changes, no deploy, no re-seed.
+3. Run QA for "My mistakes" + Step 5 (steps above and in the My mistakes request).
