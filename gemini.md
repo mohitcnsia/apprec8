@@ -39,13 +39,15 @@
 
 **One branch**
 - **Main node** = "Learn" page + short warm-up quiz. Shows a progress ring (◔ → ●) for leaves done. Finishing it opens the row.
-- **Practice leaves**, one per sub-topic (e.g. common & proper, singular & plural, gender, advanced). Difficulty colour 🟢🟡🔴 (visual only). Optional, **any order**, open once the main node is done. **No hearts.**
-- **🛡 Gate** (last fixed item of the row), open right after the main node. Pass = **≥80% overall and at least one correct in every sub-topic**. Pool of **15** questions per gate, **10 drawn** per attempt, balanced (≥2 per sub-topic), options shuffled, exam style (no right/wrong until the end), **hearts on**. After **2 failed tries**, the 3rd try needs one recommended practice leaf done first. Result screen names strong ✅ and weak ⚠️ sub-topics, and weak leaves glow on the map. Passing opens the next main node.
+- **Practice leaves**, one per sub-topic (e.g. common & proper, singular & plural, gender, advanced). Difficulty colour 🟢🟡🔴 (visual only). Optional, **any order**, open once the main node is done.
+- **🛡 Gate** (last fixed item of the row), open right after the main node. Pass = **≥80% overall and at least one correct in every sub-topic**. Pool of **15** questions per gate, **10 drawn** per attempt, balanced (≥2 per sub-topic), options shuffled. After **2 failed tries**, the 3rd try needs one recommended practice leaf done first. Result screen names strong ✅ and weak ⚠️ sub-topics, and weak leaves glow on the map. Passing opens the next main node.
 - **100% is encouraged, never required:** below 100% the result shows "Try for 100% to earn ⭐".
 - **♾️ Keep practising** (end of row): endless, one question at a time, no hearts, no end, stop anytime with a summary. Streak counter only (no global stars, it would be farmable). Questions from the branch's pools + generated questions.
 - **Branch mastered** (all leaves done): main node turns gold with a crown + confetti.
 
-**Unit Boss** (replaces the "unit test" as a trunk node): short mixed quiz over all branches, hearts on. Passing opens the next unit and shows a trophy.
+**Training vs Exam (owner decision 2026-10-30):** every English Quest quiz (warm-up, practice, gate, Unit Boss) opens **Quiz Details**, like the Space quest, so the kid chooses **Training** (instant feedback, hearts) or **Exam** (no hearts, review at the end). **Hearts exist only in Training mode.** Pass marks apply in either mode.
+
+**Unit Boss** (replaces the "unit test" as a trunk node): short mixed quiz over all branches. Passing opens the next unit and shows a trophy.
 
 **Stars:** existing `recordQuizResult` rules, unchanged (no Cloud Function change). Every quest activity (practice leaf, gate, Unit Boss, reading) reports with `mode: "quest"` so the server awards stars. Endless practice: no global stars.
 

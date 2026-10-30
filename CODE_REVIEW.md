@@ -398,3 +398,5 @@ This file tracks technical reviews, architecture decisions, and deployment readi
   - `data/englishQuestData.js` + seeder: new node structure. **Requires a re-seed** ("Update English Quest", admin). Old progress from batch-1 testing won't carry over (step ids changed), which only affects test accounts.
 - **Not device-tested yet.** The emulator app predates `expo-speech`, so it needs a native rebuild. Compile, `npm test` and the Android JS bundle pass.
 - **Spec question found while building (owner to decide, affects Step 2):** Spec v2 says gates are "exam style" *and* "hearts on". The engine's exam mode can't use hearts, because losing a heart would reveal that an answer was wrong. Proposal: gates and Unit Boss use exam mode **without hearts**; the 80% + no-weak-spot pass mark is what keeps them strict.
+- **Owner decision on the hearts question (2026-10-30):** hearts are for **Training mode only**. Every English Quest quiz opens **Quiz Details** (as in Space), and the kid chooses Training or Exam. The `config.noHearts` change was removed again. Quiz Details now forwards `questContext` so results are recorded. Spec v2 in `gemini.md` updated.
+

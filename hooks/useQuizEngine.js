@@ -79,8 +79,7 @@ function quizReducer(state, action) {
       const newScore = isCorrect
         ? state.score + (currentQuestion.stars || 10)
         : state.score;
-      // config.noHearts (English Quest practice): wrong answers never cost a heart.
-      const newLives = isCorrect || state.config?.noHearts ? state.lives : Math.max(0, state.lives - 1);
+      const newLives = isCorrect ? state.lives : Math.max(0, state.lives - 1);
       return {
         ...state,
         showFeedback: true,
@@ -106,7 +105,7 @@ function quizReducer(state, action) {
       };
     }
     case "NEXT_QUESTION": {
-      if (state.lives <= 0 && !state.config?.noHearts) {
+      if (state.lives <= 0) {
         return { ...state, status: "failed" };
       }
       const isLastQuestion = state.currentIndex === state.questions.length - 1;

@@ -24,7 +24,7 @@ import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
 const QuizDetailsScreen = ({ route, navigation }) => {
   const { theme } = useTheme();
   const C = theme.appColors || theme;
-  const { quiz } = route.params; // Get the quiz object passed from the previous screen
+  const { quiz, questContext } = route.params; // questContext: set by English Quest so results are recorded
 
   const [attempt, setAttempt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +50,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
       quiz: quiz,
       mode: mode,
       isFirstAttempt: !attempt,
+      questContext,
     });
   };
 

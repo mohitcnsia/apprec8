@@ -415,7 +415,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 <View style={styles.progressBarContainer}>
                   <View style={[styles.progressBarFill, { width: `${(currentIndex / questions.length) * 100}%` }]} />
                 </View>
-                {mode === "training" && !quiz.config?.noHearts && (
+                {mode === "training" && (
                   <View style={styles.heartsContainer}>
                     <Ionicons name="heart" size={24} color="#FF4B4B" />
                     <Text style={styles.heartsText}>{lives}</Text>

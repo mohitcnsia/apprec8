@@ -159,31 +159,29 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     } else if (step.type === "reading") {
       navigation.navigate("ReadingScreen", { contentId: step.contentId, questContext });
     } else if (step.type === "quiz") {
-      navigation.navigate("QuizScreenV2", {
-        quiz: {
-          id: step.quizId,
-          title: node.title,
-          config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10, noHearts: true },
-        },
-        mode: "training",
-        isFirstAttempt: false,
-        questContext,
-      });
+      openQuizDetails({ id: step.quizId, title: node.title }, questContext, passPercent);
     }
   };
 
-  const openTest = (node, passPercent) => {
-    navigation.navigate("QuizScreenV2", {
+  // Like the Space quest: Quiz Details lets the kid choose Training (hearts, instant feedback) or Exam.
+  const openQuizDetails = ({ id, title }, questContext, passPercent) => {
+    navigation.navigate("QuizDetails", {
       quiz: {
-        id: node.quizId,
-        title: node.title,
+        id,
+        title,
+        description: `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`,
         config: { shuffleQuestions: true, shuffleOptions: true, questionCount: 10 },
       },
-      mode: "exam",
-      isFirstAttempt: false,
-      questContext: { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap" },
+      questContext,
     });
   };
+
+  const openTest = (node, passPercent) =>
+    openQuizDetails(
+      { id: node.quizId, title: node.title },
+      { questId, nodeId: node.id, passPercent, returnTo: "EnglishQuestMap" },
+      passPercent
+    );
 
   const explainClosed = (status, lockedText) => {
     if (status === "comingSoon") Alert.alert("Coming soon!", "This will be ready in a future update.");
@@ -208,22 +206,14 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (gate.status === "locked" || gate.status === "comingSoon") {
       return explainClosed(gate.status, `Finish "${main.title}" first to open its challenge.`);
     }
-    const pass = gate.passPercent ?? DEFAULT_GATE_PASS_PERCENT;
-    Alert.alert(gate.title || "Challenge", `Score ${pass}% or more to open the next topic. Practice first if you like!`, [
-      { text: "Not yet", style: "cancel" },
-      { text: "Start", onPress: () => openTest(gate, pass) },
-    ]);
+    openTest(gate, gate.passPercent ?? DEFAULT_GATE_PASS_PERCENT);
   };
 
   const onBossPress = (bossItem) => {
     if (bossItem.status === "locked" || bossItem.status === "comingSoon") {
       return explainClosed(bossItem.status, "Clear every topic in this unit to face the Unit Boss.");
     }
-    const pass = bossItem.passPercent ?? DEFAULT_BOSS_PASS_PERCENT;
-    Alert.alert(bossItem.title || "Unit Boss", `A mix of the whole unit. Score ${pass}% or more to open the next unit.`, [
-      { text: "Not yet", style: "cancel" },
-      { text: "Start", onPress: () => openTest(bossItem, pass) },
-    ]);
+    openTest(bossItem, bossItem.passPercent ?? DEFAULT_BOSS_PASS_PERCENT);
   };
 
   const onEndlessPress = (e) =>
