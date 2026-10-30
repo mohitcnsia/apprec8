@@ -89,6 +89,12 @@ t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { status: "completed", fails
 assert.equal(t.path[0].practices[0].glow, false);
 assert.equal(t.path[0].gate.retryLocked, false);
 
+// 9b. No practice leaf for the weak sub-topic → the gate never locks (kid can't get stuck).
+t = buildQuestPath(gnodes, { ...mainDone, "a-gate": { failsSinceLastPractice: 2, weakSubtopics: ["articles"] } });
+assert.equal(t.path[0].gate.retryLocked, false, "no glowing leaf → no lock");
+t = buildQuestPath(nodes.filter((n) => n.kind !== "practice"), { ...mainDone, "a-gate": { failsSinceLastPractice: 5, weakSubtopics: ["gender"] } });
+assert.equal(t.path[0].gate.retryLocked, false, "branch without practice leaves never locks");
+
 // 10. Tester mode (unlockAll): everything open, coming-soon stays, progress object untouched.
 const before = JSON.stringify({});
 const prog = {};
