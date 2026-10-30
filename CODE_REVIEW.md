@@ -666,3 +666,147 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
 - **Safe for the old app:** the trigger only reacts to `entryPoint == "report_flag"` (new app only); `submitFeedback` stays backward compatible.
 - **Check after deploy:** send one 🚩 from the tester account → a `questionIssues/<questionId>` doc appears with `counts.distinct = 1`.
 - **Re-seed needed** (admin) for Step 2 gate pools; the seeder now merges the quest doc.
+
+---
+
+## 2026-10-30 — Review & Sign-Off: Step 2 (Gates), Spec A (Tester Mode), and Spec B (🚩 Report v1) (Gemini)
+
+- **Reviewed commits:** `b76c398` (Step 2: Gates), `0568da5` (Spec A: Tester Mode), `3634e2b` (Spec B: 🚩 Report v1) on `feat/tile-quests`
+- **Reviewer:** Gemini (Code Reviewer & Deployment Engineer)
+- **Status of implementations:** **ALL APPROVED & SIGNED OFF ✅**
+
+---
+
+### 1. Step 2 (Gates) Review — `b76c398`
+- **Balanced Draw Engine (`utils/gateRules.js`):** Verified. `drawBalanced` guarantees at least `minPerGroup` (2) per sub-topic while filling up to `count` (10), followed by a complete Fisher–Yates shuffle so sub-topics are evenly distributed.
+- **Pass Criteria & Scoring Evaluation (`evaluateGate`):** Verified. Pass requires both $\ge 80\%$ overall score and at least one correct answer across all sub-topics asked. Unanswered questions correctly count as incorrect.
+- **2-Fails Practice Lock & Glowing Weak Leaves:** Verified.
+  - `failsSinceLastPractice` and `weakSubtopics` persist in `users/{uid}/questProgress/{questId}` under `nodes[gateId]`.
+  - After 2 failed attempts, gate transitions to `retryLocked` ("Practise first" with lock icon), disabling "Try Again" on both `ResultsScreen` and the Out-of-Hearts screen.
+  - Tapping a glowing leaf passes `resetGateId: main.gate.id`; completing that practice leaf cleanly resets `failsSinceLastPractice` to 0.
+- **Results Screen Parity:** Verified. Correctly reuses `ResultsScreen` with granular sub-topic breakdowns (`✅` and `⚠️`), celebration on unlock, and polite prompting to strive for 100% to earn ⭐.
+
+---
+
+### 2. Spec A (Tester Mode) Review — `0568da5`
+- **Access Control & Case-Insensitivity:** Verified. `isTesterUser` in `config/appConfig.js` enforces case-insensitive, trimmed email comparison against `TESTER_EMAILS` (`mohitchilkoti@gmail.com`) and permits `APPREC8_TEAM_REVIEWER_UID`.
+- **Zero-Pollution State:** Verified. In-memory `useSyncExternalStore` pattern in `services/testerMode.js` ensures tester toggles (`unlockAll`, `shortQuizzes`) are ephemeral, do not touch Firestore progress during exploration, and reset on app reload.
+- **Progress Reset Safety:** Verified. `resetMyQuestProgress` is strictly scoped to `users/{auth.currentUser.uid}/questProgress/english-quest` with confirmation alert.
+- **Short Quizzes:** Verified. Standard quizzes draw 3 questions; gates draw 1 per sub-topic (max 4).
+
+---
+
+### 3. Spec B (🚩 Report v1 + Auto-Marking) Review — `3634e2b`
+- **Client Implementation (`ReportQuestionButton.js`, `services/reportApi.js`):**
+  - Offline-safe client write directly to existing `userFeedback` collection with `entryPoint: "report_flag"`.
+  - Deduplication via `AsyncStorage` (`reported_<questionId>`) prevents rapid-tap spam with zero server read overhead.
+- **Backend Trigger (`onQuestionReported` in `functions/triggers/reports.js`):**
+  - Ignores legacy feedback (`entryPoint !== "report_flag"`).
+  - Correctly tallies distinct student UIDs rather than total submissions.
+  - Thresholds: $\ge 3$ distinct students $\to$ `known` (🔧 icon rendered); $\ge 5$ distinct students reporting `wrong_answer` who answered the question $\to$ `hidden`.
+- **Pool Starvation Protection (`functions/utils/reportRules.js`):**
+  - Safeguard verified: before marking `hidden`, `canHide` ensures gate pools retain $\ge 10$ visible questions with $\ge 2$ per sub-topic, and standard quizzes retain $\ge 5$ questions.
+  - If hiding would starve the pool, the item transitions to `known` with `needsAdmin: true` ("Under review") instead of `hidden`, safeguarding quiz engines from runtime starvation crashes.
+- **Quiz Engine Exclusion:** Verified. `useQuizEngine.js` automatically filters out `hidden` question IDs (`config.excludeIds`).
+- **Callable Fix (`submitFeedback`):** Backward compatibility maintained; `issueCategory` preserved; optional text supported when a category is supplied.
+
+---
+
+### 4. Test Verification
+- All 6 automated test suites pass cleanly (`npm test`):
+  1. `questTree` (Spec v2 path and unlock tests)
+  2. `gateRules` (200 seeded balanced draws + evaluation)
+  3. `readingFlow` (paragraph splitting, glossary, "Show me where" validation)
+  4. `content` (44 nodes, 9 new quizzes, 90 questions, gate pools verified)
+  5. `imports` (265 local named imports checked across the entire repository)
+  6. `reportRules` (reporters counting, starvation guards, status transitions)
+
+---
+
+### 5. Deployment Status: DR-4
+- **Status:** `[DEPLOYED 2026-10-30]` (Successfully deployed by owner to `apprec8-ca229`).
+
+---
+
+### Reviewer Verdict & Next Steps:
+- **Verdict:** Backend and logic approved.
+- **Action for Claude:** Address the 3 on-device UX/Navigation findings below (Findings 16–18) alongside or before Step 3 (Caching).
+
+---
+
+## 2026-10-30 — On-Device Review Findings: Step 2 & Spec B (Owner & Gemini)
+
+- **Source:** Tested live on device by owner (DR-4 deployed, re-seeded, tester mode active).
+- **Scope:** `QuizScreenV2.js`, `ReportQuestionButton.js`, `ResultsScreen.js`.
+
+---
+
+### Finding 16: [HIGH] [UX / CONFUSION] Duplicate Flag Icons in Exam Mode
+- **Severity:** High (UX / User Confusion)
+- **Status:** `[RESOLVED]`
+- **Context:**
+  In `screens/quiz/QuizScreenV2.js`:
+  - Line 501: `ReportQuestionButton` renders in the header row using a flag icon (`Ionicons name="flag"`).
+  - Line 536: In Exam mode, the "Mark for review" toggle button (`styles.markButton`) also renders using `Ionicons name={isMarkedForReview ? "flag" : "flag-outline"}`.
+- **Issue:**
+  In Exam mode, students see **two identical flag icons** on the screen simultaneously. Tapping one flags the question for exam review, while tapping the other reports an issue/bug with the question.
+- **Action Required:**
+  1. For **Report Question / Feedback**: Use an icon that clearly conveys reporting an issue/feedback rather than marking, e.g. `chatbox-ellipses-outline`, `alert-circle-outline`, or `help-circle-outline`.
+  2. For **Mark for Review (Exam)**: Switch from `flag` to `bookmark-outline` / `bookmark`, which is the industry-standard UI convention for exam question bookmarks.
+- **Author Response (Claude):**
+  > Fixed in `ce9b0ee`. Report button → `alert-circle-outline` (reads as "report a problem"). Exam "mark for review" → `bookmark` / `bookmark-outline`, on the question screen **and** in the review list (which also used a flag). The report button keeps its "✓ Reported" / 🔧 states.
+
+---
+
+### Finding 17: [MEDIUM] [UI / THEME] "AI-Style" Green Square Emoji (`✅`) on Results Screen
+- **Severity:** Medium (Visual Polish / Design System)
+- **Status:** `[RESOLVED]`
+- **Context:**
+  In `screens/quiz/QuizScreenV2.js` line 119:
+  ```javascript
+  label: `${v.correct === 0 ? "⚠️" : "✅"} ${nameOf(id)}`,
+  ```
+- **Issue:**
+  On Android devices, Google's Noto Color Emoji font renders the raw unicode `✅` (U+2705) as a prominent green rounded square badge with a white tick inside. This gives the results screen a generic AI / Discord emoji appearance that clashes with the app's clean custom theme (`ThemeContext`).
+- **Action Required:**
+  Replace the square emoji with a clean checkmark without a background:
+  - Use clean unicode checkmark `✓` (or `•` / `✓` styled without a background).
+  - Alternatively, pass structured status (`{ status: "passed" | "weak", label, value }`) to `ResultsScreen.js` and render an inline vector icon (`Ionicons name="checkmark"` in `theme.success`) without any square box.
+- **Author Response (Claude):**
+  > Fixed in `ce9b0ee`. Gate result rows now pass `{ label, value, status: "passed" | "weak" }` with no emoji in the label. `ResultsScreen` draws an Ionicons `checkmark` in `theme.success` or `alert-circle-outline` in `theme.warning`, with no box. Metrics without `status` render exactly as before, so other callers are unchanged.
+
+---
+
+### Finding 18: [MEDIUM] [NAVIGATION / UX] Trapped in Quest Navigation Loop from ResultsScreen
+- **Severity:** Medium (Navigation UX)
+- **Status:** `[RESOLVED]`
+- **Context:**
+  In `screens/quiz/QuizScreenV2.js` lines 125–152 and 208–226, the `actions` array passed to `ResultsScreen` only provides:
+  - `"Play again"` / `"Try again"`
+  - `"Back to Quest"` (`navigation.navigate("EnglishQuestMap", ...)`)
+  Furthermore, `screens/common/ResultsScreen.js` does not render a top navigation header or close (`X`) button.
+- **Issue:**
+  If a student finishes an English Quest quiz and wants to exit to the Study tab, Home, or Space Olympiad, they are trapped in the Quest flow. They must tap "Back to Quest" $\to$ wait for Quest Map to load $\to$ tap back arrow to Intro Screen $\to$ tap back arrow to Study tab.
+- **Action Required:**
+  1. Add a top-right `X` (close/home) icon in `ResultsScreen.js` (or a tertiary action) that pops to the root or navigates directly to `Study`.
+  2. In `QuizScreenV2.js`, include an explicit secondary/tertiary exit option (e.g. "Exit to Study" or "Done") so users can leave English Quest without a 3-hop back-navigation chain.
+- **Author Response (Claude):**
+  > Fixed in `ce9b0ee`. `ResultsScreen` accepts an optional `closeAction`; when set it shows an ✕ top-right (below the safe-area inset). English Quest results (gate and normal quest quizzes) pass `closeAction` + a text button **"Exit to Study"**, both `navigation.popToTop()` → Study tab root in one tap. Space/V1 results don't pass it, so they're unchanged. Note: the Reading screen still has its own result card until Step 5 moves it to `ResultsScreen` (it already has "Back to Quest" and the header back arrow).
+
+---
+
+### Clarification & Process: Question Issues Validation & Fixing Lifecycle (Spec B)
+- **Validation (Current):**
+  - All reports written to `userFeedback` (`entryPoint: "report_flag"`).
+  - `onQuestionReported` trigger automatically tallies distinct students in `questionIssues/{questionId}`.
+  - Thresholds: $\ge 3$ distinct kids $\to$ `known` (🔧 icon rendered; no more reports sent); $\ge 5$ distinct kids with `wrong_answer` who answered the question $\to$ `hidden` (auto-excluded from quiz draws via `config.excludeIds`).
+- **Fixing Workflow:**
+  - **Phase 1 (Pilot):** Admin reviews `questionIssues` in Firestore or the forthcoming in-app dashboard. Admin updates question in `data/englishQuestData.js`, presses "Update English Quest", and clears `quests/{questId}.knownIssues.{questionId}`. The question immediately rejoins the playable pool.
+  - **Phase 2 (Dynamic Content Editor / RB-3):** Dedicated in-app / web "Reported Issues" list where tapping a report opens the editor with student answers highlighted. Saving the correction automatically un-hides the question and clears `questionIssues`.
+
+### Author responses (Claude): sign-off + lifecycle note
+- Thanks for the sign-off on Step 2, Spec A and Spec B, and for deploying DR-4.
+- Findings 16–18 are resolved in `ce9b0ee` (see each finding). Please re-check on device; it's a JS-only change, so a Metro reload is enough.
+- **Fixing lifecycle:** agreed with both phases. For Phase 1, also clear `questionIssues/{questionId}`. Otherwise a fixed question that gets one new report would immediately count the old reporters again and jump back to "known". The seeder merges the quest doc, so a re-seed keeps `knownIssues`; removing the entry is a deliberate admin step.
+- **Next:** Step 3 (caching).
+
