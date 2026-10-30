@@ -7,6 +7,71 @@
    - **Space Olympiad (legacy):** `quest_nodes` entry + `studyContent`/`categories`/`topics` payload in `components/quiz/SeedQuestNodesButton.js`.
    - **Tile quests (English Quest and future ones):** node in `quests/{questId}/nodes` + its study page (`studyContent`) or questions (`questions`, or reused `quizQuestions`) in `data/englishQuestData.js`, seeded by `components/quiz/SeedEnglishQuestButton.js`. Never add tile-quest nodes to `quest_nodes` (old app builds load all of it).
 4. **Target Audience (Kids):** The content is designed for kids (Space Olympiad). All answers, images, and reading materials (like the biographies) must be engaging, highly visual, and kid-friendly.
+5. **Content accuracy is the highest priority.** No AI-generated questions live in the app. AI may only draft content offline, and it's checked before it goes live. Generated practice comes from verified word tables only.
+6. **Confirm before building.** Any major feature or new screen gets a plan + mockup approved by the owner first. Reuse existing patterns (Space quest map, `ResultsScreen`, `recordQuizResult`) and the app theme (`ThemeContext`).
+7. **Stars and money:** stars are awarded by the existing `recordQuizResult` rules. Scoring is client-side today because stakes are low. **If stars ever become real money, prizes or scholarships, move scoring to the server first.**
+
+## 2026-10-30
+- **Goal:** Owner tested batch 1 on device. The English Quest map was not what was expected (own forest colours, trunk/branch-row layout nobody had approved). Redesign agreed through discussion, **no code written yet**.
+- **Completed Steps:**
+  1. Reviewed the Space quest map (`screens/quest/QuestScreen.js`): one dashed zigzag path, first node at the bottom, nodes alternate left/right quarter, only the first unfinished node is open, auto-scroll puts the current node in the vertical middle after 300 ms, confetti on completion. Uses a hardcoded mock theme (not `ThemeContext`), and the current node lands left or right depending on node count. Space quest stays untouched until English Quest is done; lessons get applied app-wide afterwards.
+  2. Reviewed `ResultsScreen` + `recordQuizResult`: stars only at 100% (15 first try, 10 later, 10 again after 7+ days), +5 daily bonus, streaks, anti-farming; `mode: "training"` is ignored by the server.
+  3. Agreed **Spec v2** below. Next step: owner's final OK, then build in the listed order.
+
+### Spec v2: English Quest map, gates and practice (agreed 2026-10-30, replaces the tree layout of 2026-10-28)
+**Map (Space style, app theme)**
+```
+   🏆 Unit 1 Boss            (gold when passed)
+    │
+   📘 Pronouns ─ ○ ○ ○ ─ 🛡 ─ ♾️
+    │
+   📘 NOUNS ── ○🟢 ○🟢 ○🟡 ○🔴 ─ 🛡 Noun Challenge ─ ♾️ Keep practising
+   ◔ 2/6   (main node, LEFT side, lower part of the screen when current)
+    │
+   🏆 Unit 0 Boss ✅
+    │
+   🚩 Start
+```
+- One dashed winding path from the bottom up, weaving along the **left half**. Main nodes = **one per branch** (e.g. Unit 1: Nouns, Pronouns, Verbs, Adjectives, Adverbs, Prepositions, Conjunctions, Reading → Unit Boss = 9 main nodes).
+- On open, auto-scroll so the **current main node is on the left, about 70% down the screen** (left-thumb zone).
+- **Colours: app `ThemeContext`** (same background gradient and colours as the Study tab, light + dark). Also applied to the intro and reading screens. Remove `questColors.js`.
+- Confetti on completion (as Space). Locked nodes don't open.
+
+**One branch**
+- **Main node** = "Learn" page + short warm-up quiz. Shows a progress ring (◔ → ●) for leaves done. Finishing it opens the row.
+- **Practice leaves**, one per sub-topic (e.g. common & proper, singular & plural, gender, advanced). Difficulty colour 🟢🟡🔴 (visual only). Optional, **any order**, open once the main node is done. **No hearts.**
+- **🛡 Gate** (last fixed item of the row), open right after the main node. Pass = **≥80% overall and at least one correct in every sub-topic**. Pool of **15** questions per gate, **10 drawn** per attempt, balanced (≥2 per sub-topic), options shuffled, exam style (no right/wrong until the end), **hearts on**. After **2 failed tries**, the 3rd try needs one recommended practice leaf done first. Result screen names strong ✅ and weak ⚠️ sub-topics, and weak leaves glow on the map. Passing opens the next main node.
+- **100% is encouraged, never required:** below 100% the result shows "Try for 100% to earn ⭐".
+- **♾️ Keep practising** (end of row): endless, one question at a time, no hearts, no end, stop anytime with a summary. Streak counter only (no global stars, it would be farmable). Questions from the branch's pools + generated questions.
+- **Branch mastered** (all leaves done): main node turns gold with a crown + confetti.
+
+**Unit Boss** (replaces the "unit test" as a trunk node): short mixed quiz over all branches, hearts on. Passing opens the next unit and shows a trophy.
+
+**Stars:** existing `recordQuizResult` rules, unchanged (no Cloud Function change). Every quest activity (practice leaf, gate, Unit Boss, reading) reports with `mode: "quest"` so the server awards stars. Endless practice: no global stars.
+
+**Results:** reuse `screens/common/ResultsScreen.js` for every activity (quizzes, gates, Unit Boss, reading, endless summary). The Reading screen's own result card goes.
+
+**Practice sources (content accuracy first)**
+1. Hand-written pools per practice leaf (existing IEO quizzes + new), random draw.
+2. **Generated questions from verified word tables** (plurals, noun gender, a/an, irregular verbs; later subject-verb agreement). Answer and mistake tag come from the table. Word tables are content (extendable without a release); each generator *type* is code.
+3. **No live AI** in the app.
+4. "My mistakes" node (questions the kid got wrong + similar generated ones), later the daily quiz.
+
+**Caching (aggressive, cut network + cost)**
+- `quests/{questId}.contentVersion` (bumped by the seeder / future editor). On open, read only that doc. If the version matches the phone's copy, nodes, questions, study pages and readings come from local storage.
+- No live listeners for content; one fetch + cache. Only the kid's own progress doc stays live.
+- Pre-download a unit's questions when the unit opens (instant + offline).
+- Progress writes use the in-memory progress (no read before write).
+- Target: about 1 read per visit instead of ~60–100.
+
+**Build order (freeze Nov 6; cut 💎 badges and "My mistakes" first if late)**
+1. Map redesign (Space-style path + side rows, app theme, left-thumb positioning) + switch intro/reading to the theme: ½ day
+2. Gates (balanced draw, 80% + no weak spot, 2-tries lock, per-topic result): 1 day
+3. Caching layer: ½ day
+4. ♾️ Endless practice + generator engine + 3–4 generators: 1½ days
+5. Rewards (progress ring, gold crown, confetti) + `recordQuizResult` with `mode: "quest"`: ½ day
+6. "My mistakes" node: ½ day
+7. Content alongside: gate pools (15 each), more practice for Adverbs and Conjunctions, Unit Boss pools.
 
 ## 2026-10-28
 - **Goal:** Review project docs, set up `CLAUDE.md`, and clean up the Quest Map.
@@ -50,7 +115,7 @@
 - Quests open from a **tile** (Study tab carousels), not from the bottom bar. The Quest tab stays as it is, hidden behind the V2 switch (off by default).
 - **New, separate tile named "English Quest"** in a new `carouselGroup: "quest"` that only the new app reads. The existing IEO tile (`categories/ieo`) is **not modified**, so kids can keep using it. If the new quest breaks, delete/hide the new tile in Firestore; no release needed.
 - Tile → intro → **one mixed tree** (no separate tracks).
-- **Tree layout:** a vertical trunk of units. Reaching a trunk node unlocks its horizontal, swipeable row of branches. Leaves get harder the further out they are, and kids don't have to finish every leaf. The **trunk node is the unit test**; passing it unlocks the next trunk node. Branch depth earns stars and is tracked.
+- *(Superseded by Spec v2 on 2026-10-30.)* **Tree layout:** a vertical trunk of units. Reaching a trunk node unlocks its horizontal, swipeable row of branches. Leaves get harder the further out they are, and kids don't have to finish every leaf. The **trunk node is the unit test**; passing it unlocks the next trunk node. Branch depth earns stars and is tracked.
 - **The tree holds grammar + reading only** (both are finite skill ladders). Each unit has 1–2 reading leaves whose passages grow with the grammar level. The map auto-scrolls so the next node sits near the kid's thumb.
 - **Vocabulary is NOT in the tree** (decided 2026-10-28). It grows without limit and words get forgotten, so a "done once" tree is the wrong model. It becomes a separate **Word Bank** (next release, not Nov 10):
   - Word packs on a shelf (Starter → IEO L1 → IEO L2 → Achievers, ~20 words each), unlocked in order.
