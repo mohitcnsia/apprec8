@@ -17,6 +17,11 @@
   1. Reviewed the Space quest map (`screens/quest/QuestScreen.js`): one dashed zigzag path, first node at the bottom, nodes alternate left/right quarter, only the first unfinished node is open, auto-scroll puts the current node in the vertical middle after 300 ms, confetti on completion. Uses a hardcoded mock theme (not `ThemeContext`), and the current node lands left or right depending on node count. Space quest stays untouched until English Quest is done; lessons get applied app-wide afterwards.
   2. Reviewed `ResultsScreen` + `recordQuizResult`: stars only at 100% (15 first try, 10 later, 10 again after 7+ days), +5 daily bonus, streaks, anti-farming; `mode: "training"` is ignored by the server.
   3. Agreed **Spec v2** below. Next step: owner's final OK, then build in the listed order.
+  4. **Step 1 (map) built and verified on device by the owner** ("What is a sentence?" completed; next node + leaf unlocked; UI pleasing). Quizzes open Quiz Details (Training with hearts / Exam), as in Space.
+  5. **Step 2 (gates) built:** balanced draw, 80% + no weak sub-topic, per-topic result screen, glow + 2-fails lock. Noun and Verb Challenge pools (15 each). Waiting for the Gemini code review + owner device test.
+  6. **Spec A (tester mode) and Spec B (🚩 report + auto known/hidden marking) built** after Gemini's spec approval. Emulator test of the report trigger passes. **DR-4** (functions + rules deploy) filed for devops.
+  7. Added `npm test` suites: `gateRules`, `reportRules`, `imports` (catches missing named imports; it found the intro-screen crash). `npm run test:emulator` for the report trigger.
+- **How to test (today's work):** after DR-4 is deployed, reload, sign in with the tester account, press **Update English Quest** (admin), turn on 🧪 Tester mode (unlock all + short quizzes), open the Noun Challenge, fail it on purpose (gender wrong) → check the result screen, glow and lock. Tap 🚩 on a question → "✓ Reported" → a `questionIssues` doc appears in Firestore.
 
 ### Spec v2: English Quest map, gates and practice (agreed 2026-10-30, replaces the tree layout of 2026-10-28)
 **Map (Space style, app theme)**
