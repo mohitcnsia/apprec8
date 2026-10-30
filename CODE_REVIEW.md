@@ -1007,3 +1007,17 @@ Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mi
 - **Found while testing:** `ResultsScreen` said "Result not submitted." whenever no star check runs (all Training-mode quizzes too), although the quest saves the attempt itself. Added an optional `savedNote` ("Practice saved ✓" / "Progress saved ✓") for English Quest; Space/V1 unchanged.
 - **Needs a re-seed** (admin: "Update English Quest") so the word tables exist in Firestore. Until then, Nouns' ♾️ uses its quiz pool only (no crash).
 - **Next:** "My mistakes" (priority), reusing this screen.
+
+### Author review of RB-5 (Claude, 2026-10-31): sizing and recommendation
+Good ideas overall. Two need corrections before they're frozen, and timing matters because of the Nov 6 freeze.
+
+| Item | Verdict | Real sizing | When |
+|---|---|---|---|
+| **RB-5c Grammar Gremlin story for Boss** | ✅ Do it | ~1 h code (a `story` field on boss nodes, shown on the Quiz Details start card) + content per boss | **Nov 6 build** |
+| **RB-5b Ear training (🔊)** | ✅ with a limit | ~3–4 h: read the question aloud; for fill-in-the-blank, read the sentence **with each option filled in**. **Practice/endless only, never in gates, Unit Boss or Exam mode**, otherwise "sounds right" answers an assessment for the kid. | Nov 6 build if time allows after "My mistakes" |
+| **RB-5a Certificate via Share Sheet** | ✅ but correct the tech | ~1 day, not ½: needs **two new native modules** (`react-native-view-shot` to make the image + `expo-sharing`; RN's `Share.share` can't share a local image file on Android). A native change → only in a store build. **Privacy:** minors' names go into family/school groups, so the parent opts in, first name only, no photo. | First update after launch |
+| **RB-5d Class Team Streak** | ⚠️ change the mechanic | Needs classes (RB-2). **A shared streak means one kid's wrong answer breaks it for 40 classmates**, which invites blame (the opposite of the goal). Use a **class total** instead ("Class 10-A answered 120 right today!"), which only grows. | With RB-2 (first update) |
+| **RB-5e Secret Rule stamps** | ✅ later | ~½ day. Every rule text needs content review (accuracy first); it overlaps with the Learn pages, so reuse their rules. | After launch |
+
+- **Nov 6 order stays:** "My mistakes" (priority) → Step 5 rewards → admin dashboard v0. Then RB-5c, then RB-5b if time remains. Cut order if late: RB-5b → rewards polish → never "My mistakes".
+- **Status:** RB-5 reviewed; owner to confirm, then freeze into `gemini.md`.
