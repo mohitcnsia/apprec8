@@ -842,3 +842,26 @@ Owner decisions so far: **🚩 Report = build now (option a)**; **tester = owner
   1. After a re-seed, phones refresh on the next quest open (new `contentVersion`); `knownIssues` changes show on the next map focus.
   2. Storage: about 1–3 KB per quiz in AsyncStorage, well under limits for Units 0–1. Pruning old versions is a later TODO.
   3. **Re-seed needed** once, so `contentVersion` exists (without it, the cache is bypassed and the app reads from the network, which is safe).
+
+---
+
+## 2026-10-30 — Spec draft for review (Claude): Spec v2 Step 4, ♾️ Keep practising + generators
+
+Owner approved the mockup and both decisions (gate questions excluded; ~50/50 mix for Nouns).
+
+- **Screen `EndlessPracticeScreen`** (from the ♾️ leaf at the end of each branch row). One question at a time, instant right/wrong + explanation, **no hearts, no end, no fail**. Header shows 🔥 streak and ✓ correct / answered. Buttons: **Next** and **Stop** (thumb zone). 🚩 report button on every question. No header back button (Android back = Stop).
+- **Stop** → existing `ResultsScreen`: questions answered, % right, best streak, weakest sub-topic, actions "Back to Quest" / "Exit to Study". No global stars (not farmable). Best streak per branch saved in progress (`nodes[endlessId].bestStreak`, `answered` total).
+- **Question sources:**
+  1. **Pool:** questions from the branch's main + practice quizzes (cached, Step 3). **Gate and Unit Boss questions are excluded**, so the assessments keep their meaning. Hidden questions (`knownIssues`) are excluded too.
+  2. **Generators (Nouns only for Nov 6):** `plural` (singular → plural, and plural → singular) and `nounGender` (masculine ↔ feminine).
+  - **Mix:** about 50% generated / 50% pool for Nouns; pool-only for other branches. No immediate repeats (the last 10 questions are not repeated); pool questions are reshuffled when used up.
+- **Word tables (content, verified by us):** stored as `studyContent` docs with `kind: "wordTable"` (existing rules, cached offline, **no deploy**). Shape: `plural: [{ singular, plural, alsoCorrect?: [] }]`, `nounGender: [{ masculine, feminine }]`. Starter tables ~60 plural + ~40 gender entries, extendable without a release.
+- **Generator rules (`utils/generators.js`, pure, tested):**
+  - Plural wrong options from common wrong rules (+s, +es, y→ies, f→ves, unchanged, double plural), **filtered against the correct plural and `alsoCorrect`**. A question is skipped if fewer than 3 distinct wrong options remain. Every option carries a `mistakeTag` (`plural-rule-error`).
+  - Gender wrong options = other words of the same gender from the table (never the right answer or the word itself). Tag `gender-error`.
+  - Generated question ids are stable (`gen:plural:<word>:<direction>`), so 🚩 reports group per word and auto-hide works.
+  - **Content tests:** every table entry produces a valid question with exactly one correct option, and no wrong option equals any listed correct form.
+- **Recording:** one `questAttempts` doc per session chunk (`mode: "endless"`), flushed every 10 answers and on Stop/unmount, so data isn't lost if the app is killed.
+- **Unlock:** the ♾️ leaf opens when the branch's main node is done (`KNOWN_SIDE_KINDS` gets `"endless"`).
+- **Effort:** ~1½ days. JS only, no deploy.
+- **Status:** `[READY FOR REVIEW]`
