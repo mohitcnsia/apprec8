@@ -60,7 +60,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 
 ## Releasing
 - Bump `patchVersion` in `app.config.js` (versionCode = major*1e6 + minor*1e4 + patch*100 + iteration).
-- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.23.
+- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.24.
 - **Release builds don't include `.env`** (gitignored, so EAS skips it): anything read from `@env` is `undefined` there.
   Values the app needs at runtime go in code (`config/appConfig.js`); `tests/releaseConfig.test.mjs` guards this.
 - Before every upload: `scripts/release/check-aab.sh <file.aab> <version>` must say PASS (version, admin ID, signature).

@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 23; // Incremented from 22 (English Quest release)
+  const patchVersion = 24; // 20.0.24: admin ID in release builds (Dashboard)
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =
