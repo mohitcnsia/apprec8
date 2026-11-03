@@ -2,19 +2,14 @@
 import { APPREC8_TEAM_REVIEWER_UID as UID_FROM_ENV } from "@env";
 
 /**
- * The User ID of the designated "Apprec8 Team" reviewer.
- * 🚨 This UID is loaded from environment variables at build time.
+ * The owner's (admin) user ID. Shows the Dashboard, seed buttons and team-review features.
+ * Not a secret: Firestore rules decide what the admin can read or write.
+ * Kept in code because release builds leave out the gitignored .env (20.0.23 shipped without it).
  */
-export const APPREC8_TEAM_REVIEWER_UID = UID_FROM_ENV; //|| "fallback_uid_if_any_or_error"; // Handle if UID_FROM_ENV is undefined
+export const ADMIN_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
 
-// It's good practice to ensure critical env vars are present.
-if (!UID_FROM_ENV) {
-  console.error(
-    "FATAL ERROR: APPREC8_TEAM_REVIEWER_UID is not defined in .env file."
-  );
-  // You might throw an error or have a default behavior,
-  // but for a UID, not having it is usually a critical issue.
-}
+/** The "Apprec8 Team" reviewer (the admin). .env can override it for local testing. */
+export const APPREC8_TEAM_REVIEWER_UID = UID_FROM_ENV || ADMIN_UID;
 
 /**
  * Tester accounts for English Quest "Tester mode" (Spec A, CODE_REVIEW.md).
