@@ -179,7 +179,8 @@ export async function saveQuestAttempt(p) {
       passed,
       startedAtMs: p.startedAt || null,
       durationMs: p.startedAt ? endedAt - p.startedAt : null,
-      answers: p.answers,
+      // Firestore rejects undefined, and one bad field loses the whole attempt: drop them.
+      answers: p.answers.map((a) => Object.fromEntries(Object.entries(a).filter(([, v]) => v !== undefined))),
       details: gate
         ? { ...(p.details || {}), gate: { bySubtopic: gate.bySubtopic, weak: gate.weak } }
         : p.details || null, // e.g. reading: { readingMode, wordCount }

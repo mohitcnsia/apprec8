@@ -263,7 +263,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       generated: !!question.generated,
       generator: question.generator || null,
       quizId: question.quizId || null,
-      mistakeKey: isMistakes ? keyRef.current : undefined,
+      mistakeKey: isMistakes ? keyRef.current : null, // never undefined: Firestore rejects it
     });
 
     // "My mistakes": 2 right in a row fixes it; a wrong answer starts the count again.
