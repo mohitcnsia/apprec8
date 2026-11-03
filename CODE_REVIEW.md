@@ -1254,3 +1254,34 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - **Change:** `functions/common/config.js` adds `adminRuntimeOptions` / `adminLongRuntimeOptions` (`invoker: "private"`); all 26 `functions/api` endpoints use them. Callables and triggers are unchanged (they must stay callable by the app). Checked by loading `functions/index.js`: 26 HTTP functions private, 0 public.
 - **Deploy (Gemini):** `firebase deploy --only functions --project apprec8-ca229`.
 - **After deploy:** the owner makes one normal call with his token. It should still work, because he has project-level access. If it returns 403, his token's account only had access per function: grant it *Cloud Functions Invoker* at project level, or roll back by redeploying the previous commit.
+
+---
+
+## 2026-11-04 — QA run: 20.0.24 candidate (Claude, owner asked to finish the Nov 10 steps; `a798280`)
+- **Result:** 9 PASS / 1 FAIL (fixed) / 2 not run. Emulator, tester account, Short quizzes.
+- **Checklist:**
+  - PASS: Dashboard (Kids + Reported tabs, live data, Pratha's row and detail page).
+  - PASS: map (current unit, teaser, "1 more unit ahead"); Learn step → 1/2.
+  - PASS: Exam quiz → results "Progress saved!", missed question listed → topic ✓, next leaves open.
+  - PASS: My mistakes appears after a wrong answer; 2 right in a row clears it; summary "All mistakes fixed! 🎉".
+  - PASS: ♾️ Keep practising (no hearts, streak, ✓ count, summary).
+  - **FAIL → fixed:** Keep practising never saved (see Finding 19).
+  - Not run: Reading, Space quest regression. The emulator was too slow during the build; neither changed since 20.0.23.
+### Finding 19: [HIGH] Keep practising attempts were never saved (since 20.0.23) — FIXED `a798280`
+- Every endless answer carried `mistakeKey: undefined`. Firestore rejects `undefined`, so `saveQuestAttempt` failed: no `questAttempts` doc, no mistakes, no Dashboard stats. The summary still said "Practice saved ✓". The ♾️ streak saved separately, so it looked fine.
+- Fix: `null` instead of `undefined`; `saveQuestAttempt` now drops `undefined` fields from every answer. Verified on the emulator: no save error, and the wrong practice answer now shows in My mistakes.
+- Lost data from 20.0.23 practice sessions can't be recovered (it was never written).
+### Finding 20: [LOW] Topic data empty on the Dashboard for Unit 0
+- Unit 0 questions have no `subtopic` tag (only gate pools do), so the kid detail page shows "No topic data yet" until a gate. Later: tag Unit 0 questions, or fall back to the topic name.
+### Finding 21: [LOW] My mistakes button covers a leaf at the starting scroll position
+- The button sits over the bottom row's "Keep practising" circle until the kid scrolls down. Later: extra bottom padding while the button shows.
+### Content note (owner decision)
+- 🚩 reported: "Which **word** is a PROPER noun? … Taj Mahal": the answer is two words. Suggest "Which is a PROPER noun?". Not changed (approved content); owner to decide.
+
+## Release 20.0.24 — status
+- Version bump `f0d8d27` (20.0.24 / 20002400). Includes the admin ID fix (Dashboard), Finding 19 fix, DR-6 code.
+- Build: running (Claude). Then `scripts/release/check-aab.sh` must PASS.
+- **Blocked on others (Claude can't do these):**
+  - DR-6 deploy: Gemini/owner. Claude's deploy attempt was blocked as a production deploy. Command: `firebase deploy --only functions --project apprec8-ca229`, then one owner token call.
+  - Upload to Play and move to production: owner (no Play Console access here).
+  - Remote Config popup for 20.0.24: owner, after it's live (`messageId` `update_20_0_24`, `min_version` 20.0.24).

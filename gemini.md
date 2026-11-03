@@ -21,6 +21,9 @@
   3. **Update push:** Remote Config v30 (owner): `active_message` = hard update `update_20_0_23`, `min_version` 20.0.23. `update_url_android` stays the internal-testing link: the public store link showed Google's "13 or older" page on a kid's account. Rollback: Remote Config version 29.
   4. Owner played English Quest on a OnePlus 9 Pro (20.0.23): works.
   5. **Bug found:** no 📊 Dashboard for the owner in the Play build, because the admin ID lived only in `.env`. Fixed on `fix/admin-uid` (`5ecd6c4`): the ID is in code, plus `tests/releaseConfig.test.mjs` and `scripts/release/check-aab.sh`. Ships in 20.0.24.
+  6. **Backup:** `feat/tile-quests` pushed to GitHub (it existed only on the laptop). GitHub `main` is an unrelated 2025 initial commit; owner: don't merge into it.
+  7. **Admin endpoints:** they're protected by Cloud IAM (tokenless call → 403), so Finding 12 was downgraded to MEDIUM. DR-6 makes them private in code (`499f7f4`); deploy pending (Gemini/owner).
+  8. **QA run by Claude** (`CODE_REVIEW.md`): found and fixed **Finding 19 (HIGH)**: ♾️ Keep practising never saved an attempt since 20.0.23. Version bumped to **20.0.24** (`f0d8d27`); build in progress.
 - **How to test:** `scripts/release/check-aab.sh build-1793723069242.aab 20.0.23` → ❌ admin ID (the bug). After 20.0.24: the same script → PASS; on the phone, signed in as the owner, Profile → 📊 Dashboard lists Pratha's English Quest results.
 
 ## 2026-10-30
@@ -246,7 +249,13 @@
   3. Win the puzzle and press "Finish & Continue Quest". It should seamlessly redirect back to the map.
 
 ## Future TODOs
-- **Release 20.0.24 (next):** merge `fix/admin-uid` (Dashboard + seed buttons in Play builds) and fixes from Gemini's QA run, then follow the "Release 20.0.24 — checklist" in `CODE_REVIEW.md` (check-aab.sh must PASS before upload).
+- **Nov 10 release (open):**
+  1. Gemini: deploy DR-6 (`firebase deploy --only functions --project apprec8-ca229`) + check no function grants Invoker to `allUsers`; owner makes one token call after.
+  2. Owner: upload the 20.0.24 `.aab` (after `scripts/release/check-aab.sh` PASS) to internal testing; check Profile → 📊 Dashboard on the phone and that ♾️ practice shows on the Dashboard.
+  3. Gemini: QA Reading + Space quest regression on 20.0.24 (not run on 2026-11-04).
+  4. Owner: promote to **production** on Play (the app is testers-only today).
+  5. Owner: Remote Config hard update `update_20_0_24`, `min_version` 20.0.24, only after it's live.
+- **Small follow-ups (LOW):** Finding 20 (topic data for Unit 0 on the Dashboard), Finding 21 (My mistakes button over a leaf), proper-noun question wording ("Which is a PROPER noun?", owner to approve).
 - **Update link for kids:** once the app is public (production), switch `update_url_android` to a link that opens the Play Store app directly (`market://details?id=com.mohitchilkoti.apprec8`), tested on a kid's supervised account first. Later: Google Play in-app updates (native library) so kids update without leaving the app.
 - **QA by Gemini (owner, 2026-10-31):** device testing goes to Gemini using `docs/qa/QA_PLAYBOOK.md` + `scripts/qa/eq.sh` (taps by text/accessibility label, not coordinates). Claude still runs `npm test`, compile and bundle checks before each review request.
 - **⭐ PRIORITY (owner, 2026-10-30): "My mistakes" node, in the Nov 6 build right after Step 4** (reuses the Step 4 endless screen; mistakes list in the progress doc; leaves after 2 right in a row; gate/Boss mistakes practised as sub-topics, not exact questions). Spec in CODE_REVIEW.md. If time runs short, cut rewards polish first, never this.
@@ -265,7 +274,7 @@
   - **Known heavy spots to check:** live listeners on whole collections (e.g. the Space quest's `quest_nodes`, Study screen carousels, leaderboard), V1 fallback reads in `listenToV2QuizQuestions`, re-downloads after 30 min offline.
   - **Removal candidates (decide with usage data, not guesses):** unused/dead code (e.g. `components/common/reader/Apprec8ReaderTester.js`, `DummyScreen`/`DummyNavigator`, `to-be-deleted` category group, the unused `react-native-tts`), rarely used features and duplicate quiz paths (V1 vs V2 screens). The app has no usage analytics today, so first add simple per-feature open counts (or Firebase Analytics) to know what kids actually use.
   - **Output:** a short report with cost per feature, total for 1,000 kids, and a keep / simplify / remove list for the owner to decide.
-- **🔴 URGENT: secure the admin HTTP endpoints (before the 50 students start).** `functions/api/*.js` (`deleteAllDocuments`, `updateFirestoreDocuments`, `bulkAdd*`, `addCategory`, `addTopic`, `updateTopic`, `addStudyContent`, word-inspector and game endpoints) are exported in `functions/index.js` and **don't check who is calling**. They use the Admin SDK, so Firestore rules don't apply: anyone with the URL could change or delete any collection, including `users`. Fix: require a Firebase ID token with the admin UID/custom claim on every endpoint (or turn them into callable functions that check `context.auth`), and remove endpoints nobody uses. Logged for devops in `CODE_REVIEW.md` (DR-3).
+- **Admin HTTP endpoints (`functions/api/*.js`):** protected by Cloud IAM (owner calls them with a short-lived token; a tokenless call gets 403). DR-6 adds `invoker: "private"` in code so a deploy can't make one public. Later (with RB-3): move to admin-checked callables and remove unused endpoints.
 - **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.
   - **Branch:** `refactor/dynamic-content` from `feat/tile-quests` (after release).
   - **Firestore is the single source of truth.** Migrate all hardcoded content once, then delete the JS/JSON content files and the client seed buttons.
