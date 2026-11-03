@@ -1225,3 +1225,25 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
   - Checklist item 5 is now **wanted** (owner), not optional. Owner first taps the store link on a phone to check it opens the app's page.
 - **Status (2026-11-03, owner):** 20.0.23 is on Play ✓ · DR-5 deployed & live ✓ (Gemini) · re-seed done via the emulator ✓. Checklist items 1–3 done; item 4 (Gemini QA run) still open.
   - Remote Config publish by Claude was blocked by the permission check (production deploy), so the **owner publishes it in the Firebase Console** with the values above.
+
+---
+
+## 2026-11-04 — Review request: admin features missing in release builds (branch `fix/admin-uid`, `5ecd6c4`)
+
+- **Bug (owner, OnePlus 9 Pro, 20.0.23 from Play):** signed in as the owner, Profile has **no 📊 Dashboard** and no seed buttons, so Pratha's results can't be seen.
+- **Cause:** the admin ID came only from `.env` (`APPREC8_TEAM_REVIEWER_UID` via `@env`). `.env` is gitignored, and EAS builds skip gitignored files, so the ID was `undefined` in the release bundle. Checked: the ID is not in the 20.0.23 `.aab`. This also broke team-review in Tasks (`TaskDetails` / `TaskEditor`) in every release build so far. Tester mode still worked because it also matches by email.
+- **Fix:** `config/appConfig.js` has `ADMIN_UID` written in the code; `.env` can still override it. A UID isn't a secret: Firestore rules decide what the admin can read or write.
+- **Guards:**
+  - `tests/releaseConfig.test.mjs` (in `npm test`): only `config/appConfig.js` may read `@env`, and the admin ID must fall back to the value in the code.
+  - **New `scripts/release/check-aab.sh <file.aab> <version>`:** checks versionName, the admin ID in the JS bundle, and the signature. On the 20.0.23 build it reports ❌ admin ID, as expected.
+- **Checks:** `npm test` 14/14. `npx expo export --platform android` **without `.env`** contains the admin ID (it didn't before).
+- **Ships in:** the next store build (20.0.24). It's a JS change, and there are no over-the-air updates. **Until then:** the owner can use the Dashboard in the emulator dev build (Metro reads `.env`), signed in as the owner. It reads live data.
+- **Gemini:** please review. **Cleared to merge** `fix/admin-uid` into `feat/tile-quests` once your current QA run is finished (say so here when merged).
+
+## Release 20.0.24 — checklist (whoever builds: Claude or Gemini)
+1. [ ] `fix/admin-uid` merged into `feat/tile-quests`, plus fixes for any HIGH findings from the current QA run.
+2. [ ] Bump `patchVersion` to 24 in `app.config.js` **and** `versionCode 20002400` / `versionName "20.0.24"` in `android/app/build.gradle`. `npm test` passes.
+3. [ ] Build: `npx eas build --profile production --platform android --local --non-interactive`.
+4. [ ] **`scripts/release/check-aab.sh build-<n>.aab 20.0.24` must say PASS.** If it fails, don't upload.
+5. [ ] Owner uploads to the internal testing track and checks that Profile → 📊 Dashboard shows on the phone.
+6. [ ] Optional: Remote Config `active_message` hard update with `min_version` 20.0.24 and a new `messageId` (`update_20_0_24`). **Only after step 5 is live on Play.** Keep `update_url_android` as the internal-testing link (owner decision, 2026-11-04).

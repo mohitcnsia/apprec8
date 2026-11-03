@@ -27,6 +27,7 @@ point here. If anything below conflicts with another file, this file wins; the o
 | Seed content to live Firestore ("Update English Quest") | Can do it | No | **Does** (when a review request asks) |
 | Write content (questions, pages) | **Approves accuracy** | Drafts | Flags errors seen in QA |
 | Version bump + release build (`.aab`) | Asks for it | **Does** when the owner asks | Can do it (devops) |
+| Check the build before upload: `scripts/release/check-aab.sh` must PASS | — | **Does** after building | **Does** after building |
 | Upload to Play Console, roll out, Remote Config | **Does** | Drafts release notes | Can help |
 | Session log in `gemini.md` | — | **Writes** at the end of each session | Adds QA / deploy notes |
 

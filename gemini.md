@@ -11,6 +11,17 @@
 5. **Content accuracy is the highest priority.** No AI-generated questions live in the app. AI may only draft content offline, and it's checked before it goes live. Generated practice comes from verified word tables only.
 6. **Confirm before building.** Any major feature or new screen gets a plan + mockup approved by the owner first. Reuse existing patterns (Space quest map, `ResultsScreen`, `recordQuizResult`) and the app theme (`ThemeContext`).
 7. **Stars and money:** stars are awarded by the existing `recordQuizResult` rules. Scoring is client-side today because stakes are low. **If stars ever become real money, prizes or scholarships, move scoring to the server first.**
+8. **Release builds don't include `.env`** (gitignored, so EAS skips it). Anything the app reads from `@env` is `undefined` in a Play build; runtime values go in `config/appConfig.js`. **Before every Play upload, run `scripts/release/check-aab.sh <file.aab> <version>`; it must say PASS.**
+
+## 2026-11-04 (covers 2026-10-31 → 2026-11-04)
+- **Goal:** ship English Quest to Play as 20.0.23 and push the update to kids.
+- **Completed Steps:**
+  1. "My mistakes", rewards, admin dashboard v0, RB-5c/5b, 5 new gate challenges (owner approved all 75 questions), the permanent-gate-lock fix. Gemini merged `feat/gate-pools` (`c9afd4b`). Details in `CODE_REVIEW.md`.
+  2. **Release 20.0.23** (`9c9ac56`): built locally and verified (version, signature). Uploaded to Play by the owner. DR-5 deployed (Gemini), re-seed done (owner, via the emulator). Roles written down in `docs/TEAM.md`.
+  3. **Update push:** Remote Config v30 (owner): `active_message` = hard update `update_20_0_23`, `min_version` 20.0.23. `update_url_android` stays the internal-testing link: the public store link showed Google's "13 or older" page on a kid's account. Rollback: Remote Config version 29.
+  4. Owner played English Quest on a OnePlus 9 Pro (20.0.23): works.
+  5. **Bug found:** no 📊 Dashboard for the owner in the Play build, because the admin ID lived only in `.env`. Fixed on `fix/admin-uid` (`5ecd6c4`): the ID is in code, plus `tests/releaseConfig.test.mjs` and `scripts/release/check-aab.sh`. Ships in 20.0.24.
+- **How to test:** `scripts/release/check-aab.sh build-1793723069242.aab 20.0.23` → ❌ admin ID (the bug). After 20.0.24: the same script → PASS; on the phone, signed in as the owner, Profile → 📊 Dashboard lists Pratha's English Quest results.
 
 ## 2026-10-30
 - **Goal:** Owner tested batch 1 on device. The English Quest map was not what was expected (own forest colours, trunk/branch-row layout nobody had approved). Redesign agreed through discussion, **no code written yet**.
@@ -235,6 +246,8 @@
   3. Win the puzzle and press "Finish & Continue Quest". It should seamlessly redirect back to the map.
 
 ## Future TODOs
+- **Release 20.0.24 (next):** merge `fix/admin-uid` (Dashboard + seed buttons in Play builds) and fixes from Gemini's QA run, then follow the "Release 20.0.24 — checklist" in `CODE_REVIEW.md` (check-aab.sh must PASS before upload).
+- **Update link for kids:** once the app is public (production), switch `update_url_android` to a link that opens the Play Store app directly (`market://details?id=com.mohitchilkoti.apprec8`), tested on a kid's supervised account first. Later: Google Play in-app updates (native library) so kids update without leaving the app.
 - **QA by Gemini (owner, 2026-10-31):** device testing goes to Gemini using `docs/qa/QA_PLAYBOOK.md` + `scripts/qa/eq.sh` (taps by text/accessibility label, not coordinates). Claude still runs `npm test`, compile and bundle checks before each review request.
 - **⭐ PRIORITY (owner, 2026-10-30): "My mistakes" node, in the Nov 6 build right after Step 4** (reuses the Step 4 endless screen; mistakes list in the progress doc; leaves after 2 right in a row; gate/Boss mistakes practised as sub-topics, not exact questions). Spec in CODE_REVIEW.md. If time runs short, cut rewards polish first, never this.
 - **RB-5 engagement ideas (owner: "great ideas"; author sizing in CODE_REVIEW.md, 2026-10-31):**
