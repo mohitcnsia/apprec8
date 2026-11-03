@@ -1285,3 +1285,4 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
   - DR-6 deploy: Gemini/owner. Claude's deploy attempt was blocked as a production deploy. Command: `firebase deploy --only functions --project apprec8-ca229`, then one owner token call.
   - Upload to Play and move to production: owner (no Play Console access here).
   - Remote Config popup for 20.0.24: owner, after it's live (`messageId` `update_20_0_24`, `min_version` 20.0.24).
+- **Build result (2026-11-04 01:49):** ✅ `build-1793737167228.aab` (61.4 MB) in the repo root, built from `a798280` (clean tree). `scripts/release/check-aab.sh … 20.0.24` → **PASS** (versionName 20.0.24, admin ID inside, signed). Rollback: `build-1793723069242.aab` (20.0.23). Next: owner uploads to internal testing.
