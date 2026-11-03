@@ -167,6 +167,12 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false } 
           };
         });
 
+      // The "practise first" lock needs a leaf that can actually glow. If no practice leaf covers the
+      // weak sub-topic(s) (e.g. a branch without practice leaves), never lock: the kid could be stuck forever.
+      if (gate?.retryLocked && !practices.some((p) => p.glow && p.status !== "comingSoon")) {
+        gate.retryLocked = false;
+      }
+
       const endlessNode = sideNodes.find((n) => n.kind === "endless");
       const endless = endlessNode
         ? {
