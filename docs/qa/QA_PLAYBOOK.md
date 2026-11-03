@@ -1,6 +1,6 @@
 # Apprec8 QA Playbook (device testing on the Android emulator)
 
-**Who:** the QA agent (Gemini, as reviewer + devops). **Author:** Claude. **Owner:** final say.
+**Who:** the QA agent (Gemini, as reviewer + devops). **Author:** Claude. **Owner:** final say. Roles in full: `docs/TEAM.md`.
 **Goal:** check every change on a real Android screen before the owner and Pratha test it, so the
 author spends its time building, not tapping.
 
