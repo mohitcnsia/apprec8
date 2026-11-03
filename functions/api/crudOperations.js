@@ -2,12 +2,12 @@
 const functions = require("firebase-functions");
 const admin = require("../common/admin");
 const { db, FieldValue } = admin;
-const { region, runtimeOptions } = require("../common/config");
+const { region, adminRuntimeOptions } = require("../common/config");
 
 /** V1 HTTPS: Adds or updates a single category document. */
 exports.addCategory = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -55,7 +55,7 @@ exports.addCategory = functions
 /** V1 HTTPS (POST): Creates a new topic document *only* if an ID doesn't exist. */
 exports.addTopic = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed. Use POST.");
@@ -132,7 +132,7 @@ exports.addTopic = functions
 /** V1 HTTPS (PUT): Updates an existing topic document *only*. */
 exports.updateTopic = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "PUT") {
       return res.status(405).send("Method Not Allowed. Use PUT.");
@@ -198,7 +198,7 @@ exports.updateTopic = functions
 /** V1 HTTPS: Adds or updates study content. */
 exports.addStudyContent = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -237,7 +237,7 @@ exports.addStudyContent = functions
 /** V1 HTTPS: Adds a single new quiz question. */
 exports.addQuizQuestion = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -303,7 +303,7 @@ exports.addQuizQuestion = functions
  */
 exports.createQuiz = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // --- CHANGE 2: Converted to onRequest to match your project style ---
 
@@ -393,7 +393,7 @@ exports.createQuiz = functions
  */
 exports.updateQuizDetails = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // 1. Handle CORS and Method validation
     res.set("Access-Control-Allow-Origin", "*");
@@ -478,7 +478,7 @@ exports.updateQuizDetails = functions
  */
 exports.addQuestions = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // 1. Handle CORS and Method validation
     res.set("Access-Control-Allow-Origin", "*");
@@ -573,7 +573,7 @@ exports.addQuestions = functions
  */
 exports.updateQuestions = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // 1. Handle CORS and Method validation
     res.set("Access-Control-Allow-Origin", "*");
@@ -649,7 +649,7 @@ exports.updateQuestions = functions
  */
 exports.deleteQuestions = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // 1. Handle CORS and Method validation
     res.set("Access-Control-Allow-Origin", "*");
@@ -720,7 +720,7 @@ exports.deleteQuestions = functions
  */
 exports.deleteQuiz = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // 1. Handle CORS and Method validation
     res.set("Access-Control-Allow-Origin", "*");

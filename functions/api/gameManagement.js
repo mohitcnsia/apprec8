@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 // We only need FieldValue from here now
 const { FieldValue } = require("firebase-admin/firestore");
-const { region, runtimeOptions } = require("../common/config");
+const { region, adminRuntimeOptions } = require("../common/config");
 
 // Get the firestore instance from the initialized admin app
 const firestore = admin.firestore();
@@ -10,7 +10,7 @@ const firestore = admin.firestore();
 // --- BULK READ ---
 exports.getGameContent = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -48,7 +48,7 @@ exports.getGameContent = functions
 // --- BULK DELETE ---
 exports.bulkDeleteGameDocs = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -86,7 +86,7 @@ exports.bulkDeleteGameDocs = functions
 
 exports.deleteVocabCategory = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -117,7 +117,7 @@ exports.deleteVocabCategory = functions
 // --- BULK ADD ---
 exports.bulkAddVocabCategories = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -177,7 +177,7 @@ exports.bulkAddVocabCategories = functions
 
 exports.bulkAddWordsToCategory = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -243,7 +243,7 @@ exports.bulkAddWordsToCategory = functions
 
 exports.bulkAddSpellingBeePuzzles = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");

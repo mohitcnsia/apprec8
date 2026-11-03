@@ -1,7 +1,7 @@
 // functions/api/utility.js
 const functions = require("firebase-functions");
 const { db } = require("../common/admin");
-const { region, runtimeOptions } = require("../common/config");
+const { region, adminRuntimeOptions } = require("../common/config");
 const { inferSchemaFromData } = require("../utils/helpers"); // Import helper
 
 /**
@@ -10,7 +10,7 @@ const { inferSchemaFromData } = require("../utils/helpers"); // Import helper
  */
 exports.getDocumentsById = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*"); // Basic CORS for testing
     res.set("Access-Control-Allow-Methods", "POST, OPTIONS");

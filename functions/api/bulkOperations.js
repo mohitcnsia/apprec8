@@ -3,8 +3,8 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin"); // Assume this initializes admin correctly
 const {
   region,
-  runtimeOptions,
-  longRuntimeOptions,
+  adminRuntimeOptions,
+  adminLongRuntimeOptions,
 } = require("../common/config");
 
 // Get the Firestore instance and FieldValue from the initialized admin app.
@@ -106,7 +106,7 @@ const handleBulkSetOperation = async (
  */
 exports.bulkAddCategories = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest((req, res) =>
     handleBulkSetOperation(req, res, {
       collectionName: "categories",
@@ -143,7 +143,7 @@ exports.bulkAddCategories = functions
  */
 exports.bulkAddTopics = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest((req, res) =>
     handleBulkSetOperation(req, res, {
       collectionName: "topics",
@@ -181,7 +181,7 @@ exports.bulkAddTopics = functions
  */
 exports.bulkAddStudyContent = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest((req, res) =>
     handleBulkSetOperation(req, res, {
       collectionName: "studyContent",
@@ -220,7 +220,7 @@ exports.bulkAddStudyContent = functions
  */
 exports.bulkAddQuizQuestions = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest((req, res) =>
     handleBulkSetOperation(req, res, {
       collectionName: "quizQuestions",
@@ -258,7 +258,7 @@ exports.bulkAddQuizQuestions = functions
  */
 exports.deleteAllDocuments = functions
   .region(region)
-  .runWith(longRuntimeOptions)
+  .runWith(adminLongRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed");
@@ -349,7 +349,7 @@ exports.deleteAllDocuments = functions
  */
 exports.updateFirestoreDocuments = functions
   .region(region)
-  .runWith(longRuntimeOptions)
+  .runWith(adminLongRuntimeOptions)
   .https.onRequest(async (req, res) => {
     // ... (Validation logic for request body remains the same)
     if (req.method !== "POST") {

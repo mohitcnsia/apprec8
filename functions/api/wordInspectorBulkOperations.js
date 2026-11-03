@@ -2,8 +2,8 @@ const functions = require("firebase-functions");
 const { db, FieldValue } = require("../common/admin");
 const {
   region,
-  runtimeOptions,
-  longRuntimeOptions,
+  adminRuntimeOptions,
+  adminLongRuntimeOptions,
 } = require("../common/config");
 
 // Define the expected schema for a single Word Inspector Quiz for validation
@@ -123,7 +123,7 @@ function validateWordInspectorQuiz(quizData) {
  */
 exports.bulkAddWordInspectorQuizzes = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed. Use POST.");
@@ -262,7 +262,7 @@ exports.bulkAddWordInspectorQuizzes = functions
  */
 exports.bulkGetWordInspectorQuizzes = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(adminRuntimeOptions)
   .https.onRequest(async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).send("Method Not Allowed. Use POST.");
