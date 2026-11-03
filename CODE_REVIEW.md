@@ -1201,3 +1201,19 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - **Isolation:** a teacher sees only their own classes, never another school's students. A school-admin role (principal/coordinator) later sees all classes in their school. The app admin (owner) sees everything, filterable by school and class.
 - **Comparisons across schools** are admin-only.
 - **Owner direction (2026-11-01):** functionality first; content will be added weekly once the features are in place. Next: Finding 12 security fix → Nov 6 release prep → RB-2 spec (with this multi-school model) for owner approval.
+
+---
+
+## 2026-11-03 — Release 20.0.23 (English Quest) — build in progress (Claude, owner request)
+
+- **Owner request:** bump the version and build now; the live app is in scheduled downtime and the owner tests manually while Gemini runs QA.
+- **Commit:** `9c9ac56` (`app.config.js` patchVersion 23 → versionCode 20002300; `android/app/build.gradle` versionCode 20002300 / versionName 20.0.23). Includes everything on `feat/tile-quests` up to `c9afd4b` (Gemini's merge of `feat/gate-pools`). `npm test` 13/13 passes on it.
+- **Build:** `npx eas build --profile production --platform android --local --non-interactive` (remote EAS credentials) → `.aab` in the repo root (gitignored).
+- **New native module since 20.0.22:** `expo-speech` (read-aloud). That's why this must be a store build, not only a content update.
+
+### Before it reaches kids (checklist)
+1. [ ] **Internal testing track first** (Play Console), owner tries it on a phone; production only after QA passes.
+2. [ ] **Server side live:** DR-1 rules ✓ · DR-4 functions ✓ · **DR-5 rules + index (dashboard): Gemini please confirm.**
+3. [ ] **Re-seed done** with the merged content ("Update English Quest"): 7 gates, word tables, boss stories, `contentVersion`.
+4. [ ] **Gemini QA run** on the merged stack (My mistakes, rewards, dashboard, RB-5c/5b, new gates) has no HIGH findings.
+5. [ ] Optional after rollout: Remote Config `hard_update` with `min_version` 20.0.23, only if older versions must be forced off (not needed for English Quest; older apps simply don't show the tile).
