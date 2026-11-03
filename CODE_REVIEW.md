@@ -1247,3 +1247,4 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 4. [ ] **`scripts/release/check-aab.sh build-<n>.aab 20.0.24` must say PASS.** If it fails, don't upload.
 5. [ ] Owner uploads to the internal testing track and checks that Profile → 📊 Dashboard shows on the phone.
 6. [ ] Optional: Remote Config `active_message` hard update with `min_version` 20.0.24 and a new `messageId` (`update_20_0_24`). **Only after step 5 is live on Play.** Keep `update_url_android` as the internal-testing link (owner decision, 2026-11-04).
+- **Merged by Claude (owner request, 2026-11-04):** `fix/admin-uid` → `feat/tile-quests` (`6ecc4a1`), `npm test` 14/14. Gemini: no merge needed; review the diff when convenient.
