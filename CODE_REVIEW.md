@@ -1217,3 +1217,4 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 3. [ ] **Re-seed done** with the merged content ("Update English Quest"): 7 gates, word tables, boss stories, `contentVersion`.
 4. [ ] **Gemini QA run** on the merged stack (My mistakes, rewards, dashboard, RB-5c/5b, new gates) has no HIGH findings.
 5. [ ] Optional after rollout: Remote Config `hard_update` with `min_version` 20.0.23, only if older versions must be forced off (not needed for English Quest; older apps simply don't show the tile).
+- **Build result (2026-11-03 21:54):** ✅ `build-1793723069242.aab` (58.5 MB) in the repo root, built from `9c9ac56`. Verified inside the bundle: versionName `20.0.23`, versionCode `20002300`, signed (EAS remote credentials). Rollback copy: `build-1789209320955.aab` (20.0.22). Next: owner uploads to the **internal testing** track; checklist items 2–4 above still open.
