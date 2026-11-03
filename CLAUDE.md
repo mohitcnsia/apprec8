@@ -60,7 +60,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 
 ## Releasing
 - Bump `patchVersion` in `app.config.js` (versionCode = major*1e6 + minor*1e4 + patch*100 + iteration).
-- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.22.
+- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.23.
 - Force-update: set Remote Config `active_message` with `type: "hard_update"` and a `min_version`. See `docs/in-app-messaging.md`.
 
 ## Other docs
