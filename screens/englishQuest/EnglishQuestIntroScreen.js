@@ -29,6 +29,7 @@ import { isTesterUser } from "../../config/appConfig";
 import { useTesterMode, setTesterMode } from "../../services/testerMode";
 import { resetMyQuestProgress } from "../../services/englishQuestApi";
 import { useTheme } from "../../context/ThemeContext";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const HOW_IT_WORKS = [
   { icon: "book", text: "Each topic starts with a short Learn page and a warm-up quiz." },
@@ -38,6 +39,7 @@ const HOW_IT_WORKS = [
 ];
 
 export default function EnglishQuestIntroScreen({ route, navigation }) {
+  useImmersiveStatusBar(); // no time/signal/battery while in a quest (owner 2026-11-05)
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const { questId } = route.params || {};

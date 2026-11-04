@@ -10,6 +10,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import Mascot from "../../components/quiz/Mascot";
 import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const MODES = [
   { id: "training", icon: "🎯", title: "Training", sub: "Hearts, and the reason after every answer." },
@@ -17,6 +18,7 @@ const MODES = [
 ];
 
 const QuizDetailsScreen = ({ route, navigation }) => {
+  useImmersiveStatusBar(); // no time/signal/battery while in a quest (owner 2026-11-05)
   const { quiz, questContext } = route.params; // questContext: set by English Quest so results are recorded
   const { isDark } = useTheme();
   const P = quizPalette(isDark);

@@ -34,6 +34,7 @@ import LottieView from "lottie-react-native";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { myAssignments, assignedNodeIds } from "../../services/assignmentsApi";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 import {
   listenToQuestProgress,
   markStudyNodeCompleted,
@@ -94,6 +95,7 @@ const ProgressRing = ({ size, progress, color, track }) => {
 };
 
 export default function EnglishQuestMapScreen({ route, navigation }) {
+  useImmersiveStatusBar(); // no time/signal/battery while in a quest (owner 2026-11-05)
   const { questId, completedNodeId } = route.params || {};
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
