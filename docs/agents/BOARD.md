@@ -35,8 +35,9 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G21 IEO pattern notes | Gemini | **done, merged** | `gemini/g21-ieo-patterns` | Gaps: no vocabulary (20–25% of IEO), no spot-the-error, no dialogue/idioms, easy distractors |
 | G19 Science Unit 2 "Human Body & Health" (Class 5) | Gemini | fixes 1 | `content/sq-u2-human-body` | 96 questions, all keys right (Claude read all); 5 joke distractors, 2 small facts |
 | G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
-| G22 English Unit 4 "Word Power" (IEO vocabulary) | Gemini | todo | `content/eq-u4-vocab` | |
-| G23 English Unit 5 "Spot the error, dialogue & idioms" | Gemini | todo | `content/eq-u5-error-dialogue` | |
+| G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
+| G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
+| G25 ⭐ Separate "Word Power" quest (owner) | Gemini | todo (do first) | `content/word-power` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
@@ -84,6 +85,21 @@ odd one out, assertion–reason, picture-based, 2-statement true/false) with an 
 Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and planned units don't cover yet, Class 5 first.
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
+
+### G25 · [todo] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
+**Why (owner 2026-11-04):** vocabulary is its own tree, not English Quest Unit 4: it must be open from day one (Pratha is in
+Unit 1; IEO is on 17 Nov) and not locked behind grammar Bosses.
+**Do (base: your `content/eq-u5-error-dialogue` branch, which has G22 + G23):**
+1. New quest module `data/wordPowerQuestData.js` (`QUEST_ID = "word-power"`, title "Word Power", tile `carouselGroup: "quest"`,
+   `order: 2`, description e.g. "Words, spelling, idioms and everyday English", `draft: false`), registered in `data/quests/index.js`.
+2. Move into it: G22's three topics (synonyms & antonyms, spelling, word choice) as Unit 1 "Word Power", and G23's dialogue +
+   idioms topics as Unit 2 "Everyday English". Renumber unitOrder from 1. Keep question content and order; ids may stay as they are
+   (they must stay unique; nothing is seeded yet).
+3. **Spot the error stays in English Quest** (it's grammar): make it English Quest Unit 4 "Spot the Error" (its own gate + Boss),
+   after Unit 3; teaser → Unit 5.
+4. Class tags per `docs/CONTENT_GUIDE.md` §9 (topic from its first class; harder leaves tagged by class).
+5. `npm test` green (all quests checked, ids unique). Report G25: what moved where, counts.
+Commit `gemini(G25): done — …`. Claude then reviews all G22/G23 questions for accuracy.
 
 ### G21 · [done] · gemini · IEO exam pattern notes (do this before anything else)
 **Why:** IEO is on 17 Nov; Claude needs the real difficulty to judge English Quest (the teacher says it's too easy for aspirants).
