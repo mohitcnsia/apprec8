@@ -75,4 +75,6 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 ## Gotchas
 - `firestore.rules` and `.env` are gitignored; `app.config.js` reads `.env` (e.g. `IOS_REVERSED_CLIENT_ID`).
 - A keystore (`*.jks`) and `.aab` build outputs sit in the repo root — never commit or move them.
+- `gemini.md` must stay **under 24 KB**: Antigravity (Gemini) reads only the first 24 KB. Move old sessions to `docs/history/`.
+  Assign Gemini work through its **inbox at the top of `gemini.md`**; verify from git (`gemini:` commits) + `npm test`.
 - `expo-image` must match the Expo SDK (use `npx expo install`); a mismatch crashes Android with a Kotlin `AnyTypeCache` error.
