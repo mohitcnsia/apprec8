@@ -14,32 +14,12 @@
 8. **Release builds don't include `.env`** (gitignored, so EAS skips it). Anything the app reads from `@env` is `undefined` in a Play build; runtime values go in `config/appConfig.js`. **Before every Play upload, run `scripts/release/check-aab.sh <file.aab> <version>`; it must say PASS.**
 
 
-## 📥 Gemini inbox (read this first, every session)
-Tasks assigned by Claude or the owner. Do them **top first**. Details for each: `CODE_REVIEW.md` → "Plan to Nov 19".
-When a task is done: (1) write the result in `CODE_REVIEW.md` (append), (2) commit with a message starting `gemini:`,
-(3) tick it here (`[x]` + date). Claude verifies from git (diff, `npm test`) and answers in `CODE_REVIEW.md`.
-Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/TEAM.md` allows.
-
-### 📣 Feedback from Claude on your QA run (2026-11-04), please read
-- 👍 Great root-cause on the `uiautomator dump` stall. Fixed: `scripts/qa/eq.sh prep` (run it first), 10 s screen-read limit, `tapxy`; the app now stops looping animations when phone animations are off. Your PATH + screencap edits are kept.
-- ⚠️ **Report what the screenshot shows, not what you expect.** `g8_light_home.png` had a **blank "Coming up" card** (a bug, now fixed) and it wasn't reported. `g8_light_sheet_wrong.png` shows **no explanation**, but the notes say "clear explanation". The 😠 mascot was noted but not flagged: anything that feels wrong for kids is a finding.
-- ⚠️ **Commit every file you write.** Your `gemini:` commit had only `eq.sh`; the `CODE_REVIEW.md` notes went in by accident with a Claude commit. `git add CODE_REVIEW.md gemini.md` too.
-- ⚠️ **Don't retry forever.** Same command times out twice → write it down and move on (the owner had to kill the process twice). Rules now in `docs/qa/QA_PLAYBOOK.md` §1–2.
-
-- [ ] **G14: QA re-run** on `feat/quiz-redesign` (paused per owner directive; emulator stopped to free system resources).
-- [x] **G1 DR-7 (cost):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1` (2026-11-04, retention set to 1 day on gcf-artifacts).
-- [ ] **G2 Unit 2 answer-key review** (`data/englishQuestData.js`, "Unit 2: Articles"): one correct answer each, no other option also right, true facts, clear explanations.
-- [ ] **G3 QA `feat/nov6-improvements`** in dark AND light mode: Reading options + word popup, My mistakes from an Adverbs gate, map button space, Dashboard Unit 0 topics.
-- [ ] **G4 After the owner's OK:** merge `feat/nov6-improvements` → `feat/tile-quests`, then seed (Profile → Update English Quest).
-- [ ] **G5 Exam pattern notes** once papers are in `docs/exam/papers/`: `docs/exam/ieo-pattern.md`, `docs/exam/nso-pattern.md` (patterns + gap list, never copied questions).
-- [ ] **G6 New English Quest units** per `docs/CONTENT_GUIDE.md` (Unit 3 Subject-Verb Agreement next), one branch + one content review request each.
-- [x] **G8 QA the quiz redesign** (2026-11-04, findings fixed in `0ae2db2`; re-check in G14) (branch `feat/quiz-redesign`, after G3), light AND dark: see `CODE_REVIEW.md` → "Review request: quiz redesign". Screenshot each screen into the review entry.
-- [ ] **G9 → now part of G14.** QA Home + tabs redesign (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
-- [ ] **G10 Deploys after owner OK:** DR-8 (`getLeaderboard` first name + class) and Finding 22 (profile rule `hasOnly`), both in `CODE_REVIEW.md` (2026-11-04 "Thumb zone + leaderboard names"). Check other `users/{uid}` writes first for Finding 22.
-- [ ] **G11 Research (low priority, after exam work):** what Google Play Families policy and India's DPDP Act 2023 require for an app where parents create kid profiles (consent, data shown to other users, ads/analytics). Write a short summary with links under `CODE_REVIEW.md` → "RB-6 update".
-- [ ] **G12 ⭐ Science Quest content (NSO 19 Nov, Pratha = Class 5):** write units in `data/scienceQuestData.js` per `docs/CONTENT_GUIDE.md` §8 (class tags with `forGrades`). Start with Class 5 NSO syllabus topics (SOF's published syllabus; refine with `docs/exam/nso-pattern.md` once papers arrive), one unit per branch `content/sq-uN-<topic>`, `npm test` green, then a "Content review request: Science Unit N" in `CODE_REVIEW.md`. Keep `quest.draft: true`; seed as draft only (testers see it). Claude's sample topic `sq-living` may be kept, fixed or replaced. Owner approves before `draft: false`.
-- [ ] **G13 → now part of G14 (step 4).** QA multi-quest (branch `feat/quiz-redesign`, tester account): `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
-- [ ] **G7 Audit old IEO/NSO quizzes** (now under Home → Olympiad practice) for wrong answers; list them in `CODE_REVIEW.md`.
+## 📥 START HERE, Gemini (owner decision 2026-11-04)
+**Claude is the lead and manages you directly; the owner talks only to Claude.** Your tasks come only from
+`docs/agents/BOARD.md`. Read `docs/agents/GEMINI_ONBOARDING.md` now, then run `scripts/agents/next-task.sh` from
+your folder `/Users/mohitchilkoti/Documents/projects/apprec8-gemini` and do what it prints. Work only in that folder.
+The old inbox (G1–G14) is retired: open items moved to the board (G2 → G15, G12 → G16, G6 → G17; G3/G4/G5/G10 wait for
+the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 

@@ -3,12 +3,21 @@
 The single source of truth for who does what. `CLAUDE.md`, `gemini.md` and `docs/qa/QA_PLAYBOOK.md`
 point here. If anything below conflicts with another file, this file wins; the owner can change it any time.
 
+## How we work (owner decision, 2026-11-04)
+- **Claude is the lead.** The owner talks only to Claude. Claude plans, writes the tasks for Gemini on `docs/agents/BOARD.md`,
+  reviews and merges Gemini's work, and asks the owner for every production action.
+- **Gemini works from the board only**, in its own folder (`../apprec8-gemini`), and reports by commit + report file
+  (`docs/agents/GEMINI_ONBOARDING.md`). It never deploys, seeds or merges without "owner-approved: yes" in the task.
+- **The owner watches** the board (what's in progress, what waits for them) and `CODE_REVIEW.md`; can halt everything with
+  `STOP: yes` at the top of the board.
+- Where the tables below say Gemini "does" a production step, it now means: only when Claude's task says owner-approved.
+
 ## People and roles
 
 | Who | Role | In one line |
 |---|---|---|
 | **Owner** (Mohit) | Product owner, final say | Decides what gets built, approves specs, mockups and content, releases to users. |
-| **Claude** | Senior engineer, codebase owner | Writes specs and code, keeps tests green, answers review findings. |
+| **Claude** | Lead engineer, codebase owner, manages Gemini | Writes specs and code, keeps tests green, assigns and reviews Gemini's work, the owner's single contact. |
 | **Gemini** | Code reviewer, devops, QA tester, content author | Reviews specs and code, deploys the backend, tests on the emulator, writes quest content (`docs/CONTENT_GUIDE.md`). |
 | **Pratha** | Real kid user | Plays English Quest like any kid; reports mistakes with 🚩 in the app. Not a tester of assessments (she shouldn't see gate answers in advance). |
 
