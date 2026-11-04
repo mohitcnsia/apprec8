@@ -109,6 +109,19 @@ function checkQuest(D) {
   console.log("path:", t.path.map(p => `${p.title}${p.kind === "boss" ? " [boss]" : ""}`).join(" → "));
   console.log(`OK ${D.QUEST_ID}: ${nodes.length} nodes, ${Object.keys(D.quizzes).length} new quizzes, ${qCount} new questions`);
 
+  // "Pick the longest answer" must not work (lesson from G16, 2026-11-04): with 4 options the right one should be the
+  // longest about a quarter of the time. Checked per quest once it has 20+ new questions.
+  const allQs = Object.values(D.quizzes).flat();
+  if (allQs.length >= 20) {
+    const longest = allQs.filter((q) => {
+      const c = q.options.find((o) => o.isCorrect).content.length;
+      return q.options.every((o) => o.isCorrect || o.content.length < c);
+    }).length;
+    const share = longest / allQs.length;
+    console.log(`${D.QUEST_ID}: right answer is the longest option in ${Math.round(share * 100)}% of questions`);
+    assert.ok(share <= 0.4, `${D.QUEST_ID}: the right answer is the longest option in ${Math.round(share * 100)}% of questions (max 40%). Make wrong options as long and detailed as the right one.`);
+  }
+
   // Class tags: whole numbers 1–12
   for (const n of nodes.filter((x) => x.grades !== undefined)) {
     assert.ok(Array.isArray(n.grades) && n.grades.length && n.grades.every((g) => Number.isInteger(g) && g >= 1 && g <= 12), `${n.id}: grades must be classes 1–12`);

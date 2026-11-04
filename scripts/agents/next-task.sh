@@ -39,6 +39,9 @@ for b in blocks:
 ' "$BOARD")"
   if [ -n "$OUT" ]; then
     echo "$OUT"
+    echo
+    echo "---------------- READ BEFORE YOU START (docs/agents/LESSONS.md) ----------------"
+    cat "$MAIN/docs/agents/LESSONS.md" 2>/dev/null
     exit 0
   fi
   if [ $((SECONDS - START)) -ge "$WAIT" ]; then
