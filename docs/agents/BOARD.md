@@ -39,8 +39,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | todo (next) | from Claude's folder | |
-| G25 ⭐ Separate "Word Power" quest (owner) | Gemini | fixes 1 (after G26) | `content/word-power` | 175 + 54 questions read by Claude: keys right; 15 fixes |
-| G26 Emulator smoke test of `feat/quiz-redesign` (calm pass 1) | Gemini | todo (after G25, only once the build has finished) | `gemini/g26-smoke` | |
+| G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
+| G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
@@ -105,7 +105,7 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G25 · [fixes 1] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
+### G25 · [done] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
 **Why (owner 2026-11-04):** vocabulary is its own tree, not English Quest Unit 4: it must be open from day one (Pratha is in
 Unit 1; IEO is on 17 Nov) and not locked behind grammar Bosses.
 **Do (base: your `content/eq-u5-error-dialogue` branch, which has G22 + G23):**
