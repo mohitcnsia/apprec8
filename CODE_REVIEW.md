@@ -1472,3 +1472,13 @@ Off `feat/nov6-improvements`. Mockups approved by the owner (canvas "Apprec8 Qui
   4. Space quest quiz: SEE WHY opens the Explanation screen with its picture; back to the next question.
   5. Out of hearts screen; results screen (stars, tiles, buttons, close X); 🔊 listen buttons on practice.
   6. Old V1 quiz (IEO from the Study tab) still plays.
+
+---
+
+## 2026-11-04 — Home + tabs redesign: decisions so far (owner + Claude)
+Canvas "Apprec8 Home & Tabs Mockups" (Home light/dark, Fun). Not built yet; Progress and Me mockups come next.
+- **Tabs:** Home · Fun · Progress · Me. Study and Quest tabs go away; their content moves to Home (quests, Olympiad practice) and Fun (stories, books, thought of the day, games). **Implementation:** the selected tab is highlighted from the navigator's real focus state (the mockup's tab bar was static).
+- **Home is one vertical scroll,** most important first and above the fold: reminders/countdown → Continue → My mistakes → quests → Olympiad practice.
+- **My mistakes tile** = the kid's own wrong answers ("My mistakes" list in their quest progress), same as the map button; tapping it opens the practice that clears them. Today it covers English Quest; other quests add theirs later.
+- **Reminders carousel (owner idea):** kids add their own reminders (up to 5 active), shown on Home as a carousel that moves by itself and can be swiped; the next 3 by date show, exam countdowns included. **Reuse the existing Tasks feature** (`tasks` collection: `userId`, `title`, `dueDate`, `completed`; `store/tasks-context.js`, `screens/task/`), today hidden in Profile. Reminders are in-app only (no phone notifications: that needs a native library, later).
+- **Open owner questions:** exam dates set by us in Remote Config? daily goal = topics, minutes or activities? My Classrooms on Home only for kids in a class; Popular Reads → Fun, Popular Quizzes → Olympiad practice?
