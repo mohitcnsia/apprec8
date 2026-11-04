@@ -27,7 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
-| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | in progress | `content/sq-u1-living-world` | |
+| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | fixes 1 (after G18) | `content/sq-u1-living-world` | 102 questions; Claude checked all: no wrong keys, 1 outdated fact, 1 unclear, many joke distractors |
 | G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Gemini | todo (next) | `gemini/g14-qa` | |
@@ -47,17 +47,6 @@ explanation clear for a Class 5 kid; read-aloud rule (practice questions: one bl
 **Fix in place** (never reorder or delete: ids are positions). Gate/Boss questions: review them too, but don't show them to Pratha.
 **Deliver:** branch `gemini/g15-unit2-review`; `docs/agents/reports/G15.md` = table (question id · OK / FIXED / UNSURE · note);
 `npm test` green. Commit `gemini(G15): done — N checked, M fixed, K unsure`.
-
-### G16 · [todo] · gemini · Science Unit 1 "The Living World" for Class 5
-**Why:** NSO on 19 Nov; Pratha is Class 5. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` (all of it, §8 for Science).
-**Do:** in `data/scienceQuestData.js`, unit `sq-u1`: keep or improve `sq-living`, then add 2–3 more topics from SOF's published
-NSO Class 5 syllabus that fit "living world" (e.g. plants, animals and adaptations, human body / food and health). Each topic:
-Learn page + warm-up quiz (6–8 questions), 1–2 practice leaves tagged by sub-topic, a gate (pool ≥ 15, 3 sub-topics × 5),
-then a Unit Boss (pool ≥ 15). Tag every node with `forGrades` (Class 5 must see all of them; add 4 / 6 only where true).
-Original questions only; NSO style (some "Which of these…", some picture-free reasoning); kid-friendly explanations.
-Keep `quest.draft: true`.
-**Deliver:** branch `content/sq-u1-living-world`; `docs/agents/reports/G16.md` (topics, question counts, anything unsure);
-`npm test` green. Commit `gemini(G16): done — N topics, Q questions`. Claude checks accuracy before the owner sees it.
 
 ### G14 · [todo] · gemini · Seed English Unit 2, then QA the redesign on the emulator
 **Owner-approved: yes** (2026-11-04) for ONE production step: seeding English Quest. Nothing else.
@@ -87,6 +76,34 @@ odd one out, assertion–reason, picture-based, 2-statement true/false) with an 
 Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and planned units don't cover yet, Class 5 first.
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
+
+### G16 · [fixes 1] · gemini · Science Unit 1 "The Living World" for Class 5
+**Why:** NSO on 19 Nov; Pratha is Class 5. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` (all of it, §8 for Science).
+**Do:** in `data/scienceQuestData.js`, unit `sq-u1`: keep or improve `sq-living`, then add 2–3 more topics from SOF's published
+NSO Class 5 syllabus that fit "living world" (e.g. plants, animals and adaptations, human body / food and health). Each topic:
+Learn page + warm-up quiz (6–8 questions), 1–2 practice leaves tagged by sub-topic, a gate (pool ≥ 15, 3 sub-topics × 5),
+then a Unit Boss (pool ≥ 15). Tag every node with `forGrades` (Class 5 must see all of them; add 4 / 6 only where true).
+Original questions only; NSO style (some "Which of these…", some picture-free reasoning); kid-friendly explanations.
+Keep `quest.draft: true`.
+**Deliver:** branch `content/sq-u1-living-world`; `docs/agents/reports/G16.md` (topics, question counts, anything unsure);
+`npm test` green. Commit `gemini(G16): done — N topics, Q questions`. Claude checks accuracy before the owner sees it.
+
+**Claude's review of your G16 (`a043ebb`), fixes 1. Do this after G18 so the fixes follow the real NSO patterns.**
+Good: all 102 answer keys are right, explanations are clear, grade tags make sense. Fix on the same branch, append-only rules apply
+(fix in place, keep positions):
+1. **Outdated fact:** Siberian cranes no longer reach India (last seen at Bharatpur in 2002). `sq-animals-warmup` q6 and
+   `sq-u1-test` q11 say they come every winter. Use a bird that still does (e.g. Amur falcon to Nagaland, bar-headed goose,
+   greater flamingo to Gujarat), or ask in the past tense.
+2. **Unclear wording:** `sq-plants-warmup` q6 "plants potato tubers with small 'eyes' cut out" reads as "eyes removed". Say
+   "plants pieces of potato, each with an 'eye'".
+3. **Joke distractors (the big one).** Many wrong options can be ruled out without knowing any science, which makes NSO
+   practice too easy: e.g. "Because crystals can run", "They turn the leopard into a herbivore", "Apples and mangoes",
+   "They turn into metal objects", "Because the balloon eats food", "made of cotton" (clouds). NSO options are all plausible.
+   Replace them with real misconceptions (e.g. for "how do fish breathe": lungs / skin / spiracles), one per wrong option,
+   with a fitting mistakeTag. Priority: gates and the Boss, then warm-ups and practice.
+4. Small: `sq-plants-warmup` q2 says food is in the cotyledons; true for beans and gram, but maize and rice keep it in the
+   endosperm. Add "in beans and gram" or pick a dicot in the question. Ferns have sori, mosses have capsules (gate q14 explanation).
+**Deliver:** commit `gemini(G16): fixed 1 — <counts>`, and add a "fixes 1" section to `docs/agents/reports/G16.md` listing every changed question id.
 
 ### G17 · [todo] · gemini · English Unit 3 Subject-Verb Agreement
 **Why:** next IEO grammar unit. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` §2–7 (unit file template,
