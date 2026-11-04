@@ -31,3 +31,15 @@ assert.match(cfg, /export const ADMIN_UID = "[A-Za-z0-9]{28}";/, "ADMIN_UID must
 assert.match(cfg, /APPREC8_TEAM_REVIEWER_UID = UID_FROM_ENV \|\| ADMIN_UID;/, "the admin ID must fall back to ADMIN_UID");
 
 console.log(`releaseConfig: ok (${files.length} files checked)`);
+
+// OTA updates (2026-11-04): the native runtime version must equal the app version, or updates never reach the build.
+{
+  const cfg = fs.readFileSync(new URL("../app.config.js", import.meta.url), "utf8");
+  const v = ["majorVersion", "minorVersion", "patchVersion"].map((k) => cfg.match(new RegExp(`const ${k} = (\\d+)`))[1]).join(".");
+  const strings = fs.readFileSync(new URL("../android/app/src/main/res/values/strings.xml", import.meta.url), "utf8");
+  const rt = (strings.match(/name="expo_runtime_version">([^<]+)</) || [])[1];
+  assert.equal(rt, v, `android strings.xml expo_runtime_version (${rt}) must equal the app version (${v})`);
+  const gradle = fs.readFileSync(new URL("../android/app/build.gradle", import.meta.url), "utf8");
+  assert.ok(gradle.includes(`versionName "${v}"`), `android/app/build.gradle versionName must be ${v}`);
+  console.log(`releaseConfig: runtime version ${rt} matches the app version`);
+}

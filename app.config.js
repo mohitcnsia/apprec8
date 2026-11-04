@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 27; // 20.0.27: calm pass 1 (Home, quiz prompt, start screen, map folds), results follow the score, big profile
+  const patchVersion = 28; // 20.0.28: schools/classes, assignments, parent accounts, Home rework, quiz fixes, OTA updates
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =
@@ -57,8 +57,14 @@ export default ({ config }) => {
         resizeMode: "contain",
         backgroundColor: "#ffffff", // Splash screen background color
       },
+      // Over-the-air updates (2026-11-04): JS + assets only; native code still needs a build. The runtime version is
+      // the app version, so an update only reaches builds of that exact version. Keep it in sync with
+      // android/app/src/main/res/values/strings.xml (expo_runtime_version).
+      runtimeVersion: `${majorVersion}.${minorVersion}.${patchVersion}`,
       updates: {
+        url: "https://u.expo.dev/ce048455-06a3-4e7e-aebb-ae82b867c72a",
         fallbackToCacheTimeout: 0,
+        checkAutomatically: "ON_LOAD",
       },
       assetBundlePatterns: ["**/*"],
       ios: {
