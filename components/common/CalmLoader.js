@@ -45,6 +45,12 @@ export default function CalmLoader() {
           fontSize: 24,
           color: theme.textPrimary, // Use theme from hook
           textAlign: "center", // Good practice for centered text
+          // Pacifico's swashes reach past the measured box; Android clips them (owner, 2026-11-04, dark mode).
+          // Room on every side + a tall line keeps the whole word visible while it breathes (scale 1.05).
+          lineHeight: 52,
+          paddingHorizontal: 24,
+          paddingVertical: 8,
+          includeFontPadding: true,
         },
         animatedText: {
           // Separate animated properties if preferred
