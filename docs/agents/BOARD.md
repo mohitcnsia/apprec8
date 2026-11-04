@@ -12,16 +12,17 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
-4. **Seed English Unit 2** after G15 (answer-key review) is clean.
-5. **Sample papers** for Class 3–6 in `docs/exam/papers/` (unblocks G5 exam pattern notes).
+4. **Seed English Unit 2:** G15 found no problems and Claude's spot checks agree. Owner OK to seed?
+5. ~~Sample papers~~ added by the owner 2026-11-04 (NSO Class 3–5 + Level 2): now task G18.
 6. RB-2 questions (4, in `CODE_REVIEW.md`) — after the exams is fine.
 
 ## Now
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
-| G15 English Unit 2 answer-key review | Gemini | todo | `gemini/g15-unit2-review` | |
-| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | todo | `content/sq-u1-living-world` | |
+| G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
+| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | in progress | `content/sq-u1-living-world` | |
+| G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
 | G14 QA re-run on the emulator | Gemini | parked (owner: emulator off for now) | | |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
@@ -51,6 +52,19 @@ Original questions only; NSO style (some "Which of these…", some picture-free 
 Keep `quest.draft: true`.
 **Deliver:** branch `content/sq-u1-living-world`; `docs/agents/reports/G16.md` (topics, question counts, anything unsure);
 `npm test` green. Commit `gemini(G16): done — N topics, Q questions`. Claude checks accuracy before the owner sees it.
+
+### G18 · [todo] · gemini · NSO (and IEO) exam pattern notes from the owner's papers
+**Feedback on G15 first:** your table notes were generated from a template ("Clean: egg before target noun/phrase"), so
+they don't show what you checked. A review note must say what you actually verified, or the review doesn't count.
+Quality over speed: one honest UNSURE is worth more than 111 OKs.
+**Papers:** `/Users/mohitchilkoti/Documents/projects/apprec8/docs/exam/papers/` (Claude's folder, **read only**; not in git and
+not in your folder on purpose). Never copy a question or passage into git or the app: notes describe patterns only.
+**Do:** for each PDF note class, level (1 / 2), subject, year. Then write `docs/exam/nso-pattern.md` (and `ieo-pattern.md` if
+any IEO papers): sections and marks; topics per class with how often they appear; question styles (e.g. "which of these",
+odd one out, assertion–reason, picture-based, 2-statement true/false) with an *invented* example of each; difficulty of the
+Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and planned units don't cover yet, Class 5 first.
+**Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
+commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
 
 ### G17 · [todo] · gemini · English Unit 3 Subject-Verb Agreement
 **Why:** next IEO grammar unit. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` §2–7 (unit file template,
