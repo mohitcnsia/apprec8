@@ -1429,3 +1429,8 @@ Off `feat/tile-quests`. Nothing goes into 20.0.24. The owner picks stable parts 
 **Seeding note:** the seed must run from an app build that has this branch's `data/englishQuestData.js` and seed button (the dev build on the emulator), as before.
 
 **Cost note (owner: ~₹5/month with no activity):** no scheduled functions are deployed, and idle v1 functions cost nothing. The likely cause is storage of the functions' build images (they pile up with every deploy). Check: Cloud Console → Billing → Reports, group by SKU. If it's Artifact Registry / Container Registry storage: `firebase functions:artifacts:setpolicy` (devops) keeps only recent images. Removing unused endpoints simplifies things but saves almost nothing on cost.
+
+### DR-7: clean up old function images (cost, owner 2026-11-04)
+- **Why:** October cost ₹5.91 with almost no use. The billing forecast for November is ₹10.73 (actual so far ₹0.00). Likely Artifact Registry storage of function images, which pile up with every deploy (free tier 0.5 GB).
+- **First confirm (owner):** Billing → Reports → time range **October**, group by SKU → the table under the chart shows which SKU costs money.
+- **If it's Artifact Registry storage (Gemini):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1`. Deletes images older than 1 day automatically. Deployed functions keep running; a rollback just rebuilds. No app change.
