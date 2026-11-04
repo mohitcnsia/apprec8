@@ -14,6 +14,7 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+0. **Fix 46 old IEO questions** Pratha plays in English Quest Unit 1 (Claude read all 319; list: `docs/content-review/ieo-fixes-2026-11-04.md`). Owner OK → Claude applies from the emulator (~5 min).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
