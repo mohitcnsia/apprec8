@@ -15,7 +15,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
-- **English Units 5 Tenses + 6 Modals & Question Tags** (Claude, ~250 questions): Seema/owner review before seeding: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T5-xxx / T6-xxx; owner shares it with Seema).
+- **English Units 5 Tenses, 6 Modals & Question Tags, 7 Reported Speech & Passive (Class 5+)** (Claude, 344 questions): Seema/owner review before seeding: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T5-, T6-, T7-; owner shares it with Seema).
 - **Build 20.0.29** (lock + play time, needs the native module): built overnight; owner uploads after `check-aab.sh` PASS.
 - ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
