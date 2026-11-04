@@ -70,6 +70,8 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - **Release builds don't include `.env`** (gitignored, so EAS skips it): anything read from `@env` is `undefined` there.
   Values the app needs at runtime go in code (`config/appConfig.js`); `tests/releaseConfig.test.mjs` guards this.
 - Before every upload: `scripts/release/check-aab.sh <file.aab> <version>` must say PASS (version, admin ID, signature).
+- If a local build dies in the `expo doctor` step with `kill ESRCH` (an EAS tooling glitch), rerun with
+  `EAS_BUILD_DISABLE_EXPO_DOCTOR_STEP=1` in front. Local builds take ~35–40 min and slow the Mac: run them when the owner is away.
 - Force-update: set Remote Config `active_message` with `type: "hard_update"` and a `min_version`. See `docs/in-app-messaging.md`.
 
 ## Other docs
