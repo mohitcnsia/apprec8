@@ -30,7 +30,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G16 Science Unit 1 "The Living World" (Class 5) | Gemini | fixes 1 (after G18) | `content/sq-u1-living-world` | 102 questions; Claude checked all: no wrong keys, 1 outdated fact, 1 unclear, many joke distractors |
 | G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
-| G14 Seed English Unit 2 + 10-min smoke test | Gemini | todo (next) | `gemini/g14-qa` | |
+| G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | in progress | `gemini/g14-qa` | |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
 
 **Done:** G1 DR-7 old function images kept 1 day (Gemini, 2026-11-04) · G8 quiz redesign QA (findings fixed in `0ae2db2`).
@@ -48,7 +48,7 @@ explanation clear for a Class 5 kid; read-aloud rule (practice questions: one bl
 **Deliver:** branch `gemini/g15-unit2-review`; `docs/agents/reports/G15.md` = table (question id · OK / FIXED / UNSURE · note);
 `npm test` green. Commit `gemini(G15): done — N checked, M fixed, K unsure`.
 
-### G14 · [todo] · gemini · Seed English Unit 2, then QA the redesign on the emulator
+### G14 · [todo] · claude · Seed English Unit 2, then QA the redesign on the emulator
 **Owner-approved: yes** (2026-11-04) for ONE production step: seeding English Quest. Nothing else.
 **Wait first:** start the emulator only while the board says `AWAY: yes` (the owner's Mac is slow when they use it), and never
 while a build runs (`pgrep -f "eas build"`). Until then, skip G14 for now: commit `gemini(G14): blocked — waiting for AWAY: yes`
