@@ -221,3 +221,6 @@ data/media_backup/
 
 # Local Firestore snapshot used by tests/content.test.mjs (optional, not committed)
 tests/fixtures/
+
+# SOF sample papers (copyrighted, used only as a guide; never commit)
+docs/exam/papers/
