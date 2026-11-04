@@ -14,6 +14,7 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- ~~Seema's review~~ done 2026-11-04: **go-ahead to seed English (Units 3–4) and Word Power** (owner, from the phone after 20.0.28: Me → Admin tools).
 - ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 (Gemini deploys).
 0. **Fix 46 old IEO questions:** owner OK 2026-11-04. The emulator froze twice, so the fix button ships in the next build; the owner presses it once on the phone (Me → Admin tools).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
@@ -39,6 +40,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | todo (next) | from Claude's folder | |
+| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (after G27) | `content/wp-old-vocab` | |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
 | G20 Science Unit 3 Matter, Forces & Earth | Gemini | **done, merged** (Claude fixed 4 items) | | 300 Science questions in total; still draft (testers) |
@@ -104,6 +106,19 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G28 · [todo] · gemini · Move the old vocabulary quizzes into Word Power (accuracy-checked)
+**Why (owner 2026-11-04):** the old IEO content is being retired; its 6 vocabulary quizzes (150 questions) must not be lost.
+**Source:** `tests/fixtures/ieo_questions.json` (in Claude's folder; read only): `4ieo11-synonyms-q1`, `-q2`, `4ieo11-antonyms-q1`,
+`-q2`, `4ieo11-idioms`, `4ieo11-vocab-q1`.
+**Do:** on a new branch from `feat/quiz-redesign`, convert them to V2 questions with `q()` in `data/wordPowerQuestData.js`: put
+synonyms/antonyms into the synonym topic (as an extra practice leaf "Word bank 1/2", subtopic-tagged), idioms into the idioms
+topic (extra practice leaf), vocab into word choice. **Check every question** like Claude did for the old IEO quizzes (two right
+answers, wrong meanings, US spelling, kid-unfriendly words, no explanation → write one) and fix it; drop duplicates of questions
+Word Power already has. Every wrong option gets a mistakeTag. Lessons file applies (no joke options, length tell, no labels).
+Prefer plain questions over "Fill in the blank:" when the blank is obvious (Seema: the phrase is too repetitive).
+**Deliver:** branch `content/wp-old-vocab`, report G28 (counts kept / fixed / dropped, with ids), `npm test` green,
+commit `gemini(G28): done — …`.
 
 ### G25 · [done] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
 **Why (owner 2026-11-04):** vocabulary is its own tree, not English Quest Unit 4: it must be open from day one (Pratha is in

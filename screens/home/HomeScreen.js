@@ -235,7 +235,8 @@ export default function HomeScreen({ navigation }) {
     const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
     const subs = [
       listenToCategoriesByGroup("quest", (d) => setQuests(d.map(tileOf)), warn("quests")),
-      listenToCategoriesByGroup("olympiad", (d) => setOlympiad(d.map(tileOf)), warn("olympiad")),
+      // Old IEO / NSO / IMO tiles hidden (owner 2026-11-04: decommission slowly, see if anyone misses them).
+      // Nothing is deleted: English Quest Unit 1 still uses some of those quizzes inside the quest.
       listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")),
       listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")),
     ];
