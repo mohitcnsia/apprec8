@@ -1,1658 +1,637 @@
-// data/englishQuest/units/u4.js: Unit 4, Word Power (IEO Vocabulary)
+// data/englishQuest/units/u4.js: Unit 4, Spot the Error (IEO Grammar)
 // Built per docs/CONTENT_GUIDE.md §2–7 and docs/exam/ieo-pattern.md.
-import { q, study, quiz, reading, unit, main, practice, gate, withSubtopic, endless, boss } from "../helpers.js";
+import { q, study, quiz, unit, main, practice, gate, withSubtopic, endless, boss } from "../helpers.js";
 
 // ---------- Nodes definition ----------
-const synAnt = main("eq-u4-synant", "eq-u4", 0, "Synonyms and Antonyms", [study("eq-u4-synant"), quiz("eq-u4-synant-warmup")]);
-const spelling = main("eq-u4-spelling", "eq-u4", 1, "Spelling Traps", [study("eq-u4-spelling"), quiz("eq-u4-spelling-warmup")]);
-const collocations = main("eq-u4-colloc", "eq-u4", 2, "Word Choice & Collocations", [study("eq-u4-colloc"), quiz("eq-u4-colloc-warmup")]);
-const u4r = main("eq-u4-reading", "eq-u4", 3, "Reading: The Whispering Banyan Grove", [reading("eq-read-banyan-grove")]);
+const errors = main("eq-u4-errors", "eq-u4", 0, "Spot the Error", [
+  study("eq-u4-errors"),
+  quiz("eq-u4-errors-warmup"),
+]);
 
 export default {
   // ---------- Study Pages ----------
   studyPages: {
-    "eq-u4-synant": {
-      name: "Synonyms and Antonyms",
+    "eq-u4-errors": {
+      name: "Spotting Sentence Errors",
       author: "Apprec8",
-      content: `### 📚 The Magic of Synonyms and Antonyms
-
-Expanding your vocabulary makes your writing and speech colourful, precise, and expressive!
-
----
-
-### 👯 Synonyms: Words with Similar Meanings
-
-A **synonym** is a word that has the same or nearly the same meaning as another word in the same language.
-
-| Word | Synonyms | Example Sentence |
-|---|---|---|
-| **Brave** | *courageous, valiant, fearless* | The brave firefighter entered the burning house. |
-| **Scarce** | *rare, sparse, meagre* | Fresh drinking water became scarce during the dry summer. |
-| **Ancient** | *antique, prehistoric, timeworn* | The museum displays ancient coins made of silver. |
-| **Cautious** | *careful, watchful, prudent* | A cautious driver slows down near a school gate. |
-| **Vanish** | *disappear, fade, evaporate* | The morning fog will vanish as the sun rises. |
-| **Wealthy** | *affluent, prosperous, opulent* | The wealthy merchant donated books to the village school. |
-| **Eager** | *keen, enthusiastic, impatient* | The eager students arrived early for the annual science fair. |
-| **Trivial** | *minor, petty, unimportant* | Do not worry about trivial matters during an exam. |
-| **Abundant** | *plentiful, lavish, copious* | The orchard produced an abundant harvest of sweet apples. |
-| **Gentle** | *tender, mild, peaceful* | A gentle breeze blew across the quiet valley. |
-
----
-
-### ⚡ Antonyms: Words with Opposite Meanings
-
-An **antonym** is a word that means the exact opposite of another word.
-
-| Word | Antonyms | Example Sentence |
-|---|---|---|
-| **Brave** | *cowardly, timid, fearful* | The cowardly dog ran away from the barking puppy. |
-| **Scarce** | *plentiful, abundant, copious* | Ripe mangoes are plentiful in the warm month of June. |
-| **Ancient** | *modern, recent, contemporary* | The city has modern high-rise flats beside old temples. |
-| **Cautious** | *reckless, rash, careless* | Rash driving on slippery roads causes dangerous accidents. |
-| **Vanish** | *appear, emerge, materialise* | A colourful rainbow will appear after the rain stops. |
-| **Wealthy** | *impoverished, needy, destitute* | The generous king gave food to impoverished families. |
-| **Eager** | *reluctant, unwilling, indifferent* | The tired boy was reluctant to leave his cosy bed. |
-| **Trivial** | *crucial, vital, essential* | Clear communication is crucial for every team project. |
-| **Cruel** | *compassionate, merciful, humane* | The merciful judge pardoned the repentant traveller. |
-| **Gloomy** | *cheerful, radiant, bright* | A cheerful smile brightened the grey hospital room. |
-
-> 💡 **IEO Tip:** Always look at the surrounding sentence context. A word can have slightly different shades of meaning depending on how it is used!`,
-    },
-    "eq-u4-spelling": {
-      name: "Spelling Traps & Rules",
-      author: "Apprec8",
-      content: `### ✍️ Conquering Tricky Spelling Traps
-
-In the IEO, spelling questions test words that have silent letters, double consonants, or confusing vowel combinations.
-
----
-
-### 🎯 The Big 10 IEO Spelling Traps
-
-1. **Separate:**
-   - Notice the **a** in the middle: *s-e-p-**a**-r-a-t-e*.
-   - 💡 Memory trick: There is **a rat** in sep-**a-rat**-e!
-2. **Necessary:**
-   - One **c**, double **s**: *n-e-**c**-e-**ss**-a-r-y*.
-   - 💡 Memory trick: A shirt has **one collar** (c) and **two sleeves** (ss)!
-3. **Beautiful:**
-   - Starts with *b-e-a-u*: *b-**e-a-u**-t-i-f-u-l*.
-4. **Receive, Deceive, Conceive:**
-   - Remember the golden rule: **i before e except after c**!
-   - *r-e-**c-e-i**-v-e*, *d-e-**c-e-i**-v-e*, *c-e-i-l-i-n-g*.
-   - But when not after c: *b-e-l-**i-e**-v-e*, *p-**i-e**-c-e*, *f-**i-e**-l-d*.
-5. **Accommodate:**
-   - Double **c** AND double **m**: *a-**cc**-o-**mm**-o-d-a-t-e*.
-6. **Embarrass:**
-   - Double **r** AND double **s**: *e-m-b-a-**rr**-a-**ss**-e-d*.
-7. **Definite:**
-   - Contains the word **finite**: *d-e-**f-i-n-i-t**-e*. Never write "definate"!
-8. **Occasion:**
-   - Double **c**, single **s**: *o-**cc**-a-**s**-i-o-n*.
-9. **Environment:**
-   - Do not forget the silent **n** before m: *e-n-v-i-r-o-**n**-m-e-n-t*.
-10. **Grammar:**
-    - Ends in **-ar**, never -er: *g-r-a-m-m-**a-r**!
-
----
-
-### 🔍 Quick Checklist
-
-- Does it drop the 'e' when adding -ing? (*make* → *making*, *write* → *writing*)
-- Does it double the last consonant after a short vowel? (*begin* → *beginning*, *stop* → *stopped*)
-- Does it keep the 'e' before -able for soft c or g? (*notice* → *noticeable*, *change* → *changeable*)`,
-    },
-    "eq-u4-colloc": {
-      name: "Natural Word Choice & Collocations",
-      author: "Apprec8",
-      content: `### 🤝 Natural Word Choice & Collocations
-
-Words in English love to travel in natural partnerships called **collocations**. Even if two words have similar dictionary meanings, native speakers only use specific combinations!
-
----
-
-### 🌟 Natural Movement and Sound Collocations
-
-| Subject | Natural Verb | Never Say |
-|---|---|---|
-| **Candle flame** | *flickers* | flames do not shiver or tremble |
-| **Cold person** | *shivers* | people do not flicker in the cold |
-| **Nervous voice** | *trembles* | voices do not waver or flutter |
-| **Dry autumn leaves** | *rustle* | leaves do not roar or creak |
-| **Gentle stream** | *babbles / murmurs* | streams do not shout or snap |
-| **Floorboards** | *creak* | old wood creaks under footsteps |
-
----
-
-### 🌦️ Nature and Weather Collocations
-
-- **Torrential rain:** We say *torrential rain* or *heavy downpour*, never "thick rain".
-- **Howling wind:** A strong storm has *howling* or *gale-force* winds, not "loud wind".
-- **Dense fog:** Visibility drops in *dense* or *thick fog*, never "heavy fog".
-- **Scorching heat:** Summer brings *scorching* or *sweltering* heat, not "burning air".
-
----
-
-### 💼 Action and Verb Collocations
-
-- **Make** vs **Do:**
-  - *make a decision*, *make an effort*, *make a mistake*, *make a phone call*.
-  - *do homework*, *do chores*, *do research*, *do your best*.
-- **Take:**
-  - *take a risk*, *take a break*, *take a seat*, *take responsibility*.
-- **Burst:**
-  - *burst into tears*, *burst into laughter*, *burst into song*.
-
----
-
-### 👑 Special Group Collocations
-
-- A royal **cavalcade** of horse-drawn carriages.
-- A **pride** of wild lions resting in the shade.
-- A **fleet** of cargo ships sailing into the harbour.
-- A **flock** of migratory birds flying south.`,
+      content: "### 🔍 Spot the Sentence Error\n\nIn the IEO, error spotting questions test your ability to read a complete sentence and pinpoint grammatical mistakes.\n\n---\n\n### 🧱 Sentence Structure in Four Parts\n\nA sentence is divided into four numbered or lettered parts:\n- **(A)** First part\n- **(B)** Second part\n- **(C)** Third part\n- **(D)** No error (if the sentence is entirely correct!)\n\n---\n\n### ⚠️ The Top 5 Error Patterns in IEO\n\n1. **Pronoun Reference Errors:**\n   - ❌ *My grandmother told us stories of **its** childhood.*\n   - ✅ *My grandmother told us stories of **her** childhood.* (Grandmother is a person, not a thing!)\n2. **Passive Voice Confusion:**\n   - ❌ *Jatin was **accusing** of theft by his neighbour.*\n   - ✅ *Jatin was **accused** of theft by his neighbour.* (Passive requires past participle!)\n3. **Subject-Verb Agreement Clashes:**\n   - ❌ *Neither of the two mangoes **were** sweet.*\n   - ✅ *Neither of the two mangoes **was** sweet.* ('Neither' is singular!)\n4. **Adjective vs Adverb Mix-ups:**\n   - ❌ *Sheena was **exhaustive** after running the marathon.*\n   - ✅ *Sheena was **exhausted** after running the marathon.* ('Exhaustive' means comprehensive; 'exhausted' means very tired!)\n5. **Preposition and Collocation Errors:**\n   - ❌ *The teacher has no tolerance **on** indiscipline.*\n   - ✅ *The teacher has no tolerance **for** indiscipline.* ('Tolerance for' is the correct preposition!)\n\n> 💡 **Inspection Strategy:** First check the subject and verb agreement. Second, check pronouns. Third, check prepositions and word forms!",
     },
   },
 
   // ---------- Quizzes ----------
   quizzes: {
-    "eq-u4-synant-warmup": [
+    "eq-u4-errors-warmup": [
       {
-        subtopic: "synonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct synonym of the word 'courageous':",
-          "brave",
+          "Choose the part of the sentence that has an error: 'My grandmother told us' (A) / 'many stories' (B) / 'of its childhood.' (C) / 'No error' (D)",
+          "of its childhood.",
           [
-          ["timid", "synonym-error"],
-          ["reckless", "synonym-error"],
-          ["frightened", "synonym-error"]
+          ["My grandmother told us", "error-pronoun-mixup"],
+          ["many stories", "error-pronoun-mixup"],
+          ["No error", "error-pronoun-mixup"]
           ],
-          "Courageous means showing bravery in the face of fear or danger; brave is its closest synonym."
+          "Grandmother is a female person, so the pronoun should be her childhood, not its childhood."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct antonym of the word 'scarce':",
-          "plentiful",
+          "Choose the part of the sentence that has an error: 'Neither of the two candidates' (A) / 'were selected' (B) / 'for the post.' (C) / 'No error' (D)",
+          "were selected",
           [
-          ["rare", "antonym-error"],
-          ["meagre", "antonym-error"],
-          ["insufficient", "antonym-error"]
+          ["Neither of the two candidates", "error-agreement-mixup"],
+          ["for the post.", "error-agreement-mixup"],
+          ["No error", "error-agreement-mixup"]
           ],
-          "Scarce means existing in very small amounts; its opposite (antonym) is plentiful or abundant."
+          "Neither is singular in grammar and requires the singular verb was selected instead of were selected."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct synonym of the word 'ancient':",
-          "antique",
+          "Choose the part of the sentence that has an error: 'Jatin was accusing' (A) / 'of theft' (B) / 'by his neighbour.' (C) / 'No error' (D)",
+          "Jatin was accusing",
           [
-          ["modern", "synonym-error"],
-          ["recent", "synonym-error"],
-          ["fashionable", "synonym-error"]
+          ["of theft", "error-passive-mixup"],
+          ["by his neighbour.", "error-passive-mixup"],
+          ["No error", "error-passive-mixup"]
           ],
-          "Ancient refers to times long past or very old objects; antique shares this meaning."
+          "In the passive voice, the verb must be past participle: Jatin was accused of theft."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct antonym of the word 'cautious':",
-          "reckless",
+          "Choose the part of the sentence that has an error: 'Sheena was exhaustive' (A) / 'after running' (B) / 'the ten-mile race.' (C) / 'No error' (D)",
+          "Sheena was exhaustive",
           [
-          ["watchful", "antonym-error"],
-          ["careful", "antonym-error"],
-          ["prudent", "antonym-error"]
+          ["after running", "error-word-form-mixup"],
+          ["the ten-mile race.", "error-word-form-mixup"],
+          ["No error", "error-word-form-mixup"]
           ],
-          "Cautious means taking great care to avoid danger; reckless means acting without caring about consequences."
+          "Exhaustive means comprehensive or thorough; the correct adjective for a tired person is exhausted."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct synonym of the word 'vanish':",
-          "disappear",
+          "Choose the part of the sentence that has an error: 'The teacher has' (A) / 'no tolerance on' (B) / 'disobedient behaviour.' (C) / 'No error' (D)",
+          "no tolerance on",
           [
-          ["arrive", "synonym-error"],
-          ["surface", "synonym-error"],
-          ["expand", "synonym-error"]
+          ["The teacher has", "error-preposition-mixup"],
+          ["disobedient behaviour.", "error-preposition-mixup"],
+          ["No error", "error-preposition-mixup"]
           ],
-          "To vanish means to pass completely out of sight, which is the definition of disappear."
+          "The correct preposition with the noun tolerance is for: tolerance for disobedient behaviour."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct antonym of the word 'wealthy':",
-          "impoverished",
+          "Choose the part of the sentence that has an error: 'Rohan is more taller' (A) / 'than his elder brother' (B) / 'in our class.' (C) / 'No error' (D)",
+          "Rohan is more taller",
           [
-          ["affluent", "antonym-error"],
-          ["prosperous", "antonym-error"],
-          ["comfortable", "antonym-error"]
+          ["than his elder brother", "error-comparative-mixup"],
+          ["in our class.", "error-comparative-mixup"],
+          ["No error", "error-comparative-mixup"]
           ],
-          "Wealthy means having abundant money; impoverished means made poor or lacking basic resources."
+          "Double comparatives are incorrect; we say taller than, not more taller than."
         ),
       },
       {
-        subtopic: "context-pairs",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Fill in the blank with the best word: 'The child was ___ to open the birthday parcel.'",
-          "eager",
+          "Choose the part of the sentence that has an error: 'A flock of birds' (A) / 'are flying' (B) / 'towards the south.' (C) / 'No error' (D)",
+          "are flying",
           [
-          ["reluctant", "context-word-choice"],
-          ["unwilling", "context-word-choice"],
-          ["hesitant", "context-word-choice"]
+          ["A flock of birds", "error-collective-mixup"],
+          ["towards the south.", "error-collective-mixup"],
+          ["No error", "error-collective-mixup"]
           ],
-          "Eager means keenly excited and looking forward to an event with enthusiasm."
+          "A flock is a singular collective noun, so the verb must be is flying instead of are flying."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct antonym of the word 'trivial':",
-          "crucial",
+          "Choose the part of the sentence that has an error: 'The train arrived' (A) / 'at the platform' (B) / 'on the scheduled time.' (C) / 'No error' (D)",
+          "on the scheduled time.",
           [
-          ["minor", "antonym-error"],
-          ["petty", "antonym-error"],
-          ["worthless", "antonym-error"]
+          ["The train arrived", "error-preposition-mixup"],
+          ["at the platform", "error-preposition-mixup"],
+          ["No error", "error-preposition-mixup"]
           ],
-          "Trivial means of very little importance; crucial means of supreme, decisive importance."
-        ),
-      },
-    ],
-    "eq-u4-synant-context-quiz": [
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Fill in the blank with the most appropriate word: 'The judge was known for giving ___ judgments.'",
-          "impartial",
-          [
-          ["biased", "context-word-choice"],
-          ["prejudiced", "context-word-choice"],
-          ["hasty", "context-word-choice"]
-          ],
-          "An impartial judge treats all parties equally without favouring one side over another."
-        ),
-      },
-      {
-        subtopic: "synonyms",
-        ...q(
-          "Choose the correct synonym of the underlined word: 'The valley was completely silent.'",
-          "tranquil",
-          [
-          ["deafening", "synonym-error"],
-          ["boisterous", "synonym-error"],
-          ["rowdy", "synonym-error"]
-          ],
-          "Silent and peaceful settings are best described as tranquil."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the correct antonym of the underlined word: 'The king was renowned for his cruelty.'",
-          "compassion",
-          [
-          ["brutality", "antonym-error"],
-          ["harshness", "antonym-error"],
-          ["ferocity", "antonym-error"]
-          ],
-          "The opposite of cruelty (harsh suffering inflicted on others) is compassion or mercy."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Fill in the blank: 'Fresh fruits and green vegetables are ___ in the summer market.'",
-          "abundant",
-          [
-          ["meagre", "context-word-choice"],
-          ["deficient", "context-word-choice"],
-          ["scarce", "context-word-choice"]
-          ],
-          "Abundant means existing in large quantities, fitting a well-stocked seasonal market."
-        ),
-      },
-      {
-        subtopic: "synonyms",
-        ...q(
-          "Choose the word that means the SAME as 'diligent':",
-          "hardworking",
-          [
-          ["careless", "synonym-error"],
-          ["lazy", "synonym-error"],
-          ["inactive", "synonym-error"]
-          ],
-          "Diligent describes a person who shows steady, earnest, and energetic effort in their work."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the word that is OPPOSITE in meaning to 'gloomy':",
-          "radiant",
-          [
-          ["sombre", "antonym-error"],
-          ["murky", "antonym-error"],
-          ["dismal", "antonym-error"]
-          ],
-          "Gloomy means dark, depressing, or overcast; radiant means glowing brightly and joyfully."
+          "We say at the scheduled time (or on time), not on the scheduled time."
         ),
       },
     ],
-    "eq-u4-synant-gate-pool": [
+    "eq-u4-errors-practice-quiz": [
       {
-        subtopic: "synonyms",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct synonym of the word 'perilous':",
-          "dangerous",
+          "Choose the part of the sentence that has an error: 'Each of the girls' (A) / 'have received' (B) / 'a gold medal.' (C) / 'No error' (D)",
+          "have received",
           [
-          ["harmless", "synonym-error"],
-          ["secure", "synonym-error"],
-          ["pleasant", "synonym-error"]
+          ["Each of the girls", "error-agreement-mixup"],
+          ["a gold medal.", "error-agreement-mixup"],
+          ["No error", "error-agreement-mixup"]
           ],
-          "Perilous comes from peril, meaning full of grave danger or risk."
+          "The subject is Each (singular), so the verb must be has received instead of have received."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct synonym of the word 'furious':",
-          "enraged",
+          "Choose the part of the sentence that has an error: 'He did not went' (A) / 'to school yesterday' (B) / 'due to high fever.' (C) / 'No error' (D)",
+          "He did not went",
           [
-          ["delighted", "synonym-error"],
-          ["cheerful", "synonym-error"],
-          ["peaceful", "synonym-error"]
+          ["to school yesterday", "error-auxiliary-verb"],
+          ["due to high fever.", "error-auxiliary-verb"],
+          ["No error", "error-auxiliary-verb"]
           ],
-          "Furious means full of intense, violent anger; enraged is an exact synonym."
+          "After the auxiliary did not, the main verb returns to the base form: did not go, not did not went."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct synonym of the word 'slender':",
-          "slim",
+          "Choose the part of the sentence that has an error: 'Me and my sister' (A) / 'baked a chocolate cake' (B) / 'for our mother.' (C) / 'No error' (D)",
+          "Me and my sister",
           [
-          ["corpulent", "synonym-error"],
-          ["stocky", "synonym-error"],
-          ["hefty", "synonym-error"]
+          ["baked a chocolate cake", "error-pronoun-case"],
+          ["for our mother.", "error-pronoun-case"],
+          ["No error", "error-pronoun-case"]
           ],
-          "Slender describes someone or something that is gracefully thin or slim."
+          "As a subject pronoun, we use My sister and I baked a cake, not Me and my sister."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct synonym of the word 'commence':",
-          "begin",
+          "Choose the part of the sentence that has an error: 'She walked into' (A) / 'the dark room' (B) / 'very slow.' (C) / 'No error' (D)",
+          "very slow.",
           [
-          ["conclude", "synonym-error"],
-          ["terminate", "synonym-error"],
-          ["finish", "synonym-error"]
+          ["She walked into", "error-adverb-adjective"],
+          ["the dark room", "error-adverb-adjective"],
+          ["No error", "error-adverb-adjective"]
           ],
-          "To commence means to start or begin an activity or formal ceremony."
+          "The verb walked requires an adverb of manner: very slowly instead of very slow."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct synonym of the word 'obstacle':",
-          "barrier",
+          "Choose the part of the sentence that has an error: 'The Nile is' (A) / 'longer than' (B) / 'any river in Africa.' (C) / 'No error' (D)",
+          "any river in Africa.",
           [
-          ["assistance", "synonym-error"],
-          ["pathway", "synonym-error"],
-          ["solution", "synonym-error"]
+          ["The Nile is", "error-comparative-other"],
+          ["longer than", "error-comparative-other"],
+          ["No error", "error-comparative-other"]
           ],
-          "An obstacle is an obstruction or barrier that hinders progress."
+          "When comparing an entity within its own group, we must exclude it: longer than any other river in Africa."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct antonym of the word 'humble':",
-          "arrogant",
+          "Choose the part of the sentence that has an error: 'The boys distributed' (A) / 'the sweets between' (B) / 'all five children.' (C) / 'No error' (D)",
+          "the sweets between",
           [
-          ["modest", "antonym-error"],
-          ["meek", "antonym-error"],
-          ["polite", "antonym-error"]
+          ["The boys distributed", "error-between-among"],
+          ["all five children.", "error-between-among"],
+          ["No error", "error-between-among"]
           ],
-          "Humble means having or showing a modest estimate of oneself; arrogant means overly proud."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the correct antonym of the word 'rigid':",
-          "flexible",
-          [
-          ["stiff", "antonym-error"],
-          ["firm", "antonym-error"],
-          ["unyielding", "antonym-error"]
-          ],
-          "Rigid means stiff and unable to bend; flexible means easily bent without breaking."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the correct antonym of the word 'innocent':",
-          "guilty",
-          [
-          ["pure", "antonym-error"],
-          ["harmless", "antonym-error"],
-          ["blameless", "antonym-error"]
-          ],
-          "Innocent means free from moral wrong or guilt; guilty means responsible for a wrong deed."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the correct antonym of the word 'expand':",
-          "contract",
-          [
-          ["broaden", "antonym-error"],
-          ["enlarge", "antonym-error"],
-          ["extend", "antonym-error"]
-          ],
-          "To expand means to increase in size or volume; to contract means to shrink or decrease."
-        ),
-      },
-      {
-        subtopic: "antonyms",
-        ...q(
-          "Choose the correct antonym of the word 'hostile':",
-          "friendly",
-          [
-          ["antagonistic", "antonym-error"],
-          ["aggressive", "antonym-error"],
-          ["unfriendly", "antonym-error"]
-          ],
-          "Hostile means showing open enmity or opposition; friendly means kind and welcoming."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Fill in the blank: 'The doctor gave clear advice to avoid ___ sugar intake.'",
-          "excessive",
-          [
-          ["moderate", "context-word-choice"],
-          ["scanty", "context-word-choice"],
-          ["limited", "context-word-choice"]
-          ],
-          "Excessive means more than is necessary, normal, or desirable."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Fill in the blank: 'The lost travellers found a ___ cave during the snowstorm.'",
-          "sheltered",
-          [
-          ["exposed", "context-word-choice"],
-          ["dangerous", "context-word-choice"],
-          ["bleak", "context-word-choice"]
-          ],
-          "A sheltered cave provides protection from wind, snow, and rain."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Select the word that correctly replaces the bracketed words: 'The magician made the rabbit [stop being seen].'",
-          "vanish",
-          [
-          ["appear", "context-word-choice"],
-          ["multiply", "context-word-choice"],
-          ["escape", "context-word-choice"]
-          ],
-          "Vanish specifically means to pass out of sight quickly or mysteriously."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Fill in the blank: 'The speaker gave a ___ summary that lasted only two minutes.'",
-          "concise",
-          [
-          ["lengthy", "context-word-choice"],
-          ["wordy", "context-word-choice"],
-          ["rambling", "context-word-choice"]
-          ],
-          "Concise means expressing much in few words, brief and to the point."
-        ),
-      },
-      {
-        subtopic: "context-pairs",
-        ...q(
-          "Select the opposite of the bracketed word: 'The soldiers made a [valiant] attempt to hold the bridge.'",
-          "cowardly",
-          [
-          ["heroic", "context-word-choice"],
-          ["fearless", "context-word-choice"],
-          ["spirited", "context-word-choice"]
-          ],
-          "Valiant means brave or courageous; its opposite is cowardly."
+          "Between is used for two people; among is used for more than two (all five children)."
         ),
       },
     ],
-    "eq-u4-spelling-warmup": [
+    "eq-u4-errors-gate-pool": [
       {
-        subtopic: "tricky-vowels",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct spelling of the word that means 'distinct or apart':",
-          "separate",
+          "Choose the part of the sentence that has an error: 'The quality of these mangoes' (A) / 'were not good' (B) / 'at all.' (C) / 'No error' (D)",
+          "were not good",
           [
-          ["seperate", "spelling-vowel-trap"],
-          ["separete", "spelling-vowel-trap"],
-          ["seperete", "spelling-vowel-trap"]
+          ["The quality of these mangoes", "error-agreement-mixup"],
+          ["at all.", "error-agreement-mixup"],
+          ["No error", "error-agreement-mixup"]
           ],
-          "Separate has an 'a' in the middle: s-e-p-a-r-a-t-e (remember: a rat in separate)."
+          "The subject is The quality (singular), not mangoes; it requires was not good."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct spelling of the word that means 'required or needed':",
-          "necessary",
+          "Choose the part of the sentence that has an error: 'One of my friends' (A) / 'have travelled' (B) / 'around the globe.' (C) / 'No error' (D)",
+          "have travelled",
           [
-          ["neccessary", "spelling-double-consonant"],
-          ["necesary", "spelling-double-consonant"],
-          ["necessery", "spelling-double-consonant"]
+          ["One of my friends", "error-agreement-mixup"],
+          ["around the globe.", "error-agreement-mixup"],
+          ["No error", "error-agreement-mixup"]
           ],
-          "Necessary has one 'c' and double 's': n-e-c-e-s-s-a-r-y."
+          "The subject is One (singular), which takes has travelled instead of have travelled."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'to get or obtain':",
-          "receive",
+          "Choose the part of the sentence that has an error: 'The news broadcast' (A) / 'were watched by' (B) / 'millions of viewers.' (C) / 'No error' (D)",
+          "were watched by",
           [
-          ["recieve", "spelling-ie-ei-rule"],
-          ["receeve", "spelling-ie-ei-rule"],
-          ["receivee", "spelling-ie-ei-rule"]
+          ["The news broadcast", "error-news-agreement"],
+          ["millions of viewers.", "error-news-agreement"],
+          ["No error", "error-news-agreement"]
           ],
-          "Under the rule 'i before e except after c', receive is spelled r-e-c-e-i-v-e."
+          "News is an uncountable singular noun, so the verb is was watched by."
         ),
       },
       {
-        subtopic: "tricky-vowels",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'rules of language':",
-          "grammar",
+          "Choose the part of the sentence that has an error: 'If he will study hard,' (A) / 'he will pass' (B) / 'the annual examination.' (C) / 'No error' (D)",
+          "If he will study hard,",
           [
-          ["grammer", "spelling-vowel-trap"],
-          ["gramar", "spelling-vowel-trap"],
-          ["gramer", "spelling-vowel-trap"]
+          ["he will pass", "error-conditional-tense"],
+          ["the annual examination.", "error-conditional-tense"],
+          ["No error", "error-conditional-tense"]
           ],
-          "Grammar ends with -ar, not -er: g-r-a-m-m-a-r."
+          "In a first conditional clause with if, we use simple present: If he studies hard."
         ),
       },
       {
-        subtopic: "tricky-vowels",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'the natural world':",
-          "environment",
+          "Choose the part of the sentence that has an error: 'Ten kilometres are' (A) / 'a long distance' (B) / 'to walk on foot.' (C) / 'No error' (D)",
+          "Ten kilometres are",
           [
-          ["enviroment", "spelling-vowel-trap"],
-          ["enviornment", "spelling-vowel-trap"],
-          ["environmant", "spelling-vowel-trap"]
+          ["a long distance", "error-measure-verb"],
+          ["to walk on foot.", "error-measure-verb"],
+          ["No error", "error-measure-verb"]
           ],
-          "Environment retains the silent 'n' before m: e-n-v-i-r-o-n-m-e-n-t."
+          "A distance considered as a single unit takes a singular verb: Ten kilometres is a long distance."
         ),
       },
       {
-        subtopic: "tricky-vowels",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'certain or fixed':",
-          "definite",
+          "Choose the part of the sentence that has an error: 'Every student must bring' (A) / 'their own pencil' (B) / 'to the test hall.' (C) / 'No error' (D)",
+          "their own pencil",
           [
-          ["definate", "spelling-vowel-trap"],
-          ["defanite", "spelling-vowel-trap"],
-          ["definit", "spelling-vowel-trap"]
+          ["Every student must bring", "error-pronoun-number"],
+          ["to the test hall.", "error-pronoun-number"],
+          ["No error", "error-pronoun-number"]
           ],
-          "Definite contains the root 'finite' and ends in -ite: d-e-f-i-n-i-t-e."
+          "Every student is singular, so traditional grammar uses his or her own pencil."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'to provide lodging':",
-          "accommodate",
+          "Choose the part of the sentence that has an error: 'Between you and I,' (A) / 'this secret plan' (B) / 'must remain private.' (C) / 'No error' (D)",
+          "Between you and I,",
           [
-          ["accomodate", "spelling-double-consonant"],
-          ["acommodate", "spelling-double-consonant"],
-          ["acomodate", "spelling-double-consonant"]
+          ["this secret plan", "error-preposition-pronoun"],
+          ["must remain private.", "error-preposition-pronoun"],
+          ["No error", "error-preposition-pronoun"]
           ],
-          "Accommodate has double 'c' and double 'm': a-c-c-o-m-m-o-d-a-t-e."
+          "Between is a preposition requiring objective case pronouns: Between you and me."
         ),
       },
       {
-        subtopic: "tricky-vowels",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'a special right or advantage':",
-          "privilege",
+          "Choose the part of the sentence that has an error: 'The boy who' (A) / 'we saw yesterday' (B) / 'is my cousin.' (C) / 'No error' (D)",
+          "The boy who",
           [
-          ["privelege", "spelling-vowel-trap"],
-          ["priviledge", "spelling-vowel-trap"],
-          ["privilige", "spelling-vowel-trap"]
+          ["we saw yesterday", "error-who-whom"],
+          ["is my cousin.", "error-who-whom"],
+          ["No error", "error-who-whom"]
           ],
-          "Privilege has no 'd' and is spelled p-r-i-v-i-l-e-g-e."
-        ),
-      },
-    ],
-    "eq-u4-spelling-rules-quiz": [
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word that follows the 'i before e except after c' rule:",
-          "ceiling",
-          [
-          ["cieling", "spelling-ie-ei-rule"],
-          ["ceeling", "spelling-ie-ei-rule"],
-          ["ceilinge", "spelling-ie-ei-rule"]
-          ],
-          "Because the diphthong follows 'c', it takes 'ei': c-e-i-l-i-n-g."
+          "As an objective relative pronoun representing the person seen, whom is required: The boy whom we saw."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correctly spelt word meaning 'trust or faith':",
-          "belief",
+          "Choose the part of the sentence that has an error: 'She sang so sweet' (A) / 'that the listeners' (B) / 'clapped with joy.' (C) / 'No error' (D)",
+          "She sang so sweet",
           [
-          ["beleif", "spelling-ie-ei-rule"],
-          ["beleefe", "spelling-ie-ei-rule"],
-          ["bilief", "spelling-ie-ei-rule"]
+          ["that the listeners", "error-adverb-adjective"],
+          ["clapped with joy.", "error-adverb-adjective"],
+          ["No error", "error-adverb-adjective"]
           ],
-          "When not preceded by 'c', the standard rule is 'i before e': b-e-l-i-e-f."
+          "The verb sang is modified by an adverb of manner: so sweetly, not so sweet."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correctly spelt word meaning 'a person who steals':",
-          "thief",
+          "Choose the part of the sentence that has an error: 'He is the most cleverest' (A) / 'boy in the entire' (B) / 'middle school.' (C) / 'No error' (D)",
+          "He is the most cleverest",
           [
-          ["theif", "spelling-ie-ei-rule"],
-          ["theefe", "spelling-ie-ei-rule"],
-          ["thife", "spelling-ie-ei-rule"]
+          ["boy in the entire", "error-double-superlative"],
+          ["middle school.", "error-double-superlative"],
+          ["No error", "error-double-superlative"]
           ],
-          "Thief follows the regular pattern with 'ie': t-h-i-e-f."
+          "Double superlatives are ungrammatical; we use cleverest or most clever, never most cleverest."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correctly spelt word meaning 'to mislead or trick someone':",
-          "deceive",
+          "Choose the part of the sentence that has an error: 'He has been absent' (A) / 'from the school' (B) / 'for Monday.' (C) / 'No error' (D)",
+          "for Monday.",
           [
-          ["decieve", "spelling-ie-ei-rule"],
-          ["deceeve", "spelling-ie-ei-rule"],
-          ["decievee", "spelling-ie-ei-rule"]
+          ["He has been absent", "error-since-for"],
+          ["from the school", "error-since-for"],
+          ["No error", "error-since-for"]
           ],
-          "Deceive follows the letter 'c', so 'e' precedes 'i': d-e-c-e-i-v-e."
+          "With a specific starting point in time (Monday), we use since, not for: since Monday."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correctly spelt word meaning 'a piece of land or sports ground':",
-          "field",
+          "Choose the part of the sentence that has an error: 'The man was angry' (A) / 'upon his servant' (B) / 'for being late.' (C) / 'No error' (D)",
+          "upon his servant",
           [
-          ["feild", "spelling-ie-ei-rule"],
-          ["feeld", "spelling-ie-ei-rule"],
-          ["feilde", "spelling-ie-ei-rule"]
+          ["The man was angry", "error-preposition-mixup"],
+          ["for being late.", "error-preposition-mixup"],
+          ["No error", "error-preposition-mixup"]
           ],
-          "Field is spelled with 'ie': f-i-e-l-d."
+          "We say angry with a person (or angry at a situation), not angry upon someone."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correctly spelt word meaning 'to accomplish or succeed':",
-          "achieve",
+          "Choose the part of the sentence that has an error: 'Honesty is' (A) / 'a best policy' (B) / 'in human life.' (C) / 'No error' (D)",
+          "a best policy",
           [
-          ["acheive", "spelling-ie-ei-rule"],
-          ["acheeve", "spelling-ie-ei-rule"],
-          ["achiive", "spelling-ie-ei-rule"]
+          ["Honesty is", "error-superlative-the"],
+          ["in human life.", "error-superlative-the"],
+          ["No error", "error-superlative-the"]
           ],
-          "Achieve is spelled with 'ie' after 'ch': a-c-h-i-e-v-e."
-        ),
-      },
-    ],
-    "eq-u4-spelling-gate-pool": [
-      {
-        subtopic: "double-letters",
-        ...q(
-          "Choose the correct spelling of the word meaning 'to feel self-conscious or ashamed':",
-          "embarrass",
-          [
-          ["embarass", "spelling-double-consonant"],
-          ["emberrass", "spelling-double-consonant"],
-          ["embaras", "spelling-double-consonant"]
-          ],
-          "Embarrass has double 'r' and double 's': e-m-b-a-r-r-a-s-s."
+          "Superlative adjectives like best take the definite article: the best policy."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'a particular event or time':",
-          "occasion",
+          "Choose the part of the sentence that has an error: 'He prefers reading books' (A) / 'than watching' (B) / 'television shows.' (C) / 'No error' (D)",
+          "than watching",
           [
-          ["ocassion", "spelling-double-consonant"],
-          ["occassion", "spelling-double-consonant"],
-          ["ocasion", "spelling-double-consonant"]
+          ["He prefers reading books", "error-prefer-to"],
+          ["television shows.", "error-prefer-to"],
+          ["No error", "error-prefer-to"]
           ],
-          "Occasion has double 'c' but single 's': o-c-c-a-s-i-o-n."
+          "The verb prefer takes the preposition to, not than: prefers reading books to watching television."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the correct spelling of the word meaning 'to take place or happen':",
-          "occurred",
+          "Choose the part of the sentence that has an error: 'The doctor advised him' (A) / 'to take an European' (B) / 'tour for rest.' (C) / 'No error' (D)",
+          "to take an European",
           [
-          ["occured", "spelling-double-consonant"],
-          ["ocurred", "spelling-double-consonant"],
-          ["ocured", "spelling-double-consonant"]
+          ["The doctor advised him", "error-article-sound"],
+          ["tour for rest.", "error-article-sound"],
+          ["No error", "error-article-sound"]
           ],
-          "Occurred doubles the 'r' before -ed: o-c-c-u-r-r-e-d."
-        ),
-      },
-      {
-        subtopic: "double-letters",
-        ...q(
-          "Choose the correct spelling of the word meaning 'a group formed for a specific task':",
-          "committee",
-          [
-          ["comittee", "spelling-double-consonant"],
-          ["commitee", "spelling-double-consonant"],
-          ["comite", "spelling-double-consonant"]
-          ],
-          "Committee features double 'm', double 't', and double 'e': c-o-m-m-i-t-t-e-e."
-        ),
-      },
-      {
-        subtopic: "double-letters",
-        ...q(
-          "Choose the correct spelling of the word meaning 'starting point':",
-          "beginning",
-          [
-          ["begining", "spelling-double-consonant"],
-          ["beggining", "spelling-double-consonant"],
-          ["begginning", "spelling-double-consonant"]
-          ],
-          "Beginning doubles the 'n' after the short vowel: b-e-g-i-n-n-i-n-g."
-        ),
-      },
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word meaning 'how heavy something is':",
-          "weight",
-          [
-          ["wieght", "spelling-ie-ei-rule"],
-          ["waight", "spelling-ie-ei-rule"],
-          ["wight", "spelling-ie-ei-rule"]
-          ],
-          "Weight produces an 'ay' sound, which is spelled 'ei': w-e-i-g-h-t."
-        ),
-      },
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word meaning 'the daughter of a brother or sister':",
-          "niece",
-          [
-          ["neice", "spelling-ie-ei-rule"],
-          ["neece", "spelling-ie-ei-rule"],
-          ["neise", "spelling-ie-ei-rule"]
-          ],
-          "Niece is spelled with 'ie': n-i-e-c-e."
-        ),
-      },
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word meaning 'unusual or odd':",
-          "weird",
-          [
-          ["wierd", "spelling-ie-ei-rule"],
-          ["weerd", "spelling-ie-ei-rule"],
-          ["wird", "spelling-ie-ei-rule"]
-          ],
-          "Weird is an exception to the regular rule, spelled w-e-i-r-d."
-        ),
-      },
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word meaning 'a written proof of payment':",
-          "receipt",
-          [
-          ["reciept", "spelling-ie-ei-rule"],
-          ["receete", "spelling-ie-ei-rule"],
-          ["receite", "spelling-ie-ei-rule"]
-          ],
-          "Receipt follows 'c', so 'ei' is used, along with silent 'p': r-e-c-e-i-p-t."
-        ),
-      },
-      {
-        subtopic: "ie-ei-rules",
-        ...q(
-          "Choose the correctly spelt word meaning 'a person living next door':",
-          "neighbour",
-          [
-          ["nieghbour", "spelling-ie-ei-rule"],
-          ["naybour", "spelling-ie-ei-rule"],
-          ["naighbour", "spelling-ie-ei-rule"]
-          ],
-          "In British English, neighbour is spelled with 'ei' and 'our': n-e-i-g-h-b-o-u-r."
-        ),
-      },
-      {
-        subtopic: "tricky-vowels",
-        ...q(
-          "Choose the correct spelling of the word meaning 'easy to see or observe':",
-          "noticeable",
-          [
-          ["noticable", "spelling-vowel-trap"],
-          ["notisable", "spelling-vowel-trap"],
-          ["notiseable", "spelling-vowel-trap"]
-          ],
-          "Noticeable retains the 'e' to preserve the soft 'c' sound: n-o-t-i-c-e-a-b-l-e."
-        ),
-      },
-      {
-        subtopic: "tricky-vowels",
-        ...q(
-          "Choose the correct spelling of the word meaning 'calendar record of days':",
-          "calendar",
-          [
-          ["calender", "spelling-vowel-trap"],
-          ["calandar", "spelling-vowel-trap"],
-          ["calander", "spelling-vowel-trap"]
-          ],
-          "Calendar ends in -ar, not -er: c-a-l-e-n-d-a-r."
-        ),
-      },
-      {
-        subtopic: "tricky-vowels",
-        ...q(
-          "Choose the correct spelling of the word meaning 'twelve in count':",
-          "twelfth",
-          [
-          ["twelveth", "spelling-vowel-trap"],
-          ["twelth", "spelling-vowel-trap"],
-          ["twelfeth", "spelling-vowel-trap"]
-          ],
-          "Twelfth uses an 'f' before the -th ending: t-w-e-l-f-t-h."
-        ),
-      },
-      {
-        subtopic: "tricky-vowels",
-        ...q(
-          "Choose the correct spelling of the word meaning 'gratefulness':",
-          "gratitude",
-          [
-          ["greatitude", "spelling-vowel-trap"],
-          ["graditude", "spelling-vowel-trap"],
-          ["grattitude", "spelling-vowel-trap"]
-          ],
-          "Gratitude is spelled g-r-a-t-i-t-u-d-e, from the Latin root gratus."
-        ),
-      },
-      {
-        subtopic: "tricky-vowels",
-        ...q(
-          "Choose the correct spelling of the word meaning 'a schedule or plan':",
-          "programme",
-          [
-          ["program", "spelling-vowel-trap"],
-          ["programer", "spelling-vowel-trap"],
-          ["programin", "spelling-vowel-trap"]
-          ],
-          "In British English, an event schedule or broadcast is spelled p-r-o-g-r-a-m-m-e."
+          "European begins with a consonant sound 'yu', so it takes the indefinite article 'a', not 'an'."
         ),
       },
     ],
-    "eq-u4-colloc-warmup": [
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank with the natural word choice: 'A cool evening breeze made the candle flame ___.'",
-          "flicker",
-          [
-          ["shiver", "collocation-verb-choice"],
-          ["tremble", "collocation-verb-choice"],
-          ["wobble", "collocation-verb-choice"]
-          ],
-          "Flames flicker in a breeze; people shiver from cold and voices tremble from nervousness."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'Standing in the cold rain made the poor child ___ with chill.'",
-          "shiver",
-          [
-          ["flicker", "collocation-verb-choice"],
-          ["sparkle", "collocation-verb-choice"],
-          ["flutter", "collocation-verb-choice"]
-          ],
-          "People shiver when they feel very cold, shaking involuntarily."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The dark sky brought ___ rain that flooded the school yard.'",
-          "torrential",
-          [
-          ["heavyweight", "collocation-adjective-choice"],
-          ["solid", "collocation-adjective-choice"],
-          ["broad", "collocation-adjective-choice"]
-          ],
-          "We say torrential rain or heavy downpour to describe violent, heavy rainstorms."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'The captain told the crew to ___ an effort to reach the harbour.'",
-          "make",
-          [
-          ["do", "collocation-make-do"],
-          ["build", "collocation-make-do"],
-          ["create", "collocation-make-do"]
-          ],
-          "The standard collocation in English is to make an effort (we do work or research, but make an effort)."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'Hearing the joyful joke made the whole classroom ___ into laughter.'",
-          "burst",
-          [
-          ["break", "collocation-burst-phrase"],
-          ["shatter", "collocation-burst-phrase"],
-          ["crack", "collocation-burst-phrase"]
-          ],
-          "The natural English expression is to burst into laughter (or burst into tears)."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'Dry yellow autumn leaves ___ under our boots as we walked through the woods.'",
-          "rustled",
-          [
-          ["screeched", "collocation-sound-verb"],
-          ["clanged", "collocation-sound-verb"],
-          ["banged", "collocation-sound-verb"]
-          ],
-          "Dry leaves rustle when moved or walked upon, making a soft crackling sound."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The morning valley was covered in ___ fog, reducing visibility to ten metres.'",
-          "dense",
-          [
-          ["deep", "collocation-adjective-choice"],
-          ["weighty", "collocation-adjective-choice"],
-          ["hard", "collocation-adjective-choice"]
-          ],
-          "Fog is described as dense or thick, never heavy or weighty."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'A royal ___ of horse carriages paraded down the wide avenue.'",
-          "cavalcade",
-          [
-          ["herd", "collocation-group-noun"],
-          ["pack", "collocation-group-noun"],
-          ["school", "collocation-group-noun"]
-          ],
-          "A formal procession of riders or vehicles is called a cavalcade."
-        ),
-      },
-    ],
-    "eq-u4-colloc-nature-quiz": [
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The explorer warned us of the ___ heat in the middle of the desert.'",
-          "scorching",
-          [
-          ["baking", "collocation-adjective-choice"],
-          ["burning", "collocation-adjective-choice"],
-          ["toasting", "collocation-adjective-choice"]
-          ],
-          "Scorching heat or sweltering heat is the standard, natural collocation for intense atmospheric heat."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'The little brook ___ gently over the smooth round pebbles.'",
-          "murmured",
-          [
-          ["shouted", "collocation-sound-verb"],
-          ["roared", "collocation-sound-verb"],
-          ["screamed", "collocation-sound-verb"]
-          ],
-          "A quiet, flowing stream is said to murmur or babble peacefully."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'During the winter storm, a ___ wind blew across the open rooftop.'",
-          "howling",
-          [
-          ["crying", "collocation-adjective-choice"],
-          ["barking", "collocation-adjective-choice"],
-          ["growling", "collocation-adjective-choice"]
-          ],
-          "Strong, violent gale winds are naturally described as howling winds."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'The brave firefighter decided to ___ the risk and enter the burning room.'",
-          "take",
-          [
-          ["have", "collocation-take-risk"],
-          ["make", "collocation-take-risk"],
-          ["hold", "collocation-take-risk"]
-          ],
-          "The established idiom is to take a risk (or run a risk)."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'Old wooden floorboards ___ under the weight of the night visitor.'",
-          "creaked",
-          [
-          ["tinkled", "collocation-sound-verb"],
-          ["chimed", "collocation-sound-verb"],
-          ["hummed", "collocation-sound-verb"]
-          ],
-          "Wooden planks and floorboards creak under pressure or age."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'The speaker stopped to ___ his throat before starting the lecture.'",
-          "clear",
-          [
-          ["clean", "collocation-clear-throat"],
-          ["wash", "collocation-clear-throat"],
-          ["sweep", "collocation-clear-throat"]
-          ],
-          "The standard expression for making a small cough to speak clearly is to clear one's throat."
-        ),
-      },
-    ],
-    "eq-u4-colloc-gate-pool": [
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'The nervous student spoke with a voice that began to ___.'",
-          "tremble",
-          [
-          ["stumble", "collocation-verb-choice"],
-          ["flicker", "collocation-verb-choice"],
-          ["shiver", "collocation-verb-choice"]
-          ],
-          "Voices and hands tremble when someone experiences anxiety, fear, or deep emotion."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'The lion opened its giant jaws and released a ___ roar.'",
-          "deafening",
-          [
-          ["blinding", "collocation-adjective-choice"],
-          ["crushing", "collocation-adjective-choice"],
-          ["weighty", "collocation-adjective-choice"]
-          ],
-          "A roar or thunderous sound so loud it hurts the ears is described as deafening."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'Dry twigs ___ under the paws of the approaching tiger.'",
-          "snapped",
-          [
-          ["chimed", "collocation-sound-verb"],
-          ["hummed", "collocation-sound-verb"],
-          ["groaned", "collocation-sound-verb"]
-          ],
-          "Dry wooden sticks and twigs snap sharply when stepped on."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'Tiny raindrops began to ___ against the glass windowpane.'",
-          "patter",
-          [
-          ["stomp", "collocation-sound-verb"],
-          ["pound", "collocation-sound-verb"],
-          ["slam", "collocation-sound-verb"]
-          ],
-          "Light rain makes a gentle tapping sound known as pattering."
-        ),
-      },
-      {
-        subtopic: "movement-sounds",
-        ...q(
-          "Fill in the blank: 'The rusted metal gate ___ loudly as the wind pushed it open.'",
-          "groaned",
-          [
-          ["murmured", "collocation-sound-verb"],
-          ["babbled", "collocation-sound-verb"],
-          ["whispered", "collocation-sound-verb"]
-          ],
-          "Heavy metal gates or hinges under strain groan or screech."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'We sailed past a ___ of magnificent warships docked in the bay.'",
-          "fleet",
-          [
-          ["flock", "collocation-group-noun"],
-          ["swarm", "collocation-group-noun"],
-          ["pack", "collocation-group-noun"]
-          ],
-          "A collection of ships or vessels sailing together is called a fleet."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The tourists were thrilled to spot a ___ of lions resting near the river.'",
-          "pride",
-          [
-          ["herd", "collocation-group-noun"],
-          ["flock", "collocation-group-noun"],
-          ["colony", "collocation-group-noun"]
-          ],
-          "The collective noun for a family or group of lions is a pride."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'A buzzing ___ of honeybees flew out of the old hollow trunk.'",
-          "swarm",
-          [
-          ["school", "collocation-group-noun"],
-          ["pack", "collocation-group-noun"],
-          ["troop", "collocation-group-noun"]
-          ],
-          "A large gathering of flying insects like bees or wasps is a swarm."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The sudden storm caused a ___ sea with massive breaking waves.'",
-          "rough",
-          [
-          ["harsh", "collocation-adjective-choice"],
-          ["rigid", "collocation-adjective-choice"],
-          ["sharp", "collocation-adjective-choice"]
-          ],
-          "We describe stormy, turbulent waters as a rough sea or choppy waters."
-        ),
-      },
-      {
-        subtopic: "natural-partners",
-        ...q(
-          "Fill in the blank: 'The chef added a ___ of salt to bring out the flavour of the soup.'",
-          "pinch",
-          [
-          ["drop", "collocation-measure-noun"],
-          ["slice", "collocation-measure-noun"],
-          ["crumb", "collocation-measure-noun"]
-          ],
-          "The standard culinary collocation for a tiny amount of salt held between two fingers is a pinch."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'Please ___ in mind that the museum closes early on Sundays.'",
-          "keep",
-          [
-          ["hold", "collocation-idiom-phrase"],
-          ["take", "collocation-idiom-phrase"],
-          ["carry", "collocation-idiom-phrase"]
-          ],
-          "The standard idiom meaning to remember or take into consideration is to keep in mind."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'We are all looking ___ to the exciting school annual picnic.'",
-          "forward",
-          [
-          ["ahead", "collocation-phrasal-verb"],
-          ["around", "collocation-phrasal-verb"],
-          ["behind", "collocation-phrasal-verb"]
-          ],
-          "The phrasal collocation meaning to anticipate with pleasure is to look forward to."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'The coach told the players to ___ their best in the final match.'",
-          "do",
-          [
-          ["make", "collocation-make-do"],
-          ["create", "collocation-make-do"],
-          ["build", "collocation-make-do"]
-          ],
-          "The correct collocation is to do one's best (never 'make your best')."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'Such golden opportunities happen only once in a ___ moon.'",
-          "blue",
-          [
-          ["red", "collocation-idiom-phrase"],
-          ["silver", "collocation-idiom-phrase"],
-          ["gold", "collocation-idiom-phrase"]
-          ],
-          "The well-known English idiom 'once in a blue moon' means very rarely."
-        ),
-      },
-      {
-        subtopic: "idiomatic-collocations",
-        ...q(
-          "Fill in the blank: 'After walking for hours, the tired hikers decided to ___ a rest.'",
-          "take",
-          [
-          ["do", "collocation-take-phrase"],
-          ["perform", "collocation-take-phrase"],
-          ["set", "collocation-take-phrase"]
-          ],
-          "The natural English expression is to take a rest (or have a rest)."
-        ),
-      },
-    ],
+
     "eq-u4-test": [
       {
-        subtopic: "synonyms",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the correct synonym of the word 'valiant':",
-          "courageous",
+          "Choose the part of the sentence that has an error: 'Neither of the runners' (A) / 'were ready' (B) / 'for the marathon.' (C) / 'No error' (D)",
+          "were ready",
           [
-          ["cowardly", "boss-synonym-valiant"],
-          ["fearful", "boss-synonym-valiant"],
-          ["hesitant", "boss-synonym-valiant"]
+          ["Neither of the runners", "boss-error-neither"],
+          ["for the marathon.", "boss-error-neither"],
+          ["No error", "boss-error-neither"]
           ],
-          "Valiant means possessing or showing courage or determination; courageous is an exact synonym."
+          "Neither is singular and takes was ready, not were ready."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the correct antonym of the word 'abundant':",
-          "scarce",
+          "Choose the part of the sentence that has an error: 'The book who' (A) / 'I borrowed from you' (B) / 'was very exciting.' (C) / 'No error' (D)",
+          "The book who",
           [
-          ["copious", "boss-antonym-abundant"],
-          ["plentiful", "boss-antonym-abundant"],
-          ["lavish", "boss-antonym-abundant"]
+          ["I borrowed from you", "boss-error-relative-pronoun"],
+          ["was very exciting.", "boss-error-relative-pronoun"],
+          ["No error", "boss-error-relative-pronoun"]
           ],
-          "Abundant means existing in large quantities; scarce means in short supply."
+          "Books are inanimate objects, so the relative pronoun must be which or that, not who."
         ),
       },
       {
-        subtopic: "antonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the word that means the OPPOSITE of 'cautious':",
-          "reckless",
+          "Choose the part of the sentence that has an error: 'She has been living' (A) / 'in Mumbai' (B) / 'since five years.' (C) / 'No error' (D)",
+          "since five years.",
           [
-          ["prudent", "boss-antonym-cautious"],
-          ["careful", "boss-antonym-cautious"],
-          ["vigilant", "boss-antonym-cautious"]
+          ["She has been living", "boss-error-since-for"],
+          ["in Mumbai", "boss-error-since-for"],
+          ["No error", "boss-error-since-for"]
           ],
-          "Cautious means careful to avoid danger; reckless means utterly careless of consequences."
+          "With a period or duration of time (five years), we use for, not since: for five years."
         ),
       },
       {
-        subtopic: "context-pairs",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Fill in the blank with the most fitting word: 'The diligent student showed great ___ before the final competition.'",
-          "enthusiasm",
+          "Choose the part of the sentence that has an error: 'He did not knew' (A) / 'the correct answer' (B) / 'to the teacher question.' (C) / 'No error' (D)",
+          "He did not knew",
           [
-          ["reluctance", "boss-context-enthusiasm"],
-          ["indifference", "boss-context-enthusiasm"],
-          ["laziness", "boss-context-enthusiasm"]
+          ["the correct answer", "boss-error-auxiliary"],
+          ["to the teacher question.", "boss-error-auxiliary"],
+          ["No error", "boss-error-auxiliary"]
           ],
-          "A diligent (hardworking) student exhibits keen interest and positive enthusiasm."
+          "After the auxiliary did not, the verb must be in base form: did not know."
         ),
       },
       {
-        subtopic: "synonyms",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the synonym of 'commence':",
-          "begin",
+          "Choose the part of the sentence that has an error: 'Ravi is superior' (A) / 'than me' (B) / 'in mathematics.' (C) / 'No error' (D)",
+          "than me",
           [
-          ["conclude", "boss-synonym-commence"],
-          ["cease", "boss-synonym-commence"],
-          ["halt", "boss-synonym-commence"]
+          ["Ravi is superior", "boss-error-superior-to"],
+          ["in mathematics.", "boss-error-superior-to"],
+          ["No error", "boss-error-superior-to"]
           ],
-          "Commence means to begin or start an action or ceremony."
+          "Adjectives ending in -ior (superior, inferior, senior, junior) take to, not than: superior to me."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the option with the CORRECT spelling:",
-          "necessary",
+          "Choose the part of the sentence that has an error: 'Each of the students' (A) / 'have completed' (B) / 'the science project.' (C) / 'No error' (D)",
+          "have completed",
           [
-          ["neccessary", "boss-spell-necessary"],
-          ["necesary", "boss-spell-necessary"],
-          ["necessery", "boss-spell-necessary"]
+          ["Each of the students", "boss-error-each"],
+          ["the science project.", "boss-error-each"],
+          ["No error", "boss-error-each"]
           ],
-          "Necessary has one 'c' and double 's': n-e-c-e-s-s-a-r-y."
+          "Each is an indefinite singular pronoun and requires the singular verb has completed."
         ),
       },
       {
-        subtopic: "tricky-vowels",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the option with the CORRECT spelling:",
-          "separate",
+          "Choose the part of the sentence that has an error: 'My sister and me' (A) / 'went to the market' (B) / 'to buy vegetables.' (C) / 'No error' (D)",
+          "My sister and me",
           [
-          ["seperate", "boss-spell-separate"],
-          ["separete", "boss-spell-separate"],
-          ["seperete", "boss-spell-separate"]
+          ["went to the market", "boss-error-subject-pronoun"],
+          ["to buy vegetables.", "boss-error-subject-pronoun"],
+          ["No error", "boss-error-subject-pronoun"]
           ],
-          "Separate is spelled with an 'a' in the middle: s-e-p-a-r-a-t-e."
+          "In the subject position, use the subjective pronoun I: My sister and I went to the market."
         ),
       },
       {
-        subtopic: "ie-ei-rules",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Choose the option with the CORRECT spelling following the 'after c' rule:",
-          "receive",
+          "Choose the part of the sentence that has an error: 'The passenger train arrived' (A) / 'at the platform' (B) / 'on five o clock.' (C) / 'No error' (D)",
+          "on five o clock.",
           [
-          ["recieve", "boss-spell-receive"],
-          ["receeve", "boss-spell-receive"],
-          ["receivee", "boss-spell-receive"]
+          ["The passenger train arrived", "boss-error-at-time"],
+          ["at the platform", "boss-error-at-time"],
+          ["No error", "boss-error-at-time"]
           ],
-          "In receive, 'e' precedes 'i' because it follows the letter 'c'."
+          "We use the preposition at for exact clock times: at five o'clock."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the option with the CORRECT spelling:",
-          "accommodate",
+          "Choose the part of the sentence that has an error: 'She walked slow' (A) / 'because the mountain path' (B) / 'was very slippery.' (C) / 'No error' (D)",
+          "She walked slow",
           [
-          ["accomodate", "boss-spell-accommodate"],
-          ["acommodate", "boss-spell-accommodate"],
-          ["acomodate", "boss-spell-accommodate"]
+          ["because the mountain path", "boss-error-adverb"],
+          ["was very slippery.", "boss-error-adverb"],
+          ["No error", "boss-error-adverb"]
           ],
-          "Accommodate contains double 'c' and double 'm': a-c-c-o-m-m-o-d-a-t-e."
+          "An adverb of manner is required to modify the action verb walked: She walked slowly."
         ),
       },
       {
-        subtopic: "double-letters",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the option with the CORRECT spelling:",
-          "embarrass",
+          "Choose the part of the sentence that has an error: 'The teacher asked him' (A) / 'why was he late' (B) / 'for the morning assembly.' (C) / 'No error' (D)",
+          "why was he late",
           [
-          ["embarass", "boss-spell-embarrass"],
-          ["emberrass", "boss-spell-embarrass"],
-          ["embaras", "boss-spell-embarrass"]
+          ["The teacher asked him", "boss-error-indirect-order"],
+          ["for the morning assembly.", "boss-error-indirect-order"],
+          ["No error", "boss-error-indirect-order"]
           ],
-          "Embarrass has two 'r's and two 's's: e-m-b-a-r-r-a-s-s."
+          "In reported or indirect speech, the subject comes before the verb: why he was late."
         ),
       },
       {
-        subtopic: "movement-sounds",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Fill in the blank with the natural word choice: 'A sudden gust of wind made the candle flame ___.'",
-          "flicker",
+          "Choose the part of the sentence that has an error: 'He is senior' (A) / 'than my brother' (B) / 'in the bank office.' (C) / 'No error' (D)",
+          "than my brother",
           [
-          ["shiver", "boss-colloc-flicker"],
-          ["tremble", "boss-colloc-flicker"],
-          ["wobble", "boss-colloc-flicker"]
+          ["He is senior", "boss-error-senior-to"],
+          ["in the bank office.", "boss-error-senior-to"],
+          ["No error", "boss-error-senior-to"]
           ],
-          "A flame flickers in the wind, whereas people shiver from cold and voices tremble with fear."
+          "Latin comparative adjectives like senior, junior, and superior take the preposition to, not than."
         ),
       },
       {
-        subtopic: "natural-partners",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Fill in the blank: 'The dark clouds unleashed a ___ downpour that drenched the garden.'",
-          "torrential",
+          "Choose the part of the sentence that has an error: 'One of my cousins' (A) / 'live in Chennai' (B) / 'near the coastal road.' (C) / 'No error' (D)",
+          "live in Chennai",
           [
-          ["solid", "boss-colloc-torrential"],
-          ["thick", "boss-colloc-torrential"],
-          ["heavyweight", "boss-colloc-torrential"]
+          ["One of my cousins", "boss-error-one-of"],
+          ["near the coastal road.", "boss-error-one-of"],
+          ["No error", "boss-error-one-of"]
           ],
-          "A sudden, heavy rainstorm is naturally called a torrential downpour."
+          "The subject is One (singular), which governs the verb lives in Chennai."
         ),
       },
       {
-        subtopic: "idiomatic-collocations",
+        subtopic: "agreement-tense-errors",
         ...q(
-          "Fill in the blank: 'The school principal told the students to ___ an effort to keep the campus clean.'",
-          "make",
+          "Choose the part of the sentence that has an error: 'Neither the headmaster' (A) / 'nor the teachers was' (B) / 'present in the auditorium.' (C) / 'No error' (D)",
+          "nor the teachers was",
           [
-          ["do", "boss-colloc-make-effort"],
-          ["create", "boss-colloc-make-effort"],
-          ["build", "boss-colloc-make-effort"]
+          ["Neither the headmaster", "boss-error-nor-plural"],
+          ["present in the auditorium.", "boss-error-nor-plural"],
+          ["No error", "boss-error-nor-plural"]
           ],
-          "The standard English collocation is to make an effort."
+          "When subjects are joined by nor, the verb agrees with the closer subject: teachers were present."
         ),
       },
       {
-        subtopic: "natural-partners",
+        subtopic: "preposition-article-errors",
         ...q(
-          "Fill in the blank: 'The tourist was excited to see a royal ___ of horse carriages pass by.'",
-          "cavalcade",
+          "Choose the part of the sentence that has an error: 'He bought a notebook' (A) / 'and a inkpot' (B) / 'from the stationery shop.' (C) / 'No error' (D)",
+          "and a inkpot",
           [
-          ["fleet", "boss-colloc-cavalcade"],
-          ["flock", "boss-colloc-cavalcade"],
-          ["pride", "boss-colloc-cavalcade"]
+          ["He bought a notebook", "boss-error-a-an"],
+          ["from the stationery shop.", "boss-error-a-an"],
+          ["No error", "boss-error-a-an"]
           ],
-          "A formal procession of carriages or riders is a cavalcade."
+          "The word inkpot begins with a vowel sound, so it takes the indefinite article an."
         ),
       },
       {
-        subtopic: "idiomatic-collocations",
+        subtopic: "pronoun-word-errors",
         ...q(
-          "Fill in the blank: 'Such magnificent solar eclipses occur only once in a ___ moon.'",
-          "blue",
+          "Choose the part of the sentence that has an error: 'This tower is the' (A) / 'most tallest structure' (B) / 'in our historic city.' (C) / 'No error' (D)",
+          "most tallest structure",
           [
-          ["red", "boss-colloc-blue-moon"],
-          ["green", "boss-colloc-blue-moon"],
-          ["golden", "boss-colloc-blue-moon"]
+          ["This tower is the", "boss-error-double-superlative"],
+          ["in our historic city.", "boss-error-double-superlative"],
+          ["No error", "boss-error-double-superlative"]
           ],
-          "The idiom 'once in a blue moon' denotes an extremely rare event."
+          "Avoid double superlatives: use either tallest or most tall, but tallest is the standard form."
         ),
       },
     ],
   },
 
-  // ---------- Readings ----------
-  readings: {
-    "eq-read-banyan-grove": {
-      title: "The Whispering Banyan Grove",
-      mode: "fullPassage",
-      type: "fullPassage",
-      author: "Apprec8",
-      glossary: {
-        canopy: "the high roof formed by spreading tree branches",
-        hollow: "an empty space inside a tree trunk",
-        scurried: "ran quickly with short hurried steps",
-        ancient: "belonging to a time long past",
-        murmurs: "soft, continuous sounds like quiet speaking",
-        haven: "a safe, peaceful shelter for living creatures",
-      },
-      paragraphs: [
-        "Deep inside the Shivalik foothills stood an ancient banyan tree known to every traveller as the Whispering Banyan. For over two hundred years, its sprawling branches had stretched out like giant wooden arms, sending leafy aerial roots straight down into the fertile mountain soil. Whenever a gentle breeze swept through the valley, the dangling roots rustled softly, sounding remarkably like friendly murmurs.",
-        "One sunny Saturday morning, young Kabir and his sister Ananya walked down the winding stone pathway to the grove. Resting beneath the wide leafy canopy, Kabir pointed toward a shadowy hollow inside the main trunk. Three tiny striped squirrels scurried out into the sunlight, their bushy tails twitching with curiosity.",
-        "\"Look at the magnificent canopy!\" whispered Ananya in wonder. \"It feels as cool as an air-conditioned room, even though the afternoon sun is scorching hot outside.\" An old herdsman named Uncle Gopal smiled as he tied his grazing goats to a sturdy root. \"This ancient tree protects our village,\" he said softly. \"During the great flood three years ago, its powerful roots held the entire hillside together and prevented a disastrous landslide.\"",
-        "Last winter, commercial timber contractors arrived with roaring electric saws, intending to fell the grand grove to build a resort. But the village council held an emergency meeting beneath the leafy boughs. Every family pledged to protect the grove. The contractors were turned away, and the ancient banyan was declared a community heritage reserve.",
-        "As the evening sun sank behind the purple ridges, flocks of wild green parrots flew back into the green leaves, filling the twilight air with joyful chatter. Kabir smiled, realizing that a single ancient tree could offer a peaceful haven for hundreds of living creatures.",
-      ],
-      questions: [
-        {
-          ...q(
-            "Why was the ancient banyan tree known as the Whispering Banyan in the village?",
-            "Its aerial roots rustled in the breeze like soft murmurs",
-            [
-            ["A hidden radio transmitter played songs inside the hollow", "reading-detail-missed"],
-            ["Villagers met under its canopy every evening to tell secrets", "reading-detail-missed"],
-            ["The tree trunk produced loud ringing sounds during storms", "reading-detail-missed"]
-            ],
-            "Paragraph 1 mentions that its long aerial roots swayed and rustled in the mountain wind, sounding just like gentle murmurs."
-          ),
-          evidence: { paragraph: 0, text: "sounding remarkably like friendly murmurs" },
-        },
-        {
-          ...q(
-            "What does the word 'canopy' mean as used in the passage?",
-            "The high roof-like covering formed by spreading branches",
-            [
-            ["A wooden bench placed at the bottom of a tree", "reading-vocab-context"],
-            ["The deep underground taproot of an ancient plant", "reading-vocab-context"],
-            ["A stone wall built around a village boundary", "reading-vocab-context"]
-            ],
-            "A tree canopy is the high, leafy ceiling formed by intertwining tree branches."
-          ),
-          evidence: { paragraph: 1, text: "leafy canopy" },
-        },
-        {
-          ...q(
-            "Which animal family had built their home inside the deep hollow of the tree trunk?",
-            "A family of striped squirrels",
-            [
-            ["A flock of mountain pigeons", "reading-detail-missed"],
-            ["A pack of wild desert foxes", "reading-detail-missed"],
-            ["A swarm of stinging wasps", "reading-detail-missed"]
-            ],
-            "Paragraph 2 states that Kabir watched three striped squirrels scurry into the sheltered hollow of the trunk."
-          ),
-          evidence: { paragraph: 1, text: "Three tiny striped squirrels scurried out" },
-        },
-        {
-          ...q(
-            "Select the correct antonym of the word 'ancient' as used in the story:",
-            "modern",
-            [
-            ["historic", "reading-antonym-context"],
-            ["timeworn", "reading-antonym-context"],
-            ["venerable", "reading-antonym-context"]
-            ],
-            "Ancient means belonging to times long past; its opposite is modern or contemporary."
-          ),
-          evidence: { paragraph: 0, text: "ancient banyan tree" },
-        },
-        {
-          ...q(
-            "Select the statement that is TRUE according to the passage:",
-            "The villagers protected the banyan grove from timber cutters.",
-            [
-            ["The banyan tree fell down during a sudden summer thunderstorm.", "reading-statement-check"],
-            ["Kabir took home the young squirrel chicks as pets.", "reading-statement-check"],
-            ["The mountain stream dried up completely in the winter month.", "reading-statement-check"]
-            ],
-            "Paragraph 4 explains how the village council united to protect the grove from commercial timber cutters."
-          ),
-          evidence: { paragraph: 3, text: "Every family pledged to protect the grove" },
-        },
-        {
-          ...q(
-            "What lesson did Kabir take away from his visit to the grove?",
-            "Ancient nature provides shelter and life to many creatures",
-            [
-            ["Old trees should be cut down to build wider village roads", "reading-inference-theme"],
-            ["Wild animals are too dangerous to live near human homes", "reading-inference-theme"],
-            ["Trees only produce wood and have no other ecological value", "reading-inference-theme"]
-            ],
-            "The concluding paragraph highlights how one great banyan tree supports an entire community of birds, squirrels, and weary travellers."
-          ),
-          evidence: { paragraph: 4, text: "a single ancient tree could offer a peaceful haven" },
-        },
-      ],
-    },
-  },
-
+  readings: {},
   wordTables: {},
 
   // ---------- The tree ----------
   nodes: [
-    unit("eq-u4", 4, "Word Power"),
+    unit("eq-u4", 4, "Spot the Error"),
 
-    // Topic 0: Synonyms and Antonyms
-    synAnt,
-    withSubtopic(practice("eq-u4-synant-p1", synAnt, 1, "Words in Context", "medium", [quiz("eq-u4-synant-context-quiz")]), "context-pairs"),
-    gate("eq-u4-synant-gate", synAnt, "Synonyms & Antonyms Challenge", "eq-u4-synant-gate-pool", {
-      "synonyms": "Synonyms and similar meanings",
-      "antonyms": "Antonyms and opposite meanings",
-      "context-pairs": "Contextual word selection",
+    // Topic 0: Spot the Error
+    errors,
+    withSubtopic(
+      practice("eq-u4-errors-p1", errors, 1, "Sentence Traps Practice", "medium", [
+        quiz("eq-u4-errors-practice-quiz"),
+      ]),
+      "pronoun-word-errors"
+    ),
+    gate("eq-u4-errors-gate", errors, "Error Spotting Master Challenge", "eq-u4-errors-gate-pool", {
+      "agreement-tense-errors": "Subject-verb and tense errors",
+      "pronoun-word-errors": "Pronoun and incorrect word errors",
+      "preposition-article-errors": "Preposition and article errors",
     }),
-    endless(synAnt),
+    endless(errors),
 
-    // Topic 1: Spelling Traps
-    spelling,
-    withSubtopic(practice("eq-u4-spelling-p1", spelling, 1, "I Before E Rules", "medium", [quiz("eq-u4-spelling-rules-quiz")]), "ie-ei-rules"),
-    gate("eq-u4-spelling-gate", spelling, "Spelling Master Challenge", "eq-u4-spelling-gate-pool", {
-      "double-letters": "Double consonant traps",
-      "ie-ei-rules": "I before E and vowel rules",
-      "tricky-vowels": "Silent letters and vowel endings",
-    }),
-    endless(spelling),
-
-    // Topic 2: Word Choice & Collocations
-    collocations,
-    withSubtopic(practice("eq-u4-colloc-p1", collocations, 1, "Nature Collocations", "medium", [quiz("eq-u4-colloc-nature-quiz")]), "natural-partners"),
-    gate("eq-u4-colloc-gate", collocations, "Word Choice & Idiom Challenge", "eq-u4-colloc-gate-pool", {
-      "movement-sounds": "Movement and sound collocations",
-      "natural-partners": "Nature and group partnerships",
-      "idiomatic-collocations": "Action and idiomatic collocations",
-    }),
-    endless(collocations),
-
-    // Reading & Boss
-    u4r,
+    // Unit 4 Boss
     boss(
       "eq-u4-boss",
       "eq-u4",
       "Unit 4 Boss",
       "eq-u4-test",
-      "The Lexicon Labyrinth: Dr. Word-Mixer has scrambled the library dictionary! Jumbled spellings, lost word partners, and confused antonyms are running wild. Harness your word power to defeat the maze and restore the great lexicon."
+      "The Error Phantom has altered the kingdom records with subtle grammar errors! Spot the mistakes in subject agreement, tenses, and prepositions to restore the true scrolls."
     ),
   ],
 };
