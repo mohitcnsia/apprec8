@@ -1,6 +1,6 @@
 // Tests for utils/classes.js (RB-2 phase A). Run: npm test
 import assert from "node:assert/strict";
-import { makeClassCode, normalizeCode, canJoin, MAX_CLASSES, questsForTeacher, teacherSubjectsIn, classLabel, consentRecord, CONSENT_TEXT, CODE_LENGTH } from "../utils/classes.js";
+import { makeClassCode, normalizeCode, canJoin, MAX_CLASSES, questsForTeacher, teacherSubjectsIn, classLabel, consentRecord, CONSENT_TEXT, CODE_LENGTH, classCodeMessage, teacherInviteMessage, classSubjects } from "../utils/classes.js";
 
 // codes: 6 characters, no look-alikes, typed input is tidied
 let i = 0; const seq = [0, 0.99, 0.5, 0.25, 0.75, 0.1];
@@ -32,4 +32,13 @@ const rec = consentRecord({ kidUid: "k", classId: "c", parentName: " Seema ", re
 assert.deepEqual(rec, { kidUid: "k", classId: "c", parentName: "Seema", relation: "mother", language: "hi", version: rec.version, acceptedAt: 5 });
 assert.throws(() => consentRecord({ kidUid: "k", classId: "c", parentName: "", relation: "mother", language: "en" }));
 assert.throws(() => consentRecord({ kidUid: "k", classId: "c", parentName: "Ravi", relation: "uncle", language: "en" }));
+// Share messages: name the class, the code, and no email anywhere
+const cm = classCodeMessage({ className: "5-A", schoolName: "Glorious Academy", code: "7A6NBB" });
+assert.ok(cm.includes("5-A, Glorious Academy") && cm.includes("code 7A6NBB") && !/e-?mail/i.test(cm));
+const tm = teacherInviteMessage({ className: "5-A", schoolName: "Glorious Academy", subjects: ["english", "wordpower"], code: "T4K9PX" });
+assert.ok(tm.includes("as the English and Word Power teacher") && tm.includes("code T4K9PX") && tm.includes("7 days"));
+assert.ok(teacherInviteMessage({ className: "5-A", subjects: [], code: "TX" }).includes("as a teacher"));
+assert.deepEqual(classSubjects({ subjects: ["science"], teacherSubjects: { t: ["english"] } }), ["science"]);
+assert.deepEqual(classSubjects({ teacherSubjects: { t: ["english", "wordpower"], u: ["english"] } }), ["english", "wordpower"]);
+assert.deepEqual(classSubjects({}), []);
 console.log("classes tests passed");

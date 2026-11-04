@@ -12,6 +12,16 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## DR-11 · Teacher invites without email (mockup L, owner-approved 2026-11-05) · **waiting for owner OK to deploy**
+
+New callable functions in `functions/callable/schoolActions.js`: `createTeacherInvite`, `redeemTeacherInvite`, `classTeam`,
+`decideTeacherRequest`. **No rules change** (the new `invites` and `classes/*/teacherRequests` data is server-only: no client rule
+matches it, so phones can't read it). Backward compatible: old app versions never call them.
+
+**Deploy:** `firebase deploy --only functions:createTeacherInvite,functions:redeemTeacherInvite,functions:classTeam,functions:decideTeacherRequest --project apprec8-ca229`
+**Until then:** the new Schools screens work, except "Share invite" (says it couldn't make the invite) and teacher names on the
+class page ("names show after the next server update").
+
 ## Owner: the IAM step, click by click (~3 min, on the laptop)
 
 Why: "Play as <child>" and child login codes sign the child in with a special token. Firebase can only make that

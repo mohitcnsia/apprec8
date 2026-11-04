@@ -171,3 +171,123 @@ exports.approveMember = functions
     await batch.commit();
     return { ok: true };
   });
+
+// ---------- Teacher invites: no email needed (owner 2026-11-05, mockup L4) ----------
+// An admin makes a one-time code for a class + subjects and shares it (WhatsApp, SMS…). The teacher signs in with the
+// Google account on their phone, enters the code (Me → Join as a teacher), and the admin approves the request.
+// invites/{code}                      { classId, schoolId, subjects, createdBy, createdAt, expiresAtMs, usedBy }
+// classes/{id}/teacherRequests/{uid}  { firstName, subjects, code, requestedAt }   (server only: no client rules)
+const INVITE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // same look-alike-free set as class codes
+const INVITE_DAYS = 7;
+const TEACHER_SUBJECTS = ["english", "science", "maths", "wordpower"];
+
+async function canManageClass(uid, cls) {
+  return (await isAppAdmin(uid)) || (await isSchoolAdmin(uid, cls.data().schoolId));
+}
+
+/** { classId, subjects[] } → { code, expiresAtMs } (app admins and that school's admins). */
+exports.createTeacherInvite = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const subjects = (data?.subjects || []).filter((s) => TEACHER_SUBJECTS.includes(s));
+    const cls = await db.collection("classes").doc(String(data?.classId || "")).get();
+    if (!cls.exists) throw new functions.https.HttpsError("not-found", "Class not found.");
+    if (!subjects.length) throw new functions.https.HttpsError("invalid-argument", "Pick at least one subject.");
+    if (!(await canManageClass(context.auth.uid, cls))) {
+      throw new functions.https.HttpsError("permission-denied", "Only admins and this school's admins can invite teachers.");
+    }
+    const { FieldValue } = require("firebase-admin/firestore");
+    for (let attempt = 0; attempt < 6; attempt++) {
+      let code = "T";
+      for (let i = 0; i < 5; i++) code += INVITE_CHARS[Math.floor(Math.random() * INVITE_CHARS.length)];
+      const ref = db.collection("invites").doc(code);
+      const expiresAtMs = Date.now() + INVITE_DAYS * 24 * 3600 * 1000;
+      const created = await db.runTransaction(async (t) => {
+        if ((await t.get(ref)).exists) return false;
+        t.set(ref, { classId: cls.id, schoolId: cls.data().schoolId || null, subjects, createdBy: context.auth.uid, createdAt: FieldValue.serverTimestamp(), expiresAtMs, usedBy: null });
+        return true;
+      });
+      if (created) return { code, expiresAtMs };
+    }
+    throw new functions.https.HttpsError("internal", "Couldn't make a code. Try again.");
+  });
+
+/** { code } → { className, schoolName, subjects } after filing a request the admin approves. */
+exports.redeemTeacherInvite = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const uid = context.auth.uid;
+    const code = String(data?.code || "").toUpperCase().replace(/[\s-]/g, "");
+    const ref = db.collection("invites").doc(code);
+    const { FieldValue } = require("firebase-admin/firestore");
+    const result = await db.runTransaction(async (t) => {
+      const inv = await t.get(ref);
+      if (!code || !inv.exists) throw new functions.https.HttpsError("not-found", "That code doesn't match an invite. Check it with the school.");
+      const v = inv.data();
+      if (v.usedBy && v.usedBy !== uid) throw new functions.https.HttpsError("failed-precondition", "This code was already used. Ask for a new one.");
+      if (Date.now() > v.expiresAtMs) throw new functions.https.HttpsError("deadline-exceeded", "This code has expired. Ask for a new one.");
+      const clsRef = db.collection("classes").doc(v.classId);
+      const cls = await t.get(clsRef);
+      if (!cls.exists) throw new functions.https.HttpsError("not-found", "That class no longer exists.");
+      const user = await t.get(db.collection("users").doc(uid));
+      if (user.exists && user.data().isChild) throw new functions.https.HttpsError("permission-denied", "Teachers join from their own account, not a child's.");
+      const firstName = (user.exists && String(user.data().firstName || "").trim()) || (context.auth.token.name || "Teacher").split(" ")[0];
+      t.update(ref, { usedBy: uid, usedAt: FieldValue.serverTimestamp() });
+      t.set(clsRef.collection("teacherRequests").doc(uid), { firstName, subjects: v.subjects, code, requestedAt: FieldValue.serverTimestamp() });
+      return { className: cls.data().name, schoolName: cls.data().schoolName || "", subjects: v.subjects };
+    });
+    return result;
+  });
+
+/** { classId } → { teachers: [{ uid, firstName, subjects }], requests: [{ uid, firstName, subjects }] } */
+exports.classTeam = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const cls = await db.collection("classes").doc(String(data?.classId || "")).get();
+    if (!cls.exists) throw new functions.https.HttpsError("not-found", "Class not found.");
+    const caller = context.auth.uid;
+    const isTeacher = (cls.data().teacherIds || []).includes(caller);
+    if (!isTeacher && !(await canManageClass(caller, cls))) throw new functions.https.HttpsError("permission-denied", "Not your class.");
+    const ids = cls.data().teacherIds || [];
+    const docs = ids.length ? await db.getAll(...ids.map((id) => db.collection("users").doc(id))) : [];
+    const teachers = docs.map((d) => ({
+      uid: d.id,
+      firstName: (d.exists && String(d.data().firstName || "").trim().split(/\s+/)[0]) || "Teacher",
+      subjects: (cls.data().teacherSubjects || {})[d.id] || [],
+    }));
+    const reqSnap = await cls.ref.collection("teacherRequests").get();
+    const requests = reqSnap.docs.map((d) => ({ uid: d.id, firstName: d.data().firstName || "Teacher", subjects: d.data().subjects || [] }));
+    return { teachers, requests };
+  });
+
+/** { classId, uid, approve } → approve adds the teacher (like assignTeacher); either way the request is removed. */
+exports.decideTeacherRequest = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const classRef = db.collection("classes").doc(String(data?.classId || ""));
+    const cls = await classRef.get();
+    if (!cls.exists) throw new functions.https.HttpsError("not-found", "Class not found.");
+    if (!(await canManageClass(context.auth.uid, cls))) throw new functions.https.HttpsError("permission-denied", "Only admins and this school's admins can approve teachers.");
+    const uid = String(data?.uid || "");
+    const reqRef = classRef.collection("teacherRequests").doc(uid);
+    const req = await reqRef.get();
+    if (!req.exists) throw new functions.https.HttpsError("not-found", "No request from this teacher.");
+    const { FieldValue } = require("firebase-admin/firestore");
+    const batch = db.batch();
+    if (data?.approve) {
+      const subjects = (req.data().subjects || []).filter((s) => TEACHER_SUBJECTS.includes(s));
+      batch.update(classRef, { teacherIds: FieldValue.arrayUnion(uid), [`teacherSubjects.${uid}`]: subjects });
+      batch.set(db.collection("users").doc(uid), { teachesClassIds: FieldValue.arrayUnion(cls.id) }, { merge: true });
+    }
+    batch.delete(reqRef);
+    await batch.commit();
+    return { ok: true };
+  });

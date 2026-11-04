@@ -37,6 +37,12 @@ export function canJoin(myClassIds = [], classId) {
   return { ok: true, reason: null };
 }
 
+/** What a class learns: its own subjects (set when created), else its teachers' subjects (older classes). */
+export function classSubjects(cls) {
+  const own = Array.isArray(cls?.subjects) && cls.subjects.length ? cls.subjects : null;
+  return own || [...new Set(Object.values(cls?.teacherSubjects || {}).flat())];
+}
+
 /** Subjects a teacher has in a class (teacherSubjects: { uid: ["english"] }). */
 export const teacherSubjectsIn = (cls, uid) => (cls?.teacherSubjects?.[uid] || []).filter((s) => SUBJECTS.includes(s));
 
@@ -85,4 +91,39 @@ export function consentRecord({ kidUid, classId, parentName, relation, language,
   if (!["mother", "father", "guardian"].includes(relation)) throw new Error("Choose mother, father or guardian");
   if (!CONSENT_TEXT[language]) throw new Error("Unknown language");
   return { kidUid, classId, parentName: name, relation, language, version: CONSENT_VERSION, acceptedAt: now };
+}
+
+// ---------- Share messages (owner 2026-11-05: share anywhere, WhatsApp, SMS…; no emails) ----------
+const subjectList = (subjects = []) => {
+  const names = subjects.map((s) => SUBJECT_NAMES[s] || s);
+  return names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+};
+
+/** The text a teacher or admin shares with parents. */
+export function classCodeMessage({ className, schoolName, code }) {
+  const where = [className, schoolName].filter(Boolean).join(", ");
+  return [
+    `Namaste! Join ${where} on Apprec8, the learning app.`,
+    "",
+    "1. Install Apprec8 from the Play Store",
+    "2. Sign in and add your child (Me → Add a child)",
+    `3. Play as your child, then Me → Join a class → code ${code}`,
+    "",
+    "The teacher approves every child, so only our class can join.",
+  ].join("\n");
+}
+
+/** The text an admin shares with a new teacher (one-time code, 7 days). */
+export function teacherInviteMessage({ className, schoolName, subjects, code }) {
+  const where = [className, schoolName].filter(Boolean).join(", ");
+  const subs = subjectList(subjects);
+  return [
+    `Namaste! Please join ${where} on Apprec8${subs ? ` as the ${subs} teacher` : " as a teacher"}.`,
+    "",
+    "1. Install Apprec8 from the Play Store",
+    "2. Sign in with Google (the account on your phone)",
+    `3. Me → Join as a teacher → code ${code}`,
+    "",
+    "The code works once, for 7 days.",
+  ].join("\n");
 }

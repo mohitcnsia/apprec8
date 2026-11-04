@@ -208,6 +208,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
         {myClasses.length + pendingClasses.length < MAX_CLASSES ? (
           <Row icon="add-circle-outline" label="Join a class (with a parent)" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
         ) : null}
+        {/* Teachers enter the school's invite code (mockup L4). Not on child profiles. */}
+        {!userData?.isChild ? (
+          <>
+            <View style={styles.divider} />
+            <Row icon="school-outline" label="Join as a teacher" onPress={() => navigation.navigate("JoinAsTeacher")} styles={styles} P={P} />
+          </>
+        ) : null}
       </View>
 
       <Text style={styles.section}>LOOK</Text>

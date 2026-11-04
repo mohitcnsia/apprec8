@@ -8,6 +8,9 @@ import { useTheme } from "../context/ThemeContext"; // Adjust path as per your p
 import MeScreen from "../screens/profile/MeScreen";
 import AdminToolsScreen from "../screens/admin/AdminToolsScreen";
 import SchoolsScreen from "../screens/admin/SchoolsScreen";
+import ClassDetailScreen from "../screens/admin/ClassDetailScreen";
+import InviteTeacherScreen from "../screens/admin/InviteTeacherScreen";
+import JoinAsTeacherScreen from "../screens/profile/JoinAsTeacherScreen";
 import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import AddChildScreen from "../screens/profile/AddChildScreen";
 import ParentPinScreen from "../screens/profile/ParentPinScreen";
@@ -90,6 +93,9 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           {/* Admin dashboard v0 (admin only; button on Profile). No header: Android back. */}
           <Stack.Screen name="AdminTools" component={AdminToolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Schools" component={SchoolsScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ClassDetail" component={ClassDetailScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="InviteTeacher" component={InviteTeacherScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="JoinAsTeacher" component={JoinAsTeacherScreen} options={{ headerShown: false }} />
           <Stack.Screen name="JoinClass" component={JoinClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AddChild" component={AddChildScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ParentPin" component={ParentPinScreen} options={{ headerShown: false }} />

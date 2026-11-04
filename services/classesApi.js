@@ -2,7 +2,7 @@
 // RB-2 phase A (2026-11-04): schools, classes, join codes, teachers. Firestore rules (DR-9) enforce who can do what;
 // these helpers only shape the writes. Data:
 //   schools/{id}            { name, city, admins: [uid], createdBy, createdAt }
-//   classes/{id}            { schoolId, schoolName, name, grade, kind: "school"|"tuition", joinCode,
+//   classes/{id}            { schoolId, schoolName, name, grade, kind: "school"|"tuition", subjects: [], joinCode,
 //                             teacherIds: [uid], teacherSubjects: { uid: ["english", ...] }, createdBy, createdAt }
 //   classCodes/{code}       { classId }
 //   classes/{id}/members/{kidUid}  { firstName, grade, code, consentId, joinedAt }
@@ -52,7 +52,7 @@ export async function listClassesOfSchool(schoolId) {
 }
 
 /** Creates a class with a fresh join code (retries if the code is taken). */
-export async function createClass({ school, name, grade, kind = "school" }) {
+export async function createClass({ school, name, grade, kind = "school", subjects = [] }) {
   const n = String(name || "").trim();
   if (!school?.id || n.length < 1) throw new Error("Choose a school and write the class name (e.g. 5-B)");
   if (!Number.isInteger(grade) || grade < 1 || grade > 12) throw new Error("Choose the class level (1–12)");
@@ -68,6 +68,7 @@ export async function createClass({ school, name, grade, kind = "school" }) {
       name: n,
       grade,
       kind,
+      subjects: (subjects || []).filter((x) => SUBJECTS.includes(x)), // what the class learns here (mockup L2)
       joinCode: code,
       teacherIds: [],
       teacherSubjects: {},
@@ -172,4 +173,24 @@ export async function approveMember({ classId, kidUid, approve }) {
 export async function classMembers(classId) {
   const snap = await getDocs(collection(db, "classes", classId, "members"));
   return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+}
+
+// ---------- Teacher invites (owner 2026-11-05, mockup L: no emails) ----------
+/** Admin: a one-time code for a teacher of this class (7 days). → { code, expiresAtMs } */
+export async function createTeacherInvite({ classId, subjects }) {
+  const res = await functions().httpsCallable("createTeacherInvite")({ classId, subjects });
+  return res.data;
+}
+/** Teacher: enter the code → a request the admin approves. → { className, schoolName, subjects } */
+export async function redeemTeacherInvite(code) {
+  const res = await functions().httpsCallable("redeemTeacherInvite")({ code });
+  return res.data;
+}
+/** Admin / teacher: the class's teachers (with names) and waiting teacher requests. */
+export async function classTeam(classId) {
+  const res = await functions().httpsCallable("classTeam")({ classId });
+  return res.data;
+}
+export async function decideTeacherRequest({ classId, uid, approve }) {
+  await functions().httpsCallable("decideTeacherRequest")({ classId, uid, approve: !!approve });
 }
