@@ -18,3 +18,11 @@
 7. **The Challenge (gate) that unlocks the next topic is tiny and far right:** after Pronouns, Verbs didn't open because the
    Pronoun Challenge wasn't done, and the teacher barely noticed it. Confusing.
 8. **Voice typing for kids** (feedback and answering questions): is speech-to-text easy / costly?
+
+## Later the same day (owner + teacher)
+9. **Every screen feels cluttered**, though all the information is logical: keep it all (and add more value), but calmer.
+   Plan (Claude): one design system for all screens: one loud thing per screen, colours with one job each, fold finished
+   things into chips (tap to open), consistent spacing, shorter labels, details in tap-to-open cards. Mockups first.
+10. **TODO (owner): clap for the leaders.** Kids see who leads the leaderboard and can 👏 clap for them, to appreciate hard work.
+    Fits RB-6 (no chat, preset reactions only). Notes: one clap per kid per leader per day, counted by the server (no spam,
+    no faking); the leader sees "👏 12 claps this week"; first names + class only.
