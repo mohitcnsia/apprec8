@@ -135,6 +135,19 @@ function checkQuest(D) {
   for (const n of nodes.filter((x) => x.grades !== undefined)) {
     assert.ok(Array.isArray(n.grades) && n.grades.length && n.grades.every((g) => Number.isInteger(g) && g >= 1 && g <= 12), `${n.id}: grades must be classes 1–12`);
   }
+  // No exam labels in anything a kid reads (owner 2026-11-04: kids learn without labels). Ids are not shown, so skipped.
+  const LABEL = /\b(IEO|NSO|IMO|SOF|Olympiads?)\b/i;
+  const scanText = (where, v, key = "") => {
+    if (typeof v === "string") {
+      if (!/(^|[a-z])Id$|^id$|^(steps|branchId|unitId|table|questId|parentId)$/i.test(key)) {
+        assert.ok(!LABEL.test(v), `${D.QUEST_ID} ${where}: exam label in kid-facing text: "${(v.match(/[^\n]{0,30}\b(IEO|NSO|IMO|SOF|Olympiads?)\b[^\n]{0,30}/i) || [v])[0]}"`);
+      }
+    } else if (v && typeof v === "object") for (const k of Object.keys(v)) scanText(`${where}.${k}`, v[k], k);
+  };
+  scanText("quest", D.quest); scanText("tile", D.tile); scanText("studyPages", D.studyPages);
+  scanText("quizzes", D.quizzes); scanText("readings", D.readings || {});
+  nodes.forEach((n) => scanText(`node ${n.id}`, { title: n.title, description: n.description, story: n.story, subtopicTitles: n.subtopicTitles }));
+
   assert.ok(D.QUEST_ID && D.quest?.title && D.tile?.questId === D.QUEST_ID, `${D.QUEST_ID}: quest/tile/QUEST_ID mismatch`);
   if (D.quest.draft) assert.equal(D.tile.carouselGroup, "quest_draft", `${D.QUEST_ID}: draft quests must use carouselGroup quest_draft`);
   else assert.equal(D.tile.carouselGroup, "quest", `${D.QUEST_ID}: tile carouselGroup`);
