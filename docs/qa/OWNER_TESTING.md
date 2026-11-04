@@ -41,6 +41,14 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### Next build (20.0.28): schools, classes, assignments, class leaderboard. Needs DR-9 deployed first
+- [ ] Me → Admin tools → **Schools & classes**: add your school (Banbasa), add class "5-B" (level 5) → note the join code.
+- [ ] Add Seema as teacher of 5-B for English + Word Power (she signs in once first). Add yourself for Science.
+- [ ] On Pratha's phone, with you: Me → **Join a class** → code → read the consent (try हिंदी) → your name, Father → tick → AGREE AND JOIN.
+- [ ] Seema's phone: Progress → **My classes** → 5-B → Pratha's English progress only. **Assign a topic** (e.g. Verbs, 1 week).
+- [ ] Pratha's phone: Home "Next up" says **From your teacher: Verbs**; the map opens Verbs even if she hasn't reached it.
+- [ ] Pratha's Progress: **5-B · this week** board with 👏; clap once (a second clap the same day says "already clapped").
+
 ### ⭐ 20.0.27 (calm pass 1, after 20.0.26): what to look at
 - [ ] **Home:** one dark "Next up" card; IEO countdown and mistakes as two small chips (countdown still changes; "+" adds a
       reminder); shelves OLYMPIAD PREP / EXPLORE / MORE PRACTICE; **CONTINUE at the bottom** (one thumb).
