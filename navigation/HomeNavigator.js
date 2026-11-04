@@ -27,6 +27,9 @@ import SudokuGame from "../components/SudokuGame";
 import Minesweeper from "../components/Minesweeper";
 import VocabBuilder from "../components/VocabBuilder";
 import SpellingBeeGame from "../components/SpellingBeeGame";
+import TaskEditor from "../screens/task/TaskEditor";
+import Tasks from "../screens/task/Tasks";
+import TaskDetails from "../screens/task/TaskDetails";
 
 const Stack = createStackNavigator();
 
@@ -56,6 +59,10 @@ const HomeNavigator = () => (
     <Stack.Screen name="Minesweeper" component={Minesweeper} />
     <Stack.Screen name="VocabBuilder" component={VocabBuilder} />
     <Stack.Screen name="SpellingBeeGame" component={SpellingBeeGame} />
+    {/* Reminders (= the kid's tasks), from Home's "Coming up" */}
+    <Stack.Screen name="TaskEditor" component={TaskEditor} />
+    <Stack.Screen name="Tasks" component={Tasks} />
+    <Stack.Screen name="TaskDetails" component={TaskDetails} />
   </Stack.Navigator>
 );
 

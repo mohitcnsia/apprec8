@@ -1504,3 +1504,12 @@ Owner approved the mockups (A–F) and the order: 1 Home + tabs, 2 Progress, 3 M
   Topic names and "cleared / total topics" use the quest content bundled in the app (`data/englishQuestData.js`, pure helpers in
   `utils/progressView.js`, tested): no extra reads. Leaderboard = the old `StatsScreen`, one tap away.
 - Admin: "Me / Kids · Reported" switch; Kids = `AdminDashboardScreen` with a new `embedded` prop (Profile's Dashboard button still works until step 3).
+
+### Steps 3–4 built: Me tab + Reminders (Claude)
+- `screens/profile/MeScreen.js` (route still `ProfileScreen`): profile card, Reminders, Messages, theme Phone setting / Light / Dark
+  (`ThemeContext` gained `themeChoice` + `setThemeChoice`; "system" clears the saved choice), Help, feedback (`cntct`), Admin tools, Sign out, version.
+  Old `screens/quiz/ProfileScreen.js` unused (delete after QA). "Join my class" waits for RB-2.
+- `screens/admin/AdminToolsScreen.js`: Dashboard link, reset seen pop-ups, the 4 seed buttons (admin only; rules still guard writes).
+- Reminders: max 5 active per kid (`utils/reminders.js`, tested; admin exempt), checked in Home, the Tasks list and the editor.
+  Task detail is now optional. Home → "+ Add reminder" opens `TaskEditor` inside the Home stack.
+- **Not done:** no phone notifications (needs a native library + build); no unread badge on Messages (messages have no read flag).

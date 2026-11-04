@@ -4,7 +4,7 @@
 // Replaces the old Home (now the Fun tab) and the Study tab. Tiles open screens in the Home stack.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import { Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
 
@@ -18,6 +18,8 @@ import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
 import { greeting, dayStreak, upcomingItems } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
+import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -258,7 +260,14 @@ export default function HomeScreen({ navigation }) {
   };
   const openMistakes = () => navigation.navigate("EnglishQuestMap", { questId: mainQuestId, openMistakes: true });
   const openSpace = () => navigation.navigate("Quest", { screen: "QuestMap" });
-  const addReminder = () => navigation.navigate("Profile", { screen: "Tasks" });
+  const addReminder = () => {
+    if (!uid) return navigation.navigate("Profile"); // guests: sign in first
+    if (!canAddReminder(tasks, uid, { isAdmin: uid === APPREC8_TEAM_REVIEWER_UID })) {
+      Alert.alert("Too many reminders", LIMIT_MESSAGE);
+      return navigation.navigate("Tasks");
+    }
+    return navigation.navigate("TaskEditor");
+  };
 
   const practiceTiles = [...olympiad, ...popularQuizzes];
 

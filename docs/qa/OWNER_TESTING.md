@@ -41,6 +41,17 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### `feat/quiz-redesign`, steps 3–4: Me tab + Reminders ("Home + tabs redesign: steps 3–4")
+Mockup board F. Light and dark mode.
+- [ ] **Me:** profile card (photo or first letter, name, email), Edit profile works.
+- [ ] Reminders row shows how many are active and opens the list; Messages opens.
+- [ ] **Look:** Phone setting / Light / Dark switch the app at once; after a restart the choice is kept. "Phone setting" follows the phone's dark mode.
+- [ ] Help and "Tell us what you think" open. Sign out asks first, then signs out.
+- [ ] No stats, no seed buttons, no "Quest Mode (V2)" switch on Me.
+- [ ] **Admin (your account):** Admin tools row → Dashboard, reset pop-ups, the 4 seed buttons (don't press them unless you mean to seed).
+- [ ] **Reminders:** Home → "+ Add reminder" opens the add form; title + date are enough (no detail needed); Save returns to Home and the reminder shows in Coming up.
+- [ ] With 5 active reminders (kid account), a 6th says "You can have 5 reminders…" (from Home and from the list). Tick one off → you can add again.
+
 ### `feat/quiz-redesign`, step 2: Progress tab ("Home + tabs redesign: step 2")
 Mockup boards D (kid) and E (admin). Light and dark mode.
 - [ ] As a kid (tester account): "My progress", streak with this week's days (gold ✓ = played; today has a ring).

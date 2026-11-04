@@ -16,6 +16,9 @@ import { useTheme } from "../../context/ThemeContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AppFlatList from "../../components/common/list/AppFlatList";
 import { TasksContext } from "../../store/tasks-context";
+import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
+import { authInstance } from "../../config/firebaseConfig";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const TasksScreenContent = () => {
@@ -249,6 +252,11 @@ const TasksScreenContent = () => {
   };
   const handleFabPress = useCallback(() => {
     /* ... same with logging ... */ console.log("TASKS_SCREEN_FAB: Pressed!");
+    const uid = authInstance.currentUser?.uid;
+    if (!canAddReminder(tasks, uid, { isAdmin: uid === APPREC8_TEAM_REVIEWER_UID })) {
+      Alert.alert("Too many reminders", LIMIT_MESSAGE);
+      return;
+    }
     if (navigation && typeof navigation.navigate === "function") {
       try {
         navigation.navigate("TaskEditor");
@@ -258,7 +266,7 @@ const TasksScreenContent = () => {
     } else {
       Alert.alert("Nav Issue", "Cannot navigate.");
     }
-  }, [navigation]);
+  }, [navigation, tasks]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

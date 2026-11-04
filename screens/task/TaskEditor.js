@@ -29,12 +29,13 @@ import { formatDate, getDatePlusDays } from "../../components/utils/date"; // En
 import { TasksContext } from "../../store/tasks-context";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { authInstance } from "../../config/firebaseConfig";
+import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { useFocusEffect, useNavigation } from "@react-navigation/native"; // useNavigation can be fallback if prop not preferred
 
 const TaskEditor = ({ route, navigation: propNavigation }) => {
   // Renamed prop to avoid conflict if useNavigation is primary
   const { theme, isDark } = useTheme();
-  const { isLoading, error, addTask, updateTask, clearError } =
+  const { tasks, isLoading, error, addTask, updateTask, clearError } =
     useContext(TasksContext);
   const currentUser = authInstance.currentUser;
 
@@ -117,10 +118,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
       Alert.alert("Validation Error", "Task Title is required!");
       return false;
     }
-    if (formData.detail.trim().length === 0) {
-      Alert.alert("Validation Error", "Task Detail is required!");
-      return false;
-    }
+    // Detail is optional (kids' reminders often have just a title and a date).
     return true;
   }, [formData.title, formData.detail]);
 
@@ -161,6 +159,11 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
         };
         await updateTask(formData.id, updateData);
       } else {
+        const isAdmin = currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+        if (!canAddReminder(tasks, currentUser?.uid, { isAdmin })) {
+          Alert.alert("Too many reminders", LIMIT_MESSAGE);
+          return;
+        }
         await addTask(taskPayload);
       }
       goBackHandler();
@@ -170,7 +173,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
         err.message || "Could not save task. Please try again."
       );
     }
-  }, [formData, validateFormData, updateTask, addTask, goBackHandler]);
+  }, [formData, validateFormData, updateTask, addTask, goBackHandler, tasks, currentUser]);
 
   const styles = useMemo(
     () =>
