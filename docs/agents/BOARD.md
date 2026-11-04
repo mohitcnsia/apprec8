@@ -18,7 +18,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 - ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 **deployed** 21:46 (functions + rules live).
 - **Owner, one click (needed for child sign-in codes / "Play as"):** Google Cloud Console → IAM → give
   `apprec8-ca229@appspot.gserviceaccount.com` the role **Service Account Token Creator** (gcloud isn't installed here).
-- **Word Bank quest** (owner's 370 words, `ebc69b8`): ships by over-the-air update after 20.0.28 is installed. Owner OK to publish the first update?
+- ~~**Word Bank quest**~~ renamed **Treasure Words** (`ebc69b8`): owner OK 2026-11-04 to publish over the air; Claude publishes after the 20.0.28 build.
 0. **Fix 46 old IEO questions:** owner OK 2026-11-04. The emulator froze twice, so the fix button ships in the next build; the owner presses it once on the phone (Me → Admin tools).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
