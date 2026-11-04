@@ -197,6 +197,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   // Map windowing (Duolingo-style): current unit in full, finished units as cards,
   // next unit as a teaser, the rest as one line. Logic in utils/questWindow.js.
   const [expandedUnits, setExpandedUnits] = useState([]);
+  // Calm map (mockup H): finished topics fold their side row into one chip; tap to open it again.
+  const [openRows, setOpenRows] = useState([]);
   const toggleUnit = (unitId) =>
     setExpandedUnits((list) => (list.includes(unitId) ? list.filter((u) => u !== unitId) : [...list, unitId]));
   const win = useMemo(
@@ -521,6 +523,30 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   };
 
   const renderSideRow = (item) => {
+    const isCurrentTopic = item.id === tree?.currentPathId;
+    // Locked topic: one faint line instead of a row of locks (design rule 4).
+    if (item.status === "locked" || item.status === "comingSoon") {
+      return item.practices.length || item.gate ? <Text style={styles.foldedFaint}>🔒 practice opens after this topic</Text> : null;
+    }
+    // Finished topic (not the current one): fold into a chip until tapped.
+    if (item.cleared && !isCurrentTopic && !openRows.includes(item.id)) {
+      const parts = [];
+      if (item.practices.length) parts.push(`⭐ ${item.practiceDone}/${item.practices.length} practice`);
+      if (item.gate) parts.push(item.gate.status === "completed" ? "🏆 ✓" : "🏆");
+      if (item.endless) parts.push("♾️");
+      if (item.mastered) parts.push("👑");
+      if (!parts.length) return null;
+      return (
+        <TouchableOpacity
+          onPress={() => setOpenRows((r) => [...r, item.id])}
+          style={styles.foldedChip}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.title}: ${parts.join(", ")}. Tap to open its practice.`}
+        >
+          <Text style={styles.foldedChipText} numberOfLines={1}>{parts.join(" · ")} ›</Text>
+        </TouchableOpacity>
+      );
+    }
     const leaves = [];
     item.practices.forEach((p) => {
       const open = p.status === "unlocked" || p.status === "completed";
@@ -848,6 +874,9 @@ const makeStyles = (theme) =>
     },
 
     sideRow: { position: "absolute", right: 0 },
+    foldedChip: { alignSelf: "flex-start", marginTop: LEAF_SIZE / 2 - 12, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14, backgroundColor: theme.cardBackground || "#F2ECF3" },
+    foldedChipText: { fontSize: 13, fontFamily: "nunitoBold", color: theme.textSecondaryOnGradient || theme.textSecondary || "#6B5A6E" },
+    foldedFaint: { marginTop: LEAF_SIZE / 2 - 10, fontSize: 12, fontFamily: "nunitoBold", color: theme.textSecondaryOnGradient || "#8b7a8d", opacity: 0.6 },
     sideRowContent: { paddingRight: 16, alignItems: "flex-start" },
     leafWrap: { width: 66, alignItems: "center" },
     leaf: {

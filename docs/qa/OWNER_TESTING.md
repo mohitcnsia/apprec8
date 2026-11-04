@@ -41,6 +41,14 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ 20.0.27 (calm pass 1, after 20.0.26): what to look at
+- [ ] **Home:** one dark "Next up" card; IEO countdown and mistakes as two small chips (countdown still changes; "+" adds a
+      reminder); shelves OLYMPIAD PREP / EXPLORE / MORE PRACTICE; **CONTINUE at the bottom** (one thumb).
+- [ ] **Quiz:** "What kind of sentence is this?" is a small label; the sentence sits in its own big card.
+- [ ] **Start screen:** tapping a quiz node opens ONE screen (stars, best, Training / Exam, START at the bottom) and the quiz starts at once.
+- [ ] **Map:** finished topics show one chip ("⭐ 3/3 practice · 🏆 ✓ ›"); tap it to open the leaves. Locked topics show one faint line.
+- [ ] Light and dark. Anything that feels cluttered still: screenshot + one line.
+
 ### ⭐ 20.0.26 on your phone (~10 min). Your feedback, fixed
 - [ ] **First:** Me → Admin tools → **Fix 46 old IEO questions** → Fix. The alert says "46 fixed". (Press once; pressing again says "already fixed".)
 - [ ] A short-answer quiz (e.g. "What kind of sentence…"): "Exclamation" and "Statement" fit on one line, no split words.
