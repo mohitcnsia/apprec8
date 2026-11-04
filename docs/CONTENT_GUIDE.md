@@ -187,3 +187,17 @@ it, and old app versions never do. After the owner approves, set `draft: false` 
 
 **NSO level:** follow `docs/exam/nso-pattern.md` (G5) for topics per class and question styles. Mistake tags name the
 misconception (e.g. `moves-means-alive`); list new ones at the top of the file.
+
+---
+
+## 9. Quests are subject quests, not exam quests (owner decision, 2026-11-04)
+
+- **English, Science, Maths** quests serve every olympiad (IEO / NSO / IMO and others) and school. No exam names in titles or tiles.
+- Olympiad topics **repeat every year and get harder by class**; a few topics are new each year. So each topic is a
+  **ladder**: the topic node is "from Class N" (`forGrades` = N and above), and its practice leaves / Champion leaves carry the
+  class level they're written for (e.g. Tenses: Class 3 simple past → Class 5 perfect → Class 7 perfect continuous).
+  A kid sees the topic from its first class on, with the levels up to their own class plus one Champion level above.
+- After a class where a topic is "complete" (e.g. tenses after Class 5), older classes get only harder practice, not new topics.
+- **Use past papers and the syllabus regularly:** every new unit is checked against `docs/exam/*-pattern.md` and
+  `docs/exam/syllabus-*.md` (coverage, style, difficulty). Questions stay **original** (modelled on the papers, never copied):
+  SOF keeps the copyright on its papers even when they are free to download, and the app is public.

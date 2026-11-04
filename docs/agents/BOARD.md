@@ -180,6 +180,8 @@ marked **covered** (unit + topic id) / **partly** / **missing**, plus the sectio
 changed. Note IMO topics briefly for later. Then the **plan**: which topics G22, G23 and G20 must include so nothing on the
 syllabus is missed, in priority order (what appears most in the papers first). If a Science node's `forGrades` contradicts the
 syllabus, list it.
+**Owner decision (read `docs/CONTENT_GUIDE.md` §9):** quests are subject quests for every olympiad; each topic is a ladder by
+class. So in the plan, give each topic its **first class** and what changes in difficulty per class (3 → 8), not only Class 5.
 **Deliver:** branch `gemini/g24-syllabus` (base `feat/quiz-redesign`), report G24, commit `gemini(G24): done — …`. Claude updates
 G22 / G23 / G20 from your plan.
 
