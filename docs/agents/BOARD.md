@@ -12,7 +12,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
-4. **Seed English Unit 2:** G15 found no problems and Claude's spot checks agree. Owner OK to seed?
+7. **20.0.25 internal-testing build** (Claude building now): owner uploads to Play internal testing, tests on own phone, then Pratha + her mother. School release only after their OK (owner).
+4. ~~Seed English Unit 2~~ owner OK 2026-11-04 → in G14.
 5. ~~Sample papers~~ added by the owner 2026-11-04 (NSO Class 3–5 + Level 2): now task G18.
 6. RB-2 questions (4, in `CODE_REVIEW.md`) — after the exams is fine.
 
@@ -24,7 +25,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G16 Science Unit 1 "The Living World" (Class 5) | Gemini | in progress | `content/sq-u1-living-world` | |
 | G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
-| G14 QA re-run on the emulator | Gemini | parked (owner: emulator off for now) | | |
+| G14 Seed English Unit 2 + QA re-run on the emulator | Gemini | todo (next, owner: before Science) | `gemini/g14-qa` | |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
 
 **Done:** G1 DR-7 old function images kept 1 day (Gemini, 2026-11-04) · G8 quiz redesign QA (findings fixed in `0ae2db2`).
@@ -52,6 +53,20 @@ Original questions only; NSO style (some "Which of these…", some picture-free 
 Keep `quest.draft: true`.
 **Deliver:** branch `content/sq-u1-living-world`; `docs/agents/reports/G16.md` (topics, question counts, anything unsure);
 `npm test` green. Commit `gemini(G16): done — N topics, Q questions`. Claude checks accuracy before the owner sees it.
+
+### G14 · [todo] · gemini · Seed English Unit 2, then QA the redesign on the emulator
+**Owner-approved: yes** (2026-11-04) for ONE production step: seeding English Quest. Nothing else.
+**Wait first:** if a build is running (`pgrep -f "eas build"` prints something), wait until it ends: the Mac can't run both.
+**Setup:** in your folder `git checkout --detach feat/quiz-redesign` (latest), `npx expo start`, emulator `Pixel_8a_API_35`,
+`scripts/qa/eq.sh prep`, restart the app; sign in as the tester/admin account (mohitchilkoti@gmail.com), never a kid's.
+**1. Seed:** Me → Admin tools → **Update English Quest** → confirm "LIVE". Check the alert says 3 units (+ teaser). Do NOT press
+the Science or other seed buttons. Open English Quest: Unit 2 "Articles & Determiners" appears after Unit 1's Boss.
+**2. QA** (light AND dark): `docs/qa/OWNER_TESTING.md` sections "step 1", "step 2", "steps 3–4", "thumb zone" (skip the
+Science section), plus the 3 fixes: Home "Coming up" card visible and tappable; wrong answer → Chamak's kind "oops" face;
+old IEO question without explanation (Gender 2 → "Hunter") shows `The answer is "Huntress".`
+**Rules:** 2 tries per step then move on (`docs/qa/QA_PLAYBOOK.md`). Report what the screenshot shows.
+**Deliver:** branch `gemini/g14-qa`; `docs/agents/reports/G14.md` = table (item · PASS / FAIL / SKIPPED · screenshot · note),
+FAILs first with steps to repeat. Commit `gemini(G14): done — P pass, F fail`. Then `eq.sh unprep`.
 
 ### G18 · [todo] · gemini · NSO (and IEO) exam pattern notes from the owner's papers
 **Feedback on G15 first:** your table notes were generated from a template ("Clean: egg before target noun/phrase"), so
