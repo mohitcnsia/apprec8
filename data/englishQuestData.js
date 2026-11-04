@@ -43,6 +43,9 @@ export const tile = {
 // Unit 2: a-an-mixup, sound-not-letter (hour, uniform, one), article-missing, article-extra,
 // article-plural-error, a-the-mixup, the-rule-mixup, determiner-number-mixup, near-far-mixup,
 // some-any-mixup, countable-uncountable-mixup, few-a-few-mixup
+// Unit 5 (tenses): tense-present-past-mixup, tense-form-error (goed, swiming), tense-continuous-mixup, stative-verb-error
+// (am knowing), did-base-form-error (did you went), tense-future-form-error (will goes), time-word-mixup, tense-perfect-mixup,
+// participle-form-error (has went / sang vs sung), since-for-mixup
 
 // ---------- Study pages (new) ----------
 export const studyPages = {

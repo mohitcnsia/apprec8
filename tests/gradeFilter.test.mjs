@@ -37,8 +37,13 @@ const progress = { "a__0": { status: "completed" }, "a-gate": { status: "complet
 const t = buildQuestPath(nodesForGrade(N, 4), progress);
 assert.equal(t.path.find((p) => p.id === "c").status, "unlocked");
 
-// English Quest has no class tags: identical for every class
-for (const g of [3, 5, 10]) assert.equal(nodesForGrade(English.nodes, g).length, English.nodes.length);
+// English Quest: only Champion leaves carry class tags (one level up). Untagged nodes show for every class.
+const tagged = English.nodes.filter((n) => n.grades);
+assert.ok(tagged.every((n) => n.kind === "practice"), "English: only practice (Champion) leaves are class-tagged");
+for (const g of [3, 5, 10]) {
+  assert.equal(nodesForGrade(English.nodes, g).length, English.nodes.length - tagged.filter((n) => !n.grades.includes(g)).length);
+}
+assert.ok(ids(nodesForGrade(English.nodes, 5)).includes("eq-u5-perfect-p2") && !ids(nodesForGrade(English.nodes, 4)).includes("eq-u5-perfect-p2"));
 
 // labels
 assert.equal(gradesLabel([5, 3, 4]), "Class 3–5");

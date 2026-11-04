@@ -5,11 +5,13 @@
 
 import u3 from "./u3.js";
 import u4 from "./u4.js";
+import u5 from "./u5.js";
 
 export const extraUnits = [
   u3,
   u4,
+  u5,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
-export const nextUnitTeaser = { id: "eq-u5", unitOrder: 5, title: "Tenses & Speech" };
+export const nextUnitTeaser = { id: "eq-u6", unitOrder: 6, title: "Modals, Tags & Speech" };
