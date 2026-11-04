@@ -1,5 +1,9 @@
 # Deploys: owner approved 2026-11-04 → Gemini task G27
 
+> **Status 2026-11-04 21:46: DEPLOYED** (all functions + rules; report `docs/agents/reports/G27.md` in Gemini's folder).
+> **Left for the owner:** DR-10 step 3 (IAM role, below: `apprec8-ca229@appspot.gserviceaccount.com` → Service Account Token
+> Creator, in Google Cloud Console → IAM & Admin → IAM → edit that account → Add role) and DR-9 step 4 (Seema's `roles` doc, after she signs in).
+
 Claude has merged all rule changes into `firestore.rules` (backup in `~/apprec8-backups/firestore.rules.before-DR9-10`).
 
 Everything below is already in the code on `feat/quiz-redesign`. Nothing works in the app until it's deployed; nothing
