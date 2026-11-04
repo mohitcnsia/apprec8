@@ -18,6 +18,7 @@ import SeedQuestNodesButton from "../../components/quiz/SeedQuestNodesButton";
 import SeedTileQuestButton from "../../components/quiz/SeedTileQuestButton";
 import { QUESTS } from "../../data/quests";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
+import FixIeoQuestionsButton from "../../components/quiz/FixIeoQuestionsButton";
 
 export default function AdminToolsScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -63,6 +64,8 @@ export default function AdminToolsScreen({ navigation }) {
         {QUESTS.map((data) => (
           <SeedTileQuestButton key={data.QUEST_ID} data={data} />
         ))}
+        {/* Corrections to old IEO questions reused by English Quest (data/fixes/ieoFixes.js) */}
+        <FixIeoQuestionsButton />
         <SeedQuestNodesButton />
         <SeedDataFixButton />
         <SeedDataButton />

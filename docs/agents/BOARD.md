@@ -14,12 +14,13 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+0. **Fix 46 old IEO questions:** owner OK 2026-11-04. The emulator froze twice, so the fix button ships in the next build; the owner presses it once on the phone (Me → Admin tools).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
 7. **20.0.25 internal-testing build** (Claude building now): owner uploads to Play internal testing, tests on own phone, then Pratha + her mother. School release only after their OK (owner).
 4. ~~Seed English Unit 2~~ owner OK 2026-11-04 → in G14.
-5. ~~Sample papers~~ added by the owner 2026-11-04 (NSO Class 3–5 + Level 2): now task G18.
+5. ~~Sample papers~~ NSO added (in `docs/exam/papers/nso/`); **IEO papers** → `docs/exam/papers/ieo/` (owner, soon).
 6. RB-2 questions (4, in `CODE_REVIEW.md`) — after the exams is fine.
 
 ## Now
@@ -27,9 +28,11 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
-| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | fixes 1 (after G18) | `content/sq-u1-living-world` | 102 questions; Claude checked all: no wrong keys, 1 outdated fact, 1 unclear, many joke distractors |
-| G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
-| G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
+| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | fixes 2 | `content/sq-u1-living-world` | Facts + wording fixed; overcorrected: right answer now NEVER longest (0%), options too wordy |
+| G18 NSO pattern notes | Gemini | **done, merged** | `gemini/g18-exam-patterns` | Good: `docs/exam/nso-pattern.md` (sections, weightage, 9 question styles, gap list) |
+| G17 English Unit 3 Subject-Verb Agreement | Gemini | fixes 1 | `content/eq-u3-sva` | 105 questions + reading; Claude read all: 5 fixes (British spelling, 1 grammar error, 2 wording) |
+| G19 Science Unit 2 "Human Body & Health" (Class 5) | Gemini | todo | `content/sq-u2-human-body` | |
+| G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
 
@@ -77,7 +80,7 @@ Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and plann
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
 
-### G16 · [fixes 1] · gemini · Science Unit 1 "The Living World" for Class 5
+### G16 · [fixes 2] · gemini · Science Unit 1 "The Living World" for Class 5
 **Why:** NSO on 19 Nov; Pratha is Class 5. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` (all of it, §8 for Science).
 **Do:** in `data/scienceQuestData.js`, unit `sq-u1`: keep or improve `sq-living`, then add 2–3 more topics from SOF's published
 NSO Class 5 syllabus that fit "living world" (e.g. plants, animals and adaptations, human body / food and health). Each topic:
@@ -107,9 +110,47 @@ Good: all 102 answer keys are right, explanations are clear, grade tags make sen
    endosperm. Add "in beans and gram" or pick a dicot in the question. Ferns have sori, mosses have capsules (gate q14 explanation).
 **Deliver:** commit `gemini(G16): fixed 1 — <counts>`, and add a "fixes 1" section to `docs/agents/reports/G16.md` listing every changed question id.
 
-### G17 · [todo] · gemini · English Unit 3 Subject-Verb Agreement
+**Claude's review of fixes 1 (`031392a`), fixes 2:** facts and wording are fixed and the distractors are much more plausible. Two problems:
+1. **Overcorrected length:** the right answer is now never the longest option (0%). "Never pick the longest" is as easy to game as
+   "always pick it". Aim for 20–35%. `npm test` now fails below 10% and above 40%.
+2. **Too wordy for Class 5:** e.g. "It grows by external deposition of molecules, lacking cells, metabolism, or reproduction",
+   "inert mineral stone". Options must be short (≤ 14 words; `npm test` checks) in words a 10-year-old uses. Same length
+   for all four options of a question, not all long.
+3. **NSO styles** (from your `docs/exam/nso-pattern.md`): make at least 5 gate/Boss questions in styles A (analogy),
+   B (multi-statement), E (experiment) or G (matching). Append new questions at the end of the pools; don't reorder.
+Commit `gemini(G16): fixed 2 — …` with a "fixes 2" section in the report.
+
+### G17 · [fixes 1] · gemini · English Unit 3 Subject-Verb Agreement
 **Why:** next IEO grammar unit. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` §2–7 (unit file template,
 `data/englishQuest/units/u3.js`, register in `units/index.js`, `nextUnitTeaser` → Unit 4).
 **Do:** 3 topics (e.g. singular/plural subjects, tricky subjects: each / everyone / pair nouns, there is / there are), each with
 Learn page, warm-up, practice leaves by sub-topic, gate; Unit Boss + one reading. Same rules as Unit 2.
 **Deliver:** branch `content/eq-u3-sva`; `docs/agents/reports/G17.md`; `npm test` green. Commit `gemini(G17): done — …`.
+
+**Claude's review (`f57fea2`), fixes 1.** All 105 questions + the Clock Tower reading read; keys are right. Fix in place:
+1. **British spelling (IEO uses it):** `eq-u3-test` q5 answer "practice" (verb) → "practise" (options: practises / practised /
+   is practising; explanation too). Reading `eq-read-clock-tower`: "cozy" → "cosy".
+2. **Grammar error:** `eq-u3-tricky-quiz` q2 "Rohan and Kabir ___ best friends since kindergarten": "since" needs "have been",
+   so no option is right. Drop "since kindergarten" (e.g. "best friends in class").
+3. **Apostrophe dodge broke the grammar:** `eq-u3-tricky-pairs-quiz` q6 "on the teacher table" and `eq-u3-tricky-gate-pool` q15
+   "from the captain belt". Rephrase without a possessive ("on the table", "from a hook").
+4. `eq-u3-tricky-gate-pool` q9: "Pencil or pen" → "A pencil or a pen".
+5. UNSURE (keep, just note it in the report): `eq-u3-tricky-pairs-quiz` q5 "The cricket team ___ practising": British usage also
+   allows "are". Indian school grammar says "is", so keep.
+Commit `gemini(G17): fixed 1 — …`.
+
+### G19 · [todo] · gemini · Science Unit 2 "Human Body & Health" for Class 5
+**Why:** your G18 notes: Human Body & Health is the biggest NSO Class 5 domain (8–10 questions per paper), and we have none.
+**Base:** `feat/quiz-redesign` (has your pattern notes). **Guide:** `docs/CONTENT_GUIDE.md` §8, `docs/exam/nso-pattern.md`, `docs/agents/LESSONS.md`.
+**Do:** unit `sq-u2` in `data/scienceQuestData.js` (or `data/scienceQuest/units/u2.js` + registration, your choice): 3 topics,
+e.g. bones, joints and muscles · digestion, teeth and food (nutrients, balanced diet, deficiency diseases) · nervous system and
+sense organs (+ communicable diseases if it fits). Same shape as Unit 1 (Learn page, warm-up, practice by sub-topic, gate ≥ 15,
+Boss ≥ 15). Tag `forGrades` honestly. At least a third of gate/Boss questions in NSO styles A/B/E/G (one right answer only).
+Short, kid-level options; the right answer is the longest about a quarter of the time. Change Unit 1's `nextUnitTeaser` /
+teaser unit so Unit 3 shows as "coming soon". Keep `quest.draft: true`.
+**Deliver:** branch `content/sq-u2-human-body` (base: your G16 branch once fixes 2 is done, so Unit 1 + 2 sit together);
+`docs/agents/reports/G19.md` incl. your 5 least-sure questions; `npm test` green. Commit `gemini(G19): done — …`.
+
+### G20 · [todo] · gemini · Science Unit 3 "Matter, Forces & Earth" for Class 5
+**Base:** your G19 branch. Same rules as G19. 3 topics, e.g. states of matter, changes and separation · forces, energy and
+simple machines · Earth, rocks and the Moon. **Deliver:** branch `content/sq-u3-matter-forces-earth`, report G20, commit `gemini(G20): done — …`.
