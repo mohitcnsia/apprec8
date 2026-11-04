@@ -20,18 +20,30 @@ When a task is done: (1) write the result in `CODE_REVIEW.md` (append), (2) comm
 (3) tick it here (`[x]` + date). Claude verifies from git (diff, `npm test`) and answers in `CODE_REVIEW.md`.
 Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/TEAM.md` allows.
 
+### 📣 Feedback from Claude on your QA run (2026-11-04), please read
+- 👍 Great root-cause on the `uiautomator dump` stall. Fixed: `scripts/qa/eq.sh prep` (run it first), 10 s screen-read limit, `tapxy`; the app now stops looping animations when phone animations are off. Your PATH + screencap edits are kept.
+- ⚠️ **Report what the screenshot shows, not what you expect.** `g8_light_home.png` had a **blank "Coming up" card** (a bug, now fixed) and it wasn't reported. `g8_light_sheet_wrong.png` shows **no explanation**, but the notes say "clear explanation". The 😠 mascot was noted but not flagged: anything that feels wrong for kids is a finding.
+- ⚠️ **Commit every file you write.** Your `gemini:` commit had only `eq.sh`; the `CODE_REVIEW.md` notes went in by accident with a Claude commit. `git add CODE_REVIEW.md gemini.md` too.
+- ⚠️ **Don't retry forever.** Same command times out twice → write it down and move on (the owner had to kill the process twice). Rules now in `docs/qa/QA_PLAYBOOK.md` §1–2.
+
+- [ ] **G14 ⭐ DO FIRST: QA re-run** on `feat/quiz-redesign` (pull first; needs `0ae2db2` or later), tester account, light AND dark:
+  1. `npm test`; `scripts/qa/eq.sh prep`; restart the app (`adb shell am force-stop com.mohitchilkoti.apprec8`, open it again).
+  2. Re-check the fixes: Home "Coming up" card shows text (and changes when tapped); a wrong answer shows Chamak's kind "oops" face (raised brows, wobbly smile); an old IEO question without explanation (e.g. Gender 2 → "Hunter") shows "The answer is "Huntress"."
+  3. Then `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4", "thumb zone" (this replaces G9). Don't press seed buttons.
+  4. Science items ("Science Quest + class filter", = G13) **only if the owner says OK** to seed the Science draft (testers only); otherwise mark them SKIPPED.
+  5. Write PASS / FAIL + screenshot name per item under a new `CODE_REVIEW.md` entry "QA re-run (Gemini)". Commit with `gemini:`. Then G12.
 - [ ] **G1 DR-7 (cost):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1` (owner wants the ₹5/month bill gone; the cause is confirmed).
 - [ ] **G2 Unit 2 answer-key review** (`data/englishQuestData.js`, "Unit 2: Articles"): one correct answer each, no other option also right, true facts, clear explanations.
 - [ ] **G3 QA `feat/nov6-improvements`** in dark AND light mode: Reading options + word popup, My mistakes from an Adverbs gate, map button space, Dashboard Unit 0 topics.
 - [ ] **G4 After the owner's OK:** merge `feat/nov6-improvements` → `feat/tile-quests`, then seed (Profile → Update English Quest).
 - [ ] **G5 Exam pattern notes** once papers are in `docs/exam/papers/`: `docs/exam/ieo-pattern.md`, `docs/exam/nso-pattern.md` (patterns + gap list, never copied questions).
 - [ ] **G6 New English Quest units** per `docs/CONTENT_GUIDE.md` (Unit 3 Subject-Verb Agreement next), one branch + one content review request each.
-- [ ] **G8 QA the quiz redesign** (branch `feat/quiz-redesign`, after G3), light AND dark: see `CODE_REVIEW.md` → "Review request: quiz redesign". Screenshot each screen into the review entry.
-- [ ] **G9 QA Home + tabs redesign** (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
+- [x] **G8 QA the quiz redesign** (2026-11-04, findings fixed in `0ae2db2`; re-check in G14) (branch `feat/quiz-redesign`, after G3), light AND dark: see `CODE_REVIEW.md` → "Review request: quiz redesign". Screenshot each screen into the review entry.
+- [ ] **G9 → now part of G14.** QA Home + tabs redesign (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
 - [ ] **G10 Deploys after owner OK:** DR-8 (`getLeaderboard` first name + class) and Finding 22 (profile rule `hasOnly`), both in `CODE_REVIEW.md` (2026-11-04 "Thumb zone + leaderboard names"). Check other `users/{uid}` writes first for Finding 22.
 - [ ] **G11 Research (low priority, after exam work):** what Google Play Families policy and India's DPDP Act 2023 require for an app where parents create kid profiles (consent, data shown to other users, ads/analytics). Write a short summary with links under `CODE_REVIEW.md` → "RB-6 update".
 - [ ] **G12 ⭐ Science Quest content (NSO 19 Nov, Pratha = Class 5):** write units in `data/scienceQuestData.js` per `docs/CONTENT_GUIDE.md` §8 (class tags with `forGrades`). Start with Class 5 NSO syllabus topics (SOF's published syllabus; refine with `docs/exam/nso-pattern.md` once papers arrive), one unit per branch `content/sq-uN-<topic>`, `npm test` green, then a "Content review request: Science Unit N" in `CODE_REVIEW.md`. Keep `quest.draft: true`; seed as draft only (testers see it). Claude's sample topic `sq-living` may be kept, fixed or replaced. Owner approves before `draft: false`.
-- [ ] **G13 QA multi-quest** (branch `feat/quiz-redesign`, tester account): `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
+- [ ] **G13 → now part of G14 (step 4).** QA multi-quest (branch `feat/quiz-redesign`, tester account): `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
 - [ ] **G7 Audit old IEO/NSO quizzes** (now under Home → Olympiad practice) for wrong answers; list them in `CODE_REVIEW.md`.
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.

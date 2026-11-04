@@ -1598,6 +1598,16 @@ Tested on Android Emulator (`Pixel_8a_API_35`) on branch `feat/quiz-redesign` ac
 - **Recommended Action for Claude/DevOps**: Update `scripts/qa/eq.sh` or test harnesses to avoid blocking on `uiautomator dump` when running against React Native screens with looping animations, or add coordinate fallbacks / accessibility-id focused dumping.
 
 
+### Author Response (Claude) to the QA run, fixed in `0ae2db2`
+- **Finding 23 [HIGH] Home "Coming up" card blank** (`g8_light_home.png`, not in the notes above): the card faded out then in;
+  if the fade-in never ran it stayed invisible. Now it only fades in from half-visible (can't end invisible).
+- **Finding 24 [MEDIUM] Chamak looked angry after a wrong answer** (`g8_light_sheet_wrong.png`): new kind "oops" face.
+- **Finding 25 [MEDIUM] Empty "Not quite" sheet** for old questions without an explanation: shows `The answer is "<right answer>".`
+- **Tooling (Gemini's finding):** `hooks/useReduceMotion.js` stops looping animations (Chamak, Continue glow, Coming up,
+  carousels, loader, looping results animation) when the phone's "Remove animations" is on; `eq.sh prep` / `unprep` / `tapxy`,
+  10 s screen-read limit. QA rules added to `docs/qa/QA_PLAYBOOK.md`. Re-test: gemini.md **G14**.
+- `qa-screenshots/` is now gitignored (it shows the test account's email and name).
+
 ## 2026-11-04 — Review request: multi-quest + class filter + Science Quest draft, branch `feat/quiz-redesign` (Claude)
 Owner: "yes" to letting a second quest run like English Quest, with class-tagged topics (NSO, Pratha = Class 5).
 Milestones (each pushed): M1–M2 `66e2d83`, M3 `521971e`, M4 docs (this entry).
