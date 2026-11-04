@@ -1497,3 +1497,10 @@ Owner approved the mockups (A–F) and the order: 1 Home + tabs, 2 Progress, 3 M
 - Old `screens/quiz/Home.js`, `StudyScreen.js`, `navigation/StudyNavigator.js` are no longer used; delete after QA.
 - Checks: `npm test` (16 suites) pass; Android JS bundle builds. Not run on a device yet (emulator froze earlier):
   test list in `docs/qa/OWNER_TESTING.md`. **Gemini:** please QA with that list (inbox G8).
+
+### Step 2 built: Progress tab (Claude)
+- `screens/progress/ProgressScreen.js` + `navigation/ProgressNavigator.js` (tab route still `Stats`). Kid view from
+  `questProgress/english-quest.stats` (streak, week strip, this week, % right, weak / great topics) + `users.stats.totalStars`.
+  Topic names and "cleared / total topics" use the quest content bundled in the app (`data/englishQuestData.js`, pure helpers in
+  `utils/progressView.js`, tested): no extra reads. Leaderboard = the old `StatsScreen`, one tap away.
+- Admin: "Me / Kids · Reported" switch; Kids = `AdminDashboardScreen` with a new `embedded` prop (Profile's Dashboard button still works until step 3).

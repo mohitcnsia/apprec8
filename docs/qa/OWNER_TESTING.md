@@ -41,6 +41,15 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### `feat/quiz-redesign`, step 2: Progress tab ("Home + tabs redesign: step 2")
+Mockup boards D (kid) and E (admin). Light and dark mode.
+- [ ] As a kid (tester account): "My progress", streak with this week's days (gold ✓ = played; today has a ring).
+- [ ] Tiles: stars, questions this week, % right. English row: "Unit N", topics cleared / total, "Now: <topic>"; tap opens the map.
+- [ ] "Work on these" lists weak topics with readable names (not ids); Practise opens the map. "Great at" shows strong topics.
+- [ ] Brand-new kid: no numbers break; it says to play English Quest. Guest: "Sign in" button.
+- [ ] Leaderboard row opens the old leaderboard; back returns to Progress.
+- [ ] **Admin (your account):** Me / Kids · Reported switch. Kids shows the Dashboard (Today / This week / All, kid rows, Reported tab); a kid row opens the detail; back returns.
+
 ### `feat/quiz-redesign`, step 1: Home + tab bar ("Home + tabs redesign: step 1")
 Test in **light and dark** mode. Mockup: canvas "Apprec8 Home & Tabs Mockups", boards A–C.
 - [ ] Tab bar shows **Home · Fun · Progress · Me**; the tab you're on is highlighted (pill behind the icon). No Study or Quest tab.

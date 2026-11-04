@@ -45,10 +45,11 @@ function unitProgress(nodes, progressNodes) {
   };
 }
 
-export default function AdminDashboardScreen({ navigation }) {
+// embedded: shown inside the Progress tab (admin "Kids" view): no own title/background, tab bar visible.
+export default function AdminDashboardScreen({ navigation, embedded = false, header: outerHeader = null }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
-  const styles = useMemo(() => makeStyles(theme, insets), [theme, insets]);
+  const styles = useMemo(() => makeStyles(theme, insets, embedded), [theme, insets, embedded]);
 
   const [tab, setTab] = useState("kids");
   const [range, setRange] = useState("today");
@@ -174,7 +175,8 @@ export default function AdminDashboardScreen({ navigation }) {
 
   const header = (
     <View>
-      <Text style={styles.title}>Dashboard</Text>
+      {outerHeader}
+      {embedded ? null : <Text style={styles.title}>Dashboard</Text>}
       <View style={styles.tabs}>
         {[
           ["kids", "Kids"],
@@ -204,10 +206,15 @@ export default function AdminDashboardScreen({ navigation }) {
     </View>
   );
 
+  const Wrapper = embedded ? View : LinearGradient;
+  const wrapperProps = embedded ? {} : { colors: [theme.gradientStart, theme.gradientEnd] };
   return (
-    <LinearGradient colors={[theme.gradientStart, theme.gradientEnd]} style={styles.container}>
+    <Wrapper {...wrapperProps} style={styles.container}>
       {!kids ? (
-        <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: insets.top + 80 }} />
+        <View style={styles.list}>
+          {outerHeader}
+          <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 60 }} />
+        </View>
       ) : (
         <FlatList
           data={tab === "kids" ? kidRows : issueRows}
@@ -223,14 +230,16 @@ export default function AdminDashboardScreen({ navigation }) {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       )}
-    </LinearGradient>
+    </Wrapper>
   );
 }
 
-const makeStyles = (theme, insets) =>
+const makeStyles = (theme, insets, embedded = false) =>
   StyleSheet.create({
     container: { flex: 1 },
-    list: { paddingTop: insets.top + 12, paddingHorizontal: 16, paddingBottom: insets.bottom + 24 },
+    list: embedded
+      ? { paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 24 }
+      : { paddingTop: insets.top + 12, paddingHorizontal: 16, paddingBottom: insets.bottom + 24 },
     title: { fontSize: 26, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient, marginBottom: 10 },
     tabs: { flexDirection: "row", gap: 8, marginBottom: 10, flexWrap: "wrap" },
     tab: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: theme.cardBackground },

@@ -16,7 +16,7 @@ import HomeNavigator from "./HomeNavigator";
 import FunNavigator from "./FunNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
-import StatsScreen from "../screens/quiz/StatsScreen";
+import ProgressNavigator from "./ProgressNavigator";
 import TasksContextProvider from "../store/tasks-context";
 import { useTheme } from "../context/ThemeContext";
 import { quizPalette } from "../components/quiz/quizPalette";
@@ -87,7 +87,7 @@ function BottomTabNavigator({ isGuest, signoutHandler, exitGuestModeHandler, use
       >
         <Tab.Screen name="Apprec8" component={HomeNavigator} options={{ title: "Home" }} />
         <Tab.Screen name="Fun" component={FunNavigator} options={{ title: "Fun" }} />
-        <Tab.Screen name="Stats" component={StatsScreen} options={{ title: "Progress" }} />
+        <Tab.Screen name="Stats" component={ProgressNavigator} options={{ title: "Progress" }} />
         <Tab.Screen name="Profile" options={{ title: "Me" }}>
           {() => (
             <ProfileNavigator
