@@ -1,0 +1,161 @@
+// components/quiz/SeedTileQuestButton.js
+// Writes ONE tile quest to Firestore from its data module (data/quests/index.js: English, Science, ...).
+// Only touches that quest's data:
+//   quests/<id>, quests/<id>/nodes/*, categories/<id> (tile),
+//   studyContent/<its page + reading ids>, questions/<its quiz ids>-q*
+// It never touches the Space quest (`quest_nodes`), other tile quests or the old IEO content.
+// Draft quests (quest.draft) get carouselGroup "quest_draft": only testers see the tile.
+
+import React, { useState } from "react";
+import { Button, Alert, View } from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import { authInstance } from "../../config/firebaseConfig";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+import { mixOptions } from "../../utils/readingFlow";
+
+const BATCH_LIMIT = 400; // below Firestore's hard limit of 500 writes per batch
+
+/** Commits writes in order, in chunks. Deletes are queued before sets, so order is safe. */
+async function commitInChunks(db, ops) {
+  for (let i = 0; i < ops.length; i += BATCH_LIMIT) {
+    const chunk = db.batch();
+    ops.slice(i, i + BATCH_LIMIT).forEach((op) => {
+      if (op.kind === "delete") chunk.delete(op.ref);
+      else if (op.options) chunk.set(op.ref, op.data, op.options);
+      else chunk.set(op.ref, op.data);
+    });
+    await chunk.commit();
+  }
+}
+
+export default function SeedTileQuestButton({ data, color = "#145A3C" }) {
+  const [loading, setLoading] = useState(false);
+  const { QUEST_ID, quest, tile, studyPages = {}, readings = {}, wordTables = {}, quizzes = {}, nodes = [] } = data || {};
+  const name = quest?.title || QUEST_ID;
+
+  const seed = async () => {
+    setLoading(true);
+    try {
+      const db = firestore();
+      const now = firestore.FieldValue.serverTimestamp();
+      // Collect every write first, then commit in chunks (Firestore allows max 500 per batch).
+      const ops = [];
+      const batch = {
+        set: (ref, data, options) => ops.push({ kind: "set", ref, data, options }),
+        delete: (ref) => ops.push({ kind: "delete", ref }),
+      };
+
+      // 1. Remove old nodes of THIS quest only (so deleted nodes disappear).
+      const oldNodes = await db.collection("quests").doc(QUEST_ID).collection("nodes").get();
+      oldNodes.forEach((d) => batch.delete(d.ref));
+
+      // 2. Remove old questions of the new quizzes (a quiz may have shrunk).
+      const quizIds = Object.keys(quizzes);
+      for (let i = 0; i < quizIds.length; i += 10) {
+        const chunk = quizIds.slice(i, i + 10);
+        const oldQs = await db.collection("questions").where("quizId", "in", chunk).get();
+        oldQs.forEach((d) => batch.delete(d.ref));
+      }
+
+      // 3. Quest info + tile
+      // merge: keep server-written fields (knownIssues from 🚩 reports, reportSettings)
+      // contentVersion changes on every seed → every phone re-downloads content once (Step 3 cache).
+      batch.set(
+        db.collection("quests").doc(QUEST_ID),
+        { ...quest, contentVersion: Date.now(), updatedAt: now },
+        { merge: true }
+      );
+      batch.set(db.collection("categories").doc(QUEST_ID), { ...tile, lastUpdatedAt: now }, { merge: true });
+
+      // 4. Tree nodes
+      nodes.forEach(({ id, ...node }) => {
+        batch.set(db.collection("quests").doc(QUEST_ID).collection("nodes").doc(id), {
+          ...node,
+          updatedAt: now,
+        });
+      });
+
+      // 5. New study pages
+      Object.entries(studyPages).forEach(([id, page]) => {
+        batch.set(db.collection("studyContent").doc(id), {
+          ...page,
+          coverImage: page.coverImage || null,
+          additionalImages: page.additionalImages || [],
+          lastUpdatedAt: now,
+        });
+      });
+
+      // 5b. Reading passages (studyContent with kind "reading"). `content` is a plain
+      // fallback so older reader screens can still show the passage.
+      Object.entries(readings).forEach(([id, r]) => {
+        batch.set(db.collection("studyContent").doc(id), {
+          ...r,
+          // Stored in a mixed order: 20.0.24 shows options as stored (right answer was always first).
+          questions: r.questions.map((q) => ({ ...q, options: mixOptions(q.options, q.question?.content || "") })),
+          kind: "reading",
+          content: r.paragraphs.join("\n\n"),
+          coverImage: r.coverImage || null,
+          additionalImages: [],
+          lastUpdatedAt: now,
+        });
+      });
+
+      // 5c. Word tables for generated practice (studyContent with kind "wordTable")
+      Object.entries(wordTables).forEach(([id, t]) => {
+        batch.set(db.collection("studyContent").doc(id), { ...t, kind: "wordTable", lastUpdatedAt: now });
+      });
+
+      // 6. New questions (V2 format)
+      Object.entries(quizzes).forEach(([quizId, questions]) => {
+        questions.forEach((question, index) => {
+          batch.set(db.collection("questions").doc(`${quizId}-q${index + 1}`), {
+            ...question,
+            quizId,
+            order: index + 1,
+            lastUpdatedAt: now,
+          });
+        });
+      });
+
+      await commitInChunks(db, ops);
+      const questionCount = Object.values(quizzes).reduce((s, qs) => s + qs.length, 0);
+      Alert.alert(
+        `${name} updated${quest.draft ? " (draft: testers only)" : ""}`,
+        `${nodes.filter((n) => n.kind === "unit").length} units, ${nodes.length} nodes, ${questionCount} new questions, ${Object.keys(readings).length} readings.`
+      );
+    } catch (e) {
+      console.error("SeedTileQuestButton:", e);
+      Alert.alert("Error", e.message);
+    }
+    setLoading(false);
+  };
+
+  // Only the admin account sees this button.
+  const isAdmin =
+    !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+  if (!isAdmin || !QUEST_ID) return null;
+
+  // Writes to live Firestore: always ask first (CLAUDE.md: content needs a second reviewer + owner OK).
+  const confirmSeed = () =>
+    Alert.alert(
+      `Update ${name}?`,
+      quest.draft
+        ? "DRAFT: only tester accounts will see this quest. Old app versions never show it."
+        : "LIVE: every kid will see this content. Only continue if the owner approved it.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Update", onPress: seed },
+      ]
+    );
+
+  return (
+    <View style={{ marginVertical: 15, marginHorizontal: 20, borderRadius: 8, overflow: "hidden" }}>
+      <Button
+        title={loading ? `Updating ${name}...` : `Update ${name}${quest.draft ? " (draft)" : ""}`}
+        onPress={confirmSeed}
+        disabled={loading}
+        color={color}
+      />
+    </View>
+  );
+}

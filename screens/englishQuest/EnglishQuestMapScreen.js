@@ -31,6 +31,8 @@ import { buildWindow } from "../../utils/questWindow";
 import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
 import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
+import { nodesForGrade } from "../../utils/gradeFilter";
+import { listenToUserDocument } from "../../services/firestoreContentApi";
 import {
   listenToQuestProgress,
   markStudyNodeCompleted,
@@ -164,9 +166,18 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     }
   }, [completedNodeId, questId, navigation]);
 
+  // Class-tagged quests (e.g. Science): hide topics that aren't for the kid's class (utils/gradeFilter.js).
+  // Testers with "unlock all" see every class. Quests without class tags (English) are unchanged.
+  const [grade, setGrade] = useState(null);
+  useEffect(() => listenToUserDocument((d) => setGrade(Number.isInteger(d?.grade) ? d.grade : null), () => {}), []);
+  const visibleNodes = useMemo(
+    () => (nodes ? (unlockAll ? nodes : nodesForGrade(nodes, grade)) : null),
+    [nodes, grade, unlockAll]
+  );
+
   const tree = useMemo(
-    () => (nodes ? buildQuestPath(nodes, progress, { unlockAll }) : null),
-    [nodes, progress, unlockAll]
+    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll }) : null),
+    [visibleNodes, progress, unlockAll]
   );
   const count = tree?.path.length || 0;
 
@@ -190,16 +201,16 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     setExpandedUnits((list) => (list.includes(unitId) ? list.filter((u) => u !== unitId) : [...list, unitId]));
   const win = useMemo(
     () =>
-      tree && nodes
+      tree && visibleNodes
         ? buildWindow({
             path: tree.path,
-            units: nodes.filter((n) => n.kind === "unit"),
+            units: visibleNodes.filter((n) => n.kind === "unit"),
             currentPathId: tree.currentPathId,
             expanded: expandedUnits,
             unlockAll,
           })
         : { rows: [], currentUnitId: null },
-    [tree, nodes, expandedUnits, unlockAll]
+    [tree, visibleNodes, expandedUnits, unlockAll]
   );
   const rows = win.rows;
 

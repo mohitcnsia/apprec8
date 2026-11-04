@@ -45,3 +45,6 @@ export const endless = (branch, generators = []) => ({
 export const boss = (id, unitId, title, quizId, story = null, passPercent = 70) => ({
   id, kind: "boss", unitId, title, quizId, passPercent, ...(story ? { story } : {}),
 });
+// Class tags (Science Quest, 2026-11-04): the classes a unit / topic / practice leaf is for, e.g. [3, 4, 5].
+// The app hides nodes that aren't for the kid's class (utils/gradeFilter.js). No tag = for everyone.
+export const forGrades = (node, grades) => ({ ...node, grades });

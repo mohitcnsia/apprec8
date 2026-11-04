@@ -14,7 +14,9 @@ import { getQuest, getQuestNodes } from "../../services/contentCache";
 import { buildQuestPath } from "../../utils/questTree";
 import { summarize, accuracy, weakTopics, activeIn, timeAgo, formatDuration } from "../../utils/kidStats";
 
-const QUEST_ID = "english-quest";
+import { QUESTS } from "../../data/quests";
+
+const DEFAULT_QUEST_ID = "english-quest";
 const RANGES = [
   { id: "today", label: "Today" },
   { id: "week", label: "This week" },
@@ -51,6 +53,7 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme, insets, embedded), [theme, insets, embedded]);
 
+  const [questId, setQuestId] = useState(DEFAULT_QUEST_ID); // which tile quest (English, Science, ...)
   const [tab, setTab] = useState("kids");
   const [range, setRange] = useState("today");
   const [kids, setKids] = useState(null);
@@ -62,10 +65,10 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
   const load = useCallback(async () => {
     setError(null);
     try {
-      const [k, i, q] = await Promise.all([listKidProgress(QUEST_ID), listQuestionIssues(), getQuest(QUEST_ID)]);
+      const [k, i, q] = await Promise.all([listKidProgress(questId), listQuestionIssues(), getQuest(questId)]);
       setKids(k);
       setIssues(i);
-      setNodes(q ? await getQuestNodes(QUEST_ID, q.contentVersion) : []);
+      setNodes(q ? await getQuestNodes(questId, q.contentVersion) : []);
     } catch (e) {
       console.error("AdminDashboard load failed:", e);
       setError(
@@ -75,7 +78,7 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
       );
       setKids((k) => k || []);
     }
-  }, []);
+  }, [questId]);
 
   useEffect(() => {
     load();
@@ -177,6 +180,24 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
     <View>
       {outerHeader}
       {embedded ? null : <Text style={styles.title}>Dashboard</Text>}
+      <View style={styles.tabs}>
+        {QUESTS.map((m) => (
+          <TouchableOpacity
+            key={m.QUEST_ID}
+            onPress={() => {
+              if (m.QUEST_ID === questId) return;
+              setKids(null);
+              setQuestId(m.QUEST_ID);
+            }}
+            style={[styles.filter, questId === m.QUEST_ID && styles.filterActive]}
+          >
+            <Text style={[styles.filterText, questId === m.QUEST_ID && styles.tabTextActive]}>
+              {m.quest.title.replace(/ Quest$/, "")}
+              {m.quest.draft ? " (draft)" : ""}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <View style={styles.tabs}>
         {[
           ["kids", "Kids"],

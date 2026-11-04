@@ -15,7 +15,8 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { SEEN_MESSAGES_KEY } from "../../hooks/useInAppMessaging";
 import SeedDataFixButton from "../../components/quiz/SeedDataFixButton";
 import SeedQuestNodesButton from "../../components/quiz/SeedQuestNodesButton";
-import SeedEnglishQuestButton from "../../components/quiz/SeedEnglishQuestButton";
+import SeedTileQuestButton from "../../components/quiz/SeedTileQuestButton";
+import { QUESTS } from "../../data/quests";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
 
 export default function AdminToolsScreen({ navigation }) {
@@ -58,7 +59,10 @@ export default function AdminToolsScreen({ navigation }) {
 
       <Text style={styles.section}>SEED CONTENT (writes to live Firestore)</Text>
       <View style={styles.card}>
-        <SeedEnglishQuestButton />
+        {/* One button per tile quest (data/quests/index.js). Draft quests seed for testers only. */}
+        {QUESTS.map((data) => (
+          <SeedTileQuestButton key={data.QUEST_ID} data={data} />
+        ))}
         <SeedQuestNodesButton />
         <SeedDataFixButton />
         <SeedDataButton />
