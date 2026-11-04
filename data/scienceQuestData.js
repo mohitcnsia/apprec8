@@ -351,6 +351,154 @@ Diseases can be classified into two categories:
 
 > 🛡️ **Vaccination:** Vaccines train our immune system to recognise and fight specific disease germs before they can make us sick!`,
   },
+
+  "sq-matter-study": {
+    name: "States of Matter, Changes & Separation",
+    author: "Apprec8",
+    content: `### 🧊 States of Matter
+
+Everything around us that has mass and occupies space is **matter**. Matter is made of tiny particles called molecules.
+
+Matter exists primarily in three states:
+1. **Solids:** Molecules are tightly packed together with very strong attractive forces between them. They have a **definite shape and definite volume**. They cannot be compressed easily.
+2. **Liquids:** Molecules are loosely packed with moderate attraction and can slide past one another. They have a **definite volume but no fixed shape**—they take the shape of any container they are poured into.
+3. **Gases:** Molecules have very large spaces between them and very weak attraction, moving freely in all directions. They have **no definite shape and no definite volume**, filling the entire space available. Gases are easily compressed.
+
+---
+
+### 🔄 Changes of State
+
+When matter is heated or cooled, its particles absorb or release heat energy, changing its physical state:
+- **Melting:** Solid changes to liquid upon heating (ice to water).
+- **Freezing (Solidification):** Liquid changes to solid upon cooling (water to ice).
+- **Evaporation & Boiling:** Liquid changes to gas upon heating (water to water vapour).
+- **Condensation:** Gas cools down and changes back into a liquid (steam touching a cold lid turns to water droplets).
+- **Sublimation:** A solid directly turns into gas without becoming a liquid first (e.g., **camphor, naphthalene balls, dry ice, and iodine**).
+
+---
+
+### 🧪 Physical vs Chemical Changes
+
+- **Physical Change:** A temporary and usually **reversible** change where no new substance is formed. Only the physical form or state changes.
+  - *Examples:* Melting of wax or butter, freezing water into ice, dissolving sugar in water, tearing paper into bits, glowing of an electric bulb.
+- **Chemical Change:** A permanent and usually **irreversible** change where one or more **completely new substances** with new properties are produced.
+  - *Examples:* Burning paper or wood (forms ash and carbon dioxide), rusting of iron, cooking of food, curdling of milk into curd, digestion of food.
+
+---
+
+### 💧 Mixtures and Separation Methods
+
+A **solution** is formed when a substance (**solute**, like salt) dissolves completely in a liquid (**solvent**, like water).
+
+Common methods to separate mixtures include:
+- **Sedimentation & Decantation:** Insoluble heavy solid impurities (like sand in water) settle to the bottom (sedimentation). The clean liquid on top is carefully poured into another beaker without disturbing the sediment (decantation).
+- **Filtration:** Separating fine insoluble solids from a liquid by passing through filter paper (like straining tea leaves or filtering muddy water).
+- **Evaporation:** Separating a soluble solid from a liquid by heating the solution until all liquid evaporates, leaving solid salt or sugar crystals behind.
+- **Distillation:** Heating a solution to turn liquid into vapour, then cooling the vapour back into pure liquid. Yields completely pure water.
+- **Purification of Drinking Water:** Water is made safe to drink by **boiling** (kills germs) and **chlorination** (adding chlorine tablets to destroy bacteria).`,
+  },
+  "sq-forces-study": {
+    name: "Forces, Energy & Simple Machines",
+    author: "Apprec8",
+    content: `### 🚀 Forces All Around Us
+
+A **force** is a push or pull acting upon an object. A force can:
+- Move a stationary object or speed up a moving object.
+- Slow down or completely stop a moving object.
+- Change the direction in which an object is traveling.
+- Change the shape or size of an object (like squeezing a sponge or moulding dough).
+
+---
+
+### 🧲 Types of Forces
+
+1. **Gravitational Force (Gravity):** The invisible pulling force that Earth exerts on all objects, pulling them down toward its centre. When you drop a ball, gravity pulls it to the ground.
+2. **Frictional Force (Friction):** The opposing force that arises when two surfaces slide against each other.
+   - *Advantages:* Friction allows us to walk without slipping, enables vehicle tyres to grip the road, and lets us write with a pencil.
+   - *Disadvantages:* Causes wear and tear on shoes and machine parts, and wastes energy as heat.
+   - *Control:* We reduce friction with **lubricants (oil/grease), ball bearings, or smooth surfaces**.
+3. **Electrostatic Force:** The force exerted by a charged body on another body (e.g., a plastic comb rubbed on dry hair attracts tiny bits of paper).
+4. **Magnetic Force:** The force exerted by magnets. Like poles repel each other, while unlike poles attract. Magnets attract magnetic metals like **iron, cobalt, and nickel**.
+5. **Buoyant Force (Upthrust):** The upward pushing force exerted by liquids on immersed objects, making them feel lighter.
+
+---
+
+### ⚡ Work and Energy
+
+In science, **work is done** only when a force applied to an object causes it to move through a distance in the direction of the force. If you push against a solid brick wall all day and it does not move, scientifically **no work is done**!
+
+**Energy** is the ability to do work. It exists in many forms:
+- **Mechanical Energy:** The sum of **kinetic energy** (energy of motion, like a speeding car) and **potential energy** (stored energy, like water held behind a high dam or a stretched bowstring).
+- **Energy Transformations:** Energy cannot be created or destroyed, only changed from one form to another:
+  - Electric iron: Electrical energy → Heat energy
+  - Solar panel: Light energy → Electrical energy
+  - Moving car: Chemical energy (fuel) → Mechanical energy
+
+---
+
+### 🛠️ Simple Machines
+
+Simple machines have few or no moving parts. They make work easier by multiplying applied force, changing the direction of force, or increasing speed:
+
+1. **The Lever:** A rigid rod that pivots around a fixed point called the **fulcrum (F)**.
+   - **Class 1 Lever (Fulcrum in the middle):** Seesaw, crowbar, scissors, pliers, beam balance.
+   - **Class 2 Lever (Load in the middle):** Wheelbarrow, nutcracker, bottle opener.
+   - **Class 3 Lever (Effort in the middle):** Tweezers, fishing rod, ice tongs, human forearm.
+2. **The Pulley:** A grooved wheel with a rope around it. A **fixed pulley** changes the direction of force (like raising a flag or drawing water from a well).
+3. **The Inclined Plane:** A sloping surface connecting a lower level to a higher level (ramps, slides, stairs).
+4. **The Wedge:** Two inclined planes joined back-to-back with a sharp edge, used to cut or split objects (knife, axe, chisel, nail).
+5. **The Screw:** An inclined plane wrapped in a spiral around a central cylinder. It holds objects together much more tightly than a smooth nail.
+6. **Wheel and Axle:** A larger wheel securely mounted onto a smaller shaft or rod (steering wheel, screwdriver, door knob, bicycle pedals).`,
+  },
+  "sq-earth-study": {
+    name: "Earth, Rocks, Atmosphere and the Moon",
+    author: "Apprec8",
+    content: `### 🌍 Inside Our Earth
+
+Our planet Earth is layered like an onion:
+1. **The Crust:** The outermost solid, thin rocky layer where we live. It forms the continents and ocean floors.
+2. **The Mantle:** The thick middle layer composed of very hot, dense semi-solid rocks (magma).
+3. **The Core:** The innermost centre of the Earth, extremely hot:
+   - **Outer Core:** Made of hot liquid iron and nickel.
+   - **Inner Core:** A solid sphere of iron and nickel under immense pressure.
+
+---
+
+### 🪨 The Three Classes of Rocks
+
+Rocks are naturally occurring mineral aggregates:
+
+| Rock Family | How Formed | Key Examples & Uses |
+|---|---|---|
+| **Igneous Rocks** | Molten magma cools and hardens either underground or on the surface after volcanic eruptions. | **Granite** (very hard building stone), **Pumice** (light, porous, sponge-like rock that floats on water!), **Basalt** (dense volcanic rock), **Obsidian** (smooth, glassy black rock). |
+| **Sedimentary Rocks** | Layers of mineral sediment, shells, and sand settle at bottoms of rivers/seas and are compressed over millions of years. Often contain **fossils**! | **Sandstone** (Red Fort in Delhi is built of red sandstone), **Limestone** (chalk and cement), **Shale** (soft rock from clay/mud), **Conglomerate** (gravel and pebbles cemented together). |
+| **Metamorphic Rocks** | Igneous or sedimentary rocks transformed by intense underground heat and pressure. | **Marble** (transformed from limestone; Taj Mahal), **Slate** (from shale; writing blackboards), **Quartzite** (from sandstone), **Gneiss** (from granite). |
+
+---
+
+### ☁️ Atmosphere: Earth's Protective Shield
+
+Earth's atmosphere is a protective envelope of gases: **78% Nitrogen, 21% Oxygen, and 1% Argon, Carbon Dioxide, and water vapour**.
+
+The atmosphere has five distinct layers:
+1. **Troposphere:** The lowest layer where all weather phenomena happen (clouds, rain, storms, wind).
+2. **Stratosphere:** The calm layer where jet planes fly; it contains the vital **ozone layer** that shields Earth from harmful solar ultraviolet (UV) radiation.
+3. **Mesosphere:** The coldest layer of the atmosphere where meteors burn up upon entering from space.
+4. **Thermosphere:** Very hot layer containing ions; auroras (northern lights) occur here.
+5. **Exosphere:** The outermost layer gradually thinning into outer space, where artificial communication satellites orbit.
+
+---
+
+### 🌕 The Moon and Eclipses
+
+The Moon is Earth's only natural satellite, orbiting Earth every 27.3 days.
+- It has **no atmosphere and no liquid water**, resulting in extreme temperatures (over 100°C during daytime, below -150°C at night).
+- The Moon's gravity is **one-sixth (1/6)** of Earth's gravity: an astronaut weighing 60 kg on Earth weighs only 10 kg on the Moon!
+- **Phases of the Moon:** As the Moon orbits Earth, we see different portions of its sunlit side: New Moon → Crescent → Half Moon → Gibbous → Full Moon.
+- **Eclipses:**
+  - **Solar Eclipse:** The Moon passes directly between the Sun and Earth (**Sun — Moon — Earth**). The Moon casts its shadow onto Earth during the day.
+  - **Lunar Eclipse:** The Earth passes directly between the Sun and the Moon (**Sun — Earth — Moon**). Earth's shadow falls on the Full Moon at night.`,
+  },
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -2991,6 +3139,1275 @@ export const quizzes = {
       ),
     },
   ],
+
+  "sq-matter-warmup": [
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Which state of matter has a definite volume but takes the shape of its container?",
+        "Liquid",
+        [
+          ["Solid", "state-shape-mixup"],
+          ["Gas", "state-shape-mixup"],
+          ["Vapour", "state-shape-mixup"]
+        ],
+        "Liquids have a fixed volume, but because their particles can flow and slide, they take the shape of whatever vessel holds them."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "What process describes a solid turning directly into a gas without melting into a liquid?",
+        "Sublimation",
+        [
+          ["Evaporation", "sublimation-mixup"],
+          ["Condensation", "sublimation-mixup"],
+          ["Sedimentation", "sublimation-mixup"]
+        ],
+        "Sublimation is the direct transition from solid to gas on heating, seen in camphor, naphthalene balls, and dry ice."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Which of the following represents a chemical change?",
+        "Rusting of an iron nail",
+        [
+          ["Melting of an ice cube", "chemical-change-mixup"],
+          ["Tearing paper into strips", "chemical-change-mixup"],
+          ["Dissolving sugar in water", "chemical-change-mixup"]
+        ],
+        "Rusting forms a new substance (hydrated iron oxide) with completely different chemical properties, making it an irreversible chemical change."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Why is the melting of candle wax considered a physical change rather than a chemical change?",
+        "No new chemical substance is formed",
+        [
+          ["The wax changes into ash and smoke", "wax-melting-mixup"],
+          ["Liquid wax can never become solid again", "wax-melting-mixup"],
+          ["The colour turns into bright yellow", "wax-melting-mixup"]
+        ],
+        "When wax melts, it only changes state from solid to liquid; the chemical composition remains unchanged and it solidifies again on cooling."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Which separation technique is most suitable for separating fine sand from water?",
+        "Filtration",
+        [
+          ["Evaporation", "filtration-use-mixup"],
+          ["Distillation", "filtration-use-mixup"],
+          ["Sublimation", "filtration-use-mixup"]
+        ],
+        "Sand is insoluble in water. Passing the mixture through filter paper retains the sand as residue while clean water passes through as filtrate."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "What is added to city tap water to destroy harmful disease-causing germs?",
+        "Chlorine tablets",
+        [
+          ["Fine sand grains", "water-purification-mixup"],
+          ["Camphor crystals", "water-purification-mixup"],
+          ["Table salt", "water-purification-mixup"]
+        ],
+        "Chlorination involves adding controlled amounts of chlorine to drinking water to disinfect it and kill harmful bacteria."
+      ),
+    },
+  ],
+  "sq-matter-separation-quiz": [
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "How can common salt be recovered after it has been dissolved in water?",
+        "By evaporating the water away",
+        [
+          ["By filtering through coarse paper", "salt-recovery-mixup"],
+          ["By magnetic separation", "salt-recovery-mixup"],
+          ["By using a separating funnel", "salt-recovery-mixup"]
+        ],
+        "Salt dissolves completely in water to form a solution. Heating the solution evaporates water, leaving solid salt crystals behind."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "In a mixture of oil and water, why does the cooking oil float on top?",
+        "Oil is less dense than water",
+        [
+          ["Oil reacts chemically with oxygen", "oil-density-mixup"],
+          ["Water dissolves all cooking oil", "oil-density-mixup"],
+          ["Oil particles have no weight", "oil-density-mixup"]
+        ],
+        "Oil and water are immiscible liquids. Because oil has a lower density than water, it rises and floats on top."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Which method allows muddy water to sit undisturbed so heavy mud settles to the bottom?",
+        "Sedimentation",
+        [
+          ["Condensation", "sedimentation-mixup"],
+          ["Sublimation", "sedimentation-mixup"],
+          ["Chlorination", "sedimentation-mixup"]
+        ],
+        "Sedimentation is the settling of heavy insoluble particles at the bottom of a liquid when left undisturbed."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "What process produces droplets of water on the outside of a glass containing iced water?",
+        "Condensation of water vapour from air",
+        [
+          ["Water leaking through the glass pores", "condensation-glass-mixup"],
+          ["Melting of the glass outer wall", "condensation-glass-mixup"],
+          ["Evaporation of cold inner ice", "condensation-glass-mixup"]
+        ],
+        "Warm water vapour present in the surrounding air touches the cold glass surface, loses heat, and condenses into liquid water droplets."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Which of the following changes is permanent and irreversible?",
+        "Baking a cake in an oven",
+        [
+          ["Freezing juice into an ice pop", "irreversible-change-mixup"],
+          ["Stretching a flexible rubber band", "irreversible-change-mixup"],
+          ["Melting butter in a pan", "irreversible-change-mixup"]
+        ],
+        "Baking causes heat-induced chemical reactions among flour, sugar, and eggs, creating a new substance that cannot be converted back to raw batter."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Which solid substance sublimes directly into purple vapour when gently heated?",
+        "Iodine crystals",
+        [
+          ["Table sugar", "iodine-sublimation-mixup"],
+          ["Iron filings", "iodine-sublimation-mixup"],
+          ["Sand grains", "iodine-sublimation-mixup"]
+        ],
+        "Iodine crystals undergo sublimation upon heating, turning directly into a dense purple vapour without melting into a liquid."
+      ),
+    },
+  ],
+  "sq-matter-gate-pool": [
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Why can gases be compressed much more easily than solids or liquids?",
+        "Gas molecules have large empty spaces between them",
+        [
+          ["Gas molecules have very strong attractive bonds", "gas-compressibility-mixup"],
+          ["Gas molecules contain no mass or weight", "gas-compressibility-mixup"],
+          ["Gases turn into ice whenever pressed", "gas-compressibility-mixup"]
+        ],
+        "In gases, molecules are spaced far apart with minimal intermolecular forces, allowing them to be pushed closer together under pressure."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "In which state of matter are molecules arranged in a rigid, fixed pattern with least movement?",
+        "Solid",
+        [
+          ["Liquid", "solid-molecule-mixup"],
+          ["Gas", "solid-molecule-mixup"],
+          ["Vapour", "solid-molecule-mixup"]
+        ],
+        "In solids, particles are tightly bound in regular arrangements, vibrating only in place around fixed positions."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Select the option that completes the change-of-state relationship:\nLiquid to gas : Evaporation :: Gas to liquid : ———",
+        "Condensation",
+        [
+          ["Sublimation", "state-analogy-mixup"],
+          ["Freezing", "state-analogy-mixup"],
+          ["Decantation", "state-analogy-mixup"]
+        ],
+        "Evaporation is the transition of liquid into gas, whereas condensation is the cooling of gas into liquid."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Read the following statements about matter:\n(i) Solids have a definite shape and fixed volume.\n(ii) Camphor turns into liquid before turning to gas.\n(iii) Gases expand to fill the entire container.\n(iv) Liquids have larger spaces between molecules than gases.\nWhich statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "matter-statement-eval"],
+          ["(ii) and (iv) only", "matter-statement-eval"],
+          ["(i) and (iv) only", "matter-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (camphor sublimes directly to gas) and (iv) is false (gases have much larger spaces than liquids)."
+      ),
+    },
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "A student puts mothballs (naphthalene) inside a warm woollen cupboard. Six months later, the balls have shrunk completely without leaving any wet spots. What occurred?",
+        "The solid mothballs sublimed directly into gas",
+        [
+          ["The mothballs soaked into the wool as oil", "naphthalene-scenario"],
+          ["The mothballs turned into solid ice crystals", "naphthalene-scenario"],
+          ["The mothballs were dissolved by cupboard air", "naphthalene-scenario"]
+        ],
+        "Naphthalene sublimes slowly at room temperature, converting directly from solid to vapour without leaving any liquid residue."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Which of the following is a reversible physical change?",
+        "Freezing water to make ice cubes",
+        [
+          ["Burning a candle wick to ash", "reversible-change-mixup"],
+          ["Frying an egg in hot oil", "reversible-change-mixup"],
+          ["Curdling of warm cow milk", "reversible-change-mixup"]
+        ],
+        "Freezing water is a reversible physical change because ice can easily be melted back into liquid water without creating a new substance."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "What key observation proves that a chemical change has taken place during a process?",
+        "One or more new substances are formed",
+        [
+          ["The original substance can be recovered easily", "chemical-proof-mixup"],
+          ["The total mass of the object disappears", "chemical-proof-mixup"],
+          ["The object only changes its temperature slightly", "chemical-proof-mixup"]
+        ],
+        "A chemical change always produces new substances with distinct physical and chemical characteristics, accompanied by chemical bond changes."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Complete the given classification relationship:\nGlowing of a light bulb : Physical change :: Rusting of iron : ———",
+        "Chemical change",
+        [
+          ["Reversible change", "change-type-analogy"],
+          ["Sublimation change", "change-type-analogy"],
+          ["Sedimentation change", "change-type-analogy"]
+        ],
+        "A bulb glowing is a physical change (tungsten wire reverts when switched off), while iron rusting creates a new compound, making it a chemical change."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Evaluate these statements about changes:\n(i) Cooking raw vegetables is an irreversible chemical change.\n(ii) Dissolving sugar in warm milk creates a brand new substance.\n(iii) Burning a piece of paper forms carbon dioxide and ash.\n(iv) Breaking a glass bottle changes its chemical formula.\nWhich of the statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "changes-statement-eval"],
+          ["(ii) and (iv) only", "changes-statement-eval"],
+          ["(i) and (iv) only", "changes-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (dissolving is a physical mixture) and (iv) is false (broken glass is still glass)."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "When lemon juice is added to a bowl of warm milk, thick white curds separate out from clear liquid. Why cannot this change be reversed?",
+        "Milk proteins have chemically reacted and changed",
+        [
+          ["The lemon juice absorbed all the white colour", "milk-curdling-scenario"],
+          ["The bowl cooled down below room temperature", "milk-curdling-scenario"],
+          ["The milk turned into solid pure chalk", "milk-curdling-scenario"]
+        ],
+        "Acid from lemon juice denatures milk proteins (casein), causing curdling—a permanent chemical change that cannot be reversed."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Which apparatus is used in a chemistry lab to separate two immiscible liquids like kerosene and water?",
+        "A separating funnel",
+        [
+          ["A porcelain filter paper", "immiscible-liquid-mixup"],
+          ["A magnetic bar", "immiscible-liquid-mixup"],
+          ["A wire gauze mesh", "immiscible-liquid-mixup"]
+        ],
+        "A separating funnel has a stopcock at the bottom that allows the denser liquid (water) to drain out, leaving lighter kerosene behind."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "What is the careful pouring of clean top liquid without disturbing the bottom settled sediment called?",
+        "Decantation",
+        [
+          ["Sedimentation", "decantation-mixup"],
+          ["Evaporation", "decantation-mixup"],
+          ["Chlorination", "decantation-mixup"]
+        ],
+        "Decantation is the slow, gentle pouring off of the top clear liquid after insoluble particles have settled by sedimentation."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Complete the separation method relationship:\nInsoluble sand in water : Filtration :: Soluble sugar in water : ———",
+        "Evaporation",
+        [
+          ["Decantation", "separation-analogy-mixup"],
+          ["Sedimentation", "separation-analogy-mixup"],
+          ["Sublimation", "separation-analogy-mixup"]
+        ],
+        "Insoluble sand is separated by filtration, whereas soluble sugar must be recovered by evaporating the liquid solvent."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "A student needs to obtain 100% pure distilled water from muddy seawater. Which method will successfully separate both the mud and the dissolved salt?",
+        "Distillation",
+        [
+          ["Filtration", "distillation-matching"],
+          ["Decantation", "distillation-matching"],
+          ["Chlorination", "distillation-matching"]
+        ],
+        "Distillation involves boiling the water into steam (leaving salts and mud behind) and condensing the pure steam into pure distilled water."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Consider these statements regarding water treatment:\n(i) Boiling water kills harmful disease-causing microbes.\n(ii) Filtration removes all dissolved salts from water.\n(iii) Alum is added during sedimentation to speed up settling of fine clay.\n(iv) Chlorination adds essential vitamins to drinking water.\nWhich statements are CORRECT?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "water-statement-eval"],
+          ["(ii) and (iv) only", "water-statement-eval"],
+          ["(i) and (iv) only", "water-statement-eval"]
+        ],
+        "Statements (i) and (iii) are correct (alum aids loading/sedimentation). Statement (ii) is false (filtration cannot remove dissolved salts) and (iv) is false (chlorine disinfects; it does not add vitamins)."
+      ),
+    },
+  ],
+  "sq-forces-warmup": [
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Which invisible pulling force pulls all objects down toward the centre of the Earth?",
+        "Gravitational force",
+        [
+          ["Frictional force", "gravity-pull-mixup"],
+          ["Electrostatic force", "gravity-pull-mixup"],
+          ["Buoyant force", "gravity-pull-mixup"]
+        ],
+        "Gravity is the universal attraction that Earth exerts on every object, pulling objects downward."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Why is it harder to push a heavy wooden box across a rough concrete road than across a smooth tiled floor?",
+        "Rough concrete produces much higher friction",
+        [
+          ["Smooth tile has higher gravitational pull", "friction-surface-mixup"],
+          ["Concrete repels wooden boxes magnetically", "friction-surface-mixup"],
+          ["Smooth tiles absorb all applied energy", "friction-surface-mixup"]
+        ],
+        "Frictional force depends on surface roughness; concrete has tiny microscopic bumps that interlock and oppose motion strongly."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "What form of energy is possessed by water stored behind a tall hydroelectric dam?",
+        "Potential energy",
+        [
+          ["Sound energy", "potential-energy-mixup"],
+          ["Light energy", "potential-energy-mixup"],
+          ["Kinetic energy", "potential-energy-mixup"]
+        ],
+        "Stored water held at a height possesses gravitational potential energy due to its elevated position."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "What energy transformation takes place when an electric toaster heats a slice of bread?",
+        "Electrical energy to heat energy",
+        [
+          ["Chemical energy to light energy", "toaster-energy-mixup"],
+          ["Sound energy to mechanical energy", "toaster-energy-mixup"],
+          ["Magnetic energy to kinetic energy", "toaster-energy-mixup"]
+        ],
+        "An electric toaster passes electricity through high-resistance nichrome wires, converting electrical energy into thermal heat energy."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "A seesaw on a playground is an example of which class of lever?",
+        "Class 1 lever",
+        [
+          ["Class 2 lever", "seesaw-lever-mixup"],
+          ["Class 3 lever", "seesaw-lever-mixup"],
+          ["Inclined lever", "seesaw-lever-mixup"]
+        ],
+        "In a seesaw, the pivot (fulcrum) sits in the middle between the two seated children (load and effort), making it a Class 1 lever."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Which simple machine consists of two inclined planes placed back-to-back, ending in a sharp cutting edge?",
+        "A wedge",
+        [
+          ["A pulley", "wedge-definition-mixup"],
+          ["A wheel and axle", "wedge-definition-mixup"],
+          ["A screw", "wedge-definition-mixup"]
+        ],
+        "A wedge (like a knife blade or axe head) consists of two sloping planes joined at a sharp edge to split or cut objects."
+      ),
+    },
+  ],
+  "sq-forces-machines-quiz": [
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Which of the following tools operates as a Class 2 lever with the load positioned between the fulcrum and effort?",
+        "A wheelbarrow",
+        [
+          ["A pair of scissors", "wheelbarrow-lever-mixup"],
+          ["A pair of tweezers", "wheelbarrow-lever-mixup"],
+          ["A fishing rod", "wheelbarrow-lever-mixup"]
+        ],
+        "In a wheelbarrow, the wheel at the front is the fulcrum, the handles are where effort is applied, and the heavy load sits in the middle."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "What type of simple machine is a winding mountain road or an accessibility ramp for wheelchairs?",
+        "An inclined plane",
+        [
+          ["A lever", "ramp-machine-mixup"],
+          ["A pulley", "ramp-machine-mixup"],
+          ["A wedge", "ramp-machine-mixup"]
+        ],
+        "An inclined plane is a sloping surface that allows objects to be raised to higher elevations with less applied force."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Why is a screw able to hold wooden planks together much more firmly than a smooth nail?",
+        "Its spiral inclined plane grips wood tightly",
+        [
+          ["It produces chemical glue inside the wood", "screw-grip-mixup"],
+          ["It is made of magnetic electrostatic steel", "screw-grip-mixup"],
+          ["It weighs ten times more than a nail", "screw-grip-mixup"]
+        ],
+        "A screw is essentially an inclined plane wrapped around a cylinder; its threads cut into wood fibres, offering tremendous resistance to pulling."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "What type of force makes tiny bits of dry paper jump up and stick to a plastic comb rubbed on hair?",
+        "Electrostatic force",
+        [
+          ["Gravitational force", "comb-electrostatic-mixup"],
+          ["Magnetic force", "comb-electrostatic-mixup"],
+          ["Frictional force", "comb-electrostatic-mixup"]
+        ],
+        "Rubbing transfers electric charges to the comb; the charged plastic attracts uncharged paper bits through electrostatic attraction."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "Scientifically, in which of the following cases is WORK actually done?",
+        "A student kicks a football across a playground",
+        [
+          ["A person pushes hard against a stationary wall", "work-done-definition"],
+          ["A guard stands still holding a heavy torch", "work-done-definition"],
+          ["A boy sits reading a book at his desk", "work-done-definition"]
+        ],
+        "Work is done only when an applied force causes an object to move through a distance. If there is no displacement, no scientific work occurs."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Why do racing cars and high-speed aeroplanes have smooth, streamlined pointed shapes?",
+        "To minimise air resistance (drag)",
+        [
+          ["To increase gravitational pull on tyres", "streamlined-shape-mixup"],
+          ["To store extra chemical solar energy", "streamlined-shape-mixup"],
+          ["To prevent electrostatic sparks on wings", "streamlined-shape-mixup"]
+        ],
+        "Streamlined bodies allow air or water to flow smoothly around the object with minimal turbulence, reducing opposing frictional drag."
+      ),
+    },
+  ],
+  "sq-forces-gate-pool": [
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "What upward force exerted by water makes a heavy wooden log float on a river?",
+        "Buoyant force (upthrust)",
+        [
+          ["Gravitational pull", "buoyancy-force-mixup"],
+          ["Electrostatic friction", "buoyancy-force-mixup"],
+          ["Magnetic force", "buoyancy-force-mixup"]
+        ],
+        "Buoyant force is the upward thrust that a fluid exerts on any object placed in it, balancing gravity for floating objects."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Which metal is strongly attracted to a permanent horseshoe magnet?",
+        "Iron",
+        [
+          ["Aluminium", "magnetic-metal-mixup"],
+          ["Copper", "magnetic-metal-mixup"],
+          ["Gold", "magnetic-metal-mixup"]
+        ],
+        "Iron, nickel, and cobalt are ferromagnetic materials strongly attracted by magnetic fields; aluminium and copper are non-magnetic."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Select the correct option to complete the force pair:\nRough surface : Increases friction :: Lubricating oil : ———",
+        "Decreases friction",
+        [
+          ["Increases gravity", "friction-analogy-mixup"],
+          ["Stops all motion", "friction-analogy-mixup"],
+          ["Creates magnetism", "friction-analogy-mixup"]
+        ],
+        "Rough surfaces increase contact friction, whereas lubricants like oil and grease smooth out imperfections and reduce friction."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "Read the following statements about forces:\n(i) Friction opposes the direction of motion.\n(ii) Gravity acts only on objects made of metal.\n(iii) Friction between shoe soles and the ground helps us walk.\n(iv) A magnet repels all non-metallic objects.\nWhich statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "forces-statement-eval"],
+          ["(ii) and (iv) only", "forces-statement-eval"],
+          ["(i) and (iv) only", "forces-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (gravity acts on all matter) and (iv) is false (magnets only attract magnetic materials; they do not repel non-metals)."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "A heavy wooden box slides across an icy frozen lake and keeps moving much farther than it would across a grassy lawn. Why?",
+        "Smooth ice provides very little frictional resistance",
+        [
+          ["Ice increases the mass of the wooden box", "ice-friction-scenario"],
+          ["Cold temperatures neutralise Earth's gravity", "ice-friction-scenario"],
+          ["Ice produces magnetic energy that pushes it", "ice-friction-scenario"]
+        ],
+        "Ice has an extremely low coefficient of friction; the absence of strong opposing frictional force allows the box to slide much farther."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "What form of energy is possessed by a speeding cricket ball in flight?",
+        "Kinetic energy",
+        [
+          ["Potential energy", "kinetic-energy-mixup"],
+          ["Chemical energy", "kinetic-energy-mixup"],
+          ["Nuclear energy", "kinetic-energy-mixup"]
+        ],
+        "Any object that is in motion possesses kinetic energy by virtue of its speed and mass."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "What energy conversion occurs inside green leaves during the process of photosynthesis?",
+        "Light energy to chemical energy",
+        [
+          ["Heat energy to electrical energy", "photosynthesis-energy-mixup"],
+          ["Kinetic energy to sound energy", "photosynthesis-energy-mixup"],
+          ["Sound energy to potential energy", "photosynthesis-energy-mixup"]
+        ],
+        "Chlorophyll absorbs sunlight (solar/light energy) and converts it into chemical energy stored within glucose molecules."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "Complete the energy conversion pair:\nElectric fan : Electrical to mechanical :: Solar cell : ———",
+        "Light to electrical",
+        [
+          ["Chemical to heat", "energy-conversion-analogy"],
+          ["Sound to mechanical", "energy-conversion-analogy"],
+          ["Nuclear to light", "energy-conversion-analogy"]
+        ],
+        "An electric fan turns electrical energy into mechanical movement; a solar panel converts solar light energy directly into electrical energy."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "Which of the following is a renewable and non-polluting source of energy?",
+        "Solar energy",
+        [
+          ["Coal", "renewable-source-matching"],
+          ["Petroleum diesel", "renewable-source-matching"],
+          ["Natural gas", "renewable-source-matching"]
+        ],
+        "Solar, wind, and hydro energy are clean, inexhaustible renewable sources, whereas fossil fuels (coal, petroleum) deplete and emit greenhouse gases."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "Evaluate the following statements about energy and work:\n(i) Work is done whenever a person applies force, even without movement.\n(ii) Energy can neither be created nor destroyed.\n(iii) Stretched rubber possesses elastic potential energy.\n(iv) Coal is a renewable energy resource.\nWhich statements are CORRECT?",
+        "(ii) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "energy-statement-eval"],
+          ["(i) and (iv) only", "energy-statement-eval"],
+          ["(ii) and (iv) only", "energy-statement-eval"]
+        ],
+        "Statements (ii) and (iii) are correct. Statement (i) is false (movement in force direction is required) and (iv) is false (coal is a finite fossil fuel)."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "In a Class 3 lever like a pair of tweezers or a fishing rod, which component is in the middle?",
+        "Effort",
+        [
+          ["Fulcrum", "class3-lever-mixup"],
+          ["Load", "class3-lever-mixup"],
+          ["Pulley", "class3-lever-mixup"]
+        ],
+        "In Class 3 levers, the effort is applied between the fulcrum at one end and the load at the opposite end."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "What is the main mechanical advantage of using a single fixed pulley to raise a school flag?",
+        "It changes the direction of the applied force",
+        [
+          ["It reduces the weight of the flag to zero", "fixed-pulley-advantage"],
+          ["It doubles the gravitational pull on the rope", "fixed-pulley-advantage"],
+          ["It speeds up the wind in the schoolyard", "fixed-pulley-advantage"]
+        ],
+        "A single fixed pulley lets a person pull downward (working with their own body weight and gravity) to raise an object upward."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Select the correct option to complete the simple machine classification:\nCrowbar : Class 1 lever :: Nutcracker : ———",
+        "Class 2 lever",
+        [
+          ["Class 3 lever", "lever-class-analogy"],
+          ["Inclined plane", "lever-class-analogy"],
+          ["Wheel and axle", "lever-class-analogy"]
+        ],
+        "In a crowbar, the fulcrum is in the middle (Class 1); in a nutcracker, the load (the nut) is placed in the middle between the hinge and handles (Class 2)."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "A carpenter turns a screwdriver to drive a screw into a wall. What type of simple machine is the screwdriver an example of?",
+        "Wheel and axle",
+        [
+          ["Class 3 lever", "screwdriver-wheel-axle"],
+          ["Fixed pulley", "screwdriver-wheel-axle"],
+          ["Single wedge", "screwdriver-wheel-axle"]
+        ],
+        "The thick handle acts as the wheel and the narrow metal shaft acts as the axle; turning the wider handle multiplies rotational force on the screw."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Workers need to lift a 200 kg heavy machine into the back of a delivery truck. Which simple machine will allow them to roll it up using the least effort?",
+        "A long wooden inclined plane (ramp)",
+        [
+          ["A pair of cutting metal shears", "truck-ramp-scenario"],
+          ["A wooden Class 1 seesaw lever", "truck-ramp-scenario"],
+          ["A fixed single flag pulley", "truck-ramp-scenario"]
+        ],
+        "An inclined plane spreads the required vertical work over a longer sloping distance, significantly reducing the effort needed to raise the load."
+      ),
+    },
+  ],
+  "sq-earth-warmup": [
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which layer of the Earth is the thin, solid outermost rocky shell upon which we live?",
+        "The Crust",
+        [
+          ["The Mantle", "earth-crust-mixup"],
+          ["The Outer Core", "earth-crust-mixup"],
+          ["The Inner Core", "earth-crust-mixup"]
+        ],
+        "The crust is the thinnest outer layer of Earth, made of solid rocks forming continents and ocean basins."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which type of rock is formed by the cooling and solidification of molten volcanic lava or magma?",
+        "Igneous rocks",
+        [
+          ["Sedimentary rocks", "igneous-definition-mixup"],
+          ["Metamorphic rocks", "igneous-definition-mixup"],
+          ["Fossil rocks", "igneous-definition-mixup"]
+        ],
+        "Igneous rocks (from Latin 'ignis' meaning fire) form when molten magma cools underground or lava solidifies on Earth's surface."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which light, porous volcanic rock has trapped gas bubbles and can actually float on water?",
+        "Pumice",
+        [
+          ["Granite", "pumice-floating-mixup"],
+          ["Basalt", "pumice-floating-mixup"],
+          ["Obsidian", "pumice-floating-mixup"]
+        ],
+        "Pumice forms from frothy volcanic lava; as it cools rapidly, trapped air pockets leave a porous sponge texture light enough to float."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "In which layer of Earth's atmosphere do all clouds, rainfall, and weather storms occur?",
+        "Troposphere",
+        [
+          ["Stratosphere", "troposphere-weather-mixup"],
+          ["Mesosphere", "troposphere-weather-mixup"],
+          ["Thermosphere", "troposphere-weather-mixup"]
+        ],
+        "The troposphere is the lowest atmospheric layer containing nearly all moisture and air density where all daily weather changes occur."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "Why does an astronaut weigh only one-sixth (1/6) of their Earth weight on the Moon?",
+        "The Moon has smaller mass and weaker gravity",
+        [
+          ["The Moon's atmosphere pushes upward strongly", "moon-gravity-mixup"],
+          ["Spacesuits lose weight in outer space", "moon-gravity-mixup"],
+          ["The Moon's core repels human bone tissue", "moon-gravity-mixup"]
+        ],
+        "Because the Moon has only about 1% of Earth's mass, its surface gravitational acceleration is approximately one-sixth of Earth's."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "What celestial event occurs when the Moon passes directly between the Sun and the Earth during the day?",
+        "A solar eclipse",
+        [
+          ["A lunar eclipse", "solar-eclipse-mixup"],
+          ["A meteor shower", "solar-eclipse-mixup"],
+          ["A full moon night", "solar-eclipse-mixup"]
+        ],
+        "In a solar eclipse, the Moon blocks sunlight and casts its shadow on Earth (Sun — Moon — Earth)."
+      ),
+    },
+  ],
+  "sq-earth-rocks-quiz": [
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which metamorphic rock is formed from sedimentary limestone under high underground heat and pressure?",
+        "Marble",
+        [
+          ["Slate", "limestone-marble-mixup"],
+          ["Gneiss", "limestone-marble-mixup"],
+          ["Quartzite", "limestone-marble-mixup"]
+        ],
+        "Under intense geological heat and pressure, limestone recrystallises into marble, famously used to build monuments like the Taj Mahal."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Why are fossils of prehistoric plants and animals found almost exclusively in sedimentary rocks?",
+        "Dead remains are buried under settling layers of sediment",
+        [
+          ["Volcanic magma preserves delicate bone tissue perfectly", "fossil-preservation-mixup"],
+          ["Metamorphic heat freezes dead creatures into crystal", "fossil-preservation-mixup"],
+          ["Sedimentary rocks form inside freezing outer space", "fossil-preservation-mixup"]
+        ],
+        "Sedimentary rocks form gently over time as silt and mud settle over dead organisms, whereas volcanic heat in igneous or metamorphic rocks destroys organic remains."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "Which atmospheric layer contains the ozone layer that shields living things from harmful ultraviolet (UV) radiation?",
+        "Stratosphere",
+        [
+          ["Troposphere", "ozone-stratosphere-mixup"],
+          ["Mesosphere", "ozone-stratosphere-mixup"],
+          ["Exosphere", "ozone-stratosphere-mixup"]
+        ],
+        "The ozone layer is located in the stratosphere; it absorbs dangerous solar ultraviolet rays that cause skin cancer and eye damage."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "In which atmospheric layer do most incoming meteors burn up due to air friction, appearing as shooting stars?",
+        "Mesosphere",
+        [
+          ["Exosphere", "meteor-mesosphere-mixup"],
+          ["Stratosphere", "meteor-mesosphere-mixup"],
+          ["Troposphere", "meteor-mesosphere-mixup"]
+        ],
+        "The mesosphere is the coldest atmospheric layer; its gases cause sufficient friction to vaporise small meteoroids entering from space."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which famous historic monument in Delhi is constructed predominantly of red sandstone?",
+        "The Red Fort",
+        [
+          ["The Taj Mahal", "red-sandstone-monument"],
+          ["The Qutub Minar", "red-sandstone-monument"],
+          ["The Victoria Memorial", "red-sandstone-monument"]
+        ],
+        "The historic Red Fort in Old Delhi was constructed by Mughal Emperor Shah Jahan using red sandstone, a durable sedimentary rock."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "What relative alignment of celestial bodies causes a total lunar eclipse?",
+        "Sun — Earth — Moon",
+        [
+          ["Sun — Moon — Earth", "lunar-eclipse-alignment"],
+          ["Earth — Sun — Moon", "lunar-eclipse-alignment"],
+          ["Moon — Sun — Earth", "lunar-eclipse-alignment"]
+        ],
+        "A lunar eclipse occurs when Earth passes directly between the Sun and Moon, casting Earth's shadow across the Full Moon."
+      ),
+    },
+  ],
+  "sq-earth-gate-pool": [
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which dark, smooth volcanic glass rock has razor-sharp edges and was used by ancient humans to make spearheads?",
+        "Obsidian",
+        [
+          ["Pumice", "obsidian-glass-mixup"],
+          ["Sandstone", "obsidian-glass-mixup"],
+          ["Limestone", "obsidian-glass-mixup"]
+        ],
+        "Obsidian is an extrusive igneous rock that cools so quickly no crystals form, creating a shiny black volcanic glass with razor-sharp fractures."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which sedimentary rock is made from fine clay and mud compressed into soft thin layers that split easily into sheets?",
+        "Shale",
+        [
+          ["Conglomerate", "shale-clay-mixup"],
+          ["Basalt", "shale-clay-mixup"],
+          ["Granite", "shale-clay-mixup"]
+        ],
+        "Shale is formed from compacted clay minerals; under further metamorphic heat and pressure, it transforms into slate."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Complete the rock transformation relationship:\nLimestone : Marble :: Sandstone : ———",
+        "Quartzite",
+        [
+          ["Slate", "rock-metamorphic-analogy"],
+          ["Gneiss", "rock-metamorphic-analogy"],
+          ["Pumice", "rock-metamorphic-analogy"]
+        ],
+        "Limestone metamrophoses into marble, while quartz-rich sandstone recrystallises under heat and pressure into quartzite."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Read these statements about rocks and minerals:\n(i) Granite is an igneous rock formed by slow cooling of magma deep underground.\n(ii) Pumice is the heaviest known rock and sinks instantly in water.\n(iii) Sedimentary rocks often preserve fossilised animal shells.\n(iv) Slate is an igneous rock formed from liquid lava.\nWhich statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "rocks-statement-eval"],
+          ["(ii) and (iv) only", "rocks-statement-eval"],
+          ["(i) and (iv) only", "rocks-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (pumice is porous and floats) and (iv) is false (slate is metamorphic, derived from shale)."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "A geologist finds a rock made of smooth rounded pebbles and gravel naturally cemented together. What type of sedimentary rock is this?",
+        "Conglomerate",
+        [
+          ["Sandstone", "conglomerate-pebbles"],
+          ["Shale", "conglomerate-pebbles"],
+          ["Basalt", "conglomerate-pebbles"]
+        ],
+        "Conglomerate is a clastic sedimentary rock composed of rounded gravel and pebble fragments bound together by mineral cement."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "Which gas makes up the largest proportion of Earth's atmosphere by volume?",
+        "Nitrogen (78%)",
+        [
+          ["Oxygen (21%)", "atmosphere-gas-mixup"],
+          ["Carbon dioxide (1%)", "atmosphere-gas-mixup"],
+          ["Water vapour (5%)", "atmosphere-gas-mixup"]
+        ],
+        "Earth's dry air consists of approximately 78% Nitrogen, 21% Oxygen, and about 1% Argon, Carbon Dioxide, and other trace gases."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "Why do commercial jet aeroplanes prefer to fly in the lower stratosphere rather than the troposphere?",
+        "The stratosphere is calm and free from turbulent weather clouds",
+        [
+          ["The stratosphere contains ten times more oxygen for pilots", "jet-stratosphere-reason"],
+          ["Gravity does not exist in the stratosphere", "jet-stratosphere-reason"],
+          ["Stratospheric air produces no friction on wings", "jet-stratosphere-reason"]
+        ],
+        "The stratosphere has stable, dry air with virtually no stormy weather or cloud turbulence, ensuring smooth, fuel-efficient flights."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "Select the correct option to complete the atmospheric layer relationship:\nTroposphere : Daily weather storms :: Stratosphere : ———",
+        "Protective ozone layer",
+        [
+          ["Space shuttles orbiting Earth", "atmosphere-layer-analogy"],
+          ["Burned meteor showers", "atmosphere-layer-analogy"],
+          ["Melted magma chambers", "atmosphere-layer-analogy"]
+        ],
+        "The troposphere contains weather phenomena; the stratosphere houses the vital UV-absorbing ozone shield."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "Evaluate these statements about Earth's atmosphere:\n(i) The exosphere is the outermost layer merging into outer space.\n(ii) All rainfall and snow occur in the mesosphere.\n(iii) Ozone in the stratosphere absorbs harmful ultraviolet rays.\n(iv) Oxygen makes up 78% of Earth's atmosphere.\nWhich statements are CORRECT?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "atmosphere-statement-eval"],
+          ["(ii) and (iv) only", "atmosphere-statement-eval"],
+          ["(i) and (iv) only", "atmosphere-statement-eval"]
+        ],
+        "Statements (i) and (iii) are correct. Statement (ii) is false (weather happens in the troposphere) and (iv) is false (nitrogen is 78%; oxygen is 21%)."
+      ),
+    },
+    {
+      subtopic: "atmosphere-layers",
+      ...q(
+        "If Earth's ozone layer in the stratosphere were completely destroyed, what would be the most severe consequence for living organisms?",
+        "Harmful solar UV rays would cause skin cancer and cataracts",
+        [
+          ["All clouds and rainfall on Earth would instantly evaporate", "ozone-depletion-scenario"],
+          ["Earth's gravitational force would drop by half", "ozone-depletion-scenario"],
+          ["The air would completely lose all nitrogen gas", "ozone-depletion-scenario"]
+        ],
+        "Ozone filters out high-energy ultraviolet-B radiation; its absence would dramatically increase cataracts, genetic mutations, and skin cancer."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "Why can no liquid water or sound exist naturally on the surface of the Moon?",
+        "The Moon has no protective atmosphere",
+        [
+          ["The Moon's core absorbs all sound waves", "moon-atmosphere-mixup"],
+          ["The Moon's gravity is too powerful for water", "moon-atmosphere-mixup"],
+          ["The Moon spins too fast for air to stay", "moon-atmosphere-mixup"]
+        ],
+        "Because the Moon has no atmosphere, water quickly boils away or freezes, and sound waves have no air medium to travel through."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "On which phase of the Moon can a solar eclipse occur?",
+        "New Moon",
+        [
+          ["Full Moon", "solar-eclipse-phase"],
+          ["First Quarter", "solar-eclipse-phase"],
+          ["Waxing Gibbous", "solar-eclipse-phase"]
+        ],
+        "A solar eclipse happens only on a New Moon day when the unlit side of the Moon faces Earth as it passes directly between Sun and Earth."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "Complete the eclipse alignment relationship:\nSolar eclipse : Sun — Moon — Earth :: Lunar eclipse : ———",
+        "Sun — Earth — Moon",
+        [
+          ["Moon — Sun — Earth", "eclipse-alignment-analogy"],
+          ["Earth — Moon — Sun", "eclipse-alignment-analogy"],
+          ["Sun — Moon — Mars", "eclipse-alignment-analogy"]
+        ],
+        "In a solar eclipse the Moon is in the middle; in a lunar eclipse the Earth is in the middle between the Sun and the Moon."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "An astronaut who weighs 66 kg on Earth lands on the surface of the Moon. What will their weight be on the Moon?",
+        "11 kg",
+        [
+          ["66 kg", "moon-weight-calculation"],
+          ["396 kg", "moon-weight-calculation"],
+          ["0 kg", "moon-weight-calculation"]
+        ],
+        "Moon's gravitational acceleration is 1/6th of Earth's: 66 kg ÷ 6 = 11 kg (though their mass remains unchanged)."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "Read these statements regarding the Moon:\n(i) A lunar eclipse occurs only on a Full Moon night.\n(ii) The Moon produces its own bright yellow light.\n(iii) The Moon takes about 27.3 days to orbit the Earth.\n(iv) Footprints left on the Moon disappear within hours due to wind.\nWhich statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "moon-statement-eval"],
+          ["(ii) and (iv) only", "moon-statement-eval"],
+          ["(i) and (iv) only", "moon-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (it reflects sunlight) and (iv) is false (with no air or wind, Apollo footprints last for millions of years)."
+      ),
+    },
+  ],
+  "sq-u3-test": [
+    {
+      subtopic: "states-of-matter",
+      ...q(
+        "Select the correct option to complete the transformation pair:\nSolid to gas directly : Sublimation :: Gas to liquid : ———",
+        "Condensation",
+        [
+          ["Evaporation", "boss-matter-analogy"],
+          ["Sedimentation", "boss-matter-analogy"],
+          ["Freezing", "boss-matter-analogy"]
+        ],
+        "Sublimation converts solid directly to gas; condensation converts gas back to liquid on cooling."
+      ),
+    },
+    {
+      subtopic: "physical-chemical-changes",
+      ...q(
+        "Consider the following statements regarding changes in matter:\n(i) Rusting of iron can be easily reversed by cooling.\n(ii) Melting of butter in a warm pan is a physical change.\n(iii) Camphor crystals sublime directly into gas on heating.\n(iv) Burning coal does not produce any new chemical substances.\nWhich statements are CORRECT?",
+        "(ii) and (iii) only",
+        [
+          ["(i) and (iii) only", "boss-changes-eval"],
+          ["(i), (ii) and (iii) only", "boss-changes-eval"],
+          ["(ii) and (iv) only", "boss-changes-eval"]
+        ],
+        "Statements (ii) and (iii) are correct. Statement (i) is false (rusting is chemical and irreversible) and (iv) is false (burning coal forms new ash and carbon dioxide)."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "A student accidentally spills sand into a beaker of salt solution. Which pair of separation techniques will successfully recover both dry sand and dry salt?",
+        "Filtration followed by evaporation",
+        [
+          ["Decantation followed by condensation", "boss-sand-salt-separation"],
+          ["Sublimation followed by distillation", "boss-sand-salt-separation"],
+          ["Sedimentation followed by chlorination", "boss-sand-salt-separation"]
+        ],
+        "Filtration removes insoluble sand on filter paper; subsequent evaporation of the clear filtrate boils off water, leaving dry salt crystals."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "What chemical is dissolved in swimming pool water and municipal drinking water to destroy harmful microorganisms?",
+        "Chlorine",
+        [
+          ["Common salt", "boss-chlorine-disinfect"],
+          ["Alum crystals", "boss-chlorine-disinfect"],
+          ["Baking powder", "boss-chlorine-disinfect"]
+        ],
+        "Chlorination using chlorine or bleaching powder is widely employed to disinfect water and kill pathogenic bacteria."
+      ),
+    },
+    {
+      subtopic: "separation-methods",
+      ...q(
+        "Which of the following substances does NOT dissolve in water, forming an insoluble suspension?",
+        "Chalk powder",
+        [
+          ["Table sugar", "boss-insoluble-chalk"],
+          ["Common salt", "boss-insoluble-chalk"],
+          ["Citric acid", "boss-insoluble-chalk"]
+        ],
+        "Chalk powder is insoluble calcium carbonate and settles down as sediment; sugar, salt, and citric acid dissolve completely."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Identify the missing machine class:\nScissors : Class 1 lever :: Nutcracker : ———",
+        "Class 2 lever",
+        [
+          ["Class 3 lever", "boss-lever-analogy"],
+          ["Inclined plane", "boss-lever-analogy"],
+          ["Wheel and axle", "boss-lever-analogy"]
+        ],
+        "Scissors have the fulcrum in the middle (Class 1); a nutcracker has the load in the middle between the pivot and handles (Class 2)."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Read the following statements about simple machines and energy:\n(i) A screw is an inclined plane wrapped around a cylinder.\n(ii) A fixed pulley reduces the force required to half.\n(iii) Tweezers and fishing rods are examples of Class 3 levers.\n(iv) A moving bicycle possesses gravitational potential energy only.\nWhich statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "boss-machines-eval"],
+          ["(ii) and (iv) only", "boss-machines-eval"],
+          ["(i) and (iv) only", "boss-machines-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (a fixed pulley only changes direction; it does not reduce force) and (iv) is false (motion gives kinetic energy)."
+      ),
+    },
+    {
+      subtopic: "types-of-forces",
+      ...q(
+        "A car driver presses the brake pedal on a wet, oily asphalt road, but the car skids forward. What was the cause of this skidding?",
+        "Water and oil formed a thin layer that drastically reduced friction",
+        [
+          ["The car became twice as heavy as soon as it rained", "boss-skidding-friction"],
+          ["Gravity stopped pulling the car toward the road", "boss-skidding-friction"],
+          ["The car tyres turned into magnetic simple wedges", "boss-skidding-friction"]
+        ],
+        "A wet or oily surface acts as a lubricant, reducing friction between tyres and asphalt, leading to skidding."
+      ),
+    },
+    {
+      subtopic: "energy-forms",
+      ...q(
+        "Which energy change takes place inside a solar calculator when light shines on its panel?",
+        "Light energy to electrical energy",
+        [
+          ["Chemical energy to sound energy", "boss-solar-calculator"],
+          ["Heat energy to mechanical energy", "boss-solar-calculator"],
+          ["Nuclear energy to kinetic energy", "boss-solar-calculator"]
+        ],
+        "Photovoltaic solar cells convert incoming solar light energy into electricity to power the calculator's digital display."
+      ),
+    },
+    {
+      subtopic: "simple-machines",
+      ...q(
+        "Which of the following devices is an example of a wheel and axle simple machine?",
+        "A door knob",
+        [
+          ["A flight of stairs", "boss-door-knob-machine"],
+          ["A bottle opener", "boss-door-knob-machine"],
+          ["A pair of tweezers", "boss-door-knob-machine"]
+        ],
+        "A door knob uses a wide wheel (knob) mounted onto a narrower axle (spindle); turning the knob turns the latch mechanism easily."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Select the correct option to complete the rock family analogy:\nGranite : Igneous rock :: Sandstone : ———",
+        "Sedimentary rock",
+        [
+          ["Metamorphic rock", "boss-rock-analogy"],
+          ["Volcanic lava rock", "boss-rock-analogy"],
+          ["Liquid mineral", "boss-rock-analogy"]
+        ],
+        "Granite is an intrusive igneous rock, while sandstone is a sedimentary rock formed from cemented sand grains."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Read these statements regarding the Earth and Moon:\n(i) The ozone layer in the stratosphere shields Earth from UV rays.\n(ii) In a solar eclipse, Earth passes directly between the Sun and Moon.\n(iii) Pumice is an igneous rock that can float on water.\n(iv) Weather changes like rain and snow occur in the thermosphere.\nWhich statements are CORRECT?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "boss-earth-moon-eval"],
+          ["(ii) and (iv) only", "boss-earth-moon-eval"],
+          ["(i) and (iv) only", "boss-earth-moon-eval"]
+        ],
+        "Statements (i) and (iii) are correct. Statement (ii) is false (Moon is in the middle during solar eclipse) and (iv) is false (weather happens in the troposphere)."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "Two astronauts stand on the surface of the Moon without their communication radios switched on. Why cannot they hear each other speaking even when shouting loudly?",
+        "Sound waves require a material medium (air) to travel",
+        [
+          ["Moon's gravity pulls sound waves straight into the core", "boss-moon-sound-vacuum"],
+          ["The Sun's bright light destroys all sound energy", "boss-moon-sound-vacuum"],
+          ["Astronaut helmet visors absorb sound vibrations entirely", "boss-moon-sound-vacuum"]
+        ],
+        "Sound is a mechanical wave requiring vibrating air molecules to travel. Because the Moon has a vacuum with no atmosphere, sound cannot propagate."
+      ),
+    },
+    {
+      subtopic: "rocks-minerals",
+      ...q(
+        "Which metamorphic rock with fine layered foliation is formed from shale and used to make school blackboards?",
+        "Slate",
+        [
+          ["Marble", "boss-shale-slate"],
+          ["Pumice", "boss-shale-slate"],
+          ["Basalt", "boss-shale-slate"]
+        ],
+        "Slate is formed when sedimentary shale is subjected to geological heat and pressure; it splits into smooth flat sheets used for blackboards and roofing."
+      ),
+    },
+    {
+      subtopic: "moon-eclipses",
+      ...q(
+        "What celestial alignment is responsible for casting Earth's shadow across the Full Moon during a lunar eclipse?",
+        "Sun — Earth — Moon",
+        [
+          ["Sun — Moon — Earth", "boss-lunar-alignment"],
+          ["Moon — Sun — Earth", "boss-lunar-alignment"],
+          ["Earth — Sun — Mars", "boss-lunar-alignment"]
+        ],
+        "A lunar eclipse takes place when the Earth moves directly between the Sun and the Moon, blocking sunlight from reaching the lunar surface."
+      ),
+    },
+  ],
 };
 
 export const readings = {};
@@ -3275,8 +4692,149 @@ const u2Boss = forGrades(
   [5]
 );
 
-// Unit 3 Teaser (coming soon)
-const u3 = unit("sq-u3", 3, "Matter and Materials", { comingSoon: true });
+
+// ==============================================================================
+// UNIT 3: Matter, Forces & Earth
+// ==============================================================================
+const u3 = forGrades(unit("sq-u3", 3, "Matter, Forces & Earth"), [4, 5]);
+
+// Topic 1: States of Matter, Changes & Separation
+const matter = forGrades(
+  main("sq-matter", u3.id, 1, "States of Matter & Changes", [
+    study("sq-matter-study"),
+    quiz("sq-matter-warmup"),
+  ]),
+  [4, 5]
+);
+
+const matterP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-matter-p1",
+      matter,
+      1,
+      "Methods of Separation",
+      "medium",
+      [quiz("sq-matter-separation-quiz")]
+    ),
+    "separation-methods"
+  ),
+  [4, 5]
+);
+
+const matterGate = forGrades(
+  gate(
+    "sq-matter-gate",
+    matter,
+    "Matter and Changes Challenge",
+    "sq-matter-gate-pool",
+    {
+      "states-of-matter": "States of matter and particles",
+      "physical-chemical-changes": "Physical and chemical changes",
+      "separation-methods": "Separation of mixtures",
+    }
+  ),
+  [4, 5]
+);
+
+const matterEndless = forGrades(endless(matter), [4, 5]);
+
+// Topic 2: Forces, Energy and Simple Machines
+const forces = forGrades(
+  main("sq-forces", u3.id, 2, "Forces, Energy and Machines", [
+    study("sq-forces-study"),
+    quiz("sq-forces-warmup"),
+  ]),
+  [4, 5]
+);
+
+const forcesP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-forces-p1",
+      forces,
+      1,
+      "Simple Machines in Action",
+      "medium",
+      [quiz("sq-forces-machines-quiz")]
+    ),
+    "simple-machines"
+  ),
+  [4, 5]
+);
+
+const forcesGate = forGrades(
+  gate(
+    "sq-forces-gate",
+    forces,
+    "Forces and Energy Challenge",
+    "sq-forces-gate-pool",
+    {
+      "types-of-forces": "Types of forces",
+      "energy-forms": "Work and energy forms",
+      "simple-machines": "Classes of simple machines",
+    }
+  ),
+  [4, 5]
+);
+
+const forcesEndless = forGrades(endless(forces), [4, 5]);
+
+// Topic 3: Earth, Rocks, Atmosphere and the Moon
+const earth = forGrades(
+  main("sq-earth", u3.id, 3, "Earth, Atmosphere and Space", [
+    study("sq-earth-study"),
+    quiz("sq-earth-warmup"),
+  ]),
+  [4, 5]
+);
+
+const earthP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-earth-p1",
+      earth,
+      1,
+      "Rocks and the Atmosphere",
+      "hard",
+      [quiz("sq-earth-rocks-quiz")]
+    ),
+    "rocks-minerals"
+  ),
+  [4, 5]
+);
+
+const earthGate = forGrades(
+  gate(
+    "sq-earth-gate",
+    earth,
+    "Earth and Universe Challenge",
+    "sq-earth-gate-pool",
+    {
+      "rocks-minerals": "Rocks and mineral families",
+      "atmosphere-layers": "Atmospheric layers and ozone",
+      "moon-eclipses": "The Moon, gravity and eclipses",
+    }
+  ),
+  [4, 5]
+);
+
+const earthEndless = forGrades(endless(earth), [4, 5]);
+
+// Unit 3 Boss
+const u3Boss = forGrades(
+  boss(
+    "sq-u3-boss",
+    u3.id,
+    "Matter, Forces & Earth Boss",
+    "sq-u3-test",
+    "Dr. Bio-Mixer is disrupting the physical world! Apply your mastery of matter, forces, and Earth science to save the universe."
+  ),
+  [4, 5]
+);
+
+// Unit 4 Teaser (coming soon)
+const u4 = unit("sq-u4", 4, "Environment and Space", { comingSoon: true });
 
 export const nodes = [
   u1,
@@ -3308,4 +4866,18 @@ export const nodes = [
   nervousEndless,
   u2Boss,
   u3,
+  matter,
+  matterP1,
+  matterGate,
+  matterEndless,
+  forces,
+  forcesP1,
+  forcesGate,
+  forcesEndless,
+  earth,
+  earthP1,
+  earthGate,
+  earthEndless,
+  u3Boss,
+  u4,
 ];
