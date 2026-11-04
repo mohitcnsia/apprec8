@@ -14,6 +14,8 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Mockup N1** (Play as child → lock the phone to Apprec8 + time limit; needs a build): owner reacts. Same canvas as L/M.
+- **English Unit 5 Tenses** (`bef00a9`, 144 questions, Claude): Seema/owner review before seeding.
 - **DR-11 deploy** (4 new functions for teacher invites, no rules change): owner OK? Then Gemini/owner runs the command in `docs/DEPLOY_PENDING.md`.
 - **Publish over the air:** leaderboard (M1), Schools & classes (L1–L4), status bar in quests, loader text fix.
 - ~~Mockups L + M~~ owner approved 2026-11-05 → built (`723fe34` leaderboard, Schools: this commit).
