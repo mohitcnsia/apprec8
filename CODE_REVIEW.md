@@ -1673,3 +1673,14 @@ Product rule from this: **the app teaches and supports on its own**; teacher fea
 - **Privacy:** mood data is sensitive (DPDP Act); store the minimum, parent consent via parent-first accounts (RB-6), never shown
   to other kids; teachers see nothing individual unless the safeguarding plan says so.
 - **Order:** after the exams; mockup + counsellor review + safeguarding plan before any build.
+
+### RB-6 / RB-8 update (owner 2026-11-04): invite-only, parent consent, Seema leads safeguarding
+- **Invite-only:** accounts are created by parents (and teachers) with an invite code; no open sign-up. Fewer strangers, calmer
+  reviews, simpler moderation.
+- **Consent is recorded in the app**, not just managed by hand: when a parent creates a kid profile they accept the terms +
+  privacy notice; we store who, when, which version (`consents/{id}`), and the parent can withdraw (delete the kid's data).
+- **Play Store:** an invite-only app can still be public on Play: give Google's reviewers a demo invite code + test login in
+  Play Console → App access. Apps for children follow the Families policy (data, ads, analytics), and we need a privacy policy
+  URL. Gemini G11 researches the exact Families + DPDP requirements.
+- **Safeguarding (RB-8):** Seema (psychologist, counsels students, ran her school's first mental-health week, heads its POCSO
+  committee) leads the safeguarding plan and reviews the well-being flow.
