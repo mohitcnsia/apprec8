@@ -81,7 +81,7 @@ Non-living things do **not** grow from within, breathe, feed, or reproduce by th
 | Cat | Plastic bottle | River |
 | Honeybee | Car | Cloud |
 
-> 💡 **Careful!** A car **moves** and needs **petrol** for energy, but it cannot grow, reproduce, or breathe. Therefore, it is **non-living**. Similarly, clouds move across the sky and expand in size, but they do not show cellular life processes.
+> 💡 **Careful!** A car **moves** and needs **petrol** for energy, but it cannot grow, reproduce, or breathe. Therefore, it is **non-living**. Similarly, clouds move across the sky and expand in size, but they do not show life processes like breathing or reproducing.
 
 ---
 
@@ -213,7 +213,7 @@ export const quizzes = {
           ["It requires human steering instead of walking on legs", "moves-means-alive"],
           ["It is constructed from metal parts that never change", "never-alive-mixup"],
         ],
-        "Moving and using energy are not enough. Living organisms must show biological processes like cellular growth, respiration, and reproduction."
+        "Moving and using energy are not enough. Living things must show life processes like growing from inside, breathing, and reproducing."
       ),
     },
     {
@@ -235,9 +235,9 @@ export const quizzes = {
         "A dry bean seed kept in a glass jar does not move, breathe noticeably, or take in food. What is it?",
         "Living, because it contains a dormant baby plant that can germinate",
         [
-          ["Non-living, because it remains completely stationary without any locomotion or growth", "moves-means-alive"],
-          ["Non-living, because it lacks green chlorophyll and cannot feed", "sign-of-life-mixup"],
-          ["Dead, because a seed completely loses all life once dried in air", "sign-of-life-mixup"],
+          ["Non-living, because it never moves around in the jar", "moves-means-alive"],
+          ["Non-living, because it lacks green leaves to feed", "sign-of-life-mixup"],
+          ["Dead, because dry seeds lose all life completely", "sign-of-life-mixup"],
         ],
         "A dry seed has a living embryo resting inside. Given moisture, oxygen, and warmth, it activates and grows into a seedling."
       ),
@@ -261,7 +261,7 @@ export const quizzes = {
         "How do green plants demonstrate that they can sense and respond to their environment?",
         "Their stems and leaves slowly grow and bend towards sunlight",
         [
-          ["Their roots move actively through soil to chase crawling worms", "moves-means-alive"],
+          ["Their roots move through soil to search for food", "moves-means-alive"],
           ["Their bark changes colour instantly when touched by raindrops", "sign-of-life-mixup"],
           ["Their leaves absorb all wavelengths of light without reflection", "sign-of-life-mixup"],
         ],
@@ -272,13 +272,13 @@ export const quizzes = {
       subtopic: "living-vs-nonliving",
       ...q(
         "During the monsoon, a river flows swiftly down a mountain and expands greatly in size. Why is the river still non-living?",
-        "Its growth is merely added water, not cell division or reproduction",
+        "Its growth is just added water, not growing from inside",
         [
           ["Because living things only increase in size during the summer season", "sign-of-life-mixup"],
-          ["Because moving water lacks the energy required to support any cells", "needs-energy-means-alive"],
-          ["Because natural flowing water is poisonous to all biological organs", "never-alive-mixup"],
+          ["Because moving river water has no energy to flow", "needs-energy-means-alive"],
+          ["Because flowing river water is poisonous to plants", "never-alive-mixup"],
         ],
-        "Non-living things can expand when material is added from the outside. Living growth occurs internally through cellular division."
+        "Non-living things grow only when outside material is added. Living things grow from within by making new cells."
       ),
     },
     {
@@ -320,21 +320,21 @@ export const quizzes = {
     ),
     q(
       "Why do all animals and humans need to consume food at regular intervals?",
-      "To gain chemical energy for growth, repair, and vital functions",
+      "To get energy for growth, repair, and daily activity",
       [
-        ["To ensure that their body temperature permanently matches the outer atmospheric air", "sign-of-life-mixup"],
-        ["To prevent their bones from turning into mineral rock deposits", "sign-of-life-mixup"],
-        ["To allow their lungs to produce new oxygen for surrounding air", "sign-of-life-mixup"],
+        ["To keep their body temperature the same as the air", "sign-of-life-mixup"],
+        ["To stop their body bones from turning into stone", "sign-of-life-mixup"],
+        ["To make new oxygen gas for the surrounding air", "sign-of-life-mixup"],
       ],
       "Food provides essential nutrients and energy needed for growth, cell repair, and vital metabolic processes."
     ),
     q(
       "A rubber balloon expands significantly when inflated with air. Why does this differ from the growth of a living puppy?",
-      "The balloon only stretches from air pressure, while a puppy produces new cells",
+      "The balloon only stretches, while the puppy grows from inside",
       [
-        ["The balloon expands too rapidly, whereas biological animal cells grow only inside total darkness", "sign-of-life-mixup"],
+        ["The balloon expands too fast, while puppy cells grow only in darkness", "sign-of-life-mixup"],
         ["The balloon contains synthetic rubber that rejects all surrounding gases", "never-alive-mixup"],
-        ["The puppy grows by absorbing solid rock minerals directly into its fur coat", "sign-of-life-mixup"],
+        ["The puppy only grows by absorbing soil minerals into its fur", "sign-of-life-mixup"],
       ],
       "Biological growth occurs from inside when an organism takes in food and creates new living cells. A balloon simply stretches."
     ),
@@ -343,7 +343,7 @@ export const quizzes = {
       "Reproduction",
       [
         ["Respiration", "sign-of-life-mixup"],
-        ["Fermentation", "sign-of-life-mixup"],
+        ["Digestion", "sign-of-life-mixup"],
         ["Germination", "cotyledon-function-mixup"],
       ],
       "Reproduction is the process by which living organisms give rise to offspring, ensuring the continuation of their species."
@@ -352,7 +352,7 @@ export const quizzes = {
       "Every living organism has a characteristic lifespan. What inevitably happens at the end of its life cycle?",
       "It dies and its body decomposes",
       [
-        ["It turns into an inert mineral stone", "never-alive-mixup"],
+        ["It turns into a hard natural stone", "never-alive-mixup"],
         ["It reverts back into an early embryo", "sign-of-life-mixup"],
         ["It stops respiring but stays living", "still-alive-mixup"],
       ],
@@ -366,14 +366,14 @@ export const quizzes = {
     {
       subtopic: "signs-of-life",
       ...q(
-        "Which gas is consumed by BOTH plants and animals during the process of cellular respiration?",
+        "Which gas is taken in by BOTH plants and animals during breathing (respiration)?",
         "Oxygen",
         [
           ["Nitrogen", "sign-of-life-mixup"],
           ["Carbon dioxide", "sign-of-life-mixup"],
           ["Water vapour", "sign-of-life-mixup"],
         ],
-        "Both plants and animals take in oxygen during respiration to oxidize food and release cellular energy."
+        "Both plants and animals take in oxygen during respiration to release energy from food."
       ),
     },
     {
@@ -419,11 +419,11 @@ export const quizzes = {
       subtopic: "signs-of-life",
       ...q(
         "Which statement accurately describes a major difference in nutrition between green plants and animals?",
-        "Green plants manufacture food by photosynthesis, while animals ingest other organisms",
+        "Green plants make food using sunlight, while animals eat other living things",
         [
-          ["Green plants absorb complex cooked meals from soil, while animals make sugars through cellular respiration", "sign-of-life-mixup"],
-          ["Green plants consume only oxygen for food, while animals feed on water vapour", "sign-of-life-mixup"],
-          ["Green plants do not require any nutrients, while animals eat only during the day", "sign-of-life-mixup"],
+          ["Green plants eat food from soil, while animals make food from sunlight", "sign-of-life-mixup"],
+          ["Green plants need only oxygen for food, while animals feed on water", "sign-of-life-mixup"],
+          ["Green plants need no food at all, while animals eat all the time", "sign-of-life-mixup"],
         ],
         "Plants are autotrophs that synthesize organic food using sunlight, water, and CO2, whereas animals are heterotrophs."
       ),
@@ -434,13 +434,13 @@ export const quizzes = {
       subtopic: "living-vs-nonliving",
       ...q(
         "A crystal of alum left undisturbed in a concentrated solution gradually increases in size. Why is the alum crystal non-living?",
-        "It grows by external deposition of molecules, lacking cells, metabolism, or reproduction",
+        "It only adds layers on the outside, but cannot breathe or reproduce",
         [
-          ["Because mineral crystals cannot dissolve or break apart in ordinary liquid water under any normal conditions", "never-alive-mixup"],
-          ["Because crystals only increase in mass when kept inside complete darkness and cold", "needs-energy-means-alive"],
+          ["Because mineral crystals can never break or dissolve in water", "never-alive-mixup"],
+          ["Because crystals only grow when kept in total darkness and cold", "needs-energy-means-alive"],
           ["Because the crystal produces poisonous toxic gases that kill all surrounding liquid", "never-alive-mixup"],
         ],
-        "Non-living crystals grow by accretion (layering on the outside). They lack cells, cellular respiration, and reproductive capacity."
+        "Non-living crystals grow by adding layers on the outside. They have no cells, cannot breathe, and cannot reproduce."
       ),
     },
     {
@@ -460,13 +460,13 @@ export const quizzes = {
       subtopic: "living-vs-nonliving",
       ...q(
         "An autonomous robot vacuum cleaner roams around furniture, detects dirt using optical sensors, and recharges its battery. Why is it non-living?",
-        "It is an artificial machine without biological cells, respiration, or reproduction",
+        "It is an electric machine that cannot grow, breathe, or reproduce",
         [
-          ["Because it moves around on rotating rubber wheels instead of using biological bone muscles and tendons", "moves-means-alive"],
-          ["Because it runs on electrical battery power instead of burning wood or dry coal", "needs-energy-means-alive"],
+          ["Because it moves on rubber wheels instead of using living legs", "moves-means-alive"],
+          ["Because it runs on battery power instead of burning coal", "needs-energy-means-alive"],
           ["Because it operates inside homes rather than living outdoors in natural forests", "never-alive-mixup"],
         ],
-        "Machines and robots operate via electronic programming. They lack cellular organization, metabolic respiration, and reproduction."
+        "Machines and robots run on electricity. They do not have cells, cannot breathe, and cannot reproduce."
       ),
     },
     {
@@ -486,10 +486,10 @@ export const quizzes = {
       subtopic: "living-vs-nonliving",
       ...q(
         "Fluffy cumulus clouds move across the sky, merge to form larger masses, and release rain. Why are clouds non-living?",
-        "They are masses of condensed water droplets blown by winds without cellular processes",
+        "They are water droplets moved by winds without any life processes",
         [
-          ["Because clouds exist only in the cold upper atmosphere where breathable oxygen gas is completely absent", "never-alive-mixup"],
-          ["Because water vapor can only support living cells when frozen into solid hail ice", "never-alive-mixup"],
+          ["Because clouds exist high up where breathable air is completely absent", "never-alive-mixup"],
+          ["Because water vapour can only live when frozen into solid hail ice", "never-alive-mixup"],
           ["Because clouds change their shape too frequently compared to living forest animals", "moves-means-alive"],
         ],
         "Clouds are collections of condensed water droplets transported by atmospheric wind currents. They possess no biological life."
@@ -514,11 +514,11 @@ export const quizzes = {
       subtopic: "once-living",
       ...q(
         "Coal is an inflammable black mineral extracted from underground mines. Why do geologists classify coal as once-living?",
-        "It originated from ancient swamp vegetation compressed over millions of years",
+        "It formed from ancient swamp plants buried millions of years ago",
         [
-          ["It continuously breathes subterranean gases beneath the crust of the Earth", "still-alive-mixup"],
+          ["It breathes underground gases trapped deep inside the Earth", "still-alive-mixup"],
           ["It contains live plant seeds that can germinate when watered underground", "still-alive-mixup"],
-          ["It absorbs volcanic heat and turns into living tree roots inside mine tunnels", "still-alive-mixup"],
+          ["It absorbs ground heat and turns into living tree roots in mines", "still-alive-mixup"],
         ],
         "Coal is a fossil fuel created by high pressure and heat acting on the dense remains of prehistoric swamp forests."
       ),
@@ -527,9 +527,9 @@ export const quizzes = {
       subtopic: "once-living",
       ...q(
         "A leather school shoe is durable and flexible. How is the shoe accurately classified scientifically?",
-        "A non-living object manufactured from once-living animal tissue",
+        "A non-living object made from once-living animal skin",
         [
-          ["A living biological animal organ that continues active cellular growth when worn on feet", "still-alive-mixup"],
+          ["A living animal organ that continues growing when worn on feet", "still-alive-mixup"],
           ["An artificial mineral synthetic material that was never alive", "never-alive-mixup"],
           ["A living plant product harvested directly from tropical trees", "never-alive-mixup"],
         ],
@@ -542,7 +542,7 @@ export const quizzes = {
         "Which component of an artist's sketching pencil originated directly from a once-living tree?",
         "The surrounding cedar wood casing",
         [
-          ["The central dark graphite carbon writing core", "never-alive-mixup"],
+          ["The dark graphite pencil writing core", "never-alive-mixup"],
           ["The small metal ferrule ring", "never-alive-mixup"],
           ["The synthetic rubber eraser tip", "never-alive-mixup"],
         ],
@@ -556,7 +556,7 @@ export const quizzes = {
         "Preserved mineralized remains or imprints of prehistoric organisms",
         [
           ["Statues carefully carved into underground stone by ancient humans", "never-alive-mixup"],
-          ["Living subterranean reptiles that have remained asleep in rocks", "still-alive-mixup"],
+          ["Ancient reptiles that have remained asleep deep in rocks", "still-alive-mixup"],
           ["Inorganic mineral crystal growths that happen to mimic bone shapes", "never-alive-mixup"],
         ],
         "Fossils are the preserved traces, bones, or petrified remains of prehistoric animals and plants that lived millions of years ago."
@@ -602,7 +602,7 @@ export const quizzes = {
         "Why is wide seed dispersal essential for the healthy growth of seedling offspring?",
         "It prevents competition for sunlight, water, and soil minerals",
         [
-          ["It prevents insect pollinators from finding and damaging seeds", "dispersal-agent-mixup"],
+          ["It prevents insects from finding and eating seeds", "dispersal-agent-mixup"],
           ["It guarantees that every scattered seed falls into deep water", "dispersal-agent-mixup"],
           ["It stops the parent tree from producing any more flower blossoms", "dispersal-agent-mixup"],
         ],
@@ -628,9 +628,9 @@ export const quizzes = {
         "A coconut has a thick, fibrous outer husk that traps air inside. Which agent disperses coconut seeds?",
         "Water currents",
         [
-          ["Strong high-altitude wind gusts", "dispersal-agent-mixup"],
-          ["Clinging to dense animal fur", "dispersal-agent-mixup"],
-          ["Explosive bursting of the dry pod", "dispersal-agent-mixup"],
+          ["Strong wind gusts", "dispersal-agent-mixup"],
+          ["Clinging to animal fur", "dispersal-agent-mixup"],
+          ["Explosive bursting of pods", "dispersal-agent-mixup"],
         ],
         "The fibrous husk traps air pockets, making the heavy coconut buoyant so it can drift across oceans to colonize distant shores."
       ),
@@ -641,9 +641,9 @@ export const quizzes = {
         "A gardener plants pieces of a potato tuber, each containing a healthy 'eye'. What develops from each eye?",
         "A new potato shoot with stems, roots, and green leaves",
         [
-          ["Only underground roots that never produce any green leaves", "vegetative-part-mixup"],
-          ["True flowers that produce seeds before any roots can form", "vegetative-part-mixup"],
-          ["A single giant seed that must be dried and planted again", "vegetative-part-mixup"],
+          ["Underground roots that never grow green leaves", "vegetative-part-mixup"],
+          ["True flowers that produce seeds before roots", "vegetative-part-mixup"],
+          ["A single giant seed that must be dried", "vegetative-part-mixup"],
         ],
         "The 'eyes' on a potato are vegetative buds located at stem nodes. When planted in moist soil, each bud sprouts into a complete new plant."
       ),
@@ -667,7 +667,7 @@ export const quizzes = {
         "What is the tough protective outer covering of a seed called?",
         "Seed coat (Testa)",
         [
-          ["Nutritive cotyledon leaf", "seed-part-mixup"],
+          ["Fleshy cotyledon leaf", "seed-part-mixup"],
           ["Growing plumule", "seed-part-mixup"],
           ["Emerging radicle", "seed-part-mixup"],
         ],
@@ -692,9 +692,9 @@ export const quizzes = {
       "When ripe pea pods or balsam fruits dry out in warm weather, how do they discharge their seeds?",
       "Their pods split suddenly with explosive force",
       [
-        ["Their seeds grow buoyant wings to glide in wind", "dispersal-agent-mixup"],
-        ["Their heavy pods drop into streams to float away", "dispersal-agent-mixup"],
-        ["Their sweet juice dissolves into surrounding soil", "dispersal-agent-mixup"],
+        ["Their seeds grow light wings to glide", "dispersal-agent-mixup"],
+        ["Their heavy pods drop in water to float", "dispersal-agent-mixup"],
+        ["Their juice dissolves into the soil", "dispersal-agent-mixup"],
       ],
       "As pea and balsam pods dry, unequal tensions cause the pod walls to twist and burst open violently, flinging the seeds outward."
     ),
@@ -712,7 +712,7 @@ export const quizzes = {
       "How do fruit-eating birds assist in the dispersal of seeds from plants like guavas, figs, and berries?",
       "They eat fleshy fruit and excrete hard seeds unharmed far away",
       [
-        ["They crush and grind every seed into fine powder with their sharp curved beaks", "dispersal-agent-mixup"],
+        ["They crush and grind every seed into powder with sharp beaks", "dispersal-agent-mixup"],
         ["They carry whole fruit branches back to build warm nests", "dispersal-agent-mixup"],
         ["They bury dry seeds deep under river sand with their wings", "dispersal-agent-mixup"],
       ],
@@ -722,9 +722,9 @@ export const quizzes = {
       "Seeds of maple and drumstick trees possess thin, papery wing-like extensions. What purpose do these wings serve?",
       "They allow seeds to spin and glide on breezes",
       [
-        ["They help seeds paddle across shallow rivers", "dispersal-agent-mixup"],
-        ["They act as sharp spines to repel caterpillars", "dispersal-agent-mixup"],
-        ["They absorb rain droplets directly into stems", "dispersal-agent-mixup"],
+        ["They help seeds paddle in rivers", "dispersal-agent-mixup"],
+        ["They act as spines against caterpillars", "dispersal-agent-mixup"],
+        ["They absorb rain drops into stems", "dispersal-agent-mixup"],
       ],
       "Winged seeds rotate like miniature propeller blades as they fall, prolonging their descent so gusts of wind can blow them far away."
     ),
@@ -749,9 +749,9 @@ export const quizzes = {
         "During seed germination, which part of the embryo always emerges first through the seed coat?",
         "The radicle (embryonic root)",
         [
-          ["The plumule (embryonic shoot)", "seed-part-mixup"],
-          ["The first green foliage leaf", "seed-part-mixup"],
-          ["The reproductive flower bud", "seed-part-mixup"],
+          ["The plumule (baby shoot)", "seed-part-mixup"],
+          ["The first green leaf", "seed-part-mixup"],
+          ["The tiny flower bud", "seed-part-mixup"],
         ],
         "The radicle grows out first to anchor the seedling into the soil and begin absorbing water and minerals."
       ),
@@ -762,9 +762,9 @@ export const quizzes = {
         "Gram, pea, and bean seeds contain two distinct seed leaves. What botanical term is applied to these seeds?",
         "Dicotyledonous (Dicot) seeds",
         [
-          ["Single-cotyledon monocotyledonous seeds", "cotyledon-function-mixup"],
+          ["Single-cotyledon monocot seeds", "cotyledon-function-mixup"],
           ["Spore-producing capsules", "spore-seed-mixup"],
-          ["Acellular plant embryos", "germination-condition-mixup"],
+          ["Seeds without any baby plant", "germination-condition-mixup"],
         ],
         "Seeds having two cotyledons are dicots (beans, grams, peas). Seeds having only one cotyledon (maize, wheat) are monocots."
       ),
@@ -799,9 +799,9 @@ export const quizzes = {
       subtopic: "seed-germination",
       ...q(
         "Why do healthy seeds placed in boiled, cooled water covered with a layer of vegetable oil fail to germinate?",
-        "The water lacks dissolved oxygen, and the oil prevents fresh air from entering",
+        "Boiling removed oxygen, and oil stops fresh air entering",
         [
-          ["The thick vegetable oil dissolves the outer seed coat and destroys the delicate plant embryo inside", "germination-condition-mixup"],
+          ["The thick oil dissolves the seed coat and destroys the embryo", "germination-condition-mixup"],
           ["Boiling creates minerals that chemically poison the seed cotyledons", "germination-condition-mixup"],
           ["Water without sunlight cannot be absorbed by any dry seed coat", "light-for-germination-myth"],
         ],
@@ -829,9 +829,9 @@ export const quizzes = {
         "How are seeds of the touch-me-not balsam plant and castor plant scattered into the environment?",
         "Through explosive bursting of their dry mature pods",
         [
-          ["Carried across long distances on the open water surface of flooded agricultural fields", "dispersal-agent-mixup"],
-          ["Transported by clinging to the coats of cattle", "dispersal-agent-mixup"],
-          ["Blown hundreds of miles by high altitude winds", "dispersal-agent-mixup"],
+          ["Carried on water across flooded fields", "dispersal-agent-mixup"],
+          ["Carried by clinging to animal coats", "dispersal-agent-mixup"],
+          ["Blown by high altitude winds", "dispersal-agent-mixup"],
         ],
         "Balsam and castor pods split open with explosive tension when mature and dry, hurling seeds away from the parent plant."
       ),
@@ -842,7 +842,7 @@ export const quizzes = {
         "Why are coconuts frequently found growing along tropical seashores and remote coral atolls?",
         "Their waterproof fibrous husk traps air, allowing them to float across oceans",
         [
-          ["Large migratory sea birds carry whole heavy coconuts in their sharp talons during seasonal flight", "dispersal-agent-mixup"],
+          ["Large sea birds carry heavy coconuts in their claws during flight", "dispersal-agent-mixup"],
           ["Underwater ocean currents roll heavy coconuts along the seabed sand", "dispersal-agent-mixup"],
           ["Coconuts burst open and fling their heavy seeds across island beaches", "dispersal-agent-mixup"],
         ],
@@ -922,7 +922,7 @@ export const quizzes = {
         "Non-flowering plants like ferns and mosses do not produce flowers, fruits, or seeds. How do they reproduce?",
         "By releasing microscopic spores from sori and capsules",
         [
-          ["By dropping heavy woody reproductive cones that split open in river mud", "spore-seed-mixup"],
+          ["By dropping heavy woody cones that split open in river mud", "spore-seed-mixup"],
           ["By growing only through swollen edible root tubers", "vegetative-part-mixup"],
           ["By producing nectar that attracts nocturnal insects", "spore-seed-mixup"],
         ],
@@ -940,6 +940,32 @@ export const quizzes = {
           ["A modified flower bud that stores concentrated sugar", "vegetative-part-mixup"],
         ],
         "An onion is a modified underground stem (bulb) with a reduced stem disc covered by concentric fleshy scale leaves storing food."
+      ),
+    },
+    {
+      subtopic: "seed-germination",
+      ...q(
+        "Rohan placed soaked bean seeds in two dishes:\nDish X had moist cotton kept in a warm room.\nDish Y had moist cotton kept inside a freezer.\nWhat will happen after three days?",
+        "Seeds in Dish X germinate, but seeds in Dish Y do not",
+        [
+          ["Seeds in Dish Y germinate, but Dish X seeds do not", "light-for-germination-myth"],
+          ["Seeds in both dishes germinate equally well", "germination-condition-mixup"],
+          ["Neither dish shows any seed germination", "germination-condition-mixup"],
+        ],
+        "Seeds need water, air, and warmth to germinate. The freezer in Dish Y is too cold, so seeds cannot sprout."
+      ),
+    },
+    {
+      subtopic: "seed-dispersal",
+      ...q(
+        "Read the two statements about seeds:\nStatement 1: Dandelion seeds have fluffy hairs to float in wind.\nStatement 2: Coconut seeds have fibrous coats to float on water.\nWhich is correct?",
+        "Both Statement 1 and Statement 2 are true",
+        [
+          ["Only Statement 1 is true", "dispersal-agent-mixup"],
+          ["Only Statement 2 is true", "dispersal-agent-mixup"],
+          ["Neither Statement 1 nor 2 is true", "dispersal-agent-mixup"],
+        ],
+        "Dandelion seeds are carried by wind using light hairs, while coconuts float on water with fibrous husks."
       ),
     },
   ],
@@ -969,9 +995,9 @@ export const quizzes = {
         "Insects like grasshoppers, cockroaches, and bees breathe through tiny pores along the sides of their bodies called ___.",
         "Spiracles",
         [
-          ["Feathery gills", "breathing-organ-mixup"],
-          ["Leaf stomata pores", "breathing-organ-mixup"],
-          ["Internal lungs", "breathing-organ-mixup"],
+          ["Gills", "breathing-organ-mixup"],
+          ["Stomata", "breathing-organ-mixup"],
+          ["Lungs", "breathing-organ-mixup"],
         ],
         "Insects have tiny breathing holes called spiracles along their abdomen, connected to internal air tubes (tracheae)."
       ),
@@ -996,7 +1022,7 @@ export const quizzes = {
         "A hard calcified shell",
         [
           ["Soft downy feathers", "body-covering-mixup"],
-          ["A thick insulating coat of dense woollen fleece", "body-covering-mixup"],
+          ["A thick coat of dense woollen fleece", "body-covering-mixup"],
           ["Slimy skin secretions", "body-covering-mixup"],
         ],
         "A hard outer shell made of calcium minerals provides a rigid protective armor into which soft-bodied animals can withdraw."
@@ -1008,7 +1034,7 @@ export const quizzes = {
         "How does the thick white fur coat of a polar bear help it survive in freezing Arctic conditions?",
         "It traps warm air for insulation and provides camouflage against snow",
         [
-          ["It enables the massive polar bear to swim significantly faster than swift marine fish", "body-covering-mixup"],
+          ["It enables the polar bear to swim faster than marine fish", "body-covering-mixup"],
           ["It absorbs green sunlight to produce chemical food energy", "camouflage-mixup"],
           ["It reflects all scents so Arctic seals cannot detect it", "camouflage-mixup"],
         ],
@@ -1021,7 +1047,7 @@ export const quizzes = {
         "Every winter, thousands of bar-headed geese fly across the high Himalayas to wetlands in India. Why do they migrate?",
         "To escape extreme sub-zero cold and find open water and food",
         [
-          ["To find colder mountain ice so their laid eggs do not overheat in warm winter sunlight", "migration-reason-mixup"],
+          ["To find colder ice so their eggs do not overheat in winter", "migration-reason-mixup"],
           ["Because they lose their flight feathers and can only walk", "migration-reason-mixup"],
           ["To change their body covering from feathers into thick fur", "body-covering-mixup"],
         ],
@@ -1045,11 +1071,11 @@ export const quizzes = {
       subtopic: "breathing-organs",
       ...q(
         "Whales and dolphins reside in ocean waters throughout their lives. How do they breathe?",
-        "They surface periodically to breathe atmospheric air using lungs via blowholes",
+        "They surface to breathe air into lungs through blowholes",
         [
-          ["They use internal feathery gills to extract dissolved oxygen directly from surrounding sea water", "breathing-organ-mixup"],
+          ["They use internal gills to extract dissolved oxygen from water", "breathing-organ-mixup"],
           ["They absorb dissolved oxygen directly through their smooth rubbery skin", "breathing-organ-mixup"],
-          ["They swallow large volumes of sea water to filter oxygen inside their stomach", "breathing-organ-mixup"],
+          ["They swallow large volumes of sea water to filter oxygen in stomach", "breathing-organ-mixup"],
         ],
         "Whales and dolphins are mammals with lungs, not fish. They must surface to inhale air through blowholes at the top of their head."
       ),
@@ -1062,7 +1088,7 @@ export const quizzes = {
       "Reptiles such as snakes, lizards, and crocodiles possess dry, horny scales on their skin. What is the primary role of these scales?",
       "To prevent internal water loss and protect against abrasion",
       [
-        ["To help them glide smoothly through air like feathered birds during seasonal flight", "body-covering-mixup"],
+        ["To help them glide through air like feathered birds during flight", "body-covering-mixup"],
         ["To absorb oxygen and minerals directly from warm sunlight", "breathing-organ-mixup"],
         ["To keep their body skin soft and permeable to moisture", "body-covering-mixup"],
       ],
@@ -1073,7 +1099,7 @@ export const quizzes = {
       "They minimize body weight while providing streamlined lift for flight",
       [
         ["They allow birds to submerge deep into ocean mud to hibernate", "body-covering-mixup"],
-        ["They make the entire skeleton heavy enough to crush and grind tough forest grain seeds", "body-covering-mixup"],
+        ["They make the skeleton heavy enough to crush hard forest seeds", "body-covering-mixup"],
         ["They cool the bird's bloodstream by circulating mountain ice", "body-covering-mixup"],
       ],
       "Air-filled hollow bones lighten the skeleton, while feathers generate aerodynamic lift, provide insulation, and enable efficient flight."
@@ -1102,9 +1128,9 @@ export const quizzes = {
       "How do the overlapping, slimy scales covering a freshwater fish assist in its underwater locomotion?",
       "They reduce water friction, allowing smooth swimming",
       [
-        ["They produce electric pulses that shock hunting fish", "body-covering-mixup"],
-        ["They act as sharp anchors to grip slippery river weeds", "body-covering-mixup"],
-        ["They store freshwater to prevent thirst in deep oceans", "body-covering-mixup"],
+        ["They produce electric pulses against enemies", "body-covering-mixup"],
+        ["They act as anchors to grip river weeds", "body-covering-mixup"],
+        ["They store water to prevent thirst in oceans", "body-covering-mixup"],
       ],
       "A streamlined body covered in backward-facing slimy scales minimizes hydrodynamic drag as the fish moves through water."
     ),
@@ -1129,9 +1155,9 @@ export const quizzes = {
         "An earthworm possesses neither lungs nor gills. How does it exchange respiratory gases with the atmosphere?",
         "Through its thin, constantly moist skin surface",
         [
-          ["Through paired spiracles on its abdominal segments", "insect-breathing-mixup"],
-          ["Through its mouth only when feeding on soil humus", "breathing-organ-mixup"],
-          ["Through microscopic air bubbles stored inside its tail", "breathing-organ-mixup"],
+          ["Through paired spiracles on its body", "insect-breathing-mixup"],
+          ["Through its mouth only when feeding", "breathing-organ-mixup"],
+          ["Through air bubbles stored in its tail", "breathing-organ-mixup"],
         ],
         "Atmospheric oxygen dissolves in moisture on the earthworm's thin body wall and diffuses directly into blood capillaries."
       ),
@@ -1168,7 +1194,7 @@ export const quizzes = {
         "Why do earthworms crawl out onto the surface of footpaths and soil during heavy monsoon downpours?",
         "Rainwater fills soil air pockets, so the worms cannot breathe underground",
         [
-          ["Because subterranean earthworms require direct warm sunlight to digest swallowed soil particles", "breathing-organ-mixup"],
+          ["Because earthworms need direct warm sunlight to digest swallowed soil", "breathing-organ-mixup"],
           ["Because excessive rainwater makes underground soil too warm for them", "breathing-organ-mixup"],
           ["Because earthworms need to lay their eggs on wet concrete footpaths", "needs-energy-means-alive"],
         ],
@@ -1209,7 +1235,7 @@ export const quizzes = {
         "How do down feathers benefit birds in ways other than enabling aerial flight?",
         "They trap an insulating layer of warm air to maintain constant body temperature",
         [
-          ["They help the diving bird breathe easily while completely submerged deep beneath ocean waves", "breathing-organ-mixup"],
+          ["They help the diving bird breathe easily while submerged underwater", "breathing-organ-mixup"],
           ["They grind tough grain seeds directly inside the bird's stomach", "body-covering-mixup"],
           ["They replace the bird's need to drink fresh water during flight", "body-covering-mixup"],
         ],
@@ -1276,7 +1302,7 @@ export const quizzes = {
         "Why do herbivorous mammals (such as cows, horses, and deer) possess broad, flat premolars and molars?",
         "To grind fibrous plant matter and tough grass thoroughly",
         [
-          ["To grip, pierce, and tear tough raw muscle meat away from animal skeletal bones", "teeth-diet-mixup"],
+          ["To grip, pierce, and tear tough raw meat away from animal bones", "teeth-diet-mixup"],
           ["To capture and crush flying insects in the dark", "teeth-diet-mixup"],
           ["To inject paralyzing venom into attacking carnivores", "teeth-diet-mixup"],
         ],
@@ -1289,8 +1315,8 @@ export const quizzes = {
         "How do the webbed feet of ducks, swans, and frogs assist them in their natural habitat?",
         "They act like paddles to push against water and propel the animal forward",
         [
-          ["They act like climbing hooks to grip tall branches in high canopy trees", "body-covering-mixup"],
-          ["They serve as sharp digging tools to excavate deep burrows in stony ground", "body-covering-mixup"],
+          ["They act like climbing hooks to grip branches in tall trees", "body-covering-mixup"],
+          ["They serve as sharp digging tools to excavate deep burrows", "body-covering-mixup"],
           ["They filter dissolved mineral salts out of muddy water while swimming", "body-covering-mixup"],
         ],
         "The skin connecting the toes creates a broad surface that pushes against water like an oar, propelling the animal smoothly."
@@ -1322,6 +1348,32 @@ export const quizzes = {
         "Migration is the regular seasonal journey undertaken by many animal species to find food, shelter, or hospitable breeding grounds."
       ),
     },
+    {
+      subtopic: "breathing-organs",
+      ...q(
+        "Complete the analogy:\nFish : Gills :: Cockroach : ___",
+        "Spiracles",
+        [
+          ["Lungs", "breathing-organ-mixup"],
+          ["Moist skin", "breathing-organ-mixup"],
+          ["Gills", "breathing-organ-mixup"],
+        ],
+        "Fish breathe using gills, while insects like cockroaches breathe through tiny holes called spiracles."
+      ),
+    },
+    {
+      subtopic: "feeding-movement",
+      ...q(
+        "Match the animal with its movement feature:\np. Snake - 1. Padded feet\nq. Camel - 2. Fins\nr. Fish - 3. Scales and ribs",
+        "p-3, q-1, r-2",
+        [
+          ["p-1, q-3, r-2", "adaptation-mixup"],
+          ["p-3, q-2, r-1", "adaptation-mixup"],
+          ["p-2, q-1, r-3", "adaptation-mixup"],
+        ],
+        "Snakes use scales and ribs to crawl, camels have broad padded feet for desert sand, and fish use fins to swim."
+      ),
+    },
   ],
 
   // ==========================================
@@ -1332,7 +1384,7 @@ export const quizzes = {
       "Which of these characteristics is found ONLY in living organisms and is completely absent in non-living things?",
       "Cellular organization and reproduction",
       [
-        ["Active movement and locomotion across physical space", "moves-means-alive"],
+        ["Active movement and locomotion across space", "moves-means-alive"],
         ["Increasing in physical volume", "sign-of-life-mixup"],
         ["Producing audible noise or heat", "needs-energy-means-alive"],
       ],
@@ -1340,11 +1392,11 @@ export const quizzes = {
     ),
     q(
       "A student plants two identical pots of gram seeds. Pot A is kept under bright sunlight, while Pot B is kept in a dark cupboard. Both get equal water and warmth. What will happen in the first three days?",
-      "Both seeds will germinate because sunlight is not needed for initial sprouting",
+      "Both seeds will germinate because seeds do not need light to sprout",
       [
-        ["Only seed in Pot A will germinate because sunlight is required to crack the seed coat", "light-for-germination-myth"],
-        ["Only seed in Pot B will germinate because direct sunlight kills all young plant embryos", "light-for-germination-myth"],
-        ["Neither seed will germinate because soil must be continuously sterilized with boiling water", "germination-condition-mixup"],
+        ["Only Pot A germinates because sunlight is needed to crack seed coats", "light-for-germination-myth"],
+        ["Only Pot B germinates because direct sunlight kills young plant embryos", "light-for-germination-myth"],
+        ["Neither seed germinates because soil must be sterilized with hot water", "germination-condition-mixup"],
       ],
       "Seeds do not require light to germinate underground; cotyledon food stores sustain the seedling until green leaves form."
     ),
@@ -1382,9 +1434,9 @@ export const quizzes = {
       "Insects like grasshoppers, butterflies, and houseflies take in air through ___.",
       "Spiracles along the sides of their body",
       [
-        ["Gills located inside their head", "breathing-organ-mixup"],
-        ["Moist skin covering their abdomen", "breathing-organ-mixup"],
-        ["True lungs enclosed inside their thorax", "breathing-organ-mixup"],
+        ["Gills inside their head", "breathing-organ-mixup"],
+        ["Moist skin on their abdomen", "breathing-organ-mixup"],
+        ["True lungs in their thorax", "breathing-organ-mixup"],
       ],
       "Insects respire via lateral spiracles connected to an internal network of tracheal air tubes."
     ),
@@ -1393,7 +1445,7 @@ export const quizzes = {
       "A wooden cricket bat",
       [
         ["A steel javelin", "never-alive-mixup"],
-        ["A synthetic polyurethane plastic football", "never-alive-mixup"],
+        ["A synthetic plastic football", "never-alive-mixup"],
         ["A brass whistle", "never-alive-mixup"],
       ],
       "Cricket bats are made from willow wood, which was once part of a living tree."
@@ -1403,8 +1455,8 @@ export const quizzes = {
       "Its thick fibrous husk contains trapped air pockets that give it buoyancy",
       [
         ["Its light papery wings act like sails that catch ocean trade winds", "dispersal-agent-mixup"],
-        ["Its inner hollow cavity is filled with buoyant hydrogen gas that actively lifts it across waves", "dispersal-agent-mixup"],
-        ["Its slippery outer wax repels all water molecules and prevents gravity", "dispersal-agent-mixup"],
+        ["Its inner hollow cavity is filled with light gas that lifts it", "dispersal-agent-mixup"],
+        ["Its slippery outer wax repels water molecules and prevents gravity", "dispersal-agent-mixup"],
       ],
       "The fibrous mesocarp of the coconut holds air, allowing the seed to float buoyant across ocean currents."
     ),
@@ -1412,7 +1464,7 @@ export const quizzes = {
       "What is the first organ to emerge from a germinating seed into the soil?",
       "The radicle, which develops into the primary root",
       [
-        ["The growing plumule, which develops upward into the green flowering stem", "seed-part-mixup"],
+        ["The plumule, which develops upward into the green stem", "seed-part-mixup"],
         ["The cotyledon, which expands into woody bark", "seed-part-mixup"],
         ["The seed coat, which becomes green foliage", "seed-part-mixup"],
       ],
@@ -1452,7 +1504,7 @@ export const quizzes = {
       "Potato, ginger, and onion plants reproduce vegetatively through which modified plant structure?",
       "Underground stems",
       [
-        ["Swollen underground taproots", "vegetative-part-mixup"],
+        ["Swollen underground roots", "vegetative-part-mixup"],
         ["Flower buds", "vegetative-part-mixup"],
         ["Seed capsules", "vegetative-part-mixup"],
       ],
@@ -1462,7 +1514,7 @@ export const quizzes = {
       "Why do snakes and desert lizards possess dry, horny scales on their skin?",
       "To prevent body water loss and protect against harsh rocky ground",
       [
-        ["To absorb dissolved atmospheric oxygen directly from humid air without using lungs", "breathing-organ-mixup"],
+        ["To absorb oxygen directly from humid air without using lungs", "breathing-organ-mixup"],
         ["To generate chemical heat when moving through cold night air", "body-covering-mixup"],
         ["To allow rapid swimming through deep underground mud tunnels", "body-covering-mixup"],
       ],
@@ -1477,6 +1529,26 @@ export const quizzes = {
         ["Coconut", "dispersal-agent-mixup"],
       ],
       "Pea and balsam fruits dry under internal tension until they split and burst open, flicking seeds outwards."
+    ),
+    q(
+      "Complete the analogy:\nBryophyllum : Leaves :: Potato : ___",
+      "Stem buds (eyes)",
+      [
+        ["Seeds", "vegetative-part-mixup"],
+        ["Roots", "vegetative-part-mixup"],
+        ["Flowers", "vegetative-part-mixup"],
+      ],
+      "Bryophyllum reproduces vegetatively from leaf notches, while potato reproduces from underground stem buds (eyes)."
+    ),
+    q(
+      "Read the statements about living things:\nStatement 1: All plants produce seeds to reproduce.\nStatement 2: Non-flowering ferns produce spores instead of seeds.\nWhich option is correct?",
+      "Statement 1 is false, but Statement 2 is true",
+      [
+        ["Both Statement 1 and Statement 2 are true", "vegetative-part-mixup"],
+        ["Both Statement 1 and Statement 2 are false", "vegetative-part-mixup"],
+        ["Statement 1 is true, but Statement 2 is false", "vegetative-part-mixup"],
+      ],
+      "Not all plants produce seeds. Non-flowering plants like ferns and mosses reproduce through microscopic spores."
     ),
   ],
 };
