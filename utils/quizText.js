@@ -29,6 +29,14 @@ export function splitInstruction(text = "") {
     const m = s.match(re);
     if (m) return { label, body: unquote(s.slice(m[0].length)) };
   }
+  // Any short instruction ending in ? or : followed by ONE quoted sentence (owner 2026-11-04: instruction and
+  // sentence looked the same). "What kind of sentence is this? 'Don't touch the hot pan.'" →
+  // { label: "WHAT KIND OF SENTENCE IS THIS?", body: "Don't touch the hot pan." }
+  const g = s.match(/^([^'"‘“]{6,90}?[?:])\s*['"‘“](.+)['"’”]\s*$/s);
+  if (g && g[2].trim().length >= 2) {
+    const head = g[1].trim();
+    return { label: (head.endsWith(":") ? head.slice(0, -1) : head).toUpperCase(), body: g[2].trim() };
+  }
   return { label: null, body: s };
 }
 

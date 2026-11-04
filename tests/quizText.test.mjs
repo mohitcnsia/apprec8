@@ -8,6 +8,12 @@ assert.deepEqual(splitInstruction("Choose the correct sentence."), { label: "CHO
 assert.deepEqual(splitInstruction("Find the mistake: 'I saw a elephant.'"), { label: "FIND THE MISTAKE", body: "I saw a elephant." });
 assert.deepEqual(splitInstruction("What is the plural of 'child'?"), { label: null, body: "What is the plural of 'child'?" });
 assert.deepEqual(splitInstruction(""), { label: null, body: "" });
+// generic "instruction? 'sentence'" (owner feedback 2026-11-04)
+assert.deepEqual(splitInstruction("What kind of sentence is this? 'Don't touch the hot pan.'"), { label: "WHAT KIND OF SENTENCE IS THIS?", body: "Don't touch the hot pan." });
+assert.deepEqual(splitInstruction("Identify the verb: 'The cat sleeps on the mat.'"), { label: "IDENTIFY THE VERB", body: "The cat sleeps on the mat." });
+// quote in the middle, or instruction after the quote: unchanged
+assert.deepEqual(splitInstruction("Which word is a demonstrative adjective in 'This apple is tasty.'?"), { label: null, body: "Which word is a demonstrative adjective in 'This apple is tasty.'?" });
+assert.deepEqual(splitInstruction("What is the plural of 'child'?"), { label: null, body: "What is the plural of 'child'?" });
 
 const t = (c) => ({ type: "text", content: c });
 assert.equal(fitsTiles([t("an"), t("a"), t("many"), t("those")]), true);

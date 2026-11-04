@@ -45,6 +45,15 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const { status, questions, error, currentIndex, score, lives } = state;
   const { playSuccess, playFailure } = useSoundEffects();
 
+  // Opened from the start screen (QuizDetails, mockup F): start straight away, no second "Start" page.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (route.params?.autoStart && status === "ready" && !autoStartedRef.current) {
+      autoStartedRef.current = true;
+      dispatch({ type: "START_QUIZ" });
+    }
+  }, [status, route.params?.autoStart, dispatch]);
+
   // --- Answer recording for quests (who answered what, and how fast) ---
   const answerLogRef = useRef({}); // questionId -> answer entry
   const questionShownAtRef = useRef(Date.now());
