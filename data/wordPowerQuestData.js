@@ -191,13 +191,13 @@ export const quizzes = {
         subtopic: "synonyms",
         ...q(
           "Choose the correct synonym of the underlined word: 'The valley was completely silent.'",
-          "tranquil",
+          "hushed",
           [
           ["deafening", "synonym-error"],
           ["boisterous", "synonym-error"],
           ["rowdy", "synonym-error"]
           ],
-          "Silent and peaceful settings are best described as tranquil."
+          "Hushed and silent both describe quiet, calm environments with very little sound."
         ),
       },
       {
@@ -400,7 +400,7 @@ export const quizzes = {
       {
         subtopic: "context-pairs",
         ...q(
-          "Fill in the blank: 'The lost travellers found a ___ cave during the snowstorm.'",
+          "Fill in the blank: 'The lost travellers found a ___ cave during the snowstorm and stayed warm and safe.'",
           "sheltered",
           [
           ["exposed", "context-word-choice"],
@@ -666,7 +666,7 @@ export const quizzes = {
       {
         subtopic: "double-letters",
         ...q(
-          "Choose the correct spelling of the word meaning 'to take place or happen':",
+          "Choose the correct spelling of the word meaning 'happened, past tense of occur':",
           "occurred",
           [
           ["occured", "spelling-double-consonant"],
@@ -783,7 +783,7 @@ export const quizzes = {
       {
         subtopic: "tricky-vowels",
         ...q(
-          "Choose the correct spelling of the word meaning 'calendar record of days':",
+          "Choose the correct spelling of the word meaning 'a chart of the days and months of a year':",
           "calendar",
           [
           ["calender", "spelling-vowel-trap"],
@@ -796,7 +796,7 @@ export const quizzes = {
       {
         subtopic: "tricky-vowels",
         ...q(
-          "Choose the correct spelling of the word meaning 'twelve in count':",
+          "Choose the correct spelling of the word meaning 'coming after the eleventh':",
           "twelfth",
           [
           ["twelveth", "spelling-vowel-trap"],
@@ -822,14 +822,14 @@ export const quizzes = {
       {
         subtopic: "tricky-vowels",
         ...q(
-          "Choose the correct spelling of the word meaning 'a schedule or plan':",
-          "programme",
+          "Choose the correct spelling of the word meaning 'a person you work with':",
+          "colleague",
           [
-          ["program", "spelling-vowel-trap"],
-          ["programer", "spelling-vowel-trap"],
-          ["programin", "spelling-vowel-trap"]
+          ["collegue", "spelling-vowel-trap"],
+          ["colleage", "spelling-vowel-trap"],
+          ["coleague", "spelling-vowel-trap"]
           ],
-          "In British English, an event schedule or broadcast is spelled p-r-o-g-r-a-m-m-e."
+          "Colleague is spelled c-o-l-l-e-a-g-u-e."
         ),
       },
   ],
@@ -946,9 +946,9 @@ export const quizzes = {
           "Fill in the blank: 'The explorer warned us of the ___ heat in the middle of the desert.'",
           "scorching",
           [
-          ["baking", "collocation-adjective-choice"],
-          ["burning", "collocation-adjective-choice"],
-          ["toasting", "collocation-adjective-choice"]
+          ["fried", "collocation-adjective-choice"],
+          ["toasted", "collocation-adjective-choice"],
+          ["boiled", "collocation-adjective-choice"]
           ],
           "Scorching heat or sweltering heat is the standard, natural collocation for intense atmospheric heat."
         ),
@@ -1498,9 +1498,9 @@ export const quizzes = {
           "Choose the most polite response:\nHost: 'Thank you so much for coming to our annual school concert.'\nGuest: '___, we had a delightful time.'",
           "The pleasure was all ours",
           [
-          ["You had to invite us", "dialogue-social-etiquette"],
-          ["It was your job to sing", "dialogue-social-etiquette"],
-          ["We had nothing else to do", "dialogue-social-etiquette"]
+          ["You are most welcome", "dialogue-social-etiquette"],
+          ["Never mind at all", "dialogue-social-etiquette"],
+          ["Please don't mention", "dialogue-social-etiquette"]
           ],
           "The polite social response to a host thanking you for attending is 'The pleasure was all ours' or 'My pleasure'."
         ),
@@ -1526,9 +1526,9 @@ export const quizzes = {
           "Choose the polite option to complete the conversation:\nPassenger: 'Could you please tell me the platform for the Rajdhani Express?'\nRailway clerk: '___, it arrives on Platform 3.'",
           "Certainly",
           [
-          ["No way", "dialogue-polite-reply"],
-          ["Ask someone else", "dialogue-polite-reply"],
-          ["Why do you ask", "dialogue-polite-reply"]
+          ["Hardly ever", "dialogue-polite-reply"],
+          ["Never indeed", "dialogue-polite-reply"],
+          ["Seldom so", "dialogue-polite-reply"]
           ],
           "Certainly is a polite, professional affirmation in customer assistance."
         ),
@@ -1539,9 +1539,9 @@ export const quizzes = {
           "Choose the natural response in this exchange:\nFriend: 'I am really sorry for spilling ink on your drawing sheet.'\nClassmate: '___, I can easily redraw it.'",
           "Never mind",
           [
-          ["You are terrible", "dialogue-apology-response"],
-          ["Pay me right now", "dialogue-apology-response"],
-          ["I will punish you", "dialogue-apology-response"]
+          ["You are welcome", "dialogue-apology-response"],
+          ["Please don't mention", "dialogue-apology-response"],
+          ["Same to you", "dialogue-apology-response"]
           ],
           "The friendly, forgiving response to an apology for a minor accident is 'Never mind' or 'Don't worry about it'."
         ),
@@ -1552,9 +1552,9 @@ export const quizzes = {
           "Complete the dialogue naturally:\nGrandmother: 'Could you give me a hand carrying this vegetable basket?'\nGrandson: '___, let me carry it inside for you.'",
           "With pleasure",
           [
-          ["I am very busy", "dialogue-polite-reply"],
-          ["Ask your friends", "dialogue-polite-reply"],
-          ["Only if you pay", "dialogue-polite-reply"]
+          ["Hardly possible", "dialogue-polite-reply"],
+          ["Not at all", "dialogue-polite-reply"],
+          ["By no chance", "dialogue-polite-reply"]
           ],
           "With pleasure indicates eager, respectful willingness to assist."
         ),
@@ -1578,9 +1578,9 @@ export const quizzes = {
           "Select the appropriate reaction in this situation:\nDoctor: 'Take these medicines twice a day and get plenty of rest.'\nPatient: '___, Doctor. I will follow your advice.'",
           "Thank you very much",
           [
-          ["I will ignore you", "dialogue-social-etiquette"],
-          ["Give me money instead", "dialogue-social-etiquette"],
-          ["You are mistaken", "dialogue-social-etiquette"]
+          ["Never mind", "dialogue-social-etiquette"],
+          ["You are welcome", "dialogue-social-etiquette"],
+          ["Don't mention it", "dialogue-social-etiquette"]
           ],
           "A polite expression of gratitude is the standard reply to medical guidance."
         ),
@@ -1619,9 +1619,9 @@ export const quizzes = {
           "Choose the correct option to complete the dialogue:\nLibrarian: 'Would you mind speaking a little more softly?'\nVisitor: 'Oh, ___. I did not realize I was loud.'",
           "I am terribly sorry",
           [
-          ["Yes I mind", "dialogue-apology-response"],
-          ["I will shout instead", "dialogue-apology-response"],
-          ["You are noisy too", "dialogue-apology-response"]
+          ["Certainly not", "dialogue-apology-response"],
+          ["Yes of course", "dialogue-apology-response"],
+          ["Don't worry about it", "dialogue-apology-response"]
           ],
           "When politely reminded of library rules, the appropriate response is an apology."
         ),
@@ -1632,9 +1632,9 @@ export const quizzes = {
           "Choose the best reply in this conversation:\nHost: 'Would you care for another slice of apple pie?'\nGuest: '___, it was delicious but I am quite full.'",
           "No, thank you",
           [
-          ["Give me ten more", "dialogue-polite-refusal"],
-          ["I dislike apples", "dialogue-polite-refusal"],
-          ["You must eat it", "dialogue-polite-refusal"]
+          ["Yes please", "dialogue-polite-refusal"],
+          ["Never mind", "dialogue-polite-refusal"],
+          ["It does not matter", "dialogue-polite-refusal"]
           ],
           "A polite refusal of additional food combines 'No' with 'thank you'."
         ),
@@ -1658,9 +1658,9 @@ export const quizzes = {
           "Choose the polite offer of assistance:\nSenior citizen: 'These bags are rather heavy.'\nYoung passerby: 'Allow me to ___ with them, Madam.'",
           "help you",
           [
-          ["laugh at you", "dialogue-polite-offer"],
-          ["ignore you", "dialogue-polite-offer"],
-          ["command you", "dialogue-polite-offer"]
+          ["direct you", "dialogue-polite-offer"],
+          ["remind you", "dialogue-polite-offer"],
+          ["inform you", "dialogue-polite-offer"]
           ],
           "'Allow me to help you' is the established courteous offer of assistance."
         ),
@@ -1671,9 +1671,9 @@ export const quizzes = {
           "Complete the conversation:\nNeighbour: 'Congratulations on winning the inter-school spelling competition!'\nChild: '___, your encouragement helped me a lot.'",
           "Thank you so much",
           [
-          ["I already knew that", "dialogue-social-etiquette"],
-          ["You should win instead", "dialogue-social-etiquette"],
-          ["It was nothing to praise", "dialogue-social-etiquette"]
+          ["Never mind that", "dialogue-social-etiquette"],
+          ["You are welcome", "dialogue-social-etiquette"],
+          ["Same to you", "dialogue-social-etiquette"]
           ],
           "The gracious response to congratulations is expressing sincere thanks."
         ),
@@ -1697,9 +1697,9 @@ export const quizzes = {
           "Choose the natural conversational reply:\nClassmate: 'I passed the science test with top marks!'\nFriend: 'That is ___! Well done!'",
           "fantastic news",
           [
-          ["awful news", "dialogue-congratulations"],
-          ["boring news", "dialogue-congratulations"],
-          ["tiresome news", "dialogue-congratulations"]
+          ["ordinary news", "dialogue-congratulations"],
+          ["expected news", "dialogue-congratulations"],
+          ["common news", "dialogue-congratulations"]
           ],
           "Colloquial congratulations warmly describe a friend's success as fantastic or wonderful news."
         ),
@@ -1772,14 +1772,14 @@ export const quizzes = {
       {
         subtopic: "everyday-conversations",
         ...q(
-          "Complete the dialogue:\nInterviewer: 'What made you choose astronomy as a career?'\nScientist: 'From my early childhood, the stars had always ___ my curiosity.'",
-          "sparked",
+          "Complete the dialogue:\nInterviewer: 'What made you choose astronomy as a career?'\nScientist: 'A visit to the planetarium ___ my eye and inspired me.'",
+          "caught",
           [
-          ["ignited", "dialogue-verb-colloc"],
-          ["kindled", "dialogue-verb-colloc"],
-          ["burned", "dialogue-verb-colloc"]
+          ["held", "dialogue-verb-colloc"],
+          ["snared", "dialogue-verb-colloc"],
+          ["grabbed", "dialogue-verb-colloc"]
           ],
-          "We naturally say that an event sparked someone's curiosity or interest."
+          "The idiom 'to catch someone's eye' means to attract someone's attention or interest."
         ),
       },
       {
@@ -2103,7 +2103,7 @@ export const quizzes = {
       {
         subtopic: "animal-nature-idioms",
         ...q(
-          "Choose the meaning of the idiom: 'the lion share'",
+          "Choose the meaning of the idiom: 'the lion\\'s share'",
           "the largest and best portion of something",
           [
           ["the meat that a wild predator hunts", "idiom-meaning-mixup"],
@@ -2225,9 +2225,9 @@ export const quizzes = {
           "Choose the best reply in this conversation:\nHost: 'Thank you for attending our science exhibition.'\nVisitor: '___, we enjoyed learning about the exhibits.'",
           "The pleasure was all ours",
           [
-          ["You had to thank us", "boss-dial-pleasure"],
-          ["We were forced to come", "boss-dial-pleasure"],
-          ["It was nothing exciting", "boss-dial-pleasure"]
+          ["Don't mention it to anyone", "boss-dial-pleasure"],
+          ["You are most welcome", "boss-dial-pleasure"],
+          ["Never mind at all", "boss-dial-pleasure"]
           ],
           "The formal, polite reply to a host thanking a guest is 'The pleasure was all ours'."
         ),
@@ -2235,7 +2235,7 @@ export const quizzes = {
       {
         subtopic: "polite-requests",
         ...q(
-          "Complete the conversation:\nAman: 'Shall we invite our neighbours to the Diwali celebration?'\nMother: '___, that is a kind and thoughtful thought!'",
+          "Complete the conversation:\nAman: 'Shall we invite our neighbours to the Diwali celebration?'\nMother: '___, that is a kind idea!'",
           "By all means",
           [
           ["By no chance", "boss-dial-by-all-means"],

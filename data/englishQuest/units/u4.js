@@ -182,14 +182,14 @@ export default {
       {
         subtopic: "preposition-article-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'The Nile is' (A) / 'longer than' (B) / 'any river in Africa.' (C) / 'No error' (D)",
-          "any river in Africa.",
+          "Choose the part of the sentence that has an error: 'The Nile is' (A) / 'longer than' (B) / 'any other river in Africa.' (C) / 'No error' (D)",
+          "No error",
           [
           ["The Nile is", "error-comparative-other"],
           ["longer than", "error-comparative-other"],
-          ["No error", "error-comparative-other"]
+          ["any other river in Africa.", "error-comparative-other"]
           ],
-          "When comparing an entity within its own group, we must exclude it: longer than any other river in Africa."
+          "The sentence correctly uses 'any other river' to compare the Nile with other African rivers. There is no error."
         ),
       },
       {
@@ -236,14 +236,14 @@ export default {
       {
         subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'The news broadcast' (A) / 'were watched by' (B) / 'millions of viewers.' (C) / 'No error' (D)",
-          "were watched by",
+          "Choose the part of the sentence that has an error: 'The news broadcast' (A) / 'was watched by' (B) / 'millions of viewers.' (C) / 'No error' (D)",
+          "No error",
           [
           ["The news broadcast", "error-news-agreement"],
-          ["millions of viewers.", "error-news-agreement"],
-          ["No error", "error-news-agreement"]
+          ["was watched by", "error-news-agreement"],
+          ["millions of viewers.", "error-news-agreement"]
           ],
-          "News is an uncountable singular noun, so the verb is was watched by."
+          "The singular subject 'The news broadcast' correctly takes the singular verb 'was watched by'. There is no error."
         ),
       },
       {
@@ -275,14 +275,14 @@ export default {
       {
         subtopic: "pronoun-word-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'Every student must bring' (A) / 'their own pencil' (B) / 'to the test hall.' (C) / 'No error' (D)",
-          "their own pencil",
+          "Choose the part of the sentence that has an error: 'The teacher asked' (A) / 'Ravi and I' (B) / 'to carry the books.' (C) / 'No error' (D)",
+          "Ravi and I",
           [
-          ["Every student must bring", "error-pronoun-number"],
-          ["to the test hall.", "error-pronoun-number"],
-          ["No error", "error-pronoun-number"]
+          ["The teacher asked", "error-pronoun-case"],
+          ["to carry the books.", "error-pronoun-case"],
+          ["No error", "error-pronoun-case"]
           ],
-          "Every student is singular, so traditional grammar uses his or her own pencil."
+          "The verb asked takes an objective pronoun: The teacher asked Ravi and me to carry the books."
         ),
       },
       {
@@ -379,14 +379,14 @@ export default {
       {
         subtopic: "preposition-article-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'He prefers reading books' (A) / 'than watching' (B) / 'television shows.' (C) / 'No error' (D)",
-          "than watching",
+          "Choose the part of the sentence that has an error: 'He prefers reading books' (A) / 'to watching' (B) / 'television shows.' (C) / 'No error' (D)",
+          "No error",
           [
           ["He prefers reading books", "error-prefer-to"],
-          ["television shows.", "error-prefer-to"],
-          ["No error", "error-prefer-to"]
+          ["to watching", "error-prefer-to"],
+          ["television shows.", "error-prefer-to"]
           ],
-          "The verb prefer takes the preposition to, not than: prefers reading books to watching television."
+          "The verb prefer correctly takes the preposition 'to' (prefers reading to watching). There is no error."
         ),
       },
       {
@@ -447,11 +447,11 @@ export default {
       {
         subtopic: "agreement-tense-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'He did not knew' (A) / 'the correct answer' (B) / 'to the teacher question.' (C) / 'No error' (D)",
+          "Choose the part of the sentence that has an error: 'He did not knew' (A) / 'the correct answer' (B) / 'to the question.' (C) / 'No error' (D)",
           "He did not knew",
           [
           ["the correct answer", "boss-error-auxiliary"],
-          ["to the teacher question.", "boss-error-auxiliary"],
+          ["to the question.", "boss-error-auxiliary"],
           ["No error", "boss-error-auxiliary"]
           ],
           "After the auxiliary did not, the verb must be in base form: did not know."
@@ -499,8 +499,8 @@ export default {
       {
         subtopic: "preposition-article-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'The passenger train arrived' (A) / 'at the platform' (B) / 'on five o clock.' (C) / 'No error' (D)",
-          "on five o clock.",
+          "Choose the part of the sentence that has an error: 'The passenger train arrived' (A) / 'at the platform' (B) / 'on five o\\'clock.' (C) / 'No error' (D)",
+          "on five o'clock.",
           [
           ["The passenger train arrived", "boss-error-at-time"],
           ["at the platform", "boss-error-at-time"],
@@ -538,14 +538,14 @@ export default {
       {
         subtopic: "preposition-article-errors",
         ...q(
-          "Choose the part of the sentence that has an error: 'He is senior' (A) / 'than my brother' (B) / 'in the bank office.' (C) / 'No error' (D)",
-          "than my brother",
+          "Choose the part of the sentence that has an error: 'He is senior' (A) / 'to my brother' (B) / 'in the bank office.' (C) / 'No error' (D)",
+          "No error",
           [
           ["He is senior", "boss-error-senior-to"],
-          ["in the bank office.", "boss-error-senior-to"],
-          ["No error", "boss-error-senior-to"]
+          ["to my brother", "boss-error-senior-to"],
+          ["in the bank office.", "boss-error-senior-to"]
           ],
-          "Latin comparative adjectives like senior, junior, and superior take the preposition to, not than."
+          "Latin comparative adjectives like senior, junior, and superior correctly take the preposition 'to' (senior to my brother). There is no error."
         ),
       },
       {
