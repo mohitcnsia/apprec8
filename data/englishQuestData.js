@@ -173,7 +173,7 @@ quick → quick**ly** · careful → careful**ly** · happy → happ**ily**
     author: "Apprec8",
     content: `### 🕵️ Be a reading detective!
 
-Olympiad reading questions are not about remembering everything. They are about **finding the clue** in the passage.
+Reading questions are not about remembering everything. They are about **finding the clue** in the passage.
 
 ---
 
