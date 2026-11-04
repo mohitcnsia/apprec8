@@ -250,7 +250,7 @@
 
 ## Future TODOs
 - **Nov 10 release (open):**
-  1. Gemini: deploy DR-6 (`firebase deploy --only functions --project apprec8-ca229`) + check no function grants Invoker to `allUsers`; owner makes one token call after.
+  1. Gemini: deploy DR-6 (`firebase deploy --only functions --project apprec8-ca229`) + check no function grants Invoker to `allUsers`.
   2. Owner: upload the 20.0.24 `.aab` (after `scripts/release/check-aab.sh` PASS) to internal testing; check Profile → 📊 Dashboard on the phone and that ♾️ practice shows on the Dashboard.
   3. Gemini: QA Reading + Space quest regression on 20.0.24 (not run on 2026-11-04).
   4. Owner: promote to **production** on Play (the app is testers-only today).
@@ -275,6 +275,7 @@
   - **Removal candidates (decide with usage data, not guesses):** unused/dead code (e.g. `components/common/reader/Apprec8ReaderTester.js`, `DummyScreen`/`DummyNavigator`, `to-be-deleted` category group, the unused `react-native-tts`), rarely used features and duplicate quiz paths (V1 vs V2 screens). The app has no usage analytics today, so first add simple per-feature open counts (or Firebase Analytics) to know what kids actually use.
   - **Output:** a short report with cost per feature, total for 1,000 kids, and a keep / simplify / remove list for the owner to decide.
 - **Admin HTTP endpoints (`functions/api/*.js`):** protected by Cloud IAM (owner calls them with a short-lived token; a tokenless call gets 403). DR-6 adds `invoker: "private"` in code so a deploy can't make one public. Later (with RB-3): move to admin-checked callables and remove unused endpoints.
+- **After DR-6 deploy (owner, not urgent):** on your next admin call, check that your token call still works. The app doesn't use these endpoints, so kids aren't affected. A 403 means your account lacks "Cloud Functions Invoker": grant it in the Cloud Console; no app build needed.
 - **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.
   - **Branch:** `refactor/dynamic-content` from `feat/tile-quests` (after release).
   - **Firestore is the single source of truth.** Migrate all hardcoded content once, then delete the JS/JSON content files and the client seed buttons.
