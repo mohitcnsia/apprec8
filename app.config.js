@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 24; // 20.0.24: admin ID in release builds (Dashboard)
+  const patchVersion = 25; // 20.0.25: redesign (Home/Fun/Progress/Me, quiz), multi-quest, reminders
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =
