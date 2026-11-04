@@ -12,6 +12,7 @@
 #   scripts/qa/eq.sh back                  Android back button
 #   scripts/qa/eq.sh offline | online      airplane mode on / off
 set -euo pipefail
+export PATH="$HOME/Library/Android/sdk/platform-tools:/usr/local/bin:$PATH"
 OUT="${QA_OUT:-/tmp/apprec8-qa}"
 mkdir -p "$OUT"
 
@@ -67,7 +68,8 @@ for t in re.findall(r"text=\"([^\"]+)\"", sys.stdin.read()):
     echo "TIMEOUT waiting for: $1" >&2; exit 1
     ;;
   shot)
-    adb exec-out screencap -p > "$OUT/${1:-shot}.png"
+    adb shell screencap -p /sdcard/shot.png
+    adb pull /sdcard/shot.png "$OUT/${1:-shot}.png" >/dev/null 2>&1
     echo "$OUT/${1:-shot}.png"
     ;;
   reload) adb shell input keyevent 46 46; sleep 10; echo "reloaded" ;;
