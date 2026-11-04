@@ -29,6 +29,7 @@ Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/
 - [ ] **G8 QA the quiz redesign** (branch `feat/quiz-redesign`, after G3), light AND dark: see `CODE_REVIEW.md` → "Review request: quiz redesign". Screenshot each screen into the review entry.
 - [ ] **G9 QA Home + tabs redesign** (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
 - [ ] **G10 Deploys after owner OK:** DR-8 (`getLeaderboard` first name + class) and Finding 22 (profile rule `hasOnly`), both in `CODE_REVIEW.md` (2026-11-04 "Thumb zone + leaderboard names"). Check other `users/{uid}` writes first for Finding 22.
+- [ ] **G11 Research (low priority, after exam work):** what Google Play Families policy and India's DPDP Act 2023 require for an app where parents create kid profiles (consent, data shown to other users, ads/analytics). Write a short summary with links under `CODE_REVIEW.md` → "RB-6 update".
 - [ ] **G7 Audit old IEO/NSO quizzes** in the Study tab for wrong answers; list them in `CODE_REVIEW.md`.
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.

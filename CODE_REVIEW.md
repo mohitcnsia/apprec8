@@ -1551,3 +1551,18 @@ fixed info (real name, class, school) changes only with parent / teacher / admin
    which counts as the teacher's approval). Changes = a request (`profileChangeRequests`) approved by the admin now,
    the class teacher after RB-2, a parent once parent accounts exist; a Cloud Function applies it. Yearly class promotion by the teacher.
 Open: parent accounts (how a parent proves they're the parent); whether real first name shows at all once nicknames exist.
+
+### RB-6 update (owner 2026-11-04): parent-first accounts, roles (draft, after the exams)
+- **Who signs up:** adults only (18+): parents, teachers, adult learners. No child signs up on their own.
+- **Kids:** a parent creates profiles for their kids (parent = account holder and gives consent). Each kid profile is its
+  own Firebase user, created by a Cloud Function, so today's per-uid data and rules keep working. Kid signs in on the
+  parent's phone (profile picker, optional PIN) or on their own device with a one-time code / QR from the parent. No email needed.
+- **Roles** (one person can have several; written by the server only): parent, teacher, admin. Owner = parent + admin;
+  a teacher who is also a parent = parent + teacher. Teacher role is approved by the admin (later by a school).
+- **Linking:** parents link to kids only by creating them or by claiming an existing kid account with a code shown on the
+  kid's device. Teachers never add parents (a teacher could attach the wrong adult to a child); a teacher can send a parent an
+  invite. Admin can link by hand for support, logged.
+- **Who sees what:** other kids see nickname (+ class level); teacher sees real name + nickname for their own classes only;
+  parent sees their own kids; admin sees all.
+- **Existing accounts** keep working; a parent claims them with a code. **Before public release:** check against Google Play
+  Families policy and India's DPDP Act (consent for under-18s) — Gemini research G11.
