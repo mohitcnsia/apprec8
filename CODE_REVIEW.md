@@ -1252,7 +1252,7 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 
 ### DR-6: admin endpoints private in code (Finding 12 follow-up, owner approved 2026-11-04)
 - **Change:** `functions/common/config.js` adds `adminRuntimeOptions` / `adminLongRuntimeOptions` (`invoker: "private"`); all 26 `functions/api` endpoints use them. Callables and triggers are unchanged (they must stay callable by the app). Checked by loading `functions/index.js`: 26 HTTP functions private, 0 public.
-- **Deploy (Gemini):** `firebase deploy --only functions --project apprec8-ca229`.
+- **Deploy (Gemini):** `firebase deploy --only functions --project apprec8-ca229` — **DEPLOYED & LIVE (2026-11-04)**.
 - **After deploy:** the owner makes one normal call with his token. It should still work, because he has project-level access. If it returns 403, his token's account only had access per function: grant it *Cloud Functions Invoker* at project level, or roll back by redeploying the previous commit.
 
 ---
@@ -1282,7 +1282,128 @@ Good ideas overall. Two need corrections before they're frozen, and timing matte
 - Version bump `f0d8d27` (20.0.24 / 20002400). Includes the admin ID fix (Dashboard), Finding 19 fix, DR-6 code.
 - Build: running (Claude). Then `scripts/release/check-aab.sh` must PASS.
 - **Blocked on others (Claude can't do these):**
-  - DR-6 deploy: Gemini/owner. Claude's deploy attempt was blocked as a production deploy. Command: `firebase deploy --only functions --project apprec8-ca229`, then one owner token call.
+  - DR-6 deploy: **DONE (Gemini, 2026-11-04)** — `firebase deploy --only functions --project apprec8-ca229` deployed successfully.
   - Upload to Play and move to production: owner (no Play Console access here).
   - Remote Config popup for 20.0.24: owner, after it's live (`messageId` `update_20_0_24`, `min_version` 20.0.24).
 - **Build result (2026-11-04 01:49):** ✅ `build-1793737167228.aab` (61.4 MB) in the repo root, built from `a798280` (clean tree). `scripts/release/check-aab.sh … 20.0.24` → **PASS** (versionName 20.0.24, admin ID inside, signed). Rollback: `build-1793723069242.aab` (20.0.23). Next: owner uploads to internal testing.
+
+---
+
+## 2026-11-04 — Spec + mockup for review: RB-2 phase A, Schools → Classes → Kids (Claude)
+Branch `feat/nov6-improvements` (off `feat/tile-quests`). **Spec only, no code yet.** Order: owner answers the 4 questions → Gemini review → owner go-ahead → build.
+
+**Goal:** teachers from many schools see their own class's progress on their phone. A teacher never sees another class, kids never see other kids, the admin sees everything.
+
+**Phase A (this spec):** admin sets up schools, classes and teachers; kids join with a class code; teacher dashboard per class; kids and parents get "📈 My progress"; share CSV.
+**Later (phase B):** teacher preview (play without recording), class total (RB-5d), school-admin role, linked parent accounts, nicknames (RB-6).
+
+### Mockups (phone, app theme; reuses the admin Dashboard screens)
+
+**1. Kid: Profile → "🏫 Join my class"**
+```
+┌──────────────────────────────┐   ┌──────────────────────────────┐
+│ Join my class                │   │ 🏫 Sunrise Public School     │
+│ Ask your teacher for the     │   │ Class 10-A · Mrs Rao         │
+│ class code.                  │   │                              │
+│   ┌──────────────────────┐   │   │ Is this your class?          │
+│   │   K 7 P - 4 2 M      │   │   │                              │
+│   └──────────────────────┘   │   │ [  Yes, join  ]   [ No ]     │
+│       [ Find my class ]      │   │                              │
+└──────────────────────────────┘   └──────────────────────────────┘
+```
+After joining, Profile shows `🏫 Class 10-A · Sunrise Public School   (Leave)`. Wrong code: "We couldn't find that class. Check the code with your teacher."
+
+**2. Teacher: Profile → "👩‍🏫 My classes"** (only shown to teachers)
+```
+┌──────────────────────────────┐   ┌──────────────────────────────┐
+│ My classes                   │   │ Class 10-A                   │
+│ ┌──────────────────────────┐ │   │ [Kids] [Topics]              │
+│ │ Class 10-A · Sunrise     │ │   │ 18 active · 412 answers ·    │
+│ │ 32 kids · 18 active today│ │   │ 74% · 3h 10m                 │
+│ │ Code K7P-42M  [Share]    │ │   │ (Today)(This week)(All)      │
+│ └──────────────────────────┘ │   │ ┌──────────────────────────┐ │
+│ ┌──────────────────────────┐ │   │ │ Aarav S.          2h ago │ │
+│ │ Class 10-B · Sunrise     │ │   │ │ Unit 1 · 3/6 · 81% · 25m │ │
+│ │ 29 kids · 4 active today │ │   │ │ ⚠️ pronouns 🔧 4 mistakes│ │
+│ └──────────────────────────┘ │   │ └──────────────────────────┘ │
+└──────────────────────────────┘   │ ...          [⤴ Share CSV]  │
+                                   └──────────────────────────────┘
+```
+- **Kids tab** = today's admin Kids tab, limited to this class. Tap a kid → today's kid detail page (unit dots, week + all time, weak topics, last 10 activities with score and pass/fail) plus **"Remove from class"**.
+- **Topics tab** (new): the class's weakest topics first, e.g. `pronouns · 58% · 120 answers`. Tells the teacher what to re-teach.
+- **Share CSV:** one row per kid (name, unit, topics cleared, answers, accuracy, time, weakest topic) through the phone's share sheet (WhatsApp, Gmail, Drive). Plain text, no new native module.
+- **Gate and Boss questions are never shown,** only the score and pass/fail.
+
+**3. Admin: 📊 Dashboard → new "Schools" tab**
+```
+┌──────────────────────────────┐   ┌──────────────────────────────┐
+│ [Kids] [Reported] [Schools]  │   │ Class 10-A · Sunrise         │
+│ [ + New school ]             │   │ Code K7P-42M [New code]      │
+│ ┌──────────────────────────┐ │   │ Teachers                     │
+│ │ Sunrise Public School    │ │   │ • Mrs Rao (rao@…)  [Remove]  │
+│ │ Nagpur · 2 classes · 61  │ │   │ [ + Add teacher by email ]   │
+│ └──────────────────────────┘ │   │ 32 kids [Open dashboard]     │
+│ → classes  [ + New class ]   │   └──────────────────────────────┘
+└──────────────────────────────┘
+```
+The admin's Kids tab gets a filter: `All schools ▾ / school / class`. Cross-school comparisons stay admin-only.
+
+**4. Kid and parent: Profile → "📈 My progress"**
+The same kid detail page, showing the kid's own data: units, time this week, topics to work on, practice questions they got wrong (with answers). A parent opens it on the kid's phone. **No parent accounts or linking in phase A** (see question 3).
+
+### Data (Firestore)
+| Path | Holds | Who reads / writes |
+|---|---|---|
+| `schools/{schoolId}` | `name, city, createdAt` | admin only |
+| `classes/{classId}` | `schoolId, schoolName, name, code, teacherUids[], teacherNames[], createdAt` | read: admin + its teachers; write: admin |
+| `classCodes/{code}` | `classId, className, schoolName, teacherNames` | **get by code** (no listing): any signed-in user; create/delete: admin or a teacher of that class (new code) |
+| `classes/{classId}/members/{uid}` | `name, joinedAt, code`, `quests.{questId}: { stats, nodes, mistakeCount }`, `updatedAt` | read: the kid, the class's teachers, admin. Create: the kid, **only with a valid code**. Update: the kid. Delete: the kid (leave), its teacher (remove), admin |
+| `users/{uid}/classLinks/{classId}` | `className, schoolName, joinedAt` | the kid only (so the app knows where to copy progress) |
+
+- **Codes:** 6 characters from letters and digits that can't be misread (no 0/O, 1/I/L, 2/Z, 5/S, 8/B), shown as `K7P-42M`. Unique across all schools (one `classCodes` doc each). A teacher can make a new code; the old one stops working.
+- **Progress copy:** after each save the kid's app already writes `questProgress` (progress + `stats`). With this change it also writes the same summary into each of the kid's class member docs (`updateDoc`, never `setDoc`). `stats` gains `recent`: the last 10 activities (title, score, passed, ⭐, time). **No question text.**
+- **Why a copy, not a rule on `questProgress`:** Firestore rules can't check "is this kid still in my class" inside a teacher's list query. With the copy, a teacher reads only `classes/{theirClass}/members`, so isolation is one simple rule. Removing a kid deletes the copy, and the kid's next `updateDoc` fails, so it can't silently come back. The kid's app then deletes its `classLinks` doc and shows "You're no longer in Class 10-A".
+- **Teachers who play the quest** aren't class members, so other teachers never see their stats. Owner rule kept: only the teacher and the admin see them.
+- **Not shown to teachers:** `questAttempts` (no rule change). The teacher's kid detail uses `recent` from the copy.
+
+### Rules sketch (deploy by devops)
+```
+function teaches(classId) {
+  return request.auth != null &&
+    request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherUids;
+}
+match /schools/{id}      { allow read, write: if isAdmin(); }
+match /classes/{classId} {
+  allow read: if isAdmin() || teaches(classId);
+  allow write: if isAdmin();
+  match /members/{uid} {
+    allow read: if isAdmin() || teaches(classId) || request.auth.uid == uid;
+    allow create: if request.auth.uid == uid &&
+      get(/databases/$(database)/documents/classCodes/$(request.resource.data.code)).data.classId == classId;
+    allow update: if request.auth.uid == uid &&
+      request.resource.data.code == resource.data.code;        // can't swap the code
+    allow delete: if isAdmin() || teaches(classId) || request.auth.uid == uid;
+  }
+}
+match /classCodes/{code} {
+  allow get: if request.auth != null;
+  allow list: if false;
+  allow create, delete: if isAdmin() || teaches(request.resource.data.classId) /* create */ || teaches(resource.data.classId) /* delete */;
+}
+match /users/{userId}/classLinks/{classId} { allow read, write: if request.auth.uid == userId; }
+```
+No new indexes (only single-collection reads).
+
+### Cost (1,000 kids, 30 classes)
+- Kid: +1 write per finished activity per class, +1–3 reads when the app starts. Roughly 10 activities a day comes to +10,000 writes/day, inside the free tier.
+- Teacher: 1 read per kid each time the dashboard opens (32 for a class). Pull to refresh, no live listeners.
+
+### Effort and timing
+- About 2–2.5 days of app code, plus rules (deploy by devops) and a QA pass with two test accounts (teacher + kid). **Needs an app build.**
+- **Recommendation: the first update after Nov 10, not the Nov 6 build.** It touches the kid's save path, which broke once already (Finding 19). It deserves its own QA round.
+
+### Questions for the owner
+1. **More than one class per kid?** (school class + tuition class). Proposed: yes, up to 3. The data allows it at no extra cost per class.
+2. **Who sets things up?** Proposed: only the admin (you) creates schools, classes and adds teachers by email (the teacher signs in once first). Teachers can only make a new code and remove kids. The school-admin role comes in phase B.
+3. **Parents in phase A = "📈 My progress" on the kid's own account** (no parent sign-in or linking). Most kids use a parent's phone anyway. Linked parent accounts later, only if parents ask. OK?
+4. **Name teachers see:** the kid's Google name for now. The teacher can't rename kids in phase A. OK?
