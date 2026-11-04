@@ -2376,6 +2376,1792 @@ export const quizzes = {
         ),
       },
   ],
+
+  "4ieo11-synonyms-q1": [
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'liberty':",
+        "freedom",
+        [
+        ["bondage", "synonym-error"],
+        ["authority", "related-concept"],
+        ["justice", "synonym-error"],
+        ],
+        "Liberty means the state of being free within society; freedom is its exact synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'inspire'?",
+        "encourage",
+        [
+        ["discourage", "antonym-error"],
+        ["criticise", "negative-association"],
+        ["overlook", "unrelated-action"],
+        ],
+        "To inspire someone means to encourage them and fill them with the urge or ability to do something creative."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'destiny':",
+        "fate",
+        [
+        ["choice", "antonym-error"],
+        ["accident", "confused-concept"],
+        ["past", "unrelated-concept"],
+        ],
+        "Destiny refers to events that will necessarily happen to a person in the future; fate has the same meaning."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym of 'diminish'?",
+        "lessen",
+        [
+        ["expand", "antonym-error"],
+        ["belittle", "confused-meaning"],
+        ["remain", "lack-of-change"],
+        ],
+        "To diminish means to make or become less; lessen is its direct synonym. Belittle means to dismiss as unimportant."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the word that means the same as 'chide':",
+        "scold",
+        [
+        ["praise", "antonym-error"],
+        ["comfort", "opposite-tone"],
+        ["forgive", "contrasting-response"],
+        ],
+        "To chide someone means to scold, rebuke, or express mild disapproval."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'petrify'?",
+        "terrify",
+        [
+        ["soothe", "antonym-error"],
+        ["surprise", "weaker-emotion"],
+        ["confuse", "misinterpreted-feeling"],
+        ],
+        "To petrify means to frighten someone so severely that they are unable to move; terrify is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'strive':",
+        "struggle",
+        [
+        ["slacken", "antonym-error"],
+        ["surrender", "antonym-error"],
+        ["hesitate", "indecision"],
+        ],
+        "To strive means to make great efforts or struggle energetically to achieve something."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'slumber'?",
+        "sleep",
+        [
+        ["wander", "unrelated-action"],
+        ["awaken", "antonym-error"],
+        ["daydream", "related-concept"],
+        ],
+        "Slumber is a literary or gentle word for sleep."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'remote' in: 'The researchers stayed in a remote village.'",
+        "distant",
+        [
+        ["crowded", "opposite-description"],
+        ["nearby", "antonym-error"],
+        ["modern", "unrelated-descriptor"],
+        ],
+        "In this context, remote means situated far from the main centres of population; distant is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym of 'vow'?",
+        "promise",
+        [
+        ["request", "weaker-form"],
+        ["threat", "negative-statement"],
+        ["excuse", "evasive-statement"],
+        ],
+        "A vow is a solemn promise or pledge."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'certainty':",
+        "conviction",
+        [
+        ["doubt", "antonym-error"],
+        ["hesitation", "lack-of-confidence"],
+        ["suspicion", "uncertain-belief"],
+        ],
+        "Certainty means firm conviction that something is the case. Conviction means a firmly held belief."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'obedient'?",
+        "dutiful",
+        [
+        ["defiant", "antonym-error"],
+        ["devoted", "confused-concept"],
+        ["careless", "unrelated-trait"],
+        ],
+        "Obedient means complying with orders or rules; dutiful is its proper synonym. Devoted means loving and loyal."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'coax':",
+        "persuade",
+        [
+        ["command", "forceful-demand"],
+        ["threaten", "negative-pressure"],
+        ["tempt", "enticement-trap"],
+        ],
+        "To coax means to persuade someone gently and gradually to do something."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'agony'?",
+        "anguish",
+        [
+        ["comfort", "antonym-error"],
+        ["relief", "opposite-state"],
+        ["fatigue", "tiredness-confusion"],
+        ],
+        "Agony refers to extreme physical or mental suffering; anguish is its direct synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'recommend':",
+        "suggest",
+        [
+        ["oppose", "antonym-error"],
+        ["criticise", "negative-reaction"],
+        ["disallow", "forbidding-action"],
+        ],
+        "To recommend means to put forward someone or something with approval as being suitable; suggest is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'ambition'?",
+        "aspiration",
+        [
+        ["reluctance", "opposite-attitude"],
+        ["hesitation", "lack-of-resolve"],
+        ["obstacle", "barrier-concept"],
+        ],
+        "Ambition is a strong desire to do or achieve something; aspiration is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'voyage':",
+        "journey",
+        [
+        ["shelter", "resting-place"],
+        ["arrival", "end-of-travel"],
+        ["residence", "permanent-stay"],
+        ],
+        "A voyage is a long journey involving travel by sea or in space."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'scared'?",
+        "frightened",
+        [
+        ["courageous", "antonym-error"],
+        ["confident", "opposite-attitude"],
+        ["reckless", "unrelated-trait"],
+        ],
+        "Scared means fearful or frightened."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'repulsive':",
+        "revolting",
+        [
+        ["attractive", "antonym-error"],
+        ["delightful", "opposite-sensation"],
+        ["hateful", "confused-emotion"],
+        ],
+        "Repulsive means arousing intense distaste or disgust; revolting is its synonym. Hateful means full of hate."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'blink' in: 'Streetlamps began to blink across the misty pier.'",
+        "flicker",
+        [
+        ["darken", "opposite-state"],
+        ["blaze", "intense-shining"],
+        ["scorch", "heat-damage"],
+        ],
+        "When lights blink, they flash on and off rapidly or flicker."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'beguile'?",
+        "charm",
+        [
+        ["disgust", "opposite-feeling"],
+        ["frighten", "opposite-reaction"],
+        ["warn", "helpful-caution"],
+        ],
+        "To beguile means to charm or enchant someone, sometimes in a deceptive way."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'realise':",
+        "understand",
+        [
+        ["overlook", "antonym-error"],
+        ["disregard", "intentional-neglect"],
+        ["misjudge", "incorrect-assessment"],
+        ],
+        "To realise means to become fully aware of something as a fact, or to understand clearly."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'outstanding'?",
+        "remarkable",
+        [
+        ["ordinary", "antonym-error"],
+        ["mediocre", "average-quality"],
+        ["familiar", "unexceptional"],
+        ],
+        "Outstanding means exceptionally good or clearly superior; remarkable is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'pioneer':",
+        "trailblazer",
+        [
+        ["follower", "antonym-error"],
+        ["spectator", "passive-observer"],
+        ["novice", "inexperienced-beginner"],
+        ],
+        "A pioneer is a person who is among the first to explore or settle a new country or area; a trailblazer."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'sparse'?",
+        "scanty",
+        [
+        ["abundant", "antonym-error"],
+        ["plentiful", "antonym-error"],
+        ["crowded", "opposite-density"],
+        ],
+        "Sparse means thinly dispersed or scattered; scanty is its synonym."
+      ),
+    },
+  ],
+
+  "4ieo11-synonyms-q2": [
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'idle':",
+        "inactive",
+        [
+        ["diligent", "antonym-error"],
+        ["energetic", "antonym-error"],
+        ["punctual", "unrelated-trait"],
+        ],
+        "Idle means not active or doing work; inactive is its synonym."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym of 'evident'?",
+        "obvious",
+        [
+        ["obscure", "antonym-error"],
+        ["doubtful", "uncertain-belief"],
+        ["concealed", "hidden-state"],
+        ],
+        "Evident means clearly seen or understood; obvious."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the word that means the same as 'cruel':",
+        "merciless",
+        [
+        ["compassionate", "antonym-error"],
+        ["gentle", "antonym-error"],
+        ["forgiving", "merciful-trait"],
+        ],
+        "Cruel means wilfully causing pain or suffering to others; merciless."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'wise'?",
+        "judicious",
+        [
+        ["reckless", "antonym-error"],
+        ["foolish", "antonym-error"],
+        ["stubborn", "unrelated-flaw"],
+        ],
+        "Wise means having or showing experience, knowledge, and good judgment; judicious."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'swift':",
+        "rapid",
+        [
+        ["sluggish", "antonym-error"],
+        ["awkward", "unrelated-trait"],
+        ["cautious", "careful-approach"],
+        ],
+        "Swift means happening quickly or moving at high speed; rapid."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'ponder'?",
+        "contemplate",
+        [
+        ["disregard", "antonym-error"],
+        ["overlook", "failure-to-notice"],
+        ["dismiss", "rejecting-thought"],
+        ],
+        "To ponder means to think about something carefully and deeply; contemplate."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'eager':",
+        "enthusiastic",
+        [
+        ["reluctant", "antonym-error"],
+        ["indifferent", "lack-of-interest"],
+        ["hesitant", "uncertainty"],
+        ],
+        "Eager means strongly wanting to do or have something; enthusiastic."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym of 'fragile'?",
+        "delicate",
+        [
+        ["sturdy", "antonym-error"],
+        ["durable", "opposite-quality"],
+        ["resilient", "tough-nature"],
+        ],
+        "Fragile means easily broken or damaged; delicate."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the word that means the same as 'gaze':",
+        "stare",
+        [
+        ["glance", "brief-look"],
+        ["blink", "rapid-eye-action"],
+        ["glimpse", "momentary-sight"],
+        ],
+        "To gaze means to look steadily and intently; stare."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'faithful'?",
+        "loyal",
+        [
+        ["treacherous", "antonym-error"],
+        ["unreliable", "opposite-trait"],
+        ["deceitful", "dishonest-character"],
+        ],
+        "Faithful means remaining loyal and steadfast."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'damp':",
+        "moist",
+        [
+        ["arid", "antonym-error"],
+        ["parched", "extreme-dryness"],
+        ["scorched", "heat-dried"],
+        ],
+        "Damp means slightly wet or moist."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'enormous'?",
+        "colossal",
+        [
+        ["diminutive", "antonym-error"],
+        ["compact", "small-size"],
+        ["modest", "moderate-size"],
+        ],
+        "Enormous means very large in size, quantity, or extent; colossal."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'reality':",
+        "actuality",
+        [
+        ["illusion", "opposite-concept"],
+        ["fantasy", "imagined-world"],
+        ["mirage", "deceptive-appearance"],
+        ],
+        "Reality refers to the state of things as they actually exist; actuality."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'gleeful'?",
+        "jubilant",
+        [
+        ["mournful", "antonym-error"],
+        ["sorrowful", "opposite-feeling"],
+        ["discontented", "unhappy-state"],
+        ],
+        "Gleeful means exuberantly or triumphantly joyful; jubilant."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym of 'feeble'?",
+        "frail",
+        [
+        ["robust", "antonym-error"],
+        ["vigorous", "opposite-trait"],
+        ["mighty", "strong-character"],
+        ],
+        "Feeble means lacking physical strength, especially as a result of age or illness; frail."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the word that means the same as 'delight':",
+        "pleasure",
+        [
+        ["dismay", "antonym-error"],
+        ["distress", "state-of-pain"],
+        ["sorrow", "deep-unhappiness"],
+        ],
+        "Delight means great pleasure or satisfaction."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'courteous'?",
+        "polite",
+        [
+        ["insolent", "antonym-error"],
+        ["brusque", "abrupt-and-rude"],
+        ["arrogant", "proud-behavior"],
+        ],
+        "Courteous means polite, respectful, or considerate in manner."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'inquire':",
+        "investigate",
+        [
+        ["overlook", "ignore-detail"],
+        ["respond", "answering-action"],
+        ["conclude", "ending-action"],
+        ],
+        "To inquire means to ask for information or investigate."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'energy'?",
+        "vigour",
+        [
+        ["lethargy", "antonym-error"],
+        ["weariness", "tiredness-trait"],
+        ["apathy", "lack-of-enthusiasm"],
+        ],
+        "Energy refers to physical or mental strength and vitality; vigour is spelled with 'our' in British English."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of the word 'gentle':",
+        "tender",
+        [
+        ["ferocious", "antonym-error"],
+        ["turbulent", "rough-and-stormy"],
+        ["abrasive", "harsh-texture"],
+        ],
+        "Gentle means having or showing a mild, kind, or tender temperament."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'dignity'?",
+        "nobility",
+        [
+        ["humiliation", "antonym-error"],
+        ["disgrace", "shameful-state"],
+        ["cowardice", "lack-of-bravery"],
+        ],
+        "Dignity means the state or quality of being worthy of honour or respect; nobility."
+      ),
+    },
+  ],
+
+  "4ieo11-antonyms-q1": [
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'liability':",
+        "asset",
+        [
+        ["burden", "synonym-error"],
+        ["debt", "related-concept"],
+        ["expense", "financial-category"],
+        ],
+        "A liability is something a person or company owes or a hindrance; an asset is a useful or valuable quality or possession."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'endure'?",
+        "surrender",
+        [
+        ["tolerate", "synonym-error"],
+        ["withstand", "synonym-error"],
+        ["persist", "continuing-effort"],
+        ],
+        "To endure means to remain firm under suffering or hardship without yielding; to surrender or give up is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'private':",
+        "public",
+        [
+        ["confidential", "synonym-error"],
+        ["personal", "related-meaning"],
+        ["exclusive", "restricted-access"],
+        ],
+        "Private means belonging to some particular person or group; public means open to all people."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'futile'?",
+        "fruitful",
+        [
+        ["pointless", "synonym-error"],
+        ["vain", "synonym-error"],
+        ["hopeless", "negative-state"],
+        ],
+        "Futile means incapable of producing any useful result; fruitful or effective is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'compulsory':",
+        "optional",
+        [
+        ["mandatory", "synonym-error"],
+        ["urgent", "time-constraint"],
+        ["essential", "necessary-quality"],
+        ],
+        "Compulsory means required by law or a rule; optional or voluntary is its opposite."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'nimble'?",
+        "clumsy",
+        [
+        ["agile", "synonym-error"],
+        ["quick", "speed-association"],
+        ["graceful", "related-positive-trait"],
+        ],
+        "Nimble means quick and light in movement; clumsy or awkward is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'mingle':",
+        "isolate",
+        [
+        ["blend", "synonym-error"],
+        ["combine", "synonym-error"],
+        ["gather", "group-action"],
+        ],
+        "To mingle means to mix or associate with others; to isolate or separate is its opposite."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'clumsy'?",
+        "graceful",
+        [
+        ["awkward", "synonym-error"],
+        ["ungainly", "synonym-error"],
+        ["careless", "unrelated-trait"],
+        ],
+        "Clumsy means awkward in movement or handling things; graceful is its opposite."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'potential' in: 'She showed great potential as a violinist.'",
+        "limitation",
+        [
+        ["talent", "synonym-association"],
+        ["promise", "future-capacity"],
+        ["capability", "positive-ability"],
+        ],
+        "Potential refers to latent qualities or abilities that may be developed; limitation is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'tragic'?",
+        "joyful",
+        [
+        ["disastrous", "synonym-error"],
+        ["dreadful", "negative-tone"],
+        ["gloomy", "sombre-feeling"],
+        ],
+        "Tragic means causing great sadness or distress; joyful is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'increase':",
+        "decrease",
+        [
+        ["expand", "synonym-error"],
+        ["amplify", "intensifying-word"],
+        ["elevate", "upward-movement"],
+        ],
+        "Increase means to become greater in size, amount, or degree; decrease means to become smaller."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'resent'?",
+        "welcome",
+        [
+        ["begrudge", "synonym-error"],
+        ["dislike", "negative-feeling"],
+        ["protest", "objecting-action"],
+        ],
+        "To resent means to feel bitterness or indignation at something; to welcome or appreciate is its opposite."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'accomplice':",
+        "opponent",
+        [
+        ["partner", "synonym-error"],
+        ["helper", "collaborator"],
+        ["associate", "allied-person"],
+        ],
+        "An accomplice is a person who helps another commit a crime or wrong act; an opponent opposes them."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'brazen'?",
+        "modest",
+        [
+        ["bold", "synonym-error"],
+        ["insolent", "synonym-error"],
+        ["audacious", "daring-attitude"],
+        ],
+        "Brazen means bold and without shame; modest or timid is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'soothe':",
+        "agitate",
+        [
+        ["comfort", "synonym-error"],
+        ["pacify", "synonym-error"],
+        ["relieve", "calming-effect"],
+        ],
+        "To soothe means to gently calm a person or their feelings; to agitate or inflame is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'ascend'?",
+        "descend",
+        [
+        ["climb", "synonym-error"],
+        ["mount", "synonym-error"],
+        ["soar", "upward-movement"],
+        ],
+        "To ascend means to go up or climb; to descend means to move downward."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'upstairs':",
+        "downstairs",
+        [
+        ["balcony", "related-location"],
+        ["rooftop", "elevated-area"],
+        ["attic", "upper-room"],
+        ],
+        "Upstairs refers to an upper floor; downstairs refers to a lower floor."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'sickness'?",
+        "wellness",
+        [
+        ["illness", "synonym-error"],
+        ["ailment", "synonym-error"],
+        ["fatigue", "tiredness-state"],
+        ],
+        "Sickness refers to the state of being ill; wellness or health is its antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'separate':",
+        "unite",
+        [
+        ["divide", "synonym-error"],
+        ["isolate", "synonym-error"],
+        ["scatter", "dispersing-action"],
+        ],
+        "To separate means to divide or cause to move apart; to unite means to bring together."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'despair'?",
+        "hope",
+        [
+        ["anguish", "synonym-error"],
+        ["sorrow", "sadness-trait"],
+        ["grief", "mourning-emotion"],
+        ],
+        "Despair is the complete loss or absence of hope; hope is its direct antonym."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'conspicuous':",
+        "hidden",
+        [
+        ["noticeable", "synonym-error"],
+        ["prominent", "synonym-error"],
+        ["obvious", "clear-appearance"],
+        ],
+        "Conspicuous means clearly visible or attracting attention; hidden or inconspicuous is its opposite."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'cringe'?",
+        "confront",
+        [
+        ["cower", "synonym-error"],
+        ["recoil", "synonym-error"],
+        ["flinch", "shrinking-reaction"],
+        ],
+        "To cringe means to shrink back in fear or embarrassment; to confront means to face boldly."
+      ),
+    },
+  ],
+
+  "4ieo11-antonyms-q2": [
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'wide':",
+        "narrow",
+        [
+        ["broad", "synonym-error"],
+        ["spacious", "synonym-error"],
+        ["vast", "synonym-error"],
+        ],
+        "Wide means having great extent from side to side; narrow means having a small width."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'arrive'?",
+        "depart",
+        [
+        ["reach", "synonym-error"],
+        ["enter", "related-action"],
+        ["approach", "related-action"],
+        ],
+        "To arrive means to reach a destination; to depart means to leave."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'calm':",
+        "stormy",
+        [
+        ["tranquil", "synonym-error"],
+        ["serene", "synonym-error"],
+        ["peaceful", "synonym-error"],
+        ],
+        "Calm means not showing or feeling agitation or excitement; stormy means marked by turbulence or disturbance."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'rich'?",
+        "poor",
+        [
+        ["wealthy", "synonym-error"],
+        ["affluent", "synonym-error"],
+        ["prosperous", "synonym-error"],
+        ],
+        "Rich means having a great deal of money or assets; poor means lacking sufficient money to live comfortably."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'friend':",
+        "enemy",
+        [
+        ["ally", "synonym-error"],
+        ["companion", "synonym-error"],
+        ["partner", "synonym-error"],
+        ],
+        "A friend is a person with whom one has a bond of mutual affection; an enemy is a person actively opposing someone."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'kind'?",
+        "cruel",
+        [
+        ["gentle", "synonym-error"],
+        ["caring", "synonym-error"],
+        ["generous", "synonym-error"],
+        ],
+        "Kind means having or showing a friendly, generous, and considerate nature; cruel means wilfully causing pain."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'hard':",
+        "soft",
+        [
+        ["solid", "synonym-error"],
+        ["firm", "synonym-error"],
+        ["rigid", "synonym-error"],
+        ],
+        "Hard means solid, firm, and resistant to pressure; soft means yielding readily to touch."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'front'?",
+        "back",
+        [
+        ["face", "related-noun"],
+        ["forward", "direction-confusion"],
+        ["vanguard", "leading-position"],
+        ],
+        "Front refers to the part or side that faces forward; back refers to the rear side."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'bright':",
+        "dim",
+        [
+        ["radiant", "synonym-error"],
+        ["brilliant", "synonym-error"],
+        ["luminous", "synonym-error"],
+        ],
+        "Bright means giving out or reflecting much light; dim means not shining brightly or clearly."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'empty'?",
+        "full",
+        [
+        ["vacant", "synonym-error"],
+        ["hollow", "synonym-error"],
+        ["bare", "synonym-error"],
+        ],
+        "Empty means containing nothing; full means containing as much or as many as is possible."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'new':",
+        "old",
+        [
+        ["fresh", "synonym-error"],
+        ["modern", "synonym-error"],
+        ["novel", "synonym-error"],
+        ],
+        "New means not existing before; old means having lived or existed for a long time."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'cheap'?",
+        "expensive",
+        [
+        ["affordable", "synonym-error"],
+        ["low-cost", "synonym-error"],
+        ["economical", "synonym-error"],
+        ],
+        "Cheap means low in price; expensive means costing a great deal of money."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'give':",
+        "receive",
+        [
+        ["donate", "synonym-error"],
+        ["present", "synonym-error"],
+        ["bestow", "synonym-error"],
+        ],
+        "To give means to freely transfer the possession of something; to receive means to be given or presented with something."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'near'?",
+        "distant",
+        [
+        ["close", "synonym-error"],
+        ["nearby", "synonym-error"],
+        ["adjacent", "synonym-error"],
+        ],
+        "Near means at or to a short distance; distant means far away in space or time."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'early':",
+        "late",
+        [
+        ["prompt", "synonym-error"],
+        ["punctual", "synonym-error"],
+        ["timely", "synonym-error"],
+        ],
+        "Early means happening before the expected time; late means doing something after the expected time."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'loud'?",
+        "quiet",
+        [
+        ["noisy", "synonym-error"],
+        ["deafening", "synonym-error"],
+        ["boisterous", "synonym-error"],
+        ],
+        "Loud means producing or capable of producing much noise; quiet means making little or no noise."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'rough':",
+        "smooth",
+        [
+        ["coarse", "synonym-error"],
+        ["jagged", "synonym-error"],
+        ["bumpy", "synonym-error"],
+        ],
+        "Rough means having an uneven or irregular surface; smooth means having an even and regular surface."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'fast'?",
+        "slow",
+        [
+        ["swift", "synonym-error"],
+        ["rapid", "synonym-error"],
+        ["speedy", "synonym-error"],
+        ],
+        "Fast means moving or capable of moving at high speed; slow means operating or moving at a low speed."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'bold':",
+        "timid",
+        [
+        ["fearless", "synonym-error"],
+        ["daring", "synonym-error"],
+        ["brave", "synonym-error"],
+        ],
+        "Bold means confident and courageous; timid means showing a lack of courage or confidence."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'strong'?",
+        "feeble",
+        [
+        ["sturdy", "synonym-error"],
+        ["muscular", "synonym-error"],
+        ["mighty", "synonym-error"],
+        ],
+        "Strong means having the power to move heavy weights or perform other physically demanding tasks; feeble means lacking physical strength."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'find':",
+        "lose",
+        [
+        ["discover", "synonym-error"],
+        ["locate", "synonym-error"],
+        ["detect", "synonym-error"],
+        ],
+        "To find means to discover by searching; to lose means to be deprived of or cease to have."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is an antonym of 'dark'?",
+        "light",
+        [
+        ["murky", "synonym-error"],
+        ["shadowy", "synonym-error"],
+        ["dim", "synonym-error"],
+        ],
+        "Dark means with little or no light; light means having a considerable amount of illumination."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the opposite of the word 'hot':",
+        "cold",
+        [
+        ["scorching", "synonym-error"],
+        ["boiling", "synonym-error"],
+        ["warm", "related-temperature"],
+        ],
+        "Hot means having a high degree of heat; cold means of or at a low or relatively low temperature."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the antonym of 'tall'?",
+        "short",
+        [
+        ["towering", "synonym-error"],
+        ["lofty", "synonym-error"],
+        ["giant", "synonym-error"],
+        ],
+        "Tall means of great or more than average height; short means measuring a small distance from head to foot."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of the word 'clean':",
+        "dirty",
+        [
+        ["spotless", "synonym-error"],
+        ["pristine", "synonym-error"],
+        ["tidy", "synonym-error"],
+        ],
+        "Clean means free from dirt, marks, or stains; dirty means covered or marked with an unclean substance."
+      ),
+    },
+  ],
+
+  "4ieo11-idioms": [
+    {
+      subtopic: "animal-nature-idioms",
+      ...q(
+        "What is the meaning of the idiom 'fly the coop'?",
+        "escape or leave suddenly",
+        [
+        ["build a wooden coop", "literal-interpretation"],
+        ["keep pet birds safe", "confused-context"],
+        ["refuse to travel far", "opposite-action"],
+        ],
+        "'Fly the coop' means to make an escape or leave home or a place suddenly and unexpectedly."
+      ),
+    },
+    {
+      subtopic: "popular-sayings",
+      ...q(
+        "What is the meaning of 'a blessing in disguise'?",
+        "an apparent misfortune that results in good",
+        [
+        ["a costume worn to a festival", "literal-interpretation"],
+        ["a harmful trick played by friends", "misunderstood-connotation"],
+        ["a secret wish kept completely quiet", "unrelated-concept"],
+        ],
+        "'A blessing in disguise' is something that seems unfortunate or unlucky at first, but turns out to have positive results."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does it mean to be 'tickled pink'?",
+        "extremely delighted and pleased",
+        [
+        ["feeling physical irritation", "literal-interpretation"],
+        ["blushing from heavy embarrassment", "colour-association"],
+        ["growing hot and uncomfortable", "physical-sensation"],
+        ],
+        "Being 'tickled pink' means feeling very pleased, thrilled, or delightfully entertained."
+      ),
+    },
+    {
+      subtopic: "animal-nature-idioms",
+      ...q(
+        "What does the expression 'raining cats and dogs' mean?",
+        "raining very heavily",
+        [
+        ["pets making loud noise outside", "literal-interpretation"],
+        ["animals running from a storm", "confused-animal-idiom"],
+        ["gentle drizzle on an autumn day", "opposite-intensity"],
+        ],
+        "'Raining cats and dogs' is a well-known idiom meaning raining torrentially or very heavily."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What is the meaning of the idiom 'acid test'?",
+        "a decisive test of true value or quality",
+        [
+        ["a sour taste test in science class", "literal-interpretation"],
+        ["an unfair question on an examination", "misleading-context"],
+        ["a dangerous chemical reaction in lab", "science-confusion"],
+        ],
+        "An 'acid test' is a definitive, conclusive test of the success, quality, or authenticity of someone or something."
+      ),
+    },
+    {
+      subtopic: "animal-nature-idioms",
+      ...q(
+        "What does the phrase 'when pigs fly' mean?",
+        "something that will never happen",
+        [
+        ["early in the quiet morning", "time-confusion"],
+        ["during a rare lunar eclipse", "rare-event-confusion"],
+        ["whenever animals are excited", "literal-interpretation"],
+        ],
+        "'When pigs fly' is an informal idiom used to say that one thinks something will never happen."
+      ),
+    },
+    {
+      subtopic: "animal-nature-idioms",
+      ...q(
+        "What is the meaning of the phrase 'root and branch'?",
+        "thoroughly and completely",
+        [
+        ["gardening carefully in spring", "literal-interpretation"],
+        ["growing tall like an oak tree", "nature-association"],
+        ["slowly and step by step", "wrong-pace"],
+        ],
+        "'Root and branch' means completely and entirely, leaving nothing untouched."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does the expression 'rank and file' refer to?",
+        "ordinary members of an organization",
+        [
+        ["commanding officers in an army", "opposite-hierarchy"],
+        ["neatly organized paper folders", "literal-interpretation"],
+        ["people with the highest scores", "elite-misconception"],
+        ],
+        "'Rank and file' refers to the ordinary members of a party, union, or group, as opposed to the leaders."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What is the meaning of the saying 'time flies'?",
+        "time seems to pass remarkably quickly",
+        [
+        ["clocks are running too fast today", "literal-interpretation"],
+        ["travelling by aeroplane saves time", "wordplay-distractor"],
+        ["important appointments arrive late", "opposite-experience"],
+        ],
+        "'Time flies' means time seems to pass at great speed, especially when one is busy or enjoying oneself."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does it mean to be 'in hot water'?",
+        "in serious trouble or difficulty",
+        [
+        ["relaxing in a warm bath", "literal-interpretation"],
+        ["cooking dinner over a stove", "kitchen-association"],
+        ["feeling sweaty in hot weather", "temperature-confusion"],
+        ],
+        "To be 'in hot water' means to be in a difficult situation or facing punishment for doing something wrong."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What is the meaning of 'bury the hatchet'?",
+        "end a quarrel and make peace",
+        [
+        ["hide gardening tools away", "literal-interpretation"],
+        ["prepare weapons before battle", "opposite-action"],
+        ["forget where an item was placed", "carelessness-distractor"],
+        ],
+        "To 'bury the hatchet' means to settle a dispute, forgive past grudges, and make peace."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does the idiom 'hit the books' mean?",
+        "study intensely with focus",
+        [
+        ["slam heavy dictionaries down", "literal-interpretation"],
+        ["borrow books from the library", "general-study-action"],
+        ["organize shelves in a neat row", "cleaning-association"],
+        ],
+        "To 'hit the books' is an informal expression meaning to study hard, especially before an exam."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does 'the ball is in your court' mean?",
+        "it is now your turn to take action",
+        [
+        ["you must serve in tennis now", "literal-sports-interpretation"],
+        ["you have won the competition", "premature-victory"],
+        ["the match has ended for today", "conclusion-confusion"],
+        ],
+        "'The ball is in your court' means it is up to you to make the next move or decision."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does it mean to 'get cold feet'?",
+        "become nervous and lose courage",
+        [
+        ["walk barefoot on frosty grass", "literal-interpretation"],
+        ["catch a winter chest cold", "health-association"],
+        ["feel relaxed and unbothered", "opposite-feeling"],
+        ],
+        "To 'get cold feet' means to experience sudden nervousness or hesitate before doing something risky or important."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does feeling 'under the weather' mean?",
+        "feeling slightly unwell or sickly",
+        [
+        ["standing outside in heavy rain", "literal-weather-interpretation"],
+        ["checking the morning forecast", "meteorological-distractor"],
+        ["feeling unusually energetic", "opposite-state"],
+        ],
+        "To be 'under the weather' means to feel mildly ill, tired, or indisposed."
+      ),
+    },
+    {
+      subtopic: "animal-nature-idioms",
+      ...q(
+        "What is the meaning of 'once in a blue moon'?",
+        "very rarely or almost never",
+        [
+        ["every single lunar month", "astronomical-literalism"],
+        ["whenever evening arrives", "routine-event"],
+        ["during a summer cloudburst", "seasonal-confusion"],
+        ],
+        "'Once in a blue moon' refers to something that happens very rarely."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does it mean to 'pull someone's leg'?",
+        "tease someone in a playful, joking manner",
+        [
+        ["trip a person while walking", "literal-physical-action"],
+        ["help someone climb an obstacle", "helpful-misinterpretation"],
+        ["annoy a friend deliberately", "malicious-intent"],
+        ],
+        "To 'pull someone's leg' means to tease or play a harmless practical joke on them."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does the expression 'bold as brass' mean?",
+        "confident and completely shameless",
+        [
+        ["polished until bright yellow", "literal-metal-interpretation"],
+        ["noisy like a marching band", "instrument-confusion"],
+        ["easily broken under pressure", "opposite-quality"],
+        ],
+        "'Bold as brass' describes someone who is extremely audacious, confident, and unabashed."
+      ),
+    },
+  ],
+
+  "4ieo11-vocab-q1": [
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'to light up':",
+        "illuminate",
+        [
+        ["illuminaete", "spelling-vowel-trap"],
+        ["illuminiaet", "spelling-letter-jumble"],
+        ["illuminete", "spelling-vowel-trap"],
+        ],
+        "Illuminate is spelled i-l-l-u-m-i-n-a-t-e, with double 'l' and ending in '-ate'."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word means 'an item kept as a reminder of a person, place, or event'?",
+        "souvenir",
+        [
+        ["trinket", "imprecise-synonym"],
+        ["specimen", "scientific-sample"],
+        ["document", "written-record"],
+        ],
+        "A souvenir is a thing kept as a reminder of a person, place, or event."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'very great or immense':",
+        "tremendous",
+        [
+        ["tremendious", "spelling-extra-vowel"],
+        ["tremandous", "spelling-vowel-trap"],
+        ["trimendous", "spelling-vowel-trap"],
+        ],
+        "Tremendous is spelled t-r-e-m-e-n-d-o-u-s (ending in '-ous', not '-ious')."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "They decided to ___ at the grocery market to buy fresh ___.",
+        "meet / meat",
+        [
+        ["meat / meet", "reversed-homophones"],
+        ["meet / mete", "archaic-homophone"],
+        ["mete / meat", "incorrect-verb-choice"],
+        ],
+        "'Meet' means to come into the presence of someone; 'meat' is animal flesh used as food."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'stubborn':",
+        "obstinate",
+        [
+        ["obsitnate", "spelling-letter-transposition"],
+        ["obtsinate", "spelling-letter-swap"],
+        ["obstinite", "spelling-vowel-trap"],
+        ],
+        "Obstinate is spelled o-b-s-t-i-n-a-t-e."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'a desire to do something':",
+        "temptation",
+        [
+        ["tamtation", "spelling-vowel-trap"],
+        ["temptashion", "spelling-phonetic-misspelling"],
+        ["tempetation", "spelling-extra-syllable"],
+        ],
+        "Temptation is spelled t-e-m-p-t-a-t-i-o-n."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'promising or favourable':",
+        "auspicious",
+        [
+        ["auspisious", "spelling-s-for-c-error"],
+        ["auspicius", "spelling-missing-vowel"],
+        ["awspicious", "spelling-phonetic-misspelling"],
+        ],
+        "Auspicious is spelled a-u-s-p-i-c-i-o-u-s, using 'c' before 'i'."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word describes 'a person who has had long experience in a particular field'?",
+        "veteran",
+        [
+        ["novice", "opposite-experience"],
+        ["amateur", "non-professional"],
+        ["apprentice", "beginner-in-training"],
+        ],
+        "A veteran is a person who has had long experience in a particular field."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the boundary around a circle:",
+        "circumference",
+        [
+        ["circumferance", "spelling-vowel-trap"],
+        ["circamference", "spelling-vowel-trap"],
+        ["circumfrence", "spelling-missing-vowel"],
+        ],
+        "Circumference ends in '-ence', spelled c-i-r-c-u-m-f-e-r-e-n-c-e."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'watchful attention':",
+        "vigilance",
+        [
+        ["vigilence", "spelling-vowel-trap"],
+        ["vegilance", "spelling-vowel-trap"],
+        ["vigalance", "spelling-vowel-trap"],
+        ],
+        "Vigilance ends in '-ance', spelled v-i-g-i-l-a-n-c-e."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word describes 'a large natural or artificial lake used as a source of water supply'?",
+        "reservoir",
+        [
+        ["aquarium", "tank-for-fish"],
+        ["aviary", "enclosure-for-birds"],
+        ["sanctuary", "refuge-for-wildlife"],
+        ],
+        "A reservoir is a large natural or artificial lake used as a source of water supply."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word describes someone or something that is 'present everywhere simultaneously'?",
+        "omnipresent",
+        [
+        ["omniscient", "all-knowing"],
+        ["omnipotent", "all-powerful"],
+        ["omnivorous", "eating-all-foods"],
+        ],
+        "'Omnipresent' means present everywhere (from Latin 'omni-' meaning all, and 'present')."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'a person who receives something':",
+        "recipient",
+        [
+        ["receipent", "spelling-ie-ei-rule"],
+        ["recipiant", "spelling-vowel-trap"],
+        ["recepient", "spelling-missing-vowel"],
+        ],
+        "Recipient is spelled r-e-c-i-p-i-e-n-t."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'awake and aware of one's surroundings':",
+        "conscious",
+        [
+        ["conssious", "spelling-double-consonant"],
+        ["consious", "spelling-missing-consonant"],
+        ["concsious", "spelling-misplaced-consonant"],
+        ],
+        "Conscious is spelled c-o-n-s-c-i-o-u-s."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'remarkable or extraordinary':",
+        "phenomenal",
+        [
+        ["phenominal", "spelling-vowel-trap"],
+        ["fenomenal", "spelling-phonetic-misspelling"],
+        ["phynomenal", "spelling-vowel-trap"],
+        ],
+        "Phenomenal is spelled p-h-e-n-o-m-e-n-a-l."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word describes 'a person who undergoes suffering or death for a noble cause'?",
+        "martyr",
+        [
+        ["patriot", "lover-of-country"],
+        ["diplomat", "peace-negotiator"],
+        ["refugee", "displaced-person"],
+        ],
+        "A martyr is a person who is killed or suffers greatly because of their religious, political, or noble beliefs."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'to make someone feel very happy and animated':",
+        "exhilarate",
+        [
+        ["exhilerate", "spelling-vowel-trap"],
+        ["exhilarete", "spelling-vowel-trap"],
+        ["exelerate", "spelling-phonetic-confusion"],
+        ],
+        "Exhilarate has an 'a' after the 'l': e-x-h-i-l-a-r-a-t-e."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "The recipe called for grinding the whole spices into a ___ paste.",
+        "coarse",
+        [
+        ["course", "path-or-class"],
+        ["corse", "archaic-spelling"],
+        ["cause", "reason-for-action"],
+        ],
+        "'Coarse' means rough or loose in texture; 'course' refers to a direction, class, or route."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "A travelling ___ of classical dancers performed at the annual festival.",
+        "troupe",
+        [
+        ["troop", "soldiers-or-monkeys"],
+        ["troup", "spelling-missing-letter"],
+        ["trust", "unrelated-word"],
+        ],
+        "A 'troupe' is a group of dancers, actors, or performers; a 'troop' refers to soldiers."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the correct spelling of the word meaning 'allowing light to pass through partially':",
+        "translucent",
+        [
+        ["translucant", "spelling-vowel-trap"],
+        ["transleucent", "spelling-extra-vowel"],
+        ["tranzlucent", "spelling-phonetic-misspelling"],
+        ],
+        "Translucent is spelled t-r-a-n-s-l-u-c-e-n-t, ending in '-ent'."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Which word describes 'a person skilled in foreign languages or the study of language'?",
+        "linguist",
+        [
+        ["novelist", "writer-of-fiction"],
+        ["historian", "student-of-history"],
+        ["archaeologist", "student-of-antiquities"],
+        ],
+        "A linguist is a person skilled in foreign languages or a person who studies linguistics."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "She went to the bank counter to deposit the salary ___ into her account.",
+        "cheque",
+        [
+        ["check", "us-spelling-or-verify"],
+        ["chick", "baby-bird"],
+        ["cheek", "facial-feature"],
+        ],
+        "In British English, a bank order to pay money is spelled 'cheque', whereas 'check' means to examine."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Wheat grains are finely ground into ___ to bake fresh bread.",
+        "flour",
+        [
+        ["flower", "blossom-of-plant"],
+        ["floor", "surface-of-room"],
+        ["flare", "sudden-bright-light"],
+        ],
+        "'Flour' is powder obtained by grinding grain; 'flower' is the blossom of a plant."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "What is the psychological term for the extreme or irrational fear of dogs?",
+        "cynophobia",
+        [
+        ["claustrophobia", "fear-of-confined-spaces"],
+        ["acrophobia", "fear-of-heights"],
+        ["hydrophobia", "fear-of-water"],
+        ],
+        "Cynophobia is the extreme or irrational fear of dogs (from Greek 'kyon' meaning dog, and 'phobos' meaning fear)."
+      ),
+    },
+    {
+      subtopic: "idiomatic-collocations",
+      ...q(
+        "Choose the British spelling of the small dish eaten before a three-course meal:",
+        "appetiser",
+        [
+        ["appetizer", "us-spelling-with-z"],
+        ["apetiser", "spelling-missing-letter"],
+        ["appitiser", "spelling-vowel-trap"],
+        ],
+        "In British English, the word is spelled 'appetiser' with an 's' rather than a 'z', and with double 'p'."
+      ),
+    },
+  ],
 };
 
 // ---------- Readings ----------
@@ -2597,6 +4383,26 @@ const synAntP1 = forGrades(
   withSubtopic(practice("wp-synant-p1", synAnt, 1, "Words in Context", "medium", [quiz("wp-synant-context-quiz")]), "context-pairs"),
   [4, 5, 6]
 );
+const synAntP2 = forGrades(
+  withSubtopic(
+    practice("wp-synant-p2", synAnt, 2, "Word Bank 1", "easy", [
+      quiz("4ieo11-synonyms-q1"),
+      quiz("4ieo11-synonyms-q2"),
+    ]),
+    "synonyms"
+  ),
+  [3, 4, 5, 6]
+);
+const synAntP3 = forGrades(
+  withSubtopic(
+    practice("wp-synant-p3", synAnt, 3, "Word Bank 2", "easy", [
+      quiz("4ieo11-antonyms-q1"),
+      quiz("4ieo11-antonyms-q2"),
+    ]),
+    "antonyms"
+  ),
+  [3, 4, 5, 6]
+);
 const synAntGate = forGrades(
   gate("wp-synant-gate", synAnt, "Synonyms & Antonyms Challenge", "wp-synant-gate-pool", {
     "synonyms": "Synonyms and similar meanings",
@@ -2632,6 +4438,15 @@ const collocations = forGrades(
 const collocationsP1 = forGrades(
   withSubtopic(practice("wp-colloc-p1", collocations, 1, "Nature Collocations", "medium", [quiz("wp-colloc-nature-quiz")]), "natural-partners"),
   [5, 6]
+);
+const collocationsP2 = forGrades(
+  withSubtopic(
+    practice("wp-colloc-p2", collocations, 2, "Vocabulary Bank", "medium", [
+      quiz("4ieo11-vocab-q1"),
+    ]),
+    "idiomatic-collocations"
+  ),
+  [4, 5, 6]
 );
 const collocationsGate = forGrades(
   gate("wp-colloc-gate", collocations, "Word Choice & Collocation Challenge", "wp-colloc-gate-pool", {
@@ -2688,6 +4503,15 @@ const idiomsP1 = forGrades(
   withSubtopic(practice("wp-idioms-p1", idioms, 1, "Proverbs in Context", "medium", [quiz("wp-idioms-practice-quiz")]), "popular-sayings"),
   [5, 6]
 );
+const idiomsP2 = forGrades(
+  withSubtopic(
+    practice("wp-idioms-p2", idioms, 2, "Idioms Bank", "medium", [
+      quiz("4ieo11-idioms"),
+    ]),
+    "action-phrases"
+  ),
+  [4, 5, 6]
+);
 const idiomsGate = forGrades(
   gate("wp-idioms-gate", idioms, "Idioms & Proverbs Challenge", "wp-idioms-gate-pool", {
     "popular-sayings": "Popular proverbs and sayings",
@@ -2720,6 +4544,8 @@ export const nodes = [
   u1,
   synAnt,
   synAntP1,
+  synAntP2,
+  synAntP3,
   synAntGate,
   synAntEndless,
   spelling,
@@ -2728,6 +4554,7 @@ export const nodes = [
   spellingEndless,
   collocations,
   collocationsP1,
+  collocationsP2,
   collocationsGate,
   collocationsEndless,
   u1r,
@@ -2739,6 +4566,7 @@ export const nodes = [
   dialogueEndless,
   idioms,
   idiomsP1,
+  idiomsP2,
   idiomsGate,
   idiomsEndless,
   u2r,
