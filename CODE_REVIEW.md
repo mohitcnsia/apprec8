@@ -1699,7 +1699,7 @@ and school admins set things up; kids join only via a parent, after consent in E
 ### DR-9: deploy rules + functions for RB-2 (owner OK needed)
 1. Merge `docs/rules/rb2-classes.rules` into `firestore.rules` (instructions inside; keep a backup) →
    `firebase deploy --only firestore:rules`.
-2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher`.
+2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher,functions:getClassLeaderboard,functions:clapForClassmate`.
 3. Create `roles/{SeemaUid}` = `{ admin: true }` in the console (after she signs in once).
 Until deployed, the new screens show "permission denied": nothing else changes.
 

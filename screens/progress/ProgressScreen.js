@@ -23,6 +23,7 @@ import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
+import ClassBoard from "./ClassBoard";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -264,6 +265,9 @@ export default function ProgressScreen({ navigation }) {
           <Text style={styles.soft}>Play a quest to see your strong and tricky topics here.</Text>
         </View>
       ) : null}
+
+      {/* My class this week + claps (only for kids in a class) */}
+      {(userData?.classIds || [])[0] ? <ClassBoard classId={userData.classIds[0]} /> : null}
 
       {/* Leaderboard (the old Stats screen) */}
       <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">

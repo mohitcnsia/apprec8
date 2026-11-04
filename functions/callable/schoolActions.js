@@ -67,3 +67,75 @@ exports.assignTeacher = functions
     await batch.commit();
     return { ok: true };
   });
+
+// ---------- Weekly class leaderboard + claps (owner idea, 2026-11-04) ----------
+// Points = right answers in the last 7 days across tile quests (from questProgress stats.daily). First names only.
+const QUESTS = ["english-quest", "science-quest", "word-power"];
+const dayKeyUtc = (ms) => new Date(ms + 5.5 * 3600 * 1000).toISOString().slice(0, 10); // India day
+const weekKey = (ms) => {
+  const d = new Date(ms + 5.5 * 3600 * 1000);
+  const monday = new Date(d);
+  monday.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  return monday.toISOString().slice(0, 10);
+};
+
+async function memberOrTeacher(uid, classId) {
+  const cls = await db.collection("classes").doc(classId).get();
+  if (!cls.exists) return null;
+  const isTeacher = (cls.data().teacherIds || []).includes(uid);
+  const isMember = (await db.collection("classes").doc(classId).collection("members").doc(uid).get()).exists;
+  return isTeacher || isMember || (await isAppAdmin(uid)) ? cls : null;
+}
+
+exports.getClassLeaderboard = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const classId = data?.classId;
+    const cls = await memberOrTeacher(context.auth.uid, classId);
+    if (!cls) throw new functions.https.HttpsError("permission-denied", "Only this class can see its board.");
+    const now = Date.now();
+    const days = Array.from({ length: 7 }, (_, i) => dayKeyUtc(now - i * 86400000));
+    const members = await db.collection("classes").doc(classId).collection("members").get();
+    const week = weekKey(now);
+    const clapsDoc = await db.collection("classes").doc(classId).collection("claps").doc(week).get();
+    const claps = clapsDoc.exists ? clapsDoc.data().counts || {} : {};
+    const rows = [];
+    for (const m of members.docs) {
+      let points = 0;
+      for (const q of QUESTS) {
+        const p = await db.collection("users").doc(m.id).collection("questProgress").doc(q).get();
+        const daily = (p.exists && p.data().stats && p.data().stats.daily) || {};
+        days.forEach((k) => (points += (daily[k] && daily[k].correct) || 0));
+      }
+      rows.push({ uid: m.id, firstName: m.data().firstName || "Kid", points, claps: claps[m.id] || 0 });
+    }
+    rows.sort((a, b) => b.points - a.points || a.firstName.localeCompare(b.firstName));
+    return { className: cls.data().name, week, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
+  });
+
+/** One clap per kid, per classmate, per day. */
+exports.clapForClassmate = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const from = context.auth.uid;
+    const { classId, toUid } = data || {};
+    if (!classId || !toUid || toUid === from) throw new functions.https.HttpsError("invalid-argument", "Pick a classmate.");
+    const classRef = db.collection("classes").doc(classId);
+    const [a, b] = await Promise.all([classRef.collection("members").doc(from).get(), classRef.collection("members").doc(toUid).get()]);
+    if (!a.exists || !b.exists) throw new functions.https.HttpsError("permission-denied", "You can clap for your own classmates.");
+    const now = Date.now();
+    const logRef = classRef.collection("clapLog").doc(`${dayKeyUtc(now)}_${from}_${toUid}`);
+    const weekRef = classRef.collection("claps").doc(weekKey(now));
+    const { FieldValue } = require("firebase-admin/firestore");
+    const ok = await db.runTransaction(async (t) => {
+      if ((await t.get(logRef)).exists) return false;
+      t.set(logRef, { at: FieldValue.serverTimestamp() });
+      t.set(weekRef, { counts: { [toUid]: FieldValue.increment(1) } }, { merge: true });
+      return true;
+    });
+    return { ok, message: ok ? "👏 Clap sent!" : "You already clapped for them today." };
+  });
