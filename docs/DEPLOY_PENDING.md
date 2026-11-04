@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-11 · Teacher invites without email (mockup L, owner-approved 2026-11-05) · **waiting for owner OK to deploy**
+## DR-11 · Teacher invites without email (mockup L, owner-approved 2026-11-05) · **owner OK to deploy 2026-11-05 → Gemini G29**
 
 New callable functions in `functions/callable/schoolActions.js`: `createTeacherInvite`, `redeemTeacherInvite`, `classTeam`,
 `decideTeacherRequest`. **No rules change** (the new `invites` and `classes/*/teacherRequests` data is server-only: no client rule

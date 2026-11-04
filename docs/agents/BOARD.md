@@ -16,8 +16,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
 - **Mockup N1** (Play as child → lock the phone to Apprec8 + time limit; needs a build): owner reacts. Same canvas as L/M.
 - **English Unit 5 Tenses** (`bef00a9`, 144 questions, Claude): Seema/owner review before seeding.
-- **DR-11 deploy** (4 new functions for teacher invites, no rules change): owner OK? Then Gemini/owner runs the command in `docs/DEPLOY_PENDING.md`.
-- **Publish over the air:** leaderboard (M1), Schools & classes (L1–L4), status bar in quests, loader text fix.
+- ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
+- ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
 - ~~Mockups L + M~~ owner approved 2026-11-05 → built (`723fe34` leaderboard, Schools: this commit).
 - ~~Seema's review~~ done 2026-11-04: **go-ahead to seed English (Units 3–4) and Word Power** (owner, from the phone after 20.0.28: Me → Admin tools).
 - ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 **deployed** 21:46 (functions + rules live).
@@ -48,7 +48,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (next) | `content/wp-old-vocab` | |
+| G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | todo (next) | from Claude's folder | |
+| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (after G29) | `content/wp-old-vocab` | |
 | Treasure Words quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA (owner OK) |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
@@ -115,6 +116,17 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G29 · [todo] · gemini · ⭐ Deploy DR-11: teacher invite functions (owner-approved: yes, 2026-11-05)
+**Owner-approved: yes** for exactly this step ("OK to deploy", 2026-11-05). Run from **Claude's folder**
+`/Users/mohitchilkoti/Documents/projects/apprec8` (don't edit any file there). No rules change.
+1. `git -C /Users/mohitchilkoti/Documents/projects/apprec8 status`: no uncommitted code changes (docs are fine). Branch `feat/quiz-redesign`.
+2. `cd functions && node -e "require('./index.js')"` must load without errors.
+3. `firebase deploy --only functions:createTeacherInvite,functions:redeemTeacherInvite,functions:classTeam,functions:decideTeacherRequest --project apprec8-ca229`
+   (only these four; if it fails, STOP and report the error text).
+4. Check: `firebase functions:list --project apprec8-ca229` shows all four in us-central1.
+**Deliver:** `docs/agents/reports/G29.md` (each step: done / error text), commit `gemini(G29): done — …` on your branch.
+**Rollback:** `firebase functions:delete <name> --project apprec8-ca229` for the four (nothing else uses them).
 
 ### G28 · [todo] · gemini · Move the old vocabulary quizzes into Word Power (accuracy-checked)
 **Why (owner 2026-11-04):** the old IEO content is being retired; its 6 vocabulary quizzes (150 questions) must not be lost.
