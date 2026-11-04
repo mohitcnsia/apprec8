@@ -1376,6 +1376,8 @@ match /schools/{id}      { allow read, write: if isAdmin(); }
 match /classes/{classId} {
   allow read: if isAdmin() || teaches(classId);
   allow write: if isAdmin();
+  allow update: if teaches(classId) &&                         // teacher: new code only
+    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['code']);
   match /members/{uid} {
     allow read: if isAdmin() || teaches(classId) || request.auth.uid == uid;
     allow create: if request.auth.uid == uid &&
