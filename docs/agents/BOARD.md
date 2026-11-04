@@ -14,8 +14,9 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **Mockup N1** (Play as child → lock the phone to Apprec8 + time limit; needs a build): owner reacts. Same canvas as L/M.
-- **English Unit 5 Tenses** (`bef00a9`, 144 questions, Claude): Seema/owner review before seeding.
+- ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
+- **English Units 5 Tenses + 6 Modals & Question Tags** (Claude, ~250 questions): Seema/owner review before seeding (review page coming).
+- **Build 20.0.29** (lock + play time, needs the native module): built overnight; owner uploads after `check-aab.sh` PASS.
 - ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
 - ~~Mockups L + M~~ owner approved 2026-11-05 → built (`723fe34` leaderboard, Schools: this commit).
