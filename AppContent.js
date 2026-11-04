@@ -13,6 +13,7 @@ import { useTheme } from "./context/ThemeContext";
 // --- NEW: Imports for In-App Messaging ---
 import { useInAppMessaging } from "./hooks/useInAppMessaging";
 import InAppMessageModal from "./components/common/InAppMessageModal";
+import useStartupUpdate from "./hooks/useStartupUpdate";
 
 const MIN_LOADER_DISPLAY_TIME = 3000;
 
@@ -35,6 +36,9 @@ const AppContent = () => {
   const { theme, isDark, isThemeLoaded } = useTheme();
   const [minimumLoaderTimeElapsed, setMinimumLoaderTimeElapsed] =
     useState(false);
+
+  // Over-the-air update: load it behind the loading screen, so one restart is enough.
+  const { checkingForUpdate } = useStartupUpdate();
 
   const {
     isLoading: isMessageLoading,
@@ -114,7 +118,8 @@ const AppContent = () => {
     authLoading ||
     !isThemeLoaded ||
     !minimumLoaderTimeElapsed ||
-    isMessageLoading
+    isMessageLoading ||
+    checkingForUpdate
   ) {
     return (
       <View style={styles.loaderContainer}>
