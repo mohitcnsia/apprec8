@@ -27,6 +27,7 @@ Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/
 - [ ] **G5 Exam pattern notes** once papers are in `docs/exam/papers/`: `docs/exam/ieo-pattern.md`, `docs/exam/nso-pattern.md` (patterns + gap list, never copied questions).
 - [ ] **G6 New English Quest units** per `docs/CONTENT_GUIDE.md` (Unit 3 Subject-Verb Agreement next), one branch + one content review request each.
 - [ ] **G8 QA the quiz redesign** (branch `feat/quiz-redesign`, after G3), light AND dark: see `CODE_REVIEW.md` → "Review request: quiz redesign". Screenshot each screen into the review entry.
+- [ ] **G9 QA Home + tabs redesign** (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
 - [ ] **G7 Audit old IEO/NSO quizzes** in the Study tab for wrong answers; list them in `CODE_REVIEW.md`.
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
