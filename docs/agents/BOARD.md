@@ -1,6 +1,8 @@
 # Agent board
 
 STOP: no
+AWAY: no
+<!-- AWAY: yes = the owner is away for 1 h+, so heavy work (emulator, builds) may run. Claude sets it when the owner says so. -->
 <!-- Owner or Claude: change the line above to "STOP: yes" to halt Gemini at its next check. -->
 
 **Updated:** 2026-11-04 by Claude · **Goal:** Pratha ready for IEO (17 Nov) and NSO (19 Nov) · **Base branch:** `feat/quiz-redesign`
@@ -59,7 +61,9 @@ Keep `quest.draft: true`.
 
 ### G14 · [todo] · gemini · Seed English Unit 2, then QA the redesign on the emulator
 **Owner-approved: yes** (2026-11-04) for ONE production step: seeding English Quest. Nothing else.
-**Wait first:** if a build is running (`pgrep -f "eas build"` prints something), wait until it ends: the Mac can't run both.
+**Wait first:** start the emulator only while the board says `AWAY: yes` (the owner's Mac is slow when they use it), and never
+while a build runs (`pgrep -f "eas build"`). Until then, skip G14 for now: commit `gemini(G14): blocked — waiting for AWAY: yes`
+and go on with the next task; Claude reopens G14 as `[fixes 1]` when the window comes.
 **Setup:** in your folder `git checkout --detach feat/quiz-redesign` (latest), `npx expo start`, emulator `Pixel_8a_API_35`,
 `scripts/qa/eq.sh prep`, restart the app; sign in as the tester/admin account (mohitchilkoti@gmail.com), never a kid's.
 **1. Seed:** Me → Admin tools → **Update English Quest** → confirm "LIVE". Check the alert says 3 units (+ teaser). Do NOT press
