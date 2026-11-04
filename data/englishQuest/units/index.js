@@ -4,10 +4,12 @@
 // extraUnits IN ORDER, and move nextUnitTeaser to the unit after it. Then run `npm test`.
 
 import u3 from "./u3.js";
+import u4 from "./u4.js";
 
 export const extraUnits = [
   u3,
+  u4,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
-export const nextUnitTeaser = { id: "eq-u4", unitOrder: 4, title: "Tenses" };
+export const nextUnitTeaser = { id: "eq-u5", unitOrder: 5, title: "Tenses & Speech" };
