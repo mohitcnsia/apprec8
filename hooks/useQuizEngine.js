@@ -50,7 +50,13 @@ const initialState = {
  */
 function quizReducer(state, action) {
   switch (action.type) {
-    case "FETCH_SUCCESS":
+    case "FETCH_SUCCESS": {
+      // The same questions can arrive twice (phone cache, then server). Once the quiz has started, a repeat delivery of
+      // the same questions must not reset the kid's answers (2026-11-04).
+      const sameIds = (a, b) => a.length === b.length && a.every((q, i) => q?.id === b[i]?.id);
+      if (state.status !== "loading" && state.status !== "ready" && state.status !== "error" && sameIds(state.questions || [], action.payload.questions || [])) {
+        return state;
+      }
       return {
         ...initialState,
         status: "ready",
@@ -59,6 +65,7 @@ function quizReducer(state, action) {
         mode: action.payload.mode,
         lives: action.payload.config?.maxLives ?? 5,
       };
+    }
     case "FETCH_ERROR":
       return { ...state, status: "error", error: action.payload };
     case "START_QUIZ":
