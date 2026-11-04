@@ -1410,3 +1410,22 @@ No new indexes (only single-collection reads).
 2. **Who sets things up?** Proposed: only the admin (you) creates schools, classes and adds teachers by email (the teacher signs in once first). Teachers can only make a new code and remove kids. The school-admin role comes in phase B.
 3. **Parents in phase A = "📈 My progress" on the kid's own account** (no parent sign-in or linking). Most kids use a parent's phone anyway. Linked parent accounts later, only if parents ask. OK?
 4. **Name teachers see:** the kid's Google name for now. The teacher can't rename kids in phase A. OK?
+
+## 2026-11-04 — Branch `feat/nov6-improvements`: fixes + Unit 2 content (Claude)
+Off `feat/tile-quests`. Nothing goes into 20.0.24. The owner picks stable parts for the Nov 6 build. `npm test` (14 suites) and the bundle pass. Not device-tested: the emulator froze ("System UI isn't responding").
+
+**Needs an app build:**
+- `807d65b`: `.exists()` checks (WordInspector, Profile; a missing doc crashed), Finding 21 (90px under the map while My mistakes shows), Finding 20 (Unit 0 answers count under their topic on the Dashboard).
+- `88d73e6`: read-aloud fills both blanks for answers like "an, a".
+- `b5ef2fb`: **[MEDIUM, in 20.0.24]** My mistakes never cleared gate mistakes in sub-topics with no tagged practice question (Adjectives "identify", all Adverbs, Prepositions place/time/direction, all Conjunctions). The map count stayed forever. Fix: fall back to any practice question of the branch. Also a content test so new units can't repeat it.
+- `2e0cc28`: **[HIGH, owner report, in 20.0.24]** Reading: options were white-on-white in dark mode and **the right answer was always first** (never shuffled). Fix: theme colours, bigger options, mixed order. New word popup: dark backdrop, big word, 🔊 Hear it, Got it.
+
+**Content only (re-seed, works in 20.0.24):**
+- `62db183`: two wordings ("Which is a PROPER noun?", "Which words need a capital letter?").
+- `b5ef2fb`: Adverbs practice quiz tagged by sub-topic (My mistakes works for Adverbs after a re-seed).
+- `2e0cc28`: the seed button stores Reading options mixed. **Re-seeding fixes "first option always right" for 20.0.24 too** (the colours need the build).
+- `ea4bac8`: **Unit 2 Articles & Determiners** (owner to review the questions before seeding): 3 topics, each with a Learn page, a practice quiz, a harder practice, a gate pool of 15 and Keep practising; reading "The rooftop garden"; Boss (12 questions, Gremlin story). Unit 3 shows Coming soon. 105 new questions.
+
+**Seeding note:** the seed must run from an app build that has this branch's `data/englishQuestData.js` and seed button (the dev build on the emulator), as before.
+
+**Cost note (owner: ~₹5/month with no activity):** no scheduled functions are deployed, and idle v1 functions cost nothing. The likely cause is storage of the functions' build images (they pile up with every deploy). Check: Cloud Console → Billing → Reports, group by SKU. If it's Artifact Registry / Container Registry storage: `firebase functions:artifacts:setpolicy` (devops) keeps only recent images. Removing unused endpoints simplifies things but saves almost nothing on cost.
