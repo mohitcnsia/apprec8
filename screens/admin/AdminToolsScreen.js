@@ -53,6 +53,11 @@ export default function AdminToolsScreen({ navigation }) {
         <Text style={styles.rowText}>Dashboard (also in Progress → Kids)</Text>
         <Ionicons name="chevron-forward" size={20} color={P.dimText} />
       </Pressable>
+      <Pressable onPress={() => navigation.navigate("Schools")} style={styles.row} accessibilityRole="button">
+        <Ionicons name="school-outline" size={20} color={P.selectedText} />
+        <Text style={styles.rowText}>Schools & classes (codes, teachers)</Text>
+        <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+      </Pressable>
       <Pressable onPress={resetSeenMessages} style={styles.row} accessibilityRole="button">
         <Ionicons name="refresh-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>Reset seen pop-up messages</Text>

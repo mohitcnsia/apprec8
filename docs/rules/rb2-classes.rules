@@ -1,0 +1,65 @@
+// DR-9 (RB-2 phase A, 2026-11-04): paste inside `match /databases/{database}/documents { ... }` of firestore.rules,
+// then `firebase deploy --only firestore:rules` (owner OK). Assumes the existing isAdmin() (owner uid).
+
+    function isAppAdmin() {
+      return isAdmin() || (request.auth != null && exists(/databases/$(database)/documents/roles/$(request.auth.uid))
+        && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.admin == true);
+    }
+    function isSchoolAdmin(schoolId) {
+      return request.auth != null
+        && request.auth.uid in get(/databases/$(database)/documents/schools/$(schoolId)).data.admins;
+    }
+
+    // App admins (owner + roles). Only the owner adds admins.
+    match /roles/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid || isAppAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /schools/{schoolId} {
+      allow read: if request.auth != null;
+      allow create: if isAppAdmin();
+      allow update: if isAppAdmin() || isSchoolAdmin(schoolId);   // school admins may add other school admins
+      allow delete: if isAppAdmin();
+    }
+
+    match /classCodes/{code} {
+      allow read: if request.auth != null;                         // a parent types the code to find the class
+      allow create, delete: if isAppAdmin() || isSchoolAdmin(get(/databases/$(database)/documents/classes/$(request.resource.data.classId)).data.schoolId);
+    }
+
+    match /classes/{classId} {
+      allow read: if request.auth != null;                         // name, school, teachers' uids only (no kid data)
+      allow create: if isAppAdmin() || isSchoolAdmin(request.resource.data.schoolId);
+      allow update, delete: if isAppAdmin() || isSchoolAdmin(resource.data.schoolId);
+
+      match /members/{kidUid} {
+        // A kid joins themself (parent present), with the class's real code; max 3 classes is checked in the app.
+        allow create: if request.auth != null && request.auth.uid == kidUid
+          && get(/databases/$(database)/documents/classCodes/$(request.resource.data.code)).data.classId == classId;
+        allow delete: if request.auth != null && (request.auth.uid == kidUid
+          || request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherIds
+          || isAppAdmin());
+        allow read: if request.auth != null && (request.auth.uid == kidUid
+          || request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherIds
+          || isAppAdmin());
+      }
+    }
+
+    match /consents/{id} {
+      allow create: if request.auth != null && request.resource.data.kidUid == request.auth.uid;
+      allow read: if isAppAdmin() || (request.auth != null && resource.data.kidUid == request.auth.uid);
+      allow update, delete: if isAppAdmin();
+    }
+
+    // Teachers read the progress of kids in their classes (users/{kid}.classIds ∩ users/{teacher}.teachesClassIds).
+    // ADD this as an extra `allow read` inside the existing match /users/{userId}/questProgress/{questId}:
+    //   allow read: if request.auth != null
+    //     && get(/databases/$(database)/documents/users/$(userId)).data.get('classIds', [])
+    //        .hasAny(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('teachesClassIds', []));
+    //
+    // users/{uid} writes: the kid writes only `classIds` (size <= 3) outside the profile branch:
+    //   || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['classIds'])
+    //       && request.resource.data.classIds.size() <= 3)
+    // and app/school admins write `teachesClassIds` on a teacher's doc:
+    // (teachesClassIds is written by the assignTeacher function, so no client rule is needed.)

@@ -18,6 +18,8 @@ import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
+import { getClasses } from "../../services/classesApi";
+import { classLabel, MAX_CLASSES } from "../../utils/classes";
 
 const THEMES = [
   ["system", "Phone setting"],
@@ -61,6 +63,12 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
   const [userData, setUserData] = useState(null);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
+  const [myClasses, setMyClasses] = useState([]);
+  const classKey = (userData?.classIds || []).join(",");
+  useEffect(() => {
+    if (!classKey) return setMyClasses([]);
+    getClasses(classKey.split(",")).then(setMyClasses).catch(() => setMyClasses([]));
+  }, [classKey]);
 
   useEffect(() => {
     if (!uid) return undefined;
@@ -131,6 +139,19 @@ export default function MeScreen({ navigation, signoutHandler }) {
         />
         <View style={styles.divider} />
         <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
+      </View>
+
+      <Text style={styles.section}>MY CLASSES</Text>
+      <View style={styles.group}>
+        {myClasses.map((c) => (
+          <View key={c.id}>
+            <Row icon="people-outline" label={classLabel(c)} detail={c.schoolName || null} onPress={() => {}} styles={styles} P={P} />
+            <View style={styles.divider} />
+          </View>
+        ))}
+        {myClasses.length < MAX_CLASSES ? (
+          <Row icon="add-circle-outline" label="Join a class (with a parent)" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+        ) : null}
       </View>
 
       <Text style={styles.section}>LOOK</Text>

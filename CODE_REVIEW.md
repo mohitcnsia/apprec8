@@ -1684,3 +1684,21 @@ Product rule from this: **the app teaches and supports on its own**; teacher fea
   URL. Gemini G11 researches the exact Families + DPDP requirements.
 - **Safeguarding (RB-8):** Seema (psychologist, counsels students, ran her school's first mental-health week, heads its POCSO
   committee) leads the safeguarding plan and reviews the well-being flow.
+
+## 2026-11-04 — RB-2 phase A built: schools, classes, join codes, parent consent (Claude)
+Owner decisions: up to 3 classes per kid; a class has several teachers, each for some subjects; owner + Seema (app admins)
+and school admins set things up; kids join only via a parent, after consent in English + Hindi.
+- Logic `utils/classes.js` (tested): codes without look-alike characters, max 3 classes, teacher → quests by subject, consent
+  record (who, relation, language, text version).
+- Service `services/classesApi.js`; screens: Admin tools → **Schools & classes** (`screens/admin/SchoolsScreen.js`),
+  Me → **My classes / Join a class** (`screens/profile/JoinClassScreen.js`: code → class → consent EN/HI → join).
+- Server: `functions/callable/schoolActions.js` → `findUserByEmail`, `assignTeacher` (app admins or that school's admins).
+- **Not done yet:** the teacher's view of their class's progress (Progress → Kids, filtered by class + subject), RB-7 assignments,
+  weekly class leaderboard + claps, adding Seema as app admin from the app (for now: a `roles/{seemaUid}` doc `{admin: true}`).
+
+### DR-9: deploy rules + functions for RB-2 (owner OK needed)
+1. Merge `docs/rules/rb2-classes.rules` into `firestore.rules` (instructions inside; keep a backup) →
+   `firebase deploy --only firestore:rules`.
+2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher`.
+3. Create `roles/{SeemaUid}` = `{ admin: true }` in the console (after she signs in once).
+Until deployed, the new screens show "permission denied": nothing else changes.

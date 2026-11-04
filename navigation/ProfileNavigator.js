@@ -7,6 +7,8 @@ import { useTheme } from "../context/ThemeContext"; // Adjust path as per your p
 // Me tab (2026-11-04) replaces the old screens/quiz/ProfileScreen.js; the route name stays "ProfileScreen".
 import MeScreen from "../screens/profile/MeScreen";
 import AdminToolsScreen from "../screens/admin/AdminToolsScreen";
+import SchoolsScreen from "../screens/admin/SchoolsScreen";
+import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
 import EditProfileScreen from "../screens/profile/EditProfileScreen"; // Adjust path
 import DeleteAccountConfirmationScreen from "../screens/profile/DeleteAccountConfirmationScreen"; // Adjust path
@@ -85,6 +87,8 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           />
           {/* Admin dashboard v0 (admin only; button on Profile). No header: Android back. */}
           <Stack.Screen name="AdminTools" component={AdminToolsScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Schools" component={SchoolsScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="JoinClass" component={JoinClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminKidDetail" component={AdminKidDetailScreen} options={{ headerShown: false }} />
           <Stack.Screen

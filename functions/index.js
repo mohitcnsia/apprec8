@@ -6,6 +6,7 @@ const bulkOperationsApi = require("./api/bulkOperations");
 const utilityApi = require("./api/utility");
 const quizActionsCallable = require("./callable/quizActions");
 const userActionsCallable = require("./callable/userActions");
+const schoolActionsCallable = require("./callable/schoolActions");
 const wordInspectorBulkOperations = require("./api/wordInspectorBulkOperations");
 const gameManagementApi = require("./api/gameManagement");
 
@@ -18,6 +19,7 @@ module.exports = {
   ...utilityApi,
   ...quizActionsCallable,
   ...userActionsCallable,
+  ...schoolActionsCallable,
   ...wordInspectorBulkOperations,
   ...gameManagementApi,
 };
