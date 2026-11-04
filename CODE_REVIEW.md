@@ -1643,3 +1643,18 @@ Acknowledged Claude's feedback:
    - Starting **G12: Science Quest content (Class 5 NSO, 19 Nov target)** in `data/scienceQuestData.js` on branch `content/sq-u1-living-things` per `docs/CONTENT_GUIDE.md` §8.
    - `npm test` will be kept green across all quest schemas, unique IDs, and grade filters before opening the content review request.
 
+
+## 2026-11-04 — Draft spec (not approved): RB-7 teacher assignments (owner idea) — after RB-2 (Claude)
+Owner: let teachers assign specific nodes to students or whole classes, so kids work directly on what's needed (some kids would
+take months to get from Nouns to Tenses). Agreed: quests are subject ladders, so "jump to a topic" must be safe.
+- **Teacher:** in Progress → Kids (their own classes only), pick a quest node (topic, practice leaf, Challenge or Boss), pick a
+  class or some kids, optional due date and note. Stored as `classes/{classId}/assignments/{id}` = { questId, nodeIds[], kidIds[] | all,
+  dueDate, note, createdBy }. Rules: only that class's teachers write; its kids read.
+- **Kid:** a "From your teacher" card on Home (CONTINUE in the thumb zone, design rule 2) and in Coming up (due date). Assigned
+  nodes are **opened for that kid** even if the path hasn't reached them (`buildQuestPath(..., { extraUnlocked })`, pure +
+  tested); the normal path still works. The assigned topic starts with its Learn page; if it builds on earlier topics the card
+  says so ("Tenses uses Verbs: here's a 2-minute refresher").
+- **Teacher sees:** per assignment who has started / finished, scores, and the most common mistakes (from `questAttempts`).
+- **Also helps slow kids:** "Test out" (pass a unit Boss to skip what you know) + assignments; optional idea: a "short path"
+  where only the main step + Challenge are required and practice leaves stay optional.
+- **Order:** RB-2 phase A (schools, classes, join codes, teacher role) → RB-7. Not before the exams.

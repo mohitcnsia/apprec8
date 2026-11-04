@@ -26,3 +26,5 @@
 10. **TODO (owner): clap for the leaders.** Kids see who leads the leaderboard and can 👏 clap for them, to appreciate hard work.
     Fits RB-6 (no chat, preset reactions only). Notes: one clap per kid per leader per day, counted by the server (no spam,
     no faking); the leader sees "👏 12 claps this week"; first names + class only.
+
+11. **Teacher assignments (owner):** teachers assign specific nodes to students or classes, so lagging kids work on what is needed. Spec draft: `CODE_REVIEW.md` → RB-7.
