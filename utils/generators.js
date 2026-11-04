@@ -127,7 +127,41 @@ export function genderQuestions(table = [], rng = Math.random) {
   return out;
 }
 
-export const GENERATORS = { plural: pluralQuestions, nounGender: genderQuestions };
+/**
+ * Word meanings (Word Power "Word Bank", 2026-11-04): table entries { word, meaning } from the owner's vocabulary list.
+ * "Which word means: '<meaning>'?" → 4 words from the same list. Skips a meaning that gives the word away
+ * (contains the word or its first 5 letters).
+ */
+export function meaningQuestions(table = [], rng = Math.random) {
+  const out = [];
+  const words = table.map((e) => lower(e.word)).filter(Boolean);
+  table.forEach((e) => {
+    const w = lower(e.word);
+    const meaning = String(e.meaning || "").replace(/\*\*/g, "").trim(); // quiz text is plain (no **bold**)
+    if (!w || !meaning) return;
+    const m = lower(meaning);
+    if (m.includes(w) || (w.length >= 5 && m.includes(w.slice(0, 5)))) return; // the meaning gives it away
+    const wrong = shuffle(words.filter((x) => x !== w), rng).slice(0, 3);
+    if (wrong.length < 3) return;
+    out.push({
+      id: `gen:meaning:${w}`,
+      // Leading emoji (🐻) would give the answer away: keep it for the Learn page and the explanation only.
+      question: { type: "text", content: `Which word means: '${meaning.replace(/^[\p{Extended_Pictographic}\u200d\ufe0f\s]+/u, "").replace(/[.]+$/, "")}'?` },
+      options: shuffle(
+        [{ type: "text", content: w, isCorrect: true }, ...wrong.map((c) => ({ type: "text", content: c, isCorrect: false, mistakeTag: "word-meaning-mixup" }))],
+        rng
+      ),
+      answer: w,
+      explanation: { text: `'${w}' means: ${meaning}` },
+      subtopic: "word-meaning",
+      generated: true,
+      generator: "wordMeaning",
+    });
+  });
+  return out;
+}
+
+export const GENERATORS = { plural: pluralQuestions, nounGender: genderQuestions, wordMeaning: meaningQuestions };
 
 /**
  * Endless feed: picks the next question, mixing pool and generated questions,

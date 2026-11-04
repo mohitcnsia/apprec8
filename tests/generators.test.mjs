@@ -88,4 +88,25 @@ st = { pool: pool.slice(0, 3), generated: [] };
 for (let i = 0; i < 10; i++) { const r = nextEndlessQuestion(st, {}, rng); st = r.state; assert.ok(r.question); }
 assert.equal(nextEndlessQuestion({ pool: [], generated: [] }).question, null);
 
+// wordMeaning: 4 options, one right, all from the same table; emoji and **bold** stripped from the question;
+// a meaning that contains its word is skipped (it would give the answer away).
+{
+  const { meaningQuestions } = await import("../utils/generators.js");
+  const { WORD_BANK } = await import("../data/wordPower/wordBank.js");
+  let total = 0;
+  for (const g of WORD_BANK) {
+    const words = new Set(g.words.map((w) => w.word.toLowerCase()));
+    for (const mq of meaningQuestions(g.words, seeded(3))) {
+      total++;
+      assert.equal(mq.options.length, 4, mq.id);
+      assert.equal(mq.options.filter((o) => o.isCorrect).length, 1, mq.id);
+      assert.equal(new Set(mq.options.map((o) => o.content)).size, 4, `duplicate option in ${mq.id}`);
+      mq.options.forEach((o) => assert.ok(words.has(o.content), `${o.content} not in ${g.name}`));
+      assert.ok(!/\*\*|^Which word means: '\p{Extended_Pictographic}/u.test(mq.question.content), mq.question.content);
+      assert.ok(!mq.question.content.toLowerCase().includes(mq.answer), `gives away ${mq.answer}`);
+    }
+  }
+  assert.ok(total > 350, `word-meaning questions: ${total}`);
+}
+
 console.log(`generators: ${plural.length} plural words, ${gender.length} gender pairs, all questions verified`);
