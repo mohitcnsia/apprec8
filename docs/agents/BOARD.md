@@ -14,7 +14,7 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **DR-9 + DR-10 (schools, classes, assignments, class board, parent-first accounts):** deploy rules + functions + one IAM role (`CODE_REVIEW.md`).
+- ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 (Gemini deploys).
 0. **Fix 46 old IEO questions:** owner OK 2026-11-04. The emulator froze twice, so the fix button ships in the next build; the owner presses it once on the phone (Me → Admin tools).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
@@ -38,6 +38,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
+| G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G25 ⭐ Separate "Word Power" quest (owner) | Gemini | fixes 1 (after G26) | `content/word-power` | 175 + 54 questions read by Claude: keys right; 15 fixes |
 | G26 Emulator smoke test of `feat/quiz-redesign` (calm pass 1) | Gemini | todo (after G25, only once the build has finished) | `gemini/g26-smoke` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
@@ -87,6 +88,22 @@ odd one out, assertion–reason, picture-based, 2-statement true/false) with an 
 Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and planned units don't cover yet, Class 5 first.
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
+
+### G27 · [todo] · gemini · ⭐ Deploy DR-8 + Finding 22 + DR-9 + DR-10 (owner-approved: yes, 2026-11-04)
+**Owner-approved: yes** for exactly these production steps. Run them from **Claude's folder**
+`/Users/mohitchilkoti/Documents/projects/apprec8` (it has `firestore.rules` and `firebase.json`; don't edit any file there).
+Claude already merged all the new rules into `firestore.rules` (backup: `~/apprec8-backups/firestore.rules.before-DR9-10`).
+1. `git -C /Users/mohitchilkoti/Documents/projects/apprec8 status`: must show no uncommitted code changes except docs. Branch `feat/quiz-redesign`.
+2. `cd functions && npm test` (if present) / `node -e "require('./index.js')"` must load without errors.
+3. `firebase deploy --only functions --project apprec8-ca229` (all functions; they're backward compatible).
+4. `firebase deploy --only firestore:rules --project apprec8-ca229`. If it fails to compile, STOP, don't retry: report the error.
+5. IAM (custom tokens for child sign-in):
+   `gcloud projects add-iam-policy-binding apprec8-ca229 --member=serviceAccount:apprec8-ca229@appspot.gserviceaccount.com --role=roles/iam.serviceAccountTokenCreator`
+   (if gcloud isn't available, report it: the owner does it in Google Cloud Console → IAM).
+6. Check: Firebase Console → Functions lists approveMember, createChildProfile, switchToChild; Rules tab shows today's version.
+**Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
+**Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
+**Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
 ### G25 · [fixes 1] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
 **Why (owner 2026-11-04):** vocabulary is its own tree, not English Quest Unit 4: it must be open from day one (Pratha is in

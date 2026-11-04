@@ -1,4 +1,6 @@
-# Pending deploys (owner OK needed) — 2026-11-04
+# Deploys: owner approved 2026-11-04 → Gemini task G27
+
+Claude has merged all rule changes into `firestore.rules` (backup in `~/apprec8-backups/firestore.rules.before-DR9-10`).
 
 Everything below is already in the code on `feat/quiz-redesign`. Nothing works in the app until it's deployed; nothing
 else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Details: `CODE_REVIEW.md` → DR-8, DR-9, DR-10.
