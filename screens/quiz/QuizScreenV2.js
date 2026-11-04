@@ -100,6 +100,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
       activity: questContext.activity || "practice",
       branchId: questContext.branchId || null,
       unitId: questContext.unitId || null,
+      topicTag: questContext.topicTag || null, // dashboard topic when a question has no sub-topic
     });
   };
 

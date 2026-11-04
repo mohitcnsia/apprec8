@@ -234,6 +234,7 @@ export default function ReadingScreen({ route, navigation }) {
         startedAt: startedAtRef.current,
         outcome: "finished",
         details: { readingMode: doc.mode || "fullPassage", wordCount: countWords(paragraphs) },
+        topicTag: questContext.topicTag || null,
       });
       setSaving(false);
     }

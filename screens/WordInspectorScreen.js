@@ -99,7 +99,7 @@ const WordInspectorScreen = ({ route, navigation }) => {
           .doc(quizId);
         const docSnap = await docRef.get();
 
-        if (docSnap.exists) {
+        if (docSnap.exists()) {
           const data = docSnap.data();
           setQuizData(data);
           const units = parsePassageToUnits(data.passage, data.caseSensitive);

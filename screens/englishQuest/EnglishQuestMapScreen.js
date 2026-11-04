@@ -29,6 +29,7 @@ import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
 import { buildWindow } from "../../utils/questWindow";
 import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
+import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
 import {
   listenToQuestProgress,
@@ -51,6 +52,7 @@ const CARD_HEIGHT = 120; // collapsed finished unit / next-unit teaser
 const MORE_HEIGHT = 70; // "N more units ahead"
 const PAD_BOTTOM = 90;
 const THUMB_ZONE = 0.7; // current node ends up ~70% down the visible map
+const MISTAKES_SPACE = 90; // extra room below the map while "My mistakes" shows, so it never covers a node (Finding 21)
 
 // Difficulty colours (visual only, Spec v2)
 const DIFFICULTY = { easy: "#58CC02", medium: "#FFB020", hard: "#FF4B4B" };
@@ -278,6 +280,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       activity: "practice", // for "My mistakes"
       branchId: node.branchId || null,
       unitId: node.unitId || null,
+      topicTag: node.subtopic || topicSlug(node.title), // dashboard topic for questions without a sub-topic (Finding 20)
       ...extraContext,
     };
     if (step.type === "study") {
@@ -347,7 +350,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         leaf,
         leaf.nextStep,
         leaf.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT,
-        leaf.glow && main.gate ? { resetGateId: main.gate.id } : {}
+        {
+          topicTag: leaf.subtopic || topicSlug(main.title), // a leaf's own title is "Practice 1": use its topic
+          ...(leaf.glow && main.gate ? { resetGateId: main.gate.id } : {}),
+        }
       );
     }
   };
@@ -719,7 +725,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           ref={scrollRef}
           onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)}
           onContentSizeChange={onContentSizeChange}
-          contentContainerStyle={{ height: contentHeight + insets.bottom }}
+          contentContainerStyle={{ height: contentHeight + insets.bottom + (mistakeCount > 0 ? MISTAKES_SPACE : 0) }}
         >
           <Svg height={contentHeight} width={width} style={StyleSheet.absoluteFill}>
             <Path d={pathD} stroke={theme.border} strokeWidth={5} strokeDasharray="10" fill="transparent" />

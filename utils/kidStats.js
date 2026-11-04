@@ -6,6 +6,14 @@ export const DAYS_KEPT = 14;
 export const WEAK_MIN_ANSWERS = 3;
 export const WEAK_BELOW = 0.6;
 
+/** Topic key from a map title, e.g. "Kinds of sentences" → "kinds-of-sentences" (Finding 20). */
+export const topicSlug = (title) =>
+  String(title || "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 /** Local date key YYYY-MM-DD (the kid's own day). */
 export const dayKey = (ms) => {
   const d = new Date(ms);
@@ -17,9 +25,14 @@ export const dayKey = (ms) => {
  * New stats after one attempt.
  * @param {object} prev - previous stats (or undefined)
  * @param {Array} answers - [{ isCorrect, subtopic }]
- * @param {object} ctx - { now, durationMs, questId, userName }
+ * @param {object} ctx - { now, durationMs, questId, userName, topicFallback }
+ *   topicFallback: topic for answers without a sub-topic tag (e.g. Unit 0 questions, Finding 20)
  */
-export function updateStats(prev = {}, answers = [], { now = Date.now(), durationMs = 0, questId = null, userName = null } = {}) {
+export function updateStats(
+  prev = {},
+  answers = [],
+  { now = Date.now(), durationMs = 0, questId = null, userName = null, topicFallback = null } = {}
+) {
   const answered = answers.length;
   const correct = answers.filter((a) => a.isCorrect).length;
   // Cap one attempt's time at 30 min, so an app left open doesn't inflate "time spent".
@@ -27,9 +40,10 @@ export function updateStats(prev = {}, answers = [], { now = Date.now(), duratio
 
   const bySubtopic = { ...(prev.bySubtopic || {}) };
   answers.forEach((a) => {
-    if (!a.subtopic) return;
-    const s = bySubtopic[a.subtopic] || { correct: 0, total: 0 };
-    bySubtopic[a.subtopic] = { correct: s.correct + (a.isCorrect ? 1 : 0), total: s.total + 1 };
+    const key = a.subtopic || topicFallback;
+    if (!key) return;
+    const s = bySubtopic[key] || { correct: 0, total: 0 };
+    bySubtopic[key] = { correct: s.correct + (a.isCorrect ? 1 : 0), total: s.total + 1 };
   });
 
   const today = dayKey(now);

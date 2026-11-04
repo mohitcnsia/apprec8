@@ -92,7 +92,7 @@ const ProfileScreen = ({ navigation, signoutHandler }) => {
       .doc(userId)
       .onSnapshot(
         (documentSnapshot) => {
-          if (documentSnapshot.exists) {
+          if (documentSnapshot.exists()) {
             const data = documentSnapshot.data();
             setUserData(data);
             const statsData = data.stats || {};

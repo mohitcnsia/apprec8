@@ -50,3 +50,22 @@ assert.equal(timeAgo(null), "never");
 assert.equal(formatDuration(12 * 60000), "12 min");
 assert.equal(formatDuration(95 * 60000), "1 h 35 m");
 console.log("kidStats: all tests passed");
+
+// Finding 20: answers without a sub-topic count under the topic fallback (Unit 0)
+{
+  const { topicSlug } = await import("../utils/kidStats.js");
+  assert.equal(topicSlug("Kinds of sentences"), "kinds-of-sentences");
+  assert.equal(topicSlug("Reading: Tara's paper boat"), "reading-taras-paper-boat");
+  assert.equal(topicSlug(""), "");
+  const f = updateStats(undefined, [
+    { isCorrect: true },
+    { isCorrect: false },
+    { isCorrect: true, subtopic: "gender" },
+  ], { now: t0, topicFallback: "kinds-of-sentences" });
+  assert.deepEqual(f.bySubtopic["kinds-of-sentences"], { correct: 1, total: 2 });
+  assert.deepEqual(f.bySubtopic.gender, { correct: 1, total: 1 });
+  // no fallback → untagged answers still skipped
+  const g = updateStats(undefined, [{ isCorrect: true }], { now: t0 });
+  assert.deepEqual(g.bySubtopic, {});
+}
+console.log("kidStats topic fallback: ok");

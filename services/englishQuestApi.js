@@ -148,6 +148,7 @@ export function markStudyNodeCompleted(questId, nodeId) {
  * @param {boolean} [p.skipProgress] - record answers only (endless practice never "completes")
  * @param {string} [p.activity] - "practice" | "gate" | "boss" | "endless" | "mistakes" | "reading" (for "My mistakes")
  * @param {string} [p.branchId] / [p.unitId] - where the activity sits on the map
+ * @param {string} [p.topicTag] - dashboard topic for answers without a sub-topic (Finding 20)
  * @returns {Promise<{ percent: number, passed: boolean } | null>}
  */
 export async function saveQuestAttempt(p) {
@@ -297,6 +298,7 @@ async function saveStats(p, endedAt) {
       durationMs: p.startedAt ? endedAt - p.startedAt : 0,
       questId: p.questId,
       userName: user.displayName || null,
+      topicFallback: p.topicTag || null,
     });
     latestStats.set(key, next);
     // Days that dropped out of the 14-day window must be deleted (a merge would keep them).
