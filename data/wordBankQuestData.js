@@ -1,6 +1,6 @@
 // data/wordBankQuestData.js
 // "Word Bank" quest (owner 2026-11-04): the owner's 370 vocabulary words (data/wordPower/wordBank.js, the same words as
-// the Word Builder game) as a quest that is open from day one. One topic per word group:
+// the Word Builder game) as its own quest, one topic per word group (a ladder: each topic opens the next):
 //   Learn page (word + meaning) → quiz "Which word means …?" (built from the owner's meanings, wrong options = other words
 //   of the same group) → ♾️ endless practice (wordMeaning generator, utils/generators.js).
 // Unit 1 Everyday Words: Class 1–4 (hidden for Class 5+). Unit 2 Big Words: Class 4–10.

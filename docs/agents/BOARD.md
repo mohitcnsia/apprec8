@@ -15,7 +15,10 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
 - ~~Seema's review~~ done 2026-11-04: **go-ahead to seed English (Units 3–4) and Word Power** (owner, from the phone after 20.0.28: Me → Admin tools).
-- ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 (Gemini deploys).
+- ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 **deployed** 21:46 (functions + rules live).
+- **Owner, one click (needed for child sign-in codes / "Play as"):** Google Cloud Console → IAM → give
+  `apprec8-ca229@appspot.gserviceaccount.com` the role **Service Account Token Creator** (gcloud isn't installed here).
+- **Word Bank quest** (owner's 370 words, `ebc69b8`): ships by over-the-air update after 20.0.28 is installed. Owner OK to publish the first update?
 0. **Fix 46 old IEO questions:** owner OK 2026-11-04. The emulator froze twice, so the fix button ships in the next build; the owner presses it once on the phone (Me → Admin tools).
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
@@ -39,8 +42,9 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
-| G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | todo (next) | from Claude's folder | |
-| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (after G27) | `content/wp-old-vocab` | |
+| G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (next) | `content/wp-old-vocab` | |
+| Word Bank quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA after owner OK |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
 | G20 Science Unit 3 Matter, Forces & Earth | Gemini | **done, merged** (Claude fixed 4 items) | | 300 Science questions in total; still draft (testers) |
