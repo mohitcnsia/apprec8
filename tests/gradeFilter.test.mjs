@@ -37,9 +37,16 @@ const progress = { "a__0": { status: "completed" }, "a-gate": { status: "complet
 const t = buildQuestPath(nodesForGrade(N, 4), progress);
 assert.equal(t.path.find((p) => p.id === "c").status, "unlocked");
 
-// English Quest: only Champion leaves carry class tags (one level up). Untagged nodes show for every class.
+// English Quest: class tags only on Champion leaves (one level up) and on whole older-class units (every node of the unit,
+// e.g. Unit 7 for Class 5+). Untagged nodes show for every class.
 const tagged = English.nodes.filter((n) => n.grades);
-assert.ok(tagged.every((n) => n.kind === "practice"), "English: only practice (Champion) leaves are class-tagged");
+const taggedUnits = new Set(English.nodes.filter((n) => n.kind === "unit" && n.grades).map((n) => n.id));
+assert.ok(tagged.every((n) => n.kind === "practice" || taggedUnits.has(n.unitId) || taggedUnits.has(n.id)), "English: only Champion leaves and whole units are class-tagged");
+for (const u of taggedUnits) {
+  const inUnit = English.nodes.filter((n) => n.unitId === u || n.id === u);
+  assert.ok(inUnit.every((n) => n.grades), `${u}: every node of a class-tagged unit needs the tag`);
+}
+assert.ok(ids(nodesForGrade(English.nodes, 5)).includes("eq-u7-boss") && !ids(nodesForGrade(English.nodes, 4)).some((id) => id.startsWith("eq-u7")));
 for (const g of [3, 5, 10]) {
   assert.equal(nodesForGrade(English.nodes, g).length, English.nodes.length - tagged.filter((n) => !n.grades.includes(g)).length);
 }

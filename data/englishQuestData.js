@@ -48,6 +48,8 @@ export const tile = {
 // participle-form-error (has went / sang vs sung), since-for-mixup
 // Unit 6 (modals, tags): modal-form-error (can swims), modal-time-mixup (can/could), modal-meaning-mixup, polite-request-mixup,
 // mustnt-donthave-mixup, tag-polarity-error, tag-helper-error, tag-pronoun-error
+// Unit 7 (Class 5+): passive-form-error, passive-tense-error, passive-number-error, passive-agent-error, reported-tense-error,
+// reported-pronoun-error, reported-question-error, reported-order-error, said-told-error
 
 // ---------- Study pages (new) ----------
 export const studyPages = {
