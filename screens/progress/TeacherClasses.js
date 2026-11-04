@@ -10,7 +10,7 @@ import { getApp } from "@react-native-firebase/app";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
-import { myTeachingClasses, classMembers } from "../../services/classesApi";
+import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
 import { questsForTeacher, classLabel } from "../../utils/classes";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
@@ -112,6 +112,12 @@ export default function TeacherClasses() {
   const [open, setOpen] = useState(null);
   const [rows, setRows] = useState(null);
   const [error, setError] = useState(null);
+  const [pending, setPending] = useState([]);
+  const [reloadKey, setReloadKey] = useState(0);
+  const decide = (kid, approve) =>
+    approveMember({ classId: open.id, kidUid: kid.uid, approve })
+      .then(() => setReloadKey((k) => k + 1))
+      .catch((e) => Alert.alert("Couldn't do that", e.message));
 
   useEffect(() => {
     myTeachingClasses().then(setClasses).catch((e) => setError(e.message));
@@ -123,7 +129,9 @@ export default function TeacherClasses() {
     const questIds = questsForTeacher(open, uid);
     (async () => {
       try {
-        const members = await classMembers(open.id);
+        const all = await classMembers(open.id);
+        setPending(all.filter((m) => m.status === "pending"));
+        const members = all.filter((m) => m.status === "approved");
         const out = [];
         for (const m of members) {
           const perQuest = [];
@@ -144,7 +152,7 @@ export default function TeacherClasses() {
         setError(e.message);
       }
     })();
-  }, [open, uid]);
+  }, [open, uid, reloadKey]);
 
   if (error) return <Text style={styles.soft}>Couldn't load your classes ({error}). The class rules may not be live yet (DR-9).</Text>;
   if (classes === null) return <ActivityIndicator color={P.label} />;
@@ -158,6 +166,26 @@ export default function TeacherClasses() {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade} · code {c.joinCode}</Text>
         </Pressable>
       ))}
+      {/* Join requests: only the teacher, who knows the family, lets a child in (child safety). */}
+      {open && pending.length ? (
+        <View style={[styles.kid, { borderColor: P.gold }]}>
+          <Text style={styles.title}>Waiting for you ({pending.length})</Text>
+          {pending.map((k) => (
+            <View key={k.uid} style={styles.rowBetween}>
+              <Text style={[styles.line, { flex: 1 }]} numberOfLines={2}>
+                {k.firstName || "Child"} · Class {k.grade || "?"} · parent: {k.parentName || "?"} ({k.relation || "?"})
+              </Text>
+              <Pressable onPress={() => decide(k, true)} hitSlop={6} style={styles.chip}>
+                <Text style={[styles.line, { color: P.correctText }]}>Approve</Text>
+              </Pressable>
+              <Pressable onPress={() => decide(k, false)} hitSlop={6} style={styles.chip}>
+                <Text style={[styles.line, { color: P.wrongText }]}>Reject</Text>
+              </Pressable>
+            </View>
+          ))}
+          <Text style={styles.soft}>Only approve children you know, with the parent named here.</Text>
+        </View>
+      ) : null}
       {open && rows ? <AssignPanel cls={open} uid={uid} kids={rows} P={P} styles={styles} /> : null}
       {open && rows === null ? <ActivityIndicator color={P.label} /> : null}
       {open && rows?.length === 0 ? <Text style={styles.soft}>No kids yet. Give parents the code {open.joinCode}.</Text> : null}

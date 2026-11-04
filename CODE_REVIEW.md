@@ -1699,7 +1699,7 @@ and school admins set things up; kids join only via a parent, after consent in E
 ### DR-9: deploy rules + functions for RB-2 (owner OK needed)
 1. Merge `docs/rules/rb2-classes.rules` into `firestore.rules` (instructions inside; keep a backup) →
    `firebase deploy --only firestore:rules`.
-2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher,functions:getClassLeaderboard,functions:clapForClassmate`.
+2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher,functions:getClassLeaderboard,functions:clapForClassmate,functions:approveMember,functions:getLeaderboard`.
 3. Create `roles/{SeemaUid}` = `{ admin: true }` in the console (after she signs in once).
 Until deployed, the new screens show "permission denied": nothing else changes.
 
@@ -1732,3 +1732,14 @@ deleteChildProfile, and the updated initializeNewUser trigger. 3. IAM: the funct
 - Me → My children → **Play as <child>**: the server checks the parent link and signs the phone in as the child (no code).
   The child's Me shows **Switch to parent (PIN)**; 5 wrong PINs → 15-minute wait. The login code stays for a child with a phone.
 - Functions: setParentPin, switchToChild, switchToParent (DR-10). Rules: `parentPins` server-only (`docs/rules/rb6-family.rules`).
+
+### Child safety (owner 2026-11-04: "how do we know the parent is really a parent?")
+No app can prove parenthood; the design makes a liar gain nothing. Built:
+- **Teacher approves every class join.** Joining writes a `pending` member (child + parent name/relation); only the class's teacher
+  (or an admin) approves via the `approveMember` function, which then adds the class to the child's `classIds`. Class boards and
+  claps count approved members only. Rules: members are created `pending`; children write only `pendingClassIds`.
+- **No real photos of children to other users:** `getLeaderboard` sends only preset avatars (our avatars bucket, DiceBear); a
+  Google photo becomes null (DR-8 deploy).
+- Already true: nobody can attach to an existing child (the parent link is made only when the parent creates the child); no chat,
+  messages or free text between users; others see first name + class only.
+- Later (public release): parent phone verification (SMS code), DPDP "verifiable consent" (e.g. DigiLocker), safeguarding plan (Seema).

@@ -123,14 +123,19 @@ export async function joinClass({ found, myClassIds = [], firstName, grade, pare
   const consentRef = doc(collection(db, "consents"));
   const batch = writeBatch(db);
   batch.set(consentRef, { ...record, acceptedAt: serverTimestamp(), acceptedAtClient: record.acceptedAt });
+  // A join is a REQUEST: the teacher (who knows the family) approves it (owner 2026-11-04, child safety).
+  // Only the server (approveMember) adds the class to users.classIds.
   batch.set(doc(db, "classes", found.classId, "members", uid), {
     firstName: String(firstName || "").trim().split(/\s+/)[0] || null,
     grade: Number.isInteger(grade) ? grade : null,
     code: found.code,
     consentId: consentRef.id,
+    status: "pending",
+    parentName: record.parentName,
+    relation: record.relation,
     joinedAt: serverTimestamp(),
   });
-  batch.set(doc(db, "users", uid), { classIds: arrayUnion(found.classId) }, { merge: true });
+  batch.set(doc(db, "users", uid), { pendingClassIds: arrayUnion(found.classId) }, { merge: true });
   await batch.commit();
 }
 
@@ -138,7 +143,7 @@ export async function leaveClass(classId) {
   const uid = me();
   const batch = writeBatch(db);
   batch.delete(doc(db, "classes", classId, "members", uid));
-  batch.set(doc(db, "users", uid), { classIds: arrayRemove(classId) }, { merge: true });
+  batch.set(doc(db, "users", uid), { classIds: arrayRemove(classId), pendingClassIds: arrayRemove(classId) }, { merge: true });
   await batch.commit();
 }
 
@@ -157,6 +162,11 @@ export async function myTeachingClasses() {
   if (!uid) return [];
   const snap = await getDocs(query(collection(db, "classes"), where("teacherIds", "array-contains", uid)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+/** Teacher: approve (or reject) a join request. Server-side: checks the caller teaches this class. */
+export async function approveMember({ classId, kidUid, approve }) {
+  await functions().httpsCallable("approveMember")({ classId, kidUid, approve: !!approve });
 }
 
 export async function classMembers(classId) {

@@ -72,10 +72,16 @@ export default function MeScreen({ navigation, signoutHandler }) {
     myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
   }, [childKey]);
   const classKey = (userData?.classIds || []).join(",");
+  const pendingKey = (userData?.pendingClassIds || []).join(",");
+  const [pendingClasses, setPendingClasses] = useState([]);
   useEffect(() => {
     if (!classKey) return setMyClasses([]);
     getClasses(classKey.split(",")).then(setMyClasses).catch(() => setMyClasses([]));
   }, [classKey]);
+  useEffect(() => {
+    if (!pendingKey) return setPendingClasses([]);
+    getClasses(pendingKey.split(",")).then(setPendingClasses).catch(() => setPendingClasses([]));
+  }, [pendingKey]);
 
   useEffect(() => {
     if (!uid) return undefined;
@@ -193,7 +199,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
             <View style={styles.divider} />
           </View>
         ))}
-        {myClasses.length < MAX_CLASSES ? (
+        {pendingClasses.map((c) => (
+          <View key={c.id}>
+            <Row icon="time-outline" label={classLabel(c)} detail="waiting for teacher" onPress={() => {}} styles={styles} P={P} />
+            <View style={styles.divider} />
+          </View>
+        ))}
+        {myClasses.length + pendingClasses.length < MAX_CLASSES ? (
           <Row icon="add-circle-outline" label="Join a class (with a parent)" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
         ) : null}
       </View>

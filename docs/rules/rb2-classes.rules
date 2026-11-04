@@ -43,7 +43,9 @@
 
       match /members/{kidUid} {
         // A kid joins themself (parent present), with the class's real code; max 3 classes is checked in the app.
+        // Joining is a request: status must be "pending"; the teacher approves via the approveMember function.
         allow create: if request.auth != null && request.auth.uid == kidUid
+          && request.resource.data.status == "pending"
           && get(/databases/$(database)/documents/classCodes/$(request.resource.data.code)).data.classId == classId;
         allow delete: if request.auth != null && (request.auth.uid == kidUid
           || request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherIds
@@ -66,8 +68,9 @@
     //     && get(/databases/$(database)/documents/users/$(userId)).data.get('classIds', [])
     //        .hasAny(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('teachesClassIds', []));
     //
-    // users/{uid} writes: the kid writes only `classIds` (size <= 3) outside the profile branch:
-    //   || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['classIds'])
-    //       && request.resource.data.classIds.size() <= 3)
+    // users/{uid} writes: the kid writes only `pendingClassIds` (size <= 3); `classIds` is written by the server only
+    // (approveMember), so a child can't add a class without the teacher:
+    //   || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pendingClassIds'])
+    //       && request.resource.data.pendingClassIds.size() <= 3)
     // and app/school admins write `teachesClassIds` on a teacher's doc:
     // (teachesClassIds is written by the assignTeacher function, so no client rule is needed.)

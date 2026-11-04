@@ -83,7 +83,8 @@ async function memberOrTeacher(uid, classId) {
   const cls = await db.collection("classes").doc(classId).get();
   if (!cls.exists) return null;
   const isTeacher = (cls.data().teacherIds || []).includes(uid);
-  const isMember = (await db.collection("classes").doc(classId).collection("members").doc(uid).get()).exists;
+  const m = await db.collection("classes").doc(classId).collection("members").doc(uid).get();
+  const isMember = m.exists && m.data().status === "approved";
   return isTeacher || isMember || (await isAppAdmin(uid)) ? cls : null;
 }
 
@@ -102,7 +103,7 @@ exports.getClassLeaderboard = functions
     const clapsDoc = await db.collection("classes").doc(classId).collection("claps").doc(week).get();
     const claps = clapsDoc.exists ? clapsDoc.data().counts || {} : {};
     const rows = [];
-    for (const m of members.docs) {
+    for (const m of members.docs.filter((d) => d.data().status === "approved")) {
       let points = 0;
       for (const q of QUESTS) {
         const p = await db.collection("users").doc(m.id).collection("questProgress").doc(q).get();
@@ -126,7 +127,9 @@ exports.clapForClassmate = functions
     if (!classId || !toUid || toUid === from) throw new functions.https.HttpsError("invalid-argument", "Pick a classmate.");
     const classRef = db.collection("classes").doc(classId);
     const [a, b] = await Promise.all([classRef.collection("members").doc(from).get(), classRef.collection("members").doc(toUid).get()]);
-    if (!a.exists || !b.exists) throw new functions.https.HttpsError("permission-denied", "You can clap for your own classmates.");
+    if (!a.exists || !b.exists || a.data().status !== "approved" || b.data().status !== "approved") {
+      throw new functions.https.HttpsError("permission-denied", "You can clap for your own classmates.");
+    }
     const now = Date.now();
     const logRef = classRef.collection("clapLog").doc(`${dayKeyUtc(now)}_${from}_${toUid}`);
     const weekRef = classRef.collection("claps").doc(weekKey(now));
@@ -138,4 +141,33 @@ exports.clapForClassmate = functions
       return true;
     });
     return { ok, message: ok ? "👏 Clap sent!" : "You already clapped for them today." };
+  });
+
+/** { classId, kidUid, approve } → the class's teacher (or an admin) approves or rejects a join request. */
+exports.approveMember = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const { classId, kidUid, approve } = data || {};
+    const classRef = db.collection("classes").doc(String(classId || ""));
+    const cls = await classRef.get();
+    if (!cls.exists) throw new functions.https.HttpsError("not-found", "Class not found.");
+    const caller = context.auth.uid;
+    const allowed = (cls.data().teacherIds || []).includes(caller) || (await isAppAdmin(caller)) || (await isSchoolAdmin(caller, cls.data().schoolId));
+    if (!allowed) throw new functions.https.HttpsError("permission-denied", "Only this class's teacher can approve.");
+    const memberRef = classRef.collection("members").doc(String(kidUid || ""));
+    if (!(await memberRef.get()).exists) throw new functions.https.HttpsError("not-found", "No request from this child.");
+    const { FieldValue } = require("firebase-admin/firestore");
+    const userRef = db.collection("users").doc(kidUid);
+    const batch = db.batch();
+    if (approve) {
+      batch.update(memberRef, { status: "approved", approvedBy: caller, approvedAt: FieldValue.serverTimestamp() });
+      batch.set(userRef, { classIds: FieldValue.arrayUnion(classId), pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
+    } else {
+      batch.delete(memberRef);
+      batch.set(userRef, { pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
+    }
+    await batch.commit();
+    return { ok: true };
   });

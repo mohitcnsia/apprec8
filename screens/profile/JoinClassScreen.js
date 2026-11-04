@@ -33,7 +33,7 @@ export default function JoinClassScreen({ navigation }) {
   const [agreed, setAgreed] = useState(false);
 
   useEffect(() => listenToUserDocument(setUser, () => {}), []);
-  const myClassIds = user?.classIds || [];
+  const myClassIds = [...(user?.classIds || []), ...(user?.pendingClassIds || [])]; // waiting ones count too
   const t = CONSENT_TEXT[lang];
 
   const lookUp = async () => {
@@ -56,7 +56,7 @@ export default function JoinClassScreen({ navigation }) {
     setBusy(true);
     try {
       await joinClass({ found, myClassIds, firstName: user?.firstName, grade: user?.grade, parentName, relation, language: lang });
-      Alert.alert("Joined! 🎉", `You're in ${classLabel(found.class)} at ${found.class.schoolName || "your school"}.`, [
+      Alert.alert("Request sent ✉️", `Your teacher will check and approve ${classLabel(found.class)}. You'll see it in Me → My classes.`, [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (e) {

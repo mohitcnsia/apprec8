@@ -16,6 +16,11 @@ const {
   serverTimestamp, // For client-side timestamps
 } = require("firebase-admin/firestore");
 
+const isPresetAvatar = (url) =>
+  typeof url === "string" &&
+  (url.startsWith("https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/avatars%2F") ||
+    url.startsWith("https://api.dicebear.com/"));
+
 const MIN_FEEDBACK_CHARS = 10; // Constants specific to feedback
 const MIN_FEEDBACK_WORDS = 3;
 
@@ -56,7 +61,9 @@ exports.getLeaderboard = functions
           lastName: null,
           username: userData.username ? String(userData.username).split("@")[0] : null,
           grade: Number.isInteger(userData.grade) ? userData.grade : null,
-          photoURL: userData.photoURL || null,
+          // Child safety (owner 2026-11-04): other users only ever see our preset avatars, never a real photo
+          // (Google sign-in can put a child's face in photoURL).
+          photoURL: isPresetAvatar(userData.photoURL) ? userData.photoURL : null,
           points: userData.stats?.totalStars || 0,
         });
       });
