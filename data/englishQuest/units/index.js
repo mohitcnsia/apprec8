@@ -6,12 +6,14 @@
 import u3 from "./u3.js";
 import u4 from "./u4.js";
 import u5 from "./u5.js";
+import u6 from "./u6.js";
 
 export const extraUnits = [
   u3,
   u4,
   u5,
+  u6,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
-export const nextUnitTeaser = { id: "eq-u6", unitOrder: 6, title: "Modals, Tags & Speech" };
+export const nextUnitTeaser = { id: "eq-u7", unitOrder: 7, title: "Reported Speech & Passive" };

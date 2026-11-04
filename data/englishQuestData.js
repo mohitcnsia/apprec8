@@ -46,6 +46,8 @@ export const tile = {
 // Unit 5 (tenses): tense-present-past-mixup, tense-form-error (goed, swiming), tense-continuous-mixup, stative-verb-error
 // (am knowing), did-base-form-error (did you went), tense-future-form-error (will goes), time-word-mixup, tense-perfect-mixup,
 // participle-form-error (has went / sang vs sung), since-for-mixup
+// Unit 6 (modals, tags): modal-form-error (can swims), modal-time-mixup (can/could), modal-meaning-mixup, polite-request-mixup,
+// mustnt-donthave-mixup, tag-polarity-error, tag-helper-error, tag-pronoun-error
 
 // ---------- Study pages (new) ----------
 export const studyPages = {
