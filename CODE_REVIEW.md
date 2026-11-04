@@ -1458,3 +1458,17 @@ Off `feat/tile-quests`. Nothing goes into 20.0.24. The owner picks stable parts 
 - Share the sample papers (Class 3–6, IEO + NSO).
 - OK Unit 2 after Gemini's review; pick what goes in the Nov 6 build; approve each mockup.
 - Upload builds, Remote Config, decide on RB-2's 4 questions.
+
+---
+
+## 2026-11-04 — Review request: quiz redesign — branch `feat/quiz-redesign` (Claude)
+Off `feat/nov6-improvements`. Mockups approved by the owner (canvas "Apprec8 Quiz Screen Mockups"). **Needs an app build.** `npm test` (15 suites) + bundle pass. **Not seen on a device:** the emulator didn't boot here (10+ min), so Gemini's QA is the first visual check.
+- `12a8423` Quiz screen (`QuizScreenV2`): big answer cards with letter badges; **2×2 tiles** when all answers are short (≤12 characters); **Chamak** mascot + speech bubble; instruction label ("FILL IN THE BLANK"); the chosen word shows inside the blank; gold progress bar, hearts; CHECK → green/red sheet slides up with the explanation; right answer pops, wrong one shakes. Plain-text explanations show in the sheet ("CONTINUE"/"GOT IT" goes to the next question); **explanations with a picture or fun fact (Space quiz) show "SEE WHY"** and open the old Explanation screen. One light + one dark palette (`components/quiz/quizPalette.js`). Keep practising uses the new answer cards.
+- `9b5f29c` Results screen: Chamak cheering, 1–3 stars from the score, coloured result tiles, gate topics as a checklist, "questions to practise" card, big buttons. Same params for every caller.
+- **QA please (light and dark, `adb shell cmd uimode night yes|no`):**
+  1. English Quest practice quiz, Training: tap an answer → it's highlighted and fills the blank; CHECK → sheet with explanation; right = pop, wrong = shake + hearts −1; CONTINUE → next question. Nothing cut off, sheet never hides the right answer (scroll if needed).
+  2. Short answers (Unit 2 "A and an" after seeding, or any a/an question) → 2×2 tiles.
+  3. Exam mode: tap = answer + next; bookmark; review list readable; Submit.
+  4. Space quest quiz: SEE WHY opens the Explanation screen with its picture; back to the next question.
+  5. Out of hearts screen; results screen (stars, tiles, buttons, close X); 🔊 listen buttons on practice.
+  6. Old V1 quiz (IEO from the Study tab) still plays.
