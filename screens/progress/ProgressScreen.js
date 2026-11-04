@@ -22,6 +22,7 @@ import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
+import TeacherClasses from "./TeacherClasses";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -115,12 +116,12 @@ export default function ProgressScreen({ navigation }) {
 
   const openQuestMap = (questId) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId } });
 
-  const segment = isAdmin ? (
+  // Teachers (RB-2) get "My classes"; the admin also gets "Kids · Reported" (the Dashboard).
+  const isTeacher = (userData?.teachesClassIds || []).length > 0;
+  const tabs = [["me", "Me"], ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
+  const segment = tabs.length > 1 ? (
     <View style={styles.segment} accessibilityRole="tablist">
-      {[
-        ["me", "Me"],
-        ["kids", "Kids · Reported"],
-      ].map(([id, label]) => (
+      {tabs.map(([id, label]) => (
         <Pressable key={id} onPress={() => setView(id)} style={[styles.segmentItem, view === id && styles.segmentOn]} accessibilityRole="tab" accessibilityState={{ selected: view === id }}>
           <Text style={[styles.segmentText, view === id && styles.segmentTextOn]}>{label}</Text>
         </Pressable>
@@ -145,6 +146,15 @@ export default function ProgressScreen({ navigation }) {
           }
         />
       </View>
+    );
+  }
+
+  if (view === "classes" && isTeacher) {
+    return (
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+        {segment}
+        <TeacherClasses />
+      </ScrollView>
     );
   }
 
