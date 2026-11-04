@@ -46,12 +46,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const { playSuccess, playFailure } = useSoundEffects();
 
   // Opened from the start screen (QuizDetails, mockup F): start straight away, no second "Start" page.
-  const autoStartedRef = useRef(false);
+  // Every time: the questions can arrive twice (phone cache, then server), and each arrival resets the quiz to "ready"
+  // (Gemini QA G26 found the Start page showing again). "Try again" then also goes straight in.
   useEffect(() => {
-    if (route.params?.autoStart && status === "ready" && !autoStartedRef.current) {
-      autoStartedRef.current = true;
-      dispatch({ type: "START_QUIZ" });
-    }
+    if (route.params?.autoStart && status === "ready") dispatch({ type: "START_QUIZ" });
   }, [status, route.params?.autoStart, dispatch]);
 
   // --- Answer recording for quests (who answered what, and how fast) ---
