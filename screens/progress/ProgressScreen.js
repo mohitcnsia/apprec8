@@ -128,7 +128,8 @@ export default function ProgressScreen({ navigation }) {
     </View>
   ) : null;
 
-  const title = <Text style={styles.h1}>{isAdmin && view === "kids" ? "Progress" : "My progress"}</Text>;
+  // No big screen title (owner 2026-11-04: wasted space + clutter); the tab bar says where you are.
+  const title = null;
 
   if (isAdmin && view === "kids") {
     return (

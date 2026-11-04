@@ -29,7 +29,7 @@ export const tile = {
   order: 2,
   image: null,
   questId: QUEST_ID,
-  description: "Science for NSO, matched to your class",
+  description: "Science, matched to your class",
 };
 
 // ---------- Mistake tags (keep short, reuse) ----------

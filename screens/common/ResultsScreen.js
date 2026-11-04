@@ -167,6 +167,17 @@ const ResultsScreen = ({ route, navigation }) => {
       ? route.params.finalScore / route.params.maxPossibleScore
       : null;
   const starCount = percent === null ? null : percent >= 0.9 ? 3 : percent >= 0.6 ? 2 : percent > 0 ? 1 : 0;
+  // The face and words follow the score (Pratha, 2026-11-04: Chamak cheered when she got almost everything wrong).
+  // < 50%: kind + encouraging; 50–79%: "good effort"; 80%+: celebrate. Callers can still pass their own title.
+  const tier = percent === null ? "great" : percent >= 0.8 ? "great" : percent >= 0.5 ? "good" : "low";
+  const mood = tier === "low" ? "thinking" : tier === "good" ? "happy" : "cheer";
+  const shownTitle = tier === "low" && !route.params?.keepTitle ? "Let's try that again" : tier === "good" && !route.params?.keepTitle ? "Good effort!" : title;
+  const shownMessage =
+    tier === "low" && !route.params?.keepTitle
+      ? "Every mistake shows us what to practise, {username}. Read the reasons, then have another go. You can do it!"
+      : tier === "good" && !route.params?.keepTitle
+      ? "Nice work, {username}! A little more practice and you'll have it."
+      : message;
   const starAnims = useRef([0, 1, 2].map(() => new Animated.Value(0))).current;
   useEffect(() => {
     if (starCount === null) return;
@@ -222,7 +233,7 @@ const ResultsScreen = ({ route, navigation }) => {
               <Image source={asset.source} style={styles.image} resizeMode="cover" />
             )
           ) : (
-            <Mascot mood="cheer" size={130} />
+            <Mascot mood={mood} size={130} />
           )}
         </View>
 
@@ -240,8 +251,8 @@ const ResultsScreen = ({ route, navigation }) => {
           </View>
         ) : null}
 
-        <Text style={styles.header}>{title}</Text>
-        <Text style={styles.messageText}>{message.replace("{username}", username)}</Text>
+        <Text style={styles.header}>{shownTitle}</Text>
+        <Text style={styles.messageText}>{shownMessage.replace("{username}", username)}</Text>
 
         {asTiles ? (
           <View style={styles.tilesRow}>

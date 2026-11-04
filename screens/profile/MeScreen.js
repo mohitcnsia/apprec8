@@ -96,10 +96,10 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      <Text style={styles.h1}>Me</Text>
 
       {/* Profile card */}
       <View style={styles.card}>
+        {/* Big picture + name (Pratha 2026-11-04: "kids love to see their pictures") */}
         <View style={styles.profileRow}>
           {photo ? (
             <Image source={{ uri: photo }} style={styles.avatar} />
@@ -108,8 +108,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
               <Text style={styles.avatarText}>{name.charAt(0).toUpperCase()}</Text>
             </View>
           )}
-          <View style={{ flex: 1 }}>
-            <Text style={styles.name} numberOfLines={1}>{name}</Text>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.name} numberOfLines={2}>{name}</Text>
             {userData?.grade ? <Text style={styles.soft}>Class {userData.grade}</Text> : null}
             {auth?.email ? <Text style={styles.soft} numberOfLines={1}>{auth.email}</Text> : null}
           </View>
@@ -193,11 +193,11 @@ const makeStyles = (P, insets) =>
     content: { paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 28, gap: 10 },
     h1: { fontSize: 28, fontFamily: "nunitoBold", color: P.text, marginBottom: 4 },
     card: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 2, borderColor: P.border, gap: 14 },
-    profileRow: { flexDirection: "row", alignItems: "center", gap: 14 },
-    avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: P.track },
+    profileRow: { alignItems: "center", gap: 12, paddingTop: 6 },
+    avatar: { width: 140, height: 140, borderRadius: 70, backgroundColor: P.track, borderWidth: 4, borderColor: P.selectedBorder },
     avatarLetter: { alignItems: "center", justifyContent: "center", backgroundColor: P.primary },
-    avatarText: { fontSize: 28, fontFamily: "nunitoBold", color: P.onPrimary },
-    name: { fontSize: 22, fontFamily: "nunitoBold", color: P.text },
+    avatarText: { fontSize: 60, fontFamily: "nunitoBold", color: P.onPrimary },
+    name: { fontSize: 26, lineHeight: 32, fontFamily: "nunitoBold", color: P.text, textAlign: "center" },
     soft: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
     outlineButton: { height: 46, borderRadius: 14, borderWidth: 2, borderBottomWidth: 4, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center", backgroundColor: P.card },
     outlineButtonText: { fontSize: 16, fontFamily: "nunitoBold", color: P.selectedText },

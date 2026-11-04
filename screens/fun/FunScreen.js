@@ -97,7 +97,6 @@ export default function FunScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      <Text style={styles.h1}>Fun</Text>
       <KidsThoughtOfTheDay thought={thoughtOfTheDay()} />
 
       <Text style={styles.section}>Games</Text>
