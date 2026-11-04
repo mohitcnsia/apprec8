@@ -23,7 +23,6 @@ import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
-import ClassBoard from "./ClassBoard";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -266,14 +265,14 @@ export default function ProgressScreen({ navigation }) {
         </View>
       ) : null}
 
-      {/* My class this week + claps (only for kids in a class) */}
-      {(userData?.classIds || [])[0] ? <ClassBoard classId={userData.classIds[0]} /> : null}
-
-      {/* Leaderboard (the old Stats screen) */}
+      {/* Leaderboard: My class (this week + claps) and Everyone, in one screen (mockup M1) */}
       <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
         <View style={[styles.card, styles.row]}>
           <TrophyIcon color={P.label} />
-          <Text style={[styles.cardTitle, { flex: 1 }]}>Leaderboard</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>Leaderboard</Text>
+            <Text style={styles.soft}>{(userData?.classIds || [])[0] ? "My class this week, claps and everyone" : "See how you rank"}</Text>
+          </View>
           <Text style={styles.link}>See ›</Text>
         </View>
       </Pressable>

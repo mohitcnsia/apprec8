@@ -6,7 +6,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import ProgressScreen from "../screens/progress/ProgressScreen";
-import StatsScreen from "../screens/quiz/StatsScreen";
+import LeaderboardScreen from "../screens/progress/LeaderboardScreen";
 import AdminKidDetailScreen from "../screens/admin/AdminKidDetailScreen";
 
 const Stack = createStackNavigator();
@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 const ProgressNavigator = () => (
   <Stack.Navigator initialRouteName="ProgressScreen" screenOptions={{ headerShown: false }}>
     <Stack.Screen name="ProgressScreen" component={ProgressScreen} />
-    <Stack.Screen name="Leaderboard" component={StatsScreen} />
+    <Stack.Screen name="Leaderboard" component={LeaderboardScreen} />
     <Stack.Screen name="AdminKidDetail" component={AdminKidDetailScreen} />
   </Stack.Navigator>
 );
