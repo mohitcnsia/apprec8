@@ -41,6 +41,21 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ 20.0.25 on your phone (Play internal testing), ~15 min. Do this first.
+Install from the internal-testing link, open the app, signed in as you.
+- [ ] **Tabs:** Home · Fun · Progress · Me; the one you're on is highlighted.
+- [ ] **Home:** your name, streak, stars; "Coming up" shows IEO / NSO days and changes by itself; Continue opens English Quest.
+- [ ] **A quiz:** answers sit low (thumb reach), CHECK, green/red sheet, Chamak's faces look friendly.
+- [ ] **English Quest:** Unit 2 "Articles & Determiners" shows after Unit 1 (after Gemini seeds it, G14).
+- [ ] **Progress:** your streak week and topics; Kids · Reported shows the Dashboard.
+- [ ] **Me:** theme Light / Dark / Phone setting; Edit profile → set Class; Admin tools opens (don't press seed buttons).
+- [ ] **+ Add reminder** on Home: add one with a date → it shows in Coming up.
+- [ ] Anything odd: screenshot + one line to Claude.
+
+**Then Pratha (her account, her phone):** play one Unit 2 topic and a practice; does it feel easy to use, anything confusing?
+**Her mother (English teacher):** play Unit 2 and 🚩 any question that's wrong or unclear (the flag is next to each question).
+School release only after both say OK.
+
 ### `feat/quiz-redesign`: Science Quest + class filter ("Multi-quest + Science Quest draft")
 Tester account. Needs one seed: Me → Admin tools → **Update Science Quest (draft)** → confirm (draft = testers only).
 - [ ] Admin tools shows one Update button per quest (English, Science (draft)); each asks to confirm before writing.
