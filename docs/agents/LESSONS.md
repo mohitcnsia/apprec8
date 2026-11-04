@@ -10,3 +10,6 @@
 6. **Wording:** read each question as a 10-year-old once; fix anything that can be misread ("eyes cut out"). (G16)
 7. **Commit everything** you write; never leave files uncommitted; stop after 2 failed tries and report. (G8)
 8. **Don't end your turn to report or wait:** the loop dies when you stop. Report by commit; to wait, `sleep 300` and re-check. (G14)
+9. **British spelling** (IEO and Indian schools): practise (verb) / practice (noun), colour, cosy, centre. (G17)
+10. **Grammar of the question itself:** check tense words in the sentence ("since" needs "have been"); never break grammar to avoid an apostrophe ("teacher table"): rephrase instead. (G17)
+11. **Don't overcorrect:** after a fix, re-check the whole set (0% "longest" is as bad as 68%). Keep options short and kid-level. (G16)

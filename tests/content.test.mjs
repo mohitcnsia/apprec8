@@ -120,6 +120,15 @@ function checkQuest(D) {
     const share = longest / allQs.length;
     console.log(`${D.QUEST_ID}: right answer is the longest option in ${Math.round(share * 100)}% of questions`);
     assert.ok(share <= 0.4, `${D.QUEST_ID}: the right answer is the longest option in ${Math.round(share * 100)}% of questions (max 40%). Make wrong options as long and detailed as the right one.`);
+    // ...and not the opposite tell either ("never pick the longest"): 0% is as easy to game as 68%.
+    assert.ok(share >= 0.1, `${D.QUEST_ID}: the right answer is the longest option in only ${Math.round(share * 100)}% of questions (min 10%). Mix it up: sometimes the right one is the longest.`);
+  }
+  // Kid-sized options: Class 3–5 kids read every option under time pressure.
+  for (const [quizId, qs] of Object.entries(D.quizzes)) {
+    qs.forEach((q, i) => q.options.forEach((o) => {
+      const words = String(o.content).split(/\s+/).length;
+      assert.ok(words <= 14, `${quizId} q${i + 1}: option too long (${words} words, max 14): "${o.content}"`);
+    }));
   }
 
   // Class tags: whole numbers 1–12
