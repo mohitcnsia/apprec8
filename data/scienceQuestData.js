@@ -180,6 +180,177 @@ An animal's outer covering protects it from weather and enemies:
 - **Arctic Tern:** Undertakes the longest migration on Earth, flying from the Arctic to the Antarctic and back each year!
 - **Monarch Butterfly:** Migrates from cold Canada to warm Mexico for the winter.`,
   },
+
+  "sq-bones-study": {
+    name: "Bones, Joints and Muscles",
+    author: "Apprec8",
+    content: `### 🦴 The Human Skeleton
+
+The human skeleton is a strong internal framework of **206 bones** in an adult. A newborn baby has about **300 soft bones**, but many fuse together as the baby grows.
+
+The skeleton performs five critical functions:
+1. **Support:** It gives our body shape and keeps us upright.
+2. **Protection:** It shields delicate internal organs from injury.
+3. **Movement:** Bones work together with muscles to allow us to walk, bend, and lift.
+4. **Blood cell production:** Soft tissue called **bone marrow** inside long bones makes red and white blood cells.
+5. **Mineral storage:** Bones store essential minerals like **calcium** and **phosphorus**.
+
+---
+
+### 🛡️ Major Parts of the Skeleton
+
+- **The Skull:** Made of **22 bones** (8 flat cranial bones interlocking to protect the brain, and 14 facial bones). Only the **lower jaw (mandible)** is movable, enabling us to chew and speak.
+- **The Backbone (Spine):** Made of **33 small ring-like bones called vertebrae**. It protects the delicate **spinal cord** and lets us twist and bend.
+- **The Rib Cage:** Formed by **12 pairs of curved bones** (24 ribs). They join the breastbone (**sternum**) in front and the spine at the back, protecting the heart and lungs. The lowest two pairs are joined only to the spine and are called **floating ribs**.
+- **Limbs:**
+  - **Forelimbs (Arms):** The upper arm has one long bone called the **humerus**; the forearm has two bones (**radius** and **ulna**).
+  - **Hindlimbs (Legs):** The thigh bone, called the **femur**, is the **longest and strongest bone** in the entire human body.
+
+---
+
+### 🔄 Movable Joints
+
+A **joint** is the place where two or more bones meet. Tough elastic bands of tissue called **ligaments** hold bones together at joints. A smooth rubbery layer called **cartilage** covers the bone ends so they do not grind against each other.
+
+There are four main types of movable joints:
+1. **Ball-and-socket joint:** A rounded bone head fits into a hollow cup. Moves freely in **all directions**. Found in the **shoulder** and **hip**.
+2. **Hinge joint:** Works like a door on a hinge, moving in **one direction back and forth**. Found in the **elbow, knee, fingers, and toes**.
+3. **Pivot joint:** Allows a bone to rotate sideways and nod up and down. Found in the **neck** (between the skull and first two vertebrae).
+4. **Gliding joint:** Bones slide smoothly over one another in multiple directions. Found in the **wrist, ankle**, and between the vertebrae of the spine.
+
+> 🔒 **Immovable Joints:** The joints between the cranial bones of your skull are fixed together and cannot move at all.
+
+---
+
+### 💪 Muscles: Working in Pairs
+
+Bones cannot move by themselves. Over **600 muscles** in the human body are attached to bones by tough white cords called **tendons**.
+
+- **Muscles can only pull—they never push!** When a muscle contracts, it gets shorter, thicker, and pulls on the bone.
+- Because muscles only pull, they work in **antagonistic pairs**. To bend your elbow, the **biceps** on the front contracts while the **triceps** on the back relaxes. To straighten your arm, the **triceps contracts** while the **biceps relaxes**.
+- **Voluntary muscles:** Muscles whose movement you can consciously control (muscles of your arms, legs, face).
+- **Involuntary muscles:** Muscles that work automatically without conscious effort (cardiac muscles of the heart pumping blood, smooth muscles of the stomach and intestines churning food).`,
+  },
+  "sq-food-study": {
+    name: "Digestion, Teeth and Food",
+    author: "Apprec8",
+    content: `### 🦷 Our Teeth and Their Care
+
+Teeth help us bite, chew, and break down food so our body can digest it easily.
+
+- **Two sets of teeth in a lifetime:**
+  - **Temporary teeth (Milk teeth):** A child develops **20 milk teeth** starting around six months of age.
+  - **Permanent teeth:** Between ages 6 and 12, milk teeth fall out and are replaced by **32 permanent teeth** (16 in the upper jaw and 16 in the lower jaw).
+
+---
+
+### ✂️ Four Types of Teeth
+
+| Tooth Type | Count | Shape | Function |
+|---|---|---|---|
+| **Incisors** | 8 (4 upper, 4 lower) | Chisel-shaped with flat sharp edges | Biting and cutting food |
+| **Canines** | 4 (2 upper, 2 lower) | Sharp, pointed and conical | Tearing tough food |
+| **Premolars** | 8 (4 upper, 4 lower) | Broad with flat ridged tops | Cracking and crushing food |
+| **Molars** | 12 (6 upper, 6 lower) | Wider and flatter than premolars | Grinding food finely before swallowing |
+
+The outer visible part of a tooth is the **crown**, while the part anchored inside the jawbone is the **root**. The shiny white outer layer is **enamel**, which is the **hardest substance in the human body**! Under the enamel lies the yellow **dentine**, and inside is the soft **pulp** filled with nerves and blood vessels.
+
+---
+
+### 🥣 The Journey of Digestion
+
+Digestion is the process of breaking down complex food into simple, soluble substances that the blood can absorb:
+
+1. **Mouth:** Teeth chew food into tiny pieces. Salivary glands release **saliva**, which contains digestive enzymes that convert insoluble **starch into soluble sugar**.
+2. **Food Pipe (Oesophagus):** A muscular tube that pushes food down into the stomach using wave-like rhythmic contractions called **peristalsis**.
+3. **Stomach:** A muscular J-shaped bag that churns food with acidic **gastric juices** for 3–4 hours, killing harmful bacteria and breaking down **proteins**.
+4. **Small Intestine:** A long, coiled tube (nearly 6 metres long). Digestion finishes here with help from juices secreted by the **liver** (which makes **bile** to digest fats) and the **pancreas**. Tiny finger-like projections called **villi** absorb the dissolved nutrients directly into the blood.
+5. **Large Intestine:** It receives undigested waste, absorbs excess **water and salts**, and passes semi-solid waste (faeces) into the **rectum** to be eliminated through the **anus**.
+
+---
+
+### 🥗 Balanced Diet & Deficiency Diseases
+
+A **balanced diet** contains carbohydrates, fats, proteins, vitamins, minerals, roughage, and water in the right proportions.
+
+When a diet consistently lacks a specific nutrient over a long period, it causes a **deficiency disease**:
+
+| Missing Nutrient | Deficiency Disease | Symptoms | Food Sources |
+|---|---|---|---|
+| **Vitamin A** | Night blindness | Cannot see clearly in dim light | Carrots, papaya, spinach, milk |
+| **Vitamin B1** | Beriberi | Weak muscles and severe nerve fatigue | Whole grains, beans, unpolished rice |
+| **Vitamin C** | Scurvy | Bleeding gums, swollen painful joints | Amla, oranges, lemons, tomatoes |
+| **Vitamin D** | Rickets | Soft, weak bones that bend into bow legs | Sunlight exposure, milk, fish, eggs |
+| **Iron** | Anaemia | Low haemoglobin, pale skin, constant tiredness | Spinach, jaggery, beetroot, apples |
+| **Iodine** | Goitre | Swollen thyroid gland in front of the neck | Iodised salt, seafood |
+| **Calcium** | Weak bones & teeth | Fragile bones, brittle teeth | Milk, curd, paneer, green leafy vegetables |
+| **Proteins** | Kwashiorkor | Swollen belly, stunted growth, thin limbs | Pulses, soy, eggs, fish, lentils |`,
+  },
+  "sq-nervous-study": {
+    name: "The Nervous System, Sense Organs and Health",
+    author: "Apprec8",
+    content: `### 🧠 The Control Centre: The Nervous System
+
+The **nervous system** controls and coordinates all activities of the human body, from thinking and breathing to running and feeling pain. It consists of the **brain**, the **spinal cord**, and a vast network of **nerves**.
+
+---
+
+### 🏛️ The Three Parts of the Brain
+
+The brain weighs about 1.4 kg and is protected inside the hard bony **skull (cranium)**. It has three distinct parts:
+
+1. **Cerebrum:**
+   - The **largest and uppermost part** of the brain, covered in deep folds.
+   - It controls conscious thinking, memory, intelligence, learning, emotions, and the five senses.
+   - When you solve a maths puzzle, recall a poem, or decide to wave your hand, your cerebrum is working.
+
+2. **Cerebellum:**
+   - Located at the back of the head, below the cerebrum.
+   - It coordinates voluntary muscle movements, posture, and body **balance**.
+   - When you ride a bicycle, dance, or balance on one foot without falling, your cerebellum is in charge.
+
+3. **Medulla Oblongata (Brain Stem):**
+   - Connects the brain to the spinal cord.
+   - It controls involuntary life-support functions: **heartbeat, breathing, blood pressure, and swallowing**.
+   - It never sleeps—it works non-stop 24 hours a day even when you are fast asleep!
+
+---
+
+### ⚡ The Spinal Cord & Reflex Actions
+
+The **spinal cord** is a thick bundle of nerves that emerges from the medulla and runs down the back, safely enclosed inside the flexible vertebral column (backbone).
+
+A **reflex action** is an immediate, automatic, involuntary response to a stimulus that happens without thinking.
+- When you accidentally touch a hot plate or step on a sharp thorn, your hand or foot pulls back instantly before you even feel the pain.
+- In a reflex action, sensory nerves send the emergency message to the **spinal cord**, which immediately commands the muscles to pull back via motor nerves. **The message does not wait for the cerebrum to think**, preventing serious injury!
+
+---
+
+### 👁️ Sense Organs and Healthy Living
+
+Our five sense organs connect us to the world:
+- **Eyes:** The transparent **cornea** admits light, the coloured **iris** adjusts the **pupil** size, and the **lens** focuses images onto the light-sensitive **retina**. The **optic nerve** carries visual signals to the brain.
+- **Ears:** The outer ear catches sound waves; the vibrating **eardrum** passes vibrations through three tiny middle ear bones to the cochlea, which sends signals via the **auditory nerve**.
+- **Nose & Tongue:** Olfactory nerves detect smells; taste buds detect sweet, salty, sour, and bitter tastes.
+- **Skin:** The largest sense organ, packed with nerve endings sensitive to touch, pressure, pain, heat, and cold.
+
+---
+
+### 🦠 Communicable Diseases and Microbes
+
+Diseases can be classified into two categories:
+- **Non-communicable diseases:** Cannot spread from person to person (e.g., deficiency diseases like scurvy, rickets, anaemia).
+- **Communicable (infectious) diseases:** Spread from an infected person to a healthy person through harmful microorganisms called **pathogens**:
+
+| Pathogen | Diseases Caused | Mode of Spread | Prevention Method |
+|---|---|---|---|
+| **Bacteria** | Typhoid, cholera, tuberculosis, pneumonia | Contaminated food, dirty water, infected cough droplets | Drinking boiled water, proper sanitation |
+| **Viruses** | Common cold, influenza, measles, polio, dengue | Sneeze droplets in air, viral vectors (Aedes mosquito for dengue) | Covering mouth when coughing, vaccination |
+| **Protozoa** | Malaria, amoebic dysentery | Bite of female *Anopheles* mosquito, unclean water | Sleeping under mosquito nets, preventing stagnant water |
+| **Fungi** | Ringworm, athlete's foot | Direct skin contact, sharing infected towels or combs | Keeping skin clean and dry, personal hygiene |
+
+> 🛡️ **Vaccination:** Vaccines train our immune system to recognise and fight specific disease germs before they can make us sick!`,
+  },
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -1551,6 +1722,1275 @@ export const quizzes = {
       "Not all plants produce seeds. Non-flowering plants like ferns and mosses reproduce through microscopic spores."
     ),
   ],
+
+  "sq-bones-warmup": [
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "How many bones does a normal adult human skeleton contain?",
+        "206 bones",
+        [
+          ["300 bones", "bone-count-mixup"],
+          ["150 bones", "bone-count-mixup"],
+          ["250 bones", "bone-count-mixup"]
+        ],
+        "An adult human skeleton has 206 bones. A baby is born with about 300 softer bones, but many fuse together as the child grows."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Which bone is the longest and strongest bone in the human body?",
+        "The thigh bone (femur)",
+        [
+          ["The upper arm bone (humerus)", "bone-location-mixup"],
+          ["The breastbone (sternum)", "bone-location-mixup"],
+          ["The backbone (spine)", "bone-location-mixup"]
+        ],
+        "The femur (thigh bone) is the longest and strongest bone in the body, supporting our body weight while walking and jumping."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Which part of the human skull is movable?",
+        "Only the lower jaw",
+        [
+          ["Only the upper jaw", "skull-mobility-mixup"],
+          ["The nasal bone", "skull-mobility-mixup"],
+          ["All skull bones", "skull-mobility-mixup"]
+        ],
+        "All bones of the skull are immovable and locked together except the lower jaw (mandible), which moves to let us speak and chew."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Which type of movable joint is found at your elbow and knee?",
+        "Hinge joint",
+        [
+          ["Ball-and-socket joint", "joint-type-mixup"],
+          ["Pivot joint", "joint-type-mixup"],
+          ["Gliding joint", "joint-type-mixup"]
+        ],
+        "Elbows and knees have hinge joints that open and close in one direction like the hinge of a door."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "What tough tissue connects muscles to bones in the human body?",
+        "Tendons",
+        [
+          ["Ligaments", "tissue-connection-mixup"],
+          ["Cartilage", "tissue-connection-mixup"],
+          ["Bone marrow", "tissue-connection-mixup"]
+        ],
+        "Tendons are tough cords that attach muscles to bones. Ligaments connect bones to other bones at joints."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Why do biceps and triceps work together in pairs to move the arm?",
+        "Muscles can only pull, never push",
+        [
+          ["One muscle has no nerve supply", "muscle-action-mixup"],
+          ["Bones push muscles into position", "muscle-action-mixup"],
+          ["Muscles only contract when sleeping", "muscle-action-mixup"]
+        ],
+        "Muscles move bones by contracting and pulling on them. Because a muscle cannot push, another muscle must contract to pull the bone back."
+      ),
+    },
+  ],
+  "sq-bones-joints-quiz": [
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Which joint allows maximum movement in all directions?",
+        "Ball-and-socket joint",
+        [
+          ["Hinge joint", "joint-motion-mixup"],
+          ["Pivot joint", "joint-motion-mixup"],
+          ["Gliding joint", "joint-motion-mixup"]
+        ],
+        "The ball-and-socket joint in the shoulder and hip allows the limb to rotate freely in all directions."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Which type of joint connects the skull to the top of the backbone, allowing you to turn your head?",
+        "Pivot joint",
+        [
+          ["Hinge joint", "joint-location-mixup"],
+          ["Ball-and-socket joint", "joint-location-mixup"],
+          ["Fixed joint", "joint-location-mixup"]
+        ],
+        "The pivot joint between the skull and the first two neck vertebrae allows your head to rotate from side to side and nod up and down."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "What is the smooth, flexible tissue that covers the ends of bones at joints to prevent friction?",
+        "Cartilage",
+        [
+          ["Ligament", "joint-lining-mixup"],
+          ["Tendon", "joint-lining-mixup"],
+          ["Bone marrow", "joint-lining-mixup"]
+        ],
+        "Cartilage acts as a smooth, rubbery shock absorber at bone ends so that bones do not grind against each other during movement."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Which of the following contains an immovable (fixed) joint?",
+        "The cranium of the skull",
+        [
+          ["The human shoulder", "immovable-joint-mixup"],
+          ["The human wrist", "immovable-joint-mixup"],
+          ["The human knee", "immovable-joint-mixup"]
+        ],
+        "The bones of the cranium fit tightly together like puzzle pieces and cannot move, protecting the soft brain inside."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "What happens to your biceps and triceps when you bend your elbow to touch your shoulder?",
+        "Biceps contracts and triceps relaxes",
+        [
+          ["Biceps relaxes and triceps contracts", "muscle-pair-mixup"],
+          ["Both biceps and triceps contract together", "muscle-pair-mixup"],
+          ["Both biceps and triceps relax completely", "muscle-pair-mixup"]
+        ],
+        "To bend the elbow, the biceps on the front of the upper arm contracts (shortens), while the triceps on the back relaxes."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Which kind of muscle is found in the walls of the stomach and blood vessels?",
+        "Involuntary smooth muscle",
+        [
+          ["Voluntary skeletal muscle", "muscle-type-mixup"],
+          ["Voluntary cardiac muscle", "muscle-type-mixup"],
+          ["Involuntary bone muscle", "muscle-type-mixup"]
+        ],
+        "Internal organs like the stomach, intestines, and blood vessels are made of involuntary smooth muscles that work automatically."
+      ),
+    },
+  ],
+  "sq-bones-gate-pool": [
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "How many pairs of ribs make up the human rib cage?",
+        "12 pairs of ribs",
+        [
+          ["10 pairs of ribs", "rib-count-mixup"],
+          ["14 pairs of ribs", "rib-count-mixup"],
+          ["24 pairs of ribs", "rib-count-mixup"]
+        ],
+        "The human rib cage consists of 12 pairs (24 total) of curved bones that protect the heart and lungs."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Why are the lowest two pairs of ribs in the rib cage called 'floating ribs'?",
+        "They are attached only to the spine",
+        [
+          ["They float freely inside the lungs", "floating-rib-mixup"],
+          ["They are made entirely of liquid", "floating-rib-mixup"],
+          ["They are not joined to any bone", "floating-rib-mixup"]
+        ],
+        "The 11th and 12th pairs of ribs do not attach to the breastbone (sternum) in front; they are attached only to the vertebral column."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Which important organ system is protected inside the vertebral column (backbone)?",
+        "The spinal cord",
+        [
+          ["The human stomach", "spine-organ-mixup"],
+          ["The two kidneys", "spine-organ-mixup"],
+          ["The vocal cords", "spine-organ-mixup"]
+        ],
+        "The vertebral column consists of 33 ring-shaped vertebrae stacked together to shelter and protect the delicate spinal cord."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Where are red blood cells produced in the human skeletal system?",
+        "Inside bone marrow",
+        [
+          ["Inside hard bone enamel", "bone-function-mixup"],
+          ["Inside cartilage layers", "bone-function-mixup"],
+          ["Inside joint ligaments", "bone-function-mixup"]
+        ],
+        "Bone marrow is a soft, spongy tissue found inside hollow long bones where new blood cells are continuously produced."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Read the following statements about human bones:\n(i) Bones store calcium and phosphorus.\n(ii) All bones in the human skull can move freely.\n(iii) The femur is located in the upper arm.\n(iv) The vertebral column is made of 33 vertebrae.\nWhich statements are CORRECT?",
+        "(i) and (iv) only",
+        [
+          ["(i), (ii) and (iv) only", "skeletal-statement-eval"],
+          ["(ii) and (iii) only", "skeletal-statement-eval"],
+          ["(i) and (iii) only", "skeletal-statement-eval"]
+        ],
+        "Statement (i) is correct (bones store minerals) and (iv) is correct (33 vertebrae). Statement (ii) is false (only lower jaw moves) and (iii) is false (femur is in the thigh)."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "What type of joint is present between the bones of your wrist and ankle?",
+        "Gliding joint",
+        [
+          ["Pivot joint", "gliding-joint-mixup"],
+          ["Hinge joint", "gliding-joint-mixup"],
+          ["Immovable joint", "gliding-joint-mixup"]
+        ],
+        "The wrist and ankle contain gliding joints where flat bones slide past each other to allow smooth, multi-directional bending."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "What is the main function of ligaments at a skeletal joint?",
+        "To connect bone to bone",
+        [
+          ["To connect muscle to bone", "ligament-function-mixup"],
+          ["To produce red blood cells", "ligament-function-mixup"],
+          ["To supply digestive juices", "ligament-function-mixup"]
+        ],
+        "Ligaments are strong, stretchy bands of fibrous tissue that bind bones together at a joint, keeping the joint stable."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Refer to the given relationship and select the option that completes it correctly:\nShoulder : Ball-and-socket joint :: Knee : ———",
+        "Hinge joint",
+        [
+          ["Pivot joint", "joint-analogy-mixup"],
+          ["Gliding joint", "joint-analogy-mixup"],
+          ["Fixed joint", "joint-analogy-mixup"]
+        ],
+        "The shoulder is an example of a ball-and-socket joint, while the knee is an example of a hinge joint."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "An orthopedic doctor observes a joint that moves in only one plane, like the opening of a single door. Which joint is this?",
+        "The elbow joint",
+        [
+          ["The hip joint", "joint-plane-mixup"],
+          ["The neck pivot joint", "joint-plane-mixup"],
+          ["The skull suture joint", "joint-plane-mixup"]
+        ],
+        "A hinge joint moves strictly in one plane back and forth. The elbow and knee are classic hinge joints."
+      ),
+    },
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "If the cartilage at a person's knee joint wears away completely, what is the most likely symptom they will experience?",
+        "Pain from bones grinding together",
+        [
+          ["The knee joint rotating in full circles", "cartilage-loss-mixup"],
+          ["Immediate loss of all arm reflexes", "cartilage-loss-mixup"],
+          ["The knee bone turning into muscle", "cartilage-loss-mixup"]
+        ],
+        "Cartilage cushions bone ends. Without it, the rough surfaces of the bones rub directly against each other, causing stiffness and severe pain."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Which of the following is an example of a voluntary muscle?",
+        "Muscle in the arm used to lift a cup",
+        [
+          ["Muscle of the heart pumping blood", "voluntary-muscle-mixup"],
+          ["Muscle in the stomach churning food", "voluntary-muscle-mixup"],
+          ["Muscle in the eye pupil dilating", "voluntary-muscle-mixup"]
+        ],
+        "Voluntary muscles (like biceps and quadriceps) are under conscious control; you decide when to contract them."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "What type of muscle makes up the walls of the human heart?",
+        "Cardiac muscle",
+        [
+          ["Skeletal muscle", "cardiac-muscle-mixup"],
+          ["Voluntary smooth muscle", "cardiac-muscle-mixup"],
+          ["Cartilage muscle", "cardiac-muscle-mixup"]
+        ],
+        "The heart is made of cardiac muscle, which is involuntary and works continuously throughout life without stopping or fatiguing easily."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Complete the given relationship correctly:\nBone to bone : Ligament :: Muscle to bone : ———",
+        "Tendon",
+        [
+          ["Cartilage", "tissue-pair-mixup"],
+          ["Vertebra", "tissue-pair-mixup"],
+          ["Marrow", "tissue-pair-mixup"]
+        ],
+        "Ligaments link bones to other bones; tendons link voluntary muscles securely to bones."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Consider the following statements about human muscles:\n(i) Muscles can push bones away during extension.\n(ii) Muscles work in opposing pairs to produce movement.\n(iii) The human body has over 600 muscles.\n(iv) Cardiac muscle is under our conscious voluntary control.\nWhich statements are TRUE?",
+        "(ii) and (iii) only",
+        [
+          ["(i) and (iii) only", "muscle-statement-eval"],
+          ["(i), (ii) and (iv) only", "muscle-statement-eval"],
+          ["(ii) and (iv) only", "muscle-statement-eval"]
+        ],
+        "Statements (ii) and (iii) are true. Statement (i) is false because muscles only pull, never push. Statement (iv) is false because cardiac muscle is involuntary."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "When an athlete straightens their bent leg at the knee, what happens to the thigh muscles?",
+        "One muscle contracts while the other relaxes",
+        [
+          ["Both thigh muscles push outward together", "muscle-coordination-mixup"],
+          ["Both thigh muscles turn into cartilage", "muscle-coordination-mixup"],
+          ["Neither muscle changes length or tension", "muscle-coordination-mixup"]
+        ],
+        "Skeletal muscles always operate in antagonistic pairs: as one muscle contracts to pull the bone, the opposing partner muscle relaxes."
+      ),
+    },
+  ],
+  "sq-food-warmup": [
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "How many permanent teeth does an adult human have in a full set?",
+        "32 permanent teeth",
+        [
+          ["20 permanent teeth", "tooth-count-mixup"],
+          ["28 permanent teeth", "tooth-count-mixup"],
+          ["36 permanent teeth", "tooth-count-mixup"]
+        ],
+        "An adult has 32 permanent teeth (16 in the upper jaw and 16 in the lower jaw). Children have 20 milk teeth."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "Which type of teeth are sharp and pointed, specifically designed for tearing food?",
+        "Canines",
+        [
+          ["Incisors", "tooth-shape-mixup"],
+          ["Premolars", "tooth-shape-mixup"],
+          ["Molars", "tooth-shape-mixup"]
+        ],
+        "Canines are sharp, pointed teeth positioned beside the incisors, designed to tear fibrous food."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "What is the hardest substance found in the human body?",
+        "Tooth enamel",
+        [
+          ["Femur bone", "enamel-hardness-mixup"],
+          ["Knee cartilage", "enamel-hardness-mixup"],
+          ["Skull cranium", "enamel-hardness-mixup"]
+        ],
+        "Enamel, the glossy white covering of the tooth crown, is the hardest material in the human body."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Where does the process of chemical digestion begin in the human digestive system?",
+        "In the mouth with saliva",
+        [
+          ["In the stomach with acid", "digestion-start-mixup"],
+          ["In the small intestine", "digestion-start-mixup"],
+          ["In the food pipe (oesophagus)", "digestion-start-mixup"]
+        ],
+        "Digestion begins in the mouth where saliva mixes with chewed food and starts breaking down starch into soluble sugar."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Which digestive organ produces bile to help digest fats?",
+        "The liver",
+        [
+          ["The stomach", "liver-bile-mixup"],
+          ["The pancreas", "liver-bile-mixup"],
+          ["The large intestine", "liver-bile-mixup"]
+        ],
+        "The liver secretes bile juice, which is stored in the gall bladder and helps break down fats in the small intestine."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which deficiency disease is caused by a severe lack of Vitamin C in the diet?",
+        "Scurvy",
+        [
+          ["Rickets", "vitamin-c-mixup"],
+          ["Beriberi", "vitamin-c-mixup"],
+          ["Goitre", "vitamin-c-mixup"]
+        ],
+        "Scurvy causes bleeding gums and skin spots, and is caused by a lack of Vitamin C (found in citrus fruits and amla)."
+      ),
+    },
+  ],
+  "sq-food-nutrients-quiz": [
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which nutrient is primarily responsible for building and repairing body tissues?",
+        "Proteins",
+        [
+          ["Carbohydrates", "nutrient-role-mixup"],
+          ["Fats", "nutrient-role-mixup"],
+          ["Vitamins", "nutrient-role-mixup"]
+        ],
+        "Proteins are the body-building nutrients needed for growth, muscle development, and healing damaged tissues."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which deficiency disease results in soft, bent bones and bow legs in young children?",
+        "Rickets",
+        [
+          ["Scurvy", "rickets-symptom-mixup"],
+          ["Anaemia", "rickets-symptom-mixup"],
+          ["Night blindness", "rickets-symptom-mixup"]
+        ],
+        "Rickets is caused by a deficiency of Vitamin D (and calcium), making bones too soft to bear the body's weight."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "A lack of which mineral causes anaemia, leading to fatigue and pale skin?",
+        "Iron",
+        [
+          ["Calcium", "iron-anaemia-mixup"],
+          ["Iodine", "iron-anaemia-mixup"],
+          ["Sodium", "iron-anaemia-mixup"]
+        ],
+        "Iron is needed to produce haemoglobin in red blood cells. A lack of iron leads to anaemia and low energy."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "What is the main role of dietary fibre (roughage) in our daily food intake?",
+        "It helps move undigested waste smoothly",
+        [
+          ["It provides quick bursts of energy", "fibre-function-mixup"],
+          ["It kills bacteria in the mouth", "fibre-function-mixup"],
+          ["It repairs fractured bone tissue", "fibre-function-mixup"]
+        ],
+        "Roughage cannot be digested, but it adds bulk to the food, helping bowels pass waste and preventing constipation."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Which organ absorbs most of the water from undigested food before waste is passed out?",
+        "The large intestine",
+        [
+          ["The small intestine", "large-intestine-mixup"],
+          ["The stomach", "large-intestine-mixup"],
+          ["The food pipe", "large-intestine-mixup"]
+        ],
+        "The large intestine absorbs excess water and useful mineral salts from undigested food matter, turning it into semi-solid faeces."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which nutrient provides the body with its main and quickest source of daily energy?",
+        "Carbohydrates",
+        [
+          ["Proteins", "carb-energy-mixup"],
+          ["Minerals", "carb-energy-mixup"],
+          ["Roughage", "carb-energy-mixup"]
+        ],
+        "Carbohydrates (such as starch and sugars found in rice, wheat, and potatoes) are broken down into glucose to release energy."
+      ),
+    },
+  ],
+  "sq-food-gate-pool": [
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "What are the tiny finger-like projections on the inner wall of the small intestine that absorb nutrients?",
+        "Villi",
+        [
+          ["Enzymes", "villi-absorb-mixup"],
+          ["Vertebrae", "villi-absorb-mixup"],
+          ["Taste buds", "villi-absorb-mixup"]
+        ],
+        "Villi line the inside of the small intestine, providing a huge surface area to absorb digested nutrients into the bloodstream."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "What is the name of the rhythmic muscular contraction that pushes food along the oesophagus?",
+        "Peristalsis",
+        [
+          ["Respiration", "peristalsis-mixup"],
+          ["Circulation", "peristalsis-mixup"],
+          ["Mastication", "peristalsis-mixup"]
+        ],
+        "Peristalsis is the wave-like contraction of smooth muscles that moves food steadily downward through the digestive tract."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "What is the primary role of hydrochloric acid secreted by the stomach lining?",
+        "It kills bacteria and creates an acidic environment",
+        [
+          ["It turns protein directly into bone enamel", "stomach-acid-mixup"],
+          ["It absorbs water into the bloodstream", "stomach-acid-mixup"],
+          ["It neutralises all salivary enzymes permanently", "stomach-acid-mixup"]
+        ],
+        "Hydrochloric acid in gastric juice destroys harmful microbes swallowed with food and activates digestive enzymes that break down protein."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Complete the given biological relationship:\nMouth : Starch breakdown :: Stomach : ———",
+        "Protein breakdown",
+        [
+          ["Fat absorption", "digestion-site-analogy"],
+          ["Water absorption", "digestion-site-analogy"],
+          ["Bile production", "digestion-site-analogy"]
+        ],
+        "In the mouth, saliva starts digesting starch into sugars; in the stomach, gastric juices begin breaking down proteins into simpler forms."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Read the following statements about human digestion:\n(i) Most nutrient absorption takes place in the small intestine.\n(ii) The liver produces bile to help break down fats.\n(iii) Digestion is completed in the large intestine.\n(iv) Saliva contains enzymes that break down starch.\nWhich of the statements are CORRECT?",
+        "(i), (ii) and (iv) only",
+        [
+          ["(i) and (iii) only", "digestion-statement-eval"],
+          ["(ii) and (iii) only", "digestion-statement-eval"],
+          ["(iii) and (iv) only", "digestion-statement-eval"]
+        ],
+        "Statements (i), (ii), and (iv) are correct. Statement (iii) is incorrect because digestion finishes in the small intestine; the large intestine only absorbs water."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "How many incisors are present in the mouth of a person with a full set of teeth?",
+        "8 incisors",
+        [
+          ["4 incisors", "incisor-count-mixup"],
+          ["12 incisors", "incisor-count-mixup"],
+          ["16 incisors", "incisor-count-mixup"]
+        ],
+        "There are 8 incisors in total (4 in the upper jaw and 4 in the lower jaw), used for biting and cutting food."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "Which flat, broad teeth are located at the very back of the mouth, used for grinding food finely?",
+        "Molars",
+        [
+          ["Canines", "molar-grind-mixup"],
+          ["Incisors", "molar-grind-mixup"],
+          ["Milk teeth", "molar-grind-mixup"]
+        ],
+        "Molars are wide and flat teeth at the back of each jaw that grind and crush food into a fine paste before swallowing."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "What soft inner layer of a tooth contains living blood vessels and nerve endings?",
+        "Pulp",
+        [
+          ["Enamel", "tooth-pulp-mixup"],
+          ["Dentine", "tooth-pulp-mixup"],
+          ["Root canal bone", "tooth-pulp-mixup"]
+        ],
+        "The pulp is the soft, living centre of a tooth that supplies nutrients through blood vessels and senses pain or cold through nerves."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "Complete the given dental relationship:\nCutting and biting : Incisors :: Tearing tough food : ———",
+        "Canines",
+        [
+          ["Premolars", "teeth-analogy-mixup"],
+          ["Molars", "teeth-analogy-mixup"],
+          ["Enamel", "teeth-analogy-mixup"]
+        ],
+        "Incisors are chisel-shaped for biting into food, while pointed canines tear tough or fibrous food."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "A student eats sticky sweets and does not brush their teeth before sleeping. What is the direct cause of tooth decay in this situation?",
+        "Bacteria produce acid from leftover sugar that dissolves enamel",
+        [
+          ["Saliva turns into solid rock and breaks the jawbone", "plaque-acid-mixup"],
+          ["The teeth naturally convert their dentine into liquid milk", "plaque-acid-mixup"],
+          ["Enamel dries out and evaporates into the air", "plaque-acid-mixup"]
+        ],
+        "Mouth bacteria feed on residual sugar from sweets and produce acids that eat away the minerals in enamel, forming a cavity."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which symptom is most characteristic of Vitamin A deficiency (night blindness)?",
+        "Difficulty seeing objects in dim light",
+        [
+          ["Bleeding and spongy gums during brushing", "night-blindness-symptom"],
+          ["Swelling of the thyroid gland in the neck", "night-blindness-symptom"],
+          ["Bones becoming soft and bending into curves", "night-blindness-symptom"]
+        ],
+        "Vitamin A is necessary for healthy retinas; its deficiency causes night blindness, making it hard to see in dim light."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Which disease causes swelling of the thyroid gland in the neck due to a lack of iodine?",
+        "Goitre",
+        [
+          ["Scurvy", "goitre-iodine-mixup"],
+          ["Rickets", "goitre-iodine-mixup"],
+          ["Beriberi", "goitre-iodine-mixup"]
+        ],
+        "Goitre is an enlargement of the thyroid gland in the neck, caused by an insufficient intake of iodine in food or salt."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Identify the missing deficiency disease in the given pair:\nVitamin C : Scurvy :: Vitamin B1 : ———",
+        "Beriberi",
+        [
+          ["Rickets", "vitamin-deficiency-analogy"],
+          ["Goitre", "vitamin-deficiency-analogy"],
+          ["Anaemia", "vitamin-deficiency-analogy"]
+        ],
+        "Lack of Vitamin C causes scurvy, while lack of Vitamin B1 (thiamine) causes beriberi, which affects muscles and nerves."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "A doctor advises a child with pale skin and low energy to eat more spinach, jaggery, and apples. Which nutrient is the doctor aiming to restore?",
+        "Iron",
+        [
+          ["Calcium", "food-nutrient-matching"],
+          ["Vitamin A", "food-nutrient-matching"],
+          ["Iodine", "food-nutrient-matching"]
+        ],
+        "Spinach, jaggery, and apples are rich sources of iron, which the body uses to manufacture haemoglobin and overcome anaemia."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Look at the following statements about nutrients:\n(i) Fats provide more energy per gram than carbohydrates.\n(ii) Scurvy is caused by a deficiency of calcium.\n(iii) Kwashiorkor in children is caused by a severe deficiency of protein.\n(iv) Sunlight triggers the production of Vitamin D in human skin.\nWhich of the statements are TRUE?",
+        "(i), (iii) and (iv) only",
+        [
+          ["(i) and (ii) only", "nutrient-statement-eval"],
+          ["(ii) and (iii) only", "nutrient-statement-eval"],
+          ["(i), (ii) and (iv) only", "nutrient-statement-eval"]
+        ],
+        "Statements (i), (iii), and (iv) are true. Statement (ii) is false because scurvy is caused by Vitamin C deficiency, not calcium."
+      ),
+    },
+  ],
+  "sq-nervous-warmup": [
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Which part of the human brain is the largest and controls thinking, learning, and memory?",
+        "The cerebrum",
+        [
+          ["The cerebellum", "brain-part-mixup"],
+          ["The medulla oblongata", "brain-part-mixup"],
+          ["The spinal cord", "brain-part-mixup"]
+        ],
+        "The cerebrum is the largest part of the brain; its folded surface processes conscious thought, memory, reasoning, and speech."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Which part of the brain coordinates muscle movement and helps you maintain balance while riding a bicycle?",
+        "The cerebellum",
+        [
+          ["The cerebrum", "cerebellum-balance-mixup"],
+          ["The medulla oblongata", "cerebellum-balance-mixup"],
+          ["The skull cranium", "cerebellum-balance-mixup"]
+        ],
+        "The cerebellum sits under the cerebrum at the back of the skull, fine-tuning voluntary muscle coordination and posture balance."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Which part of the brain controls involuntary life-support actions like heartbeat and breathing even when you are asleep?",
+        "The medulla oblongata",
+        [
+          ["The cerebrum", "medulla-function-mixup"],
+          ["The cerebellum", "medulla-function-mixup"],
+          ["The optic nerve", "medulla-function-mixup"]
+        ],
+        "The medulla oblongata (brain stem) regulates automatic vital actions including breathing, blood circulation, and digestion."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "What is the light-sensitive screen at the back of the human eye where images are formed?",
+        "The retina",
+        [
+          ["The cornea", "retina-image-mixup"],
+          ["The pupil", "retina-image-mixup"],
+          ["The iris", "retina-image-mixup"]
+        ],
+        "The retina contains photoreceptor cells that detect light rays focused by the lens and pass signals to the optic nerve."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "What type of nerves carry signals from your sense organs (eyes, ears, skin) directly to the brain?",
+        "Sensory nerves",
+        [
+          ["Motor nerves", "sensory-nerve-mixup"],
+          ["Reflex nerves", "sensory-nerve-mixup"],
+          ["Digestive nerves", "sensory-nerve-mixup"]
+        ],
+        "Sensory nerves carry sensory inputs from receptors in sense organs to the central nervous system (brain and spinal cord)."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Malaria is a communicable disease transmitted to humans by the bite of which insect vector?",
+        "Female Anopheles mosquito",
+        [
+          ["Male Anopheles mosquito", "malaria-vector-mixup"],
+          ["Aedes mosquito", "malaria-vector-mixup"],
+          ["Housefly", "malaria-vector-mixup"]
+        ],
+        "Malaria is caused by a protozoan parasite (Plasmodium) transmitted through the bite of an infected female Anopheles mosquito."
+      ),
+    },
+  ],
+  "sq-nervous-senses-quiz": [
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Which coloured circular muscle controls the amount of light entering the eye through the pupil?",
+        "The iris",
+        [
+          ["The cornea", "iris-pupil-mixup"],
+          ["The retina", "iris-pupil-mixup"],
+          ["The lens", "iris-pupil-mixup"]
+        ],
+        "The iris is the coloured part of the eye that expands or contracts to adjust the size of the pupil based on light levels."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Which nerve carries hearing signals from the inner ear directly to the brain?",
+        "The auditory nerve",
+        [
+          ["The optic nerve", "auditory-nerve-mixup"],
+          ["The olfactory nerve", "auditory-nerve-mixup"],
+          ["The spinal nerve", "auditory-nerve-mixup"]
+        ],
+        "The auditory nerve carries electrical signals produced by vibrating fluid in the inner ear (cochlea) to the brain for sound interpretation."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "What nerve transmits smell signals from the upper nasal lining to the brain?",
+        "The olfactory nerve",
+        [
+          ["The optic nerve", "olfactory-nerve-mixup"],
+          ["The auditory nerve", "olfactory-nerve-mixup"],
+          ["The motor nerve", "olfactory-nerve-mixup"]
+        ],
+        "Olfactory nerve endings in the upper nasal passages detect airborne chemical molecules and send smell messages to the brain."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Which of the following is a non-communicable disease caused by nutritional deficiency?",
+        "Rickets",
+        [
+          ["Cholera", "non-communicable-mixup"],
+          ["Tuberculosis", "non-communicable-mixup"],
+          ["Typhoid", "non-communicable-mixup"]
+        ],
+        "Rickets is a non-communicable deficiency disease caused by a lack of Vitamin D; it cannot spread from one person to another."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "What type of pathogen causes diseases like the common cold, influenza, measles, and dengue?",
+        "Viruses",
+        [
+          ["Bacteria", "virus-disease-mixup"],
+          ["Protozoa", "virus-disease-mixup"],
+          ["Fungi", "virus-disease-mixup"]
+        ],
+        "Viruses are microscopic infectious agents that cause illnesses like the common cold, flu, measles, and dengue."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Why is it important to prevent water from stagnating in open containers, old tyres, and flowerpots around the home?",
+        "To stop mosquitoes from breeding",
+        [
+          ["To keep houseflies from drinking water", "mosquito-prevention-mixup"],
+          ["To prevent earthworms from migrating", "mosquito-prevention-mixup"],
+          ["To stop fungi from growing roots", "mosquito-prevention-mixup"]
+        ],
+        "Mosquitoes lay eggs in clean or dirty stagnant water. Removing standing water prevents disease vectors from multiplying."
+      ),
+    },
+  ],
+  "sq-nervous-gate-pool": [
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Which part of the human central nervous system directly controls involuntary reflex actions?",
+        "The spinal cord",
+        [
+          ["The cerebrum", "reflex-spinal-mixup"],
+          ["The skull cranium", "reflex-spinal-mixup"],
+          ["The nasal nerve", "reflex-spinal-mixup"]
+        ],
+        "Reflex actions are fast, automatic survival reactions directed by the spinal cord so the body can react before the brain thinks."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "What is the function of motor nerves in the human nervous system?",
+        "They carry commands from the brain to muscles",
+        [
+          ["They carry smell sensations from the nose to the brain", "motor-nerve-mixup"],
+          ["They carry sound signals from the ears to the brain", "motor-nerve-mixup"],
+          ["They produce new bone cells in the backbone", "motor-nerve-mixup"]
+        ],
+        "Motor nerves transmit instructions from the brain and spinal cord to muscles and glands to trigger movement or secretion."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Refer to the given brain functions and complete the relationship:\nThinking and memory : Cerebrum :: Balance and posture : ———",
+        "Cerebellum",
+        [
+          ["Medulla oblongata", "brain-function-analogy"],
+          ["Spinal cord", "brain-function-analogy"],
+          ["Auditory nerve", "brain-function-analogy"]
+        ],
+        "The cerebrum is responsible for thinking and cognitive memory; the cerebellum is responsible for muscular balance and posture."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "A chef accidentally touches a boiling metal pot. Without thinking, their hand jerks backwards instantly. What pathway did this nerve impulse follow?",
+        "Sensory receptor → sensory nerve → spinal cord → motor nerve → muscle",
+        [
+          ["Sensory receptor → cerebrum → conscious thought → motor nerve → muscle", "reflex-pathway-mixup"],
+          ["Muscle → motor nerve → medulla → sensory nerve → skin", "reflex-pathway-mixup"],
+          ["Sensory nerve → ear cochlea → cerebellum → heart muscle", "reflex-pathway-mixup"]
+        ],
+        "In a reflex arc, the signal travels from pain receptors via sensory nerves to the spinal cord, which immediately commands the arm muscles via motor nerves."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Read the following statements about the human nervous system:\n(i) The medulla oblongata operates even when a person is asleep.\n(ii) Motor nerves carry sensory information from the eyes to the brain.\n(iii) The spinal cord is protected inside the vertebral column.\n(iv) Reflex actions require deep conscious deliberation in the cerebrum.\nWhich of the statements are TRUE?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "nervous-statement-eval"],
+          ["(ii) and (iv) only", "nervous-statement-eval"],
+          ["(i) and (iv) only", "nervous-statement-eval"]
+        ],
+        "Statements (i) and (iii) are true. Statement (ii) is false (optic/sensory nerves carry sensory data) and (iv) is false (reflexes bypass conscious thought)."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Which part of the human eye changes its curvature to focus objects clearly onto the retina?",
+        "The eye lens",
+        [
+          ["The outer cornea", "eye-lens-mixup"],
+          ["The optic nerve", "eye-lens-mixup"],
+          ["The pupil hole", "eye-lens-mixup"]
+        ],
+        "The crystalline lens of the eye adjusts its focal length to focus light sharply onto the retina."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "What happens to the pupil of your eye when you step from a bright sunny garden into a dimly lit room?",
+        "It dilates (expands) to let in more light",
+        [
+          ["It constricts (shrinks) to block excess light", "pupil-dilation-mixup"],
+          ["It completely closes and turns yellow", "pupil-dilation-mixup"],
+          ["It detaches from the coloured iris", "pupil-dilation-mixup"]
+        ],
+        "In dim light, the circular muscles of the iris relax, causing the pupil to expand (dilate) so more light can enter the eye."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Select the option that completes the given sensory relationship:\nEye : Optic nerve :: Ear : ———",
+        "Auditory nerve",
+        [
+          ["Olfactory nerve", "sensory-nerve-analogy"],
+          ["Sensory tongue nerve", "sensory-nerve-analogy"],
+          ["Spinal nerve", "sensory-nerve-analogy"]
+        ],
+        "The eye sends light impulses via the optic nerve; the ear transmits sound vibrations via the auditory nerve."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Which of the following tiny structures in the middle ear amplify sound vibrations from the eardrum to the inner ear?",
+        "Three tiny middle ear bones",
+        [
+          ["The outer cartilage pinna", "ear-bones-mixup"],
+          ["The coiled liquid cochlea", "ear-bones-mixup"],
+          ["The balance canals", "ear-bones-mixup"]
+        ],
+        "Three small bones (the hammer, anvil, and stirrup) vibrate in sequence, amplifying vibrations from the eardrum to the cochlea."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "A student tastes lemon juice, sweet honey, and salted potato chips. Which structures on the tongue identify these flavours?",
+        "Taste buds",
+        [
+          ["Salivary ducts", "taste-buds-mixup"],
+          ["Olfactory bulbs", "taste-buds-mixup"],
+          ["Enamel caps", "taste-buds-mixup"]
+        ],
+        "Taste buds located inside small bumps (papillae) on the tongue contain chemical sensory receptors that detect basic tastes."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Which of the following communicable diseases is caused by bacteria?",
+        "Tuberculosis",
+        [
+          ["Measles", "bacterial-disease-mixup"],
+          ["Polio", "bacterial-disease-mixup"],
+          ["Ringworm", "bacterial-disease-mixup"]
+        ],
+        "Tuberculosis (TB) is caused by the bacterium Mycobacterium tuberculosis. Measles and polio are caused by viruses; ringworm is caused by a fungus."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "How do vaccines help protect the human body against infectious diseases?",
+        "They train the immune system to produce antibodies",
+        [
+          ["They replace all white blood cells with antibiotics", "vaccine-mechanism-mixup"],
+          ["They kill all microorganisms in the stomach acid", "vaccine-mechanism-mixup"],
+          ["They stop the heart from pumping foreign blood", "vaccine-mechanism-mixup"]
+        ],
+        "Vaccines expose the body to safe, weakened forms of a pathogen so the immune system learns to make antibodies that fight off future infections."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Select the correct option to complete the pathogen relationship:\nRingworm : Fungi :: Cholera : ———",
+        "Bacteria",
+        [
+          ["Virus", "pathogen-analogy-mixup"],
+          ["Protozoa", "pathogen-analogy-mixup"],
+          ["Mosquito", "pathogen-analogy-mixup"]
+        ],
+        "Ringworm is a skin infection caused by a fungus; cholera is a water-borne infection caused by the bacterium Vibrio cholerae."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "During monsoon season, a village notices an outbreak of dengue fever. Which measure will be most effective in curbing this viral outbreak?",
+        "Removing stagnant water from coolers and open containers",
+        [
+          ["Boiling all vegetables before cutting them", "dengue-prevention-mixup"],
+          ["Applying skin moisturiser twice daily", "dengue-prevention-mixup"],
+          ["Avoiding contact with garden earthworms", "dengue-prevention-mixup"]
+        ],
+        "Dengue is transmitted by the Aedes mosquito, which breeds in domestic collections of stagnant water. Clearing standing water halts mosquito breeding."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Look at the following statements about diseases and health:\n(i) Anaemia can spread from person to person through cough droplets.\n(ii) Typhoid spreads primarily through contaminated food and water.\n(iii) Drinking boiled water helps kill water-borne bacteria.\n(iv) Polio is caused by a protozoan parasite.\nWhich statements are CORRECT?",
+        "(ii) and (iii) only",
+        [
+          ["(i) and (ii) only", "disease-statement-eval"],
+          ["(i), (iii) and (iv) only", "disease-statement-eval"],
+          ["(ii) and (iv) only", "disease-statement-eval"]
+        ],
+        "Statements (ii) and (iii) are correct. Statement (i) is false because anaemia is a non-communicable nutritional deficiency, and (iv) is false because polio is viral."
+      ),
+    },
+  ],
+  "sq-u2-test": [
+    {
+      subtopic: "movable-joints",
+      ...q(
+        "Select the correct option to complete the joint analogy:\nShoulder : Ball-and-socket :: Neck between skull and spine : ———",
+        "Pivot joint",
+        [
+          ["Hinge joint", "boss-joint-analogy"],
+          ["Gliding joint", "boss-joint-analogy"],
+          ["Immovable joint", "boss-joint-analogy"]
+        ],
+        "The shoulder is a ball-and-socket joint, while the neck articulation allowing the head to turn is a pivot joint."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Evaluate the following statements regarding the human skeleton:\n(i) Tendons connect bone to bone at movable joints.\n(ii) The skull protects the brain, eyes, and inner ears.\n(iii) An adult human skeleton has 206 bones.\n(iv) The lower jaw is the only movable bone in the human skull.\nWhich statements are TRUE?",
+        "(ii), (iii) and (iv) only",
+        [
+          ["(i) and (iii) only", "boss-skeletal-eval"],
+          ["(i), (ii) and (iv) only", "boss-skeletal-eval"],
+          ["(ii) and (iii) only", "boss-skeletal-eval"]
+        ],
+        "Statements (ii), (iii), and (iv) are true. Statement (i) is false because ligaments connect bone to bone; tendons connect muscle to bone."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "An X-ray of a patient reveals a fracture in the longest and heaviest bone in their body. Which bone has been fractured?",
+        "The thigh bone (femur)",
+        [
+          ["The upper arm bone (humerus)", "boss-femur-fracture"],
+          ["The breastbone (sternum)", "boss-femur-fracture"],
+          ["The backbone vertebra", "boss-femur-fracture"]
+        ],
+        "The femur (thigh bone) is both the longest and strongest bone in the human skeleton."
+      ),
+    },
+    {
+      subtopic: "muscular-system",
+      ...q(
+        "Which pair of muscles in the human upper arm contract and relax alternately to bend and straighten the elbow?",
+        "Biceps and triceps",
+        [
+          ["Hamstring and quadriceps", "boss-arm-muscles"],
+          ["Cardiac and smooth muscles", "boss-arm-muscles"],
+          ["Ligament and tendon muscles", "boss-arm-muscles"]
+        ],
+        "Biceps on the front and triceps on the back of the upper arm work in an antagonistic pair to flex and extend the elbow joint."
+      ),
+    },
+    {
+      subtopic: "skeletal-system",
+      ...q(
+        "Match the skeletal part with its protective function:\nRib cage : Heart and lungs :: Vertebral column : ———",
+        "Spinal cord",
+        [
+          ["Human brain", "boss-protection-analogy"],
+          ["Digestive stomach", "boss-protection-analogy"],
+          ["Sensory retina", "boss-protection-analogy"]
+        ],
+        "The rib cage shields the thoracic organs (heart and lungs), while the vertebral column shelters the spinal cord."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "Select the option that completes the deficiency relationship:\nVitamin D : Rickets :: Vitamin C : ———",
+        "Scurvy",
+        [
+          ["Beriberi", "boss-deficiency-analogy"],
+          ["Night blindness", "boss-deficiency-analogy"],
+          ["Goitre", "boss-deficiency-analogy"]
+        ],
+        "Lack of Vitamin D leads to rickets, while lack of Vitamin C leads to scurvy (swollen and bleeding gums)."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "Consider the following statements about digestion and teeth:\n(i) Saliva converts insoluble starch into soluble sugar.\n(ii) Tooth enamel is made of soft cartilage cells.\n(iii) Villi in the small intestine absorb dissolved nutrients into the blood.\n(iv) A child develops 32 temporary milk teeth.\nWhich statements are CORRECT?",
+        "(i) and (iii) only",
+        [
+          ["(i), (ii) and (iii) only", "boss-digestive-eval"],
+          ["(ii) and (iv) only", "boss-digestive-eval"],
+          ["(i) and (iv) only", "boss-digestive-eval"]
+        ],
+        "Statements (i) and (iii) are correct. Statement (ii) is false (enamel is the hardest substance) and (iv) is false (milk teeth count is 20)."
+      ),
+    },
+    {
+      subtopic: "nutrients-deficiency",
+      ...q(
+        "A laboratory technician tests four food samples:\n- Food W turns blue-black with iodine.\n- Food X turns purple with copper sulphate and caustic soda.\n- Food Y leaves a translucent greasy spot on filter paper.\nWhat nutrient is predominantly present in Food W?",
+        "Starch (Carbohydrate)",
+        [
+          ["Protein", "boss-iodine-test"],
+          ["Fat", "boss-iodine-test"],
+          ["Vitamin C", "boss-iodine-test"]
+        ],
+        "The iodine test is specific for starch: starch turns blue-black in the presence of dilute iodine solution."
+      ),
+    },
+    {
+      subtopic: "teeth-types",
+      ...q(
+        "Which type of teeth are especially prominent and sharp in carnivorous animals for gripping and tearing meat?",
+        "Canines",
+        [
+          ["Incisors", "boss-canines-diet"],
+          ["Premolars", "boss-canines-diet"],
+          ["Molars", "boss-canines-diet"]
+        ],
+        "Carnivores have well-developed, pointed canines designed to pierce and tear tough meat."
+      ),
+    },
+    {
+      subtopic: "digestive-system",
+      ...q(
+        "What is the primary function of bile juice produced by the liver during digestion?",
+        "It helps in breaking down fats",
+        [
+          ["It converts protein into bone marrow", "boss-bile-fats"],
+          ["It digests starch into dietary fibre", "boss-bile-fats"],
+          ["It prevents hydrochloric acid from forming", "boss-bile-fats"]
+        ],
+        "Bile juice produced by the liver emulsifies large fat droplets into tiny droplets so enzymes can digest them easily."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "Select the option that correctly completes the brain function pair:\nCerebellum : Muscle balance :: Medulla oblongata : ———",
+        "Involuntary heartbeat and breathing",
+        [
+          ["Solving mathematical problems", "boss-medulla-analogy"],
+          ["Long-term conscious memory", "boss-medulla-analogy"],
+          ["Voluntary speech in conversations", "boss-medulla-analogy"]
+        ],
+        "The cerebellum balances voluntary movement; the medulla oblongata controls automatic vital functions like heartbeat and breathing."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Read the following statements about diseases:\n(i) Dengue is transmitted by the bite of the female Aedes mosquito.\n(ii) Scurvy is an infectious communicable disease.\n(iii) Bacteria cause diseases like typhoid and tuberculosis.\n(iv) Ringworm is a fungal infection of the skin.\nWhich of the statements are TRUE?",
+        "(i), (iii) and (iv) only",
+        [
+          ["(i) and (ii) only", "boss-disease-eval"],
+          ["(ii), (iii) and (iv) only", "boss-disease-eval"],
+          ["(i) and (iv) only", "boss-disease-eval"]
+        ],
+        "Statements (i), (iii), and (iv) are true. Statement (ii) is false because scurvy is a non-communicable nutritional deficiency disease."
+      ),
+    },
+    {
+      subtopic: "brain-nerves",
+      ...q(
+        "When Priya suddenly touches a spiky cactus leaf, she pulls her finger away before she feels the sting. Why does this reflex action occur so quickly?",
+        "The spinal cord triggers the reflex without waiting for the brain",
+        [
+          ["The cerebrum sends a long written message to the cactus", "boss-reflex-cactus"],
+          ["The cactus releases an electric shock that repels her skin", "boss-reflex-cactus"],
+          ["The finger bone contracts and pulls the arm backwards", "boss-reflex-cactus"]
+        ],
+        "In a reflex action, the spinal cord directly connects the sensory nerve to the motor nerve, triggering an immediate withdrawal to avoid tissue damage."
+      ),
+    },
+    {
+      subtopic: "sense-organs",
+      ...q(
+        "Which part of the human eye acts as the transparent front window through which light first enters?",
+        "The cornea",
+        [
+          ["The retina", "boss-cornea-window"],
+          ["The optic nerve", "boss-cornea-window"],
+          ["The iris", "boss-cornea-window"]
+        ],
+        "The cornea is the clear, curved outer layer on the front surface of the eye that protects the eye and helps focus incoming light."
+      ),
+    },
+    {
+      subtopic: "diseases-prevention",
+      ...q(
+        "Which of the following diseases is spread by contaminated food and water rather than by an insect vector?",
+        "Cholera",
+        [
+          ["Malaria", "boss-waterborne-cholera"],
+          ["Dengue", "boss-waterborne-cholera"],
+          ["Chikungunya", "boss-waterborne-cholera"]
+        ],
+        "Cholera is a water-borne bacterial illness spread through contaminated water or food; malaria, dengue, and chikungunya are mosquito-borne."
+      ),
+    },
+  ],
 };
 
 export const readings = {};
@@ -1694,8 +3134,149 @@ const u1Boss = forGrades(
   [4, 5]
 );
 
-// Unit 2 Teaser (coming soon)
-const u2 = unit("sq-u2", 2, "Human Body and Health", { comingSoon: true });
+
+// ==============================================================================
+// UNIT 2: Human Body and Health
+// ==============================================================================
+const u2 = forGrades(unit("sq-u2", 2, "Human Body and Health"), [4, 5]);
+
+// Topic 1: Bones, Joints and Muscles
+const bones = forGrades(
+  main("sq-bones", u2.id, 1, "Bones, Joints and Muscles", [
+    study("sq-bones-study"),
+    quiz("sq-bones-warmup"),
+  ]),
+  [4, 5]
+);
+
+const bonesP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-bones-p1",
+      bones,
+      1,
+      "Types of Joints",
+      "medium",
+      [quiz("sq-bones-joints-quiz")]
+    ),
+    "movable-joints"
+  ),
+  [4, 5]
+);
+
+const bonesGate = forGrades(
+  gate(
+    "sq-bones-gate",
+    bones,
+    "Skeletal System Challenge",
+    "sq-bones-gate-pool",
+    {
+      "skeletal-system": "The human skeleton and bones",
+      "movable-joints": "Types of movable joints",
+      "muscular-system": "Muscles and movement",
+    }
+  ),
+  [4, 5]
+);
+
+const bonesEndless = forGrades(endless(bones), [4, 5]);
+
+// Topic 2: Digestion, Teeth and Food
+const food = forGrades(
+  main("sq-food", u2.id, 2, "Digestion, Teeth and Food", [
+    study("sq-food-study"),
+    quiz("sq-food-warmup"),
+  ]),
+  [4, 5]
+);
+
+const foodP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-food-p1",
+      food,
+      1,
+      "Nutrients and Deficiencies",
+      "medium",
+      [quiz("sq-food-nutrients-quiz")]
+    ),
+    "nutrients-deficiency"
+  ),
+  [4, 5]
+);
+
+const foodGate = forGrades(
+  gate(
+    "sq-food-gate",
+    food,
+    "Digestion and Food Challenge",
+    "sq-food-gate-pool",
+    {
+      "digestive-system": "The digestive tract and organs",
+      "teeth-types": "Structure and types of teeth",
+      "nutrients-deficiency": "Nutrients and deficiency diseases",
+    }
+  ),
+  [4, 5]
+);
+
+const foodEndless = forGrades(endless(food), [4, 5]);
+
+// Topic 3: Nervous System, Sense Organs & Health
+const nervous = forGrades(
+  main("sq-nervous", u2.id, 3, "Nervous System and Health", [
+    study("sq-nervous-study"),
+    quiz("sq-nervous-warmup"),
+  ]),
+  [5]
+);
+
+const nervousP1 = forGrades(
+  withSubtopic(
+    practice(
+      "sq-nervous-p1",
+      nervous,
+      1,
+      "Sense Organs & Microbes",
+      "hard",
+      [quiz("sq-nervous-senses-quiz")]
+    ),
+    "sense-organs"
+  ),
+  [5]
+);
+
+const nervousGate = forGrades(
+  gate(
+    "sq-nervous-gate",
+    nervous,
+    "Nervous System & Health Challenge",
+    "sq-nervous-gate-pool",
+    {
+      "brain-nerves": "The brain, spinal cord and nerves",
+      "sense-organs": "Sense organs and functions",
+      "diseases-prevention": "Diseases, microbes and prevention",
+    }
+  ),
+  [5]
+);
+
+const nervousEndless = forGrades(endless(nervous), [5]);
+
+// Unit 2 Boss
+const u2Boss = forGrades(
+  boss(
+    "sq-u2-boss",
+    u2.id,
+    "Human Body Boss",
+    "sq-u2-test",
+    "Dr. Bio-Mixer is disrupting the human body! Master the skeletal, digestive, and nervous systems to restore perfect health."
+  ),
+  [5]
+);
+
+// Unit 3 Teaser (coming soon)
+const u3 = unit("sq-u3", 3, "Matter and Materials", { comingSoon: true });
 
 export const nodes = [
   u1,
@@ -1713,4 +3294,18 @@ export const nodes = [
   animalsEndless,
   u1Boss,
   u2,
+  bones,
+  bonesP1,
+  bonesGate,
+  bonesEndless,
+  food,
+  foodP1,
+  foodGate,
+  foodEndless,
+  nervous,
+  nervousP1,
+  nervousGate,
+  nervousEndless,
+  u2Boss,
+  u3,
 ];
