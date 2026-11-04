@@ -187,7 +187,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       photoURL: selectedAvatarUrl,
       lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
       profileLastSavedAt: firestore.FieldValue.serverTimestamp(),
-      ...(grade ? { grade } : {}),
+      ...(grade && !Number.isInteger(currentGrade) ? { grade } : {}), // set once only
     };
     try {
       await firestoreService
@@ -226,6 +226,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       StyleSheet.create({
         gradientContainer: { flex: 1 },
         gradeLabel: { fontSize: 15, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient || theme.textPrimary, marginTop: 6, marginBottom: 6 },
+        gradeLocked: { fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient || theme.textSecondary, marginBottom: 12 },
         gradeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
         gradeChip: { width: 44, height: 44, borderRadius: 22, borderWidth: 2, borderColor: theme.border || "#E8DCE9", alignItems: "center", justifyContent: "center" },
         gradeChipOn: { backgroundColor: theme.primary, borderColor: theme.primary },
@@ -434,6 +435,12 @@ const EditProfileScreen = ({ route, navigation }) => {
             }}
           />
           <Text style={componentStyles.gradeLabel}>Class</Text>
+          {/* Fixed info (owner, 2026-11-04): a kid sets their class once; changes need a parent, teacher or admin. */}
+          {Number.isInteger(currentGrade) ? (
+            <Text style={componentStyles.gradeLocked}>
+              Class {currentGrade}. To change it, ask a parent or your teacher.
+            </Text>
+          ) : (
           <View style={componentStyles.gradeRow} accessibilityRole="radiogroup">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((g) => (
               <TouchableOpacity
@@ -448,6 +455,7 @@ const EditProfileScreen = ({ route, navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
+          )}
           {canUpdateProfile ? ( // Only show the button if the user CAN update
             <PaperButton
               mode="contained"

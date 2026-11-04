@@ -1532,3 +1532,22 @@ without the email part, and `grade`. Old app versions then also show first names
 fields changed, so a kid could also set `stats.totalStars` (leaderboard) or other fields. Proposed fix (devops, rules deploy):
 add `request.resource.data.diff(resource.data).affectedKeys().hasOnly(['firstName','lastName','photoURL','lastUpdatedAt','profileLastSavedAt','grade'])`
 to that branch. **Gemini:** before deploying, check no other client write to `users/{uid}` relies on this branch.
+
+**Finding 22 addendum (owner 2026-11-04: fixed info can't be changed by the kid):** also add
+`(!('grade' in resource.data) || request.resource.data.grade == resource.data.grade)` so Class is set once. The app already
+shows Class read-only once set. First/last name lock comes with RB-6 below (today kids can still edit their name).
+
+## 2026-11-04 — Draft spec (not approved): RB-6 fair leaderboards, friends, perks, fixed info (Claude)
+Owner goals: Class 5 isn't compared with Class 10; kids find friends to show off ranks; avatar + display name are perks;
+fixed info (real name, class, school) changes only with parent / teacher / admin approval.
+1. **Leagues:** default board = same class level, **this week's stars** (Monday reset), you ± 3 around your rank + top 10.
+   Tabs: My class level · My classroom (RB-2) · Friends. Server keeps `weekStars` + `weekKey` (recordQuizResult); index `grade + weekStars`.
+2. **Friends without search:** each kid has a friend code (e.g. `STAR-4821`) / QR to share in person; the other kid enters it
+   and accepts. No name search, no chat; only preset reactions (👏 🔥). Classmates appear automatically via RB-2.
+3. **Perks:** avatars and nicknames from preset lists (e.g. "Brave Comet"), no free text, so nothing to moderate.
+   Unlocked by weekly goals / streak milestones rather than "stars in one day" (avoids cramming and replay farming).
+   Unlocks written by the server only.
+4. **Fixed info:** real first name, class and school are set once (at sign-up, or by joining a class with a teacher's code,
+   which counts as the teacher's approval). Changes = a request (`profileChangeRequests`) approved by the admin now,
+   the class teacher after RB-2, a parent once parent accounts exist; a Cloud Function applies it. Yearly class promotion by the teacher.
+Open: parent accounts (how a parent proves they're the parent); whether real first name shows at all once nicknames exist.
