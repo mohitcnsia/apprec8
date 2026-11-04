@@ -1658,3 +1658,17 @@ take months to get from Nouns to Tenses). Agreed: quests are subject ladders, so
 - **Also helps slow kids:** "Test out" (pass a unit Boss to skip what you know) + assignments; optional idea: a "short path"
   where only the main step + Challenge are required and practice leaves stay optional.
 - **Order:** RB-2 phase A (schools, classes, join codes, teacher role) → RB-7. Not before the exams.
+
+## 2026-11-04 — Draft spec (not approved): RB-8 kids' well-being + "I need help" (owner idea) (Claude)
+Owner: the app should help kids (mental well-being too) even when teachers don't; never depend on teachers doing the right thing.
+Product rule from this: **the app teaches and supports on its own**; teacher features make good teaching easier but nothing needs them.
+- **Daily check-in** (optional, one tap): mood emoji + 1 short kid-friendly tip (exam nerves, breathing, talking to someone).
+- **"I need help" always one tap away** (Me tab + check-in): shows real help immediately: CHILDLINE **1098** (free, 24×7),
+  Tele MANAS **14416** (national mental-health line), **112** emergency; how to tell a trusted adult. Tap-to-call.
+- **Report a problem to Apprec8** (bullying, feeling unsafe): needs a written **safeguarding plan before launch**: who reads
+  reports and how fast, what the law requires (POCSO Act: reporting sexual offences against a child to police is mandatory),
+  escalation, privacy of the report.
+- **No amateur counselling:** the app points to trained people. Tips and flow reviewed by a child counsellor/psychologist first.
+- **Privacy:** mood data is sensitive (DPDP Act); store the minimum, parent consent via parent-first accounts (RB-6), never shown
+  to other kids; teachers see nothing individual unless the safeguarding plan says so.
+- **Order:** after the exams; mockup + counsellor review + safeguarding plan before any build.

@@ -28,3 +28,4 @@
     no faking); the leader sees "👏 12 claps this week"; first names + class only.
 
 11. **Teacher assignments (owner):** teachers assign specific nodes to students or classes, so lagging kids work on what is needed. Spec draft: `CODE_REVIEW.md` → RB-7.
+12. **Well-being + "don't depend on teachers" (owner):** kids report problems and the app helps even if teachers don't. Spec draft: `CODE_REVIEW.md` → RB-8.
