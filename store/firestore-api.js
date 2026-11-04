@@ -213,6 +213,8 @@ export async function addTaskToFirestore(taskPayloadFromContext) {
 
     const dataToSave = {
       ...otherDetails,
+      // The rules and fetchTasks match on `userId`; without it every new reminder is denied (owner, 2026-11-04).
+      userId,
       creatorUid: userId,
       createdAt: serverTimestamp(),
       lastUpdatedAt: serverTimestamp(),
