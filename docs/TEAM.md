@@ -9,7 +9,7 @@ point here. If anything below conflicts with another file, this file wins; the o
 |---|---|---|
 | **Owner** (Mohit) | Product owner, final say | Decides what gets built, approves specs, mockups and content, releases to users. |
 | **Claude** | Senior engineer, codebase owner | Writes specs and code, keeps tests green, answers review findings. |
-| **Gemini** | Code reviewer, devops, QA tester | Reviews specs and code, deploys the backend, tests on the emulator, reports findings. |
+| **Gemini** | Code reviewer, devops, QA tester, content author | Reviews specs and code, deploys the backend, tests on the emulator, writes quest content (`docs/CONTENT_GUIDE.md`). |
 | **Pratha** | Real kid user | Plays English Quest like any kid; reports mistakes with 🚩 in the app. Not a tester of assessments (she shouldn't see gate answers in advance). |
 
 ## Who does what
@@ -25,7 +25,8 @@ point here. If anything below conflicts with another file, this file wins; the o
 | Merge a feature branch into `feat/tile-quests` | Can ask anyone | When the owner asks, or for docs-only changes | **When the review request says "cleared to merge"**, never mid-QA without saying so in `CODE_REVIEW.md` |
 | Deploy Firestore rules, indexes, Cloud Functions ("DR-n" requests) | Approves | Writes the DR with exact commands | **Does** |
 | Seed content to live Firestore ("Update English Quest") | Can do it | No | **Does** (when a review request asks) |
-| Write content (questions, pages) | **Approves accuracy** | Drafts | Flags errors seen in QA |
+| Write content (questions, pages, readings) | **Approves accuracy** | Spot-checks; writes only when asked | **Drafts** per `docs/CONTENT_GUIDE.md` (from 2026-11-04) |
+| Check an answer key before seeding (second reviewer) | Can do it | Spot checks | **Does** for Claude's content |
 | Version bump + release build (`.aab`) | Asks for it | **Does** when the owner asks | Can do it (devops) |
 | Check the build before upload: `scripts/release/check-aab.sh` must PASS | — | **Does** after building | **Does** after building |
 | Upload to Play Console, roll out, Remote Config | **Does** | Drafts release notes | Can help |
@@ -52,11 +53,12 @@ point here. If anything below conflicts with another file, this file wins; the o
 | `gemini.md` | Claude (session log, frozen specs, TODOs); Gemini may add notes | It's also Gemini's own context file (`GEMINI.md`; same file on macOS). |
 | `CLAUDE.md` | Claude | Claude's own context file. |
 | `docs/qa/QA_PLAYBOOK.md`, `scripts/qa/` | Claude writes; Gemini suggests changes | |
-| Code, tests, `data/` content | Claude | Gemini requests changes through findings, doesn't edit code. |
+| Code, tests | Claude | Gemini requests changes through findings, doesn't edit code. |
+| Quest content: `data/englishQuest/units/*.js` (Unit 3+) | Gemini | Content only, never code. Units 0–2 in `data/englishQuestData.js`: either, fixes in place. |
 | `firestore.rules` (gitignored, local only) | Claude edits; Gemini deploys | Not in git, so review it from the working copy. |
 
 ## Safety rules (everyone)
-- **Content accuracy first.** No AI-generated questions live in the app; content is checked before it's seeded.
+- **Content accuracy first.** Every question is checked by a second reviewer (not its author) and approved by the owner before it's seeded. Original only: past papers are a guide, never copied.
 - **Production is touched only through DRs** (Gemini) or by the owner. Claude doesn't deploy or seed.
 - **Never put tile-quest nodes in `quest_nodes`** (older app versions load all of it).
 - **Rollback plan:** the previous `.aab` (20.0.22) can be re-released; English Quest tiles can be hidden by

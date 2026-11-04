@@ -1434,3 +1434,27 @@ Off `feat/tile-quests`. Nothing goes into 20.0.24. The owner picks stable parts 
 - **Why:** October cost ₹5.91 with almost no use. The billing forecast for November is ₹10.73 (actual so far ₹0.00). Likely Artifact Registry storage of function images, which pile up with every deploy (free tier 0.5 GB).
 - **Confirmed (owner's billing report, October):** the whole ₹4.82 is **Artifact Registry Storage** (1 GiB-month). Every other SKU (Firestore, Functions, Storage, Remote Config) is ₹0.00. Free tier is 0.5 GB, so cleaning up brings it to ₹0.
 - **If it's Artifact Registry storage (Gemini):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1`. Deletes images older than 1 day automatically. Deployed functions keep running; a rollback just rebuilds. No app change.
+
+---
+
+## 2026-11-04 — Plan to Nov 19 (owner decisions): exams + app refinement
+**Goals:** Pratha does well in **IEO (Nov 17)** and **NSO (Nov 19)** using the app; refine the whole app piece by piece over ~5 days, defensively (old app versions and old content keep working). Claude's tokens are scarce: **Gemini takes content and QA, Claude takes code.** Roles: `docs/TEAM.md`. Content rules: `docs/CONTENT_GUIDE.md`.
+
+### Gemini tasks (in order)
+1. **DR-7** (cost, now): `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1`. Then check Billing → Reports in a few days: Artifact Registry Storage should drop under the free tier.
+2. **Answer-key review of Unit 2** (`ea4bac8`, `data/englishQuestData.js`, search "Unit 2: Articles"): 105 questions. Per question: exactly one correct answer, no other option also correct, true facts, clear explanation. Write findings here. **Pratha doesn't review it** (gates/Boss are her real tests); she plays it after seeding.
+3. **QA of `feat/nov6-improvements`** on the emulator, **in dark mode and light mode** (`adb shell cmd uimode night yes|no`): Reading (options readable, right answer not always first, word popup + 🔊 Hear it), My mistakes from an Adverbs gate mistake (now clears), map with My mistakes button (Finding 21), Dashboard topic rows for Unit 0. The emulator froze twice for Claude ("System UI isn't responding"): try a cold boot (`-no-snapshot-load`) and close other heavy apps.
+4. **After the owner's OK: merge `feat/nov6-improvements` → `feat/tile-quests` and seed** (Profile → Update English Quest). This also mixes Reading options for 20.0.24 phones and fixes the two question wordings.
+5. **Exam pattern notes** when the owner shares the sample papers (Class 3–6): `docs/exam/ieo-pattern.md` and `docs/exam/nso-pattern.md`: sections, question types with a made-up example of each, topics per class, and a **gap list** (what English Quest already covers vs missing). Patterns only, no copied questions.
+6. **Write new English Quest units** from the gap list, per `docs/CONTENT_GUIDE.md` (Unit 3 Subject-Verb Agreement is next on the map). One branch and one content review request per unit; Claude or the owner is the second reviewer.
+7. **Audit the old IEO and NSO quizzes** Pratha may use before the exams (Study tab): list wrong answers here (quiz id, question, why). Known: `4ieo11-topic8-quiz4` answer doesn't match any option; `4ieo9-quiz`, `tenses-boss-1`, `tenses-boss-1-quiz` have no questions.
+
+### Claude tasks (code)
+1. **Nov 6 build** from what the owner picks on `feat/nov6-improvements` (after Gemini's QA).
+2. **App refinement, one piece at a time, each with a mockup for the owner first:** (a) quiz screen (bigger, readable options) + a sweep for hard-coded colours that break dark/light mode; (b) Home + tabs (study items on Home, the rest in a Fun tab, Study tab removed); (c) Profile cleanup + Stats as the tracking screen (merge the Dashboard; RB-2 teacher view goes here later); (d) English Quest tile image; (e) remove unused functions (keep the callables older app versions use). **Defensive:** old screens keep working until the new ones are QA'd; no data migrations.
+3. **Vocabulary and NSO (after the exam pattern notes):** a vocabulary format (Word Bank or vocabulary units in English Quest) and a **Science Quest** for NSO. Today the code assumes one quest (`english-quest` in the Dashboard and seed button), so a second quest needs code first.
+
+### Owner
+- Share the sample papers (Class 3–6, IEO + NSO).
+- OK Unit 2 after Gemini's review; pick what goes in the Nov 6 build; approve each mockup.
+- Upload builds, Remote Config, decide on RB-2's 4 questions.
