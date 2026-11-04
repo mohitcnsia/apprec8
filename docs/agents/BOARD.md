@@ -14,6 +14,7 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Science Unit 4 Our Environment** (Claude, 105 questions, `9fafd73`, draft/testers): owner checks the facts (section S4 on the same review page).
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
 - **English Units 5 Tenses, 6 Modals & Question Tags, 7 Reported Speech & Passive (Class 5+)** (Claude, 344 questions): Seema/owner review before seeding: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T5-, T6-, T7-; owner shares it with Seema).
 - **Build 20.0.29** (lock + play time, needs the native module): built overnight; owner uploads after `check-aab.sh` PASS.
