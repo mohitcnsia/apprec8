@@ -10,6 +10,7 @@ import { Button, Alert, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+import { mixOptions } from "../../utils/readingFlow";
 import {
   QUEST_ID,
   quest,
@@ -96,6 +97,8 @@ export default function SeedEnglishQuestButton() {
       Object.entries(readings).forEach(([id, r]) => {
         batch.set(db.collection("studyContent").doc(id), {
           ...r,
+          // Stored in a mixed order: 20.0.24 shows options as stored (right answer was always first).
+          questions: r.questions.map((q) => ({ ...q, options: mixOptions(q.options, q.question?.content || "") })),
           kind: "reading",
           content: r.paragraphs.join("\n\n"),
           coverImage: r.coverImage || null,

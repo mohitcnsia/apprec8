@@ -24,7 +24,7 @@ import * as Speech from "expo-speech";
 
 import { loadStudyContent } from "../../services/contentCache";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
-import { buildReadingFlow, nextCursor, splitParagraph, countWords } from "../../utils/readingFlow";
+import { buildReadingFlow, nextCursor, splitParagraph, countWords, mixOptions } from "../../utils/readingFlow";
 import { scoreAnswers, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
 import { useTheme } from "../../context/ThemeContext";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
@@ -124,6 +124,7 @@ export default function ReadingScreen({ route, navigation }) {
   const [saving, setSaving] = useState(false);
 
   const scrollRef = useRef(null);
+  const optionSeed = useRef(String(Math.random())); // options mixed once per visit (stable on reload)
   const paragraphY = useRef({});
   const startedAtRef = useRef(Date.now());
   const questionShownAtRef = useRef(Date.now());
@@ -136,7 +137,15 @@ export default function ReadingScreen({ route, navigation }) {
       questContext?.contentVersion,
       (data) => {
         if (!data || data.kind !== "reading") setError("This reading is not available yet.");
-        else setDoc(data);
+        else
+          setDoc({
+            ...data,
+            // Content stores the right answer first: mix the options for the kid.
+            questions: (data.questions || []).map((q) => ({
+              ...q,
+              options: mixOptions(q.options || [], optionSeed.current + (q.question?.content || "")),
+            })),
+          });
       },
       () => setError("Could not load the reading. Please check your internet and try again.")
     );
@@ -188,6 +197,20 @@ export default function ReadingScreen({ route, navigation }) {
     setHighlight({ paragraph: ev.paragraph, text: ev.text });
     const y = paragraphY.current[ev.paragraph];
     if (typeof y === "number") scrollRef.current?.scrollTo({ y: Math.max(0, y - 16), animated: true });
+  };
+
+  // Word popup: say the word slowly, then its meaning.
+  const hearWord = (word) => {
+    if (!word) return;
+    Speech.stop();
+    setSpeakingIndex(null);
+    Speech.speak(word, { language: "en-IN", rate: 0.75 });
+    const meaning = doc?.glossary?.[word];
+    if (meaning) Speech.speak(`It means: ${meaning}`, { language: "en-IN", rate: 0.9 });
+  };
+  const closeWord = () => {
+    Speech.stop();
+    setGlossaryWord(null);
   };
 
   const toggleSpeak = (index) => {
@@ -382,13 +405,27 @@ export default function ReadingScreen({ route, navigation }) {
       {body()}
       {renderFooter()}
 
-      <Modal visible={!!glossaryWord} transparent animationType="fade" onRequestClose={() => setGlossaryWord(null)}>
-        <Pressable style={styles.modalBackdrop} onPress={() => setGlossaryWord(null)}>
-          <View style={styles.modalCard}>
+      <Modal visible={!!glossaryWord} transparent animationType="fade" onRequestClose={closeWord}>
+        <Pressable style={styles.modalBackdrop} onPress={closeWord}>
+          {/* Inner Pressable: taps on the card don't close it */}
+          <Pressable style={styles.modalCard} onPress={() => {}}>
+            <Text style={styles.modalLabel}>WORD</Text>
             <Text style={styles.modalWord}>{glossaryWord}</Text>
+            <TouchableOpacity
+              style={styles.hearButton}
+              onPress={() => hearWord(glossaryWord)}
+              accessibilityLabel={`Hear the word ${glossaryWord}`}
+            >
+              <Ionicons name="volume-high" size={22} color={theme.textOnPrimary || "#FFFFFF"} />
+              <Text style={styles.hearText}>Hear it</Text>
+            </TouchableOpacity>
+            <View style={styles.modalDivider} />
+            <Text style={styles.modalLabel}>MEANING</Text>
             <Text style={styles.modalMeaning}>{glossaryWord ? doc?.glossary?.[glossaryWord] : ""}</Text>
-            <Text style={styles.modalHint}>Tap anywhere to close</Text>
-          </View>
+            <TouchableOpacity style={styles.gotItButton} onPress={closeWord} accessibilityLabel="Got it">
+              <Text style={styles.gotItText}>Got it</Text>
+            </TouchableOpacity>
+          </Pressable>
         </Pressable>
       </Modal>
     </LinearGradient>
@@ -414,14 +451,25 @@ const makeStyles = (theme) =>
   sectionLabel: { fontSize: 14, fontFamily: "nunitoBold", color: theme.gold, textTransform: "uppercase", marginVertical: 8 },
   questionCard: { backgroundColor: theme.cardBackground, borderRadius: 16, padding: 14, marginBottom: 12 },
   questionNumber: { fontSize: 12, fontFamily: "nunitoBold", color: theme.gold, textTransform: "uppercase" },
-  questionText: { fontSize: 17, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient, marginVertical: 8, lineHeight: 24 },
-  option: { backgroundColor: "#FFFFFF", borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14, marginTop: 8 },
-  optionCorrect: { backgroundColor: COLORS.correct },
-  optionWrong: { backgroundColor: COLORS.wrong },
-  optionText: { fontSize: 16, fontFamily: "nunito", color: theme.textPrimary },
+  questionText: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textPrimary, marginVertical: 8, lineHeight: 26 },
+  // Option colours come from the theme, so text stays readable in light and dark mode.
+  option: {
+    backgroundColor: theme.background,
+    borderWidth: 2,
+    borderColor: theme.border,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginTop: 10,
+    minHeight: 54,
+    justifyContent: "center",
+  },
+  optionCorrect: { backgroundColor: COLORS.correct, borderColor: COLORS.correct },
+  optionWrong: { backgroundColor: COLORS.wrong, borderColor: COLORS.wrong },
+  optionText: { fontSize: 17, lineHeight: 23, fontFamily: "nunitoBold", color: theme.textPrimary },
   feedback: { marginTop: 12, gap: 6 },
   feedbackTitle: { fontSize: 17, fontFamily: "nunitoBold" },
-  feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textSecondaryOnGradient, lineHeight: 21 },
+  feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textPrimary, lineHeight: 22 },
   showMeButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -445,9 +493,33 @@ const makeStyles = (theme) =>
   resultScore: { fontSize: 16, fontFamily: "nunito", color: theme.textSecondaryOnGradient, marginTop: 4 },
   resultHint: { fontSize: 14, fontFamily: "nunito", color: theme.textSecondaryOnGradient, textAlign: "center", marginBottom: 4 },
 
-  modalBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 32 },
-  modalCard: { backgroundColor: theme.cardBackground, borderRadius: 18, padding: 20, alignItems: "center", gap: 8 },
-  modalWord: { fontSize: 24, fontFamily: "nunitoBold", color: theme.primary, textTransform: "capitalize" },
-  modalMeaning: { fontSize: 17, fontFamily: "nunito", color: theme.textPrimary, textAlign: "center", lineHeight: 24 },
-  modalHint: { fontSize: 12, fontFamily: "nunito", color: "#888" },
+  // Word popup: dark backdrop hides the passage, solid card, big word.
+  modalBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.82)", justifyContent: "center", padding: 24 },
+  modalCard: {
+    backgroundColor: theme.background,
+    borderRadius: 22,
+    paddingVertical: 24,
+    paddingHorizontal: 22,
+    alignItems: "center",
+    gap: 10,
+    borderWidth: 2,
+    borderColor: theme.primary,
+    elevation: 12,
+  },
+  modalLabel: { fontSize: 12, letterSpacing: 1.5, fontFamily: "nunitoBold", color: theme.textSecondary },
+  modalWord: { fontSize: 36, fontFamily: "nunitoBold", color: theme.textPrimary, textAlign: "center" },
+  hearButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: theme.primary,
+    borderRadius: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  hearText: { fontSize: 16, fontFamily: "nunitoBold", color: theme.textOnPrimary || "#FFFFFF" },
+  modalDivider: { alignSelf: "stretch", height: 1, backgroundColor: theme.border, marginVertical: 6 },
+  modalMeaning: { fontSize: 20, fontFamily: "nunito", color: theme.textPrimary, textAlign: "center", lineHeight: 28 },
+  gotItButton: { marginTop: 8, paddingVertical: 12, paddingHorizontal: 36, borderRadius: 24, borderWidth: 2, borderColor: theme.primary },
+  gotItText: { fontSize: 16, fontFamily: "nunitoBold", color: theme.primary },
 });

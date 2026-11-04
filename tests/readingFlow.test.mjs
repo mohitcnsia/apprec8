@@ -24,3 +24,15 @@ assert.equal(segs.map(s => s.text).join(""), "The Monsoon came. Rain fell on the
 assert.deepEqual(splitParagraph("Rainbows!", "nope", { rain: "x" }).map(s => s.glossaryWord), [null]);
 assert.equal(countWords(["one two", " three "]), 3);
 console.log("readingFlow: all tests passed");
+
+// mixOptions: same key → same order, keeps every option, and the right answer isn't always first
+{
+  const { mixOptions } = await import("../utils/readingFlow.js");
+  const opts = [{ content: "A", isCorrect: true }, { content: "B" }, { content: "C" }, { content: "D" }];
+  assert.deepEqual(mixOptions(opts, "k1"), mixOptions(opts, "k1"));
+  assert.deepEqual(mixOptions(opts, "k1").map((o) => o.content).sort(), ["A", "B", "C", "D"]);
+  const firsts = new Set(Array.from({ length: 40 }, (_, i) => mixOptions(opts, `q${i}`).findIndex((o) => o.isCorrect)));
+  assert.ok(firsts.size >= 3, "right answer should land in different places");
+  assert.deepEqual(opts.map((o) => o.content), ["A", "B", "C", "D"]); // input untouched
+  console.log("readingFlow mixOptions: ok");
+}
