@@ -38,6 +38,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G25 ⭐ Separate "Word Power" quest (owner) | Gemini | todo (do first) | `content/word-power` | |
+| G26 Emulator smoke test of `feat/quiz-redesign` (calm pass 1) | Gemini | todo (after G25, only once the build has finished) | `gemini/g26-smoke` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
@@ -100,6 +101,18 @@ Unit 1; IEO is on 17 Nov) and not locked behind grammar Bosses.
 4. Class tags per `docs/CONTENT_GUIDE.md` §9 (topic from its first class; harder leaves tagged by class).
 5. `npm test` green (all quests checked, ids unique). Report G25: what moved where, counts.
 Commit `gemini(G25): done — …`. Claude then reviews all G22/G23 questions for accuracy.
+
+### G26 · [todo] · gemini · Emulator smoke test: calm pass 1 (20 min max)
+**Owner-approved:** emulator use while `AWAY: yes`. No seeding, no deploys.
+**Wait first:** don't start while a build runs (`pgrep -f "eas build"`): run `sleep 300` and check again (don't end your turn).
+**Setup:** your folder → `git checkout --detach feat/quiz-redesign`, `npx expo start`, emulator `Pixel_8a_API_35`,
+`scripts/qa/eq.sh prep`, restart the app, tester account. If the emulator says "isn't responding" twice, stop and report blocked.
+**Check (light mode, screenshots):** Home (dark "Next up" card, two chips, shelves, CONTINUE at the bottom) · open a quiz node:
+ONE start screen, START at the bottom, quiz starts at once · a "What kind of sentence…" question shows a small label + big
+sentence card · answer most questions wrong → results say "Let's try that again" with a thinking Chamak · map: finished
+topics show one chip that opens on tap · Me: big profile picture, no "Me" title.
+**Deliver:** branch `gemini/g26-smoke`, `docs/agents/reports/G26.md` (item · PASS/FAIL · screenshot · note), commit
+`gemini(G26): done — P pass, F fail`, then `eq.sh unprep` and close the emulator.
 
 ### G21 · [done] · gemini · IEO exam pattern notes (do this before anything else)
 **Why:** IEO is on 17 Nov; Claude needs the real difficulty to judge English Quest (the teacher says it's too easy for aspirants).
