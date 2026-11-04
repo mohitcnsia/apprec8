@@ -37,6 +37,9 @@ export const tile = {
 // sentence-kind-mixup, wrong-end-mark, missing-capital, pos-noun-mixup,
 // pos-verb-mixup, pos-adjective-mixup, pos-adverb-mixup, pos-pronoun-mixup,
 // pos-preposition-mixup, pos-conjunction-mixup
+// Unit 2: a-an-mixup, sound-not-letter (hour, uniform, one), article-missing, article-extra,
+// article-plural-error, a-the-mixup, the-rule-mixup, determiner-number-mixup, near-far-mixup,
+// some-any-mixup, countable-uncountable-mixup, few-a-few-mixup
 
 /** Small helper to write questions compactly. */
 const q = (content, correct, wrongs, explanation) => ({
@@ -203,6 +206,138 @@ Find each event in the passage. The order in the passage is usually the order of
 ---
 
 > 💡 **Golden rule:** Answer from the **passage**, not from what you already know!`,
+  },
+  // Unit 2: Articles & Determiners
+  "eq-u2-a-an": {
+    name: "A and An",
+    author: "Apprec8",
+    content: `### 🍎 A or An?
+
+We use **a** or **an** before **one** thing (a singular noun). It means "any one".
+
+- **a** book, **a** cat, **a** tree
+- **an** apple, **an** egg, **an** igloo, **an** orange, **an** umbrella
+
+---
+
+### 👂 Listen to the sound, not the letter!
+
+The rule is about the **first sound** we say, not the first letter we write.
+
+| Word | First sound | So we say |
+|---|---|---|
+| hour | "ow" (the h is silent) | **an** hour |
+| honest | "o" (the h is silent) | **an** honest boy |
+| uniform | "you" | **a** uniform |
+| university | "you" | **a** university |
+| one-rupee coin | "wun" | **a** one-rupee coin |
+| X-ray | "eks" | **an** X-ray |
+
+> 💡 Vowel **sound** (a, e, i, o, u sounds) → **an**. Any other sound → **a**.
+
+---
+
+### 👩‍⚕️ Jobs need a or an too
+
+- My aunt is **a** doctor.
+- My uncle is **an** engineer.
+
+> ⚠️ Never say "He is engineer." One person → **a** or **an**.
+
+---
+
+### 🎯 Now you can…
+
+- choose **a** or **an** by listening to the first sound
+- spot tricky words like *hour* and *uniform*`,
+  },
+  "eq-u2-the": {
+    name: "Using The",
+    author: "Apprec8",
+    content: `### 👉 The = the one we both know
+
+Say **a** the first time. Say **the** when we already know which one.
+
+- I saw **a** dog. **The** dog was barking. (the same dog!)
+
+---
+
+### 🌞 Use **the** for…
+
+| When | Examples |
+|---|---|
+| There is only one | **the** sun, **the** moon, **the** sky |
+| Rivers, seas, oceans | **the** Ganga, **the** Arabian Sea, **the** Indian Ocean |
+| Mountain ranges | **the** Himalayas |
+| Famous buildings | **the** Taj Mahal, **the** Red Fort |
+| "Best" words and order words | **the** tallest, **the** best, **the** first |
+
+---
+
+### 🚫 No article for…
+
+| What | Examples |
+|---|---|
+| Names of people | Priya, Dr Kalam |
+| Most countries, states and cities | India, Kerala, Chennai |
+| Languages and subjects | Hindi, Tamil, Science |
+| Meals | breakfast, lunch, dinner |
+| Games | cricket, chess |
+| One mountain | Mount Everest |
+
+> ⚠️ Some country names need **the**: **the** USA, **the** UK. And a range of mountains needs **the** (**the** Himalayas), but one mountain doesn't (Mount Everest).
+
+---
+
+### 🎯 Now you can…
+
+- use **the** for the one we know
+- leave out the article before names, languages, meals and games`,
+  },
+  "eq-u2-determiners": {
+    name: "Determiners: This, Some, Many",
+    author: "Apprec8",
+    content: `### 🧭 What is a determiner?
+
+A **determiner** comes **before a noun**. It tells us **which one** or **how many**.
+*a, an* and *the* are determiners too!
+
+---
+
+### 👆 This, that, these, those
+
+| Word | Means | Example |
+|---|---|---|
+| **this** | one thing, near | **this** pen (in my hand) |
+| **that** | one thing, far | **that** kite (up in the sky) |
+| **these** | many things, near | **these** pens |
+| **those** | many things, far | **those** kites |
+
+---
+
+### 🍬 Some and any
+
+- **some** in telling sentences: I have **some** sweets.
+- **any** in "not" sentences and questions: I don't have **any** sweets. Do you have **any** sweets?
+- 💡 When we offer something, we say **some**: Would you like **some** tea?
+
+---
+
+### 🔢 Many or much? Few or little?
+
+| Things we can count (books, friends) | Things we can't count (water, sugar) |
+|---|---|
+| **many** books | **much** water |
+| **a few** friends (some) | **a little** sugar (some) |
+| **few** friends (almost none 😟) | **little** time (almost none 😟) |
+
+---
+
+### 🎯 Now you can…
+
+- point with this, that, these and those
+- choose some or any
+- choose many or much, few or little`,
   },
 };
 
@@ -410,6 +545,144 @@ export const quizzes = {
     q("In 'She runs fast.', what part of speech is 'fast'?", "Adverb", [["Adjective", "pos-adjective-mixup"], ["Noun", "pos-noun-mixup"], ["Verb", "pos-verb-mixup"]], "Here 'fast' tells HOW she runs, so it is an adverb. In 'a fast car' it would be an adjective!"),
     q("Choose the word that is a verb in one sentence and a noun in the other: 'I ___ the ball.' / 'That was a good ___.'", "kick", [["happy", "pos-adjective-mixup"], ["slowly", "pos-adverb-mixup"], ["under", "pos-preposition-mixup"]], "'I kick the ball' (verb) and 'a good kick' (noun). The job of a word decides its part of speech."),
   ],
+  // ---------- Unit 2: Articles & Determiners ----------
+  // Practice quizzes (main + leaves) use ONE blank per question, so 🔊 "try each answer" reads well
+  // in 20.0.24 too. Options are chosen so only one is ever correct (no "the" where it would also fit).
+  // Unit 2, Branch A
+  "eq-u2-a-an-quiz": [
+    { subtopic: "vowel-sounds", ...q("Fill in the blank: 'I ate ___ apple for lunch.'", "an", [["a", "a-an-mixup"], ["many", "article-plural-error"], ["these", "determiner-number-mixup"]], "'apple' starts with a vowel sound (a), so we say AN apple.") },
+    { subtopic: "vowel-sounds", ...q("Which word needs 'an' before it?", "egg", [["book", "a-an-mixup"], ["cat", "a-an-mixup"], ["tree", "a-an-mixup"]], "'egg' starts with a vowel sound, so it is AN egg. We say a book, a cat, a tree.") },
+    { subtopic: "using-a-an", ...q("Choose the correct sentence.", "My uncle is an engineer.", [["My uncle is a engineer.", "a-an-mixup"], ["My uncle is engineer.", "article-missing"], ["My uncle is an engineers.", "article-plural-error"]], "One person's job needs a or an. 'engineer' starts with a vowel sound, so: an engineer.") },
+    { subtopic: "tricky-sounds", ...q("Which word needs 'an' before it?", "hour", [["house", "sound-not-letter"], ["horse", "sound-not-letter"], ["hill", "sound-not-letter"]], "In 'hour' the h is silent, so it starts with the sound 'ow': AN hour. In house, horse and hill we say the h: a house.") },
+    { subtopic: "tricky-sounds", ...q("Which word needs 'a' (not 'an') before it?", "uniform", [["umbrella", "a-an-mixup"], ["orange", "a-an-mixup"], ["eagle", "a-an-mixup"]], "'uniform' starts with the sound 'you', which is not a vowel sound: A uniform. The others take an.") },
+    { subtopic: "vowel-sounds", ...q("Fill in the blank: 'There is ___ owl on the tree.'", "an", [["a", "a-an-mixup"], ["many", "article-plural-error"], ["those", "determiner-number-mixup"]], "'owl' starts with a vowel sound, so it is AN owl.") },
+    { subtopic: "using-a-an", ...q("We use 'a' or 'an' before ___.", "one thing (a singular noun)", [["many things (plural nouns)", "article-plural-error"], ["names of people", "article-extra"], ["action words (verbs)", "pos-verb-mixup"]], "A and an mean 'one': a pen, an egg. Never 'a pens' or 'a Priya'.") },
+    { subtopic: "vowel-sounds", ...q("Choose the correct one.", "an ice cream", [["a ice cream", "a-an-mixup"], ["an ice creams", "article-plural-error"], ["a ice creams", "article-plural-error"]], "'ice' starts with a vowel sound, so AN ice cream, and only ONE ice cream after an.") },
+  ],
+  // Unit 2, Branch A practice (hard): tricky sounds
+  "eq-u2-a-an-tricky": [
+    q("Which is correct?", "an honest boy", [["a honest boy", "sound-not-letter"], ["an horse", "sound-not-letter"], ["a hour", "sound-not-letter"]], "In 'honest' and 'hour' the h is silent, so they take AN. In 'horse' we say the h, so it is A horse."),
+    q("Fill in the blank: 'My cousin studies at ___ university in Pune.'", "a", [["an", "sound-not-letter"], ["many", "article-plural-error"], ["these", "determiner-number-mixup"]], "'university' starts with the sound 'you', so we say A university, even though it starts with the letter u."),
+    q("Which word needs 'an' before it?", "MLA", [["unicorn", "sound-not-letter"], ["European", "sound-not-letter"], ["one-day match", "sound-not-letter"]], "We say MLA as 'em-el-ay'. It starts with a vowel sound (e), so AN MLA. Unicorn and European start with 'you', and one starts with 'wun': a unicorn, a European, a one-day match."),
+    q("Fill in the blank: 'We waited for ___ hour.'", "an", [["a", "sound-not-letter"], ["many", "article-plural-error"], ["these", "determiner-number-mixup"]], "The h in 'hour' is silent. It starts with the sound 'ow', so: AN hour."),
+    q("Which is correct?", "a one-rupee coin", [["an one-rupee coin", "sound-not-letter"], ["a one-rupee coins", "article-plural-error"], ["an one-rupee coins", "article-plural-error"]], "'one' starts with the sound 'wun', not a vowel sound, so: A one-rupee coin."),
+    q("Why do we say 'an hour' but 'a house'?", "The h in 'hour' is silent, so it starts with a vowel sound.", [["'Hour' is a longer word.", "sound-not-letter"], ["'House' is a plural word.", "article-plural-error"], ["Both can take a or an.", "sound-not-letter"]], "We listen to the first SOUND. 'hour' sounds like 'our' (vowel sound → an). In 'house' we hear the h (→ a)."),
+    q("Which word needs 'a' (not 'an') before it?", "European", [["elephant", "a-an-mixup"], ["idea", "a-an-mixup"], ["ostrich", "a-an-mixup"]], "'European' starts with the sound 'you', so it is A European. Elephant, idea and ostrich start with vowel sounds: an."),
+    q("Fill in the blank: 'He is ___ honest man.'", "an", [["a", "sound-not-letter"], ["many", "article-plural-error"], ["these", "determiner-number-mixup"]], "The h in 'honest' is silent, so it starts with the sound 'o': AN honest man."),
+  ],
+  // Unit 2, Branch A gate pool (assessment: never in practice)
+  "eq-u2-a-an-gate-pool": [
+    { subtopic: "vowel-sounds", ...q("Which word needs 'an' before it?", "orange", [["mango", "a-an-mixup"], ["banana", "a-an-mixup"], ["guava", "a-an-mixup"]], "'orange' starts with a vowel sound, so it is AN orange. The others start with other sounds: a mango.") },
+    { subtopic: "vowel-sounds", ...q("Fill in the blanks: 'I saw ___ ant and ___ bee.'", "an, a", [["a, an", "a-an-mixup"], ["an, an", "a-an-mixup"], ["a, a", "a-an-mixup"]], "'ant' starts with a vowel sound (an ant). 'bee' does not (a bee).") },
+    { subtopic: "vowel-sounds", ...q("Choose the correct one.", "an elephant", [["a elephant", "a-an-mixup"], ["an elephants", "article-plural-error"], ["a elephants", "article-plural-error"]], "'elephant' starts with a vowel sound: AN elephant, and only one elephant after an.") },
+    { subtopic: "vowel-sounds", ...q("Which word needs 'a' before it?", "kite", [["igloo", "a-an-mixup"], ["engine", "a-an-mixup"], ["arrow", "a-an-mixup"]], "'kite' starts with a k sound, so A kite. Igloo, engine and arrow start with vowel sounds: an.") },
+    { subtopic: "vowel-sounds", ...q("Fill in the blanks: 'Mum bought ___ umbrella and ___ raincoat.'", "an, a", [["a, an", "a-an-mixup"], ["an, an", "a-an-mixup"], ["a, a", "a-an-mixup"]], "AN umbrella (vowel sound u), A raincoat (r sound).") },
+    { subtopic: "tricky-sounds", ...q("Which word needs 'an' before it?", "X-ray", [["yo-yo", "sound-not-letter"], ["zebra", "a-an-mixup"], ["unicorn", "sound-not-letter"]], "We say X as 'eks', which starts with a vowel sound: AN X-ray. A yo-yo, a zebra, a unicorn ('you' sound).") },
+    { subtopic: "tricky-sounds", ...q("Choose the correct one.", "a uniform", [["an uniform", "sound-not-letter"], ["a uniforms", "article-plural-error"], ["an uniforms", "sound-not-letter"]], "'uniform' starts with the sound 'you', so A uniform.") },
+    { subtopic: "tricky-sounds", ...q("Fill in the blanks: 'It took ___ hour to make ___ one-page poster.'", "an, a", [["a, an", "sound-not-letter"], ["an, an", "sound-not-letter"], ["a, a", "sound-not-letter"]], "AN hour (the h is silent). A one-page poster ('one' starts with the sound 'wun').") },
+    { subtopic: "tricky-sounds", ...q("Which word needs 'a' (not 'an') before it?", "university", [["hour", "sound-not-letter"], ["owl", "a-an-mixup"], ["umbrella", "a-an-mixup"]], "'university' starts with the sound 'you': A university. An hour, an owl, an umbrella.") },
+    { subtopic: "tricky-sounds", ...q("Choose the correct sentence.", "Grandpa is an honest man.", [["Grandpa is a honest man.", "sound-not-letter"], ["Grandpa is honest man.", "article-missing"], ["Grandpa is an honest men.", "article-plural-error"]], "The h in 'honest' is silent, so AN honest man.") },
+    { subtopic: "using-a-an", ...q("Choose the correct sentence.", "My sister is a nurse.", [["My sister is nurse.", "article-missing"], ["My sister is an nurse.", "a-an-mixup"], ["My sister is a nurses.", "article-plural-error"]], "A job needs a or an before it: A nurse.") },
+    { subtopic: "using-a-an", ...q("Find the mistake: 'I saw a elephant in a zoo.'", "'a elephant' should be 'an elephant'", [["'a zoo' should be 'an zoo'", "a-an-mixup"], ["'saw' should be 'see'", "tense-mixup"], ["There is no mistake.", "no-mistake-miss"]], "'elephant' starts with a vowel sound, so: I saw AN elephant in a zoo.") },
+    { subtopic: "using-a-an", ...q("Which word can NOT have 'a' or 'an' before it?", "books", [["book", "article-plural-error"], ["apple", "article-plural-error"], ["pencil", "article-plural-error"]], "A and an mean 'one', so they never go before a plural like 'books'.") },
+    { subtopic: "using-a-an", ...q("Choose the correct sentence.", "She has a cat and a parrot.", [["She has cat and parrot.", "article-missing"], ["She has a cat and an parrot.", "a-an-mixup"], ["She has an cat and a parrot.", "a-an-mixup"]], "Cat and parrot both start with consonant sounds: A cat and A parrot.") },
+    { subtopic: "using-a-an", ...q("The words 'a' and 'an' mean ___.", "one (any one)", [["many", "article-plural-error"], ["the special one we both know", "a-the-mixup"], ["none", "article-missing"]], "A or an means any one: 'Give me a pen' means any one pen. 'The' is for the one we both know.") },
+  ],
+  // Unit 2, Branch B
+  "eq-u2-the-quiz": [
+    { subtopic: "known-one", ...q("Fill in the blank: '___ sun rises in the east.'", "The", [["A", "a-the-mixup"], ["An", "a-an-mixup"], ["Many", "article-plural-error"]], "There is only one sun, so we say THE sun.") },
+    { subtopic: "known-one", ...q("Which pair of sentences talks about the SAME dog?", "I saw a dog. The dog was barking.", [["I saw a dog. A dog was barking.", "article-missing"], ["I saw the dog. A dog was barking.", "a-the-mixup"], ["I saw an dog. The dog was barking.", "a-an-mixup"]], "First time: A dog. After that we know which dog, so: THE dog.") },
+    { subtopic: "special", ...q("Which name needs 'the' before it?", "Ganga", [["Delhi", "article-extra"], ["Priya", "article-extra"], ["Hindi", "article-extra"]], "Rivers take 'the': the Ganga. Cities, people and languages don't: Delhi, Priya, Hindi.") },
+    { subtopic: "special", ...q("Choose the correct sentence.", "Mount Everest is the highest mountain in the world.", [["The Mount Everest is the highest mountain in the world.", "article-extra"], ["Mount Everest is highest mountain in the world.", "article-missing"], ["Mount Everest is a highest mountain in the world.", "a-the-mixup"]], "One mountain needs no article (Mount Everest), but a 'best' word like highest needs THE.") },
+    { subtopic: "special", ...q("Which sentence is correct?", "We visited the Red Fort in Delhi.", [["We visited Red Fort in the Delhi.", "article-extra"], ["We visited the Red Fort in the Delhi.", "article-extra"], ["We visited a Red Fort in Delhi.", "a-the-mixup"]], "Famous buildings take 'the' (the Red Fort). City names don't (Delhi).") },
+    { subtopic: "special", ...q("Fill in the blank: 'He was ___ first boy to finish the race.'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["some", "determiner-number-mixup"]], "Order words like first, second and last take THE: the first boy.") },
+    { subtopic: "no-article", ...q("Where do we NOT use 'the'?", "Before names of people, like Priya", [["Before rivers, like Ganga", "the-rule-mixup"], ["Before the sun and the moon", "the-rule-mixup"], ["Before 'best' words, like best and tallest", "the-rule-mixup"]], "Names of people never take 'the'. Rivers, the sun and 'best' words do.") },
+    { subtopic: "special", ...q("Fill in the blank: 'The Pacific is ___ largest ocean.'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["much", "countable-uncountable-mixup"]], "'largest' is a 'best' word (superlative), so it takes THE.") },
+  ],
+  // Unit 2, Branch B practice: no article
+  "eq-u2-no-article": [
+    q("Choose the correct sentence.", "We have lunch at noon.", [["We have the lunch at noon.", "article-extra"], ["We have an lunch at noon.", "a-an-mixup"], ["We have lunch at the noon.", "article-extra"]], "Meals (breakfast, lunch, dinner) usually need no article: We have lunch."),
+    q("Fill in the blank: 'Rahul loves playing ___.'", "cricket", [["the cricket", "article-extra"], ["a cricket", "article-extra"], ["an cricket", "a-an-mixup"]], "Games need no article: play cricket, play chess."),
+    q("Choose the correct sentence.", "Meera speaks Tamil and English.", [["Meera speaks the Tamil and English.", "article-extra"], ["Meera speaks a Tamil and English.", "article-extra"], ["Meera speaks the Tamil and the English.", "article-extra"]], "Languages need no article: Tamil, English, Hindi."),
+    q("Which name needs 'the' before it?", "Indian Ocean", [["India", "article-extra"], ["Kerala", "article-extra"], ["Mumbai", "article-extra"]], "Oceans take 'the': the Indian Ocean. Most countries, states and cities don't."),
+    q("Choose the correct sentence.", "Chennai is a big city in India.", [["The Chennai is a big city in India.", "article-extra"], ["Chennai is a big city in the India.", "article-extra"], ["Chennai is big city in India.", "article-missing"]], "City and country names need no article. But 'a big city' needs a, because it is one city."),
+    q("Which one is correct?", "the USA", [["the India", "article-extra"], ["the Japan", "article-extra"], ["the China", "article-extra"]], "Most countries need no article (India, Japan, China). Names with 'States' or 'Kingdom' take the: the USA, the UK."),
+    q("Choose the correct sentence.", "My favourite subject is Science.", [["My favourite subject is the Science.", "article-extra"], ["My favourite subject is a Science.", "article-extra"], ["My favourite subject is an Science.", "a-an-mixup"]], "School subjects need no article: Science, Maths, English."),
+    q("Choose the correct sentence.", "The Himalayas are in the north of India.", [["Himalayas are in the north of India.", "article-missing"], ["The Himalayas are in the north of the India.", "article-extra"], ["The Himalayas are in a north of India.", "a-the-mixup"]], "A range of mountains takes THE (the Himalayas). India takes no article."),
+  ],
+  // Unit 2, Branch B gate pool
+  "eq-u2-the-gate-pool": [
+    { subtopic: "known-one", ...q("Fill in the blank: 'Look at ___ moon! It is so bright tonight.'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["many", "article-plural-error"]], "There is only one moon in our sky, so: THE moon.") },
+    { subtopic: "known-one", ...q("Fill in the blanks so both sentences talk about the SAME cake: 'Mum baked ___ cake. ___ cake was delicious.'", "a, The", [["The, A", "a-the-mixup"], ["an, The", "a-an-mixup"], ["an, An", "a-an-mixup"]], "First time: A cake. Then we know which cake: THE cake.") },
+    { subtopic: "known-one", ...q("Fill in the blank: 'Please close ___ door behind you.'", "the", [["an", "a-an-mixup"], ["many", "article-plural-error"], ["much", "countable-uncountable-mixup"]], "We both know which door (the one behind you), so: THE door.") },
+    { subtopic: "known-one", ...q("Choose the correct sentence.", "The sky is full of stars tonight.", [["A sky is full of stars tonight.", "a-the-mixup"], ["Sky is full of stars tonight.", "article-missing"], ["An sky is full of stars tonight.", "a-an-mixup"]], "There is only one sky, so: THE sky.") },
+    { subtopic: "known-one", ...q("Why do we say 'the sun'?", "There is only one sun that we all know.", [["'Sun' starts with a vowel sound.", "a-an-mixup"], ["'Sun' is a plural word.", "article-plural-error"], ["We use 'the' before every short word.", "the-rule-mixup"]], "We use THE when there is only one, or when we both know which one.") },
+    { subtopic: "special", ...q("Which name needs 'the' before it?", "Arabian Sea", [["Goa", "article-extra"], ["Kavya", "article-extra"], ["Marathi", "article-extra"]], "Seas take 'the': the Arabian Sea. States, people and languages don't.") },
+    { subtopic: "special", ...q("Fill in the blank: 'This is ___ best day of my life!'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["much", "countable-uncountable-mixup"]], "'best' is a superlative, so it takes THE: the best day.") },
+    { subtopic: "special", ...q("Choose the correct sentence.", "The Brahmaputra is a long river.", [["Brahmaputra is a long river.", "article-missing"], ["A Brahmaputra is a long river.", "a-the-mixup"], ["The Brahmaputra is an long river.", "a-an-mixup"]], "Rivers take THE: the Brahmaputra. 'a long river' uses a, because 'long' starts with an l sound.") },
+    { subtopic: "special", ...q("Which is correct?", "the Taj Mahal", [["a Taj Mahal", "a-the-mixup"], ["an Taj Mahal", "a-an-mixup"], ["the Taj Mahals", "article-plural-error"]], "Famous buildings take THE: the Taj Mahal, the Red Fort.") },
+    { subtopic: "special", ...q("Fill in the blank: 'January is ___ first month of the year.'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["many", "article-plural-error"]], "Order words like first and last take THE: the first month.") },
+    { subtopic: "no-article", ...q("Choose the correct sentence.", "We play chess after dinner.", [["We play the chess after dinner.", "article-extra"], ["We play a chess after dinner.", "article-extra"], ["We play chess after an dinner.", "a-an-mixup"]], "Games and meals need no article: play chess, after dinner.") },
+    { subtopic: "no-article", ...q("Which name does NOT take 'the'?", "Kolkata", [["Himalayas", "article-extra"], ["Indian Ocean", "article-extra"], ["Red Fort", "article-extra"]], "Cities need no article: Kolkata. But the Himalayas, the Indian Ocean, the Red Fort.") },
+    { subtopic: "no-article", ...q("Choose the correct sentence.", "Dr Kalam was a great scientist.", [["The Dr Kalam was a great scientist.", "article-extra"], ["Dr Kalam was great scientist.", "article-missing"], ["Dr Kalam was an great scientist.", "a-an-mixup"]], "Names of people take no article. But 'a great scientist' needs a: he was one scientist.") },
+    { subtopic: "no-article", ...q("Choose the correct sentence.", "We eat breakfast at seven.", [["We eat the breakfast at seven.", "article-extra"], ["We eat an breakfast at seven.", "a-an-mixup"], ["We eat breakfast at the seven.", "article-extra"]], "Meals need no article: eat breakfast. Times need none either: at seven.") },
+    { subtopic: "no-article", ...q("Which sentence is correct?", "My grandmother speaks Bengali.", [["My grandmother speaks the Bengali.", "article-extra"], ["My grandmother speaks a Bengali.", "article-extra"], ["My grandmother speaks an Bengali.", "a-an-mixup"]], "Languages need no article: speaks Bengali.") },
+  ],
+  // Unit 2, Branch C
+  "eq-u2-determiners-quiz": [
+    { subtopic: "this-that", ...q("Fill in the blank: '___ books in my hands are new.'", "These", [["This", "determiner-number-mixup"], ["That", "determiner-number-mixup"], ["A", "article-plural-error"]], "Many things (books) that are near (in my hands) → THESE.") },
+    { subtopic: "this-that", ...q("Fill in the blank: 'Look at ___ bird on the far-away tree!'", "that", [["this", "near-far-mixup"], ["these", "determiner-number-mixup"], ["those", "determiner-number-mixup"]], "One thing (bird) that is far away → THAT.") },
+    { subtopic: "this-that", ...q("Which is correct?", "these apples", [["this apples", "determiner-number-mixup"], ["that apples", "determiner-number-mixup"], ["these apple", "determiner-number-mixup"]], "'these' is for many things, so it goes with a plural: these apples.") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'I do not have ___ money.'", "any", [["some", "some-any-mixup"], ["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "In 'not' sentences we use ANY: I do not have any money.") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'There are ___ mangoes in the basket.'", "some", [["any", "some-any-mixup"], ["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"]], "In a telling sentence we use SOME. Mangoes can be counted, so not much or a little.") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'How ___ students are in your class?'", "many", [["much", "countable-uncountable-mixup"], ["little", "countable-uncountable-mixup"], ["any", "some-any-mixup"]], "We can count students, so: how MANY.") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'Please add ___ salt to the dal.'", "a little", [["a few", "countable-uncountable-mixup"], ["many", "countable-uncountable-mixup"], ["these", "determiner-number-mixup"]], "We can't count salt, so: a LITTLE salt. 'A few' is for things we can count.") },
+    { subtopic: "this-that", ...q("Which word is a determiner? 'Those children are playing.'", "Those", [["children", "pos-noun-mixup"], ["are", "pos-verb-mixup"], ["playing", "pos-verb-mixup"]], "'Those' comes before the noun 'children' and tells us WHICH children.") },
+  ],
+  // Unit 2, Branch C practice (hard): how much, how many
+  "eq-u2-quantity": [
+    q("Fill in the blank: 'There is not ___ water in the bottle.'", "much", [["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"], ["these", "determiner-number-mixup"]], "We can't count water, so: not MUCH water."),
+    q("Fill in the blank: 'She has read ___ books this year.'", "many", [["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"], ["little", "countable-uncountable-mixup"]], "We can count books, so: MANY books."),
+    q("Fill in the blank: 'I have ___ friends in my new school, so I am happy.'", "a few", [["few", "few-a-few-mixup"], ["a little", "countable-uncountable-mixup"], ["much", "countable-uncountable-mixup"]], "'a few' means 'some', which is a happy thing. 'few' means 'almost none'."),
+    q("Fill in the blank: 'He has ___ friends, so he often feels lonely.'", "few", [["a few", "few-a-few-mixup"], ["a little", "countable-uncountable-mixup"], ["much", "countable-uncountable-mixup"]], "'few' (without 'a') means almost none. That is why he feels lonely."),
+    q("Fill in the blank: 'There is ___ milk left, so we must buy more.'", "little", [["few", "countable-uncountable-mixup"], ["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "Milk can't be counted, and there is almost none left: LITTLE milk."),
+    q("Which word goes with 'sugar'?", "much", [["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"], ["these", "determiner-number-mixup"]], "We can't count sugar, so: much sugar (not many sugar)."),
+    q("Choose the correct sentence.", "We need a little time and a few chairs.", [["We need a few time and a little chairs.", "countable-uncountable-mixup"], ["We need a little time and a little chairs.", "countable-uncountable-mixup"], ["We need a few time and a few chairs.", "countable-uncountable-mixup"]], "Time can't be counted (a little time). Chairs can (a few chairs)."),
+    q("Fill in the blank: 'How ___ rice should I cook?'", "much", [["many", "countable-uncountable-mixup"], ["few", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "We don't count rice grain by grain, we measure it. So: how MUCH rice."),
+  ],
+  // Unit 2, Branch C gate pool
+  "eq-u2-determiners-gate-pool": [
+    { subtopic: "this-that", ...q("Fill in the blank: 'Can you see ___ stars far up in the sky?'", "those", [["these", "near-far-mixup"], ["this", "determiner-number-mixup"], ["that", "determiner-number-mixup"]], "Many things (stars) that are far away → THOSE.") },
+    { subtopic: "this-that", ...q("Fill in the blank: '___ pencil in my hand is broken.'", "This", [["These", "determiner-number-mixup"], ["Those", "determiner-number-mixup"], ["That", "near-far-mixup"]], "One thing that is near (in my hand) → THIS.") },
+    { subtopic: "this-that", ...q("Which is correct?", "those shoes", [["that shoes", "determiner-number-mixup"], ["this shoes", "determiner-number-mixup"], ["those shoe", "determiner-number-mixup"]], "'those' is for many things, so it goes with a plural: those shoes.") },
+    { subtopic: "this-that", ...q("Choose the correct sentence.", "These flowers in my garden smell lovely.", [["This flowers in my garden smell lovely.", "determiner-number-mixup"], ["That flowers in my garden smell lovely.", "determiner-number-mixup"], ["These flower in my garden smell lovely.", "determiner-number-mixup"]], "Many flowers → these flowers (plural noun after these).") },
+    { subtopic: "this-that", ...q("We use 'that' for ___.", "one thing that is far away", [["many things that are near", "determiner-number-mixup"], ["one thing that is near", "near-far-mixup"], ["many things that are far away", "determiner-number-mixup"]], "this = one, near · that = one, far · these = many, near · those = many, far.") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'Is there ___ juice in the fridge?'", "any", [["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"], ["these", "determiner-number-mixup"]], "In questions we usually use ANY: Is there any juice?") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'We did not see ___ tigers at the park.'", "any", [["some", "some-any-mixup"], ["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"]], "In 'not' sentences we use ANY: We did not see any tigers.") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'Mum bought ___ bananas from the market.'", "some", [["any", "some-any-mixup"], ["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"]], "In telling sentences we use SOME: Mum bought some bananas.") },
+    { subtopic: "some-any", ...q("Choose the correct sentence.", "I have some crayons, but I do not have any paper.", [["I have any crayons, but I do not have some paper.", "some-any-mixup"], ["I have some crayons, but I do not have some paper.", "some-any-mixup"], ["I have any crayons, but I do not have any paper.", "some-any-mixup"]], "Telling part → some crayons. 'Not' part → any paper.") },
+    { subtopic: "some-any", ...q("Fill in the blank: 'Would you like ___ sweets?'", "some", [["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"], ["this", "determiner-number-mixup"]], "When we offer something, we say SOME: Would you like some sweets?") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'There are not ___ trees in the city now.'", "many", [["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"], ["little", "countable-uncountable-mixup"]], "We can count trees, so: not MANY trees.") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'Do not add too ___ sugar to the tea.'", "much", [["many", "countable-uncountable-mixup"], ["few", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "We can't count sugar, so: too MUCH sugar.") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'I need ___ minutes to finish my drawing.'", "a few", [["a little", "countable-uncountable-mixup"], ["much", "countable-uncountable-mixup"], ["little", "countable-uncountable-mixup"]], "We can count minutes, so: A FEW minutes.") },
+    { subtopic: "quantity", ...q("Which word goes with 'information'?", "much", [["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"], ["these", "determiner-number-mixup"]], "'information' can't be counted (never 'informations'), so: much information.") },
+    { subtopic: "quantity", ...q("Fill in the blank: 'There is ___ hope of rain today. The sky is clear.'", "little", [["few", "countable-uncountable-mixup"], ["many", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "Hope can't be counted, and there is almost none (the sky is clear): LITTLE hope.") },
+  ],
+  // Unit 2 test: articles + determiners mixed
+  "eq-u2-test": [
+    q("Fill in the blanks: 'I saw ___ owl and ___ crow.'", "an, a", [["a, an", "a-an-mixup"], ["an, an", "a-an-mixup"], ["a, a", "a-an-mixup"]], "AN owl (vowel sound), A crow (k sound)."),
+    q("Which word needs 'an' before it?", "envelope", [["unicorn", "sound-not-letter"], ["horse", "sound-not-letter"], ["pencil", "a-an-mixup"]], "'envelope' starts with a vowel sound: AN envelope. A unicorn ('you' sound), a horse, a pencil."),
+    q("Choose the correct sentence.", "She is an artist and a singer.", [["She is a artist and an singer.", "a-an-mixup"], ["She is artist and singer.", "article-missing"], ["She is an artist and an singer.", "a-an-mixup"]], "AN artist (vowel sound), A singer (s sound)."),
+    q("Fill in the blank: '___ Narmada flows into the Arabian Sea.'", "The", [["A", "a-the-mixup"], ["An", "a-an-mixup"], ["Many", "article-plural-error"]], "Rivers take THE: the Narmada."),
+    q("Choose the correct sentence.", "Riya speaks Hindi and plays cricket.", [["Riya speaks the Hindi and plays the cricket.", "article-extra"], ["Riya speaks Hindi and plays a cricket.", "article-extra"], ["Riya speaks a Hindi and plays cricket.", "article-extra"]], "Languages and games need no article."),
+    q("Fill in the blank: 'This is ___ tallest tree in our village.'", "the", [["a", "a-the-mixup"], ["an", "a-an-mixup"], ["much", "countable-uncountable-mixup"]], "'tallest' is a superlative, so it takes THE."),
+    q("Fill in the blank: '___ kites up in the sky are so colourful!'", "Those", [["This", "determiner-number-mixup"], ["That", "determiner-number-mixup"], ["An", "article-plural-error"]], "Many things (kites) that are far away (up in the sky) → THOSE."),
+    q("Fill in the blank: 'There are not ___ chairs in the hall.'", "any", [["some", "some-any-mixup"], ["much", "countable-uncountable-mixup"], ["a little", "countable-uncountable-mixup"]], "In 'not' sentences we use ANY: not any chairs."),
+    q("Fill in the blank: 'How ___ milk do you drink every day?'", "much", [["many", "countable-uncountable-mixup"], ["few", "countable-uncountable-mixup"], ["a few", "countable-uncountable-mixup"]], "We can't count milk, so: how MUCH milk."),
+    q("Fill in the blank: 'I have ___ marbles. Do you want to play?'", "a few", [["a little", "countable-uncountable-mixup"], ["much", "countable-uncountable-mixup"], ["any", "some-any-mixup"]], "We can count marbles, and there are some to play with: A FEW marbles."),
+    q("Which word is a determiner? 'We bought some oranges.'", "some", [["We", "pos-pronoun-mixup"], ["bought", "pos-verb-mixup"], ["oranges", "pos-noun-mixup"]], "'some' comes before the noun 'oranges' and tells HOW MANY."),
+    q("Find the mistake: 'I have a umbrella and some books.'", "'a umbrella' should be 'an umbrella'", [["'some books' should be 'any books'", "some-any-mixup"], ["'have' should be 'has'", "subject-verb-mixup"], ["There is no mistake.", "no-mistake-miss"]], "'umbrella' starts with a vowel sound: AN umbrella. 'some books' is right in a telling sentence."),
+  ],
 };
 
 // ---------- Reading passages (new, stored in studyContent with kind: "reading") ----------
@@ -463,6 +736,32 @@ export const readings = {
       { ...q("Put these steps in the correct order:\n(1) The visitor saves some new seeds.\n(2) The visitor borrows a packet of seeds.\n(3) The seeds are returned to the library.\n(4) The plants grow and produce fruit.", "2, 4, 1, 3", [["1, 2, 3, 4", "sequence"], ["2, 1, 4, 3", "sequence"], ["4, 2, 1, 3", "sequence"]], "Borrow (2) → plants grow (4) → save seeds (1) → return them (3)."), evidence: { paragraph: 1, text: "When the plants grow and produce fruit, the visitor saves some of the new seeds and returns them to the library." } },
       { ...q("What does Mrs. Iyer believe growing a plant teaches a child?", "To respect farmers", [["To become a scientist", "inference"], ["To sell vegetables", "not-in-passage"], ["To read more books", "not-in-passage"]], "She believes a child who grows even one plant 'will respect farmers for the rest of their life'."), evidence: { paragraph: 2, text: "Mrs. Iyer believes that a child who grows even one plant will respect farmers for the rest of their life." } },
       { ...q("In the sentence 'Neighbouring villages have also started asking...', what part of speech is 'villages'?", "Noun", [["Verb", "pos-verb-mixup"], ["Adjective", "pos-adjective-mixup"], ["Adverb", "pos-adverb-mixup"]], "'villages' names places, so it is a noun. ('Neighbouring' describes them, so it is an adjective.)"), evidence: { paragraph: 4, text: "Neighbouring villages have also started asking how they can build one of their own." } },
+    ],
+  },
+  "eq-read-rooftop-garden": {
+    name: "The Rooftop Garden",
+    author: "Apprec8",
+    mode: "fullPassage",
+    glossary: {
+      shoots: "new young parts of a plant that just came out of the soil",
+      swayed: "moved slowly from side to side",
+      term: "one part of the school year",
+      patience: "being able to wait calmly without getting upset",
+    },
+    paragraphs: [
+      "The students of Class 6 at Green Valley School had a problem. Their school was in the middle of a busy city, and there was no space for a garden. One morning, their teacher, Mr. Joseph, pointed to the flat roof above the library and smiled. \"Why not grow a garden up there?\" he asked.",
+      "The children collected old buckets, broken pots and empty paint tins. They filled them with soil and planted seeds of tomato, spinach and marigold. Every day, a few students climbed the stairs with watering cans before the first bell rang.",
+      "For the first two weeks, nothing happened. Some children wanted to give up. Then, one Monday, Aisha noticed tiny green shoots peeping out of the soil. She ran downstairs shouting the good news, and soon the whole class was on the roof.",
+      "By the end of the term, the roof was full of colour. Bright orange marigolds swayed in the wind, and the spinach was used in the school kitchen. Even the butterflies seemed to enjoy the new garden.",
+      "Mr. Joseph says the best thing the garden grew was not a vegetable. It was patience.",
+    ],
+    questions: [
+      { ...q("Why couldn't the school have a garden at first?", "There was no space in the busy city.", [["The teacher did not like plants.", "not-in-passage"], ["The children had no seeds.", "not-in-passage"], ["The library was too small.", "detail-missed"]], "Paragraph 1 says the school was 'in the middle of a busy city, and there was no space for a garden'."), evidence: { paragraph: 0, text: "Their school was in the middle of a busy city, and there was no space for a garden." } },
+      { ...q("What did the children use as pots?", "Old buckets, broken pots and empty paint tins", [["New plastic pots from a shop", "not-in-passage"], ["Clay pots made by Mr. Joseph", "not-in-passage"], ["Old shoes and boxes", "not-in-passage"]], "The passage says: 'The children collected old buckets, broken pots and empty paint tins.'"), evidence: { paragraph: 1, text: "The children collected old buckets, broken pots and empty paint tins." } },
+      { ...q("Select the INCORRECT statement according to the passage.", "The seeds came up on the very first day.", [["Some children wanted to give up.", "statement-check"], ["The spinach was used in the school kitchen.", "statement-check"], ["Students watered the plants before the first bell.", "statement-check"]], "The passage says: 'For the first two weeks, nothing happened.' So the seeds did not come up on the first day. The other three statements are true."), evidence: { paragraph: 2, text: "For the first two weeks, nothing happened." } },
+      { ...q("The word 'patience' in the passage is closest in meaning to ___.", "waiting calmly without giving up", [["growing vegetables quickly", "word-meaning"], ["being in a hurry", "opposite-meaning"], ["working alone", "word-meaning"]], "The children waited two weeks before anything grew. Waiting calmly like that is patience."), evidence: { paragraph: 4, text: "It was patience." } },
+      { ...q("In 'a few students climbed the stairs', what does 'a few' tell us?", "How many students", [["What the students did", "pos-verb-mixup"], ["Where the students went", "pos-adverb-mixup"], ["Which school it was", "detail-missed"]], "'a few' is a determiner. It comes before the noun 'students' and tells HOW MANY."), evidence: { paragraph: 1, text: "Every day, a few students climbed the stairs with watering cans before the first bell rang." } },
+      { ...q("What does the last paragraph tell us?", "Waiting for the plants taught the children to be patient.", [["The garden grew only one vegetable.", "inference"], ["Mr. Joseph did not like the garden.", "inference"], ["The children sold the vegetables.", "not-in-passage"]], "The garden's 'best' result was not a vegetable: the children learned patience while they waited."), evidence: { paragraph: 4, text: "Mr. Joseph says the best thing the garden grew was not a vegetable." } },
     ],
   },
 };
@@ -576,6 +875,12 @@ const prepositions = main("eq-u1-prepositions", "eq-u1", 5, "Prepositions", [stu
 const conjunctions = main("eq-u1-conjunctions", "eq-u1", 6, "Conjunctions", [study("4ieo7-study"), quiz("4ieo7-quiz")]);
 const u1r = main("eq-u1-reading", "eq-u1", 7, "Reading: The seed library", [study("eq-read-tips"), reading("eq-read-seed-library")]);
 
+// --- Unit 2: Articles & Determiners (new content) ---
+const u2a = main("eq-u2-a-an", "eq-u2", 0, "A and an", [study("eq-u2-a-an"), quiz("eq-u2-a-an-quiz")]);
+const u2b = main("eq-u2-the", "eq-u2", 1, "Using 'the'", [study("eq-u2-the"), quiz("eq-u2-the-quiz")]);
+const u2c = main("eq-u2-determiners", "eq-u2", 2, "Determiners", [study("eq-u2-determiners"), quiz("eq-u2-determiners-quiz")]);
+const u2r = main("eq-u2-reading", "eq-u2", 3, "Reading: The rooftop garden", [reading("eq-read-rooftop-garden")]);
+
 export const nodes = [
   unit("eq-u0", 0, "Sentences"),
   u0a,
@@ -679,5 +984,42 @@ export const nodes = [
     "Uh-oh! 👾 The Grammar Gremlin pulled the name tags off the animals in the Word Zoo. Nouns, verbs, adjectives and adverbs are running around and nobody knows who is who! Use your word-detective skills to put the right tag back on every word. 🦁"
   ),
 
-  unit("eq-u2", 2, "Articles & Determiners", { comingSoon: true }),
+  unit("eq-u2", 2, "Articles & Determiners"),
+  u2a,
+  withSubtopic(practice("eq-u2-a-an-p1", u2a, 1, "Tricky sounds", "hard", [quiz("eq-u2-a-an-tricky")]), "tricky-sounds"),
+  gate("eq-u2-a-an-gate", u2a, "A/An Challenge", "eq-u2-a-an-gate-pool", {
+    "vowel-sounds": "Vowel sounds",
+    "tricky-sounds": "Tricky sounds (hour, uniform)",
+    "using-a-an": "When to use a or an",
+  }),
+  endless(u2a),
+
+  u2b,
+  withSubtopic(practice("eq-u2-the-p1", u2b, 1, "No article needed", "medium", [quiz("eq-u2-no-article")]), "no-article"),
+  gate("eq-u2-the-gate", u2b, "'The' Challenge", "eq-u2-the-gate-pool", {
+    "known-one": "The one we know",
+    special: "Rivers, seas & special names",
+    "no-article": "No article needed",
+  }),
+  endless(u2b),
+
+  u2c,
+  withSubtopic(practice("eq-u2-determiners-p1", u2c, 1, "Much, many, few, little", "hard", [quiz("eq-u2-quantity")]), "quantity"),
+  gate("eq-u2-determiners-gate", u2c, "Determiner Challenge", "eq-u2-determiners-gate-pool", {
+    "this-that": "This, that, these, those",
+    "some-any": "Some & any",
+    quantity: "Much, many, few, little",
+  }),
+  endless(u2c),
+
+  u2r,
+  boss(
+    "eq-u2-boss",
+    "eq-u2",
+    "Unit 2 Boss",
+    "eq-u2-test",
+    "Oh no! 👾 The Grammar Gremlin sneaked into the Village Market and stole all the little words. Now everyone is asking for 'apple', 'umbrella' and 'sweets' with no a, an, the or some! The shopkeepers are so confused. Put every little word back where it belongs and save market day! 🛒"
+  ),
+
+  unit("eq-u3", 3, "Subject-Verb Agreement", { comingSoon: true }),
 ];
