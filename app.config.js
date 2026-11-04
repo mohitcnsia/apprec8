@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 26; // 20.0.26: owner phone feedback (tiles, confetti, full screen, challenge), IEO fix button
+  const patchVersion = 27; // 20.0.27: calm pass 1 (Home, quiz prompt, start screen, map folds), results follow the score, big profile
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =
