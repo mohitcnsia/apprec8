@@ -111,3 +111,20 @@ assert.equal(starsForPercent(85), 2); assert.equal(starsForPercent(100), 3);
 assert.deepEqual(scoreAnswers([{ isCorrect: true }, { isCorrect: false }], 4), { correctCount: 1, total: 4, percent: 25 });
 
 console.log("questTree (Spec v2): all tests passed");
+
+// RB-7: a teacher-assigned topic opens even if the path hasn't reached it; the rest stays locked
+{
+  const { buildQuestPath: build } = await import("../utils/questTree.js");
+  const N = [
+    { id: "u1", kind: "unit", unitOrder: 1, title: "U1" },
+    { id: "a", kind: "main", unitId: "u1", branchId: "a", branchOrder: 1, title: "A", steps: [{ type: "quiz", quizId: "qa" }] },
+    { id: "b", kind: "main", unitId: "u1", branchId: "b", branchOrder: 2, title: "B", steps: [{ type: "quiz", quizId: "qb" }] },
+    { id: "c", kind: "main", unitId: "u1", branchId: "c", branchOrder: 3, title: "C", steps: [{ type: "quiz", quizId: "qc" }] },
+  ];
+  const plain = build(N, {});
+  assert.equal(plain.path.find((p) => p.id === "c").status, "locked");
+  const t = build(N, {}, { extraUnlocked: ["c"] });
+  assert.equal(t.path.find((p) => p.id === "c").status, "unlocked");
+  assert.equal(t.path.find((p) => p.id === "b").status, "locked");
+  console.log("questTree extraUnlocked: ok");
+}

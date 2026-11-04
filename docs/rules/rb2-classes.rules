@@ -33,6 +33,14 @@
       allow create: if isAppAdmin() || isSchoolAdmin(request.resource.data.schoolId);
       allow update, delete: if isAppAdmin() || isSchoolAdmin(resource.data.schoolId);
 
+      // RB-7 assignments: the class's teachers write; members (and admins) read.
+      match /assignments/{aid} {
+        allow read: if request.auth != null && (exists(/databases/$(database)/documents/classes/$(classId)/members/$(request.auth.uid))
+          || request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherIds || isAppAdmin());
+        allow create, update, delete: if request.auth != null
+          && (request.auth.uid in get(/databases/$(database)/documents/classes/$(classId)).data.teacherIds || isAppAdmin());
+      }
+
       match /members/{kidUid} {
         // A kid joins themself (parent present), with the class's real code; max 3 classes is checked in the app.
         allow create: if request.auth != null && request.auth.uid == kidUid

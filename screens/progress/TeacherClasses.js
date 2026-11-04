@@ -4,7 +4,7 @@
 // Reads: classes (teacherIds contains me), members, and each member's questProgress (rules: DR-9). One-time reads.
 
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { useTheme } from "../../context/ThemeContext";
@@ -15,8 +15,92 @@ import { questsForTeacher, classLabel } from "../../utils/classes";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
 import { topicNamer } from "../../utils/progressView";
+import { nodesForGrade } from "../../utils/gradeFilter";
+import { createAssignment, listAssignments, deleteAssignment } from "../../services/assignmentsApi";
+import { dayKey } from "../../utils/kidStats";
 
 const db = getFirestore(getApp());
+
+function AssignPanel({ cls, uid, kids, P, styles }) {
+  const questIds = questsForTeacher(cls, uid);
+  const [questId, setQuestId] = useState(questIds[0] || null);
+  const [picked, setPicked] = useState([]);
+  const [who, setWho] = useState([]); // empty = whole class
+  const [due, setDue] = useState(7);
+  const [note, setNote] = useState("");
+  const [list, setList] = useState([]);
+  const reload = () => listAssignments(cls.id).then(setList).catch(() => setList([]));
+  useEffect(() => {
+    reload();
+  }, [cls.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const topics = useMemo(() => {
+    const nodes = bundledQuest(questId)?.nodes || [];
+    return nodesForGrade(nodes, cls.grade).filter((n) => n.kind === "main");
+  }, [questId, cls.grade]);
+  if (!questIds.length) return <Text style={styles.soft}>No quests for your subjects yet.</Text>;
+  const toggle = (arr, set, v) => set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+  const assign = async () => {
+    try {
+      const dueDate = due ? dayKey(Date.now() + due * 24 * 60 * 60 * 1000) : null;
+      await createAssignment({ classId: cls.id, questId, nodes: topics.filter((t) => picked.includes(t.id)), kidIds: who, dueDate, note });
+      setPicked([]);
+      setNote("");
+      Alert.alert("Assigned", who.length ? `Sent to ${who.length} kid(s).` : "Sent to the whole class.");
+      reload();
+    } catch (e) {
+      Alert.alert("Couldn't assign", e.message);
+    }
+  };
+  return (
+    <View style={[styles.kid, { gap: 8 }]}>
+      <Text style={styles.title}>Assign a topic</Text>
+      <View style={styles.chips}>
+        {questIds.map((q) => (
+          <Pressable key={q} onPress={() => { setQuestId(q); setPicked([]); }} style={[styles.chip, questId === q && styles.chipOn]}>
+            <Text style={styles.line}>{bundledQuest(q)?.quest?.title || q}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <View style={styles.chips}>
+        {topics.map((t) => (
+          <Pressable key={t.id} onPress={() => toggle(picked, setPicked, t.id)} style={[styles.chip, picked.includes(t.id) && styles.chipOn]}>
+            <Text style={styles.line}>{t.title}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <Text style={styles.soft}>Who (none picked = whole class)</Text>
+      <View style={styles.chips}>
+        {kids.map((k) => (
+          <Pressable key={k.uid} onPress={() => toggle(who, setWho, k.uid)} style={[styles.chip, who.includes(k.uid) && styles.chipOn]}>
+            <Text style={styles.line}>{k.firstName || "Kid"}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <View style={styles.chips}>
+        {[[0, "No due date"], [3, "3 days"], [7, "1 week"], [14, "2 weeks"]].map(([d, label]) => (
+          <Pressable key={d} onPress={() => setDue(d)} style={[styles.chip, due === d && styles.chipOn]}>
+            <Text style={styles.line}>{label}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <TextInput value={note} onChangeText={setNote} placeholder="Note for the kids (optional)" placeholderTextColor={P.dimText} style={styles.input} />
+      <Pressable disabled={!picked.length} onPress={assign} style={[styles.button, !picked.length && { opacity: 0.45 }]}>
+        <Text style={styles.buttonText}>ASSIGN</Text>
+      </Pressable>
+      {list.map((a) => (
+        <View key={a.id} style={styles.rowBetween}>
+          <Text style={[styles.line, { flex: 1 }]} numberOfLines={2}>
+            {(a.nodeTitles || []).join(", ")} · {a.kidIds?.length ? `${a.kidIds.length} kid(s)` : "whole class"}
+            {a.dueDate ? ` · due ${a.dueDate}` : ""}
+          </Text>
+          <Pressable onPress={() => deleteAssignment(cls.id, a.id).then(reload)} hitSlop={8}>
+            <Text style={[styles.line, { color: P.wrongText }]}>Remove</Text>
+          </Pressable>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 export default function TeacherClasses() {
   const { isDark } = useTheme();
@@ -74,6 +158,7 @@ export default function TeacherClasses() {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade} · code {c.joinCode}</Text>
         </Pressable>
       ))}
+      {open && rows ? <AssignPanel cls={open} uid={uid} kids={rows} P={P} styles={styles} /> : null}
       {open && rows === null ? <ActivityIndicator color={P.label} /> : null}
       {open && rows?.length === 0 ? <Text style={styles.soft}>No kids yet. Give parents the code {open.joinCode}.</Text> : null}
       {open && rows
@@ -106,4 +191,10 @@ const makeStyles = (P) =>
     title: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
     soft: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
     line: { fontSize: 14, fontFamily: "nunitoBold", color: P.text },
+    chips: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
+    chip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1, borderColor: P.border },
+    chipOn: { borderColor: P.selectedBorder, backgroundColor: P.selectedBg },
+    input: { height: 44, borderRadius: 12, borderWidth: 1, borderColor: P.border, color: P.text, paddingHorizontal: 12, fontFamily: "nunitoBold" },
+    button: { height: 48, borderRadius: 14, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
+    buttonText: { color: P.onPrimary, fontSize: 15, fontFamily: "nunitoBold", letterSpacing: 0.5 },
   });

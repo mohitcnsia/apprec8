@@ -93,7 +93,10 @@ function buildSteps(node, progress) {
  *   path is ordered from the START (bottom of the map) to the END.
  *   Path items: { kind: "main", ...main, status, side: [...] } | { kind: "boss", ... } | { kind: "comingSoon", ... }
  */
-export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false } = {}) {
+// extraUnlocked: main-topic ids a teacher assigned to this kid (RB-7): they open even if the path hasn't reached them.
+// Nothing else changes: the next topic still needs the normal path.
+export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false, extraUnlocked = [] } = {}) {
+  const assigned = new Set(extraUnlocked || []);
   const units = nodes.filter((n) => n.kind === "unit").sort(byNumber("unitOrder"));
   const path = [];
   let previousUnitDone = true;
@@ -120,7 +123,7 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false } 
 
       let status;
       if (!s.playable) status = previousBranchCleared ? "comingSoon" : "locked";
-      else if (!previousBranchCleared && !unlockAll) status = "locked";
+      else if (!previousBranchCleared && !unlockAll && !assigned.has(main.id)) status = "locked";
       else if (s.allDone) status = "completed";
       else status = "unlocked";
 

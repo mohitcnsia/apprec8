@@ -32,6 +32,7 @@ import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
 import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
 import { nodesForGrade } from "../../utils/gradeFilter";
+import { myAssignments, assignedNodeIds } from "../../services/assignmentsApi";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import {
   listenToQuestProgress,
@@ -169,15 +170,30 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   // Class-tagged quests (e.g. Science): hide topics that aren't for the kid's class (utils/gradeFilter.js).
   // Testers with "unlock all" see every class. Quests without class tags (English) are unchanged.
   const [grade, setGrade] = useState(null);
-  useEffect(() => listenToUserDocument((d) => setGrade(Number.isInteger(d?.grade) ? d.grade : null), () => {}), []);
+  const [classIds, setClassIds] = useState([]);
+  useEffect(
+    () =>
+      listenToUserDocument((d) => {
+        setGrade(Number.isInteger(d?.grade) ? d.grade : null);
+        setClassIds(d?.classIds || []);
+      }, () => {}),
+    []
+  );
+  // RB-7: topics a teacher assigned to this kid open even if the path hasn't reached them.
+  const [assigned, setAssigned] = useState([]);
+  const classKey = classIds.join(",");
+  useEffect(() => {
+    if (!classKey) return setAssigned([]);
+    myAssignments(classKey.split(",")).then((list) => setAssigned(assignedNodeIds(list, questId))).catch(() => {});
+  }, [classKey, questId]);
   const visibleNodes = useMemo(
     () => (nodes ? (unlockAll ? nodes : nodesForGrade(nodes, grade)) : null),
     [nodes, grade, unlockAll]
   );
 
   const tree = useMemo(
-    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll }) : null),
-    [visibleNodes, progress, unlockAll]
+    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll, extraUnlocked: assigned }) : null),
+    [visibleNodes, progress, unlockAll, assigned]
   );
   const count = tree?.path.length || 0;
 

@@ -1702,3 +1702,11 @@ and school admins set things up; kids join only via a parent, after consent in E
 2. `firebase deploy --only functions:findUserByEmail,functions:assignTeacher`.
 3. Create `roles/{SeemaUid}` = `{ admin: true }` in the console (after she signs in once).
 Until deployed, the new screens show "permission denied": nothing else changes.
+
+### RB-7 teacher assignments built (Claude, 2026-11-04)
+- Engine: `buildQuestPath(..., { extraUnlocked })` opens assigned topics (tested); the rest of the path is unchanged.
+- `services/assignmentsApi.js`: `classes/{classId}/assignments/{id}` { questId, nodeIds, nodeTitles, kidIds (empty = whole class),
+  dueDate, note }. Teacher: Progress → My classes → a class → **Assign a topic** (quest of their subject, topics for the class level,
+  whole class or chosen kids, due date, note; list + remove). Kid: assigned topics open on the map; Home's "Next up" card becomes
+  **"From your teacher"** until the due date. Rules for assignments added to `docs/rules/rb2-classes.rules` (part of DR-9).
+- Next: the 2-minute refresher hint when an assigned topic builds on an earlier one; weekly class leaderboard + claps.

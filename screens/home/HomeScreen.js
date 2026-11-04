@@ -19,6 +19,8 @@ import { EXAMS } from "../../config/exams";
 import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
+import { myAssignments } from "../../services/assignmentsApi";
+import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 
@@ -248,6 +250,18 @@ export default function HomeScreen({ navigation }) {
     return () => unsubs.forEach((u) => u && u());
   }, [questKey, uid]);
 
+  // RB-7: a teacher's assignment (not past its due date) becomes the "Next up" card.
+  const [assignments, setAssignments] = useState([]);
+  const myClassKey = (userData?.classIds || []).join(",");
+  useEffect(() => {
+    if (!myClassKey) return setAssignments([]);
+    myAssignments(myClassKey.split(",")).then(setAssignments).catch(() => setAssignments([]));
+  }, [myClassKey]);
+  const teacherTask =
+    assignments
+      .filter((a) => !a.dueDate || daysUntil(a.dueDate) >= 0)
+      .sort((a, b) => String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999")))[0] || null;
+
   // Continue = the quest played most recently. Mistakes = all quests; the tile opens the one with most.
   const mainQuest = pickContinue(allQuests, progressById);
   const mainQuestId = mainQuest?.questId || null;
@@ -267,6 +281,7 @@ export default function HomeScreen({ navigation }) {
   const coming = upcomingItems(EXAMS, myTasks);
 
   const openMainQuest = () => {
+    if (teacherTask) return navigation.navigate("EnglishQuestMap", { questId: teacherTask.questId });
     if (!mainQuestId) return;
     if (started) navigation.navigate("EnglishQuestMap", { questId: mainQuestId });
     else navigation.navigate("EnglishQuestIntro", { questId: mainQuestId });
@@ -314,13 +329,26 @@ export default function HomeScreen({ navigation }) {
           <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`Next up: ${mainQuest.title}`}>
             <View style={styles.nextCard}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.nextLabel}>{started ? "NEXT UP" : "START HERE"} · {(mainQuest.title || "Quest").toUpperCase()}</Text>
-                <Text style={styles.nextTitle} numberOfLines={2}>
-                  {started ? "Keep going!" : mainQuest.description || "One step at a time"}
-                </Text>
-                <Text style={styles.nextSub}>
-                  {started ? `${doneSteps} ${doneSteps === 1 ? "step" : "steps"} done` : "Tap CONTINUE below"}
-                </Text>
+                {teacherTask ? (
+                  <>
+                    <Text style={styles.nextLabel}>FROM YOUR TEACHER</Text>
+                    <Text style={styles.nextTitle} numberOfLines={2}>{(teacherTask.nodeTitles || []).join(", ") || "A new topic"}</Text>
+                    <Text style={styles.nextSub} numberOfLines={2}>
+                      {teacherTask.dueDate ? `Due in ${daysUntil(teacherTask.dueDate)} days` : "Open now"}
+                      {teacherTask.note ? ` · ${teacherTask.note}` : ""}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.nextLabel}>{started ? "NEXT UP" : "START HERE"} · {(mainQuest.title || "Quest").toUpperCase()}</Text>
+                    <Text style={styles.nextTitle} numberOfLines={2}>
+                      {started ? "Keep going!" : mainQuest.description || "One step at a time"}
+                    </Text>
+                    <Text style={styles.nextSub}>
+                      {started ? `${doneSteps} ${doneSteps === 1 ? "step" : "steps"} done` : "Tap CONTINUE below"}
+                    </Text>
+                  </>
+                )}
               </View>
               <View style={styles.nextArt}>{/science/i.test(mainQuestId || "") ? <FlaskArt /> : <BookArt size={70} />}</View>
             </View>
