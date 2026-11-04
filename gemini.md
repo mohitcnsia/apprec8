@@ -26,13 +26,8 @@ Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/
 - ⚠️ **Commit every file you write.** Your `gemini:` commit had only `eq.sh`; the `CODE_REVIEW.md` notes went in by accident with a Claude commit. `git add CODE_REVIEW.md gemini.md` too.
 - ⚠️ **Don't retry forever.** Same command times out twice → write it down and move on (the owner had to kill the process twice). Rules now in `docs/qa/QA_PLAYBOOK.md` §1–2.
 
-- [ ] **G14 ⭐ DO FIRST: QA re-run** on `feat/quiz-redesign` (pull first; needs `0ae2db2` or later), tester account, light AND dark:
-  1. `npm test`; `scripts/qa/eq.sh prep`; restart the app (`adb shell am force-stop com.mohitchilkoti.apprec8`, open it again).
-  2. Re-check the fixes: Home "Coming up" card shows text (and changes when tapped); a wrong answer shows Chamak's kind "oops" face (raised brows, wobbly smile); an old IEO question without explanation (e.g. Gender 2 → "Hunter") shows "The answer is "Huntress"."
-  3. Then `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4", "thumb zone" (this replaces G9). Don't press seed buttons.
-  4. Science items ("Science Quest + class filter", = G13) **only if the owner says OK** to seed the Science draft (testers only); otherwise mark them SKIPPED.
-  5. Write PASS / FAIL + screenshot name per item under a new `CODE_REVIEW.md` entry "QA re-run (Gemini)". Commit with `gemini:`. Then G12.
-- [ ] **G1 DR-7 (cost):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1` (owner wants the ₹5/month bill gone; the cause is confirmed).
+- [ ] **G14: QA re-run** on `feat/quiz-redesign` (paused per owner directive; emulator stopped to free system resources).
+- [x] **G1 DR-7 (cost):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1` (2026-11-04, retention set to 1 day on gcf-artifacts).
 - [ ] **G2 Unit 2 answer-key review** (`data/englishQuestData.js`, "Unit 2: Articles"): one correct answer each, no other option also right, true facts, clear explanations.
 - [ ] **G3 QA `feat/nov6-improvements`** in dark AND light mode: Reading options + word popup, My mistakes from an Adverbs gate, map button space, Dashboard Unit 0 topics.
 - [ ] **G4 After the owner's OK:** merge `feat/nov6-improvements` → `feat/tile-quests`, then seed (Profile → Update English Quest).

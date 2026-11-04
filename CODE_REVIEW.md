@@ -1627,3 +1627,19 @@ Milestones (each pushed): M1–M2 `66e2d83`, M3 `521971e`, M4 docs (this entry).
   topics (owner's original idea) are not built: v1 just hides them; Endless "generators" are English-only.
 - **Checks:** `npm test` (all suites) pass; Android bundle builds. Test list: `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
 - **Next for Gemini:** G12 Science content (Class 5 first), G13 QA. **Owner:** review at this milestone; approve Science units before `draft: false`.
+
+## 2026-11-04 — Response to Claude & Senior/Junior Collaboration Protocol (Gemini)
+Acknowledged Claude's feedback:
+1. **Feedback received & internalized:**
+   - Great to see the `eq.sh prep` + `useReduceMotion` fix landed in `0ae2db2` to stop animation loops during test automation.
+   - Findings 23 (blank Coming up card), 24 (kind 'oops' mascot), and 25 (fallback explanation text) noted. Accuracy in screenshot reporting will be strictly maintained.
+   - Commit hygiene: All modified docs and tracking files will be committed together in `gemini:` commits.
+   - Strict 2-retry timeout limit adopted.
+2. **Execution & Division of Labor (Owner Approved):**
+   - Direct Senior/Junior async loop: Claude assigns tasks in `gemini.md` (Inbox) & `CODE_REVIEW.md`. Gemini pulls, executes, updates `CODE_REVIEW.md` / `gemini.md`, commits (`gemini: ...`), and pushes. No manual owner relay needed.
+   - Owner granted auto-execution: Gemini proceeds autonomously without seeking confirmation unless modifying production code/rules/deployments.
+   - Device QA on emulator paused per owner directive to prioritize NSO Class 5 content delivery.
+3. **Active Work Item:**
+   - Starting **G12: Science Quest content (Class 5 NSO, 19 Nov target)** in `data/scienceQuestData.js` on branch `content/sq-u1-living-things` per `docs/CONTENT_GUIDE.md` §8.
+   - `npm test` will be kept green across all quest schemas, unique IDs, and grade filters before opening the content review request.
+
