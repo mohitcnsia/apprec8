@@ -1,124 +1,110 @@
+// navigation/BottomTabNavigator.js
+// Tabs since the Home + tabs redesign (owner-approved mockups, 2026-11-04): Home · Fun · Progress · Me.
+// - The old Study tab's screens now live in the Home stack (navigation/HomeNavigator.js).
+// - The Space quest is a hidden tab ("Quest"), opened from Home's quest tiles. Its screens still
+//   navigate back to "QuestMap" (CLAUDE.md rule 6). The "Quest Mode (V2)" switch no longer hides it.
+// - Route names stay the same as before ("Apprec8", "Stats", "Profile"), so old links keep working.
+// - The selected tab is highlighted from the navigator's own focus state.
+
 import React from "react";
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native"; // <-- IMPORT THIS HELPER
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { MaterialIcons } from "@expo/vector-icons";
 
 import HomeNavigator from "./HomeNavigator";
-import StudyNavigator from "./StudyNavigator";
+import FunNavigator from "./FunNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
 import StatsScreen from "../screens/quiz/StatsScreen";
+import TasksContextProvider from "../store/tasks-context";
 import { useTheme } from "../context/ThemeContext";
-import { useV2 } from "../context/V2Context";
+import { quizPalette } from "../components/quiz/quizPalette";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator({
-  isGuest,
-  signoutHandler,
-  exitGuestModeHandler,
-  user,
-}) {
-  const { theme } = useTheme();
-  const { isV2Enabled } = useV2();
+// Screens that use the whole screen (no tab bar).
+const IMMERSIVE_SCREENS = [
+  "QuizDetails",
+  "QuizScreenV2",
+  "Explanation",
+  "ResultsScreen",
+  "EnglishQuestIntro",
+  "EnglishQuestMap",
+  "ReadingScreen",
+  "EndlessPractice",
+  "AdminDashboard",
+  "AdminKidDetail",
+];
+
+const ICONS = {
+  Apprec8: ["home", "home-outline"],
+  Fun: ["game-controller", "game-controller-outline"],
+  Stats: ["stats-chart", "stats-chart-outline"],
+  Profile: ["person-circle", "person-circle-outline"],
+};
+
+function BottomTabNavigator({ isGuest, signoutHandler, exitGuestModeHandler, user }) {
+  const { theme, isDark } = useTheme();
+  const P = quizPalette(isDark);
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor: theme.tabBarActiveTint,
-        tabBarInactiveTintColor: theme.tabBarInactiveTint,
-        sceneContainerStyle: { backgroundColor: theme.background },
-
-        // This is the core logic that will be applied to ALL tabs
-        tabBarStyle: ((route) => {
-          // This function checks the active screen inside a navigator
-          const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-
-          // List of screens where the tab bar should be HIDDEN
-          const immersiveScreens = [
-            "QuizDetails",
-            "QuizScreenV2",
-            "Explanation",
-            "ResultsScreen",
-            "EnglishQuestIntro",
-            "EnglishQuestMap",
-            "ReadingScreen",
-            "EndlessPractice",
-            "AdminDashboard",
-            "AdminKidDetail",
-          ];
-
-          // If the current screen is in our immersive list, hide the tab bar
-          if (immersiveScreens.includes(routeName)) {
-            return { display: "none" };
-          }
-
-          // Otherwise, show it with the normal theme styles
-          return {
-            backgroundColor: theme.tabBarBackground,
-            borderTopColor: theme.border || "transparent",
-          };
-        })(route), // Immediately invoke the function with the route
-
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === "Apprec8") {
-            iconName = focused ? "home" : "home-outline";
-            return <Ionicons name={iconName} size={size} color={color} />;
-          } else if (route.name === "Study") {
-            iconName = focused ? "book" : "book-outline";
-            return <Ionicons name={iconName} size={size} color={color} />;
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person-circle" : "person-circle-outline";
-            return <Ionicons name={iconName} size={size} color={color} />;
-          } else if (route.name === "Quest") {
-            iconName = focused ? "map" : "map-outline";
-            return <Ionicons name={iconName} size={size} color={color} />;
-          } else if (route.name === "Stats") {
+    // key: reload reminders when a guest signs in (the provider loads once on mount).
+    <TasksContextProvider key={user?.uid || "guest"}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarActiveTintColor: P.selectedText,
+          tabBarInactiveTintColor: P.textSoft,
+          tabBarLabelStyle: { fontFamily: "nunitoBold", fontSize: 12 },
+          sceneContainerStyle: { backgroundColor: theme.background },
+          tabBarStyle: (() => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+            if (route.name === "Quest" || IMMERSIVE_SCREENS.includes(routeName)) {
+              return { display: "none" };
+            }
+            return { backgroundColor: P.card, borderTopColor: P.border, borderTopWidth: 2, height: 64, paddingBottom: 8, paddingTop: 6 };
+          })(),
+          tabBarIcon: ({ focused, color }) => {
+            const names = ICONS[route.name];
+            if (!names) return null;
             return (
-              <MaterialIcons name="leaderboard" color={color} size={size} />
+              <View
+                style={{
+                  width: 54,
+                  height: 30,
+                  borderRadius: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: focused ? P.selectedBg : "transparent",
+                }}
+              >
+                <Ionicons name={focused ? names[0] : names[1]} size={22} color={color} />
+              </View>
             );
-          }
-        },
-      })}
-    >
-      <Tab.Screen
-        name="Apprec8"
-        component={HomeNavigator}
-        options={{ title: "Home" }}
-      />
-      <Tab.Screen
-        name="Study"
-        component={StudyNavigator}
-        options={{ title: "Study" }}
-      />
-
-      {/* The Quest tab no longer needs a custom options prop, as it's handled in screenOptions */}
-      {isV2Enabled && (
+          },
+        })}
+      >
+        <Tab.Screen name="Apprec8" component={HomeNavigator} options={{ title: "Home" }} />
+        <Tab.Screen name="Fun" component={FunNavigator} options={{ title: "Fun" }} />
+        <Tab.Screen name="Stats" component={StatsScreen} options={{ title: "Progress" }} />
+        <Tab.Screen name="Profile" options={{ title: "Me" }}>
+          {() => (
+            <ProfileNavigator
+              isGuest={isGuest}
+              actionHandler={isGuest ? exitGuestModeHandler : signoutHandler}
+              user={user}
+            />
+          )}
+        </Tab.Screen>
+        {/* Hidden: the Space quest, opened from Home. */}
         <Tab.Screen
           name="Quest"
           component={QuestNavigator}
-          options={{ title: "Quest" }}
+          options={{ title: "Quest", tabBarButton: () => null, tabBarItemStyle: { display: "none" } }}
         />
-      )}
-
-      <Tab.Screen
-        name="Stats"
-        component={StatsScreen}
-        options={{ title: "Stats" }}
-      />
-      <Tab.Screen name="Profile" options={{ title: "Profile" }}>
-        {() => (
-          <ProfileNavigator
-            isGuest={isGuest}
-            actionHandler={isGuest ? exitGuestModeHandler : signoutHandler}
-            user={user}
-          />
-        )}
-      </Tab.Screen>
-    </Tab.Navigator>
+      </Tab.Navigator>
+    </TasksContextProvider>
   );
 }
 

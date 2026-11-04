@@ -41,6 +41,20 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### `feat/quiz-redesign`, step 1: Home + tab bar ("Home + tabs redesign: step 1")
+Test in **light and dark** mode. Mockup: canvas "Apprec8 Home & Tabs Mockups", boards A–C.
+- [ ] Tab bar shows **Home · Fun · Progress · Me**; the tab you're on is highlighted (pill behind the icon). No Study or Quest tab.
+- [ ] Home top: Chamak, "Good morning/afternoon/evening, <your name>", streak 🔥 (days in a row with English Quest answers) and stars.
+- [ ] **Coming up:** IEO and NSO countdowns change by themselves every few seconds; tap the card or a dot to switch (it then pauses ~10 s).
+- [ ] Add a task with a due date (Coming up → "+ Add reminder" opens Tasks). Restart the app: it shows in Coming up, sorted by date (max 3 items).
+- [ ] **Continue** opens the English Quest map (or the intro for a kid who never started). Back gesture returns to Home.
+- [ ] With mistakes in English Quest: the red "N mistakes to fix" tile shows; tapping it opens the map and goes straight into My mistakes.
+- [ ] **Your quests:** English opens the intro; **Space** opens the Space map (no tab bar), back returns to Home; Science/Maths are greyed "coming".
+- [ ] **Olympiad practice** row: old IEO/NSO quizzes open and play; My classrooms row only if you have classrooms.
+- [ ] **Fun** tab: thought of the day, 5 games open (Sudoku, Minesweeper, Tell the time, Word builder, Spelling bee), Featured / Book Summaries / Popular Reads open.
+- [ ] Progress (old Stats) and Me (old Profile) still work. Tasks in Me still work (add, edit, complete).
+- [ ] As a guest: Home shows "friend", Continue opens the intro, which asks to sign in.
+
 ### `feat/quiz-redesign` ("Review request: quiz redesign")
 Test in **light and dark** mode.
 - [ ] Practice quiz (Training): answer highlights and fills the blank → CHECK → green/red sheet with the reason → CONTINUE goes to the next question.
@@ -49,7 +63,7 @@ Test in **light and dark** mode.
 - [ ] Exam mode: tap = answer + next; bookmark; review list readable; Submit.
 - [ ] Space quest quiz: SEE WHY opens the picture explanation, then the next question.
 - [ ] Out of hearts screen; results screen (stars, tiles, buttons, X).
-- [ ] An old IEO quiz from the Study tab still plays.
+- [ ] An old IEO quiz (now under Home → Olympiad practice) still plays.
 
 ### `feat/nov6-improvements` ("Branch feat/nov6-improvements: fixes + Unit 2 content")
 - [ ] Reading (Tara's paper boat), **dark mode**: options readable; the right answer isn't always first.

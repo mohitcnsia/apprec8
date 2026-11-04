@@ -18,6 +18,7 @@ import {
 import { useTheme } from "../../context/ThemeContext";
 import DummyScreen from "../../screens/DummyScreen"; // Ensure this path is correct if used
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // For the checkmark icon
+import { openCategory } from "../../utils/openCategory";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20; // Horizontal spacing between items (total)
@@ -58,62 +59,7 @@ const CarouselItem = React.memo(
     const imageSource = getImageSource(item);
     const hasMetadata = containsMetadata(item);
 
-    const pressHandler = useCallback(() => {
-      if (!item || !item.id) {
-        console.warn(
-          "CarouselItem: pressHandler called with no item or item.id"
-        );
-        return;
-      }
-      // Navigation logic based on item.type (remains same)
-      switch (item.type?.toUpperCase()) {
-        case "STUDY":
-          navigation.push("Apprec8Reader", { contentId: item.id });
-          break;
-        case "QUIZ":
-          navigation.push("Quiz", { quizContentId: item.id });
-          break;
-        case "CLOCK":
-          navigation.push("ClockPracticeGenerator", {});
-          break;
-        case "SUDOKU":
-          navigation.push("SudokuGame", {});
-          break;
-        case "MINESWEEPER":
-          navigation.push("Minesweeper", {});
-          break;
-        case "VOCAB_BUILDER":
-          navigation.push("VocabBuilder", {});
-          break;
-        case "SPELLBEE":
-          navigation.navigate("SpellingBeeGame", {});
-          break;
-        case "QUEST":
-          // Tile-based quest (e.g. English Quest). The category id is the quest id
-          // unless the category sets `questId`.
-          // navigate (not push) so a double tap doesn't stack two intro screens.
-          navigation.navigate("EnglishQuestIntro", { questId: item.questId || item.id });
-          break;
-        case "COURSE":
-        case "COMPLEX":
-        case "ACTIVITY":
-          navigation.push("LinkScreen", {
-            categoryId: item.id,
-            categoryTitle: item.title,
-          });
-          break;
-        default:
-          console.warn(
-            `CarouselItem: Unhandled item type: ${item.type} for ID: ${item.id}`
-          );
-          navigation.navigate("DummyScreen", {
-            errorMessage: `Action for "${item.title || "this item"}" of type "${
-              item.type
-            }" is not yet defined.`,
-          });
-          break;
-      }
-    }, [navigation, item]);
+    const pressHandler = useCallback(() => openCategory(navigation, item), [navigation, item]);
 
     // --- Checkmark Logic for Quizzes using perfectQuizCompletions map ---
     const isQuizType = item.type?.toUpperCase() === "QUIZ";

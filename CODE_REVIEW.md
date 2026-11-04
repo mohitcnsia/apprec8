@@ -1482,3 +1482,18 @@ Canvas "Apprec8 Home & Tabs Mockups" (Home light/dark, Fun). Not built yet; Prog
 - **My mistakes tile** = the kid's own wrong answers ("My mistakes" list in their quest progress), same as the map button; tapping it opens the practice that clears them. Today it covers English Quest; other quests add theirs later.
 - **Reminders carousel (owner idea):** kids add their own reminders (up to 5 active), shown on Home as a carousel that moves by itself and can be swiped; the next 3 by date show, exam countdowns included. **Reuse the existing Tasks feature** (`tasks` collection: `userId`, `title`, `dueDate`, `completed`; `store/tasks-context.js`, `screens/task/`), today hidden in Profile. Reminders are in-app only (no phone notifications: that needs a native library, later).
 - **Open owner questions:** exam dates set by us in Remote Config? daily goal = topics, minutes or activities? My Classrooms on Home only for kids in a class; Popular Reads → Fun, Popular Quizzes → Olympiad practice?
+
+## 2026-11-04 — Home + tabs redesign: step 1 built (Home + tab bar), branch `feat/quiz-redesign` (Claude)
+Owner approved the mockups (A–F) and the order: 1 Home + tabs, 2 Progress, 3 Me, 4 Reminders.
+- **Tabs:** Home · Fun · Progress (old Stats) · Me (old Profile). Route names unchanged (`Apprec8`, `Stats`, `Profile`).
+  Study tab removed: its screens moved into the Home stack (`navigation/HomeNavigator.js`). Space quest = hidden tab `Quest`
+  (opened from Home), so `navigate("QuestMap")` still works; the Quest Mode (V2) switch no longer hides it (switch removed in step 3).
+- **Home** (`screens/home/HomeScreen.js`): greeting + streak (from English Quest `stats.daily`) + stars (`users.stats.totalStars`);
+  Coming up = `config/exams.js` (IEO 17 Nov, NSO 19 Nov) + the kid's own tasks with a due date (`utils/homeFeed.js`, tested);
+  Continue; My mistakes tile (map opens straight into My mistakes via `openMistakes: true`); quests grid; Olympiad practice
+  (`olympiad` + `popular_quiz` groups); My classrooms only when not empty. English tile uses a drawn book, not the IEO image.
+- **Fun** (`screens/fun/FunScreen.js`): thought of the day, 5 games, Featured, Book Summaries, Popular Reads.
+- `TasksContextProvider` moved up to wrap all tabs (Home and Me share reminders). Tile taps share `utils/openCategory.js`.
+- Old `screens/quiz/Home.js`, `StudyScreen.js`, `navigation/StudyNavigator.js` are no longer used; delete after QA.
+- Checks: `npm test` (16 suites) pass; Android JS bundle builds. Not run on a device yet (emulator froze earlier):
+  test list in `docs/qa/OWNER_TESTING.md`. **Gemini:** please QA with that list (inbox G8).

@@ -1,18 +1,27 @@
-// navigators/HomeNavigator.js (or similar path)
+// navigation/HomeNavigator.js
+// Home tab stack. Since the Home + tabs redesign (2026-11-04) it also holds every screen the old
+// Study tab had (quests, quizzes, readers), so Home's tiles open inside this stack and the
+// Android back gesture returns to Home. Screen names are unchanged, so old links keep working.
 
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet } from "react-native";
-// Import the theme hook
-import { useTheme } from "../context/ThemeContext";
-// Remove the legacy Colors import
-// import { Colors } from "../config/colors";
 
-// Screen Imports (remain the same)
-import Home from "../screens/quiz/Home"; // Assuming path is correct
+import HomeScreen from "../screens/home/HomeScreen";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
 import TopicOverviewScreen from "../screens/quiz/TopicOverviewScreen";
 import LinksScreen from "../screens/LinksScreen";
+import DummyScreen from "../screens/DummyScreen";
+import WordInspectorScreen from "../screens/WordInspectorScreen";
+import QuizScreen from "../screens/quiz/QuizScreen";
+import QuizResultScreen from "../screens/quiz/QuizResultScreen";
+import EnglishQuestIntroScreen from "../screens/englishQuest/EnglishQuestIntroScreen";
+import EnglishQuestMapScreen from "../screens/englishQuest/EnglishQuestMapScreen";
+import ReadingScreen from "../screens/englishQuest/ReadingScreen";
+import EndlessPracticeScreen from "../screens/englishQuest/EndlessPracticeScreen";
+import QuizDetailsScreen from "../screens/quiz/QuizDetailsScreen";
+import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
+import ExplanationScreen from "../screens/quiz/ExplanationScreen";
+import ResultsScreen from "../screens/common/ResultsScreen";
 import ClockPracticeGenerator from "../components/ClockPracticeGenerator";
 import SudokuGame from "../components/SudokuGame";
 import Minesweeper from "../components/Minesweeper";
@@ -21,112 +30,33 @@ import SpellingBeeGame from "../components/SpellingBeeGame";
 
 const Stack = createStackNavigator();
 
-// --- Helper component to apply theme ---
-const ThemedHomeStack = () => {
-  const { theme } = useTheme(); // Use the theme hook here
-
-  // Define screen options using theme variables
-  const screenOptionsConfig = {
-    headerStyle: {
-      // Use theme color for header background
-      backgroundColor: theme.headerBackground || theme.primary || "#800000", // Provide fallbacks
-    },
-    // Use theme color for header text and icons
-    headerTintColor: theme.headerTint || "#ffffff",
-    headerTitleStyle: {
-      fontWeight: "bold", // Keep specific style if needed
-      // fontFamily: "pacifico", // Example if you want a specific font
-    },
-    // headerTitleAlign: 'center', // Optional: Centralize title alignment by default
-  };
-
-  return (
-    <Stack.Navigator
-      initialRouteName="HomeScreen"
-      screenOptions={screenOptionsConfig} // Apply themed options
-    >
-      <Stack.Screen
-        name="HomeScreen"
-        component={Home}
-        options={{
-          headerShown: false, // Keep screen-specific option
-        }}
-      />
-      <Stack.Screen
-        name="LinkScreen"
-        component={LinksScreen}
-        options={{
-          headerShown: false, // Keep screen-specific option
-        }}
-      />
-      <Stack.Screen
-        name="Apprec8Reader"
-        component={Apprec8Reader}
-        options={{
-          headerShown: false, // Keep screen-specific option
-        }}
-      />
-      <Stack.Screen
-        name="ClockPracticeGenerator"
-        component={ClockPracticeGenerator}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="SudokuGame"
-        component={SudokuGame}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="Minesweeper"
-        component={Minesweeper}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="VocabBuilder"
-        component={VocabBuilder}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="SpellingBeeGame"
-        component={SpellingBeeGame}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="Overview"
-        component={TopicOverviewScreen}
-        options={{
-          headerShown: false, // Keep screen-specific option
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
-// --- Main Exported Navigator Component ---
-// Renders the helper component which applies the theme
-const HomeNavigator = () => {
-  return <ThemedHomeStack />;
-};
+const HomeNavigator = () => (
+  <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="HomeScreen" component={HomeScreen} />
+    {/* Old Study tab screens */}
+    <Stack.Screen name="LinkScreen" component={LinksScreen} />
+    <Stack.Screen name="Overview" component={TopicOverviewScreen} />
+    <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} />
+    <Stack.Screen name="Quiz" component={QuizScreen} />
+    <Stack.Screen name="WordInspector" component={WordInspectorScreen} />
+    <Stack.Screen name="QuizResult" component={QuizResultScreen} />
+    <Stack.Screen name="DummyScreen" component={DummyScreen} />
+    {/* Tile-based quests (English Quest) */}
+    <Stack.Screen name="EnglishQuestIntro" component={EnglishQuestIntroScreen} />
+    <Stack.Screen name="EnglishQuestMap" component={EnglishQuestMapScreen} />
+    <Stack.Screen name="ReadingScreen" component={ReadingScreen} />
+    <Stack.Screen name="EndlessPractice" component={EndlessPracticeScreen} />
+    <Stack.Screen name="QuizDetails" component={QuizDetailsScreen} />
+    <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} />
+    <Stack.Screen name="Explanation" component={ExplanationScreen} />
+    <Stack.Screen name="ResultsScreen" component={ResultsScreen} />
+    {/* Games (also in the Fun tab), in case a content tile opens one */}
+    <Stack.Screen name="ClockPracticeGenerator" component={ClockPracticeGenerator} />
+    <Stack.Screen name="SudokuGame" component={SudokuGame} />
+    <Stack.Screen name="Minesweeper" component={Minesweeper} />
+    <Stack.Screen name="VocabBuilder" component={VocabBuilder} />
+    <Stack.Screen name="SpellingBeeGame" component={SpellingBeeGame} />
+  </Stack.Navigator>
+);
 
 export default HomeNavigator;
-
-// Note: The StyleSheet below wasn't used in the original code for the navigator itself.
-// Keep it if any parent component needs it, otherwise it can be removed from this file.
-/*
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
-*/

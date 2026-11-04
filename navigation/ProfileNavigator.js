@@ -13,7 +13,7 @@ import ContactUsForm from "../components/input/ContactUsForm"; // Adjust path
 import Tasks from "../screens/task/Tasks"; // Adjust path
 import TaskDetails from "../screens/task/TaskDetails"; // Adjust path
 import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
-import TasksContextProvider from "../store/tasks-context"; // Adjust path
+// TasksContextProvider now wraps all tabs (BottomTabNavigator), so Home shows the same reminders.
 import DummyScreen from "../screens/DummyScreen"; // << ENSURE THIS IMPORT IS CORRECT AND UNCOMMENTED
 import MessageCenterScreen from "../screens/profile/MessageCenterScreen";
 import AdminDashboardScreen from "../screens/admin/AdminDashboardScreen";
@@ -156,15 +156,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
 
 // Main Exported Navigator Component
 const ProfileNavigator = ({ isGuest, actionHandler, user }) => {
-  return (
-    <TasksContextProvider>
-      <ThemedStack
-        isGuest={isGuest}
-        actionHandler={actionHandler}
-        user={user}
-      />
-    </TasksContextProvider>
-  );
+  return <ThemedStack isGuest={isGuest} actionHandler={actionHandler} user={user} />;
 };
 
 export default ProfileNavigator;

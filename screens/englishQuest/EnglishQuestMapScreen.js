@@ -448,6 +448,17 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     });
   };
 
+  // Home's "mistakes to fix" tile opens the map with openMistakes: true → go straight to practice once.
+  const autoMistakesDone = useRef(false);
+  useEffect(() => {
+    if (!route.params?.openMistakes || autoMistakesDone.current) return;
+    if (!tree || !quest || mistakeCount === 0) return;
+    autoMistakesDone.current = true;
+    navigation.setParams({ openMistakes: false });
+    openMistakes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params?.openMistakes, tree, quest, mistakeCount]);
+
   // ♾️ Keep practising: pool = this branch's main + practice quizzes (gate/boss questions are
   // assessments and are never used for practice) + generated questions from word tables.
   const onEndlessPress = (e, main) => {
