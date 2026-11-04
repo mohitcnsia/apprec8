@@ -1,7 +1,7 @@
 # Agent board
 
 STOP: no
-AWAY: no
+AWAY: yes
 <!-- AWAY: yes = the owner is away for 1 h+, so heavy work (emulator, builds) may run. Claude sets it when the owner says so. -->
 <!-- Owner or Claude: change the line above to "STOP: yes" to halt Gemini at its next check. -->
 

@@ -9,3 +9,4 @@
 5. **Facts change:** check that "every year / still / today" facts are still true (Siberian cranes stopped reaching India in 2002). (G16)
 6. **Wording:** read each question as a 10-year-old once; fix anything that can be misread ("eyes cut out"). (G16)
 7. **Commit everything** you write; never leave files uncommitted; stop after 2 failed tries and report. (G8)
+8. **Don't end your turn to report or wait:** the loop dies when you stop. Report by commit; to wait, `sleep 300` and re-check. (G14)

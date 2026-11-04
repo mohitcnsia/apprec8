@@ -11,6 +11,10 @@ watches progress on `docs/agents/BOARD.md`. Gemini takes tasks only from that bo
 - Never check out or commit to `feat/quiz-redesign`, `feat/tile-quests` or `main`; Claude merges.
 
 ## 2. The loop
+**Never end your turn to report or to wait.** Nobody reads your chat (the owner talks only to Claude), and when your turn ends
+the loop stops until someone restarts you. Report only through commits and report files. Keep calling the script in the same
+turn; end only on exit 3 (STOP) or after NO_TASK three times in a row (then say "No tasks, idle" once and stop).
+If you must wait (a build is running), run `sleep 300` and check again; don't stop.
 1. `scripts/agents/next-task.sh` (run it from your folder). It waits until a task for you is open, then prints it.
    - exit 0 → do that task · exit 2 → nothing yet: run it again · exit 3 → **STOP**: commit what you have and end.
 2. Start: `git checkout -b <branch from the task> <base from the task>`; commit `gemini(Gxx): start` (empty commit is fine).
