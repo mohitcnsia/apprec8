@@ -13,7 +13,7 @@ import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
 
 const MODES = [
   { id: "training", icon: "🎯", title: "Training", sub: "Hearts, and the reason after every answer." },
-  { id: "exam", icon: "📝", title: "Exam", sub: "Like the real Olympiad: answers at the end." },
+  { id: "exam", icon: "📝", title: "Exam", sub: "Like a real exam: answers at the end." },
 ];
 
 const QuizDetailsScreen = ({ route, navigation }) => {

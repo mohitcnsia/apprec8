@@ -15,3 +15,4 @@
 11. **Don't overcorrect:** after a fix, re-check the whole set (0% "longest" is as bad as 68%). Keep options short and kid-level. (G16)
 12. **Collocation / word-choice questions:** check that no wrong option is ALSO natural English (baking heat, kindled curiosity). (G25)
 13. **Spot the error:** exactly one error per sentence, and "No error" must sometimes be the answer. (G25)
+14. **No exam labels** in anything kids see (Olympiad / IEO / NSO / IMO). Use "champion level", "challenge". (owner)

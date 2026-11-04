@@ -19,7 +19,7 @@ const IEO_TILE_IMAGE =
 export const quest = {
   title: "English Quest",
   description:
-    "Climb the English tree, from your very first sentence all the way to Olympiad master level. Practise in the branches, pass each unit test, and collect stars!",
+    "Climb the English tree, from your very first sentence all the way to champion level. Practise in the branches, pass each unit test, and collect stars!",
   image: IEO_TILE_IMAGE,
   version: 1,
 };
@@ -32,7 +32,7 @@ export const tile = {
   order: 1,
   image: IEO_TILE_IMAGE,
   questId: QUEST_ID,
-  description: "Grammar and reading, from zero to Olympiad level",
+  description: "Grammar and reading, from your first sentence to champion level",
 };
 
 // ---------- Mistake tags (keep this list short and reuse tags) ----------

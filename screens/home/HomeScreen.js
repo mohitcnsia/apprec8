@@ -20,6 +20,9 @@ import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "..
 import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
+import { bundledQuest } from "../../data/quests";
+import { nodesForGrade } from "../../utils/gradeFilter";
+import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
@@ -133,31 +136,49 @@ function ComingUp({ items, P, isDark, styles, onAdd }) {
   const tone = TONES[item?.tone] || TONES.plum;
 
   return (
-    <View style={[styles.chipCard, { flex: 1 }]}>
-      <Pressable
-        style={{ flex: 1 }}
-        onPress={() => (count > 1 ? tapTo((index + 1) % count) : !item && onAdd())}
-        accessibilityRole="button"
-        accessibilityLabel={item ? `${item.title}, ${item.days} ${item.unit.toLowerCase()} left. Tap for the next one.` : "Nothing coming up. Add a reminder."}
-      >
-        <Animated.View style={{ opacity: fade }}>
-          <Text style={styles.chipLabel} numberOfLines={1}>{item ? item.tag : "COMING UP"}</Text>
-          <Text style={styles.chipValue} numberOfLines={1}>
-            {item ? (item.days === 0 ? "Today" : `${item.days} ${item.unit.toLowerCase()}`) : "Nothing yet"}
-          </Text>
-          <Text style={styles.chipSub} numberOfLines={1}>{item ? item.title : "Add a reminder"}</Text>
-        </Animated.View>
-        {count > 1 ? (
-          <View style={styles.miniDots}>
-            {items.map((it, k) => (
-              <View key={it.id} style={[styles.miniDot, k === index && styles.miniDotOn]} />
-            ))}
+    <View style={{ gap: 8 }}>
+      <View style={styles.rowBetween}>
+        <Text style={styles.label}>COMING UP</Text>
+        <Pressable onPress={onAdd} hitSlop={10} accessibilityRole="button" style={styles.addPill}>
+          <Text style={styles.link}>+ Add reminder</Text>
+        </Pressable>
+      </View>
+      {item ? (
+        <Pressable
+          onPress={() => count > 1 && tapTo((index + 1) % count)}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.title}, ${item.days} ${item.unit.toLowerCase()} left. Tap for the next one.`}
+        >
+          <Animated.View style={[styles.remCard, { borderColor: isDark ? P.border : tone.border, opacity: fade }]}>
+            <View style={[styles.remBox, { borderColor: tone.head }]}>
+              <Text style={[styles.remTag, { backgroundColor: tone.head }]}>{item.tag}</Text>
+              <View style={styles.remNumWrap}>
+                <Text style={[styles.remNum, { color: isDark ? P.text : tone.num }]}>{item.days === 0 ? "!" : item.days}</Text>
+              </View>
+              <Text style={[styles.remUnit, { color: isDark ? P.textSoft : tone.num }]}>{item.unit}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.remTitle} numberOfLines={2}>{item.title}</Text>
+              <Text style={styles.remSub} numberOfLines={1}>{item.sub}</Text>
+            </View>
+          </Animated.View>
+        </Pressable>
+      ) : (
+        <Pressable onPress={onAdd} accessibilityRole="button">
+          <View style={styles.remCard}>
+            <Text style={styles.remSub}>Nothing coming up. Add a reminder for a test, a project or an exam!</Text>
           </View>
-        ) : null}
-      </Pressable>
-      <Pressable onPress={onAdd} hitSlop={10} accessibilityRole="button" accessibilityLabel="Add reminder" style={styles.addButton}>
-        <Text style={styles.addButtonText}>+</Text>
-      </Pressable>
+        </Pressable>
+      )}
+      {count > 1 ? (
+        <View style={styles.dots}>
+          {items.map((it, k) => (
+            <Pressable key={it.id} onPress={() => tapTo(k)} hitSlop={8} accessibilityLabel={`Show ${it.title}`}>
+              <View style={[styles.dot, k === index && styles.dotOn]} />
+            </Pressable>
+          ))}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -300,140 +321,175 @@ export default function HomeScreen({ navigation }) {
 
   const practiceTiles = [...olympiad, ...popularQuizzes];
 
-  const shelfTile = (key, title, sub, art, onPress, dim = false) => (
+  // Each quest tile is its own "continue" (owner 2026-11-04: a kid runs several quests; no single big Continue card).
+  const questStats = (q) => {
+    const data = bundledQuest(q.questId);
+    if (!data) return null;
+    try {
+      const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
+      return questSummary(nodesForGrade(data.nodes, grade), progressById[q.questId]?.nodes || {});
+    } catch (e) {
+      return null;
+    }
+  };
+  const openQuest = (q) => {
+    const started = Object.keys(progressById[q.questId]?.nodes || {}).length > 0;
+    if (started) navigation.navigate("EnglishQuestMap", { questId: q.questId });
+    else openCategory(navigation, q);
+  };
+  const PRACTICE_NAMES = { IEO: "English", NSO: "Science", IMO: "Maths" }; // old category titles → subject names (no exam labels)
+
+  const questTile = (key, title, sub, art, tint, onPress, { stats = null, dim = false, teacher = false } = {}) => (
     <Pressable key={key} style={styles.gridCell} onPress={onPress} disabled={!onPress} accessibilityRole="button" accessibilityLabel={`${title}, ${sub}`}>
-      <View style={[styles.shelfTile, dim && styles.soon]}>
-        <View style={styles.shelfArt}>{art}</View>
+      <View style={[styles.questTile, dim && styles.soon]}>
+        <View style={[styles.questArtBox, { backgroundColor: tint }]}>{art}</View>
         <Text style={styles.questTitle} numberOfLines={1}>{title}</Text>
-        <Text style={styles.questSub} numberOfLines={1}>{sub}</Text>
+        <Text style={[styles.questSub, teacher && { color: P.label }]} numberOfLines={2}>{sub}</Text>
+        {stats && stats.total ? (
+          <View style={styles.tileProgressRow}>
+            <View style={styles.tileTrack}>
+              <View style={[styles.tileFill, { width: `${Math.round((stats.cleared / stats.total) * 100)}%` }]} />
+            </View>
+            <Text style={styles.tileCount}>{stats.cleared}/{stats.total}</Text>
+          </View>
+        ) : null}
+        {onPress && !dim ? (
+          <View style={styles.goArrow}>
+            <Text style={styles.goArrowText}>▶</Text>
+          </View>
+        ) : null}
       </View>
     </Pressable>
   );
 
-  // Calm Home (mockup I + design rules, 2026-11-04): one loud "Next up" card; quiet chips; shelves; CONTINUE in the thumb zone.
+  // Home (owner 2026-11-04: back to mockup A, quest tiles carry the continue; no exam labels anywhere).
   return (
-    <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Mascot size={38} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.hello}>{greeting()},</Text>
-            <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <View style={styles.header}>
+        <Mascot size={50} />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.hello}>{greeting()},</Text>
+          <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
+        </View>
+        <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
+          <FlameIcon />
+          <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
+        </View>
+        <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
+          <StarIcon />
+          <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
+        </View>
+      </View>
+
+      <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
+
+      {teacherTask ? (
+        <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`From your teacher: ${(teacherTask.nodeTitles || []).join(", ")}`}>
+          <View style={styles.teacherCard}>
+            <Text style={styles.label}>FROM YOUR TEACHER</Text>
+            <Text style={styles.teacherTitle} numberOfLines={2}>{(teacherTask.nodeTitles || []).join(", ") || "A new topic"}</Text>
+            <Text style={styles.questSub} numberOfLines={2}>
+              {teacherTask.dueDate ? `Due in ${daysUntil(teacherTask.dueDate)} days` : "Open now"}
+              {teacherTask.note ? ` · ${teacherTask.note}` : ""}
+            </Text>
           </View>
-          <Text style={styles.quietStats} accessibilityLabel={`${streak} day streak, ${stars} stars`}>
-            🔥 {streak} · ⭐ {stars}
-          </Text>
-        </View>
-
-        {mainQuest ? (
-          <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`Next up: ${mainQuest.title}`}>
-            <View style={styles.nextCard}>
-              <View style={{ flex: 1 }}>
-                {teacherTask ? (
-                  <>
-                    <Text style={styles.nextLabel}>FROM YOUR TEACHER</Text>
-                    <Text style={styles.nextTitle} numberOfLines={2}>{(teacherTask.nodeTitles || []).join(", ") || "A new topic"}</Text>
-                    <Text style={styles.nextSub} numberOfLines={2}>
-                      {teacherTask.dueDate ? `Due in ${daysUntil(teacherTask.dueDate)} days` : "Open now"}
-                      {teacherTask.note ? ` · ${teacherTask.note}` : ""}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <Text style={styles.nextLabel}>{started ? "NEXT UP" : "START HERE"} · {(mainQuest.title || "Quest").toUpperCase()}</Text>
-                    <Text style={styles.nextTitle} numberOfLines={2}>
-                      {started ? "Keep going!" : mainQuest.description || "One step at a time"}
-                    </Text>
-                    <Text style={styles.nextSub}>
-                      {started ? `${doneSteps} ${doneSteps === 1 ? "step" : "steps"} done` : "Tap CONTINUE below"}
-                    </Text>
-                  </>
-                )}
-              </View>
-              <View style={styles.nextArt}>{/science/i.test(mainQuestId || "") ? <FlaskArt /> : <BookArt size={70} />}</View>
-            </View>
-          </Pressable>
-        ) : null}
-
-        <View style={styles.chipRow}>
-          <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
-          {mainQuest && mistakeCount > 0 ? (
-            <Pressable style={{ flex: 1 }} onPress={openMistakes} accessibilityRole="button" accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}>
-              <View style={styles.chipCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.chipLabel, { color: P.wrongText }]}>MISTAKES</Text>
-                  <Text style={styles.chipValue}>{mistakeCount} to fix</Text>
-                  <Text style={styles.chipSub} numberOfLines={1}>2 right in a row fixes one</Text>
-                </View>
-              </View>
-            </Pressable>
-          ) : null}
-        </View>
-
-        <Text style={styles.shelfLabel}>OLYMPIAD PREP</Text>
-        <View style={styles.grid}>
-          {allQuests.map((q) =>
-            shelfTile(
-              q.id,
-              (q.title || "Quest").replace(/ Quest$/, ""),
-              draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.subtitle || "Quest",
-              /science/i.test(q.questId) ? <FlaskArt /> : <BookArt />,
-              () => openCategory(navigation, q)
-            )
-          )}
-          {allQuests.some((q) => /science/i.test(q.questId)) ? null : shelfTile("science-soon", "Science", "Coming soon", <FlaskArt />, null, true)}
-          {shelfTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, null, true)}
-        </View>
-
-        <Text style={styles.shelfLabel}>EXPLORE</Text>
-        <View style={styles.grid}>{shelfTile("space", "Space", "Rockets, planets, ISRO", <RocketArt />, openSpace)}</View>
-
-        {practiceTiles.length > 0 ? (
-          <>
-            <Text style={styles.shelfLabel}>MORE PRACTICE</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-              {practiceTiles.map((c) => (
-                <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                  <View style={styles.practiceTile}>
-                    {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                    <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </>
-        ) : null}
-
-        {classrooms.length > 0 ? (
-          <>
-            <Text style={styles.shelfLabel}>MY CLASSROOMS</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-              {classrooms.map((c) => (
-                <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                  <View style={styles.practiceTile}>
-                    {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                    <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </>
-        ) : null}
-      </ScrollView>
-
-      {/* Thumb zone: the one main button (design rule 2) */}
-      {mainQuest ? (
-        <View style={styles.footer}>
-          <GlowButton label={started ? `CONTINUE · ${(mainQuest.title || "Quest").replace(/ Quest$/, "")}` : "START"} onPress={openMainQuest} styles={styles} />
-        </View>
+        </Pressable>
       ) : null}
-    </View>
+
+      {mistakeCount > 0 ? (
+        <Pressable onPress={openMistakes} accessibilityRole="button" accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}>
+          <View style={styles.mistakes}>
+            <View style={styles.mistakesIcon}>
+              <WrenchIcon />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.mistakesTitle}>
+                {mistakeCount} {mistakeCount === 1 ? "mistake" : "mistakes"} to fix
+              </Text>
+              <Text style={styles.mistakesSub}>Two right in a row fixes one</Text>
+            </View>
+            <Text style={styles.mistakesGo}>Fix now</Text>
+          </View>
+        </Pressable>
+      ) : null}
+
+      <Text style={styles.section}>Your quests</Text>
+      <View style={styles.grid}>
+        {allQuests.map((q) => {
+          const st = questStats(q);
+          const isDraft = draftQuests.some((d) => d.id === q.id);
+          const sub = isDraft
+            ? "Draft · testers only"
+            : st?.current
+            ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
+            : "Start here";
+          const sci = /science/i.test(q.questId);
+          const words = /word/i.test(q.questId);
+          return questTile(
+            q.id,
+            (q.title || "Quest").replace(/ Quest$/, ""),
+            sub,
+            sci ? <FlaskArt /> : <BookArt />,
+            sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
+            () => openQuest(q),
+            { stats: st }
+          );
+        })}
+        {allQuests.some((q) => /science/i.test(q.questId)) ? null : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
+        {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
+      </View>
+
+      <Text style={styles.section}>Explore</Text>
+      <View style={styles.grid}>{questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace)}</View>
+
+      {practiceTiles.length > 0 ? (
+        <>
+          <Text style={styles.section}>More practice</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
+            {practiceTiles.map((c) => (
+              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
+                <View style={styles.practiceTile}>
+                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
+                  <Text style={styles.practiceTitle} numberOfLines={2}>{PRACTICE_NAMES[String(c.title || "").trim()] || c.title}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : null}
+
+      {classrooms.length > 0 ? (
+        <>
+          <Text style={styles.section}>My classrooms</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
+            {classrooms.map((c) => (
+              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
+                <View style={styles.practiceTile}>
+                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
+                  <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : null}
+    </ScrollView>
   );
 }
 
 const makeStyles = (P, insets) =>
   StyleSheet.create({
     screen: { flex: 1, backgroundColor: P.bg },
+    addPill: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: P.border, backgroundColor: P.card },
+    teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
+    teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
+    questArtBox: { height: 82, borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 8 },
+    tileProgressRow: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 6, marginRight: 34 },
+    tileTrack: { flex: 1, height: 7, borderRadius: 4, backgroundColor: P.track, overflow: "hidden" },
+    tileFill: { height: "100%", borderRadius: 4, backgroundColor: P.gold },
+    tileCount: { fontSize: 12, fontFamily: "nunitoBold", color: P.textSoft },
+    goArrow: { position: "absolute", right: 10, bottom: 10, width: 30, height: 30, borderRadius: 15, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
+    goArrowText: { color: P.onPrimary, fontSize: 12, fontFamily: "nunitoBold", marginLeft: 2 },
     quietStats: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
     nextCard: { flexDirection: "row", alignItems: "center", gap: 10, padding: 18, borderRadius: 24, backgroundColor: P.primary },
     nextLabel: { fontSize: 12, letterSpacing: 1, fontFamily: "nunitoBold", color: "#E0C6E3" },
@@ -525,14 +581,14 @@ const makeStyles = (P, insets) =>
     grid: { flexDirection: "row", flexWrap: "wrap", marginHorizontal: -6 },
     gridCell: { width: "50%", padding: 6 },
     questTile: {
-      height: 150,
+      minHeight: 190,
       borderRadius: 20,
       backgroundColor: P.card,
       borderWidth: 2,
       borderColor: P.border,
       borderBottomWidth: 5,
       padding: 12,
-      justifyContent: "flex-end",
+      justifyContent: "flex-start",
     },
     soon: { opacity: 0.55 },
     questArt: { flex: 1, alignItems: "center", justifyContent: "center" },

@@ -1,8 +1,5 @@
 // config/exams.js
-// Exam countdowns on Home ("Coming up"). Each one hides itself after its date.
-// To change dates without code, this could move to Remote Config later (open owner question).
+// Built-in exam countdowns for Home's "Coming up". Empty on purpose (owner 2026-11-04: no exam labels in the app;
+// kids learn and grow without labels). Exams are now ordinary reminders a kid or parent adds ("+ Add reminder").
 
-export const EXAMS = [
-  { id: "ieo-2026", tag: "IEO", title: "English Olympiad", date: "2026-11-17", tone: "gold" },
-  { id: "nso-2026", tag: "NSO", title: "Science Olympiad", date: "2026-11-19", tone: "green" },
-];
+export const EXAMS = [];

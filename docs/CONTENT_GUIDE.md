@@ -201,3 +201,6 @@ misconception (e.g. `moves-means-alive`); list new ones at the top of the file.
 - **Use past papers and the syllabus regularly:** every new unit is checked against `docs/exam/*-pattern.md` and
   `docs/exam/syllabus-*.md` (coverage, style, difficulty). Questions stay **original** (modelled on the papers, never copied):
   SOF keeps the copyright on its papers even when they are free to download, and the app is public.
+
+- **No exam labels in the app** (owner 2026-11-04): no "Olympiad", "IEO", "NSO", "IMO" in titles, descriptions, Learn pages or
+  questions kids see. Kids grow into champions without labels. (The papers still guide us behind the scenes.)

@@ -16,7 +16,7 @@ export const QUEST_ID = "science-quest";
 
 export const quest = {
   title: "Science Quest",
-  description: "Explore living things, matter, forces, Earth and space, one branch at a time, up to Olympiad (NSO) level.",
+  description: "Explore living things, matter, forces, Earth and space, one branch at a time, up to champion level.",
   image: null,
   version: 1,
   draft: true,
