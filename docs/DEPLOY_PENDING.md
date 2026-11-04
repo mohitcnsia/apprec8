@@ -12,6 +12,21 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## Owner: the IAM step, click by click (~3 min, on the laptop)
+
+Why: "Play as <child>" and child login codes sign the child in with a special token. Firebase can only make that
+token if its server account has permission to "create tokens". Without it those two features fail; everything else works.
+
+1. Open **https://console.cloud.google.com/iam-admin/iam?project=apprec8-ca229** and sign in with mohitchilkoti@gmail.com.
+2. Top of the page: check the project picker says **apprec8-ca229**.
+3. In the list (tab **"View by principals"**), find the row
+   **apprec8-ca229@appspot.gserviceaccount.com** (name: "App Engine default service account").
+   Not in the list? Tick **"Include Google-provided role grants"** (top right of the table).
+4. On that row, click the **pencil** icon (Edit principal) at the right end.
+5. Click **"+ Add another role"**, type **Service Account Token Creator** in the role box, pick it.
+6. Click **Save**. Done; it works within a minute (no app update, no deploy).
+7. Test on the phone: Me → add a child (or "Play as"), enter your PIN. If it still says "permission", tell Claude.
+
 | # | What it switches on | Steps |
 |---|---|---|
 | **DR-8** | Leaderboard: first name + class only, preset avatars only (no real photos) | `firebase deploy --only functions:getLeaderboard` |
