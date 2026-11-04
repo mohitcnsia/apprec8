@@ -76,3 +76,20 @@ const items = buildMistakeItems(
 );
 assert.deepEqual(items.map((i) => [i.question.id, i.mistakeKey]), [["sim1", "topic:nouns:gender"], ["qa", "a"]]);
 console.log("mistakes: all tests passed");
+
+// similarQuestions: a gate sub-topic with no tagged practice question falls back to the branch
+{
+  const { similarQuestions } = await import("../utils/mistakes.js");
+  const all = [
+    { id: 1, branchId: "adv", subtopic: "kinds" },
+    { id: 2, branchId: "adv", subtopic: null },
+    { id: 3, branchId: "conj", subtopic: null },
+  ];
+  const ids = (xs) => xs.map((x) => x.id);
+  assert.deepEqual(ids(similarQuestions(all, { branchId: "adv", subtopic: "kinds" })), [1]);
+  assert.deepEqual(ids(similarQuestions(all, { branchId: "adv", subtopic: "forming" })), [1, 2]); // fallback
+  assert.deepEqual(ids(similarQuestions(all, { branchId: "conj", subtopic: "pairs" })), [3]);
+  assert.deepEqual(ids(similarQuestions(all, { unitId: "u1" }, { u1: ["adv", "conj"] })), [1, 2, 3]); // Boss
+  assert.deepEqual(similarQuestions(all, { branchId: "none", subtopic: "x" }), []);
+  console.log("mistakes similarQuestions: ok");
+}

@@ -90,6 +90,22 @@ export const countMistakes = (mistakes = {}) => Object.keys(mistakes).length;
  *   byId: questions we can replay exactly (pool + regenerated); similar: questions for a topic entry
  * @returns {Array<{ question, mistakeKey }>} one item per playable mistake (topic entries pick a similar question)
  */
+/**
+ * Practice questions for a topic mistake (gate/Boss): same branch(es), same sub-topic when known.
+ * If no practice question has that sub-topic, any question from the branch(es) will do, so the
+ * mistake can still be fixed (otherwise it stays on the map forever).
+ * @param {Array} all - practice questions [{ branchId, subtopic }]
+ * @param {object} entry - { branchId, unitId, subtopic }
+ * @param {object} unitBranches - { [unitId]: [branchId] }
+ */
+export function similarQuestions(all = [], entry = {}, unitBranches = {}) {
+  const branches = entry.branchId ? [entry.branchId] : unitBranches[entry.unitId] || [];
+  const inBranch = all.filter((q) => branches.includes(q.branchId));
+  if (!entry.subtopic) return inBranch;
+  const same = inBranch.filter((q) => q.subtopic === entry.subtopic);
+  return same.length ? same : inBranch;
+}
+
 export function buildMistakeItems(mistakes = {}, { byId = new Map(), similar = () => [] } = {}, rng = Math.random) {
   const items = [];
   Object.entries(mistakes)

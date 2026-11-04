@@ -70,6 +70,15 @@ for (const g of nodes.filter(n => n.kind === "gate")) {
   }
   nodes.filter(n => n.kind === "practice" && n.branchId === g.branchId && n.subtopic)
     .forEach(p => assert.ok(titles[p.subtopic], `${p.id}: sub-topic '${p.subtopic}' not named on ${g.id}`));
+  // "My mistakes" practises a gate mistake with practice questions of the same sub-topic. When the
+  // branch's practice is all new content, every gate sub-topic needs at least one (else the app falls
+  // back to any branch question, and older builds can't clear the mistake at all).
+  const practiceSteps = [nodes.find(n => n.id === g.branchId), ...nodes.filter(n => n.kind === "practice" && n.branchId === g.branchId)]
+    .flatMap(n => (n.steps || []).filter(s => s.type === "quiz").map(s => ({ quizId: s.quizId, node: n })));
+  if (practiceSteps.every(s => D.quizzes[s.quizId])) {
+    const tagged = new Set(practiceSteps.flatMap(s => D.quizzes[s.quizId].map(q => q.subtopic || s.node.subtopic)));
+    for (const t of Object.keys(titles)) assert.ok(tagged.has(t), `${g.id}: no practice question for sub-topic '${t}' (My mistakes can't fix it)`);
+  }
   console.log(`gate ${g.id}: ${pool.length} questions, sub-topics ${Object.keys(titles).map(t => `${t}=${pool.filter(q => q.subtopic === t).length}`).join(" ")}`);
 }
 import { buildReadingFlow, countWords } from "../utils/readingFlow.js";

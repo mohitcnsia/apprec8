@@ -21,7 +21,7 @@ import { getQuizQuestions, getStudyDoc } from "../../services/contentCache";
 import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQuestApi";
 import { GENERATORS, nextEndlessQuestion } from "../../utils/generators";
 import { shuffle } from "../../utils/gateRules";
-import { buildMistakeItems, RIGHT_TO_CLEAR } from "../../utils/mistakes";
+import { buildMistakeItems, similarQuestions, RIGHT_TO_CLEAR } from "../../utils/mistakes";
 
 const CHUNK_SIZE = 10;
 
@@ -168,10 +168,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
         }
       }
       // Similar questions for a topic mistake: same branch(es), same sub-topic when known.
-      similarRef.current = (entry) => {
-        const branches = entry.branchId ? [entry.branchId] : unitBranches[entry.unitId] || [];
-        return all.filter((q) => branches.includes(q.branchId) && (!entry.subtopic || q.subtopic === entry.subtopic));
-      };
+      similarRef.current = (entry) => similarQuestions(all, entry, unitBranches);
       const items = buildMistakeItems(mistakes, { byId, similar: similarRef.current });
       if (!alive) return;
       if (!items.length) {
