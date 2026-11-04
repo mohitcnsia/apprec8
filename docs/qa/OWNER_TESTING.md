@@ -41,6 +41,14 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ 20.0.29 (lock the phone + play time), ~5 min. Needs the IAM step first (DEPLOY_PENDING.md)
+1. Upload `build-1793820561489.aab` to Play internal testing; install.
+2. Me → MY CHILDREN → **Play as Pratha** → a sheet: lock card, HOW LONG? (15/30/45 min, No limit), LOCK & PLAY.
+3. Pick 15 min → LOCK & PLAY → Android asks "Pin this app?" → Got it. Try Home/Recents: you can't leave Apprec8
+   (unpinning asks for the phone's own PIN/pattern).
+4. After 15 min: Chamak "Great work, Pratha! Time is up…" covers the app. Your app PIN → back to you, the phone is unpinned.
+5. "Play without lock" still works; "Login code (another phone)" link is at the bottom of the sheet.
+
 ### Over-the-air update (after you say "publish"): new leaderboard, Schools & classes, no status bar in quests, ~10 min
 1. **Start screen:** "Appreciate" is not cut off (dark mode too).
 2. **Quests:** open English Quest → map, a Learn page, a quiz start screen, a quiz: no time/battery bar at the top anywhere.
