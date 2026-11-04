@@ -17,9 +17,19 @@ export function sentenceWithBlank(questionText = "") {
 /** Does this question have a blank we can fill with each option? */
 export const canTryAnswers = (questionText) => sentenceWithBlank(questionText) !== null;
 
-/** Fill the first blank with an option. */
+/**
+ * Fill the blank with an option. With several blanks and an option like "an, a" (one part per
+ * blank), each part goes into its own blank; otherwise only the first blank is filled.
+ */
 export function fillBlank(sentence, option) {
-  return String(sentence).replace(BLANK, String(option).trim());
+  const text = String(sentence);
+  const blanks = text.match(/_{2,}/g) || [];
+  const parts = String(option).split(",").map((x) => x.trim());
+  if (blanks.length > 1 && parts.length === blanks.length) {
+    let i = 0;
+    return text.replace(/_{2,}/g, () => parts[i++]);
+  }
+  return text.replace(BLANK, String(option).trim());
 }
 
 /**

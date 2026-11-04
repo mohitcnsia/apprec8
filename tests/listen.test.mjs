@@ -15,3 +15,9 @@ assert.deepEqual(
 assert.deepEqual(tryEachAnswerLines("What is the plural of 'leaf'?", [{ content: "leaves" }]), []);
 assert.equal(speakableQuestion("The baby ___."), "The baby  blank .");
 console.log("listen: all tests passed");
+
+// several blanks: "an, a" fills one part per blank; a mismatch keeps the old behaviour
+assert.equal(fillBlank("I saw ___ owl and ___ crow.", "an, a"), "I saw an owl and a crow.");
+assert.equal(fillBlank("I saw ___ owl and ___ crow.", "an"), "I saw an owl and ___ crow.");
+assert.equal(fillBlank("___ dog", "a, b"), "a, b dog");
+console.log("listen multi-blank: ok");
