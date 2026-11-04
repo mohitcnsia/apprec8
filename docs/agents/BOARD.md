@@ -14,6 +14,9 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Mockups L (Schools & classes: no emails, codes shared on WhatsApp, forms in sheets) + M (leaderboard redesign)**:
+  https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL (2026-11-05). Owner reacts, then Claude builds. Feedback items 19–22.
+- **Publish over the air:** start-loader text fix `453d4a5` (owner OK needed per publish).
 - ~~Seema's review~~ done 2026-11-04: **go-ahead to seed English (Units 3–4) and Word Power** (owner, from the phone after 20.0.28: Me → Admin tools).
 - ~~DR-8/9/10 + Finding 22~~ owner OK 2026-11-04 → G27 **deployed** 21:46 (functions + rules live).
 - **Owner, one click (needed for child sign-in codes / "Play as"):** Google Cloud Console → IAM → give
