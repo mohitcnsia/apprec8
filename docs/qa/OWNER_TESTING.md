@@ -41,6 +41,21 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### Over-the-air update (after you say "publish"): new leaderboard, Schools & classes, no status bar in quests, ~10 min
+1. **Start screen:** "Appreciate" is not cut off (dark mode too).
+2. **Quests:** open English Quest → map, a Learn page, a quiz start screen, a quiz: no time/battery bar at the top anywhere.
+   Back on Home, the bar is there again.
+3. **Leaderboard** (Progress → Leaderboard): tabs "My class" / "Everyone" (tabs only show for a kid in a class), top-3 podium,
+   👏 next to classmates (once a day each), your own row pinned at the bottom with "N more to pass …".
+4. **Schools** (Me → Admin tools → Schools & classes): only the list. "+ New school" at the bottom opens a sheet that closes
+   after Create. "Add a class" in a school opens the class sheet (name, class 1–12, subjects, tuition switch) → after Create
+   you land on the class page.
+5. **Class page** (tap 5-A): big code; WAITING FOR YOU shows children added by parents (Approve / ✕); TEACHERS; Kids in
+   this class; **SHARE CODE** at the bottom opens the phone's share menu (WhatsApp, SMS, Copy…).
+6. **Invite a teacher** (class page → Invite a teacher): pick subjects, see the message. **SHARE INVITE works only after the
+   DR-11 deploy** (until then it says it couldn't make the invite). After it: send it to Seema → on her phone Me → Join as a
+   teacher → code → her request shows on the class page → Approve.
+
 ### Treasure Words quest (your 370 vocabulary words). Arrives by an over-the-air update after 20.0.28, ~5 min
 1. Me → Admin tools → **Update Treasure Words** (seeds the quest + its Home tile).
 2. Home → Your quests → **Treasure Words** tile. As Pratha (Class 5) the path starts at **Actions & Change** (13 "big word" topics);
