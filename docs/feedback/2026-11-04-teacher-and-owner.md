@@ -41,3 +41,11 @@
     are too small; kids love seeing their picture: make it big.
 17. **Voice:** Pratha used the keyboard mic fine; in-app mic OK; can it handle Hindi?
 18. Owner: build the "later" specs (RB-2, 6, 7, 8) today if possible; don't open all units for Pratha (she works her way up).
+19. **Schools & classes screen (owner, phone, 20.0.28, night):** the "add school" form sits between the school list and the
+    classes (looks odd); the forms stay open after adding (not intuitive). **Mockup + brainstorm before changing.**
+20. **No emails in rural towns (Banbasa):** parents rarely use email; teachers maybe. Everyone has a phone number + WhatsApp.
+    Claude's view: Android phones already carry a Google account (Play Store), so Google sign-in still works; the problem is
+    *adding people by typed email*. Proposal for the mockup: invite links/codes shared on WhatsApp, admin approves.
+    Phone (SMS) sign-in = fallback (cost per SMS, SMS fraud).
+21. **Leaderboard UI:** overhaul to match the new design.
+22. **Start loader:** the breathing "Appreciate" text is clipped (dark mode). Fixed `453d4a5` (not yet published).
