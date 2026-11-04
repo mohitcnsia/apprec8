@@ -20,7 +20,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
 7. **20.0.25 internal-testing build** (Claude building now): owner uploads to Play internal testing, tests on own phone, then Pratha + her mother. School release only after their OK (owner).
 4. ~~Seed English Unit 2~~ owner OK 2026-11-04 → in G14.
-5. ~~Sample papers~~ NSO added (in `docs/exam/papers/nso/`); **IEO papers** → `docs/exam/papers/ieo/` (owner, soon).
+5. ~~Sample papers~~ NSO in `docs/exam/papers/nso/`, IEO in `docs/exam/papers/ieo/` (owner, 2026-11-04): IEO → task G21.
 6. RB-2 questions (4, in `CODE_REVIEW.md`) — after the exams is fine.
 
 ## Now
@@ -31,6 +31,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G16 Science Unit 1 "The Living World" (Class 5) | Gemini | fixes 2 | `content/sq-u1-living-world` | Facts + wording fixed; overcorrected: right answer now NEVER longest (0%), options too wordy |
 | G18 NSO pattern notes | Gemini | **done, merged** | `gemini/g18-exam-patterns` | Good: `docs/exam/nso-pattern.md` (sections, weightage, 9 question styles, gap list) |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | fixes 1 | `content/eq-u3-sva` | 105 questions + reading; Claude read all: 5 fixes (British spelling, 1 grammar error, 2 wording) |
+| G21 IEO pattern notes from the owner's papers | Gemini | todo (do first) | `gemini/g21-ieo-patterns` | |
 | G19 Science Unit 2 "Human Body & Health" (Class 5) | Gemini | todo | `content/sq-u2-human-body` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
@@ -79,6 +80,14 @@ odd one out, assertion–reason, picture-based, 2-statement true/false) with an 
 Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and planned units don't cover yet, Class 5 first.
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
+
+### G21 · [todo] · gemini · IEO exam pattern notes (do this before anything else)
+**Why:** IEO is on 17 Nov; Claude needs the real difficulty to judge English Quest (the teacher says it's too easy for aspirants).
+**Papers:** `/Users/mohitchilkoti/Documents/projects/apprec8/docs/exam/papers/ieo/` (read only; never copy questions).
+**Do:** like G18: per paper class / level / year; `docs/exam/ieo-pattern.md` with sections and marks, topic weightage for Class 5,
+question styles with *invented* examples, the Achievers section's difficulty, and a **gap list vs English Quest Units 0–3**
+(topics missing, and where our questions are easier than the papers: name 3–5 concrete examples of each).
+**Deliver:** branch `gemini/g21-ieo-patterns` (base `feat/quiz-redesign`), report G21, commit `gemini(G21): done — N papers read`.
 
 ### G16 · [fixes 2] · gemini · Science Unit 1 "The Living World" for Class 5
 **Why:** NSO on 19 Nov; Pratha is Class 5. **Base:** `feat/quiz-redesign`. **Guide:** `docs/CONTENT_GUIDE.md` (all of it, §8 for Science).
