@@ -1,13 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Easing } from "react-native";
 import { useTheme } from "../../context/ThemeContext"; // Import the custom hook
+import useReduceMotion from "../../hooks/useReduceMotion";
 
 export default function CalmLoader() {
   // Access the current theme object and the toggle function
   const { theme } = useTheme();
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const reduceMotion = useReduceMotion();
 
   useEffect(() => {
+    if (reduceMotion) return undefined; // still screen when the phone asks for less motion
     const breathe = Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
@@ -26,7 +29,7 @@ export default function CalmLoader() {
     );
     breathe.start();
     return () => breathe.stop();
-  }, [scaleAnim]);
+  }, [scaleAnim, reduceMotion]);
 
   const styles = React.useMemo(
     () =>

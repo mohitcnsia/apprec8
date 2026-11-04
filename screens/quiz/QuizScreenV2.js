@@ -406,6 +406,12 @@ const QuizScreenV2 = ({ route, navigation }) => {
         const done = currentIndex + (checked ? 1 : 0);
         const chosenText = mode === "exam" ? state.userAnswers[currentQuestion.id] ?? null : state.selectedAnswer?.content ?? null;
         const explanation = sheetExplanation(currentQuestion.explanation);
+        // Old questions without an explanation: a wrong answer still learns the right one (QA 2026-11-04).
+        const rightOption = currentQuestion.options.find((o) => o.isCorrect);
+        const answerFallback =
+          checked && !wasCorrect && rightOption && (rightOption.type || "text") === "text" && rightOption.content
+            ? `The answer is "${rightOption.content}".`
+            : "";
         const onOption = (option) => {
           if (mode === "training") {
             dispatch({ type: "SELECT_ANSWER", payload: { selectedOption: option } });
@@ -494,7 +500,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
               <FeedbackSheet
                 correct={wasCorrect}
                 title={wasCorrect ? "Brilliant!" : "Not quite"}
-                text={explanation.text}
+                text={explanation.text || answerFallback}
                 buttonLabel={explanation.rich ? "SEE WHY" : wasCorrect ? "CONTINUE" : "GOT IT"}
                 onPress={handleContinue}
                 bottomInset={insets.bottom}

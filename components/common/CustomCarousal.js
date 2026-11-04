@@ -19,6 +19,7 @@ import { useTheme } from "../../context/ThemeContext";
 import DummyScreen from "../../screens/DummyScreen"; // Ensure this path is correct if used
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // For the checkmark icon
 import { openCategory } from "../../utils/openCategory";
+import useReduceMotion from "../../hooks/useReduceMotion";
 
 const { width: screenWidth } = Dimensions.get("window");
 const SPACING = 20; // Horizontal spacing between items (total)
@@ -240,13 +241,14 @@ const CustomCarousel = ({
   const { theme } = useTheme();
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const reduceMotion = useReduceMotion(); // no auto-scroll when the phone asks for less motion
 
   const imageWidth = (screenWidth * customWidth) / 100;
   const imageHeight = customHeight;
 
   useEffect(() => {
     let autoplayTimerId = null;
-    if (autoPlay && Array.isArray(data) && data.length > 1) {
+    if (autoPlay && !reduceMotion && Array.isArray(data) && data.length > 1) {
       autoplayTimerId = setInterval(() => {
         if (flatListRef.current) {
           setCurrentIndex((prevIndex) => {
@@ -263,7 +265,7 @@ const CustomCarousel = ({
     return () => {
       if (autoplayTimerId) clearInterval(autoplayTimerId);
     };
-  }, [autoPlay, data, interval]);
+  }, [autoPlay, data, interval, reduceMotion]);
 
   const handleScroll = useCallback(
     (event) => {

@@ -18,6 +18,7 @@ import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
 import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
+import useReduceMotion from "../../hooks/useReduceMotion";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 
@@ -99,23 +100,27 @@ function ComingUp({ items, P, isDark, styles, onAdd }) {
   const indexRef = useRef(0);
   indexRef.current = index;
 
+  const reduceMotion = useReduceMotion();
+
+  // Fade IN only, starting half-visible (QA 2026-11-04: fading out first could leave the card invisible
+  // when an animation callback never ran, e.g. with phone animations off).
   const show = (next) => {
-    Animated.timing(fade, { toValue: 0, duration: 140, useNativeDriver: true }).start(() => {
-      setIndex(next);
-      Animated.timing(fade, { toValue: 1, duration: 180, useNativeDriver: true }).start();
-    });
+    setIndex(next);
+    if (reduceMotion) return fade.setValue(1);
+    fade.setValue(0.5);
+    Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true }).start();
   };
 
-  // Moves by itself; a tap pauses it for a while (manual mode).
+  // Moves by itself; a tap pauses it for a while (manual mode). Still when the phone asks for less motion.
   useEffect(() => {
-    if (count < 2) return undefined;
+    if (count < 2 || reduceMotion) return undefined;
     const t = setInterval(() => {
       if (Date.now() < pausedUntil.current) return;
       show((indexRef.current + 1) % count);
     }, ROTATE_MS);
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
+  }, [count, reduceMotion]);
 
   const tapTo = (next) => {
     pausedUntil.current = Date.now() + PAUSE_AFTER_TAP_MS;
@@ -175,7 +180,12 @@ function ComingUp({ items, P, isDark, styles, onAdd }) {
 
 function GlowButton({ label, onPress, styles }) {
   const pulse = useRef(new Animated.Value(0)).current;
+  const reduceMotion = useReduceMotion();
   useEffect(() => {
+    if (reduceMotion) {
+      pulse.setValue(1); // ring fully faded out
+      return undefined;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1, duration: 1000, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
@@ -184,7 +194,7 @@ function GlowButton({ label, onPress, styles }) {
     );
     loop.start();
     return () => loop.stop();
-  }, [pulse]);
+  }, [pulse, reduceMotion]);
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.55, 0] });
   return (

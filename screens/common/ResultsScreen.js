@@ -29,6 +29,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
 import Mascot from "../../components/quiz/Mascot";
+import useReduceMotion from "../../hooks/useReduceMotion";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import functions from "@react-native-firebase/functions";
@@ -80,6 +81,7 @@ const getResultAsset = (params) => {
 
 const ResultsScreen = ({ route, navigation }) => {
   const { theme, isDark } = useTheme();
+  const reduceMotion = useReduceMotion();
   const C = theme.appColors || theme;
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -215,7 +217,7 @@ const ResultsScreen = ({ route, navigation }) => {
         <View style={styles.assetContainer}>
           {route.params?.asset ? (
             asset.type === "lottie" ? (
-              <LottieView source={asset.source} autoPlay loop={asset.loop ?? false} style={styles.lottie} />
+              <LottieView source={asset.source} autoPlay loop={(asset.loop ?? false) && !reduceMotion} style={styles.lottie} />
             ) : (
               <Image source={asset.source} style={styles.image} resizeMode="cover" />
             )

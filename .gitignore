@@ -224,3 +224,6 @@ tests/fixtures/
 
 # SOF sample papers (copyrighted, used only as a guide; never commit)
 docs/exam/papers/
+
+# QA screenshots (show the test account email/name): keep local
+qa-screenshots/

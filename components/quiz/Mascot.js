@@ -6,6 +6,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing } from "react-native";
 import Svg, { Path, Ellipse, Circle } from "react-native-svg";
+import useReduceMotion from "../../hooks/useReduceMotion";
 
 const BODY = "M38 4l9.5 19.3 21.3 3.1-15.4 15 3.6 21.2L38 52.6 19 62.6l3.6-21.2-15.4-15 21.3-3.1z";
 const INK = "#3b0940";
@@ -24,10 +25,14 @@ function Face({ mood }) {
   if (mood === "thinking") {
     return (
       <>
-        <Ellipse cx={31} cy={35} rx={3.6} ry={4} fill={INK} />
-        <Ellipse cx={45} cy={35} rx={3.6} ry={4} fill={INK} />
-        <Path d="M32 44h12" stroke={INK} strokeWidth={2.6} strokeLinecap="round" />
-        <Path d="M26 27l7 2M50 27l-7 2" stroke={INK} strokeWidth={2.4} strokeLinecap="round" />
+        {/* Kind "oops" face (QA 2026-11-04: the old slanted brows read as angry). Raised, curved brows
+            + a small wobbly smile say "that's ok, let's see why". */}
+        <Ellipse cx={31} cy={35} rx={3.6} ry={4.4} fill={INK} />
+        <Ellipse cx={45} cy={35} rx={3.6} ry={4.4} fill={INK} />
+        <Circle cx={32.2} cy={33.4} r={1.2} fill="#FFFFFF" />
+        <Circle cx={46.2} cy={33.4} r={1.2} fill="#FFFFFF" />
+        <Path d="M27 27.5q4-3 8 -0.5M41 27q4-2.5 8 0.5" stroke={INK} strokeWidth={2.2} fill="none" strokeLinecap="round" />
+        <Path d="M32 44.5q2-1.6 4 0t4 0t4 0" stroke={INK} strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       </>
     );
   }
@@ -44,8 +49,13 @@ function Face({ mood }) {
 
 export default function Mascot({ mood = "happy", size = 72, style }) {
   const move = useRef(new Animated.Value(0)).current;
+  const reduceMotion = useReduceMotion();
 
   useEffect(() => {
+    if (reduceMotion) {
+      move.setValue(0);
+      return undefined;
+    }
     const jump = mood === "cheer";
     const loop = Animated.loop(
       Animated.sequence([
@@ -55,7 +65,7 @@ export default function Mascot({ mood = "happy", size = 72, style }) {
     );
     loop.start();
     return () => loop.stop();
-  }, [mood, move]);
+  }, [mood, move, reduceMotion]);
 
   const lift = mood === "cheer" ? -size * 0.14 : -size * 0.06;
   const translateY = move.interpolate({ inputRange: [0, 1], outputRange: [0, lift] });
@@ -64,7 +74,7 @@ export default function Mascot({ mood = "happy", size = 72, style }) {
     <Animated.View
       style={[{ width: size, height: size * 1.1, transform: [{ translateY }] }, style]}
       accessible
-      accessibilityLabel={mood === "cheer" ? "Chamak is cheering" : mood === "thinking" ? "Chamak is thinking" : "Chamak, your star buddy"}
+      accessibilityLabel={mood === "cheer" ? "Chamak is cheering" : mood === "thinking" ? "Chamak says: oops, let's see why" : "Chamak, your star buddy"}
     >
       <Svg width="100%" height="100%" viewBox="0 0 76 84">
         <Path d={BODY} fill="#F5C842" stroke="#C99A12" strokeWidth={3} strokeLinejoin="round" />
