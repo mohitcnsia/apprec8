@@ -13,3 +13,5 @@
 9. **British spelling** (IEO and Indian schools): practise (verb) / practice (noun), colour, cosy, centre. (G17)
 10. **Grammar of the question itself:** check tense words in the sentence ("since" needs "have been"); never break grammar to avoid an apostrophe ("teacher table"): rephrase instead. (G17)
 11. **Don't overcorrect:** after a fix, re-check the whole set (0% "longest" is as bad as 68%). Keep options short and kid-level. (G16)
+12. **Collocation / word-choice questions:** check that no wrong option is ALSO natural English (baking heat, kindled curiosity). (G25)
+13. **Spot the error:** exactly one error per sentence, and "No error" must sometimes be the answer. (G25)

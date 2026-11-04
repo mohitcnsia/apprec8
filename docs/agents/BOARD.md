@@ -38,7 +38,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
-| G25 ⭐ Separate "Word Power" quest (owner) | Gemini | todo (do first) | `content/word-power` | |
+| G25 ⭐ Separate "Word Power" quest (owner) | Gemini | fixes 1 (after G26) | `content/word-power` | 175 + 54 questions read by Claude: keys right; 15 fixes |
 | G26 Emulator smoke test of `feat/quiz-redesign` (calm pass 1) | Gemini | todo (after G25, only once the build has finished) | `gemini/g26-smoke` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
@@ -88,7 +88,7 @@ Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and plann
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
 
-### G25 · [todo] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
+### G25 · [fixes 1] · gemini · Separate "Word Power" quest (owner decision): restructure G22 + G23 (do this first)
 **Why (owner 2026-11-04):** vocabulary is its own tree, not English Quest Unit 4: it must be open from day one (Pratha is in
 Unit 1; IEO is on 17 Nov) and not locked behind grammar Bosses.
 **Do (base: your `content/eq-u5-error-dialogue` branch, which has G22 + G23):**
@@ -102,6 +102,23 @@ Unit 1; IEO is on 17 Nov) and not locked behind grammar Bosses.
 4. Class tags per `docs/CONTENT_GUIDE.md` §9 (topic from its first class; harder leaves tagged by class).
 5. `npm test` green (all quests checked, ids unique). Report G25: what moved where, counts.
 Commit `gemini(G25): done — …`. Claude then reviews all G22/G23 questions for accuracy.
+
+**Claude's review (`c186564`), fixes 1.** All Word Power + Spot the Error questions read; every key is right. Fix in place:
+1. **Two right answers:** `wp-colloc-nature-quiz` q1 (baking / burning heat are natural too: use non-collocations, e.g. "fried / toasted");
+   `wp-dialogue-gate-pool` q14 (ignited / kindled curiosity are fine too); `wp-spelling-gate-pool` q15 ("program" is a correct US
+   spelling: use another word, e.g. colleague / collegue / colleage / coleague); `wp-synant-gate-pool` q12 (a "dangerous" cave fits:
+   add "and stayed warm and safe" to the sentence).
+2. **Two errors in one sentence:** `eq-u4-test` q4 part C "to the teacher question" → "to the question". `eq-u4-test` q8: "o'clock".
+3. **Answer given away / wrong meaning:** `wp-spelling-gate-pool` q12 ("calendar record of days" → "a chart of the days and months of
+   a year"); q13 (twelfth = "coming after the eleventh", not "twelve in count"); q3 (occurred = "happened, past tense of occur").
+4. **Idiom form:** `wp-idioms-gate-pool` q10 → "the lion's share" (apostrophes are fine in gates).
+5. **Modern usage:** `eq-u4-errors-gate-pool` q6 ("their own pencil" is accepted today): replace with a clear error.
+6. **"No error" is never right** in 37 Spot-the-Error questions: make it the right answer in ~4 of them (rewrite those sentences correctly).
+7. **Joke / rude replies in dialogues** (lesson 3): e.g. "Give me money instead", "I will ignore you", "You are noisy too",
+   "We were forced to come". IEO options are polite but wrong for the situation or ungrammatical ("Yes, I mind", "Certainly not").
+   Fix in all dialogue gates + `wp-u2-test`; practice quizzes too if time.
+8. Small: `wp-synant-context-quiz` q2 tranquil ≠ silent (use "hushed"); `wp-u2-test` q5 "a kind and thoughtful thought" → "a kind idea".
+Seema reviews English after this. Commit `gemini(G25): fixed 1 — …`.
 
 ### G26 · [todo] · gemini · Emulator smoke test: calm pass 1 (20 min max)
 **Owner-approved:** emulator use while `AWAY: yes`. No seeding, no deploys.
