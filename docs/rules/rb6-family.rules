@@ -1,0 +1,14 @@
+// DR-10 (RB-6 parent-first accounts, 2026-11-04): add to firestore.rules, then deploy rules (owner OK).
+
+    // Server-only: login codes are created and redeemed by Cloud Functions.
+    match /childLoginCodes/{code} {
+      allow read, write: if false;
+    }
+
+    // Inside the existing match /users/{userId}: parents read their children's profile and progress.
+    //   allow read: if request.auth != null && request.auth.uid in resource.data.get('parentUids', []);
+    // Inside match /users/{userId}/questProgress/{questId}:
+    //   allow read: if request.auth != null
+    //     && request.auth.uid in get(/databases/$(database)/documents/users/$(userId)).data.get('parentUids', []);
+    // Children can't change their fixed info (firstName, grade, parentUids, isChild): keep Finding 22's hasOnly([...])
+    // for profile edits and leave these keys out of it.

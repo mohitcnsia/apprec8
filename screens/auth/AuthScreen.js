@@ -5,6 +5,7 @@ import { View, StyleSheet } from "react-native";
 import { Button, TextInput, Card, Text } from "react-native-paper";
 // import { Colors } from "../../config/colors"; // <-- Remove this direct import
 import { useTheme } from "../../context/ThemeContext"; // <-- Import useTheme
+import { signInWithChildCode } from "../../services/familyApi";
 
 export default function AuthScreen({
   externalError,
@@ -23,6 +24,10 @@ export default function AuthScreen({
   const [isLogin, setIsLogin] = useState(true);
   const [secureText, setSecureText] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
+  // Child accounts (RB-6): a one-time code from the parent signs the child in on this phone.
+  const [childMode, setChildMode] = useState(false);
+  const [childCode, setChildCode] = useState("");
+  const [childBusy, setChildBusy] = useState(false);
   const shouldShowEye = isFocused || password.length === 0;
   const isValid = email.includes("@") && password.length >= 6;
 
@@ -195,6 +200,43 @@ export default function AuthScreen({
         >
           Continue with Google
         </Button>
+
+        {/* Child sign-in with a code from the parent */}
+        {childMode ? (
+          <View style={{ marginTop: 12 }}>
+            <TextInput
+              label="Code from my parent (6 letters)"
+              value={childCode}
+              onChangeText={(v) => setChildCode(v.toUpperCase())}
+              autoCapitalize="characters"
+              autoCorrect={false}
+              mode="outlined"
+              maxLength={8}
+            />
+            <Button
+              mode="contained"
+              style={{ marginTop: 10 }}
+              loading={childBusy}
+              disabled={childBusy || childCode.trim().length < 6}
+              onPress={async () => {
+                setChildBusy(true);
+                setError("");
+                try {
+                  await signInWithChildCode(childCode);
+                } catch (e) {
+                  setError(e?.message || "That code doesn't work. Ask your parent for a new one.");
+                }
+                setChildBusy(false);
+              }}
+            >
+              Sign in with my code
+            </Button>
+          </View>
+        ) : (
+          <Button mode="outlined" style={{ marginTop: 12 }} onPress={() => setChildMode(true)} disabled={isAuthLoading}>
+            I have a code from my parent
+          </Button>
+        )}
 
         {/* Bottom buttons */}
         <View style={styles.bottomView}>

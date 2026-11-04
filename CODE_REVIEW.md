@@ -1710,3 +1710,19 @@ Until deployed, the new screens show "permission denied": nothing else changes.
   whole class or chosen kids, due date, note; list + remove). Kid: assigned topics open on the map; Home's "Next up" card becomes
   **"From your teacher"** until the due date. Rules for assignments added to `docs/rules/rb2-classes.rules` (part of DR-9).
 - Next: the 2-minute refresher hint when an assigned topic builds on an earlier one; weekly class leaderboard + claps.
+
+## 2026-11-04 — RB-6 parent-first accounts built (additive; current sign-in unchanged) (Claude)
+- Parent: Me → **My children → Add a child**: first name, class (fixed), consent in English or Hindi (text: `utils/family.js`,
+  version-stamped) → server creates the child's account (no email) + user doc `{ firstName, grade, isChild, parentUids }` +
+  consent record → shows a **one-time login code** (48 h; Share button). "New code" per child for another phone.
+- Child's phone: sign-in screen → **"I have a code from my parent"** → code → signed in as the child (custom token).
+- Server: `functions/callable/familyActions.js` → createChildProfile, newChildLoginCode, redeemChildLoginCode (one use,
+  transaction), deleteChildProfile (deletes the child's data + account). **Fixed** `triggers/auth.js initializeNewUser`: it
+  overwrote the whole user doc and would have wiped a new child's profile; it now keeps an existing doc.
+- Not yet: parent seeing a child's progress screen (data is readable after DR-10; screen next), switching between children
+  on one phone, invite codes for the Play Store (RB-6 invite-only).
+
+### DR-10: deploy for parent-first accounts (owner OK needed)
+1. Rules: `docs/rules/rb6-family.rules` (+ DR-9). 2. Functions: createChildProfile, newChildLoginCode, redeemChildLoginCode,
+deleteChildProfile, and the updated initializeNewUser trigger. 3. IAM: the functions' service account
+(`<project-id>@appspot.gserviceaccount.com`) needs the **Service Account Token Creator** role (for `createCustomToken`).

@@ -44,6 +44,14 @@ exports.initializeNewUser = functions
     };
 
     try {
+      // A child account (RB-6) is created by createChildProfile, which writes its own user doc (name, class,
+      // parent). Never overwrite an existing doc: just make sure the basics are there.
+      const existing = await userRef.get();
+      if (existing.exists) {
+        await userRef.set({ userId: userId, lastUpdatedAt: now }, { merge: true });
+        console.log(`User doc ${userId} already exists (child account?): kept it`);
+        return null;
+      }
       await userRef.set(newUserDocument);
       console.log(`Successfully initialized document for user ${userId}`);
     } catch (error) {

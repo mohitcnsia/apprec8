@@ -19,6 +19,7 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
 import { getClasses } from "../../services/classesApi";
+import { myChildren } from "../../services/familyApi";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 
 const THEMES = [
@@ -64,6 +65,12 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [userData, setUserData] = useState(null);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [myClasses, setMyClasses] = useState([]);
+  const [children, setChildren] = useState([]);
+  const childKey = (userData?.childUids || []).join(",");
+  useEffect(() => {
+    if (!childKey) return setChildren([]);
+    myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
+  }, [childKey]);
   const classKey = (userData?.classIds || []).join(",");
   useEffect(() => {
     if (!classKey) return setMyClasses([]);
@@ -140,6 +147,22 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <View style={styles.divider} />
         <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
       </View>
+
+      {/* Parents add their children here (RB-6). Child accounts don't see this. */}
+      {!userData?.isChild ? (
+        <>
+          <Text style={styles.section}>MY CHILDREN</Text>
+          <View style={styles.group}>
+            {children.map((k) => (
+              <View key={k.uid}>
+                <Row icon="happy-outline" label={k.firstName || "Child"} detail={k.grade ? `Class ${k.grade} · new code` : "new code"} onPress={() => navigation.navigate("AddChild", { kid: k })} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </View>
+            ))}
+            <Row icon="person-add-outline" label="Add a child" onPress={() => navigation.navigate("AddChild")} styles={styles} P={P} />
+          </View>
+        </>
+      ) : null}
 
       <Text style={styles.section}>MY CLASSES</Text>
       <View style={styles.group}>
