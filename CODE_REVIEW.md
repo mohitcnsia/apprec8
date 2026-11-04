@@ -1388,7 +1388,8 @@ match /classes/{classId} {
 match /classCodes/{code} {
   allow get: if request.auth != null;
   allow list: if false;
-  allow create, delete: if isAdmin() || teaches(request.resource.data.classId) /* create */ || teaches(resource.data.classId) /* delete */;
+  allow create: if isAdmin() || teaches(request.resource.data.classId);
+  allow delete: if isAdmin() || teaches(resource.data.classId);
 }
 match /users/{userId}/classLinks/{classId} { allow read, write: if request.auth.uid == userId; }
 ```
