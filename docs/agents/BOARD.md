@@ -44,7 +44,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (next) | `content/wp-old-vocab` | |
-| Word Bank quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA after owner OK |
+| Treasure Words quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA (owner OK) |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
 | G20 Science Unit 3 Matter, Forces & Earth | Gemini | **done, merged** (Claude fixed 4 items) | | 300 Science questions in total; still draft (testers) |

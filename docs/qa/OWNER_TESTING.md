@@ -41,9 +41,9 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
-### Word Bank quest (your 370 vocabulary words). Arrives by an over-the-air update after 20.0.28, ~5 min
-1. Me → Admin tools → **Update Word Bank** (seeds the quest + its Home tile).
-2. Home → Your quests → **Word Bank** tile. As Pratha (Class 5) the path starts at **Actions & Change** (13 "big word" topics);
+### Treasure Words quest (your 370 vocabulary words). Arrives by an over-the-air update after 20.0.28, ~5 min
+1. Me → Admin tools → **Update Treasure Words** (seeds the quest + its Home tile).
+2. Home → Your quests → **Treasure Words** tile. As Pratha (Class 5) the path starts at **Actions & Change** (13 "big word" topics);
    a Class 1–3 child sees only **Everyday Words** (Animals, Food, Plants, School); Class 4 sees both.
 3. Open a topic: Learn page = table of word + meaning → quiz "Which word means …?" (10 of the group's words, no emoji hint)
    → ♾️ Keep practising never runs out.

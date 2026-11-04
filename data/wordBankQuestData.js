@@ -1,5 +1,5 @@
 // data/wordBankQuestData.js
-// "Word Bank" quest (owner 2026-11-04): the owner's 370 vocabulary words (data/wordPower/wordBank.js, the same words as
+// "Treasure Words" quest (owner 2026-11-04; id stays "word-bank"): the owner's 370 vocabulary words (data/wordPower/wordBank.js, the same words as
 // the Word Builder game) as its own quest, one topic per word group (a ladder: each topic opens the next):
 //   Learn page (word + meaning) → quiz "Which word means …?" (built from the owner's meanings, wrong options = other words
 //   of the same group) → ♾️ endless practice (wordMeaning generator, utils/generators.js).
@@ -13,21 +13,21 @@ import { seededRandom } from "../utils/readingFlow.js";
 export const QUEST_ID = "word-bank";
 
 export const quest = {
-  title: "Word Bank",
-  description: "Learn hundreds of new words: what they mean and how to use them. Collect them all!",
+  title: "Treasure Words",
+  description: "Every word is a treasure! Learn hundreds of new words and what they mean. Collect them all! 💎",
   image: null,
   version: 1,
   draft: false,
 };
 
 export const tile = {
-  title: "Word Bank",
+  title: "Treasure Words",
   type: "QUEST",
   carouselGroup: "quest",
   order: 3,
   image: null,
   questId: QUEST_ID,
-  description: "New words and their meanings",
+  description: "Collect new words and their meanings 💎",
 };
 
 const EVERYDAY = [1, 2, 3, 4];
