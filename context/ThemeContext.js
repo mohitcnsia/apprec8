@@ -10,11 +10,15 @@ const ThemeContext = createContext({
   isDark: false,
   isThemeLoaded: false,
   toggleTheme: () => {},
+  themeChoice: "system",
+  setThemeChoice: () => {},
 });
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(lightColors); // Start with lightColors as default
   const [isThemeLoaded, setIsThemeLoaded] = useState(false);
+  // "system" (follow the phone), "light" or "dark" (Me tab, 2026-11-04)
+  const [themeChoice, setChoiceState] = useState("system");
 
   useEffect(() => {
     const loadThemePreference = async () => {
@@ -23,6 +27,7 @@ export const ThemeProvider = ({ children }) => {
         const savedThemeMode = await AsyncStorage.getItem("appTheme");
         if (savedThemeMode) {
           initialTheme = savedThemeMode === "dark" ? darkColors : lightColors;
+          setChoiceState(savedThemeMode === "dark" ? "dark" : "light");
           console.log(`🎨 Theme loaded from storage: ${savedThemeMode}`);
         } else {
           const systemTheme = Appearance.getColorScheme();
@@ -68,9 +73,31 @@ export const ThemeProvider = ({ children }) => {
 
     const newTheme = theme.mode === "light" ? darkColors : lightColors;
     setTheme(newTheme);
+    setChoiceState(newTheme.mode);
     try {
       await AsyncStorage.setItem("appTheme", newTheme.mode);
       console.log(`🎨 Theme preference saved: ${newTheme.mode}`);
+    } catch (error) {
+      console.error("❌ Failed to save theme preference", error);
+    }
+  };
+
+  /** Me tab: "system" removes the saved choice and follows the phone again. */
+  const setThemeChoice = async (choice) => {
+    if (!isThemeLoaded) return;
+    setChoiceState(choice);
+    if (choice === "system") {
+      setTheme(Appearance.getColorScheme() === "dark" ? darkColors : lightColors);
+      try {
+        await AsyncStorage.removeItem("appTheme");
+      } catch (error) {
+        console.error("❌ Failed to clear theme preference", error);
+      }
+      return;
+    }
+    setTheme(choice === "dark" ? darkColors : lightColors);
+    try {
+      await AsyncStorage.setItem("appTheme", choice);
     } catch (error) {
       console.error("❌ Failed to save theme preference", error);
     }
@@ -84,6 +111,8 @@ export const ThemeProvider = ({ children }) => {
         theme,
         isDark,
         toggleTheme,
+        themeChoice,
+        setThemeChoice,
         isThemeLoaded, // Expose this for consumers if needed
       }}
     >

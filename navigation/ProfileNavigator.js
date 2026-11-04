@@ -4,7 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useTheme } from "../context/ThemeContext"; // Adjust path as per your project
 
 // Screen Imports
-import ProfileScreen from "../screens//quiz/ProfileScreen"; // Adjust path
+// Me tab (2026-11-04) replaces the old screens/quiz/ProfileScreen.js; the route name stays "ProfileScreen".
+import MeScreen from "../screens/profile/MeScreen";
+import AdminToolsScreen from "../screens/admin/AdminToolsScreen";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
 import EditProfileScreen from "../screens/profile/EditProfileScreen"; // Adjust path
 import DeleteAccountConfirmationScreen from "../screens/profile/DeleteAccountConfirmationScreen"; // Adjust path
@@ -70,11 +72,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
             }}
           >
             {(props) => (
-              <ProfileScreen
-                {...props}
-                signoutHandler={actionHandler}
-                user={user}
-              />
+              <MeScreen {...props} signoutHandler={actionHandler} user={user} />
             )}
           </Stack.Screen>
           <Stack.Screen
@@ -86,6 +84,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
             }}
           />
           {/* Admin dashboard v0 (admin only; button on Profile). No header: Android back. */}
+          <Stack.Screen name="AdminTools" component={AdminToolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminKidDetail" component={AdminKidDetailScreen} options={{ headerShown: false }} />
           <Stack.Screen
