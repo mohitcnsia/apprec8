@@ -8,6 +8,9 @@
 //   and quizzes by `quizId` (old quizQuestions are converted on the fly).
 // - All new content is original. Past papers are only used as a guide.
 
+import { q, study, quiz, reading, unit, main, practice, gate, withSubtopic, endless, boss } from "./englishQuest/helpers.js";
+import { extraUnits, nextUnitTeaser } from "./englishQuest/units/index.js";
+
 export const QUEST_ID = "english-quest";
 
 const IEO_TILE_IMAGE =
@@ -40,17 +43,6 @@ export const tile = {
 // Unit 2: a-an-mixup, sound-not-letter (hour, uniform, one), article-missing, article-extra,
 // article-plural-error, a-the-mixup, the-rule-mixup, determiner-number-mixup, near-far-mixup,
 // some-any-mixup, countable-uncountable-mixup, few-a-few-mixup
-
-/** Small helper to write questions compactly. */
-const q = (content, correct, wrongs, explanation) => ({
-  question: { type: "text", content },
-  options: [
-    { type: "text", content: correct, isCorrect: true },
-    ...wrongs.map(([text, mistakeTag]) => ({ type: "text", content: text, isCorrect: false, mistakeTag })),
-  ],
-  answer: correct,
-  explanation: { text: explanation },
-});
 
 // ---------- Study pages (new) ----------
 export const studyPages = {
@@ -834,31 +826,6 @@ export const wordTables = {
 // gate     = harder quiz; passing it opens the next branch (Step 2 adds pools + sub-topic rules)
 // endless  = "Keep practising" (Spec v2 Step 4; shows "Coming soon" until then)
 // boss     = Unit Boss on the path; passing it opens the next unit
-const study = (contentId) => ({ type: "study", contentId });
-const quiz = (quizId) => ({ type: "quiz", quizId });
-const reading = (contentId) => ({ type: "reading", contentId });
-
-const unit = (id, unitOrder, title, extra = {}) => ({ id, kind: "unit", unitOrder, title, ...extra });
-const main = (id, unitId, branchOrder, title, steps) => ({ id, kind: "main", unitId, branchId: id, branchOrder, title, steps });
-const practice = (id, branch, order, title, difficulty, steps) => ({
-  id, kind: "practice", unitId: branch.unitId, branchId: branch.id, order, title, difficulty, steps,
-});
-const gate = (id, branch, title, quizId, subtopicTitles, passPercent = 80) => ({
-  id, kind: "gate", unitId: branch.unitId, branchId: branch.id, title, quizId, passPercent,
-  drawCount: 10, subtopicTitles, // { [subtopicId]: "Title shown on the result screen" }
-});
-const withSubtopic = (node, subtopic) => ({ ...node, subtopic });
-// generators: [{ type: "plural" | "nounGender", table: <wordTable id> }]; pool = the branch's
-// main + practice quizzes (gate/boss questions are never used, they're assessments).
-const endless = (branch, generators = []) => ({
-  id: `${branch.id}-endless`, kind: "endless", unitId: branch.unitId, branchId: branch.id, title: `Keep practising`,
-  generators,
-});
-// story (RB-5c "Grammar Gremlin"): a playful mission shown on the Boss start card, to turn test
-// nerves into a rescue mission. Keep numbers out of it: the pass rule is added by the app.
-const boss = (id, unitId, title, quizId, story = null, passPercent = 70) => ({
-  id, kind: "boss", unitId, title, quizId, passPercent, ...(story ? { story } : {}),
-});
 
 // --- Unit 0: Sentences ---
 const u0a = main("eq-u0-sentence", "eq-u0", 0, "What is a sentence?", [study("eq-u0-what-is-sentence"), quiz("eq-u0-sentence-or-not")]);
@@ -1021,5 +988,21 @@ export const nodes = [
     "Oh no! 👾 The Grammar Gremlin sneaked into the Village Market and stole all the little words. Now everyone is asking for 'apple', 'umbrella' and 'sweets' with no a, an, the or some! The shopkeepers are so confused. Put every little word back where it belongs and save market day! 🛒"
   ),
 
-  unit("eq-u3", 3, "Subject-Verb Agreement", { comingSoon: true }),
 ];
+
+// ---------- New units from data/englishQuest/units/ (one file per unit, docs/CONTENT_GUIDE.md) ----------
+// Each unit adds its pages, quizzes, readings and nodes. A duplicate id is a mistake, so it stops here.
+const addAll = (target, extra = {}, what) =>
+  Object.entries(extra).forEach(([id, value]) => {
+    if (id in target) throw new Error(`English Quest: duplicate ${what} id "${id}"`);
+    target[id] = value;
+  });
+extraUnits.forEach((u) => {
+  addAll(studyPages, u.studyPages, "study page");
+  addAll(quizzes, u.quizzes, "quiz");
+  addAll(readings, u.readings, "reading");
+  addAll(wordTables, u.wordTables, "word table");
+  nodes.push(...u.nodes);
+});
+// The next unit shows as "Coming soon" at the end of the path.
+if (nextUnitTeaser) nodes.push(unit(nextUnitTeaser.id, nextUnitTeaser.unitOrder, nextUnitTeaser.title, { comingSoon: true }));
