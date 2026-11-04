@@ -34,6 +34,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | **done, merged** | `content/eq-u3-sva` | All 5 fixes checked by Claude. Seeding waits for owner OK |
 | G21 IEO pattern notes | Gemini | **done, merged** | `gemini/g21-ieo-patterns` | Gaps: no vocabulary (20–25% of IEO), no spot-the-error, no dialogue/idioms, easy distractors |
 | G19 Science Unit 2 "Human Body & Health" (Class 5) | Gemini | fixes 1 | `content/sq-u2-human-body` | 96 questions, all keys right (Claude read all); 5 joke distractors, 2 small facts |
+| G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
 | G22 English Unit 4 "Word Power" (IEO vocabulary) | Gemini | todo | `content/eq-u4-vocab` | |
 | G23 English Unit 5 "Spot the error, dialogue & idioms" | Gemini | todo | `content/eq-u5-error-dialogue` | |
 | G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
@@ -170,6 +171,17 @@ teaser unit so Unit 3 shows as "coming soon". Keep `quest.draft: true`.
 2. `sq-food-gate-pool` q14: apples have little iron; use dates or green leafy vegetables.
 3. British spelling: "orthopedic" → "orthopaedic" (`sq-bones-gate-pool` q9).
 Commit `gemini(G19): fixed 1 — …`.
+
+### G24 · [todo] · gemini · Syllabus check: NSO + IEO Class 5 vs our quests (before writing more units)
+**Source:** `/Users/mohitchilkoti/Documents/projects/apprec8/docs/exam/syllabus/syllabusclass5.pdf` (owner: Class 5 syllabus for IEO,
+NSO and IMO + last 5 years' patterns; read only, never copy text into git).
+**Do:** write `docs/exam/syllabus-class5.md` in your own words: for NSO and IEO, the official topic list for Class 5, each topic
+marked **covered** (unit + topic id) / **partly** / **missing**, plus the section pattern (questions, marks) per year if it
+changed. Note IMO topics briefly for later. Then the **plan**: which topics G22, G23 and G20 must include so nothing on the
+syllabus is missed, in priority order (what appears most in the papers first). If a Science node's `forGrades` contradicts the
+syllabus, list it.
+**Deliver:** branch `gemini/g24-syllabus` (base `feat/quiz-redesign`), report G24, commit `gemini(G24): done — …`. Claude updates
+G22 / G23 / G20 from your plan.
 
 ### G22 · [todo] · gemini · English Unit 4 "Word Power" (IEO vocabulary) for Class 5
 **Why:** your G21 notes: synonyms, antonyms, spelling and word choice are 20–25% of IEO, and we have none. IEO is on 17 Nov.

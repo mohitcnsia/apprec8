@@ -227,3 +227,6 @@ docs/exam/papers/
 
 # QA screenshots (show the test account email/name): keep local
 qa-screenshots/
+
+# SOF syllabus PDFs (owner-provided, not ours to publish)
+docs/exam/syllabus/
