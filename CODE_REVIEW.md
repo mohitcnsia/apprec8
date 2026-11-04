@@ -1669,6 +1669,7 @@ Product rule from this: **the app teaches and supports on its own**; teacher fea
   reports and how fast, what the law requires (POCSO Act: reporting sexual offences against a child to police is mandatory),
   escalation, privacy of the report.
 - **No amateur counselling:** the app points to trained people. Tips and flow reviewed by a child counsellor/psychologist first.
+  **Reviewer: Seema** (owner's wife: English teacher, trained psychologist, does counselling). She also helps write the safeguarding plan.
 - **Privacy:** mood data is sensitive (DPDP Act); store the minimum, parent consent via parent-first accounts (RB-6), never shown
   to other kids; teachers see nothing individual unless the safeguarding plan says so.
 - **Order:** after the exams; mockup + counsellor review + safeguarding plan before any build.
