@@ -29,3 +29,15 @@
 
 11. **Teacher assignments (owner):** teachers assign specific nodes to students or classes, so lagging kids work on what is needed. Spec draft: `CODE_REVIEW.md` → RB-7.
 12. **Well-being + "don't depend on teachers" (owner):** kids report problems and the app helps even if teachers don't. Spec draft: `CODE_REVIEW.md` → RB-8.
+
+## Pratha's first session on 20.0.26 (via owner)
+13. **Mascot cheered on a very low score** (she answered everything wrong on purpose): results must match performance:
+    encouraging, not congratulating, when the score is low.
+14. **Kids' own questions** ("when do I use who, whose, whom?"): help kids get precise answers while keeping the app free
+    (live AI for every question would be costly).
+15. **Mistake bank:** for each mistake, more similar questions so kids master it; common mistakes across kids → weekly
+    training set / daily question.
+16. **Screen titles waste space** ("My progress", "Fun", "Me"): remove; use the space better. **Me:** profile picture and name
+    are too small; kids love seeing their picture: make it big.
+17. **Voice:** Pratha used the keyboard mic fine; in-app mic OK; can it handle Hindi?
+18. Owner: build the "later" specs (RB-2, 6, 7, 8) today if possible; don't open all units for Pratha (she works her way up).
