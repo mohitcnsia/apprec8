@@ -1566,3 +1566,54 @@ Open: parent accounts (how a parent proves they're the parent); whether real fir
   parent sees their own kids; admin sees all.
 - **Existing accounts** keep working; a parent claims them with a code. **Before public release:** check against Google Play
   Families policy and India's DPDP Act (consent for under-18s) — Gemini research G11.
+
+## 2026-11-04 — QA run: Quiz redesign (`feat/quiz-redesign`) (Gemini)
+Tested on Android Emulator (`Pixel_8a_API_35`) on branch `feat/quiz-redesign` across both Dark and Light modes.
+
+### 1. Visual Verification (Checklist Items 1 & 2)
+- **Dark Mode:**
+  - 2×2 answer tiles render cleanly for short answers (`≤12` chars) (`qa-screenshots/g8_screen.png`).
+  - Active purple selection on tap (`qa-screenshots/g8_opt_tapped.png`).
+  - Correct answer sheet: Celebrating Chamak mascot (`😊🙌`), green outline, `✓ Brilliant!`, clear explanation, `CONTINUE` button (`qa-screenshots/g8_sheet_right.png`).
+  - Wrong answer sheet: Chamak mascot (`😠`), red outline on chosen option, green outline on correct answer, heart decremented (`❤️ 5` -> `❤️ 4`), clear explanation, `GOT IT` button (`qa-screenshots/g8_sheet_wrong.png`).
+- **Light Mode:**
+  - Switched in-app theme in `Me` tab (`Look: Light`).
+  - High contrast, crisp cards, mascot speech bubble, gold progress bar, hearts counter (`qa-screenshots/g8_light_q1.png`).
+  - Option tap highlights card with purple border and activates `CHECK` (`qa-screenshots/g8_light_opt_tapped.png`).
+  - Correct answer sheet: Green outline, green check badge, readable text without clipping (`qa-screenshots/g8_light_sheet.png`).
+  - Wrong answer sheet: Red outline on incorrect choice ("Hunteress"), correct choice ("Huntress") outlined in green, hearts decremented to `❤️ 4`, `GOT IT` button (`qa-screenshots/g8_light_sheet_wrong.png`).
+  - Audio 🔊 button tapped cleanly without crashes.
+  - Back button gracefully exits the quiz back to the node details modal (`qa-screenshots/g8_after_back.png`).
+
+### 2. Exam Mode (Checklist Item 3)
+- Tested "Gender 2" in Exam mode (`qa-screenshots/g8_exam_start.png`, `g8_exam_q1.png`).
+- Hearts counter is correctly hidden (unlimited lives in exam mode).
+- Tap-to-advance works immediately: selecting an option immediately logs the response and advances to the next question without requiring `CHECK` (`qa-screenshots/exam_q2.png`).
+
+### 3. Tooling Finding: Why QA Was Stalling in `scripts/qa/eq.sh`
+- **Root Cause**: `scripts/qa/eq.sh` relies on `adb shell uiautomator dump` inside `dump()` to resolve button text coordinates.
+- On Android 15 (API 35) running React Native, continuous micro-animations and timers (such as Chamak's bouncing animation, shimmering buttons, or progress bars) prevent the UI thread from entering an idle state.
+- `uiautomator dump` blocks waiting for idle state and times out after 30–45 seconds with `ERROR: could not get idle state`.
+- Because every single `eq.sh tap`, `eq.sh texts`, or `eq.sh wait` command invokes `dump()`, test steps were stalling for 30–60s per interaction.
+- **Recommended Action for Claude/DevOps**: Update `scripts/qa/eq.sh` or test harnesses to avoid blocking on `uiautomator dump` when running against React Native screens with looping animations, or add coordinate fallbacks / accessibility-id focused dumping.
+
+
+## 2026-11-04 — Review request: multi-quest + class filter + Science Quest draft, branch `feat/quiz-redesign` (Claude)
+Owner: "yes" to letting a second quest run like English Quest, with class-tagged topics (NSO, Pratha = Class 5).
+Milestones (each pushed): M1–M2 `66e2d83`, M3 `521971e`, M4 docs (this entry).
+- **M1 class filter:** `utils/gradeFilter.js` → `nodesForGrade(nodes, grade)` runs before `buildQuestPath` (engine unchanged).
+  Nodes may carry `grades: [..]`; hidden topics take their practice/gate/endless along and never block the next topic;
+  empty units vanish; no class = nothing hidden; tester "unlock all" = no filter. English has no tags → identical (tested).
+  The quest map reads the kid's `users.grade`.
+- **M2 several quests:** `data/quests/index.js` lists bundled quests (English, Science). `SeedTileQuestButton` seeds any quest
+  (English's button is now a wrapper) and always asks to confirm (draft vs LIVE wording). Draft quests seed their tile to
+  `carouselGroup: "quest_draft"`: testers only; old apps never read it. Content test runs per quest + ids unique across quests
+  + grade tags valid. Dashboard: English / Science chips. Firestore rules and functions were already generic: **no deploy needed.**
+- **Science Quest draft:** `data/scienceQuestData.js`: 1 unit, 1 sample topic "Living and non-living" (Class 3–5: study page
+  + 6 questions, written by Claude, needs Gemini's accuracy review), "Plants" teaser.
+- **M3 Home + Progress:** Continue = quest played most recently; mistakes tile = all quests (opens the one with most);
+  streak/totals across quests; Progress row per quest, counts only the kid's class topics.
+- **Not done / next:** class not set → kid sees every class (later: a nudge to set it); Warm-up/Challenge rows for other classes'
+  topics (owner's original idea) are not built: v1 just hides them; Endless "generators" are English-only.
+- **Checks:** `npm test` (all suites) pass; Android bundle builds. Test list: `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
+- **Next for Gemini:** G12 Science content (Class 5 first), G13 QA. **Owner:** review at this milestone; approve Science units before `draft: false`.

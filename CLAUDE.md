@@ -19,9 +19,14 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - `components/common/reader/Apprec8Reader.js` — study/biography reader; `components/quiz/Apprec8ReaderV2.js` — quiz explanations
 - `components/SpellingBeeGame.js`, `VocabBuilder.js`, `SudokuGame.js`, `Minesweeper.js`, `ClockPracticeGenerator.js` — mini-games
 - `components/quiz/SeedQuestNodesButton.js` — **the Space quest seeding script** (in-app "Update Quest Map" button)
+- **Tabs (2026-11-04 redesign):** Home (`screens/home/`, stack also holds the old Study screens) · Fun (`screens/fun/`) · Progress
+  (`screens/progress/`, route `Stats`; admin Kids view = embedded Dashboard) · Me (`screens/profile/MeScreen.js`, route `ProfileScreen`;
+  seed buttons in `screens/admin/AdminToolsScreen.js`). Space quest = hidden tab `Quest`. Old `Home.js`, `StudyScreen.js`, `ProfileScreen.js` unused.
+- **Tile quests:** all listed in `data/quests/index.js` (English, Science draft). Seed: `components/quiz/SeedTileQuestButton.js`.
+  Class tags: `grades` on nodes, filtered by `utils/gradeFilter.js` (kid's class = `users.grade`). Draft quest tile = `carouselGroup: "quest_draft"` (testers only).
 - **English Quest (tile-based quest):** `screens/englishQuest/` (intro + tree map), `utils/questTree.js` (unlock rules, pure),
   `services/englishQuestApi.js` (progress + attempt recording), content in `data/englishQuestData.js`,
-  seeded by `components/quiz/SeedEnglishQuestButton.js` (admin only). Opened from a `QUEST` tile in the Study tab "Quests" row.
+  seeded by `components/quiz/SeedEnglishQuestButton.js` (wrapper of SeedTileQuestButton, admin only). Opened from a `QUEST` tile on Home.
   Leaf types: `study` (Apprec8Reader), `quiz` (QuizScreenV2), `reading` (`screens/englishQuest/ReadingScreen.js`, logic in
   `utils/readingFlow.js`, content = `studyContent` doc with `kind: "reading"`). Read-aloud uses `expo-speech`.
 - `services/firestoreContentApi.js` — client reads (onSnapshot listeners)

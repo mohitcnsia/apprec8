@@ -41,6 +41,16 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### `feat/quiz-redesign`: Science Quest + class filter ("Multi-quest + Science Quest draft")
+Tester account. Needs one seed: Me → Admin tools → **Update Science Quest (draft)** → confirm (draft = testers only).
+- [ ] Admin tools shows one Update button per quest (English, Science (draft)); each asks to confirm before writing.
+- [ ] After the draft seed, Home → Your quests shows **Science** ("Draft · testers only"), and the greyed "Science · Coming for NSO" tile is gone. A non-tester account sees neither.
+- [ ] Science opens its intro → map: "The Living World" with "Living and non-living", then "Plants · coming soon". Study page + 6-question warm-up play and save.
+- [ ] Class filter: Edit profile Class 5 → the topic shows. (A Class 8 account would see no Science unit; tester "unlock all" shows everything.)
+- [ ] English Quest looks and plays exactly as before for every class.
+- [ ] Home: Continue shows the quest played last; mistakes tile counts both quests. Progress shows a row per quest; Dashboard has English / Science chips.
+- [ ] Re-seed English Quest (Update English Quest → confirm) still works, and kids' progress is kept.
+
 ### `feat/quiz-redesign`: thumb zone + leaderboard names ("Thumb zone + leaderboard names")
 - [ ] Quiz on a tall phone (emulator Pixel 7 Pro or bigger): the answers sit just above CHECK, not under the question with a big gap below.
 - [ ] Long question / small phone: everything still scrolls; nothing hidden behind CHECK or the green/red sheet.

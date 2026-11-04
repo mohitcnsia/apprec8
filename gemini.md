@@ -6,7 +6,7 @@
 2. **Release Strategy:** Differentiate between dynamic data updates (updating `space_olympiad_data.json` and seeding Firestore via the "Update Quest Map" button) which do NOT require an app update, versus native/UI changes (like bumping `expo-image` or adding `react-native-image-zoom-viewer`) which DO require a production build.
 3. **Database Seeding:** Every node must ship together with its content, or it opens to a blank screen.
    - **Space Olympiad (legacy):** `quest_nodes` entry + `studyContent`/`categories`/`topics` payload in `components/quiz/SeedQuestNodesButton.js`.
-   - **Tile quests (English Quest and future ones):** node in `quests/{questId}/nodes` + its study page (`studyContent`) or questions (`questions`, or reused `quizQuestions`) in `data/englishQuestData.js`, seeded by `components/quiz/SeedEnglishQuestButton.js`. Never add tile-quest nodes to `quest_nodes` (old app builds load all of it).
+   - **Tile quests (English, Science, ...):** node in `quests/{questId}/nodes` + its study page (`studyContent`) or questions (`questions`, or reused `quizQuestions`) in the quest's data file (`data/englishQuestData.js`, `data/scienceQuestData.js`; all listed in `data/quests/index.js`), seeded by `components/quiz/SeedTileQuestButton.js` (Me → Admin tools, one button per quest). Never add tile-quest nodes to `quest_nodes` (old app builds load all of it).
 4. **Target Audience (Kids):** The content is designed for kids (Space Olympiad). All answers, images, and reading materials (like the biographies) must be engaging, highly visual, and kid-friendly.
 5. **Content accuracy is the highest priority.** No AI-generated questions live in the app. AI may only draft content offline, and it's checked before it goes live. Generated practice comes from verified word tables only.
 6. **Confirm before building.** Any major feature or new screen gets a plan + mockup approved by the owner first. Reuse existing patterns (Space quest map, `ResultsScreen`, `recordQuizResult`) and the app theme (`ThemeContext`).
@@ -30,9 +30,20 @@ Blocked or unsure? Ask the owner. Production (deploy, seed, Play) only as `docs/
 - [ ] **G9 QA Home + tabs redesign** (same branch, after G8), light AND dark, tester account only: follow `docs/qa/OWNER_TESTING.md` → "steps 1", "step 2", "steps 3–4". Report failures with screenshots under `CODE_REVIEW.md` → "Home + tabs redesign: step 1 built". Do not press seed buttons.
 - [ ] **G10 Deploys after owner OK:** DR-8 (`getLeaderboard` first name + class) and Finding 22 (profile rule `hasOnly`), both in `CODE_REVIEW.md` (2026-11-04 "Thumb zone + leaderboard names"). Check other `users/{uid}` writes first for Finding 22.
 - [ ] **G11 Research (low priority, after exam work):** what Google Play Families policy and India's DPDP Act 2023 require for an app where parents create kid profiles (consent, data shown to other users, ads/analytics). Write a short summary with links under `CODE_REVIEW.md` → "RB-6 update".
-- [ ] **G7 Audit old IEO/NSO quizzes** in the Study tab for wrong answers; list them in `CODE_REVIEW.md`.
+- [ ] **G12 ⭐ Science Quest content (NSO 19 Nov, Pratha = Class 5):** write units in `data/scienceQuestData.js` per `docs/CONTENT_GUIDE.md` §8 (class tags with `forGrades`). Start with Class 5 NSO syllabus topics (SOF's published syllabus; refine with `docs/exam/nso-pattern.md` once papers arrive), one unit per branch `content/sq-uN-<topic>`, `npm test` green, then a "Content review request: Science Unit N" in `CODE_REVIEW.md`. Keep `quest.draft: true`; seed as draft only (testers see it). Claude's sample topic `sq-living` may be kept, fixed or replaced. Owner approves before `draft: false`.
+- [ ] **G13 QA multi-quest** (branch `feat/quiz-redesign`, tester account): `docs/qa/OWNER_TESTING.md` → "Science Quest + class filter".
+- [ ] **G7 Audit old IEO/NSO quizzes** (now under Home → Olympiad practice) for wrong answers; list them in `CODE_REVIEW.md`.
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
+
+## 2026-11-04 (part 2): app redesign + Science Quest groundwork, branch `feat/quiz-redesign` (Claude)
+- **Goal:** finish the owner-approved redesign (quiz, Home + tabs) and prepare NSO (Science Quest) for 19 Nov.
+- **Completed Steps:** (details + commit ids in `CODE_REVIEW.md`, entries dated 2026-11-04)
+  1. Quiz screens redesigned (mockups A–D); answers sit in the thumb zone above CHECK.
+  2. Tabs Home · Fun · Progress · Me. Study tab gone (its screens are in the Home stack); Space quest = hidden tab opened from Home. Reminders (= Tasks, max 5 per kid) in Home's Coming up. Progress merges Stats + Dashboard; Me replaces Profile, seed buttons in Admin tools.
+  3. Leaderboard shows first name + class (Class 1–12 in Edit profile, set once). DR-8 + Finding 22 wait for deploy (G10).
+  4. Multi-quest: `data/quests/index.js`, generic `SeedTileQuestButton`, class filter `utils/gradeFilter.js` (`grades` on nodes), Dashboard quest switch, Home/Progress show every quest. Science Quest draft (`data/scienceQuestData.js`, 1 sample topic) visible to testers only (`quest_draft`).
+- **How to test:** `npm test` (all suites); then `docs/qa/OWNER_TESTING.md`, newest sections first (G8, G9, G13). Nothing is deployed or seeded.
 
 ## 2026-11-04 (covers 2026-10-31 → 2026-11-04)
 - **Goal:** ship English Quest to Play as 20.0.23 and push the update to kids.

@@ -1,4 +1,4 @@
-# English Quest content guide
+# Tile quest content guide (English Quest, Science Quest)
 
 **For:** whoever writes quest content (Gemini by default, see `docs/TEAM.md`). **Owner:** approves accuracy.
 **Goal:** content that passes `npm test` the first time, is correct, and works on every app version.
@@ -153,8 +153,37 @@ Reuse existing tags (full list at the top of `data/englishQuestData.js`). Add a 
 2. Read every question once more as a 10-year-old would: one answer only? Explanation clear?
 3. Add "Content review request: Unit N" to `CODE_REVIEW.md`: branch, commit, question count, anything you're unsure of.
 4. **Accuracy check by a second reviewer** (owner, or Claude for spot checks), then the owner's OK.
-5. **Seed:** merge to `feat/tile-quests`, then from the emulator dev build signed in as the admin: Profile →
-   **Update English Quest**. Phones pick up the new content automatically (no app update).
+5. **Seed:** merge to `feat/tile-quests`, then from the emulator dev build signed in as the admin: Me → Admin tools →
+   **Update English Quest** (or **Update Science Quest**). It asks to confirm. Phones pick up the new content
+   automatically (no app update).
 6. Pratha plays the new practice topics; 🚩 reports show on the Dashboard's Reported tab.
 
 **Fixing a reported question:** change its text/options **in place** (same position), test, re-seed.
+
+---
+
+## 8. Science Quest (NSO): one tree, tagged by class
+
+**File:** `data/scienceQuestData.js` (same helpers and rules as English Quest; ids start with `sq-`). When it grows,
+split units into `data/scienceQuest/units/uN.js` the same way as English. All quests are listed in
+`data/quests/index.js`; `npm test` checks every quest (ids must be unique across quests).
+
+**Class tags.** Every unit, topic (main) and, if needed, practice leaf says which classes it is for:
+```js
+import { ..., forGrades } from "./englishQuest/helpers.js";
+const plants = forGrades(main("sq-plants", u1.id, 2, "Parts of a plant", [study("sq-plants-study"), quiz("sq-plants-warmup")]), [3, 4, 5]);
+const challenge = forGrades(practice("sq-plants-p3", plants, 3, "Photosynthesis challenge", "hard", [quiz("sq-plants-p3")]), [5, 6]);
+```
+- The app hides nodes that aren't for the kid's class (`utils/gradeFilter.js`). A hidden topic never blocks the next
+  one, and a unit with no topics left for that class disappears. Kids with no class set see everything.
+- Tag every Science node: untagged = "for everyone", which is rarely right in Science.
+- A topic taught in several classes is **one** topic tagged `[4, 5, 6]`, not three copies. Put the harder questions
+  in a practice leaf tagged for the higher classes.
+- Order topics so each class's path still makes sense on its own (Class 3 sees only Class 3 topics, in order).
+- Gate and Boss pools must work for every class that sees them (don't put Class 7 questions in a `[4, 5]` gate).
+
+**Draft until approved.** `quest.draft: true` seeds the tile to `carouselGroup: "quest_draft"`: only tester accounts see
+it, and old app versions never do. After the owner approves, set `draft: false` (the tile moves to `quest`) and re-seed.
+
+**NSO level:** follow `docs/exam/nso-pattern.md` (G5) for topics per class and question styles. Mistake tags name the
+misconception (e.g. `moves-means-alive`); list new ones at the top of the file.
