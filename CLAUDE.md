@@ -9,6 +9,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - `npx eas build --profile production --platform android --local` — Play Store `.aab`
 - `cd functions && npm run serve` — Functions emulator; `npm run deploy` to deploy (Node 22)
 - `firebase deploy --only firestore:rules` — needed before seeding if rules changed
+- **Owner testing:** `docs/qa/OWNER_TESTING.md` (no build: dev app on the emulator + `npx expo start`). Add every branch's test checklist there.
 - `npm test` — Node tests in `tests/` for the English Quest logic and content (no linter configured).
 
 ## Layout
