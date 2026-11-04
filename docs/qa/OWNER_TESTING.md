@@ -41,6 +41,12 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### `feat/quiz-redesign`: thumb zone + leaderboard names ("Thumb zone + leaderboard names")
+- [ ] Quiz on a tall phone (emulator Pixel 7 Pro or bigger): the answers sit just above CHECK, not under the question with a big gap below.
+- [ ] Long question / small phone: everything still scrolls; nothing hidden behind CHECK or the green/red sheet.
+- [ ] Me → Edit profile: pick a Class (1–12), save; Me shows "Class N".
+- [ ] Progress → Leaderboard: kids show as "Pratha · Class 5" (first name only). Full effect after DR-8 is deployed (until then the server still sends last names; the new app hides them).
+
 ### `feat/quiz-redesign`, steps 3–4: Me tab + Reminders ("Home + tabs redesign: steps 3–4")
 Mockup board F. Light and dark mode.
 - [ ] **Me:** profile card (photo or first letter, name, email), Edit profile works.

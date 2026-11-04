@@ -467,6 +467,10 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 </View>
               ) : null}
 
+              {/* Thumb zone (owner, 2026-11-04): on tall screens the free space goes ABOVE the options,
+                  so the answers sit just over CHECK where a thumb can reach them. */}
+              <View style={styles.thumbSpacer} />
+
               <View style={tiles ? styles.tileGrid : styles.optionList}>
                 {currentQuestion.options.map((option, index) => (
                   <Option
@@ -560,6 +564,7 @@ const makeStyles = (P, insets) =>
     heartsRow: { flexDirection: "row", alignItems: "center", gap: 5 },
     heartsText: { color: P.heart, fontFamily: "nunitoBold", fontSize: 18 },
     listenRow: { flexDirection: "row", justifyContent: "flex-start" },
+    thumbSpacer: { flexGrow: 1, minHeight: 4 },
     optionList: { marginTop: 6 },
     tileGrid: { marginTop: 10, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" },
     footer: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: Math.max(22, insets.bottom + 14) },

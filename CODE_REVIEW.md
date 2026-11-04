@@ -1513,3 +1513,22 @@ Owner approved the mockups (A–F) and the order: 1 Home + tabs, 2 Progress, 3 M
 - Reminders: max 5 active per kid (`utils/reminders.js`, tested; admin exempt), checked in Home, the Tasks list and the editor.
   Task detail is now optional. Home → "+ Add reminder" opens `TaskEditor` inside the Home stack.
 - **Not done:** no phone notifications (needs a native library + build); no unread badge on Messages (messages have no read flag).
+
+## 2026-11-04 — Thumb zone + leaderboard names (owner requests), branch `feat/quiz-redesign` (Claude)
+- **Thumb zone:** on the quiz screen the free space now goes above the answers (`thumbSpacer`), so options sit just over
+  CHECK. Keep practising already worked this way; Reading scrolls to each question.
+- **Leaderboard names:** other kids show as first name + class ("Pratha · Class 5"), never last name or email
+  (`utils/leaderName.js`, tested). Edit profile has a Class 1–12 picker (`users.grade`, also useful for class-tagged NSO nodes).
+  **School is not shown** to everyone: first name + school + class points a stranger to one child in one classroom. Proposal:
+  show school only to kids of the same school, once RB-2 exists (school comes from the class join code, not free text).
+
+### DR-8: leaderboard sends first name + class only (devops; owner OK needed)
+`functions/callable/userActions.js` → `getLeaderboard` now returns `lastName: null`, first word of `firstName`, `username`
+without the email part, and `grade`. Old app versions then also show first names only. Deploy just this function:
+`firebase deploy --only functions:getLeaderboard` (after `npm test` + emulator check).
+
+### Finding 22: [MEDIUM] Profile update rule lets a kid change any field of their own user doc
+`firestore.rules` → `users/{userId}` → "Profile update" branch checks that the name/photo fields are present but not *which*
+fields changed, so a kid could also set `stats.totalStars` (leaderboard) or other fields. Proposed fix (devops, rules deploy):
+add `request.resource.data.diff(resource.data).affectedKeys().hasOnly(['firstName','lastName','photoURL','lastUpdatedAt','profileLastSavedAt','grade'])`
+to that branch. **Gemini:** before deploying, check no other client write to `users/{uid}` relies on this branch.

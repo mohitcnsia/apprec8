@@ -84,6 +84,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
       currentLastName: userData?.lastName || "",
       currentPhotoURL: userData?.photoURL || "",
       currentProfileLastSavedAt: userData?.profileLastSavedAt || null,
+      currentGrade: userData?.grade ?? null,
     });
 
   const openHelp = () =>
@@ -109,6 +110,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
           )}
           <View style={{ flex: 1 }}>
             <Text style={styles.name} numberOfLines={1}>{name}</Text>
+            {userData?.grade ? <Text style={styles.soft}>Class {userData.grade}</Text> : null}
             {auth?.email ? <Text style={styles.soft} numberOfLines={1}>{auth.email}</Text> : null}
           </View>
         </View>

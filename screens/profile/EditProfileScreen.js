@@ -61,10 +61,13 @@ const EditProfileScreen = ({ route, navigation }) => {
     currentLastName = "",
     currentPhotoURL = "",
     currentProfileLastSavedAt = null,
+    currentGrade = null,
   } = route.params || {};
 
   const [firstName, setFirstName] = useState(currentFirstName);
   const [lastName, setLastName] = useState(currentLastName);
+  // Class 1–12 (2026-11-04): shown on the leaderboard ("Pratha · Class 5") and used later for class-tagged quests.
+  const [grade, setGrade] = useState(Number.isInteger(currentGrade) ? currentGrade : null);
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(
     currentPhotoURL || DEFAULT_AVATAR
   );
@@ -184,6 +187,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       photoURL: selectedAvatarUrl,
       lastUpdatedAt: firestore.FieldValue.serverTimestamp(),
       profileLastSavedAt: firestore.FieldValue.serverTimestamp(),
+      ...(grade ? { grade } : {}),
     };
     try {
       await firestoreService
@@ -210,6 +214,7 @@ const EditProfileScreen = ({ route, navigation }) => {
     userId,
     firstName,
     lastName,
+    grade,
     selectedAvatarUrl,
     navigation,
     canUpdateProfile,
@@ -220,6 +225,12 @@ const EditProfileScreen = ({ route, navigation }) => {
     () =>
       StyleSheet.create({
         gradientContainer: { flex: 1 },
+        gradeLabel: { fontSize: 15, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient || theme.textPrimary, marginTop: 6, marginBottom: 6 },
+        gradeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
+        gradeChip: { width: 44, height: 44, borderRadius: 22, borderWidth: 2, borderColor: theme.border || "#E8DCE9", alignItems: "center", justifyContent: "center" },
+        gradeChipOn: { backgroundColor: theme.primary, borderColor: theme.primary },
+        gradeText: { fontSize: 16, fontFamily: "nunitoBold", color: theme.textPrimaryOnGradient || theme.textPrimary },
+        gradeTextOn: { color: theme.textOnPrimary || "#FFFFFF" },
         scrollViewContent: {
           flexGrow: 1,
           paddingHorizontal: 20,
@@ -422,6 +433,21 @@ const EditProfileScreen = ({ route, navigation }) => {
               },
             }}
           />
+          <Text style={componentStyles.gradeLabel}>Class</Text>
+          <View style={componentStyles.gradeRow} accessibilityRole="radiogroup">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((g) => (
+              <TouchableOpacity
+                key={g}
+                onPress={() => setGrade(g)}
+                style={[componentStyles.gradeChip, grade === g && componentStyles.gradeChipOn]}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: grade === g }}
+                accessibilityLabel={`Class ${g}`}
+              >
+                <Text style={[componentStyles.gradeText, grade === g && componentStyles.gradeTextOn]}>{g}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
           {canUpdateProfile ? ( // Only show the button if the user CAN update
             <PaperButton
               mode="contained"

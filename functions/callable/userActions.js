@@ -50,9 +50,12 @@ exports.getLeaderboard = functions
         leaders.push({
           id: doc.id,
           rank: rankCounter,
-          firstName: userData.firstName || null,
-          lastName: userData.lastName || null,
-          username: userData.username || null,
+          // Other kids see first name + class only (owner, 2026-11-04): no last name, no email.
+          // Older apps show "firstName lastName", so sending lastName: null makes them show the first name too.
+          firstName: String(userData.firstName || "").trim().split(/\s+/)[0] || null,
+          lastName: null,
+          username: userData.username ? String(userData.username).split("@")[0] : null,
+          grade: Number.isInteger(userData.grade) ? userData.grade : null,
           photoURL: userData.photoURL || null,
           points: userData.stats?.totalStars || 0,
         });

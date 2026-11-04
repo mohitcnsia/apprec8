@@ -25,26 +25,17 @@ import TopThreeDisplay from "../../components/common/TopThreeDisplay";
 import LeaderListItem from "../../components/common/LeaderListItem";
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
+import { leaderName } from "../../utils/leaderName";
 
 const LEADERBOARD_DISPLAY_LIMIT = 10; // How many users to show in the main list
 const REFRESH_INTERVAL = 10 * 60 * 1000;
 const INFO_LABEL_DURATION = 5000;
 
-const ASYNC_STORAGE_CACHE_KEY = "leaderboardCache_v3_split"; // Changed key for new data structure
+const ASYNC_STORAGE_CACHE_KEY = "leaderboardCache_v4_firstname"; // v4: older caches held full names
 const ASYNC_STORAGE_TIMESTAMP_KEY = "leaderboardCacheTimestamp_v3";
 
-const getDisplayName = (leaderObject) => {
-  if (!leaderObject) return "User";
-  const firstName = leaderObject.firstName?.trim();
-  const lastName = leaderObject.lastName?.trim();
-  const username = leaderObject.username?.trim();
-  const originalNameField = leaderObject.name?.trim();
-  if (firstName && lastName) return `${firstName} ${lastName}`;
-  if (firstName) return firstName;
-  if (username) return username;
-  if (originalNameField) return originalNameField;
-  return `User #${(leaderObject.id || "anon").substring(0, 4)}`;
-};
+// First name + class only (owner, 2026-11-04). See utils/leaderName.js.
+const getDisplayName = (leaderObject) => leaderName(leaderObject);
 
 const StatsScreen = ({ navigation }) => {
   const { theme } = useTheme();
