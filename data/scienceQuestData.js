@@ -1991,7 +1991,7 @@ export const quizzes = {
     {
       subtopic: "movable-joints",
       ...q(
-        "An orthopedic doctor observes a joint that moves in only one plane, like the opening of a single door. Which joint is this?",
+        "An orthopaedic doctor observes a joint that moves in only one plane, like the opening of a single door. Which joint is this?",
         "The elbow joint",
         [
           ["The hip joint", "joint-plane-mixup"],
@@ -2007,9 +2007,9 @@ export const quizzes = {
         "If the cartilage at a person's knee joint wears away completely, what is the most likely symptom they will experience?",
         "Pain from bones grinding together",
         [
-          ["The knee joint rotating in full circles", "cartilage-loss-mixup"],
-          ["Immediate loss of all arm reflexes", "cartilage-loss-mixup"],
-          ["The knee bone turning into muscle", "cartilage-loss-mixup"]
+          ["Bones fusing together into a fixed joint immediately", "cartilage-loss-mixup"],
+          ["Loss of feeling in the leg skin", "cartilage-loss-mixup"],
+          ["Bones growing longer than normal", "cartilage-loss-mixup"]
         ],
         "Cartilage cushions bone ends. Without it, the rough surfaces of the bones rub directly against each other, causing stiffness and severe pain."
       ),
@@ -2364,9 +2364,9 @@ export const quizzes = {
         "A student eats sticky sweets and does not brush their teeth before sleeping. What is the direct cause of tooth decay in this situation?",
         "Bacteria produce acid from leftover sugar that dissolves enamel",
         [
-          ["Saliva turns into solid rock and breaks the jawbone", "plaque-acid-mixup"],
-          ["The teeth naturally convert their dentine into liquid milk", "plaque-acid-mixup"],
-          ["Enamel dries out and evaporates into the air", "plaque-acid-mixup"]
+          ["Sugar enters inside the tooth and pushes the root out", "plaque-acid-mixup"],
+          ["Lack of protective saliva causes teeth to crack under chewing pressure", "plaque-acid-mixup"],
+          ["Teeth stop receiving nutrients from the gums", "plaque-acid-mixup"]
         ],
         "Mouth bacteria feed on residual sugar from sweets and produce acids that eat away the minerals in enamel, forming a cavity."
       ),
@@ -2413,14 +2413,14 @@ export const quizzes = {
     {
       subtopic: "nutrients-deficiency",
       ...q(
-        "A doctor advises a child with pale skin and low energy to eat more spinach, jaggery, and apples. Which nutrient is the doctor aiming to restore?",
+        "A doctor advises a child with pale skin and low energy to eat more spinach, jaggery, and dates. Which nutrient is the doctor aiming to restore?",
         "Iron",
         [
           ["Calcium", "food-nutrient-matching"],
           ["Vitamin A", "food-nutrient-matching"],
           ["Iodine", "food-nutrient-matching"]
         ],
-        "Spinach, jaggery, and apples are rich sources of iron, which the body uses to manufacture haemoglobin and overcome anaemia."
+        "Spinach, jaggery, and dates are rich sources of iron, which the body uses to manufacture haemoglobin and overcome anaemia."
       ),
     },
     {
@@ -2683,8 +2683,8 @@ export const quizzes = {
         "It dilates (expands) to let in more light",
         [
           ["It constricts (shrinks) to block excess light", "pupil-dilation-mixup"],
-          ["It completely closes and turns yellow", "pupil-dilation-mixup"],
-          ["It detaches from the coloured iris", "pupil-dilation-mixup"]
+          ["It stays exactly the same size in all conditions", "pupil-dilation-mixup"],
+          ["It changes its shape from circular to oval", "pupil-dilation-mixup"]
         ],
         "In dim light, the circular muscles of the iris relax, causing the pupil to expand (dilate) so more light can enter the eye."
       ),
@@ -2957,9 +2957,9 @@ export const quizzes = {
         "When Priya suddenly touches a spiky cactus leaf, she pulls her finger away before she feels the sting. Why does this reflex action occur so quickly?",
         "The spinal cord triggers the reflex without waiting for the brain",
         [
-          ["The cerebrum sends a long written message to the cactus", "boss-reflex-cactus"],
-          ["The cactus releases an electric shock that repels her skin", "boss-reflex-cactus"],
-          ["The finger bone contracts and pulls the arm backwards", "boss-reflex-cactus"]
+          ["The brain deliberates carefully before commanding the arm to move", "boss-reflex-cactus"],
+          ["Sensory nerves contract the arm muscles without using motor nerves", "boss-reflex-cactus"],
+          ["Skin pain receptors push the finger away on their own", "boss-reflex-cactus"]
         ],
         "In a reflex action, the spinal cord directly connects the sensory nerve to the motor nerve, triggering an immediate withdrawal to avoid tissue damage."
       ),
