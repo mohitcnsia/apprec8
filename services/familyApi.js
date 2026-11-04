@@ -6,6 +6,7 @@ import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { authInstance } from "../config/firebaseConfig";
 import { childPayload, normalizeChildCode } from "../utils/family";
+import { endSession } from "./playSession";
 
 const db = getFirestore(getApp());
 const call = (name, data) => functions().httpsCallable(name)(data).then((r) => r.data);
@@ -50,4 +51,5 @@ export async function playAsChild(kidUid) {
 export async function backToParent(pin) {
   const { token } = await call("switchToParent", { pin });
   await signInWithCustomToken(authInstance, token);
+  await endSession(); // unpin the phone and stop the timer (mockup N1)
 }

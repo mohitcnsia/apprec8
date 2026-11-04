@@ -27,7 +27,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 28; // 20.0.28: schools/classes, assignments, parent accounts, Home rework, quiz fixes, OTA updates
+  const patchVersion = 29; // 20.0.29: lock the phone to Apprec8 + play time (N1), new leaderboard, schools redesign
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =

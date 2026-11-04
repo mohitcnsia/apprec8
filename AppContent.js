@@ -14,6 +14,7 @@ import { useTheme } from "./context/ThemeContext";
 import { useInAppMessaging } from "./hooks/useInAppMessaging";
 import InAppMessageModal from "./components/common/InAppMessageModal";
 import useStartupUpdate from "./hooks/useStartupUpdate";
+import TimeUpOverlay from "./components/common/TimeUpOverlay";
 
 const MIN_LOADER_DISPLAY_TIME = 3000;
 
@@ -167,6 +168,8 @@ const AppContent = () => {
           />
         )}
       </View>
+      {/* A child's play time is over (Play as → How long?, mockup N1): pause until the parent's PIN */}
+      {user ? <TimeUpOverlay uid={user.uid} /> : null}
     </PaperProvider>
   );
 };

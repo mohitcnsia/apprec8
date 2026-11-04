@@ -19,7 +19,8 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
 import { getClasses } from "../../services/classesApi";
-import { myChildren, playAsChild } from "../../services/familyApi";
+import { myChildren } from "../../services/familyApi";
+import PlayAsChildSheet from "./PlayAsChildSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 
 const THEMES = [
@@ -66,6 +67,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [myClasses, setMyClasses] = useState([]);
   const [children, setChildren] = useState([]);
+  const [playKid, setPlayKid] = useState(null); // "Play as" sheet (mockup N1)
   const childKey = (userData?.childUids || []).join(",");
   useEffect(() => {
     if (!childKey) return setChildren([]);
@@ -165,15 +167,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
                   icon="happy-outline"
                   label={`Play as ${k.firstName || "child"}`}
                   detail={k.grade ? `Class ${k.grade}` : null}
-                  onPress={() =>
-                    !userData?.hasParentPin
-                      ? navigation.navigate("ParentPin", { mode: "set" })
-                      : Alert.alert(k.firstName || "Child", "Switch this phone to your child's profile? Switching back needs your PIN.", [
-                          { text: "Cancel", style: "cancel" },
-                          { text: "Login code (another phone)", onPress: () => navigation.navigate("AddChild", { kid: k }) },
-                          { text: `Play as ${k.firstName || "child"}`, onPress: () => playAsChild(k.uid).catch((e) => Alert.alert("Couldn't switch", e.message)) },
-                        ])
-                  }
+                  onPress={() => (!userData?.hasParentPin ? navigation.navigate("ParentPin", { mode: "set" }) : setPlayKid(k))}
                   styles={styles}
                   P={P}
                 />
@@ -265,6 +259,16 @@ export default function MeScreen({ navigation, signoutHandler }) {
         onConfirm={() => {
           setConfirmSignOut(false);
           if (typeof signoutHandler === "function") signoutHandler();
+        }}
+      />
+      <PlayAsChildSheet
+        kid={playKid}
+        P={P}
+        onClose={() => setPlayKid(null)}
+        onLoginCode={() => {
+          const k = playKid;
+          setPlayKid(null);
+          navigation.navigate("AddChild", { kid: k });
         }}
       />
     </ScrollView>
