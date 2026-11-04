@@ -4,6 +4,9 @@ STOP: no
 <!-- Owner or Claude: change the line above to "STOP: yes" to halt Gemini at its next check. -->
 
 **Updated:** 2026-11-04 by Claude · **Goal:** Pratha ready for IEO (17 Nov) and NSO (19 Nov) · **Base branch:** `feat/quiz-redesign`
+**Owner priorities (2026-11-04):** 1) content accuracy, 2) a great app for kids, as soon as possible. Only the owner and Pratha use it now, so
+breaking it is OK: ship often to internal testing, test on the owner's phone, keep emulator use short (slow Mac).
+Accuracy pipeline: Gemini writes → Claude checks every question → Pratha's mother (English teacher) 🚩 in the app → owner OK → kids.
 **How this works:** Claude (lead) writes tasks here; Gemini picks them up with `scripts/agents/next-task.sh`, works in its own
 folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + `docs/agents/reports/Gxx.md` on its branch.
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
@@ -25,7 +28,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G16 Science Unit 1 "The Living World" (Class 5) | Gemini | in progress | `content/sq-u1-living-world` | |
 | G18 NSO (+ IEO) pattern notes from the owner's papers | Gemini | todo (next) | `gemini/g18-exam-patterns` | |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | todo | `content/eq-u3-sva` | |
-| G14 Seed English Unit 2 + QA re-run on the emulator | Gemini | todo (next, owner: before Science) | `gemini/g14-qa` | |
+| G14 Seed English Unit 2 + 10-min smoke test | Gemini | todo (next) | `gemini/g14-qa` | |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
 
 **Done:** G1 DR-7 old function images kept 1 day (Gemini, 2026-11-04) · G8 quiz redesign QA (findings fixed in `0ae2db2`).
@@ -61,9 +64,9 @@ Keep `quest.draft: true`.
 `scripts/qa/eq.sh prep`, restart the app; sign in as the tester/admin account (mohitchilkoti@gmail.com), never a kid's.
 **1. Seed:** Me → Admin tools → **Update English Quest** → confirm "LIVE". Check the alert says 3 units (+ teaser). Do NOT press
 the Science or other seed buttons. Open English Quest: Unit 2 "Articles & Determiners" appears after Unit 1's Boss.
-**2. QA** (light AND dark): `docs/qa/OWNER_TESTING.md` sections "step 1", "step 2", "steps 3–4", "thumb zone" (skip the
-Science section), plus the 3 fixes: Home "Coming up" card visible and tappable; wrong answer → Chamak's kind "oops" face;
-old IEO question without explanation (Gender 2 → "Hunter") shows `The answer is "Huntress".`
+**2. Short smoke test only, max 10 minutes** (owner 2026-11-04: the Mac is slow and the owner tests on the phone): light mode
+only. Home shows the "Coming up" card text; open Unit 2's first topic and answer 2 questions (one wrong: Chamak's kind "oops"
+face); Progress and Me open. Then close the emulator (it slows the Mac a lot).
 **Rules:** 2 tries per step then move on (`docs/qa/QA_PLAYBOOK.md`). Report what the screenshot shows.
 **Deliver:** branch `gemini/g14-qa`; `docs/agents/reports/G14.md` = table (item · PASS / FAIL / SKIPPED · screenshot · note),
 FAILs first with steps to repeat. Commit `gemini(G14): done — P pass, F fail`. Then `eq.sh unprep`.
