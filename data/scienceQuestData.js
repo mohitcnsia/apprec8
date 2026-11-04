@@ -22,6 +22,7 @@ import {
   boss,
   forGrades,
 } from "./englishQuest/helpers.js";
+import sqU4 from "./scienceQuest/units/u4.js"; // Unit 4 Our Environment (2026-11-05)
 
 export const QUEST_ID = "science-quest";
 
@@ -50,6 +51,8 @@ export const tile = {
 // light-for-germination-myth, vegetative-part-mixup, spore-seed-mixup,
 // breathing-organ-mixup, amphibian-breathing-mixup, insect-breathing-mixup, body-covering-mixup,
 // camouflage-mixup, migration-reason-mixup, teeth-diet-mixup
+// Unit 4: producer-consumer-mixup, arrow-direction-mixup, food-web-effect-mixup, decomposer-mixup, farming-order-mixup,
+// farm-tool-mixup, crop-season-mixup, pollution-cause-mixup, greenhouse-mixup, conservation-mixup
 
 // ---------- Study pages ----------
 export const studyPages = {
@@ -499,6 +502,7 @@ The Moon is Earth's only natural satellite, orbiting Earth every 27.3 days.
   - **Solar Eclipse:** The Moon passes directly between the Sun and Earth (**Sun — Moon — Earth**). The Moon casts its shadow onto Earth during the day.
   - **Lunar Eclipse:** The Earth passes directly between the Sun and the Moon (**Sun — Earth — Moon**). Earth's shadow falls on the Full Moon at night.`,
   },
+  ...sqU4.studyPages,
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -4408,6 +4412,7 @@ export const quizzes = {
       ),
     },
   ],
+  ...sqU4.quizzes,
 };
 
 export const readings = {};
@@ -4833,8 +4838,8 @@ const u3Boss = forGrades(
   [4, 5]
 );
 
-// Unit 4 Teaser (coming soon)
-const u4 = unit("sq-u4", 4, "Environment and Space", { comingSoon: true });
+// Unit 4 Our Environment: data/scienceQuest/units/u4.js. Unit 5 teaser (coming soon).
+const u5 = unit("sq-u5", 5, "Light, Sound & Magnets", { comingSoon: true });
 
 export const nodes = [
   u1,
@@ -4879,5 +4884,6 @@ export const nodes = [
   earthGate,
   earthEndless,
   u3Boss,
-  u4,
+  ...sqU4.nodes,
+  u5,
 ];
