@@ -13,12 +13,13 @@ import Svg, { Path } from "react-native-svg";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
-import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
-import { QUEST_ID, nodes as BUNDLED_NODES } from "../../data/englishQuestData";
+import { QUESTS } from "../../data/quests";
+import { nodesForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
-import { dayStreak } from "../../utils/homeFeed";
+import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 
@@ -52,41 +53,67 @@ export default function ProgressScreen({ navigation }) {
   const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
   const [view, setView] = useState("me");
   const [userData, setUserData] = useState(null);
-  const [progress, setProgress] = useState({ nodes: {}, doc: {} });
+  const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
+  // Bundled quests (topic names + counts without extra reads). Drafts only for testers.
+  const quests = useMemo(() => QUESTS.filter((m) => !m.quest.draft || isTesterUser(user)), [uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!uid) return undefined;
     const unsubUser = listenToUserDocument(setUserData, (e) => console.warn("Progress: user doc failed", e));
-    const unsubProgress = listenToQuestProgress(
-      QUEST_ID,
-      (nodes, doc) => setProgress({ nodes: nodes || {}, doc: doc || {} }),
-      (e) => console.warn("Progress: quest progress failed", e)
+    const unsubs = quests.map((m) =>
+      listenToQuestProgress(
+        m.QUEST_ID,
+        (nodes, doc) => setProgressById((p) => ({ ...p, [m.QUEST_ID]: { nodes: nodes || {}, doc: doc || {} } })),
+        (e) => console.warn(`Progress: ${m.QUEST_ID} progress failed`, e)
+      )
     );
     return () => {
       unsubUser && unsubUser();
-      unsubProgress && unsubProgress();
+      unsubs.forEach((u) => u && u());
     };
-  }, [uid]);
+  }, [uid, quests]);
 
-  const name = useMemo(() => topicNamer(BUNDLED_NODES), []);
-  const stats = progress.doc?.stats || {};
-  const daily = stats.daily || {};
+  const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
+  const statsOf = (id) => progressById[id]?.doc?.stats || {};
+  // All quests together for streak / week / totals.
+  const daily = mergeDaily(quests.map((m) => statsOf(m.QUEST_ID).daily));
+  const stats = quests.reduce(
+    (t, m) => ({ answered: t.answered + (statsOf(m.QUEST_ID).answered || 0), correct: t.correct + (statsOf(m.QUEST_ID).correct || 0), daily }),
+    { answered: 0, correct: 0, daily }
+  );
   const streak = dayStreak(daily);
   const week = weekStrip(daily);
   const thisWeek = summarize(stats, "week");
   const right = accuracy({ answered: stats.answered || 0, correct: stats.correct || 0 });
   const stars = userData?.stats?.totalStars || 0;
-  const weak = weakTopics(stats).slice(0, 3);
-  const great = greatTopics(stats);
-  const english = useMemo(() => {
-    try {
-      return questSummary(BUNDLED_NODES, progress.nodes);
-    } catch (e) {
-      return null;
-    }
-  }, [progress.nodes]);
+  // Per quest: where the kid is (only topics for their class), weak and strong topics with names.
+  const perQuest = useMemo(
+    () =>
+      quests.map((m) => {
+        const p = progressById[m.QUEST_ID] || { nodes: {}, doc: {} };
+        const namer = topicNamer(m.nodes);
+        let summary = null;
+        try {
+          summary = questSummary(nodesForGrade(m.nodes, grade), p.nodes);
+        } catch (e) {
+          summary = null;
+        }
+        const st = p.doc?.stats || {};
+        return {
+          questId: m.QUEST_ID,
+          title: m.quest.title.replace(/ Quest$/, ""),
+          draft: !!m.quest.draft,
+          summary,
+          weak: weakTopics(st).map((t) => ({ ...t, questId: m.QUEST_ID, name: namer(t.subtopic) })),
+          great: greatTopics(st).map((t) => ({ ...t, questId: m.QUEST_ID, name: namer(t.subtopic) })),
+        };
+      }),
+    [quests, progressById, grade]
+  );
+  const weak = perQuest.flatMap((q) => q.weak).sort((a, b) => a.percent - b.percent).slice(0, 3);
+  const great = perQuest.flatMap((q) => q.great).sort((a, b) => b.percent - a.percent).slice(0, 3);
 
-  const openQuestMap = () => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId: QUEST_ID } });
+  const openQuestMap = (questId) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId } });
 
   const segment = isAdmin ? (
     <View style={styles.segment} accessibilityRole="tablist">
@@ -177,31 +204,35 @@ export default function ProgressScreen({ navigation }) {
 
       {/* Quests */}
       <Text style={styles.section}>Quests</Text>
-      <Pressable onPress={openQuestMap} accessibilityRole="button">
-        <View style={styles.card}>
-          <View style={styles.rowBetween}>
-            <Text style={styles.cardTitle}>
-              English{english?.unitOrder !== null && english?.unitOrder !== undefined ? ` · Unit ${english.unitOrder}` : ""}
-            </Text>
-            {english ? <Text style={styles.soft}>{english.cleared} / {english.total} topics</Text> : null}
+      {perQuest.map((q) => (
+        <Pressable key={q.questId} onPress={() => openQuestMap(q.questId)} accessibilityRole="button">
+          <View style={styles.card}>
+            <View style={styles.rowBetween}>
+              <Text style={styles.cardTitle}>
+                {q.title}
+                {q.summary?.unitOrder !== null && q.summary?.unitOrder !== undefined ? ` · Unit ${q.summary.unitOrder}` : ""}
+                {q.draft ? " (draft)" : ""}
+              </Text>
+              {q.summary ? <Text style={styles.soft}>{q.summary.cleared} / {q.summary.total} topics</Text> : null}
+            </View>
+            {q.summary ? <Bar percent={q.summary.total ? (q.summary.cleared / q.summary.total) * 100 : 0} P={P} /> : null}
+            {q.summary?.current ? <Text style={styles.soft}>Now: {q.summary.current}</Text> : null}
           </View>
-          {english ? <Bar percent={english.total ? (english.cleared / english.total) * 100 : 0} P={P} /> : null}
-          {english?.current ? <Text style={styles.soft}>Now: {english.current}</Text> : null}
-        </View>
-      </Pressable>
+        </Pressable>
+      ))}
 
       {/* Work on these */}
       {weak.length > 0 ? (
         <>
           <Text style={styles.section}>Work on these</Text>
           {weak.map((t) => (
-            <View key={t.subtopic} style={[styles.card, styles.row]}>
+            <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
               <View style={{ flex: 1, gap: 6 }}>
-                <Text style={styles.cardTitle} numberOfLines={2}>{name(t.subtopic)}</Text>
+                <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
                 <Bar percent={t.percent} P={P} color={P.wrongBorder} />
                 <Text style={styles.soft}>{t.percent}% right · {t.total} answers</Text>
               </View>
-              <Pressable onPress={openQuestMap} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${name(t.subtopic)}`}>
+              <Pressable onPress={() => openQuestMap(t.questId)} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${t.name}`}>
                 <Text style={styles.smallButtonText}>Practise</Text>
               </Pressable>
             </View>
@@ -212,14 +243,14 @@ export default function ProgressScreen({ navigation }) {
       {great.length > 0 ? (
         <View style={[styles.card, styles.greatCard]}>
           <Text style={styles.greatText}>
-            ⭐ Great at: {great.map((t) => `${name(t.subtopic)} (${t.percent}%)`).join(", ")}
+            ⭐ Great at: {great.map((t) => `${t.name} (${t.percent}%)`).join(", ")}
           </Text>
         </View>
       ) : null}
 
       {(stats.answered || 0) === 0 ? (
         <View style={styles.card}>
-          <Text style={styles.soft}>Play English Quest to see your strong and tricky topics here.</Text>
+          <Text style={styles.soft}>Play a quest to see your strong and tricky topics here.</Text>
         </View>
       ) : null}
 

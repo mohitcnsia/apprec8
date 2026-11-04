@@ -68,3 +68,17 @@ assert.equal(upcomingItems([], [], now).length, 0);
 assert.equal(upcomingItems([{ id: "x", tag: "X", title: "X", date: "2026-11-05" }], [], now)[0].unit, "DAY");
 
 console.log("homeFeed tests passed");
+
+// ---- several quests ----
+import { mergeDaily, lastPlayed, pickContinue } from "../utils/homeFeed.js";
+const m = mergeDaily([{ "2026-11-04": { answered: 3, correct: 2, timeMs: 10 } }, { "2026-11-04": { answered: 1, correct: 1 }, "2026-11-03": { answered: 5 } }, undefined]);
+assert.deepEqual(m["2026-11-04"], { answered: 4, correct: 3, timeMs: 10 });
+assert.equal(m["2026-11-03"].answered, 5);
+assert.equal(lastPlayed({ stats: { lastActiveAt: 42 } }), 42);
+assert.equal(lastPlayed({ updatedAt: { toMillis: () => 7 } }), 7);
+assert.equal(lastPlayed({}), 0);
+const Q = [{ questId: "english-quest" }, { questId: "science-quest" }];
+assert.equal(pickContinue(Q, {}).questId, "english-quest"); // nobody played: first
+assert.equal(pickContinue(Q, { "science-quest": { doc: { stats: { lastActiveAt: 9 } } }, "english-quest": { doc: { stats: { lastActiveAt: 5 } } } }).questId, "science-quest");
+assert.equal(pickContinue([], {}), null);
+console.log("homeFeed multi-quest: ok");

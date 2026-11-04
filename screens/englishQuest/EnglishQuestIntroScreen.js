@@ -153,7 +153,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
               accessibilityLabel="Reset my progress"
               style={styles.resetButton}
               onPress={() =>
-                Alert.alert("Reset my progress?", "This deletes YOUR English Quest progress only.", [
+                Alert.alert("Reset my progress?", `This deletes YOUR ${quest?.title || "quest"} progress only.`, [
                   { text: "Cancel", style: "cancel" },
                   {
                     text: "Reset",

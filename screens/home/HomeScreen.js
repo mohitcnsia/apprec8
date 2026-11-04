@@ -16,10 +16,10 @@ import { listenToCategoriesByGroup, listenToUserDocument } from "../../services/
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
-import { greeting, dayStreak, upcomingItems } from "../../utils/homeFeed";
+import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
-import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -35,6 +35,7 @@ const tileOf = (c) => ({
   title: c.title,
   image: c.image,
   subtitle: c.subtitle || "",
+  description: c.description || "",
   type: c.type || "COURSE",
   questId: c.questId || null,
 });
@@ -211,7 +212,9 @@ export default function HomeScreen({ navigation }) {
   const [olympiad, setOlympiad] = useState([]);
   const [popularQuizzes, setPopularQuizzes] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
-  const [progress, setProgress] = useState({ nodes: {}, doc: {} });
+  const [draftQuests, setDraftQuests] = useState([]); // testers only: quests still in review
+  const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
+  const isTester = isTesterUser(authInstance.currentUser);
 
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
@@ -221,32 +224,50 @@ export default function HomeScreen({ navigation }) {
       listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")),
       listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")),
     ];
+    // Draft quests (e.g. Science while Gemini writes it): only testers see them.
+    if (isTester) subs.push(listenToCategoriesByGroup("quest_draft", (d) => setDraftQuests(d.map(tileOf)), warn("draft quests")));
     let unsubUser = () => {};
     if (uid) unsubUser = listenToUserDocument((d) => setUserData(d), warn("user"));
     return () => {
       subs.forEach((u) => u && u());
       unsubUser();
     };
-  }, [uid]);
+  }, [uid, isTester]);
 
-  // The main quest (English Quest today): first quest tile.
-  const mainQuest = quests[0] || null;
-  const mainQuestId = mainQuest ? mainQuest.questId || mainQuest.id : null;
+  // Every tile quest (English, Science, ...), each with its own progress doc.
+  const allQuests = useMemo(
+    () =>
+      [...quests, ...draftQuests]
+        .map((q) => ({ ...q, questId: q.questId || q.id }))
+        .filter((q, i, arr) => arr.findIndex((x) => x.questId === q.questId) === i),
+    [quests, draftQuests]
+  );
+  const questKey = allQuests.map((q) => q.questId).join(",");
 
   useEffect(() => {
-    if (!mainQuestId) return undefined;
-    return listenToQuestProgress(
-      mainQuestId,
-      (nodes, doc) => setProgress({ nodes: nodes || {}, doc: doc || {} }),
-      (e) => console.warn("HomeScreen: quest progress failed to load", e)
+    const ids = questKey ? questKey.split(",") : [];
+    const unsubs = ids.map((id) =>
+      listenToQuestProgress(
+        id,
+        (nodes, doc) => setProgressById((m) => ({ ...m, [id]: { nodes: nodes || {}, doc: doc || {} } })),
+        (e) => console.warn(`HomeScreen: progress of ${id} failed to load`, e)
+      )
     );
-  }, [mainQuestId, uid]);
+    return () => unsubs.forEach((u) => u && u());
+  }, [questKey, uid]);
+
+  // Continue = the quest played most recently. Mistakes = all quests; the tile opens the one with most.
+  const mainQuest = pickContinue(allQuests, progressById);
+  const mainQuestId = mainQuest?.questId || null;
+  const progress = progressById[mainQuestId] || { nodes: {}, doc: {} };
+  const mistakesOf = (id) => Object.keys(progressById[id]?.doc?.mistakes || {}).length;
+  const mistakeQuest = [...allQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
 
   const firstName =
     userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
   const stars = userData?.stats?.totalStars || 0;
-  const streak = dayStreak(progress.doc?.stats?.daily || {});
-  const mistakeCount = Object.keys(progress.doc?.mistakes || {}).length;
+  const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
+  const mistakeCount = allQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
   const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
   const started = Object.keys(progress.nodes || {}).length > 0;
 
@@ -258,7 +279,8 @@ export default function HomeScreen({ navigation }) {
     if (started) navigation.navigate("EnglishQuestMap", { questId: mainQuestId });
     else navigation.navigate("EnglishQuestIntro", { questId: mainQuestId });
   };
-  const openMistakes = () => navigation.navigate("EnglishQuestMap", { questId: mainQuestId, openMistakes: true });
+  const openMistakes = () =>
+    mistakeQuest && navigation.navigate("EnglishQuestMap", { questId: mistakeQuest.questId, openMistakes: true });
   const openSpace = () => navigation.navigate("Quest", { screen: "QuestMap" });
   const addReminder = () => {
     if (!uid) return navigation.navigate("Profile"); // guests: sign in first
@@ -296,12 +318,12 @@ export default function HomeScreen({ navigation }) {
       {mainQuest ? (
         <View style={styles.continueCard}>
           <View style={styles.continueArt}>
-            <BookArt size={92} />
+            {/science/i.test(mainQuestId || "") ? <FlaskArt /> : <BookArt size={92} />}
           </View>
           <Text style={styles.label}>{started ? "CONTINUE" : "START HERE"}</Text>
           <Text style={styles.continueTitle}>{mainQuest.title || "English Quest"}</Text>
           <Text style={styles.continueSub}>
-            {started ? `${doneSteps} ${doneSteps === 1 ? "step" : "steps"} done. Keep going!` : "Grammar and words, one step at a time"}
+            {started ? `${doneSteps} ${doneSteps === 1 ? "step" : "steps"} done. Keep going!` : mainQuest.description || "One step at a time"}
           </Text>
           <GlowButton label={started ? "CONTINUE" : "START"} onPress={openMainQuest} styles={styles} />
         </View>
@@ -328,14 +350,16 @@ export default function HomeScreen({ navigation }) {
       {/* Quests */}
       <Text style={styles.section}>Your quests</Text>
       <View style={styles.grid}>
-        {quests.map((q) => (
+        {allQuests.map((q) => (
           <Pressable key={q.id} style={styles.gridCell} onPress={() => openCategory(navigation, q)} accessibilityRole="button">
             <View style={styles.questTile}>
               <View style={styles.questArt}>
-                <BookArt />
+                {/science/i.test(q.questId) ? <FlaskArt /> : <BookArt />}
               </View>
               <Text style={styles.questTitle} numberOfLines={1}>{(q.title || "Quest").replace(/ Quest$/, "")}</Text>
-              <Text style={styles.questSub} numberOfLines={1}>{q.subtitle || "Quest"}</Text>
+              <Text style={styles.questSub} numberOfLines={1}>
+                {draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.subtitle || "Quest"}
+              </Text>
             </View>
           </Pressable>
         ))}
@@ -348,6 +372,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.questSub}>Space Olympiad</Text>
           </View>
         </Pressable>
+        {allQuests.some((q) => /science/i.test(q.questId)) ? null : (
         <View style={styles.gridCell}>
           <View style={[styles.questTile, styles.soon]}>
             <View style={styles.questArt}>
@@ -357,6 +382,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.questSub}>Coming for NSO</Text>
           </View>
         </View>
+        )}
         <View style={styles.gridCell}>
           <View style={[styles.questTile, styles.soon]}>
             <View style={styles.questArt}>

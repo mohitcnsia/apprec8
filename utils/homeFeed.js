@@ -89,3 +89,49 @@ export function upcomingItems(exams = [], tasks = [], now = Date.now(), limit = 
     sub: `${it.kind === "reminder" ? "Your reminder · " : ""}${shortDate(it.date)}`,
   }));
 }
+
+// ---------- Several tile quests (English, Science, ...), 2026-11-04 ----------
+
+/** Adds up per-day stats of several quests: { day: { answered, correct, timeMs } }. */
+export function mergeDaily(dailies = []) {
+  const out = {};
+  dailies.forEach((daily) =>
+    Object.entries(daily || {}).forEach(([k, v]) => {
+      const d = out[k] || { answered: 0, correct: 0, timeMs: 0 };
+      out[k] = {
+        answered: d.answered + (v?.answered || 0),
+        correct: d.correct + (v?.correct || 0),
+        timeMs: d.timeMs + (v?.timeMs || 0),
+      };
+    })
+  );
+  return out;
+}
+
+/** When the kid last played a quest (ms), from its progress doc. 0 = never. */
+export const lastPlayed = (doc = {}) => {
+  if (typeof doc?.stats?.lastActiveAt === "number") return doc.stats.lastActiveAt;
+  const u = doc?.updatedAt;
+  if (u && typeof u.toMillis === "function") return u.toMillis();
+  if (u && typeof u.seconds === "number") return u.seconds * 1000;
+  return 0;
+};
+
+/**
+ * Which quest the Continue card shows: the one played most recently, else the first quest.
+ * @param {Array} quests - [{ questId, ... }] in display order
+ * @param {object} progressById - { questId: { nodes, doc } }
+ */
+export function pickContinue(quests = [], progressById = {}) {
+  if (!quests.length) return null;
+  let best = null;
+  let bestAt = 0;
+  quests.forEach((q) => {
+    const at = lastPlayed(progressById[q.questId]?.doc);
+    if (at > bestAt) {
+      best = q;
+      bestAt = at;
+    }
+  });
+  return best || quests[0];
+}
