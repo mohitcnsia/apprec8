@@ -1726,3 +1726,9 @@ Until deployed, the new screens show "permission denied": nothing else changes.
 1. Rules: `docs/rules/rb6-family.rules` (+ DR-9). 2. Functions: createChildProfile, newChildLoginCode, redeemChildLoginCode,
 deleteChildProfile, and the updated initializeNewUser trigger. 3. IAM: the functions' service account
 (`<project-id>@appspot.gserviceaccount.com`) needs the **Service Account Token Creator** role (for `createCustomToken`).
+
+### RB-6 update: one phone, several profiles (owner: kids use their parent's phone)
+- Parent sets a 4-digit **parent PIN** (Me → Set parent PIN; salted scrypt hash in `parentPins/{uid}`, server-only).
+- Me → My children → **Play as <child>**: the server checks the parent link and signs the phone in as the child (no code).
+  The child's Me shows **Switch to parent (PIN)**; 5 wrong PINs → 15-minute wait. The login code stays for a child with a phone.
+- Functions: setParentPin, switchToChild, switchToParent (DR-10). Rules: `parentPins` server-only (`docs/rules/rb6-family.rules`).

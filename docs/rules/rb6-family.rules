@@ -12,3 +12,8 @@
     //     && request.auth.uid in get(/databases/$(database)/documents/users/$(userId)).data.get('parentUids', []);
     // Children can't change their fixed info (firstName, grade, parentUids, isChild): keep Finding 22's hasOnly([...])
     // for profile edits and leave these keys out of it.
+
+    // PIN hashes: server only.
+    match /parentPins/{uid} {
+      allow read, write: if false;
+    }

@@ -128,3 +128,63 @@ exports.deleteChildProfile = functions
     await admin.auth().deleteUser(kidUid).catch(() => {});
     return { ok: true };
   });
+
+// ---------- One phone, several profiles (owner: kids use their parent's phone) ----------
+// The parent sets a 4-digit PIN once. "Play as <child>" signs the phone in as the child (no code). The child gets back
+// to the parent only with the PIN, so a child can't reach parent / admin mode.
+const crypto = require("crypto");
+const hashPin = (pin, salt) => crypto.scryptSync(String(pin), salt, 32).toString("hex");
+
+/** { pin } (4 digits) → stores a salted hash on the parent's doc. */
+exports.setParentPin = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const me = await db.collection("users").doc(context.auth.uid).get();
+    if (me.exists && me.data().isChild) throw new functions.https.HttpsError("permission-denied", "Only a parent can set the PIN.");
+    const pin = String(data?.pin || "");
+    if (!/^\d{4}$/.test(pin)) throw new functions.https.HttpsError("invalid-argument", "The PIN is 4 numbers.");
+    const salt = crypto.randomBytes(16).toString("hex");
+    await db.collection("parentPins").doc(context.auth.uid).set({ salt, hash: hashPin(pin, salt), updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+    await db.collection("users").doc(context.auth.uid).set({ hasParentPin: true }, { merge: true });
+    return { ok: true };
+  });
+
+/** { kidUid } → token to sign this phone in as the child (caller must be the child's parent). */
+exports.switchToChild = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const kid = await db.collection("users").doc(String(data?.kidUid || "")).get();
+    if (!kid.exists || !(kid.data().parentUids || []).includes(context.auth.uid)) {
+      throw new functions.https.HttpsError("permission-denied", "Only this child's parent can do this.");
+    }
+    const pin = await db.collection("parentPins").doc(context.auth.uid).get();
+    if (!pin.exists) throw new functions.https.HttpsError("failed-precondition", "Set your parent PIN first.");
+    return { token: await admin.auth().createCustomToken(kid.id, { child: true }) };
+  });
+
+/** { pin } from a child's session → token to sign back in as the parent. 5 wrong tries → 15 min wait. */
+exports.switchToParent = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const kid = await db.collection("users").doc(context.auth.uid).get();
+    const parentUid = kid.exists ? (kid.data().parentUids || [])[0] : null;
+    if (!parentUid) throw new functions.https.HttpsError("failed-precondition", "This isn't a child profile.");
+    const pinRef = db.collection("parentPins").doc(parentUid);
+    const p = await pinRef.get();
+    if (!p.exists) throw new functions.https.HttpsError("failed-precondition", "No parent PIN set.");
+    const d = p.data();
+    if (d.lockedUntil && d.lockedUntil > Date.now()) throw new functions.https.HttpsError("resource-exhausted", "Too many tries. Wait 15 minutes.");
+    if (hashPin(String(data?.pin || ""), d.salt) !== d.hash) {
+      const fails = (d.fails || 0) + 1;
+      await pinRef.set({ fails: fails >= 5 ? 0 : fails, lockedUntil: fails >= 5 ? Date.now() + 15 * 60 * 1000 : null }, { merge: true });
+      throw new functions.https.HttpsError("permission-denied", "Wrong PIN.");
+    }
+    await pinRef.set({ fails: 0, lockedUntil: null }, { merge: true });
+    return { token: await admin.auth().createCustomToken(parentUid) };
+  });

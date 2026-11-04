@@ -36,3 +36,18 @@ export async function signInWithChildCode(input) {
   const { token } = await call("redeemChildLoginCode", { code });
   await signInWithCustomToken(authInstance, token);
 }
+
+// ---------- One phone, several profiles ----------
+export const setParentPin = (pin) => call("setParentPin", { pin });
+
+/** Parent's phone: "Play as <child>" → this phone is now signed in as the child. */
+export async function playAsChild(kidUid) {
+  const { token } = await call("switchToChild", { kidUid });
+  await signInWithCustomToken(authInstance, token);
+}
+
+/** Child's session: back to the parent with the parent's PIN. */
+export async function backToParent(pin) {
+  const { token } = await call("switchToParent", { pin });
+  await signInWithCustomToken(authInstance, token);
+}

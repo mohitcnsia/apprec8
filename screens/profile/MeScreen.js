@@ -5,7 +5,7 @@
 // (the Space quest is always on Home now). Old screens/quiz/ProfileScreen.js is no longer used.
 
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Constants from "expo-constants";
@@ -19,7 +19,7 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
 import { getClasses } from "../../services/classesApi";
-import { myChildren } from "../../services/familyApi";
+import { myChildren, playAsChild } from "../../services/familyApi";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 
 const THEMES = [
@@ -155,14 +155,35 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <View style={styles.group}>
             {children.map((k) => (
               <View key={k.uid}>
-                <Row icon="happy-outline" label={k.firstName || "Child"} detail={k.grade ? `Class ${k.grade} · new code` : "new code"} onPress={() => navigation.navigate("AddChild", { kid: k })} styles={styles} P={P} />
+                <Row
+                  icon="happy-outline"
+                  label={`Play as ${k.firstName || "child"}`}
+                  detail={k.grade ? `Class ${k.grade}` : null}
+                  onPress={() =>
+                    !userData?.hasParentPin
+                      ? navigation.navigate("ParentPin", { mode: "set" })
+                      : Alert.alert(k.firstName || "Child", "Switch this phone to your child's profile? Switching back needs your PIN.", [
+                          { text: "Cancel", style: "cancel" },
+                          { text: "Login code (another phone)", onPress: () => navigation.navigate("AddChild", { kid: k }) },
+                          { text: `Play as ${k.firstName || "child"}`, onPress: () => playAsChild(k.uid).catch((e) => Alert.alert("Couldn't switch", e.message)) },
+                        ])
+                  }
+                  styles={styles}
+                  P={P}
+                />
                 <View style={styles.divider} />
               </View>
             ))}
             <Row icon="person-add-outline" label="Add a child" onPress={() => navigation.navigate("AddChild")} styles={styles} P={P} />
+            <View style={styles.divider} />
+            <Row icon="keypad-outline" label={userData?.hasParentPin ? "Change parent PIN" : "Set parent PIN"} onPress={() => navigation.navigate("ParentPin", { mode: "set" })} styles={styles} P={P} />
           </View>
         </>
-      ) : null}
+      ) : (
+        <View style={styles.group}>
+          <Row icon="swap-horizontal-outline" label="Switch to parent (PIN)" onPress={() => navigation.navigate("ParentPin", { mode: "unlock" })} styles={styles} P={P} />
+        </View>
+      )}
 
       <Text style={styles.section}>MY CLASSES</Text>
       <View style={styles.group}>

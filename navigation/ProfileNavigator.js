@@ -10,6 +10,7 @@ import AdminToolsScreen from "../screens/admin/AdminToolsScreen";
 import SchoolsScreen from "../screens/admin/SchoolsScreen";
 import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import AddChildScreen from "../screens/profile/AddChildScreen";
+import ParentPinScreen from "../screens/profile/ParentPinScreen";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
 import EditProfileScreen from "../screens/profile/EditProfileScreen"; // Adjust path
 import DeleteAccountConfirmationScreen from "../screens/profile/DeleteAccountConfirmationScreen"; // Adjust path
@@ -91,6 +92,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen name="Schools" component={SchoolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="JoinClass" component={JoinClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AddChild" component={AddChildScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ParentPin" component={ParentPinScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminKidDetail" component={AdminKidDetailScreen} options={{ headerShown: false }} />
           <Stack.Screen
