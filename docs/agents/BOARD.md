@@ -30,18 +30,18 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
-| G16 Science Unit 1 "The Living World" (Class 5) | Gemini | **done** (fixes 2 accepted) | `content/sq-u1-living-world` | 108 questions, length tell 24%, 6 NSO-style; merges with G19 |
+| G16 Science Unit 1 | Gemini | **done, merged** | | |
 | G18 NSO pattern notes | Gemini | **done, merged** | `gemini/g18-exam-patterns` | Good: `docs/exam/nso-pattern.md` (sections, weightage, 9 question styles, gap list) |
 | G17 English Unit 3 Subject-Verb Agreement | Gemini | **done, merged** | `content/eq-u3-sva` | All 5 fixes checked by Claude. Seeding waits for owner OK |
 | G21 IEO pattern notes | Gemini | **done, merged** | `gemini/g21-ieo-patterns` | Gaps: no vocabulary (20–25% of IEO), no spot-the-error, no dialogue/idioms, easy distractors |
-| G19 Science Unit 2 "Human Body & Health" (Class 5) | Gemini | fixes 1 | `content/sq-u2-human-body` | 96 questions, all keys right (Claude read all); 5 joke distractors, 2 small facts |
+| G19 Science Unit 2 Human Body | Gemini | **done, merged** | | |
 | G24 Syllabus check: NSO + IEO Class 5 vs our quests | Gemini | todo (next after G19) | `gemini/g24-syllabus` | |
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
-| G20 Science Unit 3 "Matter, Forces & Earth" (Class 5) | Gemini | todo | `content/sq-u3-matter-forces-earth` | |
+| G20 Science Unit 3 Matter, Forces & Earth | Gemini | **done, merged** (Claude fixed 4 items) | | 300 Science questions in total; still draft (testers) |
 | G14 Seed English Unit 2 + 10-min smoke test | Claude (Gemini idle) | **done** 2026-11-04 15:13 | — | Seeded: 4 units, 64 nodes, 270 questions, 3 readings. Map shows 3 units; Home "Coming up" fix confirmed |
 | G11 Policy research (Play Families, DPDP) | Gemini | parked (after exams) | | |
 
@@ -216,7 +216,7 @@ Learn page, warm-up, practice leaves by sub-topic, gate; Unit Boss + one reading
    allows "are". Indian school grammar says "is", so keep.
 Commit `gemini(G17): fixed 1 — …`.
 
-### G19 · [fixes 1] · gemini · Science Unit 2 "Human Body & Health" for Class 5
+### G19 · [done] · gemini · Science Unit 2 "Human Body & Health" for Class 5
 **Why:** your G18 notes: Human Body & Health is the biggest NSO Class 5 domain (8–10 questions per paper), and we have none.
 **Base:** `feat/quiz-redesign` (has your pattern notes). **Guide:** `docs/CONTENT_GUIDE.md` §8, `docs/exam/nso-pattern.md`, `docs/agents/LESSONS.md`.
 **Do:** unit `sq-u2` in `data/scienceQuestData.js` (or `data/scienceQuest/units/u2.js` + registration, your choice): 3 topics,
@@ -264,6 +264,6 @@ Practice questions: one blank, no apostrophe inside the quoted sentence. Include
 (choose the right reply in a short conversation, as in IEO Q41–45), common idioms (meaning, in context). Same shape and rules.
 **Deliver:** branch `content/eq-u5-error-dialogue`, report G23, commit `gemini(G23): done — …`.
 
-### G20 · [todo] · gemini · Science Unit 3 "Matter, Forces & Earth" for Class 5
+### G20 · [done] · gemini · Science Unit 3 "Matter, Forces & Earth" for Class 5
 **Base:** your G19 branch. Same rules as G19. 3 topics, e.g. states of matter, changes and separation · forces, energy and
 simple machines · Earth, rocks and the Moon. **Deliver:** branch `content/sq-u3-matter-forces-earth`, report G20, commit `gemini(G20): done — …`.
