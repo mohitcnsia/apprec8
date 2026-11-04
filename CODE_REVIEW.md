@@ -1432,5 +1432,5 @@ Off `feat/tile-quests`. Nothing goes into 20.0.24. The owner picks stable parts 
 
 ### DR-7: clean up old function images (cost, owner 2026-11-04)
 - **Why:** October cost ₹5.91 with almost no use. The billing forecast for November is ₹10.73 (actual so far ₹0.00). Likely Artifact Registry storage of function images, which pile up with every deploy (free tier 0.5 GB).
-- **First confirm (owner):** Billing → Reports → time range **October**, group by SKU → the table under the chart shows which SKU costs money.
+- **Confirmed (owner's billing report, October):** the whole ₹4.82 is **Artifact Registry Storage** (1 GiB-month). Every other SKU (Firestore, Functions, Storage, Remote Config) is ₹0.00. Free tier is 0.5 GB, so cleaning up brings it to ₹0.
 - **If it's Artifact Registry storage (Gemini):** `firebase functions:artifacts:setpolicy --project apprec8-ca229 --days 1`. Deletes images older than 1 day automatically. Deployed functions keep running; a rollback just rebuilds. No app change.
