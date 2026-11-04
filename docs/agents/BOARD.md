@@ -101,6 +101,8 @@ Good: all 102 answer keys are right, explanations are clear, grade tags make sen
    "They turn into metal objects", "Because the balloon eats food", "made of cotton" (clouds). NSO options are all plausible.
    Replace them with real misconceptions (e.g. for "how do fish breathe": lungs / skin / spiracles), one per wrong option,
    with a fitting mistakeTag. Priority: gates and the Boss, then warm-ups and practice.
+5. **Length tell:** the right answer is the longest option in 69 of 102 questions (68%); a kid can score by picking the
+   longest. `npm test` now fails above 40% (`tests/content.test.mjs`). Make wrong options as long and specific as the right one.
 4. Small: `sq-plants-warmup` q2 says food is in the cotyledons; true for beans and gram, but maize and rice keep it in the
    endosperm. Add "in beans and gram" or pick a dicot in the question. Ferns have sori, mosses have capsules (gate q14 explanation).
 **Deliver:** commit `gemini(G16): fixed 1 — <counts>`, and add a "fixes 1" section to `docs/agents/reports/G16.md` listing every changed question id.
