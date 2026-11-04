@@ -93,7 +93,7 @@ export default function ReportQuestionButton({
             <TextInput
               value={note}
               onChangeText={setNote}
-              placeholder="Tell us more (optional)"
+              placeholder="Tell us more (optional). 🎤 Tap the keyboard mic to speak"
               placeholderTextColor={theme.placeholder}
               maxLength={300}
               multiline

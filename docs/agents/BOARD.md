@@ -18,7 +18,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 1. **Nov 6 build:** which branch goes in (`feat/nov6-improvements` only, or also the redesign on `feat/quiz-redesign`)?
 2. **DR-8** deploy `getLeaderboard` (first name + class) and **Finding 22** rules fix (`CODE_REVIEW.md`).
 3. **Seed the Science Quest draft** (testers only) so it can be tested on the emulator.
-7. **20.0.25 internal-testing build** (Claude building now): owner uploads to Play internal testing, tests on own phone, then Pratha + her mother. School release only after their OK (owner).
+7. **20.0.26 build** (owner feedback fixes + IEO fix button) is ready to build: **owner, tell Claude when you are away ~1 h.** Then upload + press "Fix 46 old IEO questions".
+8. **Mockups E–G** (quiz canvas): instruction vs sentence, one start screen, Challenge on the path + Test out + Champion. Owner reacts.
 4. ~~Seed English Unit 2~~ owner OK 2026-11-04 → in G14.
 5. ~~Sample papers~~ NSO in `docs/exam/papers/nso/`, IEO in `docs/exam/papers/ieo/` (owner, 2026-11-04): IEO → task G21.
 6. RB-2 questions (4, in `CODE_REVIEW.md`) — after the exams is fine.

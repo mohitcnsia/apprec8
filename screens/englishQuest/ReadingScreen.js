@@ -28,6 +28,7 @@ import { buildReadingFlow, nextCursor, splitParagraph, countWords, mixOptions } 
 import { scoreAnswers, DEFAULT_LEAF_PASS_PERCENT } from "../../utils/questTree";
 import { useTheme } from "../../context/ThemeContext";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 // Semantic colours (same in light and dark). Everything else comes from the app theme.
 const COLORS = {
@@ -109,6 +110,7 @@ const QuestionBlock = ({ number, question, answer, onAnswer, onShowMe, report })
 };
 
 export default function ReadingScreen({ route, navigation }) {
+  useImmersiveStatusBar(); // hide the phone status bar while reading/playing
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const { contentId, questContext } = route.params || {};

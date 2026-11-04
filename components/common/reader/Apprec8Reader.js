@@ -26,6 +26,7 @@ import Markdown from "react-native-markdown-display";
 import { loadStudyContent } from "../../../services/contentCache";
 import { useTheme } from "../../../context/ThemeContext";
 import FeedbackFAB from "../FeedbackFAB";
+import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
 
 const screenWidth = Dimensions.get("window").width;
 const coverImageHeight = screenWidth * 0.6;
@@ -36,6 +37,7 @@ const TAP_SLOP_THRESHOLD = 10;
 const TAP_ZONE_SIZE = 80;
 
 const Apprec8Reader = ({ route, navigation }) => {
+  useImmersiveStatusBar(); // hide the phone status bar while reading/playing
   const { theme } = useTheme();
   const C = theme.appColors || theme;
   const contentId = route?.params?.contentId;

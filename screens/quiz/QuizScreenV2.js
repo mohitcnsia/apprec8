@@ -29,8 +29,10 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { fitsTiles, sheetExplanation } from "../../utils/quizText";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const QuizScreenV2 = ({ route, navigation }) => {
+  useImmersiveStatusBar(); // hide the phone status bar while reading/playing
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const C = theme.appColors || theme;

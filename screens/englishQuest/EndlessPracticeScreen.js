@@ -22,10 +22,12 @@ import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQues
 import { GENERATORS, nextEndlessQuestion } from "../../utils/generators";
 import { shuffle } from "../../utils/gateRules";
 import { buildMistakeItems, similarQuestions, RIGHT_TO_CLEAR } from "../../utils/mistakes";
+import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const CHUNK_SIZE = 10;
 
 export default function EndlessPracticeScreen({ route, navigation }) {
+  useImmersiveStatusBar(); // hide the phone status bar while reading/playing
   const {
     questId,
     nodeId,

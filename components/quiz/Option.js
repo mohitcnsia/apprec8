@@ -67,8 +67,9 @@ const Option = ({ option, onPress, isSelected, showFeedback, isCorrect, index = 
         accessibilityState={{ selected: !!isSelected, disabled: !!showFeedback }}
         style={[isTile ? styles.tile : styles.card, look.box]}
       >
+        {/* Tiles: one line that shrinks to fit, so a word is never split ("Exclamati-on", owner 2026-11-04) */}
         {isTile ? (
-          <Text style={[styles.tileText, look.text]} numberOfLines={2} adjustsFontSizeToFit>
+          <Text style={[styles.tileText, look.text]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.45}>
             {content}
           </Text>
         ) : (

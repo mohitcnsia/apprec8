@@ -431,7 +431,7 @@ const FeedbackFAB = ({
 
               {/* Feedback Text Input */}
               <TextInput
-                label={placeholderText}
+                label={`${placeholderText} (🎤 keyboard mic to speak)`}
                 value={feedbackText}
                 onChangeText={setFeedbackText}
                 multiline

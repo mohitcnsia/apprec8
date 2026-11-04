@@ -341,14 +341,16 @@ const QuestScreen = () => {
       </ScrollView>
 
       {showConfetti && (
-        <LottieView
-          source={require("../../assets/animations/confetti.json")}
-          loop={false}
-          onAnimationFinish={onConfettiFinish}
-          autoPlay
-          speed={2}
-          style={styles.lottieOverlay}
-        />
+        <View pointerEvents="none" style={styles.lottieOverlay}>
+          <LottieView
+            source={require("../../assets/animations/confetti.json")}
+            loop={false}
+            onAnimationFinish={onConfettiFinish}
+            autoPlay
+            speed={2}
+            style={{ flex: 1 }}
+          />
+        </View>
       )}
     </View>
   );

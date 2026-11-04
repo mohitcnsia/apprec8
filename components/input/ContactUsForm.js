@@ -172,7 +172,7 @@ const ContactUsForm = ({ navigation }) => {
         />
 
         <Input
-          label="Please explain the problem or share feedback:"
+          label="Explain the problem or share feedback (🎤 tap the keyboard mic to speak):"
           value={formData.message}
           onChangeText={(value) => inputChangeHandler("message", value)}
           textInputConfig={{

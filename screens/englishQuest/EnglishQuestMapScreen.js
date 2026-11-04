@@ -346,6 +346,22 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   };
 
   const onMainPress = (item) => {
+    if (item.status === "locked") {
+      // Say exactly what opens this topic, and offer to go there (owner 2026-11-04).
+      const mains = (tree?.path || []).filter((p) => p.kind === "main");
+      const prev = mains[mains.findIndex((p) => p.id === item.id) - 1];
+      if (prev && prev.status === "completed" && prev.gate && prev.gate.status !== "completed") {
+        return Alert.alert(
+          `🔒 ${item.title} is locked`,
+          `Pass the "${prev.gate.title || "Challenge"}" (the gold trophy next to ${prev.title}) to open it.`,
+          [
+            { text: "Not now", style: "cancel" },
+            { text: "Go to Challenge", onPress: () => onGatePress(prev.gate, prev) },
+          ]
+        );
+      }
+      if (prev && prev.status !== "completed") return explainClosed("locked", `Finish "${prev.title}" first.`);
+    }
     if (item.status === "locked" || item.status === "comingSoon") {
       return explainClosed(item.status, "Pass the challenge before this one to open it.");
     }
@@ -547,7 +563,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (item.gate) {
       const g = item.gate;
       const c = circleColors(g.status);
-      leaves.push(
+      // The Challenge that blocks the next topic goes FIRST (next to its topic) and stands out (owner 2026-11-04:
+      // it was tiny and far right, so the next topic "didn't open" and nobody knew why).
+      const blocking = g.status === "unlocked" && item.status === "completed";
+      leaves[blocking ? "unshift" : "push"](
         <TouchableOpacity
           key={g.id}
           style={styles.leafWrap}
@@ -555,12 +574,19 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
           activeOpacity={0.8}
           accessibilityLabel={`Challenge: ${g.title || "Challenge"}, ${g.retryLocked ? "practise first" : g.status}`}
         >
-          <View style={[styles.leaf, styles.gateLeaf, { backgroundColor: c.bg, borderColor: g.status === "unlocked" ? theme.accent : c.border }]}>
-            <Ionicons name={g.status === "locked" || g.retryLocked ? "lock-closed" : "shield-checkmark"} size={22} color={c.icon} />
+          <View
+            style={[
+              styles.leaf,
+              styles.gateLeaf,
+              { backgroundColor: c.bg, borderColor: g.status === "unlocked" ? theme.accent : c.border },
+              blocking && styles.gateBlocking,
+            ]}
+          >
+            <Ionicons name={g.status === "locked" || g.retryLocked ? "lock-closed" : blocking ? "trophy" : "shield-checkmark"} size={blocking ? 28 : 22} color={blocking ? "#9A6B00" : c.icon} />
           </View>
           <View style={styles.starsRow} />
-          <Text style={[styles.leafLabel, styles.gateLabel]} numberOfLines={2}>
-            {g.retryLocked ? "Practise first" : g.title || "Challenge"}
+          <Text style={[styles.leafLabel, styles.gateLabel, blocking && styles.gateBlockingLabel]} numberOfLines={3}>
+            {g.retryLocked ? "Practise first" : blocking ? `🏆 ${g.title || "Challenge"}: opens the next topic` : g.title || "Challenge"}
           </Text>
         </TouchableOpacity>
       );
@@ -763,14 +789,16 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       )}
 
       {showConfetti ? (
-        <LottieView
-          source={require("../../assets/animations/confetti.json")}
-          autoPlay
-          loop={false}
-          speed={2}
-          onAnimationFinish={() => setShowConfetti(false)}
-          style={styles.confetti}
-        />
+        <View pointerEvents="none" style={styles.confetti}>
+          <LottieView
+            source={require("../../assets/animations/confetti.json")}
+            autoPlay
+            loop={false}
+            speed={2}
+            onAnimationFinish={() => setShowConfetti(false)}
+            style={{ flex: 1 }}
+          />
+        </View>
       ) : null}
 
       {/* 🔧 My mistakes: bottom-right thumb zone, only when there's something to fix */}
@@ -840,6 +868,8 @@ const makeStyles = (theme) =>
     gateLabel: { fontFamily: "nunitoBold" },
 
     startRow: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 6 },
+    gateBlocking: { width: 62, height: 62, borderRadius: 18, borderWidth: 4, borderColor: "#dcb51b", backgroundColor: "#FFF4D6" },
+    gateBlockingLabel: { color: "#9A6B00", fontFamily: "nunitoBold" },
     confetti: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 10, pointerEvents: "none" },
     mistakesButton: {
       position: "absolute",

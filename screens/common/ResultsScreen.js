@@ -325,14 +325,18 @@ const ResultsScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       ) : null}
 
+      {/* Confetti never blocks taps (the teacher thought the app was stuck, 2026-11-04) */}
       {isConfettiVisible && (
-        <LottieView
-          source={require("../../assets/animations/confetti.json")}
-          autoPlay
-          loop={false}
-          style={styles.confettiOverlay}
-          onAnimationFinish={() => setConfettiVisible(false)}
-        />
+        <View pointerEvents="none" style={styles.confettiOverlay}>
+          <LottieView
+            source={require("../../assets/animations/confetti.json")}
+            autoPlay
+            loop={false}
+            speed={1.5}
+            style={{ flex: 1 }}
+            onAnimationFinish={() => setConfettiVisible(false)}
+          />
+        </View>
       )}
     </View>
   );

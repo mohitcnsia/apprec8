@@ -342,7 +342,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
           keyboardShouldPersistTaps="handled"
         >
           <Input
-            label="What is your Task?"
+            label="What is your reminder? (🎤 tap the keyboard mic to speak)"
             value={formData.title}
             onChangeText={(value) => inputChangeHandler("title", value)}
           />

@@ -41,6 +41,16 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ 20.0.26 on your phone (~10 min). Your feedback, fixed
+- [ ] **First:** Me → Admin tools → **Fix 46 old IEO questions** → Fix. The alert says "46 fixed". (Press once; pressing again says "already fixed".)
+- [ ] A short-answer quiz (e.g. "What kind of sentence…"): "Exclamation" and "Statement" fit on one line, no split words.
+- [ ] A quiz, a reading, a study page, Keep practising: the phone's top bar is hidden; it comes back on Home.
+- [ ] Finish a quiz with confetti: you can tap the buttons while the confetti falls.
+- [ ] Map: after finishing a topic, its Challenge is first in the side row with a gold border ("opens the next topic").
+      Tap the next (locked) topic: it says which Challenge opens it, and **Go to Challenge** opens it.
+- [ ] 🚩 report box, feedback, reminders: the hint says to use the keyboard mic. Try speaking into the keyboard mic.
+- [ ] The Gender 2 quiz: "Dog → …" is now "Tiger → Tigress"; a wrong answer shows an explanation.
+
 ### ⭐ 20.0.25 on your phone (Play internal testing), ~15 min. Do this first.
 Install from the internal-testing link, open the app, signed in as you.
 - [ ] **Tabs:** Home · Fun · Progress · Me; the one you're on is highlighted.
