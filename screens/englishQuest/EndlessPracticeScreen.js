@@ -427,6 +427,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
           {question.options.map((option, index) => (
             <Option
               key={`${question.id}-${index}`}
+              index={index}
               option={option}
               onPress={() => onAnswer(option)}
               isSelected={selected?.content === option.content}

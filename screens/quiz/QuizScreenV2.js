@@ -12,8 +12,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { Button as PaperButton } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,17 +19,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from "../../context/ThemeContext";
 import { useQuizEngine } from "../../hooks/useQuizEngine";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
-import QuestionCard from "../../components/quiz/QuestionCard";
 import Option from "../../components/quiz/Option";
 import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
 import ListenButtons from "../../components/quiz/ListenButtons";
+import QuestionPrompt from "../../components/quiz/QuestionPrompt";
+import FeedbackSheet from "../../components/quiz/FeedbackSheet";
+import Mascot from "../../components/quiz/Mascot";
+import { quizPalette } from "../../components/quiz/quizPalette";
+import { fitsTiles, sheetExplanation } from "../../utils/quizText";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 
 const QuizScreenV2 = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const C = theme.appColors || theme;
+  const P = quizPalette(isDark);
   // questContext is only set by tile-based quests (English Quest):
   // { questId, nodeId, passPercent, returnTo }
   const { quiz, mode, isFirstAttempt, questContext } = route.params;
@@ -319,116 +322,38 @@ const QuizScreenV2 = ({ route, navigation }) => {
     }
   };
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        container: { flex: 1 },
-        centered: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 20,
-        },
-        errorText: {
-          color: C.warning,
-          fontSize: 16,
-          textAlign: "center",
-          marginBottom: 15,
-        },
-        scrollableContainer: { flex: 1 },
-        scrollContent: { flexGrow: 1, padding: 15, paddingTop: 60, paddingBottom: Math.max(40, insets.bottom + 20) },
-        footer: { padding: 15, paddingTop: 5, paddingBottom: Math.max(40, insets.bottom + 20), backgroundColor: "transparent" },
-        progressText: {
-          color: C.textOnPrimary || "white",
-          fontSize: 16,
-          textAlign: "center",
-          marginBottom: 15,
-          fontFamily: "nunitoBold",
-        },
-        reviewItem: {
-          padding: 15,
-          marginVertical: 8,
-          backgroundColor: "rgba(255,255,255,0.1)",
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: "transparent",
-        },
-        reviewItemMarked: { borderColor: C.accent || "#1CB0F6" },
-        reviewQuestionText: {
-          fontFamily: "nunitoBold",
-          fontSize: 16,
-          color: C.textOnPrimary || "white",
-          marginBottom: 12,
-        },
-        reviewOptionContainer: {
-          marginVertical: 4,
-          padding: 10,
-          borderRadius: 20,
-          borderWidth: 1,
-          borderColor: "rgba(255,255,255,0.2)",
-        },
-        reviewOptionContainerSelected: {
-          backgroundColor: C.primary || "#58CC02",
-        },
-        reviewOptionText: {
-          fontFamily: "nunito",
-          color: "rgba(255,255,255,0.8)",
-        },
-        reviewOptionTextSelected: { fontFamily: "nunitoBold", color: "white" },
-        markButton: {
-          position: "absolute",
-          top: 10,
-          right: 10,
-          zIndex: 1,
-          padding: 5,
-        },
-        headerRow: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 15,
-        },
-        progressBarContainer: {
-          flex: 1,
-          height: 12,
-          backgroundColor: 'rgba(255,255,255,0.2)',
-          borderRadius: 6,
-          marginRight: 15,
-          overflow: 'hidden',
-        },
-        progressBarFill: {
-          height: '100%',
-          backgroundColor: '#58CC02', // Duolingo Green
-        },
-        heartsContainer: {
-          flexDirection: 'row',
-          alignItems: 'center',
-        },
-        heartsText: {
-          color: '#FF4B4B',
-          fontFamily: 'nunitoBold',
-          fontSize: 18,
-          marginLeft: 5,
-        },
-        footerCorrect: {
-          backgroundColor: 'rgba(88, 204, 2, 0.9)', // Green tint
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        },
-        footerIncorrect: {
-          backgroundColor: 'rgba(255, 75, 75, 0.9)', // Red tint
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        },
-        feedbackText: {
-          color: 'white',
-          fontFamily: 'nunitoBold',
-          fontSize: 20,
-          marginBottom: 10,
-        },
-      }),
-    [C, insets.bottom],
-  );
+  // ---------- Look (quiz redesign, owner-approved mockups 2026-11-04) ----------
+  const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
+
+  // After Check: plain-text explanations show in the sheet; a picture or fun fact keeps its screen.
+  const handleContinue = () => {
+    const currentQuestion = questions[currentIndex];
+    if (sheetExplanation(currentQuestion?.explanation).rich) handleContinueToExplanation();
+    else dispatch({ type: "NEXT_QUESTION" });
+  };
+
+  const bigButton = (label, onPress, { disabled = false, tone = "primary", style } = {}) => {
+    const colors =
+      tone === "danger"
+        ? { bg: P.wrongBorder, shadow: P.wrongButtonShadow, fg: "#FFFFFF" }
+        : tone === "ghost"
+        ? { bg: "transparent", shadow: "transparent", fg: P.label }
+        : disabled
+        ? { bg: P.disabledBg, shadow: P.disabledShadow, fg: P.disabledText }
+        : { bg: P.primary, shadow: P.primaryShadow, fg: P.onPrimary };
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={disabled}
+        activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        style={[styles.bigButton, { backgroundColor: colors.bg, borderBottomColor: colors.shadow }, tone === "ghost" && styles.ghostButton, style]}
+      >
+        <Text style={[styles.bigButtonText, { color: colors.fg }]}>{label}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   const renderContent = () => {
     const currentQuestion = questions[currentIndex];
@@ -436,289 +361,218 @@ const QuizScreenV2 = ({ route, navigation }) => {
       case "loading":
       case "error":
       case "ready": {
-        const titleColor = {
-          color: C.textOnPrimary || "white",
-          fontSize: 22,
-          textAlign: "center",
-          marginBottom: 20,
-          fontFamily: "nunitoBold",
-        };
         return (
           <View style={styles.centered}>
-            {status === "loading" && (
-              <ActivityIndicator
-                animating={true}
-                size="large"
-                color="#FFFFFF"
-              />
-            )}
-            {status === "error" && (
-              <Text style={styles.errorText}>{error}</Text>
-            )}
-            {status === "ready" && <Text style={titleColor}>{quiz.title}</Text>}
-            <PaperButton
-              mode="contained"
-              onPress={() =>
-                status === "ready"
-                  ? dispatch({ type: "START_QUIZ" })
-                  : navigation.goBack()
-              }
-            >
-              {status === "ready" ? `Start ${mode}` : "Go Back"}
-            </PaperButton>
+            {status === "loading" && <ActivityIndicator animating size="large" color={P.label} />}
+            {status === "error" && <Text style={styles.errorText}>{error}</Text>}
+            {status === "ready" ? (
+              <>
+                <Mascot size={96} />
+                <Text style={styles.bigTitle}>{quiz.title}</Text>
+              </>
+            ) : null}
+            {status !== "loading"
+              ? bigButton(status === "ready" ? `Start ${mode}` : "Go back", () =>
+                  status === "ready" ? dispatch({ type: "START_QUIZ" }) : navigation.goBack()
+                , { style: { alignSelf: "stretch", marginTop: 12 } })
+              : null}
           </View>
         );
       }
       case "failed": {
-        const titleColor = {
-          color: "#FF4B4B",
-          fontSize: 24,
-          textAlign: "center",
-          marginBottom: 10,
-          fontFamily: "nunitoBold",
-        };
         return (
           <View style={styles.centered}>
-            <Ionicons name="heart-dislike" size={64} color="#FF4B4B" style={{marginBottom: 20}} />
-            <Text style={titleColor}>Out of Hearts!</Text>
-            <Text style={[styles.progressText, {marginBottom: 30}]}>Don't worry, mistakes help you learn.</Text>
-            {!isGate || canRetryAfter(failsAfterThisAttempt(false)) ? (
-              <PaperButton
-                mode="contained"
-                buttonColor="#FF4B4B"
-                onPress={() => (isGate ? retryGate(false) : dispatch({ type: "RESTART_QUIZ" }))}
-              >
-                Try Again
-              </PaperButton>
-            ) : (
-              <Text style={[styles.progressText, { marginBottom: 10 }]}>
-                Practise a glowing topic on the map, then try this challenge again.
-              </Text>
-            )}
-            <PaperButton
-              mode="outlined"
-              style={{marginTop: 15}}
-              textColor="white"
-              onPress={() => navigation.goBack()}
-            >
-              Quit
-            </PaperButton>
+            <Mascot mood="thinking" size={96} />
+            <View style={styles.heartsRow}>
+              <Ionicons name="heart-dislike" size={30} color={P.heart} />
+              <Text style={[styles.bigTitle, { color: P.wrongBorder, marginBottom: 0 }]}>Out of hearts!</Text>
+            </View>
+            <Text style={styles.softText}>Don't worry, mistakes help you learn.</Text>
+            {!isGate || canRetryAfter(failsAfterThisAttempt(false))
+              ? bigButton("Try again", () => (isGate ? retryGate(false) : dispatch({ type: "RESTART_QUIZ" })), {
+                  style: { alignSelf: "stretch", marginTop: 18 },
+                })
+              : <Text style={styles.softText}>Practise a glowing topic on the map, then try this challenge again.</Text>}
+            {bigButton("Quit", () => navigation.goBack(), { tone: "ghost", style: { alignSelf: "stretch", marginTop: 6 } })}
           </View>
         );
       }
       case "answering": {
         if (!currentQuestion) return null;
-        const isMarkedForReview = state.markedForReview.includes(
-          currentQuestion.id,
-        );
+        const isMarkedForReview = state.markedForReview.includes(currentQuestion.id);
+        const checked = mode === "training" && state.showFeedback;
+        const wasCorrect = !!state.wasCorrect;
+        const tiles = fitsTiles(currentQuestion.options);
+        const done = currentIndex + (checked ? 1 : 0);
+        const chosenText = mode === "exam" ? state.userAnswers[currentQuestion.id] ?? null : state.selectedAnswer?.content ?? null;
+        const explanation = sheetExplanation(currentQuestion.explanation);
+        const onOption = (option) => {
+          if (mode === "training") {
+            dispatch({ type: "SELECT_ANSWER", payload: { selectedOption: option } });
+          } else {
+            logAnswer(currentQuestion, option);
+            dispatch({ type: "ANSWER_AND_ADVANCE", payload: { questionId: currentQuestion.id, selectedOption: option } });
+          }
+        };
         return (
-          <View style={styles.scrollableContainer}>
-            <ScrollView
-              style={{ flex: 1 }}
-              contentContainerStyle={styles.scrollContent}
-            >
+          <View style={styles.screen}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
               <View style={styles.headerRow}>
-                <View style={styles.progressBarContainer}>
-                  <View style={[styles.progressBarFill, { width: `${(currentIndex / questions.length) * 100}%` }]} />
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: `${Math.round((done / Math.max(1, questions.length)) * 100)}%` }]} />
                 </View>
+                {mode === "exam" ? (
+                  <TouchableOpacity
+                    accessibilityLabel={isMarkedForReview ? "Unmark this question" : "Mark this question for review"}
+                    style={styles.iconButton}
+                    onPress={() => dispatch({ type: "TOGGLE_MARK_FOR_REVIEW", payload: { questionId: currentQuestion.id } })}
+                  >
+                    <Ionicons name={isMarkedForReview ? "bookmark" : "bookmark-outline"} size={26} color={isMarkedForReview ? P.gold : P.textSoft} />
+                  </TouchableOpacity>
+                ) : null}
                 <ReportQuestionButton
                   questionId={currentQuestion.id}
                   questionText={currentQuestion.question?.content}
                   options={currentQuestion.options}
                   quizId={quiz.id}
-                  chosen={
-                    mode === "exam"
-                      ? state.userAnswers[currentQuestion.id] ?? null
-                      : state.showFeedback
-                      ? state.selectedAnswer?.content ?? null
-                      : null
-                  }
+                  chosen={mode === "exam" ? state.userAnswers[currentQuestion.id] ?? null : checked ? state.selectedAnswer?.content ?? null : null}
                   mode={mode}
                   questContext={questContext}
                   knownStatus={questContext?.knownIssues?.[currentQuestion.id]?.status}
-                  color="white"
+                  color={P.textSoft}
                 />
-                {mode === "training" && (
-                  <View style={styles.heartsContainer}>
-                    <Ionicons name="heart" size={24} color="#FF4B4B" />
+                {mode === "training" ? (
+                  <View style={styles.heartsRow} accessibilityLabel={`${lives} hearts left`}>
+                    <Ionicons name="heart" size={24} color={P.heart} />
                     <Text style={styles.heartsText}>{lives}</Text>
                   </View>
-                )}
+                ) : null}
               </View>
-              {mode === "exam" && (
-                <TouchableOpacity
-                  style={styles.markButton}
-                  onPress={() =>
-                    dispatch({
-                      type: "TOGGLE_MARK_FOR_REVIEW",
-                      payload: { questionId: currentQuestion.id },
-                    })
-                  }
-                >
-                  <Ionicons
-                    name={isMarkedForReview ? "bookmark" : "bookmark-outline"}
-                    size={28}
-                    color={isMarkedForReview ? C.accent : "white"}
-                  />
-                </TouchableOpacity>
-              )}
+
+              <QuestionPrompt
+                question={currentQuestion}
+                mood={checked ? (wasCorrect ? "cheer" : "thinking") : "happy"}
+                chosenText={chosenText}
+              />
+
               {/* RB-5b ear training: English Quest PRACTICE in Training only (never gates, Boss or Exam) */}
               {mode === "training" && questContext?.activity === "practice" ? (
-                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 }}>
+                <View style={styles.listenRow}>
                   <ListenButtons
                     questionId={currentQuestion.id}
                     questionText={currentQuestion.question?.content}
                     options={currentQuestion.options}
-                    color="white"
+                    color={P.label}
                   />
                 </View>
               ) : null}
-              <QuestionCard question={currentQuestion} />
-              
-              {/* Spacer to push options to the bottom (Thumb Zone) */}
-              <View style={{ flex: 1 }} />
 
-              <View style={{ marginTop: 10, paddingBottom: 10 }}>
+              <View style={tiles ? styles.tileGrid : styles.optionList}>
                 {currentQuestion.options.map((option, index) => (
                   <Option
-                    key={index}
+                    key={`${currentQuestion.id}-${index}`}
+                    index={index}
+                    variant={tiles ? "tile" : "card"}
                     option={option}
-                    onPress={() => {
-                      if (mode === "training") {
-                        dispatch({
-                          type: "SELECT_ANSWER",
-                          payload: { selectedOption: option },
-                        });
-                      } else {
-                        logAnswer(currentQuestion, option);
-                        dispatch({
-                          type: "ANSWER_AND_ADVANCE",
-                          payload: {
-                            questionId: currentQuestion.id,
-                            selectedOption: option,
-                          },
-                        });
-                      }
-                    }}
-                    isSelected={state.selectedAnswer?.content === option.content}
-                    showFeedback={state.showFeedback}
+                    onPress={() => onOption(option)}
+                    isSelected={chosenText !== null && chosenText === option.content}
+                    showFeedback={checked}
                     isCorrect={option.isCorrect}
                   />
                 ))}
               </View>
             </ScrollView>
-            {mode === "training" && (
-              <View style={[styles.footer, state.showFeedback && (state.wasCorrect ? styles.footerCorrect : styles.footerIncorrect)]}>
-                {state.showFeedback && (
-                  <Text style={styles.feedbackText}>
-                    {state.wasCorrect ? "Excellent!" : "Not quite!"}
-                  </Text>
-                )}
-                <PaperButton
-                  mode="contained"
-                  disabled={!state.selectedAnswer}
-                  buttonColor={state.showFeedback ? (state.wasCorrect ? 'white' : 'white') : C.primary}
-                  textColor={state.showFeedback ? (state.wasCorrect ? '#58CC02' : '#FF4B4B') : 'white'}
-                  onPress={
-                    state.showFeedback
-                      ? handleContinueToExplanation
-                      : handleCheckAnswer
-                  }
-                >
-                  {state.showFeedback ? "Continue" : "Check"}
-                </PaperButton>
-              </View>
-            )}
+
+            {mode === "training" && !checked ? (
+              <View style={styles.footer}>{bigButton("CHECK", handleCheckAnswer, { disabled: !state.selectedAnswer })}</View>
+            ) : null}
+            {checked ? (
+              <FeedbackSheet
+                correct={wasCorrect}
+                title={wasCorrect ? "Brilliant!" : "Not quite"}
+                text={explanation.text}
+                buttonLabel={explanation.rich ? "SEE WHY" : wasCorrect ? "CONTINUE" : "GOT IT"}
+                onPress={handleContinue}
+                bottomInset={insets.bottom}
+              />
+            ) : null}
           </View>
         );
       }
       case "reviewing": {
         return (
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.progressText}>Review Your Answers</Text>
+            <Text style={styles.bigTitle}>Review your answers</Text>
             {questions.map((q, index) => {
               const isMarked = state.markedForReview.includes(q.id);
               const userAnswer = state.userAnswers[q.id];
               return (
                 <TouchableOpacity
                   key={q.id}
-                  style={[
-                    styles.reviewItem,
-                    isMarked && styles.reviewItemMarked,
-                  ]}
-                  onPress={() =>
-                    dispatch({ type: "GO_TO_QUESTION", payload: { index } })
-                  }
+                  style={[styles.reviewItem, isMarked && styles.reviewItemMarked]}
+                  onPress={() => dispatch({ type: "GO_TO_QUESTION", payload: { index } })}
+                  accessibilityLabel={`Question ${index + 1}, tap to change`}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginBottom: 8,
-                    }}
-                  >
-                    {isMarked && (
-                      <Ionicons
-                        name="bookmark"
-                        size={18}
-                        color={C.accent}
-                        style={{ marginRight: 8 }}
-                      />
-                    )}
-                    <Text style={styles.reviewQuestionText}>{`Question ${
-                      index + 1
-                    }: ${q.question.content}`}</Text>
+                  <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
+                    {isMarked ? <Ionicons name="bookmark" size={18} color={P.gold} /> : null}
+                    <Text style={styles.reviewQuestionText}>{`Question ${index + 1}: ${q.question.content}`}</Text>
                   </View>
-                  {q.options.map((opt, optIndex) => (
-                    <View
-                      key={optIndex}
-                      style={[
-                        styles.reviewOptionContainer,
-                        opt.content === userAnswer &&
-                          styles.reviewOptionContainerSelected,
-                      ]}
-                    >
-                      <Text
-                        style={
-                          opt.content === userAnswer
-                            ? styles.reviewOptionTextSelected
-                            : styles.reviewOptionText
-                        }
-                      >
-                        {opt.content}
-                      </Text>
-                    </View>
-                  ))}
+                  {q.options.map((opt, optIndex) => {
+                    const picked = opt.content === userAnswer;
+                    return (
+                      <View key={optIndex} style={[styles.reviewOption, picked && styles.reviewOptionPicked]}>
+                        <Text style={picked ? styles.reviewOptionTextPicked : styles.reviewOptionText}>{opt.content}</Text>
+                      </View>
+                    );
+                  })}
                 </TouchableOpacity>
               );
             })}
-            <PaperButton
-              mode="contained"
-              style={{ marginTop: 20 }}
-              onPress={() => dispatch({ type: "SUBMIT_EXAM", payload: { isFirstAttempt } })}
-            >
-              Submit Exam
-            </PaperButton>
+            {bigButton("SUBMIT EXAM", () => dispatch({ type: "SUBMIT_EXAM", payload: { isFirstAttempt } }), { style: { marginTop: 16 } })}
           </ScrollView>
         );
       }
       default:
         return (
           <View style={styles.centered}>
-            <ActivityIndicator animating={true} size="large" color="#FFFFFF" />
+            <ActivityIndicator animating size="large" color={P.label} />
           </View>
         );
     }
   };
 
-  return (
-    <LinearGradient
-      colors={[C.gradientStart, C.gradientEnd]}
-      style={{ flex: 1 }}
-    >
-      {renderContent()}
-    </LinearGradient>
-  );
+  return <View style={[styles.container, { backgroundColor: P.bg }]}>{renderContent()}</View>;
 };
+
+const makeStyles = (P, insets) =>
+  StyleSheet.create({
+    container: { flex: 1 },
+    screen: { flex: 1 },
+    centered: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 6 },
+    errorText: { color: P.wrongBorder, fontSize: 16, textAlign: "center", marginBottom: 15, fontFamily: "nunitoBold" },
+    bigTitle: { color: P.text, fontSize: 26, textAlign: "center", fontFamily: "nunitoBold", marginVertical: 10 },
+    softText: { color: P.textSoft, fontSize: 16, textAlign: "center", fontFamily: "nunitoBold", lineHeight: 23 },
+    scrollContent: { flexGrow: 1, paddingHorizontal: 20, paddingTop: insets.top + 16, paddingBottom: 20, gap: 14 },
+    headerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+    progressTrack: { flex: 1, height: 16, borderRadius: 8, backgroundColor: P.track, overflow: "hidden" },
+    progressFill: { height: "100%", borderRadius: 8, backgroundColor: P.gold },
+    iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+    heartsRow: { flexDirection: "row", alignItems: "center", gap: 5 },
+    heartsText: { color: P.heart, fontFamily: "nunitoBold", fontSize: 18 },
+    listenRow: { flexDirection: "row", justifyContent: "flex-start" },
+    optionList: { marginTop: 6 },
+    tileGrid: { marginTop: 10, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" },
+    footer: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: Math.max(22, insets.bottom + 14) },
+    bigButton: { height: 58, borderRadius: 18, borderBottomWidth: 5, alignItems: "center", justifyContent: "center", paddingHorizontal: 20 },
+    ghostButton: { borderBottomWidth: 0 },
+    bigButtonText: { fontSize: 18, fontFamily: "nunitoBold", letterSpacing: 1 },
+    reviewItem: { padding: 15, marginBottom: 10, backgroundColor: P.card, borderRadius: 16, borderWidth: 2, borderColor: P.border },
+    reviewItemMarked: { borderColor: P.gold },
+    reviewQuestionText: { flex: 1, fontFamily: "nunitoBold", fontSize: 16, color: P.text, lineHeight: 22 },
+    reviewOption: { marginVertical: 4, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 14, borderWidth: 2, borderColor: P.border },
+    reviewOptionPicked: { backgroundColor: P.selectedBg, borderColor: P.selectedBorder },
+    reviewOptionText: { fontFamily: "nunito", fontSize: 15, color: P.textSoft },
+    reviewOptionTextPicked: { fontFamily: "nunitoBold", fontSize: 15, color: P.selectedText },
+  });
 
 export default QuizScreenV2;
