@@ -41,6 +41,15 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Learn cards (after the next "publish" AND re-seeding Word Power + Treasure Words), ~10 min
+1. Word Power → Synonyms and Antonyms → Learn: 10 cards, not a long page. Soft colours, nothing bright on dark mode.
+2. 🔊 reads each card. NEXT / ‹ at the bottom. Quick checks: tap an answer, it shows right away, nothing lost.
+3. Last card "You learned …" → **TRY 8 QUESTIONS ▶** opens the quiz straight away. After it, the topic shows done.
+4. Skip test: open Learn again on a fresh topic → "Skip to quiz ›" → pass the quiz → the topic is NOT done until you
+   finish the cards (as you asked: unlocking unchanged).
+5. "See everything on one page" (first and last card) shows the old page.
+6. Treasure Words → any group → Learn: one word per card, tap to see the meaning, a check every 4 words.
+
 ### ⭐ Practice paper (after the next "publish"), your tester account only, ~15 min
 Pratha can't see it yet (draft, testers only) until you approve the paper questions.
 1. Home → Explore → **Practice paper** tile → English / Science switch, parts and counts, "Show the clock" switch.

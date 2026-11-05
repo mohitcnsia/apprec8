@@ -27,6 +27,8 @@ import { loadStudyContent } from "../../../services/contentCache";
 import { useTheme } from "../../../context/ThemeContext";
 import FeedbackFAB from "../FeedbackFAB";
 import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
+import LearnCards from "../../learn/LearnCards";
+import { learnCards, nextStepId, tryLabel } from "../../../utils/learnCards";
 
 const screenWidth = Dimensions.get("window").width;
 const coverImageHeight = screenWidth * 0.6;
@@ -38,8 +40,9 @@ const TAP_ZONE_SIZE = 80;
 
 const Apprec8Reader = ({ route, navigation }) => {
   useImmersiveStatusBar(); // hide the phone status bar while reading/playing
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const C = theme.appColors || theme;
+  const [showPage, setShowPage] = useState(false); // Learn cards: "See everything on one page"
   const contentId = route?.params?.contentId;
   const completedQuizId = route?.params?.completedQuizId;
   // Set by tile-based quests (English Quest): { questId, nodeId, returnTo }
@@ -432,6 +435,33 @@ const Apprec8Reader = ({ route, navigation }) => {
           />
         )}
       </View>
+    );
+  }
+
+  // Learn cards (spec R): pages with `cards` open as bite-size cards; the long page stays one tap away.
+  const cards = showPage ? null : learnCards(studyData);
+  if (cards) {
+    const next = questContext ? nextStepId(questContext.nodeId) : null;
+    const finish = ({ allSeen }) => {
+      if (!questContext) return navigation.goBack();
+      // The Learn step counts only when every card was seen; a skip opens the quiz without it (owner 2026-11-05).
+      navigation.navigate(questContext.returnTo || "EnglishQuestMap", {
+        questId: questContext.questId,
+        completedNodeId: allSeen ? questContext.nodeId : undefined,
+        openAfter: questContext.nextStep ? next : undefined,
+      });
+    };
+    return (
+      <LearnCards
+        cards={cards}
+        title={studyData.name || ""}
+        cardKey={contentId}
+        isDark={isDark}
+        finishLabel={!questContext ? "DONE" : questContext.nextStep ? tryLabel(questContext.nextStep.count) : "BACK TO QUEST"}
+        canSkip={!!questContext?.nextStep}
+        onFinish={finish}
+        onShowPage={() => setShowPage(true)}
+      />
     );
   }
 

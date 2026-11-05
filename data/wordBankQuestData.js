@@ -9,6 +9,7 @@ import { study, quiz, unit, main, endless, forGrades } from "./englishQuest/help
 import { WORD_BANK } from "./wordPower/wordBank.js";
 import { meaningQuestions } from "../utils/generators.js";
 import { seededRandom } from "../utils/readingFlow.js";
+import { wordCards } from "../utils/learnCards.js";
 
 export const QUEST_ID = "word-bank";
 
@@ -57,6 +58,8 @@ for (const g of WORD_BANK) {
       `| Word | Meaning |\n|---|---|\n` +
       g.words.map((w) => `| **${w.word}** | ${w.meaning.replace(/\|/g, "/")} |`).join("\n") +
       `\n\n> 💡 **Tip:** Cover the meanings with your hand and test yourself. Then take the quiz!`,
+    // Learn cards (spec R): one flip card per word, a quick check after every 4. The table stays as "See everything".
+    cards: wordCards(g.words, { key: learnId }),
   };
   wordTables[tableId] = { name: `${g.name} words`, tableType: "wordMeaning", entries: g.words };
   // Fixed quiz from the same generator, with a seeded order so it never changes between seeds (question ids are positions).

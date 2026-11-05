@@ -5,6 +5,7 @@
 // On open, the current node is scrolled to the lower-left (left-thumb zone).
 // Unlock rules live in utils/questTree.js.
 
+import { bundledQuest } from "../../data/quests";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
@@ -315,7 +316,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       ...extraContext,
     };
     if (step.type === "study") {
-      navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext });
+      // Learn cards end with "TRY 8 QUESTIONS ▶": tell the reader what comes next (quiz size from the bundled quest).
+      const steps = node.steps || [];
+      const after = steps[steps.findIndex((x) => x.id === step.id) + 1];
+      const nextStep = after && after.type === "quiz" ? { id: after.id, count: bundledQuest(questId)?.quizzes?.[after.quizId]?.length ?? null } : null;
+      navigation.navigate("Apprec8Reader", { contentId: step.contentId, questContext: { ...questContext, nextStep } });
     } else if (step.type === "reading") {
       navigation.navigate("ReadingScreen", { contentId: step.contentId, questContext });
     } else if (step.type === "quiz") {
@@ -494,6 +499,20 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       returnTo: "EnglishQuestMap",
     });
   };
+
+  // Learn cards' last button ("TRY 8 QUESTIONS ▶") or "Skip to quiz": open that quiz step once the map is ready.
+  useEffect(() => {
+    const target = route.params?.openAfter;
+    if (!target || !tree) return;
+    navigation.setParams({ openAfter: undefined });
+    for (const item of tree.path) {
+      for (const owner of [item, ...(item.practices || [])]) {
+        const step = (owner.steps || []).find((x) => x.id === target);
+        if (step) return openStep(owner, step, owner.passPercent ?? DEFAULT_PRACTICE_PASS_PERCENT);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params?.openAfter, tree]);
 
   // Home's "mistakes to fix" tile opens the map with openMistakes: true → go straight to practice once.
   const autoMistakesDone = useRef(false);

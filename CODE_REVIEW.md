@@ -1801,6 +1801,11 @@ won't read that. Mockup: canvas row **R** (R1–R4), https://claude.ai/artifact/
   **No YouTube on cards**: ads, "up next" videos and links out of the app are not safe for kids. Cost: 0 reads; mobile
   data for the parent, so clips stay small (≤ 3 MB) and load only when the card is shown. Order: pictures + read-aloud
   first (now), recorded audio next (Seema), short clips last (need someone to make them).
+- **Built 2026-11-05 (Claude):** `components/learn/LearnCards.js` (shown by Apprec8Reader when a page has `cards`),
+  `utils/learnCards.js` + tests. First pages: Word Power "Synonyms and Antonyms" (10 cards, easy → hard; Seema to review the
+  words) and every Treasure Words group (generated: a flip card per word, a check after every 4). The map passes the quiz
+  size, so the last button says "TRY 8 QUESTIONS ▶" and opens the quiz. Not yet: swipe (buttons only), audio/video.
+  Reaches phones after "publish" + re-seeding Word Power and Treasure Words.
 
 ## 2026-11-05 — Draft spec (not approved): S · Word ladders: start easy, build up (owner idea) (Claude)
 Why (owner): Word Power starts straight with Synonyms & Antonyms at olympiad level (scarce, prudent, opulent, destitute)
