@@ -2121,3 +2121,32 @@ for great images. **Idea: use her favourite topic to carry real learning**, not 
 (rule 1), never hot-linked. Copying images from books or random websites is not OK.
 **Owner to decide:** (a) Science unit + English set + pictures, or start with one? (b) Classes 3–6? (c) photos,
 illustrations, or both? Then a mockup, then building. The old dog quiz and Animal Kingdom stay visible meanwhile.
+
+## 2026-11-06 (night) — QA run: Tonight's changes (Guide quests, Need help?, Old content hidden) (Gemini G39, `24d1868`)
+- **Result:** 20 PASS / 0 FAIL
+- **Scope:** `docs/qa/OWNER_TESTING.md` sections "Guide quests" (Row W), ""Need help?" sheet" (Rows P1–P2), and "Old content hidden". Tested with tester account (`mohitchilkoti@gmail.com`).
+- **Detailed report:** [`docs/agents/reports/G39.md`](docs/agents/reports/G39.md).
+- **Checklist:**
+  1. **Guide quests (Row W):**
+     - Me → Guides: visible for admin and adult profiles; completely hidden for kids (`isChild: true` or numeric `grade`). PASS.
+     - Admin sees "Set up a school" (`admin-school`) and "Start your class" (`teacher-class`); teacher sees "Start your class". PASS.
+     - "DO STEP N ▶" sets active guide and navigates to target screen. PASS.
+     - Top guide strip (`components/guides/GuideStrip.js`) renders with 🧭, step count, and action hint. PASS.
+     - Tapping the hint folds strip into compact pill `🧭 Step N/Total` at top right; tapping pill unfolds. PASS.
+     - Tapping ✕ stops guide strip immediately. PASS.
+     - Tapping "Guide ›" returns cleanly to `GuideScreen`. PASS.
+     - Done steps tick automatically from real facts on return, displaying `✅ Step N done!` banner. PASS.
+     - Zero overlap between top guide strip (`top: insets.top + 6`) and bottom `MainButton` footer (`bottom: insets.bottom + 12`). PASS.
+  2. **"Need help?" sheet (Rows P1–P2):**
+     - Calm green `NeedHelpRow` on Me tab under profile card, visible to all users. PASS.
+     - Opens `HelpSheet` modal with CHILDLINE `1098`, Tele MANAS `14416`, and Emergency `112`. PASS.
+     - Tapping Call on 1098 / 14416 dispatches `ACTION_DIAL` (`tel:<number>`), opening phone keypad; does NOT place call directly. PASS.
+     - Emergency 112 has NO Call button (children protected from prank/accidental calls). PASS.
+     - Closes gracefully via Close button, Android back, or outside backdrop tap. Zero data/analytics saved. PASS.
+     - Dark and Light themes verified: soft contrast, calm green outlines, fully readable. PASS.
+  3. **Old content hidden:**
+     - Tester account (non-owner): all legacy olympiad quizzes and popular quizzes hidden except dog/animal favourites. PASS.
+     - Legacy Space quest hidden from "Your quests" for non-owner tester. PASS.
+     - Fun tab stories, book summaries, and popular reads filtered by `FAVOURITES`. PASS.
+     - Empty "EXPLORE" shelf suppressed when no practice paper fits the child's grade. PASS.
+- **Tooling Note:** Emulator cold-boot crash loop in `com.android.bluetooth` (`libbluetooth_jni.so`) identified and resolved by disabling bluetooth package. Emulator shut down immediately after testing to keep host Mac fast.
