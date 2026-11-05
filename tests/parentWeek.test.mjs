@@ -42,3 +42,24 @@ assert.ok(none.nothingText);
 assert.equal(none.subjects.length, 0);
 assert.ok(Number.isInteger(weekIndexOf(now)));
 console.log(`parentWeek tests passed (${en.timeText}; ${en.subjects.map((s) => `${s.title}: strong ${s.strong}, practise ${s.practise}, next ${s.next}`).join(" / ")})`);
+
+// Missed questions for the parent
+const { missedQuestions } = await import("../utils/parentWeek.js");
+const quizzes = { qz: [{ question: { content: "Q one?" }, options: [{ content: "A", isCorrect: true }, { content: "B" }] }, { question: { content: "Q two?" }, options: [{ content: "C", isCorrect: true }] }] };
+const missed = missedQuestions([
+  {
+    questId: "english-quest",
+    quizzes,
+    namer: (s) => s.toUpperCase(),
+    mistakes: {
+      "qz-q2": { kind: "question", quizId: "qz", questionId: "qz-q2", subtopic: "tense", lastWrongAt: 30 },
+      "qz-q1": { kind: "question", quizId: "qz", questionId: "qz-q1", lastWrongAt: 10 },
+      "topic:b:gate": { kind: "topic", subtopic: "modals", lastWrongAt: 20 },
+      gen: { kind: "question", quizId: "x", questionId: "x-q1", generator: "plural", lastWrongAt: 40 },
+    },
+  },
+]);
+assert.deepEqual(missed.map((m) => m.text || m.topic), ["Q two?", "MODALS", "Q one?"], "newest first; generated skipped; gate = topic only");
+assert.equal(missed[0].answer, "C");
+assert.equal(missed[1].text, null, "Challenge question text never shown");
+console.log("parentWeek missed-questions tests passed");

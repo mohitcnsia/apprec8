@@ -10,7 +10,7 @@ import { getApp } from "@react-native-firebase/app";
 import { QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { topicNamer } from "../../utils/progressView";
-import { parentWeek, weekIndexOf } from "../../utils/parentWeek";
+import { parentWeek, weekIndexOf, missedQuestions } from "../../utils/parentWeek";
 
 const db = getFirestore(getApp());
 const LANG_KEY = "parentLang:v1";
@@ -30,6 +30,7 @@ export function useParentLang() {
 export default function ParentWeekCard({ child, lang, P }) {
   const s = useMemo(() => makeStyles(P), [P]);
   const [quests, setQuests] = useState(null);
+  const [showMissed, setShowMissed] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -40,7 +41,7 @@ export default function ParentWeekCard({ child, lang, P }) {
         try {
           const snap = await getDoc(doc(db, "users", child.uid, "questProgress", m.QUEST_ID));
           const d = snap.exists() ? snap.data() : {};
-          out.push({ questId: m.QUEST_ID, title: m.quest?.title || m.QUEST_ID, stats: d.stats || {}, nodes: d.nodes || {}, questNodes: m.nodes, namer: topicNamer(m.nodes) });
+          out.push({ questId: m.QUEST_ID, title: m.quest?.title || m.QUEST_ID, stats: d.stats || {}, nodes: d.nodes || {}, mistakes: d.mistakes || {}, quizzes: m.quizzes, questNodes: m.nodes, namer: topicNamer(m.nodes) });
         } catch (e) {
           // not allowed or offline: skip this subject
         }
@@ -55,6 +56,7 @@ export default function ParentWeekCard({ child, lang, P }) {
   if (quests === null) return <ActivityIndicator color={P.label} />;
   const w = parentWeek({ name: child.firstName || "Your child", grade: child.grade, quests, lang, weekIndex: weekIndexOf() });
   const t = w.words;
+  const missed = missedQuestions(quests, 5);
 
   return (
     <View style={s.wrap}>
@@ -94,6 +96,29 @@ export default function ParentWeekCard({ child, lang, P }) {
         <Text style={s.label}>{t.home}</Text>
         <Text style={s.line}>{w.home}</Text>
       </View>
+      {/* Folded, not hidden (design rule): the latest mistakes, with the right answer, to talk about at home. */}
+      {missed.length ? (
+        <View style={s.card}>
+          <Pressable onPress={() => setShowMissed((v) => !v)} accessibilityRole="button" accessibilityState={{ expanded: showMissed }} style={{ flexDirection: "row", alignItems: "center", minHeight: 40 }}>
+            <Text style={[s.subject, { flex: 1 }]}>{t.missed(missed.length)}</Text>
+            <Text style={s.soft}>{showMissed ? "▲" : "▼"}</Text>
+          </Pressable>
+          {showMissed
+            ? missed.map((m) => (
+                <View key={m.key} style={{ paddingVertical: 6, borderTopWidth: 1, borderTopColor: P.border, gap: 2 }}>
+                  {m.kind === "question" ? (
+                    <>
+                      <Text style={s.line}>{m.text}</Text>
+                      {m.answer ? <Text style={[s.small, { color: P.correctText }]}>✓ {m.answer}</Text> : null}
+                    </>
+                  ) : (
+                    <Text style={s.line}>{t.topicMiss(m.topic || "")}</Text>
+                  )}
+                </View>
+              ))
+            : null}
+        </View>
+      ) : null}
       <Text style={s.soft}>
         💜 {t.tipFrom}: {w.tip}
       </Text>

@@ -26,6 +26,8 @@ export const WORDS = {
     days: ["M", "T", "W", "T", "F", "S", "S"],
     nothing: (n) => `${n} didn't practise this week. A short, friendly reminder helps more than a long talk.`,
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`),
+    missed: (n) => `Questions to talk about (${n})`,
+    topicMiss: (topic) => `A Challenge question about “${topic}”`,
   },
   hi: {
     title: (n) => `${n} का हफ़्ता`,
@@ -44,6 +46,8 @@ export const WORDS = {
     days: ["सो", "मं", "बु", "गु", "शु", "श", "र"],
     nothing: (n) => `${n} ने इस हफ़्ते अभ्यास नहीं किया। लंबी बात से ज़्यादा एक छोटी, प्यार भरी याद दिलाना काम करता है।`,
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} घंटा ${m % 60} मिनट` : `${m} मिनट`),
+    missed: (n) => `बात करने के लिए सवाल (${n})`,
+    topicMiss: (topic) => `“${topic}” पर एक चैलेंज सवाल`,
   },
 };
 
@@ -144,3 +148,32 @@ export function parentWeek({ name, grade = null, quests = [], now = Date.now(), 
 
 /** Week number since 2026-01-05 (a Monday): picks this week's tip. */
 export const weekIndexOf = (now = Date.now()) => Math.floor((now - new Date(2026, 0, 5).getTime()) / (7 * DAY));
+
+/**
+ * The child's latest mistakes for the parent (mockup V2 "see the questions she missed"), from the progress docs'
+ * "My mistakes" maps: no extra reads. Challenge/Boss mistakes are topics only (their exact questions stay secret).
+ * @param {Array<{ questId, mistakes, quizzes, namer }>} quests - quizzes = the bundled quest's quizzes
+ * @returns [{ key, kind: "question"|"topic", text, answer?, topic, at }]
+ */
+export function missedQuestions(quests = [], max = 5) {
+  const out = [];
+  quests.forEach((q) => {
+    Object.entries(q.mistakes || {}).forEach(([key, m]) => {
+      if (!m) return;
+      const topic = m.subtopic ? (q.namer || ((x) => x))(m.subtopic) : null;
+      if (m.kind === "topic") {
+        out.push({ key: `${q.questId}:${key}`, kind: "topic", text: null, topic, at: m.lastWrongAt || 0 });
+        return;
+      }
+      let question = m.question || null; // papers store the question inline
+      if (!question && m.quizId && m.questionId) {
+        const idx = Number(String(m.questionId).split("-q").pop()) - 1;
+        question = (q.quizzes?.[m.quizId] || [])[idx] || null;
+      }
+      if (!question?.question?.content) return; // generated or removed questions: skip
+      const right = (question.options || []).find((o) => o.isCorrect);
+      out.push({ key: `${q.questId}:${key}`, kind: "question", text: question.question.content, answer: right ? right.content : null, topic, at: m.lastWrongAt || 0 });
+    });
+  });
+  return out.sort((a, b) => b.at - a.at).slice(0, max);
+}
