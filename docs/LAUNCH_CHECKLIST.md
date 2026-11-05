@@ -14,8 +14,9 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 - Re-seed English (Grammar Pro 2–6, Unit 5 practice) if not done.
 - Say **"publish"** for last night's app changes, then **re-seed English** (adds Unit 10 Word Building).
 - **OK the deploys** DR-16 (Demo School), DR-17 (link Pratha's account), DR-18 (weekly notifications): Gemini deploys.
-- **Build 20.0.30**: run `scripts/release/check-aab.sh <aab> 20.0.30`, upload to internal testing, install, test the
-  weekly-summary switch (Progress → My children / My classes).
+- **Build 20.0.30 is ready:** `build-1793902963993.aab` (repo root, 61 MB). `check-aab.sh` says **PASS** (version,
+  admin ID, signed); storage + overlay permissions are gone, no advertising ID. Upload to internal testing, install, test
+  the weekly-summary switch (Progress → My children / My classes). Then Claude merges `feat/push-20.0.30`.
 - Read the **Hindi** on the parent card (utils/parentWeek.js) and the link consent (utils/family.js); Seema: the 4 tips.
 - Decide the **Dog Squad** plan (CODE_REVIEW.md, 2026-11-06).
 
