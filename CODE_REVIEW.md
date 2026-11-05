@@ -1857,3 +1857,11 @@ things (practice paper, class topics) stay hidden until Edit Profile. Proposal: 
   topics and difficulty, and write original questions.
 - **New original papers:** Claude writes English Papers 2–4 (Seema reviews); Gemini drafts Science Papers 2–4 (G35,
   `draft: true`, Claude reviews every question). tests/papers.test.mjs now checks every paper in `PAPERS`.
+
+## 2026-11-05 — Draft spec (not approved): U · Picture questions (owner: "paper has beautiful drawings") (Claude)
+Mockups U1–U3 (canvas row U): figure series, label the picture, mirror image. Pictures are line drawings stored inside
+the question as SVG text and drawn with react-native-svg (already in the app): no hosting, no downloads, 0 reads, crisp
+on any screen, soft colours on the dark theme. Optional `figure` (question) and per-option `figure` (answer tiles, 2 × 2).
+Plan once approved: support in the paper screen (and quests later), then ~10 picture questions per new Science paper
+(figure series, mirror/water images, counting shapes, plant/body/circuit diagrams). Owner OK'd the rough-sheet tip
+("Keep a pencil and a rough sheet next to you"): on the paper start screen, ships with the next publish.

@@ -185,7 +185,7 @@ export default function PracticePaperScreen({ navigation, route }) {
           })}
           <Text style={s.note}>
             Just like a real test: no hints, no hearts. Answer everything, check your answers, then submit. If you leave, the
-            clock keeps going.
+            clock keeps going.{"\n\n"}✏️ Keep a pencil and a rough sheet next to you.
           </Text>
           {saved ? null : (
             <View style={s.switchRow}>
