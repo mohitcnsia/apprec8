@@ -4,6 +4,7 @@
 const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
+const { cachedResult } = require("../utils/serverCache");
 
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
@@ -70,7 +71,7 @@ exports.assignTeacher = functions
 
 // ---------- Weekly class leaderboard + claps (owner idea, 2026-11-04) ----------
 // Points = right answers in the last 7 days across tile quests (from questProgress stats.daily). First names only.
-const QUESTS = ["english-quest", "science-quest", "word-power"];
+const QUESTS = ["english-quest", "science-quest", "word-power", "word-bank"]; // word-bank = Treasure Words
 const dayKeyUtc = (ms) => new Date(ms + 5.5 * 3600 * 1000).toISOString().slice(0, 10); // India day
 const weekKey = (ms) => {
   const d = new Date(ms + 5.5 * 3600 * 1000);
@@ -98,20 +99,30 @@ exports.getClassLeaderboard = functions
     if (!cls) throw new functions.https.HttpsError("permission-denied", "Only this class can see its board.");
     const now = Date.now();
     const days = Array.from({ length: 7 }, (_, i) => dayKeyUtc(now - i * 86400000));
-    const members = await db.collection("classes").doc(classId).collection("members").get();
     const week = weekKey(now);
-    const clapsDoc = await db.collection("classes").doc(classId).collection("claps").doc(week).get();
+    const classRef = db.collection("classes").doc(classId);
+    // Cost guard (2026-11-05): the points (1 read per kid per quest) are computed at most once per 10 min per class and
+    // kept in classes/{id}/cache/board (server-only). Claps are read fresh each time so a clap shows at once.
+    const base = await cachedResult(classRef.collection("cache").doc("board"), { key: week, now }, async () => {
+      const members = await classRef.collection("members").get();
+      const approved = members.docs.filter((d) => d.data().status === "approved");
+      return Promise.all(
+        approved.map(async (m) => {
+          const progress = await Promise.all(
+            QUESTS.map((q) => db.collection("users").doc(m.id).collection("questProgress").doc(q).get())
+          );
+          let points = 0;
+          for (const p of progress) {
+            const daily = (p.exists && p.data().stats && p.data().stats.daily) || {};
+            days.forEach((k) => (points += (daily[k] && daily[k].correct) || 0));
+          }
+          return { uid: m.id, firstName: m.data().firstName || "Kid", points };
+        })
+      );
+    });
+    const clapsDoc = await classRef.collection("claps").doc(week).get();
     const claps = clapsDoc.exists ? clapsDoc.data().counts || {} : {};
-    const rows = [];
-    for (const m of members.docs.filter((d) => d.data().status === "approved")) {
-      let points = 0;
-      for (const q of QUESTS) {
-        const p = await db.collection("users").doc(m.id).collection("questProgress").doc(q).get();
-        const daily = (p.exists && p.data().stats && p.data().stats.daily) || {};
-        days.forEach((k) => (points += (daily[k] && daily[k].correct) || 0));
-      }
-      rows.push({ uid: m.id, firstName: m.data().firstName || "Kid", points, claps: claps[m.id] || 0 });
-    }
+    const rows = base.map((r) => ({ ...r, claps: claps[r.uid] || 0 }));
     rows.sort((a, b) => b.points - a.points || a.firstName.localeCompare(b.firstName));
     return { className: cls.data().name, week, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
   });
@@ -168,6 +179,7 @@ exports.approveMember = functions
       batch.delete(memberRef);
       batch.set(userRef, { pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     }
+    batch.delete(classRef.collection("cache").doc("board")); // a new classmate shows on the board straight away
     await batch.commit();
     return { ok: true };
   });
