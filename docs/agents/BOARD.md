@@ -27,6 +27,10 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Owner 2026-11-05 evening: "everything approved"** (review page 550 Qs, both practice papers, spec S, mockup P screens).
+  Seema reviews on her phone afterwards. Published `cb0fc89e` (paper testers-only, Learn cards, cost guard 4).
+  **Owner seeds** (Me → Admin tools): English (Units 8–9), Word Power (cards), Treasure Words (cards), Science (Units 5–6 + 1–3 fixes).
+  Papers opened to Class 5 (`draft: false`): needs one more "publish". Mockup P build waits for Seema's wording + safeguarding plan (RB-8).
 - ~~Mockup Q practice paper~~ owner: "excellent" 2026-11-05 → **built** (testers only until the paper questions are approved; ships with the next "publish"; short options 2 × 2). Open questions: Claude's defaults in CODE_REVIEW.md Q; owner can change them.
 - ~~Mockup R Learn cards~~ owner OK 2026-11-05 → **built** (Word Power first page + all Treasure Words); needs "publish" + re-seed of Word Power and Treasure Words. Seema: review the 10 Word Power cards.
 - **Spec S word ladders** (Word Power + Treasure Words start too hard, owner 2026-11-05): CODE_REVIEW.md S. Owner OK?
@@ -75,6 +79,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |
 | G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | done: **0 findings** (Claude: too clean to trust on 558 Qs; not counted as the second review. Seema + owner on the review page remain the gate; Claude spot-checks) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | **done** 2026-11-05 evening (42 functions live, report G30) | from Claude's folder | |
@@ -146,6 +151,11 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G33 · [todo] · gemini · ⭐ DR-14 backfill, second run (owner-approved: yes, 2026-11-05)
+**Owner-approved: yes** (part of DR-14: "run the backfill again after the next publish"; publish `cb0fc89e` done 2026-11-05).
+From Claude's folder: `node scripts/admin/backfillQuestId.cjs` (dry run), then `node scripts/admin/backfillQuestId.cjs --apply`
+if it lists any docs. Nothing else. **Deliver:** `docs/agents/reports/G33.md` with both outputs, commit `gemini(G33): done — …`.
 
 ### G32 · [done] · gemini · ⭐ Deploy DR-14: dashboard index + backfill (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** for exactly these steps ("DR-14 OK to deploy? yes", 2026-11-05). Do this after G30, before G31.
