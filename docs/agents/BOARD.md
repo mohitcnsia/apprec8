@@ -31,7 +31,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 - **Owner 2026-11-05 evening: "everything approved"** (review page 550 Qs, both practice papers, spec S, mockup P screens).
   Seema reviews on her phone afterwards. Published `cb0fc89e` (paper testers-only, Learn cards, cost guard 4).
   **Owner seeds** (Me → Admin tools): English (Units 8–9), Word Power (cards), Treasure Words (cards), Science (Units 5–6 + 1–3 fixes).
-  Papers opened to Class 5 (`draft: false`): needs one more "publish". Mockup P build waits for Seema's wording + safeguarding plan (RB-8).
+  Papers opened to Class 5: **published** `fa97c6b4` (with the owner's paper feedback fixes). Mockup P build waits for Seema's wording + safeguarding plan (RB-8).
 - ~~Mockup Q practice paper~~ owner: "excellent" 2026-11-05 → **built** (testers only until the paper questions are approved; ships with the next "publish"; short options 2 × 2). Open questions: Claude's defaults in CODE_REVIEW.md Q; owner can change them.
 - ~~Mockup R Learn cards~~ owner OK 2026-11-05 → **built** (Word Power first page + all Treasure Words); needs "publish" + re-seed of Word Power and Treasure Words. Seema: review the 10 Word Power cards.
 - **Spec S word ladders** (Word Power + Treasure Words start too hard, owner 2026-11-05): CODE_REVIEW.md S. Owner OK?
