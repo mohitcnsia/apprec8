@@ -434,6 +434,55 @@ With **yesterday, last week, ago**, use the simple past:
       q("Complete the sentence: 'The guests ___ an hour ago.'", "arrived", [["have arrived", "tense-perfect-mixup"], ["arrive", "time-word-mixup"], ["will arrive", "time-word-mixup"]], "AGO → simple past: ARRIVED."),
       q("Fill in both blanks: 'While I ___ my homework, my brother ___ the TV on.'", "was doing, switched", [["am doing, switched", "tense-present-past-mixup"], ["was doing, switches", "tense-present-past-mixup"], ["did, was switch", "tense-form-error"]], "The long action: I WAS DOING. The short action that interrupted it: he SWITCHED the TV on."),
     ],
+    // Classes 5–8 practice (owner 2026-11-05: Class 5 covers tenses extensively). Optional side leaves: nothing locks.
+    "eq-u5-past-future-cont": [
+      q("I ___ my homework when the lights went out.", "was doing", [["am doing", "tense-mixup"], ["will be doing", "tense-mixup"], ["were doing", "tense-mixup"]], "A longer action in the past, cut short by a quick one: was doing."),
+      q("While Mum ___ dinner, the phone rang.", "was cooking", [["is cooking", "tense-mixup"], ["will be cooking", "tense-mixup"], ["cooks", "tense-mixup"]], "WHILE + a longer past action: was cooking."),
+      q("What ___ you doing at 8 o'clock last night?", "were", [["are", "tense-mixup"], ["was", "tense-mixup"], ["will", "tense-mixup"]], "LAST NIGHT, with YOU: were you doing?"),
+      q("This time tomorrow, we ___ in the swimming pool.", "will be swimming", [["were swimming", "tense-mixup"], ["are swim", "tense-mixup"], ["swam", "tense-mixup"]], "Going on at a moment in the future: will be swimming."),
+      q("Don't call me at 7 tomorrow. I ___ my piano lesson.", "will be having", [["was having", "tense-mixup"], ["had", "tense-mixup"], ["have had", "tense-mixup"]], "In the middle of something at a future time: will be having."),
+      q("The children ___ football when it started to rain.", "were playing", [["was playing", "tense-mixup"], ["are playing", "tense-mixup"], ["will be playing", "tense-mixup"]], "CHILDREN (many) + a longer past action: were playing."),
+      q("Which sentence is correct?", "She was reading a book when I called her.", [["She was read a book when I called her.", "tense-mixup"], ["She were reading a book when I called her.", "tense-mixup"], ["She is reading a book when I called her.", "tense-mixup"]], "She + was + -ing, interrupted by a past action (called)."),
+      q("At 10 a.m. next Monday, Riya ___ her science exam.", "will be writing", [["was writing", "tense-mixup"], ["has written", "tense-mixup"], ["had written", "tense-mixup"]], "Going on at a future moment: will be writing."),
+      q("While I was walking to school, I ___ a rainbow.", "saw", [["was seeing", "tense-mixup"], ["see", "tense-mixup"], ["will see", "tense-mixup"]], "The quick action that happened in the middle takes the simple past: saw."),
+      q("In 'We were singing songs on the bus', which words show an action that went on for a while?", "were singing", [["We", "tense-mixup"], ["songs", "tense-mixup"], ["on the bus", "tense-mixup"]], "WERE + -ING shows an action going on in the past."),
+    ],
+    "eq-u5-had-will-have": [
+      q("When I reached school, the bell ___.", "had already rung", [["has already rung", "tense-mixup"], ["already rings", "tense-mixup"], ["will have rung", "tense-mixup"]], "The bell rang BEFORE I reached (past): had rung."),
+      q("Mohan ___ his lunch before he went out to play.", "had eaten", [["has eaten", "tense-mixup"], ["eats", "tense-mixup"], ["will have eaten", "tense-mixup"]], "The earlier of two past actions takes HAD: had eaten."),
+      q("Which happened first? 'The film had started before we sat down.'", "The film started.", [["We sat down.", "tense-mixup"], ["Both happened together.", "tense-mixup"], ["We bought popcorn.", "tense-mixup"]], "HAD STARTED marks the earlier action."),
+      q("By the time Dad gets home, I ___ my homework.", "will have finished", [["had finished", "tense-mixup"], ["have finished", "tense-mixup"], ["finished", "tense-mixup"]], "Finished before a future moment: will have finished."),
+      q("By next week, the farmers ___ all the wheat.", "will have cut", [["had cut", "tense-mixup"], ["have cut", "tense-mixup"], ["cut", "tense-mixup"]], "BY + a future time: will have cut."),
+      q("She was sad because she ___ her favourite pen.", "had lost", [["has lost", "tense-mixup"], ["loses", "tense-mixup"], ["will have lost", "tense-mixup"]], "She lost it before she felt sad (past): had lost."),
+      q("By the end of this year, I ___ ten storybooks.", "will have read", [["had read", "tense-mixup"], ["have read", "tense-mixup"], ["reading", "tense-mixup"]], "Done before a future time: will have read."),
+      q("Which sentence is correct?", "The guests had left before we arrived.", [["The guests has left before we arrived.", "tense-mixup"], ["The guests had leave before we arrived.", "tense-mixup"], ["The guests will have left before we arrived.", "tense-mixup"]], "Before another past action: had left."),
+      q("After the rain ___, we went outside to play.", "had stopped", [["has stopped", "tense-mixup"], ["stops", "tense-mixup"], ["will have stopped", "tense-mixup"]], "The rain stopped first, then we went out: had stopped."),
+      q("By 9 o'clock tonight, the shop ___.", "will have closed", [["had closed", "tense-mixup"], ["has closed", "tense-mixup"], ["closes", "tense-mixup"]], "Closed before a future time (9 o'clock tonight): will have closed."),
+    ],
+    "eq-u5-have-been-doing": [
+      q("Riya ___ the piano for two hours. Her fingers are tired.", "has been playing", [["had been playing", "tense-mixup"], ["is playing", "tense-mixup"], ["will have been playing", "tense-mixup"]], "Started in the past, still true now (tired fingers): has been playing."),
+      q("My little brother ___ since breakfast. He just won't stop!", "has been crying", [["had been crying", "tense-mixup"], ["cries", "tense-mixup"], ["will be crying", "tense-mixup"]], "SINCE breakfast and still going on: has been crying."),
+      q("We have been living here ___ 2020.", "since", [["for", "tense-mixup"], ["from", "tense-mixup"], ["during", "tense-mixup"]], "2020 is a starting point: since."),
+      q("The players were tired. They ___ for three hours.", "had been running", [["have been running", "tense-mixup"], ["will have been running", "tense-mixup"], ["runs", "tense-mixup"]], "Before a past moment (they were tired): had been running."),
+      q("By March, Dadi ___ in this house for thirty years.", "will have been living", [["has been living", "tense-mixup"], ["had been living", "tense-mixup"], ["lives", "tense-mixup"]], "How long, up to a future time: will have been living."),
+      q("Which sentence is correct?", "He has been waiting for an hour.", [["He is waiting since an hour.", "tense-mixup"], ["He have been waiting for an hour.", "tense-mixup"], ["He has been wait for an hour.", "tense-mixup"]], "He + has + been + -ing, FOR + a length of time."),
+      q("How long ___ you been learning English?", "have", [["has", "tense-mixup"], ["are", "tense-mixup"], ["did", "tense-mixup"]], "YOU + have + been: How long have you been learning?"),
+      q("Her eyes were red because she ___.", "had been crying", [["has been crying", "tense-mixup"], ["will have been crying", "tense-mixup"], ["cries", "tense-mixup"]], "Before a past moment (red eyes): had been crying."),
+      q("Find the mistake: 'I am knowing Arjun since Class 1.'", "am knowing \u2192 have known", [["Arjun \u2192 Arjun's", "error-location-mixup"], ["since \u2192 for", "error-location-mixup"], ["Class \u2192 class", "error-location-mixup"]], "KNOW never takes -ing: I have known Arjun since Class 1."),
+      q("Which sentence tells how long something WILL have gone on?", "By June, I will have been learning dance for a year.", [["I will learn dance in June.", "tense-mixup"], ["I have been learning dance for a year.", "tense-mixup"], ["I had been learning dance for a year.", "tense-mixup"]], "will + have + been + -ing, up to a future time."),
+    ],
+    "eq-u5-tense-detective": [
+      q("Find the mistake: 'Yesterday I go to the market.'", "go \u2192 went", [["I \u2192 me", "error-location-mixup"], ["the \u2192 a", "error-location-mixup"], ["market \u2192 markets", "error-location-mixup"]], "YESTERDAY \u2192 simple past: went."),
+      q("Find the mistake: 'She don't like spicy food.'", "don't \u2192 doesn't", [["like \u2192 likes", "error-location-mixup"], ["spicy \u2192 spice", "error-location-mixup"], ["food \u2192 foods", "error-location-mixup"]], "SHE takes DOESN'T: She doesn't like\u2026"),
+      q("Find the mistake: 'Look! The baby sleeps.'", "sleeps \u2192 is sleeping", [["Look \u2192 Looks", "error-location-mixup"], ["The \u2192 A", "error-location-mixup"], ["baby \u2192 babies", "error-location-mixup"]], "LOOK! means right now: is sleeping."),
+      q("Find the mistake: 'I have finished my work two hours ago.'", "have finished \u2192 finished", [["my \u2192 mine", "error-location-mixup"], ["work \u2192 works", "error-location-mixup"], ["two \u2192 second", "error-location-mixup"]], "AGO is a finished time: simple past (finished)."),
+      q("Find the mistake: 'He will comes tomorrow.'", "comes \u2192 come", [["He \u2192 Him", "error-location-mixup"], ["will \u2192 shall", "error-location-mixup"], ["tomorrow \u2192 yesterday", "error-location-mixup"]], "After WILL, the base verb: will come."),
+      q("Find the mistake: 'We was playing when it started to rain.'", "was \u2192 were", [["playing \u2192 play", "error-location-mixup"], ["started \u2192 starts", "error-location-mixup"], ["rain \u2192 rains", "error-location-mixup"]], "WE takes WERE: we were playing."),
+      q("Find the mistake: 'They has been working since morning.'", "has \u2192 have", [["been \u2192 being", "error-location-mixup"], ["working \u2192 work", "error-location-mixup"], ["since \u2192 for", "error-location-mixup"]], "THEY takes HAVE: they have been working."),
+      q("Find the mistake: 'When I reached the stop, the bus has already left.'", "has \u2192 had", [["the stop \u2192 a stop", "error-location-mixup"], ["bus \u2192 buses", "error-location-mixup"], ["already \u2192 yet", "error-location-mixup"]], "It left before I reached (past): had already left."),
+      q("Find the mistake: 'Every morning my father reading the newspaper.'", "reading \u2192 reads", [["my \u2192 mine", "error-location-mixup"], ["the \u2192 a", "error-location-mixup"], ["morning \u2192 mornings", "error-location-mixup"]], "A habit (every morning), HE/SHE: reads."),
+      q("Find the mistake: 'Did you saw the rainbow yesterday?'", "saw \u2192 see", [["Did \u2192 Do", "error-location-mixup"], ["the \u2192 a", "error-location-mixup"], ["yesterday \u2192 today", "error-location-mixup"]], "After DID, the base verb: Did you see\u2026?"),
+    ],
   },
 
   // ---------- Reading ----------
@@ -494,6 +543,7 @@ With **yesterday, last week, ago**, use the simple past:
     // Topic A: Present or Past?
     simple,
     withSubtopic(practice("eq-u5-simple-p1", simple, 1, "Irregular Past Words", "medium", [quiz("eq-u5-simple-irregular")]), "simple-past"),
+    forGrades(practice("eq-u5-simple-p2", simple, 2, "Tense Detective: Find the Mistake", "hard", [quiz("eq-u5-tense-detective")]), [5, 6, 7, 8]),
     gate("eq-u5-simple-gate", simple, "Present or Past Challenge", "eq-u5-simple-gate-pool", {
       "simple-present": "Simple present",
       "simple-past": "Simple past",
@@ -504,6 +554,7 @@ With **yesterday, last week, ago**, use the simple past:
     // Topic B: Happening Now
     cont,
     withSubtopic(practice("eq-u5-cont-p1", cont, 1, "Was or Were?", "medium", [quiz("eq-u5-cont-was-were")]), "past-continuous"),
+    forGrades(practice("eq-u5-cont-p2", cont, 2, "Was Doing & Will Be Doing", "medium", [quiz("eq-u5-past-future-cont")]), [5, 6, 7, 8]),
     gate("eq-u5-cont-gate", cont, "Happening Now Challenge", "eq-u5-cont-gate-pool", {
       "present-continuous": "Happening now",
       "past-continuous": "Happening in the past",
@@ -525,6 +576,8 @@ With **yesterday, last week, ago**, use the simple past:
     perfect,
     withSubtopic(practice("eq-u5-perfect-p1", perfect, 1, "Since or For?", "medium", [quiz("eq-u5-perfect-since-for")]), "perfect-or-past"),
     forGrades(practice("eq-u5-perfect-p2", perfect, 2, "Champion: Had & Has Been", "hard", [quiz("eq-u5-perfect-champion")]), [5, 6, 7, 8, 9, 10, 11, 12]),
+    forGrades(practice("eq-u5-perfect-p3", perfect, 3, "Had Done & Will Have Done", "hard", [quiz("eq-u5-had-will-have")]), [5, 6, 7, 8]),
+    forGrades(practice("eq-u5-perfect-p4", perfect, 4, "Champion 2: Have Been Doing", "hard", [quiz("eq-u5-have-been-doing")]), [5, 6, 7, 8]),
     gate("eq-u5-perfect-gate", perfect, "Have Done Challenge", "eq-u5-perfect-gate-pool", {
       "has-have": "Has or have",
       "past-participle": "Third forms",

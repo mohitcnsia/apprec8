@@ -1882,3 +1882,7 @@ competency questions; nothing copied). The "Word Building" teaser is now Classes
 everything after it). Checked: Class 5 path unchanged; Class 10 reaches Grammar Pro after Unit 9; a teacher-assigned topic
 opens at once. Seema reviews (review page, code G10-). Next units: Modals, Subject–Verb Agreement + Determiners,
 Reported Speech, Passive, Editing.
+- **Owner: "Pratha also needs tenses; Class 5 covers them extensively."** Unit 5 had 144 tense questions at Class 3–5 basics.
+  Added 4 optional practice leaves for Classes 5–8 (40 questions, Class-5 wording): Tense Detective (find the mistake),
+  Was Doing & Will Be Doing, Had Done & Will Have Done, Champion 2: Have Been Doing. Practice leaves never lock anything.
+  Grammar Pro stays Classes 9–10 (its frames are teen / board level).
