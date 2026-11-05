@@ -42,3 +42,16 @@ stop and report it as blocked.
 ## 5. What Claude does
 Writes and orders tasks, reviews every `done` commit (diff + `npm test` + accuracy spot checks), merges, updates the board
 and `CODE_REVIEW.md`, and asks the owner for anything in §3.
+
+
+## Lessons from review (Claude, 2026-11-05, after G35 + G36: 91 + 9 fixes)
+Before you commit any question, check these five things yourself. They caused almost every fix:
+1. **Try every wrong option in the sentence.** If it is also correct English (even formal, British or less common:
+   "Might I borrow…?", "is being uploaded tomorrow", "could have" next to "should have"), replace it.
+2. **"Find the error" options:** no wrong option may be the same correction written another way ("has located →
+   has been located" vs "has located by → has been located by"), and no wrong option may fix the sentence differently.
+3. **Only real errors.** Wordy or old-fashioned is not an error. Style debates are not errors: congratulate for/on,
+   who/whom as object, "committee have", "ten items or less", "prefer … over", optional backshift, split infinitives.
+4. **One error per "find the error" sentence.** Read the whole sentence again after your correction.
+5. **Never pad options** to beat the longest-answer check ("Thursday evening", "Rickets disease"). Make the options
+   parallel and let the test tell you; if it fails, write better wrong options.
