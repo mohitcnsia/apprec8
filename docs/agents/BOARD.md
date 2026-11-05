@@ -14,7 +14,7 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → **seed after the next publish** (the phone's seed buttons only have content that was published). Next: owner says "publish" (OTA for 20.0.29), then Me → Admin tools → seed English, Word Power, Science.
+- ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
 - **Build 20.0.29** (lock + play time): `build-1793820561489.aab`, check PASS, lock module inside. **Owner uploads to Play.**
 - ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
