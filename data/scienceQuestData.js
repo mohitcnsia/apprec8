@@ -588,7 +588,7 @@ export const quizzes = {
         "How do green plants demonstrate that they can sense and respond to their environment?",
         "Their stems and leaves slowly grow and bend towards sunlight",
         [
-          ["Their roots move through soil to search for food", "moves-means-alive"],
+          ["Their roots pull the whole plant to a new place", "moves-means-alive"],
           ["Their bark changes colour instantly when touched by raindrops", "sign-of-life-mixup"],
           ["Their leaves absorb all wavelengths of light without reflection", "sign-of-life-mixup"],
         ],
@@ -2095,14 +2095,14 @@ export const quizzes = {
     {
       subtopic: "skeletal-system",
       ...q(
-        "Read the following statements about human bones:\n(i) Bones store calcium and phosphorus.\n(ii) All bones in the human skull can move freely.\n(iii) The femur is located in the upper arm.\n(iv) The vertebral column is made of 33 vertebrae.\nWhich statements are CORRECT?",
+        "Read the following statements about human bones:\n(i) Bones store calcium and phosphorus.\n(ii) All bones in the human skull can move freely.\n(iii) The femur is located in the upper arm.\n(iv) The backbone is made of many small bones called vertebrae.\nWhich statements are CORRECT?",
         "(i) and (iv) only",
         [
           ["(i), (ii) and (iv) only", "skeletal-statement-eval"],
           ["(ii) and (iii) only", "skeletal-statement-eval"],
           ["(i) and (iii) only", "skeletal-statement-eval"]
         ],
-        "Statement (i) is correct (bones store minerals) and (iv) is correct (33 vertebrae). Statement (ii) is false (only lower jaw moves) and (iii) is false (femur is in the thigh)."
+        "Statement (i) is correct (bones store minerals) and (iv) is correct (the backbone is a chain of small bones called vertebrae). Statement (ii) is false (only lower jaw moves) and (iii) is false (femur is in the thigh)."
       ),
     },
     {
@@ -4096,7 +4096,7 @@ export const quizzes = {
         [
           ["Oxygen (21%)", "atmosphere-gas-mixup"],
           ["Carbon dioxide (0.04%)", "atmosphere-gas-mixup"],
-          ["Water vapour (5%)", "atmosphere-gas-mixup"]
+          ["Argon (about 1%)", "atmosphere-gas-mixup"]
         ],
         "Earth's dry air consists of approximately 78% Nitrogen, 21% Oxygen, and about 1% Argon, Carbon Dioxide, and other trace gases."
       ),
