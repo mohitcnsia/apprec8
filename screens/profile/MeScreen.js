@@ -228,6 +228,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
       <Text style={styles.section}>HELP</Text>
       <View style={styles.group}>
+        {/* Guide quests (mockup W1): learn by doing. Adults only for now (kids/parents guides come later). */}
+        {isAdmin || (!userData?.isChild && !Number.isInteger(userData?.grade)) ? (
+          <>
+            <Row icon="compass-outline" label="Guides" detail="Learn by doing" onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild })} styles={styles} P={P} />
+            <View style={styles.divider} />
+          </>
+        ) : null}
         <Row icon="help-circle-outline" label="Help" onPress={openHelp} styles={styles} P={P} />
         <View style={styles.divider} />
         <Row icon="chatbubble-ellipses-outline" label="Tell us what you think" onPress={() => navigation.navigate("cntct")} styles={styles} P={P} />

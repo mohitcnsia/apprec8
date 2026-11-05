@@ -11,6 +11,7 @@ import { makeSchoolStyles, MainButton } from "../admin/schoolUi";
 import { redeemTeacherInvite } from "../../services/classesApi";
 import { SUBJECT_NAMES } from "../../utils/classes";
 import { showAlert } from "../../services/dialog";
+import { markGuide } from "../../services/guideFacts";
 
 export default function JoinAsTeacherScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -26,6 +27,7 @@ export default function JoinAsTeacherScreen({ navigation }) {
     setBusy(true);
     try {
       setDone(await redeemTeacherInvite(tidy));
+      markGuide("teacher-class.join.sent");
     } catch (e) {
       showAlert("Couldn't join", e?.message || String(e));
     }

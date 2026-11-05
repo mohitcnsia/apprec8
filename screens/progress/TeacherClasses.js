@@ -4,14 +4,15 @@
 // Reads: classes (teacherIds contains me), members, and each member's questProgress (rules: DR-9). One-time reads.
 
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
-import { questsForTeacher, classLabel } from "../../utils/classes";
+import { questsForTeacher, classLabel, classCodeMessage } from "../../utils/classes";
+import { markGuide } from "../../services/guideFacts";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
 import { topicNamer } from "../../utils/progressView";
@@ -149,6 +150,7 @@ export default function TeacherClasses() {
         }
         out.sort((a, b) => b.last - a.last);
         setRows(out);
+        if (out.length) markGuide("teacher.progress"); // guide step 5: the teacher has seen students' progress
       } catch (e) {
         setError(e.message);
       }
@@ -167,6 +169,19 @@ export default function TeacherClasses() {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade} · code {c.joinCode}</Text>
         </Pressable>
       ))}
+      {/* Guide step 2: share the class code (phone share menu, like the admin's SHARE CODE). */}
+      {open?.joinCode ? (
+        <Pressable
+          onPress={() => {
+            markGuide("teacher.share");
+            Share.share({ message: classCodeMessage({ className: open.name, schoolName: open.schoolName, code: open.joinCode }) }).catch(() => {});
+          }}
+          accessibilityRole="button"
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>SHARE CODE {open.joinCode}</Text>
+        </Pressable>
+      ) : null}
       {/* Join requests: only the teacher, who knows the family, lets a child in (child safety). */}
       {open && pending.length ? (
         <View style={[styles.kid, { borderColor: P.gold }]}>

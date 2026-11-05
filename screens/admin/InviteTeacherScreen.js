@@ -13,6 +13,7 @@ import { makeSchoolStyles, Chip, MainButton, Field } from "./schoolUi";
 import { createTeacherInvite, findUserByEmail, setTeacher } from "../../services/classesApi";
 import { SUBJECTS, SUBJECT_NAMES, teacherInviteMessage } from "../../utils/classes";
 import { showAlert } from "../../services/dialog";
+import { markGuide } from "../../services/guideFacts";
 
 export default function InviteTeacherScreen({ route, navigation }) {
   const { classId, className, schoolName, subjects: classSubs = [] } = route.params || {};
@@ -41,6 +42,7 @@ export default function InviteTeacherScreen({ route, navigation }) {
         const r = await createTeacherInvite({ classId, subjects });
         c = r.code;
         setInvite({ code: c, subjectsKey: key });
+        markGuide("admin.invite");
       }
       await Share.share({ message: teacherInviteMessage({ className, schoolName, subjects, code: c }) });
     } catch (e) {

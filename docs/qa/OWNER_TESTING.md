@@ -272,3 +272,12 @@ Test in **light and dark** mode.
 - [ ] Get an Adverbs Challenge question wrong → My mistakes → it can be fixed (2 right in a row).
 - [ ] Dashboard → a kid who played Unit 0 shows topic rows.
 - [ ] Unit 2 content (after seeding): play A and an, Using 'the', Determiners.
+
+## Guide quests (row W, 2026-11-05)
+1. Me → **Guides** (you see "Set up a school" and "Start your class"; Pratha sees no Guides row).
+2. Set up a school → **DO STEP 1** → the Schools screen opens with a 🧭 strip at the top saying what to tap.
+   Tap the strip text: it folds to a small "Step 1/5" pill; tap again to open. ✕ stops it.
+3. Create the school → tap **Guide ›** on the strip → "✅ Step 1 done!" and step 2 is next.
+4. Steps tick themselves: class created; invite code made (or a teacher added); teacher approved; a test student approved.
+5. Seema: Me → Guides → Start your class → join with your invite code ("waiting for the admin" until you approve her)
+   → Progress tab: tap the class → **SHARE CODE** → approve students → assign a topic → see progress.

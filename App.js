@@ -4,13 +4,14 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { V2Provider } from "./context/V2Context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppContent from "./AppContent"; // Import the new AppContent component
+import { navRef } from "./navigation/navRef";
 
 export default function App() {
   // Wrap the main application content with the ThemeProvider
   return (
     <ThemeProvider>
       <V2Provider>
-        <NavigationContainer>
+        <NavigationContainer ref={navRef}>
           <AppContent />
         </NavigationContainer>
       </V2Provider>
