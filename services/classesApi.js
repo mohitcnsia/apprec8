@@ -120,6 +120,7 @@ export async function joinClass({ found, myClassIds = [], firstName, grade, pare
   if (!uid) throw new Error("Sign in first");
   const check = canJoin(myClassIds, found?.classId);
   if (!check.ok) throw new Error(check.reason);
+  if (String(uid).startsWith("demo_") !== String(found?.classId || "").startsWith("demo_")) throw new Error("Demo accounts can only join the Demo School."); // G38
   const record = consentRecord({ kidUid: uid, classId: found.classId, parentName, relation, language });
   const consentRef = doc(collection(db, "consents"));
   const batch = writeBatch(db);

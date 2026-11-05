@@ -169,6 +169,10 @@ exports.approveMember = functions
     if (!allowed) throw new functions.https.HttpsError("permission-denied", "Only this class's teacher can approve.");
     const memberRef = classRef.collection("members").doc(String(kidUid || ""));
     if (!(await memberRef.get()).exists) throw new functions.https.HttpsError("not-found", "No request from this child.");
+    // Demo School stays apart: a demo child never joins a real class, a real child never joins a demo class (G38).
+    if (approve && String(kidUid).startsWith("demo_") !== String(classId).startsWith("demo_")) {
+      throw new functions.https.HttpsError("failed-precondition", "Demo accounts and real classes can't mix.");
+    }
     const { FieldValue } = require("firebase-admin/firestore");
     const userRef = db.collection("users").doc(kidUid);
     const batch = db.batch();

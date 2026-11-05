@@ -26,6 +26,11 @@ exports.onQuestionReported = functions
     const questId = data.questId || null;
     const uid = data.userId;
     const reason = data.issueCategory;
+    // Demo School accounts never count towards hiding a question from real kids (Gemini G38 review).
+    if (String(uid || "").startsWith("demo_")) {
+      functions.logger.info("onQuestionReported: demo account, not counted", { id: snap.id });
+      return null;
+    }
     if (!questionId || !uid || !R.REASONS.includes(reason)) {
       functions.logger.warn("onQuestionReported: ignoring incomplete report", { id: snap.id });
       return null;

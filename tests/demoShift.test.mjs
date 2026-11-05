@@ -35,9 +35,9 @@ const st = shiftStats({ lastActiveAt: now, daily: { "2026-11-09": { answered: 3 
 assert.equal(st.lastActiveAt, now + 7 * DAY);
 assert.deepEqual(Object.keys(st.daily), ["2026-11-16"]);
 
-// Only the login kid has global stars (others never rank above real children)
+// No demo kid has global stars: the field is missing, so the board and the rank count never see them (G38)
 const users = ops.filter((o) => /^users\/demo_[^/]+$/.test(o.path) && o.data.grade);
-assert.ok(users.every((u) => u.path === "users/demo_kid_login" || u.data.stats.totalStars === 0));
+assert.ok(users.length === 44 && users.every((u) => u.data.stats.totalStars === undefined && u.data.demoStars >= 0));
 const size = JSON.stringify(ops).length;
 assert.ok(size < 9_000_000, `payload fits a callable (${Math.round(size / 1e6 * 10) / 10} MB)`);
 console.log(`demoShift tests passed (payload ${Math.round(size / 1e5) / 10} MB)`);
