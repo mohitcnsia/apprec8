@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-13 · Cost guard 2: cache the leaderboards · **waiting for owner OK** (code on branch `cost/leaderboard-cache`, tests green)
+## DR-13 · Cost guard 2: cache the leaderboards · **owner OK 2026-11-05 → merged → Gemini G30** (with DR-12)
 
 Why: the class board read 1 doc per kid per quest on every open (a class of 40 ≈ 200 reads per open; one busy class could
 use most of the free 50,000 reads/day). Now: computed at most once per 10 min per class and kept in a server-only doc;
