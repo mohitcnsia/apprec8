@@ -13,6 +13,7 @@ import { needsFirstRun } from "./utils/firstRun";
 import { canWriteFreeText } from "./utils/freeText";
 import { FreeTextContext } from "./context/FreeTextContext";
 import { isTesterUser, FREE_TEXT_EMAILS } from "./config/appConfig";
+import { remoteList } from "./services/remoteLists";
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
 import { useTheme } from "./context/ThemeContext";
@@ -107,7 +108,9 @@ const AppContent = () => {
   }, [uid]);
   const createdMs = Date.parse(user?.metadata?.creationTime || "") || 0;
   const brandNew = !!uid && Date.now() - createdMs < 5 * 60 * 1000; // its doc may still be on the way
-  const freeText = canWriteFreeText({ email: user?.email, doc: userDoc, isTester: isTesterUser(user), allowEmails: FREE_TEXT_EMAILS });
+  // Named exceptions come from Remote Config ("free_text_emails"), read again once the start-up fetch has finished.
+  const freeTextEmails = React.useMemo(() => [...FREE_TEXT_EMAILS, ...remoteList("free_text_emails")], [isMessageLoading]); // eslint-disable-line react-hooks/exhaustive-deps
+  const freeText = canWriteFreeText({ email: user?.email, doc: userDoc, isTester: isTesterUser(user), allowEmails: freeTextEmails });
   const showFirstRun =
     !!uid && grownUp !== null && (needsFirstRun(userDoc, { grownUp }) || (userDoc === null && brandNew));
 
