@@ -2104,3 +2104,20 @@ Needed for Pratha's parent report (her account has a year of progress). Reuses t
 - Not yet: unlinking (write to us for now).
 **DR-17 (owner OK, then Gemini):** `firebase deploy --only functions:createParentLinkCode,functions:redeemParentLinkCode,functions:deleteChildProfile,functions:switchToChild --project apprec8-ca229`.
 `parentLinkCodes` needs no client rule (server only).
+
+## 2026-11-06 — Plan for owner decision: "Dog Squad" (Pratha's favourite topic) (Claude)
+Owner: Pratha's favourites are the dog quiz and Animal Kingdom, especially German Shepherds; use AI tools or the web
+for great images. **Idea: use her favourite topic to carry real learning**, not trivia only.
+1. **Science (Classes 3–6): "Dog Squad"** unit in the Science Quest: German Shepherds (origin, working dogs in India:
+   police, army, rescue, guide dogs), dog senses (smell, hearing) and how they compare with ours, wolves → dogs,
+   caring for a dog, and **staying safe around dogs** (approaching a dog, body language, stray dogs, what to do after a
+   bite: wash 15 minutes with soap and running water, tell an adult, see a doctor the same day). The safety topic is
+   real value for Indian children. Facts come from Gemini's sourced fact sheet (G40, in progress).
+2. **English: dog-themed practice**: a reading ("Rex, the police dog") and a Tense Detective set about a German
+   Shepherd's day, so grammar practice uses her favourite theme.
+3. **Picture questions**: breeds and body language as line drawings (our SVG style, 0 reads), plus 10–20 photos.
+**Images, honestly:** AI images often get dogs wrong (extra legs, odd ears), so every AI image needs a check and an
+"illustration" label. Free-licence photos (Unsplash, Pexels; Wikimedia Commons with credit) go into `media_backup`
+(rule 1), never hot-linked. Copying images from books or random websites is not OK.
+**Owner to decide:** (a) Science unit + English set + pictures, or start with one? (b) Classes 3–6? (c) photos,
+illustrations, or both? Then a mockup, then building. The old dog quiz and Animal Kingdom stay visible meanwhile.
