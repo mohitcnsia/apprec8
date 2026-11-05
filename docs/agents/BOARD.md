@@ -27,7 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **Science quest live for everyone** (`draft: false`, owner: Pratha couldn't see it): needs "publish" + owner re-seeds Science.
+- **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
 - ~~Mockups T1–T4~~ owner OK 2026-11-05 → **built** (login, email, create account, forgot sheet, first run, animations); ships with the next "publish".
 - ~~DR-15 stars for practice papers~~ owner OK 2026-11-05 ("OK for stars"; stars again after a week = spaced repetition) → **G34 (Gemini)**.
 - **Owner 2026-11-05 evening: "everything approved"** (review page 550 Qs, both practice papers, spec S, mockup P screens).
