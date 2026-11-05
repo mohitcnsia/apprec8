@@ -12,6 +12,15 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## DR-13 · Cost guard 2: cache the leaderboards · **waiting for owner OK** (code on branch `cost/leaderboard-cache`, tests green)
+
+Why: the class board read 1 doc per kid per quest on every open (a class of 40 ≈ 200 reads per open; one busy class could
+use most of the free 50,000 reads/day). Now: computed at most once per 10 min per class and kept in a server-only doc;
+most opens cost ~2 reads. The "Everyone" board: same (10 min), and the row count is capped at 50 (the app could ask for
+any number before). Also: Treasure Words now counts for class points; approving a kid refreshes the class board at once.
+What kids notice: points on the boards can be up to 10 min behind. No app update, no rules change.
+On OK: Claude merges into `feat/quiz-redesign`; Gemini deploys with G30 (`firebase deploy --only functions`).
+
 ## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **owner OK 2026-11-05 → Gemini G30**
 
 Why: today nothing limits how many copies of a function can run, so a bug, a loop or someone spamming the app could
