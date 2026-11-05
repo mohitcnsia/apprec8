@@ -11,7 +11,7 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 ## A. Seema's Class 10 pilot (closed testing on Play)
 | # | Item | Who | State |
 |---|---|---|---|
-| A1 | **Class 9–10 English content** (CBSE): tenses, modals, subject–verb agreement, determiners, reported speech, active/passive, editing & omission, gap filling, case-based reading. Seema names the topics + order; Claude writes; Seema reviews. Hide English Quest Units 0–2 from Classes 9–10. | Seema → Claude | not started |
+| A1 | **Class 9–10 English content** (CBSE): tenses, modals, subject–verb agreement, determiners, reported speech, active/passive, editing & omission, gap filling, case-based reading. Seema names the topics + order; Claude writes; Seema reviews. Hide English Quest Units 0–2 from Classes 9–10. | Seema → Claude | **done**: Grammar Pro 1–6 (666 Qs, Classes 9–10), live after the English re-seed |
 | A2 | ~~Class 10 practice papers~~ dropped (owner: grammar only for the pilot) | — | dropped |
 | A3 | **Teacher dry run**: Seema creates the school + class (Admin tools → Schools & classes), 2 test students join with the code, she approves, assigns a topic, sees progress + class leaderboard | Seema + owner | not done |
 | A4 | **Parent consent**: students are under 18. In-app consent at "Join a class" exists (EN/HI); for the pilot also the school's usual signed consent form | Seema / school | in-app ready |
