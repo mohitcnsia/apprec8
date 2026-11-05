@@ -1907,3 +1907,8 @@ Reported Speech, Passive, Editing.
    (tap-only, results only as totals).
 9. **Link an existing child account to a parent** (Pratha has a year of progress on her own account; today the app can
    only create new child profiles): needs a small server function with both sides confirming.
+10. **Apprec8 Challenge, our own olympiad (owner idea, later; after Seema's pilot):** a month-long **qualifier at home**
+    (ranked on accuracy over many attempts, never one paper) → a **1-hour final on a Sunday morning in the school hall**,
+    teacher present. Rewards: certificates, medals and free premium access; scholarships only after one season, with
+    written rules. Needs new server work for the final: questions sent only at the start time (not bundled in the app),
+    server-side marking, one attempt per child, fixed time window, results per school. First run inside Seema's school.
