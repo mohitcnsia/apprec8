@@ -13,6 +13,11 @@ import CustomCarousel from "../../components/common/CustomCarousal";
 import KidsThoughtOfTheDay from "../../components/thought/KidsThoughtOfTheDay";
 import { THOUGHTS } from "../../data/thoughts";
 import { listenToCategoriesByGroup } from "../../services/firestoreContentApi";
+import { visibleOldTiles } from "../../utils/oldContent";
+import { authInstance } from "../../config/firebaseConfig";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+
+const isOwner = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
 
 const tileOf = (c) => ({
   id: c.id,
@@ -88,9 +93,10 @@ export default function FunScreen({ navigation }) {
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`FunScreen: ${what} failed to load`, e);
     const subs = [
-      listenToCategoriesByGroup("story", (d) => setStories(d.map(tileOf)), warn("stories")),
-      listenToCategoriesByGroup("book_summary", (d) => setBooks(d.map(tileOf)), warn("book summaries")),
-      listenToCategoriesByGroup("popular_read", (d) => setReads(d.map(tileOf)), warn("popular reads")),
+      // Old reading carousels: owner only, except dog/animal favourites (Seema 2026-11-05).
+      listenToCategoriesByGroup("story", (d) => setStories(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("stories")),
+      listenToCategoriesByGroup("book_summary", (d) => setBooks(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("book summaries")),
+      listenToCategoriesByGroup("popular_read", (d) => setReads(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("popular reads")),
     ];
     return () => subs.forEach((u) => u && u());
   }, []);

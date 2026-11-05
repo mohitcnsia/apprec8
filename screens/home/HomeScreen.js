@@ -13,6 +13,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import Mascot from "../../components/quiz/Mascot";
 import { authInstance } from "../../config/firebaseConfig";
 import { listenToCategoriesByGroup, listenToUserDocument } from "../../services/firestoreContentApi";
+import { visibleOldTiles, showOldSpace } from "../../utils/oldContent";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
@@ -331,7 +332,11 @@ export default function HomeScreen({ navigation }) {
     return navigation.navigate("TaskEditor");
   };
 
-  const practiceTiles = [...olympiad, ...popularQuizzes];
+  // Old content: owner only, except Pratha's favourites (dogs, animals). Seema 2026-11-05.
+  const oldAdmin = uid === APPREC8_TEAM_REVIEWER_UID;
+  const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
+  const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
+  const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade);
 
   // Each quest tile is its own "continue" (owner 2026-11-04: a kid runs several quests; no single big Continue card).
   const questStats = (q) => {
@@ -451,11 +456,11 @@ export default function HomeScreen({ navigation }) {
         {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
       </View>
 
-      <Text style={styles.section}>Explore</Text>
+      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper ? <Text style={styles.section}>Explore</Text> : null}
       <View style={styles.grid}>
-        {questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace)}
+        {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
         {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
-        {papersFor({ grade: userGrade, isTester }).length || MIX_GRADES.includes(userGrade)
+        {hasPaper
           ? questTile("paper", "Practice paper", "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
               navigation.navigate("PracticePaper", { grade: userGrade })
             )
@@ -478,11 +483,11 @@ export default function HomeScreen({ navigation }) {
         </>
       ) : null}
 
-      {classrooms.length > 0 ? (
+      {classroomTiles.length > 0 ? (
         <>
           <Text style={styles.section}>My classrooms</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-            {classrooms.map((c) => (
+            {classroomTiles.map((c) => (
               <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
                 <View style={styles.practiceTile}>
                   {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}

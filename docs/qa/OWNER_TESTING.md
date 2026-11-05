@@ -287,3 +287,8 @@ Test in **light and dark** mode.
 2. Tap it: CHILDLINE 1098 and Tele MANAS 14416 have **Call** buttons. Call opens the dialer with the number typed;
    **don't press the green button** while testing. 112 has no call button (by design).
 3. Close, Android back and tapping outside all close it. Nothing is saved.
+
+## Old content hidden (Seema's feedback, 2026-11-05)
+- **You (owner):** Home and Fun look as before (More practice, My classrooms, Space, Featured / Book Summaries).
+- **Everyone else (check with the tester account or Pratha's):** old tiles are gone except titles with dogs / animals
+  (e.g. the dog quiz, Animal Kingdom). Space is hidden. "Explore" only shows when a practice paper fits the child's class.
