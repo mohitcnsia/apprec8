@@ -5,6 +5,7 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin"); // Keep admin for auth and other services
 const { region, runtimeOptions } = require("../common/config");
 const { countFeedbackWords } = require("../utils/helpers"); // Import specific helper
+const { clampTopN, cachedResult } = require("../utils/serverCache");
 
 // Initialize Firestore from the admin SDK (once)
 const firestore = admin.firestore();
@@ -38,9 +39,11 @@ exports.getLeaderboard = functions
       );
     }
 
-    const topN = data && data.topN > 0 ? data.topN : 10;
+    // Cost guard (2026-11-05): at most 50 rows, and the board is computed at most once per 10 min (server-only cache doc).
+    const topN = clampTopN(data && data.topN);
 
     try {
+      const leaderboard = await cachedResult(firestore.collection("leaderboardCache").doc(`top${topN}`), {}, async () => {
       const usersCollectionRef = firestore.collection("users");
       const topNQuery = usersCollectionRef
         .orderBy("stats.totalStars", "desc")
@@ -67,8 +70,10 @@ exports.getLeaderboard = functions
           points: userData.stats?.totalStars || 0,
         });
       });
+      return leaders;
+      });
 
-      return { leaderboard: leaders };
+      return { leaderboard };
     } catch (error) {
       console.error("getLeaderboard: Critical error:", error);
       throw new functions.https.HttpsError(
