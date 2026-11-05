@@ -15,13 +15,14 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 
 ## Claude's plan, 2026-11-05 day (owner out ~8 h; feedback this evening)
 1. ~~English Unit 8 Linking Words~~ done (`a419e73`, 120 Qs) → review page (same link) + G31 second review.
-2. Science Unit 5 Light, Sound & Magnets (Class 3–5, from the owner's papers, original questions) → review page.
+2. ~~Science Unit 5 Light, Sound & Magnets~~ done (`3c5f77e`, 105 Qs, draft/testers) → review page + G31.
 3. Gemini G30: second-reviewer accuracy pass on Units 8 + Science 5 (after G29).
 4. Mockup for approval: parent consent + child safety screen (needed before launch).
 5. Clean-up: delete the unused old screens (Home.js, StudyScreen, ProfileScreen, StatsScreen), tests green.
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Review page (same link): English Unit 8 (Seema) + Science Unit 5 (owner)**, 225 questions: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T8-, S5-). Seed only after OK + G31.
 - ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
 - **Build 20.0.29** (lock + play time): `build-1793820561489.aab`, check PASS, lock module inside. **Owner uploads to Play.**
@@ -61,7 +62,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G31 Second review: English Unit 8 Linking Words (120 Qs) | Gemini | todo (after G30) | report only | |
+| G31 Second review: English Unit 8 (120 Qs) + Science Unit 5 (105 Qs) | Gemini | todo (after G30) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
@@ -132,9 +133,9 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G31 · [todo] · gemini · Second review of English Unit 8 (accuracy, report only: change nothing)
-Read `data/englishQuest/units/u8.js` (commit `a419e73` or later). For EVERY question (120: warm-ups, practice leaves,
-gates, Champion, Boss, reading) check:
+### G31 · [todo] · gemini · Second review of English Unit 8 + Science Unit 5 (accuracy, report only: change nothing)
+Read `data/englishQuest/units/u8.js` and `data/scienceQuest/units/u5.js` (commit `3c5f77e` or later). For EVERY question
+(225: warm-ups, practice leaves, gates, Champion, Boss, reading) check (for Science: is the fact true for Class 3–5 textbooks?):
 1. The ✓ answer is right in standard British/Indian school English.
 2. **No wrong option also works** (in grammar AND in meaning). Linking words overlap, so try each option in the sentence:
    e.g. "The baby slept although the dog barked" makes sense, so "although" can't be a wrong option there.
