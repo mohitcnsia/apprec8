@@ -41,6 +41,16 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ New login screens + first run + Science for everyone (after "publish"), ~10 min
+1. Sign out → login screen: Chamak floats in a starry sky (tap it: it jumps and sparkles), a planet circles, a shooting
+   star now and then. CONTINUE WITH GOOGLE is the big bottom button.
+2. "Use email instead" → form low on the screen, LOG IN at the bottom. "New? Create account" → a plant grows, Chamak blooms.
+3. Typing hides the animation so the form stays in view. "Forgot password?" opens a sheet.
+4. Log in with Google → on YOUR account you'll see the first-run screen once (you have no class): type a name and watch
+   the bubble, tap "I'm a parent" → LET'S GO. It won't ask again on this phone.
+5. Admin tools → seed **Science** again → Pratha (and every Class 3–5 child) now sees the Science tile, not only testers.
+6. Phone set to "Remove animations" (Accessibility) → the pictures stand still.
+
 ### ⭐ App popups (raw Android popups replaced), after this "publish", ~5 min
 Every popup should now slide up from the bottom in the app's colours, the safe choice big, red outline for Delete/Leave.
 1. Me → Sign out → popup says "Sign out" / "Cancel" (it used to say "Confirm"). Tap Cancel.

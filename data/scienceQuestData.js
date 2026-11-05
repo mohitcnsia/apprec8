@@ -6,7 +6,7 @@
 // The app hides topics that aren't for the kid's class (utils/gradeFilter.js); a topic for several
 // classes is shared. Untagged = for everyone (avoid in Science).
 //
-// STATUS: DRAFT. Seeds to carouselGroup "quest_draft" while draft is true.
+// STATUS: LIVE since 2026-11-05 (owner approved). While draft was true it seeded to carouselGroup "quest_draft" (testers only).
 // Class 5 NSO focus: Unit 1 "The Living World" (Living vs non-living, Plants, Animals).
 
 import {
@@ -33,7 +33,7 @@ export const quest = {
   description: "Explore living things, plants, animals, matter, forces, Earth and space, one branch at a time, up to champion level.",
   image: null,
   version: 1,
-  draft: true,
+  draft: false, // owner approved 2026-11-05 ("everything approved"): everyone sees the tile (Class 3–5 topics)
 };
 
 export const tile = {

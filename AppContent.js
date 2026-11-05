@@ -6,6 +6,10 @@ import { Provider as PaperProvider } from "react-native-paper";
 
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import AuthScreen from "./screens/auth/AuthScreen";
+import FirstRunScreen, { grownUpKey } from "./screens/auth/FirstRunScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { listenToUserDocument } from "./services/firestoreContentApi";
+import { needsFirstRun } from "./utils/firstRun";
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
 import { useTheme } from "./context/ThemeContext";
@@ -82,6 +86,27 @@ const AppContent = () => {
     exitGuestModeHandler,
   } = useFirebaseAuth();
 
+  // First run (mockup T4): a signed-in account without a first name (or class, unless a parent / teacher) is asked once.
+  const [userDoc, setUserDoc] = useState(undefined); // undefined = loading, null = not created yet
+  const [grownUp, setGrownUp] = useState(null); // null = not read yet
+  const uid = user?.uid || null;
+  useEffect(() => {
+    setUserDoc(undefined);
+    setGrownUp(null);
+    if (!uid) return undefined;
+    AsyncStorage.getItem(grownUpKey(uid))
+      .then((v) => setGrownUp(v === "1"))
+      .catch(() => setGrownUp(false));
+    return listenToUserDocument(
+      (d) => setUserDoc(d || null),
+      () => setUserDoc(null)
+    );
+  }, [uid]);
+  const createdMs = Date.parse(user?.metadata?.creationTime || "") || 0;
+  const brandNew = !!uid && Date.now() - createdMs < 5 * 60 * 1000; // its doc may still be on the way
+  const showFirstRun =
+    !!uid && grownUp !== null && (needsFirstRun(userDoc, { grownUp }) || (userDoc === null && brandNew));
+
   const styles = React.useMemo(
     () =>
       StyleSheet.create({
@@ -150,7 +175,9 @@ const AppContent = () => {
     <PaperProvider theme={currentPaperTheme}>
       <ThemedStatusBar />
       <View style={styles.container}>
-        {user || isGuest ? (
+        {showFirstRun ? (
+          <FirstRunScreen uid={uid} userDoc={userDoc} onDone={({ grownUp: g }) => g && setGrownUp(true)} />
+        ) : user || isGuest ? (
           // --- RESTORED: All props are now correctly passed ---
           <BottomTabNavigator
             isGuest={isGuest}
