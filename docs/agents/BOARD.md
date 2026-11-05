@@ -25,7 +25,9 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 - ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
 - **Build 20.0.29** (lock + play time): `build-1793820561489.aab`, check PASS, lock module inside. **Owner uploads to Play.**
-- ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
+- ~~DR-11 deploy~~ **deployed** by Gemini (G29) 2026-11-05 07:07: teacher invites work.
+- ~~IAM step~~ done by owner 2026-11-05 (Token Creator on the App Engine account): Play as / child codes work.
+- **DR-12 cost guard** (cap every function at 10 copies): owner OK to deploy? Plus the owner's **budget alert** (₹1,000/month, emails only), steps in DEPLOY_PENDING.md.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
 - ~~Mockups L + M~~ owner approved 2026-11-05 → built (`723fe34` leaderboard, Schools: this commit).
 - ~~Seema's review~~ done 2026-11-04: **go-ahead to seed English (Units 3–4) and Word Power** (owner, from the phone after 20.0.28: Me → Admin tools).
@@ -57,7 +59,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **in progress** (Antigravity started 2026-11-05) | from Claude's folder | |
+| G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
 | Treasure Words quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA (owner OK) |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |

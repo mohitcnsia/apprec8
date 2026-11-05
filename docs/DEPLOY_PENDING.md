@@ -12,6 +12,26 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **waiting for owner OK**
+
+Why: today nothing limits how many copies of a function can run, so a bug, a loop or someone spamming the app could
+grow the bill without limit. `functions/common/config.js` now sets `maxInstances` for every function (all use it).
+No app change, nothing for users to notice at today's size. Deploy (Gemini, once the owner says OK):
+
+```
+cd functions && node -e "require('./index.js')" && cd .. && firebase deploy --only functions --project apprec8-ca229
+```
+Then `firebase functions:list --project apprec8-ca229` and report.
+
+## Owner: budget alert, click by click (~3 min, on the laptop)
+A budget only **emails you**; it never stops the app. With DR-12 it is the safety net against surprise bills.
+1. Open **https://console.cloud.google.com/billing/budgets** (signed in as mohitchilkoti@gmail.com) → pick the billing
+   account that pays for apprec8-ca229.
+2. **+ Create budget** → Name `apprec8 monthly` → Projects: **apprec8-ca229** → Next.
+3. Budget type **Specified amount** → **₹1,000** (monthly) → Next.
+4. Alert thresholds: **50%, 90%, 100%** (actual) and add **100% forecasted** → tick "Email alerts to billing admins".
+5. **Finish.** If an alert email ever comes, forward it to Claude before doing anything else.
+
 ## DR-11 · Teacher invites without email (mockup L, owner-approved 2026-11-05) · **owner OK to deploy 2026-11-05 → Gemini G29**
 
 New callable functions in `functions/callable/schoolActions.js`: `createTeacherInvite`, `redeemTeacherInvite`, `classTeam`,
