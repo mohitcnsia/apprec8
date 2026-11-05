@@ -19,6 +19,7 @@ import SeedTileQuestButton from "../../components/quiz/SeedTileQuestButton";
 import { QUESTS } from "../../data/quests";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
 import FixIeoQuestionsButton from "../../components/quiz/FixIeoQuestionsButton";
+import DemoSchoolButton from "../../components/admin/DemoSchoolButton";
 
 export default function AdminToolsScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -62,6 +63,11 @@ export default function AdminToolsScreen({ navigation }) {
         <Ionicons name="refresh-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>Reset seen pop-up messages</Text>
       </Pressable>
+
+      <Text style={styles.section}>DEMO SCHOOL (made-up class)</Text>
+      <View style={styles.card}>
+        <DemoSchoolButton P={P} />
+      </View>
 
       <Text style={styles.section}>SEED CONTENT (writes to live Firestore)</Text>
       <View style={styles.card}>

@@ -292,3 +292,10 @@ Test in **light and dark** mode.
 - **You (owner):** Home and Fun look as before (More practice, My classrooms, Space, Featured / Book Summaries).
 - **Everyone else (check with the tester account or Pratha's):** old tiles are gone except titles with dogs / animals
   (e.g. the dog quiz, Animal Kingdom). Space is hidden. "Explore" only shows when a practice paper fits the child's class.
+
+## Demo School (after DR-16 is deployed)
+1. Admin tools → DEMO SCHOOL → type a password (8+ characters, keep it in your password manager) → RESET → about 1 min.
+2. Sign out, sign in with `demo.teacher@example.com` + that password → Progress tab: classes 10-B and 5-A with kids,
+   weak topics, an assignment (Passive voice, due Friday).
+3. `demo.parent@example.com` → Me: one child, Riya (Class 5). `demo.kid@example.com` → Riya's own app.
+4. Your own account: the main leaderboard and your Kids view show no demo kids.

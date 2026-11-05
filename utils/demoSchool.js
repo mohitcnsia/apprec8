@@ -248,7 +248,9 @@ export function buildDemoSchool({ quests, now = Date.now(), seed = 7 }) {
       put(`users/${uid}`, {
         firstName, lastName: "", grade: cls.grade, isChild: true, classIds: [cls.id], demoPersona: persona,
         parentUids: persona === "parentsChild" ? ["demo_parent"] : [],
-        stats: { totalStars: stars, currentStreak: persona === "away" ? 0 : 1 + Math.floor(r() * 6) },
+        // Global stars only for the login kid (Riya): the other demo kids never rank above real children.
+        stats: { totalStars: persona === "parentsChild" ? stars : 0, currentStreak: persona === "away" ? 0 : 1 + Math.floor(r() * 6) },
+        demoStars: stars,
       });
       put(`classes/${cls.id}/members/${uid}`, {
         firstName, grade: cls.grade, code: null, consentId: null, status: "approved",

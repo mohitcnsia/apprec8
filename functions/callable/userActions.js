@@ -45,16 +45,18 @@ exports.getLeaderboard = functions
     try {
       const leaderboard = await cachedResult(firestore.collection("leaderboardCache").doc(`top${topN}`), {}, async () => {
       const usersCollectionRef = firestore.collection("users");
+      // Demo School kids (isDemo) never show on the real board: read a few extra rows and drop them.
       const topNQuery = usersCollectionRef
         .orderBy("stats.totalStars", "desc")
-        .limit(topN);
+        .limit(topN + 5);
       const snapshot = await topNQuery.get();
 
       const leaders = [];
       let rankCounter = 0;
       snapshot.forEach((doc) => {
-        rankCounter++;
         const userData = doc.data();
+        if (userData.isDemo || leaders.length >= topN) return;
+        rankCounter++;
         leaders.push({
           id: doc.id,
           rank: rankCounter,

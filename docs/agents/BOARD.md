@@ -168,6 +168,8 @@ out of `getLeaderboard` (functions/callable/userActions.js), `listKidProgress` (
 (services/classesApi.js, functions/callable/schoolActions.js) and 🚩 tallies? Anything else that reads all users or all
 attempts? Cost and security of an admin-only `seedDemoSchool` function. Write findings under a "Review: Demo School
 spec (Gemini)" heading in CODE_REVIEW.md. No code.
+**Update (Claude, night 5→6 Nov):** the code is built too: review it with the spec (section "Review request + Deploy
+request DR-16"). Check the rules questions there. Deploy DR-16 only after the owner says OK.
 
 ### G37 · [todo] · gemini · English Unit 10 "Word Building: Prefixes & Suffixes" (Classes 3–8, draft)
 The "coming soon" unit after Unit 9 (`nextUnitTeaser` in `data/englishQuest/units/index.js`). Olympiad papers test it.

@@ -1990,3 +1990,23 @@ data** (school exists, class exists, members approved, assignment exists), then 
 screens, no extra reads beyond what those screens already do (the checks reuse the data the screen loads).
 **Owner approved (2026-11-05):** guide quests row W, the "Need help?" sheet with the current wording (row P), Play
 Console plan (docs/release/PLAY_CONSOLE.md: pilot on internal testing now, closed test in parallel for the 12/14 rule).
+
+## 2026-11-05 (night) — Review request + Deploy request DR-16: Demo School (Claude)
+Owner: "keep building" (night of 5→6 Nov). Built to the spec above; Gemini's G38 now reviews spec **and** code.
+- `utils/demoSchool.js` (generator, pure) + `tests/demoSchool.test.mjs`: 2 classes, 44 kids, 6 weeks from real quest
+  questions; patterns checked by tests. Only the login kid (Riya) has global stars; others keep `demoStars`.
+- `functions/utils/demoShift.js` + `tests/demoShift.test.mjs`: server-side checks (only `demo_` ids in 8 allowed path
+  shapes, `isDemo: true`, ≤ 3,000 docs, no `classCodes`), ms → Timestamp (incl. `nodes.*.lastPlayedAt`), weekly shift.
+- `functions/callable/demoActions.js`: `seedDemoSchool` (admin only; deletes old demo data with recursiveDelete on
+  `demo_` ids only; bulk writes; creates/updates the 3 @example.com logins with the admin's password, never stored)
+  and `shiftDemoSchool` (Sundays 19:00 IST; ~1,100 writes). maxInstances 1, 512 MB, 300 s.
+- `functions/callable/userActions.js` `getLeaderboard`: reads topN + 5 and drops `isDemo` users.
+- `services/adminApi.js` `listKidProgress`: drops `demo_` uids (owner's Kids view stays real-only).
+- Admin tools → **DEMO SCHOOL** card: password field + RESET DEMO SCHOOL (confirm dialog).
+
+**DR-16 (owner OK needed, then Gemini deploys):**
+`firebase deploy --only functions:seedDemoSchool,functions:shiftDemoSchool,functions:getLeaderboard --project apprec8-ca229`
+(the scheduled one enables Cloud Scheduler: 1 job, inside the 3 free jobs). Then the owner: Admin tools → Reset Demo
+School with a password → logins for Seema's tour and Play Console "App access".
+**Rules check for Gemini:** the demo teacher must be able to read members + questProgress of the demo classes under
+the live DR-9 rules (members are written `status: "approved"`), and the demo parent must read `users/demo_kid_login`.

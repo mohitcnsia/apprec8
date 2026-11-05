@@ -32,7 +32,7 @@ export async function listKidProgress(questId) {
   return docs
     .filter((d) => d.id === questId)
     .map((d) => ({ uid: d.ref.parent.parent?.id, ...d.data() }))
-    .filter((k) => k.uid);
+    .filter((k) => k.uid && !String(k.uid).startsWith("demo_")); // Demo School kids never mix with real ones
 }
 
 /** A kid's latest attempts (needs index questAttempts: userId ASC, createdAt DESC). */
