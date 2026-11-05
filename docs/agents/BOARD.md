@@ -18,6 +18,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 2. ~~Science Unit 5 Light, Sound & Magnets~~ done (`3c5f77e`, 105 Qs, draft/testers) → review page + G31.
 3. Gemini G30: second-reviewer accuracy pass on Units 8 + Science 5 (after G29).
 4. ~~Mockup P (child safety & privacy)~~ done → waiting for owner + Seema.
+10. ~~Accuracy pass Science Units 1–3~~ (300 Qs): 3 fixes (`273777e`); reach the app with the next publish + Science re-seed.
 9. Mockup Q practice paper + spec (waiting for owner); draft English Paper 1 + Science Paper 1 (`0f565fe`, 100 Qs) → review page + G31.
 7. ~~Science Unit 6 Patterns & Puzzles~~ done (`e1ec069`, 105 Qs; NSO opens with 10 reasoning questions and nothing covered them) → review page + G31.
 8. ~~Cost guard 4~~ (Vocab / Spelling Bee / Space map phone copy) done, docs/COSTS.md.

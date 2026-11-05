@@ -31,6 +31,9 @@ the owner; G14/G11 parked).
      DR-14 dashboard reads one quest (`questId` on progress, index + backfill script; waiting for OK).
   3. English Unit 8 Linking Words (120 Qs) + Science Unit 5 Light, Sound & Magnets (105 Qs): review page + G31 second review.
   4. Mockup P (child safety & privacy, draft for owner + Seema). Old unused screens deleted. Owner tests = 7 in-app reminders.
+  5. Later: English Unit 9 Punctuation (128 Qs), Science Unit 6 Patterns & Puzzles (105 Qs, answers recomputed by a test),
+     cost guard 4 (Vocab / Spelling Bee / Space map phone copy, docs/COSTS.md), mockup Q practice paper + draft Papers 1
+     (English + Science, 50 Qs each) + scoring logic, accuracy pass on Science Units 1–3 (3 fixes).
 - **How to test:** `npm test`; docs/qa/OWNER_TESTING.md (new sections at the top).
 
 ## 2026-11-05 (night): 20.0.28 → 20.0.29, Word Bank, schools, leaderboard, lock, English Units 5–6, branch `feat/quiz-redesign` (Claude)
