@@ -13,6 +13,14 @@ Accuracy pipeline: Gemini writes → Claude checks every question → Pratha's m
 folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + `docs/agents/reports/Gxx.md` on its branch.
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
+## Claude's plan, 2026-11-05 day (owner out ~8 h; feedback this evening)
+1. English Unit 8 Linking Words (and, but, because, so, although…; Class 3–5 focus) → review page.
+2. Science Unit 5 Light, Sound & Magnets (Class 3–5, from the owner's papers, original questions) → review page.
+3. Gemini G30: second-reviewer accuracy pass on Units 8 + Science 5 (after G29).
+4. Mockup for approval: parent consent + child safety screen (needed before launch).
+5. Clean-up: delete the unused old screens (Home.js, StudyScreen, ProfileScreen, StatsScreen), tests green.
+Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
+
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
 - ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
