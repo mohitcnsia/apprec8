@@ -1886,3 +1886,24 @@ Reported Speech, Passive, Editing.
   Added 4 optional practice leaves for Classes 5–8 (40 questions, Class-5 wording): Tense Detective (find the mistake),
   Was Doing & Will Be Doing, Had Done & Will Have Done, Champion 2: Have Been Doing. Practice leaves never lock anything.
   Grammar Pro stays Classes 9–10 (its frames are teen / board level).
+
+## 2026-11-05 — Product decisions from the owner discussion (no build yet; each needs spec + mockup) (Claude)
+1. **Free text:** children get tap-only choices + "ask a grown-up to tell us"; parents/teachers get free text.
+   Exception: Pratha (supervised by the owner, long-time tester) gets free text via a per-account flag (not tester mode).
+   Lock down the 4 child-reachable boxes first: 🚩 report, feedback button, contact form, reminders.
+2. **Hindi is key for parents.** Parent-facing layer bilingual first (weekly summary, parent guides, consent already EN/HI);
+   kids' learning content stays English. Translations reviewed by a person, never machine-only.
+3. **Parents are the lever** ("kids are great, crushed by parents' pressure"): a Parents' Corner (short Hindi/English
+   cards by Seema: exam pressure, comparison, praising effort, screen time, Family Link setup, reading the summary) and
+   one parenting tip inside each weekly summary.
+4. **Consent by parents, work by teachers:** parents consent (school form + in-app record), teachers do setup/onboarding.
+5. **Weekly summary that comes to people** (free app notifications): parents (Sunday) and teachers (Monday "3 things");
+   usable in quarterly PTMs as proof of what was taught and practised. Owner OK'd the weekly server summary (a week is the
+   minimum window for useful data).
+6. **Detailed explore dashboard = premium, ~6 months out**, once there is traffic. Now: details for Pratha (owner).
+7. **Value check before building dashboards:** Demo School with fake accounts + 2–3 sketches → Seema: "what would you do
+   on Monday because of this?"
+8. **Guide quests** (kids / parents / teachers, 4–6 cards each, "What's new" card per release) and **feedback polls**
+   (tap-only, results only as totals).
+9. **Link an existing child account to a parent** (Pratha has a year of progress on her own account; today the app can
+   only create new child profiles): needs a small server function with both sides confirming.
