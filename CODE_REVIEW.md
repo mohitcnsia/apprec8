@@ -2121,3 +2121,18 @@ for great images. **Idea: use her favourite topic to carry real learning**, not 
 (rule 1), never hot-linked. Copying images from books or random websites is not OK.
 **Owner to decide:** (a) Science unit + English set + pictures, or start with one? (b) Classes 3–6? (c) photos,
 illustrations, or both? Then a mockup, then building. The old dog quiz and Animal Kingdom stay visible meanwhile.
+
+## 2026-11-06 (night) — Review request + DR-18: build 20.0.30, weekly summary notifications (Claude)
+Branch **`feat/push-20.0.30`** (native: not on `feat/quiz-redesign`, so no OTA can reach 20.0.29 phones with it).
+- `@react-native-firebase/messaging` 22.2.1; `POST_NOTIFICATIONS`; storage + overlay permissions removed
+  (`tools:node="remove"`; nothing used them: the phone lock is screen pinning); white star notification icon.
+- `services/push.js`: guarded by `NativeModules.RNFBMessagingModule` (old builds: no-op). Android 13+ permission is
+  asked only when an adult taps **Turn on** (`components/push/WeeklyPushCard.js`, on Progress → My children / My classes).
+  A tap on a summary opens that Progress view.
+- `functions/callable/pushActions.js`: `savePushSettings` (adults only; children never get notifications; ≤ 5 tokens),
+  `weeklyParentPush` (Sun 18:30 IST, one per linked child, EN/HI) and `weeklyTeacherPush` (Mon 07:30 IST, one per class);
+  dead tokens are dropped. Text = mockup V1 (`functions/utils/weeklyPush.js`, tests/weeklyPush.test.mjs).
+- Version 20.0.30 (app.config.js, build.gradle 20003000, strings.xml runtime version).
+**DR-18 (owner OK, then Gemini):** `firebase deploy --only functions:savePushSettings,functions:weeklyParentPush,functions:weeklyTeacherPush --project apprec8-ca229` (2 more Cloud Scheduler jobs: with shiftDemoSchool that is 3 = the free limit).
+**Release:** Claude builds the `.aab` locally tonight; owner runs `scripts/release/check-aab.sh <aab> 20.0.30`, uploads to
+internal testing, tests; then `feat/push-20.0.30` merges into `feat/quiz-redesign` and OTAs go to runtime 20.0.30.

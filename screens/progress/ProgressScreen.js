@@ -25,6 +25,7 @@ import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
 import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/parent/ParentWeekCard";
 import { myChildren } from "../../services/familyApi";
+import WeeklyPushCard from "../../components/push/WeeklyPushCard";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -170,6 +171,7 @@ export default function ProgressScreen({ navigation, route }) {
         {children.map((c) => (
           <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} />
         ))}
+        <WeeklyPushCard role="parent" on={!!userData?.pushOptIn?.parent} lang={lang} P={P} />
       </ScrollView>
     );
   }
@@ -179,6 +181,7 @@ export default function ProgressScreen({ navigation, route }) {
       <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
         {segment}
         <TeacherClasses />
+        <WeeklyPushCard role="teacher" on={!!userData?.pushOptIn?.teacher} P={P} />
       </ScrollView>
     );
   }

@@ -61,7 +61,7 @@ precise location, no device IDs for ads, child-friendly content, a privacy polic
 | Photos | Google profile photo URL (adults); children see only preset avatars | account | — |
 | App activity: in-app actions (quiz answers, scores, time spent) | yes | app functionality, progress reports for the child, parent and teacher | required |
 | App info and performance: crash logs | **no** (no crash reporting yet; change this when B7 adds it) | | |
-| Device or other IDs | yes (Firebase installation ID used by Remote Config) | app functionality | required |
+| Device or other IDs | yes (Firebase installation ID used by Remote Config; from 20.0.30 a notification token for parents/teachers who turn on the weekly summary) | app functionality | required (token: optional) |
 | Other: parent's name + relation in the consent record | yes | consent (DPDP) | required to join a class |
 - Shared with third parties: **No** (Google Firebase is our processor, which counts as a service provider, not sharing).
 - Encrypted in transit: **Yes** (HTTPS).
@@ -71,7 +71,7 @@ precise location, no device IDs for ads, child-friendly content, a privacy polic
 **Government app / Financial features / Health / News / COVID:** No / No / No / No / No.
 
 ## 5. Before the full Families review (production), not needed for closed testing
-- The release manifest asks for `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE` and `SYSTEM_ALERT_WINDOW`
+- **Done in 20.0.30:** the release manifest asked for `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE` and `SYSTEM_ALERT_WINDOW`
   (`android/app/src/main/AndroidManifest.xml`). A children's app should not ask for permissions it doesn't use:
   remove them in the next native build (Claude checks nothing uses them first).
 - Store listing: short and full description, 2+ phone screenshots, feature graphic, app icon (Claude drafts the text).
