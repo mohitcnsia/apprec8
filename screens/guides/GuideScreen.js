@@ -50,7 +50,7 @@ export default function GuideScreen({ route, navigation }) {
 
   const doStep = (s) => {
     setActiveGuide({ guideId: guide.id, stepId: s.id, n: s.n, total: guide.steps.length, hint: s.hint });
-    if (s.go.tab) navigation.navigate(s.go.tab, { screen: "ProgressScreen" });
+    if (s.go.tab) navigation.navigate(s.go.tab, { screen: "ProgressScreen", params: { view: s.go.view || "classes" } });
     else navigation.navigate(s.go.screen);
   };
 

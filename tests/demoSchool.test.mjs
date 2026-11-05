@@ -4,7 +4,7 @@ import { QUESTS } from "../data/quests/index.js";
 import { buildDemoSchool, shiftDayKey, shiftDays, DEMO_LOGINS } from "../utils/demoSchool.js";
 import { summarize, accuracy, weakTopics } from "../utils/kidStats.js";
 
-const now = new Date(2026, 10, 9, 19, 0).getTime(); // Sunday 9 Nov 2026, 7 pm
+const now = new Date(2026, 10, 9, 19, 0).getTime(); // Monday 9 Nov 2026, 7 pm
 const { ops, summary } = buildDemoSchool({ quests: QUESTS, now });
 const DAY = 86400000;
 

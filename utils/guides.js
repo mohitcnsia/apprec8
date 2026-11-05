@@ -74,7 +74,7 @@ export const GUIDES = [
         id: "share",
         title: "Share the class code",
         why: "Send it to 2 students' parents first. They type it in the app with their child.",
-        hint: "Tap your class below, then Share code. Pick WhatsApp or SMS.",
+        hint: "Under My classes, tap your class, then SHARE CODE. Pick WhatsApp or SMS.",
         go: { tab: "Stats" },
         done: (f) => !!f.marks["teacher.share"] || f.kids > 0,
       },

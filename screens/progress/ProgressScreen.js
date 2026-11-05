@@ -23,6 +23,8 @@ import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
+import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/parent/ParentWeekCard";
+import { myChildren } from "../../services/familyApi";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -43,7 +45,7 @@ function Bar({ percent, P, color }) {
   );
 }
 
-export default function ProgressScreen({ navigation }) {
+export default function ProgressScreen({ navigation, route }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -118,7 +120,18 @@ export default function ProgressScreen({ navigation }) {
 
   // Teachers (RB-2) get "My classes"; the admin also gets "Kids · Reported" (the Dashboard).
   const isTeacher = (userData?.teachesClassIds || []).length > 0;
-  const tabs = [["me", "Me"], ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
+  const childKey = (userData?.childUids || []).join(",");
+  const [children, setChildren] = useState([]);
+  const [lang, setLang] = useParentLang();
+  useEffect(() => {
+    if (!childKey) return setChildren([]);
+    myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
+  }, [childKey]);
+  // The guide (and later the weekly notification) can open a view directly.
+  useEffect(() => {
+    if (route?.params?.view) setView(route.params.view);
+  }, [route?.params?.view]);
+  const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
   const segment = tabs.length > 1 ? (
     <View style={styles.segment} accessibilityRole="tablist">
       {tabs.map(([id, label]) => (
@@ -146,6 +159,18 @@ export default function ProgressScreen({ navigation }) {
           }
         />
       </View>
+    );
+  }
+
+  if (view === "family" && children.length) {
+    return (
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+        {segment}
+        <LangSwitch lang={lang} onChange={setLang} P={P} />
+        {children.map((c) => (
+          <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} />
+        ))}
+      </ScrollView>
     );
   }
 

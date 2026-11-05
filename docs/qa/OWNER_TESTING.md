@@ -305,3 +305,10 @@ Progress tab → tap a class you teach (best with the demo teacher login after D
 **This week**: how many practised; **1 · Reteach one thing** (the topic most students are below 60% in);
 **2 · Who needs you** (up to 3: away 7+ days, failed a challenge twice, accuracy falling); **3 · Assignment** with a
 done / started / not started bar; 🚀 who is ready for harder work. No extra reads: it uses what the screen loads.
+
+## Parent "week at a glance" (mockups V2/V3, 2026-11-06)
+A parent account with children (yours after you add / link a child, or demo.parent after DR-16): Progress tab →
+**My children**: practised days (7 boxes, Monday first) and time, ↑/↓ vs last week; per subject Strong / Practise /
+done count / next topic; **One thing to do at home**; Seema's suggestion (changes each week). English / हिंदी switch at
+the top (remembered on the phone). **Owner: please read the Hindi** (utils/parentWeek.js, WORDS.hi and TIPS.hi) and
+tell Claude what to change. Seema: please check the 4 tips (TIPS.en).
