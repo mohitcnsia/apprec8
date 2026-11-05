@@ -1912,3 +1912,6 @@ Reported Speech, Passive, Editing.
     teacher present. Rewards: certificates, medals and free premium access; scholarships only after one season, with
     written rules. Needs new server work for the final: questions sent only at the start time (not bundled in the app),
     server-side marking, one attempt per child, fixed time window, results per school. First run inside Seema's school.
+    **Winners' privacy (owner agreed):** by default show only first name + initial, school and class (no photo). Full
+    name / photo only if the parent ticked "Show my child's name and photo if they win" in the parent consent. Schools
+    announce winners on their own pages under their own consent. Rules page published before the qualifier starts.
