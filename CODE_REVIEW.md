@@ -1972,3 +1972,58 @@ normal class. No running cost.
 **Questions for the owner:**
 1. Classes OK: 10-B English (32) + 5-A (12)? 2. Names: made-up Indian first names + initial (e.g. "Aarav S.")?
 3. The demo parent sees one Class 5 child, so the parent screens look like Pratha's? 4. Weekly reset, or only when we press it?
+
+## 2026-11-05 — Review: Demo School spec (Gemini)
+**Scope:** Architecture, security, and isolation review of the Demo School spec against current production code in `functions/`, `services/`, and `firestore.rules`. No code changes in this task.
+
+### 1. Global Leaderboard (`getLeaderboard` & `getCurrentUserRank` in `functions/callable/userActions.js`)
+- **`getLeaderboard` Leak:** The current query is `usersCollectionRef.orderBy("stats.totalStars", "desc").limit(topN)`. There is currently no `isDemo` filter.
+  - *Buffer & Filter limitation:* The spec suggests reading extra rows and filtering in memory. With 44 demo kids, if demo kids are seeded with high stars (simulating 6 weeks of active play), a small buffer (e.g. `topN + 10`) is completely insufficient: demo kids could occupy 44 of the top 60 slots, resulting in a leaderboard of only 16 real kids. To guarantee a full 50-kid board, the fetch would need `limit(topN + 45)`.
+- **CRITICAL OMISSION in Spec: `getCurrentUserRank`:** Lines 121–128 execute:
+  ```javascript
+  const rankCountQuery = usersCollectionRef.where("stats.totalStars", ">", currentUserScore);
+  const countSnapshot = await rankCountQuery.count().get();
+  ```
+  Firestore `.count()` aggregates server-side across all matching documents. It cannot be filtered in memory. If 30 demo kids have more stars than a real child, that child's global rank will be artificially degraded by 30 positions.
+- **Architectural Recommendation:** In Firestore, documents lacking an indexed query field are automatically excluded from queries targeting that field. If demo user documents **completely omit `stats.totalStars`** (or store demo points in `demoStats.totalStars`), demo kids are automatically excluded from both `getLeaderboard` and `getCurrentUserRank` at the storage layer with **zero code changes to rank counting and zero extra read costs**.
+
+### 2. Admin Dashboard & Progress (`listKidProgress` in `services/adminApi.js`)
+- **Collection-Group Read Leak:** `listKidProgress(questId)` queries `collectionGroup(db, "questProgress")` and maps documents directly from `d.data()` without fetching the parent `users/{uid}` doc.
+  - If `isDemo: true` is only stored on the `users/{uid}` document, `listKidProgress` has **no visibility** into whether a kid is demo or real.
+  - **Requirement:** `isDemo: true` MUST be explicitly written to every `users/{uid}/questProgress/{questId}` document at seed time.
+- **Dashboard UI:** `AdminDashboardScreen.js` maps `listKidProgress` directly to the Kids list with no filter. It must filter `!k.isDemo` by default, with a "Show demo" switch for testing.
+- **Read Cost:** Collection-group queries read every matching document. Seeding 44 demo kids with 2 active quest progress docs will add 44 reads to every admin quest dashboard load (~88 reads across English and Science). This is acceptable for admin tools, but it is a permanent read overhead while demo data exists.
+
+### 3. Class Joins & Visibility (`services/classesApi.js`, `functions/callable/schoolActions.js`, `firestore.rules`)
+- **Real kids joining Demo Classes:** `classesApi.js:findClassByCode` and `joinClass` have no checks for `isDemo`. If the demo classes create codes in `classCodes/{code}`, any real kid who enters the code can submit a join request.
+- **Demo kids joining Real Classes:** `demo.kid@example.com` has a live Firebase Auth credential. If someone using that account enters a real class code, `joinClass` will create a join request.
+- **`approveMember` Vulnerability:** `functions/callable/schoolActions.js:approveMember` only checks that the caller is a teacher of the class or an admin. It does NOT check whether a real child is joining a demo class, or a demo child is joining a real class.
+- **`listSchools()` Leak:** `classesApi.js:listSchools()` reads all `schools` collection documents. "Demo School (not real)" will be returned and displayed in school selection dropdowns for all real users unless filtered out.
+- **Recommendations:**
+  1. Do not register demo class codes in the public `classCodes` collection, OR add an `isDemo: true` check in `joinClass` and `approveMember` that requires `caller.isDemo === class.isDemo`.
+  2. In `firestore.rules`, update `classes/{classId}/members/{kidUid}` create rule to verify caller and target class demo statuses match.
+  3. Filter `listSchools()` to hide `isDemo === true` from non-admin users.
+
+### 4. 🚩 Tallies & Safety (`functions/triggers/reports.js`)
+- **Auto-Hide Hazard:** `onQuestionReported` triggers on `onCreate` of `userFeedback/{feedbackId}` with `entryPoint: "report_flag"`. If a question receives `hideAt` (3) reports from distinct kids with wrong-answer reports, the function **automatically modifies `quests/{questId}.knownIssues` and hides the question from all real kids across the app**.
+- If a tester using `demo.kid@example.com` taps 🚩 during exploratory testing, or if mock reports are seeded into `userFeedback`, it will trigger real question hiding and pollute production `questionIssues`.
+- **Requirement:** `onQuestionReported` MUST include an early exit:
+  ```javascript
+  if (data.isDemo === true || data.userId?.startsWith("demo_")) return null;
+  ```
+  `seedDemoSchool` must never write documents into `userFeedback`.
+
+### 5. Other Places Reading Users / Attempts
+- **`functions/triggers/auth.js:initializeNewUser`:** Fires whenever `admin.auth().createUser()` is called (for `demo.teacher`, `demo.parent`, `demo.kid`). It writes a standard user doc with `stats: { totalStars: 0 }`. The seeder must explicitly set/merge `isDemo: true` and omit `stats.totalStars`.
+- **Family Linking:** In `functions/callable/familyActions.js`, parent access to child progress relies on `users/{parentUid}.childUids` containing the child UID and `users/{kidUid}.parentUids` containing the parent UID. For `demo.parent` to view `demo.kid`, the seeder must establish these bidirectional arrays and set `isChild: true` on `demo.kid`.
+- **`scripts/admin/backfillQuestId.cjs`:** Uses `collectionGroup("questProgress")`. Safe, but will process demo progress documents.
+
+### 6. Cost, Security & Implementation of `seedDemoSchool`
+- **Authorization:** Must enforce `isAppAdmin(context.auth.uid)`. Callable must reject non-admins with `permission-denied`.
+- **Concurrency & MaxInstances:** Must specify `maxInstances: 1` to prevent race conditions during resets.
+- **Cascade Deletion (Critical):** Firestore document deletion does **not** delete subcollections. Simply deleting `users/{demo_uid}` will leave `users/{demo_uid}/questProgress/*` orphaned in the database, where they will permanently pollute `collectionGroup("questProgress")` queries. The reset routine MUST use `admin.firestore().recursiveDelete()` on all demo user and class document references.
+- **Auth User Idempotency:** The reset routine must handle existing Auth users gracefully (e.g. check `admin.auth().getUserByEmail()`, then delete or update password) to avoid `auth/email-already-exists` crashes on subsequent resets.
+- **Write/Read Budget:**
+  - Seed: 1 School + 2 Classes + 46 Users + 92 QuestProgress + ~400 Attempts + 44 Members = ~600 writes.
+  - Reset: ~600 reads + ~600 deletes.
+  - Total: ~1,200 operations per reset, well within the Firebase free tier of 20,000 writes/deletes per day.
