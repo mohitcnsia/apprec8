@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-15 · Stars for practice papers · **waiting for owner OK**
+## DR-15 · Stars for practice papers · **owner OK 2026-11-05 → Gemini G34**
 
 Why (owner 2026-11-05): "there must be some good rewards for completing such a large paper." Today `recordQuizResult` gives
 stars only for 100%, so a 47 / 60 paper earns nothing. Change: when the app sends `kind: "paper"`, stars =
