@@ -1930,3 +1930,7 @@ Reported Speech, Passive, Editing.
     no countdown timers. Supporter tiers, same features: Family ₹99 (sponsors 1 child) · Supporter ₹299 (3) · Champion
     ₹499 (5). Price check with Seema's pilot parents: 4 questions (too cheap to trust / bargain / getting expensive /
     too expensive) + count real payments. Payment screen needs a mockup first.
+    **Parked until after the pilot (owner, 2026-11-05).** Sponsorship must give real value: since learning is already
+    free, a sponsored seat = a government-school class getting the teacher tools + reports free, and later free entry to
+    the Apprec8 Challenge, given through a teacher/headmaster or an NGO with a school code (start with one school near us).
+    At the end of the pilot ask parents one question: "Would you pay for this, and how much?"
