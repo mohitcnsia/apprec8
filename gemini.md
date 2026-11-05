@@ -66,6 +66,9 @@ the owner; G14/G11 parked).
 (Older session: 2026-10-31 → 2026-11-04 release work, moved to `docs/history/gemini-log-2026-11.md`.)
 
 ## Future TODOs
+- **Level 2 practice (owner 2026-11-05):** the owner will share Class 6 sample papers; Level 2 for Class 5 asks Class 6
+  questions. Then: pattern notes (pattern only, nothing copied), Level 2 papers / Champion sets for Class 5 from the
+  Class 6 syllabus, harder Mix option.
 - **Nov 10 release (open):**
   1. Gemini: deploy DR-6 (`firebase deploy --only functions --project apprec8-ca229`) + check no function grants Invoker to `allUsers`.
   2. Owner: upload the 20.0.24 `.aab` (after `scripts/release/check-aab.sh` PASS) to internal testing; check Profile → 📊 Dashboard on the phone and that ♾️ practice shows on the Dashboard.

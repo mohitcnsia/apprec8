@@ -27,6 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Class 6 sample papers** (owner will share): Level 2 for Class 5 uses Class 6 questions → Level 2 papers + Champion sets (TODO in gemini.md).
 - ~~Review page (550 Qs + Paper 2 + Same & Opposite)~~ owner 2026-11-05: **"Content approved"**; misses get reported in play (🚩 flag). English Paper 2 live for Class 5.
 - **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
 - ~~Mockups T1–T4~~ owner OK 2026-11-05 → **built** (login, email, create account, forgot sheet, first run, animations); ships with the next "publish".
