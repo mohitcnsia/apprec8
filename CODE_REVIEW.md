@@ -1933,4 +1933,5 @@ Reported Speech, Passive, Editing.
     **Parked until after the pilot (owner, 2026-11-05).** Sponsorship must give real value: since learning is already
     free, a sponsored seat = a government-school class getting the teacher tools + reports free, and later free entry to
     the Apprec8 Challenge, given through a teacher/headmaster or an NGO with a school code (start with one school near us).
-    At the end of the pilot ask parents one question: "Would you pay for this, and how much?"
+    At the end of the pilot ask parents (owner): "Would you like to sponsor a child's learning?" and explain how it
+    works; share more only with those who say yes. No price survey.
