@@ -10,6 +10,7 @@ import u6 from "./u6.js";
 import u7 from "./u7.js";
 import u8 from "./u8.js";
 import u9 from "./u9.js";
+import u10 from "./u10.js";
 import b1 from "./b1.js"; // Grammar Pro (Classes 9–10)
 import b2 from "./b2.js";
 import b3 from "./b3.js";
@@ -25,6 +26,7 @@ export const extraUnits = [
   u7,
   u8,
   u9,
+  u10,
   b1,
   b2,
   b3,
@@ -36,4 +38,4 @@ export const extraUnits = [
 /** Shown as "Coming soon" after the last unit (null = nothing). */
 // Classes 1–8 only: a "Coming soon" unit locks every unit after it, and Classes 9–10 go on to Grammar Pro (b1, also
 // unitOrder 10, Classes 9–10 only, so the two never show together).
-export const nextUnitTeaser = { id: "eq-u10", unitOrder: 10, title: "Word Building: Prefixes & Suffixes", grades: [1, 2, 3, 4, 5, 6, 7, 8] };
+export const nextUnitTeaser = null;
