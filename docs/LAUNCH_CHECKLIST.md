@@ -20,7 +20,7 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 | A2 | ~~Class 10 practice papers~~ dropped (owner: grammar only for the pilot) | — | dropped |
 | A3 | **Teacher dry run**: Seema creates the school + class (Admin tools → Schools & classes), 2 test students join with the code, she approves, assigns a topic, sees progress + class leaderboard | Seema + owner | **through guide quests** (mockup row W): owner and Seema learn by doing |
 | A4 | **Parent consent**: students are under 18. In-app consent at "Join a class" exists (EN/HI); for the pilot also the school's usual signed consent form | Seema / school | in-app ready |
-| A5 | **"Need help?" sheet** (mockup P1–P2: 1098, Tele-MANAS 14416) before teens use it; Seema finalises the wording | Seema → Claude | **wording OK for now (owner 2026-11-05)**: build it; more feedback later |
+| A5 | **"Need help?" sheet** (mockup P1–P2: 1098, Tele-MANAS 14416) before teens use it; Seema finalises the wording | Seema → Claude | **built 2026-11-05** (Me tab, everyone); Seema refines words later |
 | A6 | **Distribution** (steps + form answers: [release/PLAY_CONSOLE.md](release/PLAY_CONSOLE.md)): start on internal testing (≤100, works today); in parallel Play Console → Closed testing → testers = the 50 students' Google accounts (or a Google Group) → opt-in link. Upload the latest build there | Owner | not done |
 | A7 | **Privacy policy page + "delete my account" web page** (public URLs; Play asks for both) | owner | **exists** (owner 2026-11-05); Claude to check it mentions classes, teachers, parent consent, attempts |
 | A8 | Remote Config `update_url_android` → the Play link the students use (today: internal-testing link) | Owner | pending |

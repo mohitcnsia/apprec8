@@ -21,6 +21,7 @@ import { TasksContext } from "../../store/tasks-context";
 import { getClasses } from "../../services/classesApi";
 import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
+import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 
 const THEMES = [
@@ -68,6 +69,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [myClasses, setMyClasses] = useState([]);
   const [children, setChildren] = useState([]);
   const [playKid, setPlayKid] = useState(null); // "Play as" sheet (mockup N1)
+  const [helpOpen, setHelpOpen] = useState(false); // "Need help?" (mockup P1–P2)
   const childKey = (userData?.childUids || []).join(",");
   useEffect(() => {
     if (!childKey) return setChildren([]);
@@ -141,6 +143,9 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <Text style={styles.outlineButtonText}>Edit profile</Text>
         </Pressable>
       </View>
+
+      {/* Always here, for every child (mockup P1): calm green, safe to tap. */}
+      <NeedHelpRow onPress={() => setHelpOpen(true)} P={P} />
 
       <Text style={styles.section}>MY STUFF</Text>
       <View style={styles.group}>
@@ -278,6 +283,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
           navigation.navigate("AddChild", { kid: k });
         }}
       />
+      <HelpSheet visible={helpOpen} onClose={() => setHelpOpen(false)} P={P} />
     </ScrollView>
   );
 }

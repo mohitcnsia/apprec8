@@ -281,3 +281,9 @@ Test in **light and dark** mode.
 4. Steps tick themselves: class created; invite code made (or a teacher added); teacher approved; a test student approved.
 5. Seema: Me → Guides → Start your class → join with your invite code ("waiting for the admin" until you approve her)
    → Progress tab: tap the class → **SHARE CODE** → approve students → assign a topic → see progress.
+
+## "Need help?" sheet (row P1–P2, 2026-11-05)
+1. Me tab: a calm green **Need help? Talk to someone** row under your profile card (everyone sees it).
+2. Tap it: CHILDLINE 1098 and Tele MANAS 14416 have **Call** buttons. Call opens the dialer with the number typed;
+   **don't press the green button** while testing. 112 has no call button (by design).
+3. Close, Android back and tapping outside all close it. Nothing is saved.
