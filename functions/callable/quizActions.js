@@ -1,6 +1,7 @@
 // functions/callable/quizActions.js
 
 const functions = require("firebase-functions");
+const { paperStars } = require("../utils/paperStars");
 const { admin, db, FieldValue } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
 const { isSameUTCDate, isYesterdayUTC } = require("../utils/helpers");
@@ -18,6 +19,8 @@ exports.recordQuizResult = functions
     }
     const userId = context.auth.uid;
     const { quizId, scoreAchieved, passingScore, maxScore, mode } = data;
+    // DR-15: practice papers (kind "paper") earn stars by marks, not only at 100% (functions/utils/paperStars.js).
+    const isPaper = data.kind === "paper";
     const now = admin.firestore.Timestamp.now(); // Firestore Timestamp for 'now'
     const serverTimestamp = FieldValue.serverTimestamp(); // For fields like lastUpdatedAt
 
@@ -110,7 +113,17 @@ exports.recordQuizResult = functions
         }
 
         // Strict Anti-Farming Star Calculation
-        if (percentage === 100) {
+        if (isPaper) {
+          const lastRewardMs = existingAttemptData.lastPaperRewardAt?.toMillis?.() ?? null;
+          quizPerfStars = paperStars({
+            score: scoreAchieved,
+            max: maxScore,
+            answered: Number(data.answeredCount) || 0,
+            total: Number(data.totalQuestions) || 0,
+            lastRewardMs,
+            nowMs: now.toMillis(),
+          });
+        } else if (percentage === 100) {
           if (isFirstTimePassingThisQuiz) {
             if (attemptCount === 1) {
               quizPerfStars = 15; // Flawless first try!
@@ -172,6 +185,7 @@ exports.recordQuizResult = functions
         if (!attemptSnap.exists) {
           attemptDataUpdates.firstAttemptDate = now;
         }
+        if (isPaper && quizPerfStars > 0) attemptDataUpdates.lastPaperRewardAt = now;
 
         // --- MODIFIED SECTION for perfect scores ---
         if (scoreAchieved === maxScore && maxScore > 0) {

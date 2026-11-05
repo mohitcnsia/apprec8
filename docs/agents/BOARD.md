@@ -27,6 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **DR-15 stars for practice papers** (10 for finishing + up to 20 for marks, once a week per paper): owner OK to deploy?
 - **Owner 2026-11-05 evening: "everything approved"** (review page 550 Qs, both practice papers, spec S, mockup P screens).
   Seema reviews on her phone afterwards. Published `cb0fc89e` (paper testers-only, Learn cards, cost guard 4).
   **Owner seeds** (Me → Admin tools): English (Units 8–9), Word Power (cards), Treasure Words (cards), Science (Units 5–6 + 1–3 fixes).

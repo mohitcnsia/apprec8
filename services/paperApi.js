@@ -7,7 +7,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore, collection, addDoc, serverTimestamp } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import Constants from "expo-constants";
+import functions from "@react-native-firebase/functions";
 import { authInstance } from "../config/firebaseConfig";
+import { addPaperMistakes } from "./englishQuestApi";
 
 const db = getFirestore(getApp());
 const who = () => authInstance.currentUser?.uid || "guest";
@@ -49,11 +51,32 @@ async function addHistory(entry) {
   }
 }
 
-/** Saves a finished paper: phone history + one questAttempts doc. Never throws. */
-export async function savePaperResult(paper, outcome, { startedAt, submittedAt } = {}) {
+/**
+ * Saves a finished paper: phone history, one questAttempts doc, wrong answers into "My mistakes" (one write per quest),
+ * and asks the server for stars (recordQuizResult, kind "paper"; DR-15). Never throws.
+ * @returns {Promise<{ stars: number }>} stars awarded (0 until DR-15 is deployed, or within 7 days of the last reward)
+ */
+export async function savePaperResult(paper, outcome, { startedAt, submittedAt, wrongsByQuest = {} } = {}) {
   await addHistory({ paperId: paper.id, score: outcome.score, max: outcome.max, usedMs: outcome.usedMs, at: submittedAt || Date.now() });
   const user = authInstance.currentUser;
-  if (!user) return;
+  if (!user) return { stars: 0 };
+  await Promise.all(Object.entries(wrongsByQuest).map(([questId, wrongs]) => addPaperMistakes(questId, wrongs, paper.id)));
+  let stars = 0;
+  try {
+    const res = await functions().httpsCallable("recordQuizResult")({
+      quizId: paper.id,
+      kind: "paper",
+      mode: "exam",
+      scoreAchieved: outcome.score,
+      maxScore: outcome.max,
+      passingScore: 0,
+      answeredCount: outcome.rows.filter((r) => r.chosen != null).length,
+      totalQuestions: outcome.rows.length,
+    });
+    stars = res?.data?.starsAwarded || 0;
+  } catch (e) {
+    console.warn("paper stars failed:", e?.message || e);
+  }
   try {
     const answered = outcome.rows.filter((r) => r.chosen != null).length;
     const correctCount = outcome.rows.filter((r) => r.correct).length;
@@ -86,4 +109,5 @@ export async function savePaperResult(paper, outcome, { startedAt, submittedAt }
   } catch (error) {
     console.error("savePaperResult failed:", error);
   }
+  return { stars };
 }

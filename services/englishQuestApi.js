@@ -26,7 +26,7 @@ import { getApp } from "@react-native-firebase/app";
 import Constants from "expo-constants";
 import { authInstance } from "../config/firebaseConfig";
 import { scoreAnswers } from "../utils/questTree";
-import { mistakeUpdates } from "../utils/mistakes";
+import { mistakeUpdates, paperMistakeUpdates } from "../utils/mistakes";
 import { updateStats } from "../utils/kidStats";
 
 const db = getFirestore(getApp());
@@ -261,22 +261,41 @@ async function saveMistakes(p) {
       branchId: p.branchId || null,
       unitId: p.unitId || null,
     });
-    const keys = Object.keys(updates);
-    if (!keys.length) return;
-    const payload = {};
-    keys.forEach((k) => (payload[k] = updates[k] === null ? deleteField() : updates[k]));
-    // Keep the local copy in step so several saves in a row don't lose each other's changes.
-    const next = { ...current };
-    keys.forEach((k) => (updates[k] === null ? delete next[k] : (next[k] = updates[k])));
-    latestMistakes.set(key, next);
-    await setDoc(
-      doc(db, "users", user.uid, "questProgress", p.questId),
-      { questId: p.questId, mistakes: payload, updatedAt: serverTimestamp() },
-      { merge: true }
-    );
+    await writeMistakes(p.questId, current, updates);
   } catch (e) {
     console.warn("saveMistakes failed:", e);
   }
+}
+
+/** Practice paper: adds wrong / blank paper questions to this quest's "My mistakes" (one write). Never throws. */
+export async function addPaperMistakes(questId, wrongs, paperId) {
+  const user = currentUser();
+  if (!user || !questId || !wrongs?.length) return;
+  try {
+    const current = latestMistakes.get(`${user.uid}/${questId}`) || {};
+    await writeMistakes(questId, current, paperMistakeUpdates(current, wrongs, { paperId }));
+  } catch (e) {
+    console.warn("addPaperMistakes failed:", e);
+  }
+}
+
+async function writeMistakes(questId, current, updates) {
+  const user = currentUser();
+  if (!user) return;
+  const key = `${user.uid}/${questId}`;
+  const keys = Object.keys(updates);
+  if (!keys.length) return;
+  const payload = {};
+  keys.forEach((k) => (payload[k] = updates[k] === null ? deleteField() : updates[k]));
+  // Keep the local copy in step so several saves in a row don't lose each other's changes.
+  const next = { ...current };
+  keys.forEach((k) => (updates[k] === null ? delete next[k] : (next[k] = updates[k])));
+  latestMistakes.set(key, next);
+  await setDoc(
+    doc(db, "users", user.uid, "questProgress", questId),
+    { questId, mistakes: payload, updatedAt: serverTimestamp() },
+    { merge: true }
+  );
 }
 
 /**

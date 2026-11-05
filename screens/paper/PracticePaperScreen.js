@@ -5,7 +5,7 @@
 // Opened from Home's "Practice paper" tile. Route params: { grade } (the child's class).
 
 import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
@@ -13,7 +13,8 @@ import { authInstance } from "../../config/firebaseConfig";
 import { isTesterUser } from "../../config/appConfig";
 import { SUBJECTS, papersFor, paperById, topicTitle } from "../../data/papers";
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
-import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome } from "../../utils/paperSession";
+import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
+import { splitInstruction } from "../../utils/quizText";
 import { loadPaperSession, savePaperSession, loadPaperHistory, savePaperResult } from "../../services/paperApi";
 
 const reducer = (state, action) => {
@@ -45,6 +46,7 @@ export default function PracticePaperScreen({ navigation, route }) {
   const [now, setNow] = useState(Date.now());
   const [showClockChoice, setShowClockChoice] = useState(true);
   const [onlyMistakes, setOnlyMistakes] = useState(true);
+  const [stars, setStars] = useState(null); // stars from the server (null = still asking)
   const resultSaved = useRef(false);
   const previous = useRef(null); // last result of this paper before today's
 
@@ -91,7 +93,11 @@ export default function PracticePaperScreen({ navigation, route }) {
     if (!outcome || resultSaved.current) return;
     resultSaved.current = true;
     previous.current = history.find((h) => h.paperId === paper.id) || null;
-    savePaperResult(paper, outcome, { startedAt: state.startedAt, submittedAt: state.submittedAt }).then(() => loadPaperHistory().then(setHistory));
+    setStars(null);
+    savePaperResult(paper, outcome, { startedAt: state.startedAt, submittedAt: state.submittedAt, wrongsByQuest: paperWrongsByQuest(paper, state) }).then((r) => {
+      setStars(r?.stars || 0);
+      loadPaperHistory().then(setHistory);
+    });
   }, [outcome]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!paper) {
@@ -203,6 +209,7 @@ export default function PracticePaperScreen({ navigation, route }) {
     const chosen = state.answers[item.id];
     const marked = !!state.marked[item.id];
     const isLast = state.index === questions.length - 1;
+    const instruction = splitInstruction(question.question?.content || "");
     return (
       <View style={s.screen}>
         <View style={s.topRow}>
@@ -216,9 +223,13 @@ export default function PracticePaperScreen({ navigation, route }) {
         <View style={s.track}>
           <View style={[s.fill, { width: `${Math.round(((state.index + 1) / questions.length) * 100)}%` }]} />
         </View>
-        <ScrollView contentContainerStyle={s.body}>
+        <ScrollView contentContainerStyle={[s.body, { flexGrow: 1 }]}>
           {passage ? <Passage passage={passage} s={s} key={question.passage} /> : null}
-          <Text style={s.question}>{question.question?.content}</Text>
+          {passage ? <Text style={s.qLabel}>QUESTION</Text> : null}
+          {instruction.label && instruction.body ? <Text style={s.qLabel}>{instruction.label}</Text> : null}
+          <Text style={s.question}>{instruction.body || question.question?.content}</Text>
+          {/* Options sit low, near the thumb (owner 2026-11-05: "tiles are way above the top"). */}
+          <View style={{ flexGrow: 1, minHeight: 12 }} />
           <View style={grid ? s.grid : s.stack}>
             {options.map((o) => {
               const on = chosen === o.content;
@@ -319,6 +330,8 @@ export default function PracticePaperScreen({ navigation, route }) {
   // ---------- Q4 Result ----------
   if (state.phase === "result") {
     const prev = previous.current;
+    const medal = paperMedal(outcome.score, outcome.max);
+    const mistakesAdded = Object.values(paperWrongsByQuest(paper, state)).flat().filter((w) => !w.question.passage).length;
     const diff = prev ? outcome.score - prev.score : null;
     const line = [
       outcome.timedOut ? "Time was up" : minutesLabel(outcome.usedMs),
@@ -334,6 +347,16 @@ export default function PracticePaperScreen({ navigation, route }) {
             {outcome.score} <Text style={s.scoreMax}>/ {outcome.max}</Text>
           </Text>
           <Text style={s.soft}>{line}</Text>
+          <View style={s.medal}>
+            <Text style={{ fontSize: 44 }}>{medal.emoji}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={s.cardTitle}>{medal.title}</Text>
+              <Text style={s.soft}>
+                {stars == null ? "Adding up your stars…" : stars > 0 ? `+${stars} ⭐ for a whole paper` : "Stars for this paper: once a week"}
+              </Text>
+              {mistakesAdded > 0 ? <Text style={s.soft}>{mistakesAdded} questions added to My mistakes 🔧</Text> : null}
+            </View>
+          </View>
           <View style={[s.card, { gap: 12 }]}>
             {outcome.parts.map((p) => (
               <View key={p.id}>
@@ -425,7 +448,7 @@ function Passage({ passage, s }) {
   return (
     <View style={s.passage}>
       <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: open }}>
-        <Text style={s.passageTitle}>📖 {passage.title}  {open ? "▴" : "▾"}</Text>
+        <Text style={s.passageTitle}>📖 READ: {passage.title.toUpperCase()}  {open ? "▴ hide" : "▾ show"}</Text>
       </Pressable>
       {open ? (
         <ScrollView style={{ maxHeight: 300 }} nestedScrollEnabled>
@@ -462,15 +485,18 @@ const makeStyles = (P, insets) =>
     track: { height: 6, borderRadius: 3, backgroundColor: P.track, marginHorizontal: 18, marginTop: 10, overflow: "hidden" },
     fill: { height: 6, borderRadius: 3, backgroundColor: P.primary },
     question: { fontSize: 22, lineHeight: 30, fontWeight: "800", color: P.text },
+    qLabel: { fontSize: 13, fontWeight: "800", letterSpacing: 1, color: P.label, marginBottom: -6 },
+    medal: { flexDirection: "row", alignItems: "center", gap: 14, borderRadius: 18, borderWidth: 2, borderColor: P.gold, backgroundColor: P.streakBg, padding: 14 },
     stack: { gap: 10 },
     grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
-    option: { minHeight: 56, borderRadius: 16, borderWidth: 2, borderColor: P.border, backgroundColor: P.card, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 10 },
-    optionGrid: { width: "48%", flexGrow: 1, minHeight: 64, alignItems: "center" },
+    option: { minHeight: 62, borderRadius: 18, borderWidth: 2, borderColor: P.border, backgroundColor: P.card, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 12 },
+    optionGrid: { width: "47%", flexGrow: 1, minHeight: 84, alignItems: "center" },
     optionOn: { borderColor: P.selectedBorder, backgroundColor: P.selectedBg },
-    optionText: { fontSize: 18, lineHeight: 24, fontWeight: "800", color: P.text },
-    passage: { borderRadius: 16, borderWidth: 2, borderColor: P.border, backgroundColor: P.card, padding: 14, gap: 8 },
-    passageTitle: { fontSize: 16, fontWeight: "800", color: P.label },
-    passageText: { fontSize: 16, lineHeight: 24, fontWeight: "600", color: P.text, marginBottom: 10 },
+    optionText: { fontSize: 19, lineHeight: 25, fontWeight: "800", color: P.text },
+    // The story looks like a page of a book (serif, softer, a margin line), so it never looks like the question.
+    passage: { borderRadius: 14, borderLeftWidth: 4, borderLeftColor: P.label, backgroundColor: P.borderDeep, paddingVertical: 12, paddingHorizontal: 14, gap: 8 },
+    passageTitle: { fontSize: 14, fontWeight: "800", letterSpacing: 0.5, color: P.label },
+    passageText: { fontFamily: Platform.OS === "android" ? "serif" : "Georgia", fontSize: 16, lineHeight: 25, color: P.textSoft, marginBottom: 10 },
     numbers: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
     num: { width: 44, height: 44, borderRadius: 12, borderWidth: 2, alignItems: "center", justifyContent: "center" },
     numAnswered: { borderColor: P.selectedBorder, backgroundColor: P.selectedBg },

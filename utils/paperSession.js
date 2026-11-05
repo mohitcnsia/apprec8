@@ -108,3 +108,21 @@ export function paperOutcome(paper, state) {
   });
   return { ...result, usedMs, rows, timedOut: !!state.timedOut };
 }
+
+/** Medal for finishing a paper (shown at once, no server needed): 🥇 90%+, 🥈 70%+, 🥉 for finishing. */
+export function paperMedal(score, max) {
+  const pct = max > 0 ? (score / max) * 100 : 0;
+  if (pct >= 90) return { emoji: "🥇", title: "Gold medal!" };
+  if (pct >= 70) return { emoji: "🥈", title: "Silver medal!" };
+  return { emoji: "🥉", title: "You finished a whole paper!" };
+}
+
+/** Wrong and blank answers, grouped by quest, for "My mistakes" (reading questions are skipped later). */
+export function paperWrongsByQuest(paper, state) {
+  const byQuest = {};
+  paperQuestions(paper).forEach(({ id, question }) => {
+    if (state.answers[id] === question.answer || !question.topic?.quest) return;
+    (byQuest[question.topic.quest] = byQuest[question.topic.quest] || []).push({ questionId: id, question, branchId: question.topic.node || null });
+  });
+  return byQuest;
+}

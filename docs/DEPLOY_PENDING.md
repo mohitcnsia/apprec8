@@ -12,6 +12,16 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## DR-15 · Stars for practice papers · **waiting for owner OK**
+
+Why (owner 2026-11-05): "there must be some good rewards for completing such a large paper." Today `recordQuizResult` gives
+stars only for 100%, so a 47 / 60 paper earns nothing. Change: when the app sends `kind: "paper"`, stars =
+**10 for finishing** (at least 40 of 50 answered, so a blank submit earns nothing) **+ up to 20 for marks** (47 / 60 → 26 ⭐),
+**once per paper every 7 days** (no farming). Code: `functions/utils/paperStars.js` (tested), 10 lines in
+`functions/callable/quizActions.js`. The app already asks (OTA); until this is deployed it simply gets 0 stars.
+Cost: the same 1 call per finished paper as quizzes. Deploy (Gemini, once the owner says OK):
+`firebase deploy --only functions:recordQuizResult --project apprec8-ca229`.
+
 ## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **deployed 2026-11-05 (Gemini G32)**; run the backfill once more after the next publish
 
 Why: the admin dashboard read every kid's progress for EVERY quest, then kept one quest (≈ kids × 4 reads per open).

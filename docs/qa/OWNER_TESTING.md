@@ -41,6 +41,13 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Practice paper, round 2 (your feedback, after this "publish"), ~10 min
+1. Reading questions: the story looks like a book page (serif, margin line, "READ: …"), the question below has a QUESTION label.
+2. Options are bigger and sit low, near your thumb.
+3. Finish a paper → medal (🥇 90%+, 🥈 70%+, 🥉 finished) + "N questions added to My mistakes 🔧".
+4. Home → "mistakes to fix" → the paper's wrong questions come up (reading ones are left out: they need the story).
+5. Stars: "Stars for this paper: once a week" until DR-15 is deployed; then e.g. +26 ⭐.
+
 ### ⭐ Learn cards (after the next "publish" AND re-seeding Word Power + Treasure Words), ~10 min
 1. Word Power → Synonyms and Antonyms → Learn: 10 cards, not a long page. Soft colours, nothing bright on dark mode.
 2. 🔊 reads each card. NEXT / ‹ at the bottom. Quick checks: tap an answer, it shows right away, nothing lost.

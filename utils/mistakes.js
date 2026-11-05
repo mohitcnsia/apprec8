@@ -68,7 +68,11 @@ export function mistakeUpdates(mistakes = {}, answers = [], ctx = {}) {
     }
   }
 
-  // Keep the list small: drop the oldest entries beyond MAX_MISTAKES.
+  return capMistakes(mistakes, updates);
+}
+
+/** Keep the list small: drop the oldest entries beyond MAX_MISTAKES (adds `null` updates for them). */
+function capMistakes(mistakes, updates) {
   const merged = { ...mistakes };
   Object.entries(updates).forEach(([k, v]) => (v === null ? delete merged[k] : (merged[k] = v)));
   const keys = Object.keys(merged);
@@ -79,6 +83,36 @@ export function mistakeUpdates(mistakes = {}, answers = [], ctx = {}) {
       .forEach((k) => (updates[k] = null));
   }
   return updates;
+}
+
+/**
+ * Practice paper (owner 2026-11-05: "wrong questions must be added to My mistakes"). Paper questions are not in any quest
+ * quiz, so the entry carries the question itself (`inline`). Reading questions are skipped (they need their passage).
+ * @param {Array} wrongs - [{ questionId, question (paper question), branchId (the quest topic) }]
+ */
+export function paperMistakeUpdates(mistakes = {}, wrongs = [], { paperId, now = Date.now() } = {}) {
+  const updates = {};
+  for (const w of wrongs) {
+    const q = w?.question;
+    if (!w?.questionId || !q || q.passage || !Array.isArray(q.options)) continue;
+    updates[w.questionId] = {
+      kind: "question",
+      questionId: w.questionId,
+      quizId: paperId || null,
+      generator: null,
+      subtopic: null,
+      branchId: w.branchId || null,
+      inline: {
+        question: q.question,
+        options: q.options.map(({ type = "text", content, isCorrect, mistakeTag }) => ({ type, content, isCorrect: !!isCorrect, ...(mistakeTag ? { mistakeTag } : {}) })),
+        answer: q.answer,
+        explanation: q.explanation || null,
+      },
+      lastWrongAt: now,
+      rightInARow: 0,
+    };
+  }
+  return capMistakes(mistakes, updates);
 }
 
 export const countMistakes = (mistakes = {}) => Object.keys(mistakes).length;
@@ -115,7 +149,9 @@ export function buildMistakeItems(mistakes = {}, { byId = new Map(), similar = (
         const options = similar(entry) || [];
         if (options.length) items.push({ question: options[Math.floor(rng() * options.length)], mistakeKey: key });
       } else {
-        const q = byId.get(entry.questionId);
+        const q =
+          byId.get(entry.questionId) ||
+          (entry.inline ? { ...entry.inline, id: entry.questionId, quizId: entry.quizId, branchId: entry.branchId, subtopic: null } : null);
         if (q) items.push({ question: q, mistakeKey: key });
       }
     });

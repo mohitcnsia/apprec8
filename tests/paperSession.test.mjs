@@ -82,3 +82,46 @@ const restored = paperReducer(paper, initialPaperState("p"), { type: "restore", 
 assert.deepEqual([restored.phase, restored.answers, restored.marked], ["check", { a: 1 }, {}]);
 
 console.log("paperSession tests passed");
+
+// ---- owner feedback 2026-11-05: medal, mistakes, stars ----
+const { paperMedal, paperWrongsByQuest } = await import("../utils/paperSession.js");
+const { paperMistakeUpdates, buildMistakeItems, MAX_MISTAKES } = await import("../utils/mistakes.js");
+import { createRequire } from "node:module";
+const { paperStars, PAPER_REWARD_GAP_MS } = createRequire(import.meta.url)("../functions/utils/paperStars.js");
+
+assert.equal(paperMedal(55, 60).emoji, "🥇");
+assert.equal(paperMedal(47, 60).emoji, "🥈");
+assert.equal(paperMedal(10, 60).emoji, "🥉");
+
+// wrong + blank answers grouped by quest; right ones left out
+const w = paperWrongsByQuest(paper, { answers: { "p-a-q1": "x", "p-a-q2": "x" } });
+assert.deepEqual(Object.keys(w), ["english-quest"]);
+assert.deepEqual(w["english-quest"].map((x) => [x.questionId, x.branchId]), [["p-a-q2", "n2"], ["p-b-q1", "n3"]]);
+
+// mistakes carry the question itself; reading (passage) questions skipped; replayable without any read
+const real = en1.parts.flatMap((part) => part.questions.map((q, i) => ({ questionId: `${en1.id}-${part.id}-q${i + 1}`, question: q, branchId: q.topic.node })));
+const up = paperMistakeUpdates({}, real, { paperId: en1.id, now: 5 });
+const passageCount = real.filter((x) => x.question.passage).length;
+assert.ok(passageCount > 0);
+assert.equal(Object.keys(up).length, real.length - passageCount);
+const e0 = up[real[0].questionId];
+assert.deepEqual([e0.kind, e0.quizId, e0.inline.answer, e0.inline.options.filter((o) => o.isCorrect).length], ["question", "paper-en-1", real[0].question.answer, 1]);
+assert.ok(!JSON.stringify(up).includes("undefined") && !Object.values(up).some((v) => v && Object.values(v.inline).includes(undefined)), "no undefined for Firestore");
+const items = buildMistakeItems(up, {}, () => 0);
+assert.equal(items.length, Object.keys(up).length, "every paper mistake can be practised");
+assert.equal(items[0].question.options.length, 4);
+// cap still applies
+const many = {};
+for (let i = 0; i < MAX_MISTAKES; i++) many[`old${i}`] = { kind: "question", questionId: `old${i}`, lastWrongAt: i };
+const capped = paperMistakeUpdates(many, real.slice(0, 5), { paperId: "x", now: 1000 });
+assert.equal(Object.values(capped).filter((v) => v === null).length, 5, "oldest 5 dropped");
+
+// stars (DR-15): 10 for finishing + up to 20 for marks; blank submit 0; once a week
+const now = 1_800_000_000_000;
+assert.equal(paperStars({ score: 47, max: 60, answered: 50, total: 50, nowMs: now }), 26);
+assert.equal(paperStars({ score: 60, max: 60, answered: 50, total: 50, nowMs: now }), 30);
+assert.equal(paperStars({ score: 0, max: 60, answered: 3, total: 50, nowMs: now }), 0);
+assert.equal(paperStars({ score: 30, max: 60, answered: 40, total: 50, nowMs: now }), 20);
+assert.equal(paperStars({ score: 47, max: 60, answered: 50, total: 50, nowMs: now, lastRewardMs: now - 1000 }), 0);
+assert.equal(paperStars({ score: 47, max: 60, answered: 50, total: 50, nowMs: now, lastRewardMs: now - PAPER_REWARD_GAP_MS }), 26);
+console.log("paper rewards + mistakes tests passed");

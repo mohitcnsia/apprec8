@@ -146,6 +146,8 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       for (const e of entries) {
         if (e.kind === "topic") {
           (e.branchId ? [e.branchId] : unitBranches[e.unitId] || []).forEach((b) => branchesNeeded.add(b));
+        } else if (e.inline) {
+          continue; // practice-paper mistake: the question is stored with it (no read)
         } else if (e.generator && e.quizId && !tableDone.has(e.quizId)) {
           tableDone.add(e.quizId);
           await loadTable(e.quizId, e.generator, e.branchId);
