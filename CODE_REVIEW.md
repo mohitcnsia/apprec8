@@ -1743,3 +1743,23 @@ No app can prove parenthood; the design makes a liar gain nothing. Built:
 - Already true: nobody can attach to an existing child (the parent link is made only when the parent creates the child); no chat,
   messages or free text between users; others see first name + class only.
 - Later (public release): parent phone verification (SMS code), DPDP "verifiable consent" (e.g. DigiLocker), safeguarding plan (Seema).
+
+## 2026-11-05 — Draft spec (not approved): Q · Practice paper (exam-style, timed) (Claude)
+Why: Pratha's English and Science olympiads are on 17 and 19 Nov. The quests teach topic by topic; nothing lets her sit a
+full paper under test conditions (50 questions, 60 minutes, four parts, the last part worth more), and nothing practises
+pacing or checking. Mockup: canvas row **Q** (Q1–Q4), https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL.
+- **Q1 Start:** English / Science, Paper 1 / 2; parts and counts (Class 5 English: 30 Words & Grammar · 10 Reading ·
+  5 Everyday English · 5 Champion ★3 marks; Science: 10 Thinking skills · 35 Science · 5 Champion ★3). "Show the clock" switch
+  (default on; off for a nervous child, Seema to advise). Last score. No exam names anywhere.
+- **Q2 In the paper:** part name, 12/50, quiet clock, ‹ back, ⚑ mark to check later, NEXT in the thumb zone. No hints,
+  no hearts, no read-aloud (it's an assessment).
+- **Q3 Check:** grid of 50 numbers (answered / ⚑ / blank); tap one to go back; SUBMIT. At 0:00 it submits by itself.
+- **Q4 Result:** marks by part, time used, change since last time; **Practise these next** = the 3 topics with most wrong
+  answers, each opening that quest topic (from each question's `topicNode`). SEE ANSWERS shows explanations.
+- **Content:** new, unseen, original questions only (never gate/Boss pools): English Paper 1 + Science Paper 1 (50 each),
+  Paper 2 later. Same checks as quests (`npm test`, review page, Seema / owner OK, Gemini second review).
+- **Build:** JS only (no native, no new library): `screens/paper/` (start, paper, check, result), `data/papers/*.js`, seeded
+  like quests (`papers/{id}` + `questions`), results in `users/{uid}/paperResults` (rules: own doc only), answers in
+  `questAttempts` with `activity: "paper"` for the dashboard. Cost: 1 read per paper per week (phone copy), 2 writes per paper.
+- **Plan if approved tonight:** build 6 Nov → OTA; Papers 1 written 6–7 Nov → review → Pratha plays from ~8 Nov.
+- **Open questions:** (1) only for Class 3–5 at first? (2) clock default on or off? (3) show the paper on Home, or inside each quest?

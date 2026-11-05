@@ -25,6 +25,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Mockup Q (practice paper, exam-style, timed)** for Pratha before 17/19 Nov: canvas row Q + spec in CODE_REVIEW.md (3 open questions). Build 6 Nov if approved.
 - **Mockup P (child safety & privacy, draft)**: P1 'Need help?' row on the child's Me tab, P2 help sheet (1098 / 14416 / 112, tap to call),
   P3 parent: what we keep + who sees it + consent, P4 delete child data (PIN). Same canvas: https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL
   (row P). Owner approves the screens; **Seema reviews the words**; safeguarding plan before any build (RB-8). Before build Claude
