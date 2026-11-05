@@ -1935,3 +1935,40 @@ Reported Speech, Passive, Editing.
     the Apprec8 Challenge, given through a teacher/headmaster or an NGO with a school code (start with one school near us).
     At the end of the pilot ask parents (owner): "Would you like to sponsor a child's learning?" and explain how it
     works; share more only with those who say yes. No price survey.
+
+## 2026-11-05 — Spec for review: Demo School (fake accounts + demo data) (Claude)
+**Spec only, no code yet.** Order: owner answers the questions below → Gemini review → owner go-ahead → build.
+
+**Why:** (1) Seema and the owner see the teacher and parent screens (and later the weekly/daily reports, mockup row V)
+with realistic data, without touching real children; (2) a login for Google Play reviewers; (3) safe testing for
+Claude and Gemini.
+
+**What gets created (all marked `isDemo: true`):**
+- School **"Demo School (not real)"**, two classes: **10-B English** (32 kids, Seema's pilot shape) and **5-A** (12 kids,
+  Pratha's shape, English + Science).
+- **3 real logins** (Firebase Auth, emails on the reserved `@example.com` domain, which can never belong to anyone):
+  `demo.teacher@example.com` (teacher of both classes), `demo.parent@example.com` (parent of one demo child),
+  `demo.kid@example.com` (a Class 5 kid). The owner types the password in Admin tools; it is never in the repo.
+- **The other 43 kids are data only** (user doc + progress + attempts, ids `demo_kid_01…`, no login), with clearly
+  made-up first names.
+- **6 weeks of made-up attempts with patterns the screens should catch:** one topic most of 10-B gets wrong (reported
+  questions), 3 kids who need attention (failed a challenge twice / 9 days away / accuracy dropping), an assignment
+  part done, a kid ready for harder work, normal ups and downs.
+
+**Kept apart from real data:**
+- Global leaderboard (`getLeaderboard`): skips `isDemo` users (reads a few extra rows and filters).
+- Admin Kids view / dashboard (`listKidProgress`): hides `isDemo` kids unless "Show demo" is on.
+- Real kids can never join a demo class (`joinClass` / `approveMember` refuse it unless the user is demo or a tester).
+- Demo attempts never count in 🚩 tallies or any metric.
+
+**How:** an admin-only Cloud Function `seedDemoSchool` (creating logins needs the server; maxInstances 1), started
+from Admin tools → "Reset Demo School" (deletes the old demo data, then seeds it again, so it can be refreshed weekly
+to keep dates recent). The data generator is a pure function in `utils/` with tests (patterns present, every doc
+has `isDemo`, no real email). Deploy by Gemini/owner (Claude does not deploy).
+
+**Cost:** one-time about 2,000 writes per reset (the free tier is 20,000 a day); afterwards demo screens read like a
+normal class. No running cost.
+
+**Questions for the owner:**
+1. Classes OK: 10-B English (32) + 5-A (12)? 2. Names: made-up Indian first names + initial (e.g. "Aarav S.")?
+3. The demo parent sees one Class 5 child, so the parent screens look like Pratha's? 4. Weekly reset, or only when we press it?
