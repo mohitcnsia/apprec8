@@ -83,7 +83,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G35 Science Papers 2–4 (150 original Qs, draft) | Gemini | todo (next) | `gemini/g35-papers` | |
+| G36 Grammar Pro 2–6 (Class 9–10 grammar, draft) | Gemini | todo (next) | `gemini/g36-grammar-pro` | |
+| G35 Science Papers 2–4 (150 original Qs, draft) | Gemini | **done** → Claude reviewing | `gemini/g35-papers` | |
 | G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | **done** 17:41 (recordQuizResult only) | from Claude's folder | |
 | G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | **done** (5 docs, 0 missing) | from Claude's folder | |
 | G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |
@@ -158,7 +159,37 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G35 · [todo] · gemini · Science Papers 2, 3 and 4 (draft, original questions, Class 5)
+### G36 · [todo] · gemini · Grammar Pro 2–6: the rest of Class 9–10 grammar (draft, CBSE board style)
+Owner 2026-11-05: finish the Class 10 grammar syllabus for Seema's pilot; Claude reviews every question for accuracy.
+**Model to copy exactly:** `data/englishQuest/units/b1.js` (Grammar Pro 1: Tenses): same helpers, `GRADES = [9, 10]`,
+every node passed through `forGrades` (the `.map` at the end), Learn `cards` + `content` per topic, warm-up (8), one
+"Board Style" practice leaf (10, "hard"), a Challenge gate (15 = 3 sub-topics × 5, sub-topic tags on every question),
+`endless`, and a unit Boss (12). Read `docs/exam/cbse10-english-pattern.md` first (board format + topics).
+Write one unit file per unit, add each to `data/englishQuest/units/index.js` after `b1`, unitOrder 11, 12, …:
+- **b2 Modals** (unitOrder 11): ability / permission / possibility (can, could, may, might) · obligation & advice (must,
+  have to, should, ought to) · deduction & past (must be, can't be, should have, could have, would for past habit).
+- **b3 Agreement & Determiners** (12): subject–verb agreement (as well as / along with / each / neither…nor / a number of
+  vs the number of / news, jury, scissors) · determiners (each, every, all, both, few, a few, little, less vs fewer,
+  this/that/these) · editing lines with one agreement or determiner error.
+- **b4 Reported Speech** (13): statements · questions (yes/no with if/whether; wh- with statement word order) ·
+  commands, requests, thanks and dialogues with a frame ("The customer asked the worker …").
+- **b5 Active & Passive** (14): all tenses incl. continuous passive · modal passive (must be done) and questions ·
+  when to leave out the doer / which part starts the passive sentence.
+- **b6 Editing & Prepositions** (15): error + correction across all topics · prepositions (since/for, prefer … to,
+  superior to, within, unnecessary ones like "where is he at") · clauses (when that/which can be dropped).
+**Rules (Claude rejects anything that breaks them):**
+1. **Original questions only.** Board papers are a guide; never copy or lightly reword a board / CBSE question.
+2. **Exactly one right answer.** Try every option in the sentence: if a wrong option also works in standard British/Indian
+   English, change it. No style splits (no optional backshift in reported speech unless the frame forces it, no
+   singular "their", no "took a decision"). In "Error → Correction" options, no second change may also fix the sentence.
+3. Real-life frames like the board (message, notice, report, letter, diary, poster, conversation), teen-appropriate,
+   no exam names in questions. Explanations: one clear line.
+4. Right answer is the longest option in at most 40% of a unit's questions; every wrong option has a `mistakeTag`.
+5. `npm test` passes after each unit.
+**Deliver:** one commit per unit `gemini(G36): Grammar Pro N <topic>`, then `gemini(G36): done — 5 units, N questions`.
+Claude reviews each before it goes to Seema.
+
+### G35 · [done] · gemini · Science Papers 2, 3 and 4 (draft, original questions, Class 5)
 Owner 2026-11-05: Pratha finished Paper 1; "we will need far more practice papers". Write **three new Science papers**,
 each exactly like `data/papers/sciencePaper1.js` (copy its shape, helpers and comments):
 - Files `data/papers/sciencePaper2.js`, `sciencePaper3.js`, `sciencePaper4.js`; ids `paper-sci-2/3/4`, titles "Paper 2/3/4",
