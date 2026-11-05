@@ -7,6 +7,7 @@
 import { QUESTS } from "../quests/index.js";
 import { nodesForGrade } from "../../utils/gradeFilter.js";
 import { seededRandom } from "../../utils/readingFlow.js";
+import { pictureQuestionsFor } from "./pictureQuestions.js";
 
 const byId = (id) => QUESTS.find((m) => m.QUEST_ID === id);
 
@@ -143,13 +144,15 @@ export function buildMixPaper(id) {
   }
 
   const sq = questPool("science-quest", grade);
-  const thinking = take(sq.filter((x) => x.unitId === "sq-u6"), 10, rng, used);
+  // Thinking skills: 3 picture questions (spec U) + 7 from the Patterns & Puzzles unit.
+  const pictures = take(pictureQuestionsFor().map((q) => ({ question: q, topic: q.topic, picture: q })), 3, rng, used);
+  const thinking = [...pictures, ...take(sq.filter((x) => x.unitId === "sq-u6"), 10 - pictures.length, rng, used)];
   const champion = take(sq.filter((x) => x.champion && x.unitId !== "sq-u6"), 5, rng, used);
   const science = take(sq.filter((x) => x.unitId !== "sq-u6" && !x.champion), 35 + (5 - champion.length), rng, used);
   return {
     ...base,
     parts: [
-      { id: "thinking", title: "Thinking skills", marks: 1, questions: thinking.map(asPaperQuestion) },
+      { id: "thinking", title: "Thinking skills", marks: 1, questions: thinking.map((x) => (x.picture ? x.picture : asPaperQuestion(x))) },
       { id: "science", title: "Science", marks: 1, questions: science.map(asPaperQuestion) },
       { id: "champion", title: "Champion questions", marks: 3, questions: champion.map(asPaperQuestion) },
     ].filter((p) => p.questions.length),

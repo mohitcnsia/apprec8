@@ -1865,3 +1865,10 @@ on any screen, soft colours on the dark theme. Optional `figure` (question) and 
 Plan once approved: support in the paper screen (and quests later), then ~10 picture questions per new Science paper
 (figure series, mirror/water images, counting shapes, plant/body/circuit diagrams). Owner OK'd the rough-sheet tip
 ("Keep a pencil and a rough sheet next to you"): on the paper start screen, ships with the next publish.
+- **Owner 2026-11-05: approved ("looking great. perfect"). Built (Claude):** `utils/figures.js` (shapes + exact turns /
+  mirror / water flips as SVG text, colour tokens themed at render), `data/papers/pictureQuestions.js` (18 questions:
+  6 figure series, 3 mirror, 2 water image, 3 "same shape, only turned", 4 on a labelled plant), tests/figures.test.mjs
+  proves every answer by moving points; a rendered sheet was checked by eye. Paper screen draws question pictures and
+  picture answer tiles (fixed A–D order); Science Mix papers get 3 picture questions in Thinking skills. Picture and
+  reading questions are not added to My mistakes (it shows text only). Copyright (owner asked): we draw our own; book /
+  past-paper images are not used, even tweaked.

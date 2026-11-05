@@ -15,6 +15,8 @@ import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES } fro
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
+import { SvgXml } from "react-native-svg";
+import { themeFigure } from "../../utils/figures";
 import { loadPaperSession, savePaperSession, loadPaperHistory, savePaperResult } from "../../services/paperApi";
 import { showAlert } from "../../services/dialog";
 
@@ -215,8 +217,10 @@ export default function PracticePaperScreen({ navigation, route }) {
     const { question } = item;
     const part = paper.parts.find((x) => x.id === item.partId);
     const passage = question.passage ? paper.passages?.[question.passage] : null;
-    const options = optionOrder(item.id, question.options);
-    const grid = fitsTwoByTwo(options);
+    // Picture questions keep their A–D order (spec U); other options are shuffled once per question.
+    const options = question.fixedOrder ? question.options : optionOrder(item.id, question.options);
+    const pictures = options.some((o) => o.figure);
+    const grid = pictures || fitsTwoByTwo(options);
     const chosen = state.answers[item.id];
     const marked = !!state.marked[item.id];
     const isLast = state.index === questions.length - 1;
@@ -239,6 +243,12 @@ export default function PracticePaperScreen({ navigation, route }) {
           {passage ? <Text style={s.qLabel}>QUESTION</Text> : null}
           {instruction.label && instruction.body ? <Text style={s.qLabel}>{instruction.label}</Text> : null}
           <Text style={s.question}>{instruction.body || question.question?.content}</Text>
+          {question.figure ? (
+            <View style={s.figureBox} accessibilityLabel="Picture for this question">
+              <SvgXml xml={themeFigure(question.figure, P)} width="100%" height={figureHeight(question.figure)} />
+            </View>
+          ) : null}
+          {question.hint ? <Text style={s.soft}>{question.hint}</Text> : null}
           {/* Options sit low, near the thumb (owner 2026-11-05: "tiles are way above the top"). */}
           <View style={{ flexGrow: 1, minHeight: 12 }} />
           <View style={grid ? s.grid : s.stack}>
@@ -252,7 +262,14 @@ export default function PracticePaperScreen({ navigation, route }) {
                   accessibilityRole="button"
                   accessibilityState={{ selected: on }}
                 >
-                  <Text style={[s.optionText, grid && { textAlign: "center" }, on && { color: P.selectedText }]}>{o.content}</Text>
+                  {o.figure ? (
+                    <>
+                      <Text style={[s.figLabel, on && { color: P.selectedText }]}>{o.content.replace(/^Figure /, "")}</Text>
+                      <SvgXml xml={themeFigure(o.figure, P)} width={64} height={64} />
+                    </>
+                  ) : (
+                    <Text style={[s.optionText, grid && { textAlign: "center" }, on && { color: P.selectedText }]}>{o.content}</Text>
+                  )}
                 </Pressable>
               );
             })}
@@ -429,6 +446,13 @@ export default function PracticePaperScreen({ navigation, route }) {
             <View key={r.questionId} style={s.card}>
               <Text style={s.soft}>Question {r.number}</Text>
               <Text style={[s.partText, { marginTop: 4 }]}>{q.question?.content}</Text>
+              {q.figure ? <SvgXml xml={themeFigure(q.figure, P)} width="100%" height={Math.min(120, figureHeight(q.figure))} /> : null}
+              {q.options?.find((o) => o.isCorrect)?.figure ? (
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 6 }}>
+                  <Text style={s.soft}>Right answer:</Text>
+                  <SvgXml xml={themeFigure(q.options.find((o) => o.isCorrect).figure, P)} width={48} height={48} />
+                </View>
+              ) : null}
               {r.correct ? (
                 <Text style={[s.answer, { color: P.correctText, backgroundColor: P.correctBg }]}>✓ {q.answer}</Text>
               ) : (
@@ -451,6 +475,14 @@ export default function PracticePaperScreen({ navigation, route }) {
       </View>
     </View>
   );
+}
+
+/** Height for a question picture: from its own viewBox (wide rows stay short), capped for small phones. */
+function figureHeight(svg) {
+  const m = /viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"/.exec(svg || "");
+  if (!m) return 120;
+  const ratio = Number(m[2]) / Number(m[1]);
+  return Math.max(70, Math.min(200, Math.round(340 * ratio)));
 }
 
 /** Reading passage above its questions; open at first, can be folded to see the options. */
@@ -496,6 +528,8 @@ const makeStyles = (P, insets) =>
     track: { height: 6, borderRadius: 3, backgroundColor: P.track, marginHorizontal: 18, marginTop: 10, overflow: "hidden" },
     fill: { height: 6, borderRadius: 3, backgroundColor: P.primary },
     question: { fontSize: 22, lineHeight: 30, fontWeight: "800", color: P.text },
+    figureBox: { borderRadius: 16, backgroundColor: P.borderDeep, padding: 12, alignItems: "center" },
+    figLabel: { fontSize: 13, fontWeight: "900", color: P.textSoft },
     qLabel: { fontSize: 13, fontWeight: "800", letterSpacing: 1, color: P.label, marginBottom: -6 },
     medal: { flexDirection: "row", alignItems: "center", gap: 14, borderRadius: 18, borderWidth: 2, borderColor: P.gold, backgroundColor: P.streakBg, padding: 14 },
     stack: { gap: 10 },

@@ -94,7 +94,8 @@ export function paperMistakeUpdates(mistakes = {}, wrongs = [], { paperId, now =
   const updates = {};
   for (const w of wrongs) {
     const q = w?.question;
-    if (!w?.questionId || !q || q.passage || !Array.isArray(q.options)) continue;
+    // Reading and picture questions are skipped: "My mistakes" shows text only.
+    if (!w?.questionId || !q || q.passage || q.figure || !Array.isArray(q.options) || q.options.some((o) => o.figure)) continue;
     updates[w.questionId] = {
       kind: "question",
       questionId: w.questionId,

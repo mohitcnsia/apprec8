@@ -41,6 +41,12 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Picture questions (after "publish"), ~5 min
+1. Practice paper → Science → Mix paper: Thinking skills has 3 picture questions (figure series / mirror / water image /
+   turned shape / plant). Pictures are soft on the dark theme; answer tiles show drawings A–D.
+2. Start screen says "✏️ Keep a pencil and a rough sheet next to you."
+3. SEE ANSWERS shows the picture and the right drawing.
+
 ### ⭐ Mix papers (after "publish"), ~5 min to look, 60 min to sit one
 1. Practice paper → English: Paper 1 ✓ and **Mix paper 1** ("a new mix of quest questions every time").
 2. Finish a Mix paper → next time it offers Mix paper 2 (new questions). An unfinished one resumes.
