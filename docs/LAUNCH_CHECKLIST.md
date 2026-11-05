@@ -12,13 +12,14 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 | # | Item | Who | State |
 |---|---|---|---|
 | A1 | **Class 9–10 English content** (CBSE): tenses, modals, subject–verb agreement, determiners, reported speech, active/passive, editing & omission, gap filling, case-based reading. Seema names the topics + order; Claude writes; Seema reviews. Hide English Quest Units 0–2 from Classes 9–10. | Seema → Claude | not started |
-| A2 | Class 10 practice papers + Mix papers for Classes 9–10 (after A1) | Claude | not started |
+| A2 | ~~Class 10 practice papers~~ dropped (owner: grammar only for the pilot) | — | dropped |
 | A3 | **Teacher dry run**: Seema creates the school + class (Admin tools → Schools & classes), 2 test students join with the code, she approves, assigns a topic, sees progress + class leaderboard | Seema + owner | not done |
 | A4 | **Parent consent**: students are under 18. In-app consent at "Join a class" exists (EN/HI); for the pilot also the school's usual signed consent form | Seema / school | in-app ready |
 | A5 | **"Need help?" sheet** (mockup P1–P2: 1098, Tele-MANAS 14416) before teens use it; Seema finalises the wording | Seema → Claude | mockup ready |
 | A6 | **Distribution**: Play Console → Closed testing → testers = the 50 students' Google accounts (or a Google Group) → opt-in link. Upload the latest build there | Owner | not done |
 | A7 | **Privacy policy page + "delete my account" web page** (public URLs; Play asks for both) | Claude drafts, owner hosts | not started |
 | A8 | Remote Config `update_url_android` → the Play link the students use (today: internal-testing link) | Owner | pending |
+| A10 | **Demo School** (fake class for Seema to try the teacher screens + Play reviewer login): generator done; server function, filters, Admin button after Gemini's review; deploy by Gemini/owner | Claude → Gemini | in progress |
 | A9 | Cost check: 50 students ≈ 15,000 reads/day at most (free tier 50,000), writes far below 20,000. Budget alert in place | done | ok |
 
 ## B. Public release (after the pilot)

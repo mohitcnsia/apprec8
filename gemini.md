@@ -70,6 +70,7 @@ the owner; G14/G11 parked).
   privacy / delete; waits for Seema's wording) · privacy policy page + "delete my account" web page for Play · crash
   reporting (none today). Tracked in docs/LAUNCH_CHECKLIST.md.
 - **Apprec8 Challenge / own olympiad (owner 2026-11-05, after the pilot):** month-long qualifier in the app + 1-hour Sunday final in the school hall. Needs server work for the final: questions released at start time, server marking, one attempt, time window, per-school results. Certificates, medals, free premium first; scholarships later. Winners shown as first name + initial, school, class; photo/full name only with a parent tick box. Spec: CODE_REVIEW.md product decision 10.
+- **"Beat your past self" (owner 2026-11-05):** honest healthy competition, no fake kids: paper results show "Last time: 34/40. Beat it?" (and later the same on gates/Mix papers); family challenge (parent takes the same Mix paper). Fits the daily report work.
 - **Level 2 practice (owner 2026-11-05):** the owner will share Class 6 sample papers; Level 2 for Class 5 asks Class 6
   questions. Then: pattern notes (pattern only, nothing copied), Level 2 papers / Champion sets for Class 5 from the
   Class 6 syllabus, harder Mix option.

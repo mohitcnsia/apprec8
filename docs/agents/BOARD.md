@@ -84,7 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G38 Review the Demo School spec (CODE_REVIEW.md, 2026-11-05) | Gemini | todo (after G37) | review only | |
+| G38 ⭐ Review the Demo School spec (CODE_REVIEW.md, 2026-11-05) — Seema wants to start | Gemini | **todo, do this first** (before G37) | review only | |
 | G37 English Unit 10 Word Building (Classes 3–8) | Gemini | todo (next) | `gemini/g37-word-building` | |
 | G36 Grammar Pro 2–6 (Class 9–10 grammar, 555 Qs) | Gemini | **done, reviewed by Claude: 91 fixes** (27 Modals, 9 Agreement, 7 Reported, 31 Passive, 17 Editing): wrong options that were also right ("Might I…?", "should have" vs "could have", "is being uploaded tomorrow"), "error" options that were the same correction reworded, style debates sold as errors (congratulate for, who/whom, committee have), a wrong key, sentences with two errors | `gemini/g36-grammar-pro` | |
 | G35 Science Papers 2–4 (150 original Qs) | Gemini | **done, reviewed, live** (Claude fixed: pasteurisation wording, ship floats "balances" not "exceeds", a second right answer on shadows, padded options, jargon in explanations; Paper 3 had dropped from the paper list) | `gemini/g35-papers` | |
@@ -162,7 +162,7 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G38 · [todo] · gemini · Review: Demo School spec (after G37)
+### G38 · [todo] · gemini · ⭐ Review: Demo School spec (do first, before G37: Seema wants to start the pilot)
 Read "Spec for review: Demo School" at the end of CODE_REVIEW.md. Check against the code: will demo users really stay
 out of `getLeaderboard` (functions/callable/userActions.js), `listKidProgress` (services/adminApi.js), class joins
 (services/classesApi.js, functions/callable/schoolActions.js) and 🚩 tallies? Anything else that reads all users or all
