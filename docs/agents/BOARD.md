@@ -84,7 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
 | G36 Grammar Pro 2–6 (Class 9–10 grammar, draft) | Gemini | todo (next) | `gemini/g36-grammar-pro` | |
-| G35 Science Papers 2–4 (150 original Qs, draft) | Gemini | **done** → Claude reviewing | `gemini/g35-papers` | |
+| G35 Science Papers 2–4 (150 original Qs) | Gemini | **done, reviewed, live** (Claude fixed: pasteurisation wording, ship floats "balances" not "exceeds", a second right answer on shadows, padded options, jargon in explanations; Paper 3 had dropped from the paper list) | `gemini/g35-papers` | |
 | G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | **done** 17:41 (recordQuizResult only) | from Claude's folder | |
 | G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | **done** (5 docs, 0 missing) | from Claude's folder | |
 | G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |

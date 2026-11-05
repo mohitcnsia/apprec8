@@ -6,10 +6,13 @@ import englishPaper1 from "./englishPaper1.js";
 import sciencePaper1 from "./sciencePaper1.js";
 import englishPaper2 from "./englishPaper2.js";
 import englishPaper3 from "./englishPaper3.js";
+import sciencePaper2 from "./sciencePaper2.js";
+import sciencePaper3 from "./sciencePaper3.js";
+import sciencePaper4 from "./sciencePaper4.js";
 import { bundledQuest } from "../quests/index.js";
 import { buildMixPaper, mixPaperId, parseMixId } from "./mix.js";
 
-export const PAPERS = [englishPaper1, englishPaper2, englishPaper3, sciencePaper1];
+export const PAPERS = [englishPaper1, englishPaper2, englishPaper3, sciencePaper1, sciencePaper2, sciencePaper3, sciencePaper4];
 
 export const SUBJECTS = [
   { id: "english", title: "English" },
