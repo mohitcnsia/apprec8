@@ -5,6 +5,7 @@
 import englishPaper1 from "./englishPaper1.js";
 import sciencePaper1 from "./sciencePaper1.js";
 import { bundledQuest } from "../quests/index.js";
+import { buildMixPaper, mixPaperId, parseMixId } from "./mix.js";
 
 export const PAPERS = [englishPaper1, sciencePaper1];
 
@@ -18,7 +19,27 @@ export function papersFor({ grade = null, isTester = false } = {}) {
   return PAPERS.filter((p) => isTester || (!p.draft && Array.isArray(p.grades) && p.grades.includes(grade)));
 }
 
-export const paperById = (id) => PAPERS.find((p) => p.id === id) || null;
+const mixCache = new Map();
+/** A fixed paper, or a Mix paper built from its id (kept in memory once built). */
+export function paperById(id) {
+  const fixed = PAPERS.find((p) => p.id === id);
+  if (fixed) return fixed;
+  if (!parseMixId(id)) return null;
+  if (!mixCache.has(id)) mixCache.set(id, buildMixPaper(id));
+  return mixCache.get(id);
+}
+
+/** Classes that get Mix papers (owner 2026-11-05: "no dearth of practice material"). */
+export const MIX_GRADES = [3, 4, 5, 6];
+
+/** The next Mix paper for this subject and class: one after the highest finished (an unfinished one resumes). */
+export function nextMixId(subject, grade, history = []) {
+  const done = history
+    .map((h) => parseMixId(h.paperId))
+    .filter((x) => x && x.subject === subject && x.grade === grade)
+    .map((x) => x.n);
+  return mixPaperId(subject, grade, (done.length ? Math.max(...done) : 0) + 1);
+}
 
 /** Name of the quest topic to practise ("Linking Words"), falling back to the node id. */
 export function topicTitle({ quest, node } = {}) {

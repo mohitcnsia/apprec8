@@ -26,7 +26,7 @@ import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
-import { papersFor } from "../../data/papers";
+import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 
 const ROTATE_MS = 3500;
@@ -455,7 +455,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.grid}>
         {questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace)}
         {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
-        {papersFor({ grade: userGrade, isTester }).length
+        {papersFor({ grade: userGrade, isTester }).length || MIX_GRADES.includes(userGrade)
           ? questTile("paper", "Practice paper", "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
               navigation.navigate("PracticePaper", { grade: userGrade })
             )

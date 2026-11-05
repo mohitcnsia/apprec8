@@ -1847,3 +1847,13 @@ things (practice paper, class topics) stay hidden until Edit Profile. Proposal: 
   + tests), `services/dialog.js` `showAlert()` = same arguments as `Alert.alert`. 67 `Alert.alert` calls in 26 files now use
   it; `ConfirmationModal` / `InfoModal` restyled on top of it (they also ignored `confirmText` / `cancelText` / `message`:
   fixed). Falls back to the system popup only before the app has mounted.
+
+## 2026-11-05 — Mix papers + more original papers (owner: "far more practice papers… no dearth") (Claude)
+- **Mix papers** (`data/papers/mix.js`, tests/mixPaper.test.mjs): unlimited papers in the Paper 1 shape, built on the
+  phone from quest questions (already reviewed). Never Challenge / Unit Boss questions (or practice copies of them).
+  Classes 3–6; the id `mix-en-g5-3` fixes the paper (resume, review). 0 reads (bundled data). After each finished Mix
+  paper the next number appears.
+- **Past papers are a guide only** (owner asked about rewording them): rewording is still copying; we take the pattern,
+  topics and difficulty, and write original questions.
+- **New original papers:** Claude writes English Papers 2–4 (Seema reviews); Gemini drafts Science Papers 2–4 (G35,
+  `draft: true`, Claude reviews every question). tests/papers.test.mjs now checks every paper in `PAPERS`.

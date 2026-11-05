@@ -39,8 +39,11 @@ function check(paper, { counts, totalMarks }) {
   console.log(`${paper.id}: ${n} questions, ${totalMarks} marks, longest-option tell ${pct}%`);
 }
 
-check(en1, { counts: [30, 10, 5, 5], totalMarks: 60 });
-check(sci1, { counts: [10, 35, 5], totalMarks: 60 });
+// Every bundled paper (data/papers/index.js), so new papers are checked as soon as they are listed.
+const { PAPERS } = await import("../data/papers/index.js");
+const SHAPES = { english: [30, 10, 5, 5], science: [10, 35, 5] };
+for (const paper of PAPERS) check(paper, { counts: SHAPES[paper.subject], totalMarks: 60 });
+assert.equal(new Set(PAPERS.map((p) => p.id)).size, PAPERS.length, "paper ids are unique");
 
 // Thinking-skills answers recomputed (same rules as tests/reasoningCheck.test.mjs)
 {

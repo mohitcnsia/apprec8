@@ -82,6 +82,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G35 Science Papers 2–4 (150 original Qs, draft) | Gemini | todo (next) | `gemini/g35-papers` | |
 | G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | **done** 17:41 (recordQuizResult only) | from Claude's folder | |
 | G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | **done** (5 docs, 0 missing) | from Claude's folder | |
 | G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |
@@ -155,6 +156,23 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G35 · [todo] · gemini · Science Papers 2, 3 and 4 (draft, original questions, Class 5)
+Owner 2026-11-05: Pratha finished Paper 1; "we will need far more practice papers". Write **three new Science papers**,
+each exactly like `data/papers/sciencePaper1.js` (copy its shape, helpers and comments):
+- Files `data/papers/sciencePaper2.js`, `sciencePaper3.js`, `sciencePaper4.js`; ids `paper-sci-2/3/4`, titles "Paper 2/3/4",
+  `minutes: 60`, `grades: [5]`, **`draft: true`**. Add each to `PAPERS` in `data/papers/index.js`.
+- Parts: 10 Thinking skills (series, codes, directions, ranking, calendar, family; **work every answer out twice**)
+  · 35 Science (spread over Science Units 1–5: living world, body & health, matter/forces/earth, environment,
+  light/sound/magnets) · 5 Champion (3 marks each, harder, two-step).
+- **Original questions only.** Use `docs/exam/nso-pattern.md` and the papers in `docs/exam/papers/nso/` only as a guide to
+  topics, styles and difficulty. Never copy or reword a past-paper question. No question already in a quest or in Paper 1.
+- Every question: 4 options, one right, every wrong option has a `mistakeTag`, `topic` = a real Science quest node,
+  a one-line kid-friendly `explanation`. No wrong option that is also true. No exam names anywhere.
+- The right answer may be the longest option in at most 40% of questions (the test checks).
+- Run `npm test` (tests/papers.test.mjs checks every paper in `PAPERS`). All must pass.
+**Deliver:** one commit per paper `gemini(G35): Science Paper N`, then `gemini(G35): done — 3 papers, 150 questions`.
+Claude reviews every question before the owner sees them; nothing is shown to Pratha until then (`draft: true`).
 
 ### G34 · [done] · gemini · ⭐ Deploy DR-15: stars for practice papers (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** ("OK for stars", 2026-11-05). From Claude's folder (branch `feat/quiz-redesign`, commit `ce8b151` or later):

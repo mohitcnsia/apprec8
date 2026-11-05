@@ -41,6 +41,11 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Mix papers (after "publish"), ~5 min to look, 60 min to sit one
+1. Practice paper → English: Paper 1 ✓ and **Mix paper 1** ("a new mix of quest questions every time").
+2. Finish a Mix paper → next time it offers Mix paper 2 (new questions). An unfinished one resumes.
+3. Science the same. Every Mix paper: 50 questions, 60 marks, stars, wrong answers into My mistakes.
+
 ### Word ladder: "Same & Opposite" (after "publish" + seeding Word Power), ~5 min. Tester: unlock all, or a Class 2–4 child
 1. Word Power map: first topic "Same & Opposite" (Classes 2–4): 7 Learn cards → TRY 8 QUESTIONS.
 2. Practice leaves: Twin Words (10), Opposite Words (10).

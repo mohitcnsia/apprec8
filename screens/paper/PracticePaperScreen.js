@@ -11,7 +11,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { isTesterUser } from "../../config/appConfig";
-import { SUBJECTS, papersFor, paperById, topicTitle } from "../../data/papers";
+import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES } from "../../data/papers";
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
@@ -35,14 +35,20 @@ export default function PracticePaperScreen({ navigation, route }) {
 
   const grade = Number.isInteger(route?.params?.grade) ? route.params.grade : null;
   const isTester = isTesterUser(authInstance.currentUser);
-  const papers = useMemo(() => papersFor({ grade, isTester }), [grade, isTester]);
+  const fixedPapers = useMemo(() => papersFor({ grade, isTester }), [grade, isTester]);
+  const [history, setHistory] = useState([]);
+  // Mix papers (data/papers/mix.js): a new one per subject after each finished one, built from quest questions.
+  const mixGrade = MIX_GRADES.includes(grade) ? grade : isTester ? 5 : null;
+  const papers = useMemo(() => {
+    const mix = mixGrade ? SUBJECTS.map((sub) => paperById(nextMixId(sub.id, mixGrade, history))).filter(Boolean) : [];
+    return [...fixedPapers, ...mix];
+  }, [fixedPapers, mixGrade, history]);
   const subjects = SUBJECTS.filter((sub) => papers.some((p) => p.subject === sub.id));
 
   const [state, dispatch] = useReducer(reducer, papers[0]?.id || null, initialPaperState);
   const paper = paperById(state.paperId);
   const questions = useMemo(() => (paper ? paperQuestions(paper) : []), [paper]);
 
-  const [history, setHistory] = useState([]);
   const [saved, setSaved] = useState(null); // a paper in progress on this phone
   const [now, setNow] = useState(Date.now());
   const [showClockChoice, setShowClockChoice] = useState(true);
@@ -120,6 +126,7 @@ export default function PracticePaperScreen({ navigation, route }) {
   // ---------- Q1 Start ----------
   if (state.phase === "start") {
     const last = history.find((h) => h.paperId === paper.id);
+    const done = (id) => history.some((h) => h.paperId === id);
     const subjectPapers = papers.filter((p) => p.subject === paper.subject);
     const start = () => {
       resultSaved.current = false;
@@ -154,8 +161,11 @@ export default function PracticePaperScreen({ navigation, route }) {
             return (
               <Pressable key={p.id} onPress={() => !on && dispatch({ type: "select", paperId: p.id })} accessibilityRole="button" accessibilityState={{ selected: on }}>
                 <View style={[s.card, on && { borderColor: P.selectedBorder }]}>
-                  <Text style={s.cardTitle}>{p.title}{p.draft ? "  ·  Draft (testers)" : ""}</Text>
-                  <Text style={s.soft}>{count} questions · {p.minutes} min</Text>
+                  <Text style={s.cardTitle}>{p.title}{p.draft ? "  ·  Draft (testers)" : ""}{done(p.id) ? "  ✓" : ""}</Text>
+                  <Text style={s.soft}>
+                    {count} questions · {p.minutes} min
+                    {p.mix ? " · a new mix of quest questions every time" : ""}
+                  </Text>
                   {on ? (
                     <View style={{ marginTop: 10, gap: 6 }}>
                       {p.parts.map((part, i) => (
