@@ -5,7 +5,8 @@
 // builds are never affected):
 //   quests/{questId}                       quest info (title, description, image)
 //   quests/{questId}/nodes/{nodeId}        units (trunk) and leaves (branches)
-//   users/{uid}/questProgress/{questId}    { nodes: { [nodeId]: { status, bestPercent, attempts } } }
+//   users/{uid}/questProgress/{questId}    { questId, nodes: { [nodeId]: { status, bestPercent, attempts } } }
+//     (questId is also stored as a field so the admin dashboard can query one quest: cost guard 2026-11-05)
 //   questAttempts/{autoId}                 one document per quiz attempt, with every answer
 
 import {
@@ -120,7 +121,7 @@ async function updateNodeProgress(questId, nodeId, { percent, passed, gate = nul
     nodesUpdate[resetGateId] = { failsSinceLastPractice: 0 };
   }
 
-  await setDoc(progressRef, { nodes: nodesUpdate, updatedAt: serverTimestamp() }, { merge: true });
+  await setDoc(progressRef, { questId, nodes: nodesUpdate, updatedAt: serverTimestamp() }, { merge: true });
 }
 
 /** Marks a study page as read (completed). */
@@ -229,6 +230,7 @@ export async function updateEndlessStats(questId, nodeId, { bestStreak = 0, answ
   await setDoc(
     doc(db, "users", user.uid, "questProgress", questId),
     {
+      questId,
       nodes: {
         [nodeId]: {
           bestStreak: Math.max(prevBest, bestStreak),
@@ -269,7 +271,7 @@ async function saveMistakes(p) {
     latestMistakes.set(key, next);
     await setDoc(
       doc(db, "users", user.uid, "questProgress", p.questId),
-      { mistakes: payload, updatedAt: serverTimestamp() },
+      { questId: p.questId, mistakes: payload, updatedAt: serverTimestamp() },
       { merge: true }
     );
   } catch (e) {
@@ -306,7 +308,7 @@ async function saveStats(p, endedAt) {
     Object.keys(prev.daily || {}).forEach((d) => {
       if (!(d in next.daily)) daily[d] = deleteField();
     });
-    await setDoc(ref, { stats: { ...next, daily } }, { merge: true });
+    await setDoc(ref, { questId: p.questId, stats: { ...next, daily } }, { merge: true });
   } catch (e) {
     console.warn("saveStats failed:", e);
   }

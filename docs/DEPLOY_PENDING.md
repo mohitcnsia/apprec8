@@ -12,6 +12,17 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
+## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **waiting for owner OK** (owner: "fix later - ok")
+
+Why: the admin dashboard read every kid's progress for EVERY quest, then kept one quest (≈ kids × 4 reads per open).
+Now progress docs carry a `questId` field and the dashboard asks only for that quest (≈ 1 read per kid).
+Code is safe before the deploy: the app falls back to the old read until the index exists.
+Steps (Gemini, once the owner says OK), from Claude's folder:
+1. `firebase deploy --only firestore:indexes --project apprec8-ca229` (adds one index: questProgress.questId). If the CLI
+   asks to DELETE indexes that are not in the file, answer **No** and report.
+2. `node scripts/admin/backfillQuestId.cjs` (dry run: today 2 docs), then `node scripts/admin/backfillQuestId.cjs --apply`.
+3. Report both outputs. App side ships with the next over-the-air update (owner's "publish").
+
 ## DR-13 · Cost guard 2: cache the leaderboards · **owner OK 2026-11-05 → merged → Gemini G30** (with DR-12)
 
 Why: the class board read 1 doc per kid per quest on every open (a class of 40 ≈ 200 reads per open; one busy class could

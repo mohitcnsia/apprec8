@@ -16,10 +16,20 @@ import { getApp } from "@react-native-firebase/app";
 
 const db = getFirestore(getApp());
 
-/** Every kid's progress doc for one quest (≈ 1 read per kid). */
+/**
+ * Every kid's progress doc for one quest: 1 read per kid (cost guard DR-14, 2026-11-05).
+ * Progress docs carry a `questId` field, so we ask only for this quest. Until the collection-group index on
+ * questProgress.questId is deployed (firestore.indexes.json), the query fails and we fall back to the old full read.
+ */
 export async function listKidProgress(questId) {
-  const snap = await getDocs(collectionGroup(db, "questProgress"));
-  return snap.docs
+  let docs;
+  try {
+    docs = (await getDocs(query(collectionGroup(db, "questProgress"), where("questId", "==", questId)))).docs;
+  } catch (e) {
+    console.warn("listKidProgress: questId index not ready, reading every quest's progress", e?.code || e?.message);
+    docs = (await getDocs(collectionGroup(db, "questProgress"))).docs;
+  }
+  return docs
     .filter((d) => d.id === questId)
     .map((d) => ({ uid: d.ref.parent.parent?.id, ...d.data() }))
     .filter((k) => k.uid);
