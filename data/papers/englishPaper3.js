@@ -17,7 +17,7 @@ export default {
   title: "Paper 3",
   minutes: 60,
   grades: [5],
-  draft: true, // testers only until Seema / the owner approve the questions
+  draft: false, // owner approved 2026-11-05
   passages: {
     bees: {
       title: "How Bees Share a Secret",
