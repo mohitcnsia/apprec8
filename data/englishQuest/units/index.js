@@ -8,6 +8,7 @@ import u4 from "./u4.js";
 import u5 from "./u5.js";
 import u6 from "./u6.js";
 import u7 from "./u7.js";
+import u8 from "./u8.js";
 
 export const extraUnits = [
   u3,
@@ -15,7 +16,8 @@ export const extraUnits = [
   u5,
   u6,
   u7,
+  u8,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
-export const nextUnitTeaser = { id: "eq-u8", unitOrder: 8, title: "Linking Words" };
+export const nextUnitTeaser = { id: "eq-u9", unitOrder: 9, title: "Punctuation Power" };

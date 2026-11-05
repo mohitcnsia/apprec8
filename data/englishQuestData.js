@@ -50,6 +50,8 @@ export const tile = {
 // mustnt-donthave-mixup, tag-polarity-error, tag-helper-error, tag-pronoun-error
 // Unit 7 (Class 5+): passive-form-error, passive-tense-error, passive-number-error, passive-agent-error, reported-tense-error,
 // reported-pronoun-error, reported-question-error, reported-order-error, said-told-error
+// Unit 8 (linking words): because-so-mixup (reason vs result), because-of-error (because of + sentence), conjunction-double-error
+// (although … but), when-while-mixup, conjunction-pair-error (neither … or); reuses conjunction-meaning-error, time-word-mixup
 
 // ---------- Study pages (new) ----------
 export const studyPages = {
