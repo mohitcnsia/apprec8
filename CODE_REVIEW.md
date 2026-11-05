@@ -1915,3 +1915,6 @@ Reported Speech, Passive, Editing.
     **Winners' privacy (owner agreed):** by default show only first name + initial, school and class (no photo). Full
     name / photo only if the parent ticked "Show my child's name and photo if they win" in the parent consent. Schools
     announce winners on their own pages under their own consent. Rules page published before the qualifier starts.
+    **Parent reports (owner, 2026-11-05, mockups V1–V6):** weekly = "<Name>'s weekly report is ready"; tip line =
+    "Seema's suggestion" / "सीमा की सलाह". **Daily report = premium** (V6: today's time, questions, accuracy, sessions,
+    one real mistake, tomorrow's 15 minutes, a calm bedtime note). Goes to the parent only, never pushed to the child.
