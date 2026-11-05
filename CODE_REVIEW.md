@@ -1918,3 +1918,10 @@ Reported Speech, Passive, Editing.
     **Parent reports (owner, 2026-11-05, mockups V1–V6):** weekly = "<Name>'s weekly report is ready"; tip line =
     "Seema's suggestion" / "सीमा की सलाह". **Daily report = premium** (V6: today's time, questions, accuracy, sessions,
     one real mistake, tomorrow's 15 minutes, a calm bedtime note). Goes to the parent only, never pushed to the child.
+11. **Pricing shape (owner, 2026-11-05):** learning free for every child (quest, practice, papers, mistakes, weekly
+    report); premium = extra depth for adults (daily report, history, PTM view); schools pay per student, never kids;
+    no ads, no data selling, no dark patterns. Year 1: **₹99/year "founding family" price, locked for life** (later
+    price can rise without upsetting early supporters). **"One pays, one learns":** each paid year sponsors a free
+    premium year for a government-school child; show the real count in the app; promise it only if we do it. Later,
+    olympiad fees cover costs. Needs (after the pilot + daily report): Google Play Billing (native build; Google keeps
+    ~15% of subscriptions; check GST with a CA), a `premium` flag checked on the server, a sponsored-kids counter.
