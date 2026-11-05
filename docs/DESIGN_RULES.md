@@ -19,3 +19,7 @@ Mockups: quiz canvas boards E–I. Colours come from `components/quiz/quizPalett
 8. **Calm motion:** one small animation at a time; nothing blocks taps (confetti passes touches through);
    respect "Remove animations" (`hooks/useReduceMotion.js`). Hide the status bar while reading or playing.
 9. **Both themes, always:** test light AND dark; never white-on-white.
+
+**Bottom-heavy screens (owner 2026-11-05, login mockups):** anchor the whole content block low, near the thumb, not only the
+main button. Empty space goes at the TOP (room for a small, friendly animation later), never at the bottom. The most-used
+choice is the big bottom button (login: Google); rarer ones fold behind a quiet link (email, parent code, guest).
