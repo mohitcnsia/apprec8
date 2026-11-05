@@ -4442,9 +4442,9 @@ export const wordTables = {};
 // ---------- Nodes definition ----------
 // Unit 1
 const u1 = forGrades(unit("wp-u1", 1, "Word Power"), [2, 3, 4, 5, 6]);
-// Spec S word ladder (owner 2026-11-05): an easy first rung. Classes 2–4 only: Class 5–6 don't see it, so nothing they have
-// finished gets locked behind it (a topic opens only when the one before is cleared). branchOrder -1 = before the rest.
-const SAMEOPP_GRADES = [2, 3, 4];
+// Spec S word ladder (owner 2026-11-05): an easy first rung, branchOrder -1 = before the rest. Classes 2–5 (owner: a Class 5
+// child whose finished topics re-lock behind it just does it first: "she is quick"). Class 6 skips it.
+const SAMEOPP_GRADES = [2, 3, 4, 5];
 const sameOpp = forGrades(main("wp-sameopp", u1.id, -1, "Same & Opposite", [study("wp-sameopp-study"), quiz("wp-sameopp-warmup")]), SAMEOPP_GRADES);
 const sameOppP1 = forGrades(withSubtopic(practice("wp-sameopp-p1", sameOpp, 1, "Twin Words", "easy", [quiz("wp-sameopp-twins")]), "synonyms"), SAMEOPP_GRADES);
 const sameOppP2 = forGrades(withSubtopic(practice("wp-sameopp-p2", sameOpp, 2, "Opposite Words", "easy", [quiz("wp-sameopp-opposites")]), "antonyms"), SAMEOPP_GRADES);

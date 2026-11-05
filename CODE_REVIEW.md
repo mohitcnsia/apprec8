@@ -1823,8 +1823,10 @@ for Class 3–6, and Treasure Words' Big Words start with abide, ambush, appall,
   Twin Words 10, Opposite Words 10, ♾️ practice) for **Classes 2–4 only**. Change from the draft: not shown to Class 5
   (a topic opens only when the one before it is cleared, so showing it to Class 5 would lock Pratha's finished topics);
   Class 5 gets easy → hard through the new Learn cards instead. Checked: Class 5 path unchanged, finished topics stay done.
-- **Treasure Words re-order: on hold.** Re-ordering the Big Words groups would lock any group Pratha already finished
-  behind ones she hasn't. Needs her progress first (owner checks her map, or OK for a one-time read).
+- **Owner 2026-11-05: re-locking finished topics is fine ("she can work on stuff again, she is quick").** So:
+  "Same & Opposite" now for Classes 2–5; Treasure Words Big Words groups re-ordered easiest → hardest (and easiest words
+  first in each group; Claude's judgement), Class 4 sees the first two groups only. A finished topic placed after an
+  unfinished one shows locked until the earlier one is done (progress itself is kept).
 
 ## 2026-11-05 — Fix: login / registration review (owner: "email password flow seems broken") (Claude)
 Found and fixed (`utils/authErrors.js` + tests, `hooks/useFirebaseAuth.js`, `AppContent.js`, `screens/auth/AuthScreen.js`):
