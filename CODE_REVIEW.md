@@ -1980,3 +1980,11 @@ Cloud Scheduler's 3 free jobs cover it), so Monday's teacher card and Sunday's p
 class, like real use. "Reset Demo School" in Admin tools stays for a full reseed. Seema liked mockup row V.
 **Build plan:** pure generator `utils/demoSchool.js` + tests first (no live effect); the function, the filters and the
 Admin button after Gemini's G38 review; deploy by Gemini/owner.
+
+## 2026-11-05 — Mockup for review: Guide quests, learn by doing (row W) (Claude)
+Owner and Seema want to learn the dry run (A3) by doing. **Me → Guides**: "Set up a school" (admin, 5 steps: create
+school → create class → invite teacher → approve teacher → join as a test student), "Start your class" (teacher, 5:
+join as teacher → share code → approve students → assign a topic → see progress), "For parents" (4), "Your first day"
+(kids, 4). Each step opens the **real screen** with a guide strip saying what to tap (W3) and **ticks itself from real
+data** (school exists, class exists, members approved, assignment exists), then shows the next step (W4). No fake
+screens, no extra reads beyond what those screens already do (the checks reuse the data the screen loads).
