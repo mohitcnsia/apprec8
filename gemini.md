@@ -23,6 +23,14 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-05 (evening): practice paper built, specs R + S, DR-14 → G32 (Claude)
+- **Goal:** act on the owner's evening feedback.
+- **Done:** practice paper (mockup Q approved) built: Home → Explore → Practice paper; bundled papers, resume, clock,
+  check grid, result by part, answers; testers only until the paper questions are approved (`2dfefec`). DR-14 approved →
+  Gemini G32 (index + backfill; backfill again after the next publish). Help sheet: Call opens the dialer only, no call
+  button for 112 (prank-call worry). Draft specs **R Learn cards** (mockup row R) and **S word ladders** in CODE_REVIEW.md.
+- **How to test:** docs/qa/OWNER_TESTING.md → "Practice paper" (after "publish").
+
 ## 2026-11-05 (day): costs, Unit 8, Science Unit 5, safety mockup, branch `feat/quiz-redesign` (Claude)
 - **Goal:** owner away 8 h: cost guards (owner: "extremely cautious about costs"), more Class 3–5 content, safety mockup, clean-up.
 - **Completed Steps:**
