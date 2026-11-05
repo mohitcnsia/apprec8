@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import {
-  listenToVocabGameData,
+  loadVocabGameData,
 } from "../store/firestore-api";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -39,7 +39,7 @@ const VocabBuilder = ({ route, navigation }) => {
   const maxWrongGuesses = 6;
 
   useEffect(() => {
-    const unsubscribe = listenToVocabGameData(
+    const unsubscribe = loadVocabGameData(
       (data) => {
         if (Object.keys(data).length > 0) {
           setWordCategories(data);

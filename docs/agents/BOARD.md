@@ -34,6 +34,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 - ~~DR-11 deploy~~ **deployed** by Gemini (G29) 2026-11-05 07:07: teacher invites work.
 - ~~IAM step~~ done by owner 2026-11-05 (Token Creator on the App Engine account): Play as / child codes work.
 - ~~DR-13 leaderboard cache~~ owner OK 2026-11-05 ("OK DR-13") → merged → **G30 (Gemini)**.
+- **Cost guard 4 (app only, ships with the next "publish")**: Vocab game (~480 reads per open → 0, refresh weekly), Spelling Bee and Space quest map kept on the phone for 7 days (admin: 2 min). Summary of all guards: docs/COSTS.md.
 - **DR-14 dashboard query** (built, `questId` on progress + one index + backfill of 2 docs): owner OK to deploy? Steps in DEPLOY_PENDING.md.
 - ~~DR-12 cost guard~~ owner OK 2026-11-05 ("as long as it doesn't break stuff") → **G30 (Gemini)**. Budget alert: owner has had one since 2025.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.

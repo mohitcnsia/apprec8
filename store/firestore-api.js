@@ -16,6 +16,11 @@ import {
 import { getApp } from "@react-native-firebase/app";
 import { authInstance } from "../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
+import { cachedGameData } from "../services/gameCache";
+import { cacheKeys } from "../utils/cachePolicy";
+
+// Game lists: everyone keeps a week-long copy; the admin's lasts 2 minutes (sees newly seeded words quickly).
+const gameCacheOptions = () => (authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID ? { maxAgeMs: 2 * 60 * 1000 } : {});
 
 const app = getApp();
 const db = getFirestore(app);
@@ -32,11 +37,11 @@ export async function fetchSpellingBeePuzzles() {
   const puzzlesQuery = query(puzzlesRef); // No specific order needed for now
 
   try {
-    const querySnapshot = await getDocs(puzzlesQuery);
-    const puzzles = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const puzzles = await cachedGameData(
+      cacheKeys.game("spellingBee"),
+      async () => (await getDocs(puzzlesQuery)).docs.map((d) => ({ id: d.id, ...d.data() })),
+      gameCacheOptions()
+    );
 
     console.log(
       `fetchSpellingBeePuzzles: Successfully fetched ${puzzles.length} puzzles.`
@@ -51,7 +56,35 @@ export async function fetchSpellingBeePuzzles() {
 }
 
 /**
- * Sets up a real-time listener for vocabulary game data.
+ * Vocab game data, read once and kept on the phone for a week (cost guard 2026-11-05; the live listener below read
+ * every category and all ~460 words on every open). Same callback shape as listenToVocabGameData:
+ * onData({ [categoryId]: { name, words } }). Returns a cancel function.
+ */
+export function loadVocabGameData(onData, onError) {
+  let cancelled = false;
+  cachedGameData(
+    cacheKeys.game("vocab"),
+    async () => {
+      const cats = await getDocs(query(collection(db, "gameVocabCategories"), orderBy("name")));
+      const entries = await Promise.all(
+        cats.docs.map(async (c) => {
+          const words = await getDocs(collection(db, "gameVocabCategories", c.id, "words"));
+          return [c.id, { name: c.data().name, words: words.docs.map((w) => w.data()) }];
+        })
+      );
+      return Object.fromEntries(entries);
+    },
+    gameCacheOptions()
+  )
+    .then((data) => !cancelled && onData(data))
+    .catch((e) => !cancelled && onError(e));
+  return () => {
+    cancelled = true;
+  };
+}
+
+/**
+ * Sets up a real-time listener for vocabulary game data. (Not used by the app any more: see loadVocabGameData.)
  * @param {(data: object) => void} onDataChange - Callback invoked with the full game data object.
  * @param {(error: Error) => void} onError - Callback invoked on listener error.
  * @returns {() => void} An unsubscribe function to detach the listener.

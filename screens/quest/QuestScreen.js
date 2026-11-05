@@ -12,7 +12,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Svg, Path } from "react-native-svg";
 import LottieView from "lottie-react-native";
-import { listenToQuestNodes, listenToUserDocument, markQuizCompleted } from "../../services/firestoreContentApi";
+import { loadQuestNodes, listenToUserDocument, markQuizCompleted } from "../../services/firestoreContentApi";
 
 // --- Mock Theme Hook ---
 const useTheme = () => ({
@@ -64,7 +64,7 @@ const QuestScreen = () => {
   // --- HOOK 1: Data fetching from Firestore (Quest Nodes) ---
   useEffect(() => {
     setIsLoading(true);
-    const unsubscribe = listenToQuestNodes(
+    const unsubscribe = loadQuestNodes(
       (nodes) => {
         setQuestNodesRaw(nodes.reverse());
         setIsLoading(false);

@@ -79,6 +79,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - Force-update: set Remote Config `active_message` with `type: "hard_update"` and a `min_version`. See `docs/in-app-messaging.md`.
 
 ## Other docs
+- `docs/COSTS.md` — what each screen reads, cost guards, rules for new code (owner: be very careful with costs)
 - `docs/architecture_summary.md`, `docs/features_summary.md`, `docs/build_and_run_guide.md`
 - `docs/investor_pitch.md` — product pitch + roadmap
 - `gemini.md` — session log from a previous AI assistant plus future TODOs

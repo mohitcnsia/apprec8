@@ -18,11 +18,23 @@ export function isFresh(entry, version, { now = Date.now(), maxAgeMs = DEFAULT_M
 
 export const makeEntry = (version, data, now = Date.now()) => ({ version, savedAt: now, data });
 
+/**
+ * Cost guard (2026-11-05): game word lists (Vocab, Spelling Bee) have no content version, so they are kept on the phone
+ * for a week and then refreshed. Opening the Vocab game used to read ~480 documents every time.
+ */
+export function isFreshByAge(entry, { now = Date.now(), maxAgeMs = DEFAULT_MAX_AGE_MS } = {}) {
+  if (!entry || entry.data === undefined || entry.data === null) return false;
+  if (typeof entry.savedAt !== "number") return false;
+  const age = now - entry.savedAt;
+  return age >= 0 && age <= maxAgeMs;
+}
+
 /** Storage keys (one per quest / quiz / study page). */
 export const cacheKeys = {
   nodes: (questId) => `eqc:nodes:${questId}`,
   quiz: (quizId) => `eqc:quiz:${quizId}`,
   study: (contentId) => `eqc:study:${contentId}`,
+  game: (name) => `game:${name}:v1`,
 };
 
 /** Content ids (quizzes + study/reading pages) used by the nodes of one unit, for prefetching. */

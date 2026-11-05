@@ -1,6 +1,6 @@
 // Tests for utils/cachePolicy.js. Run: npm test
 import assert from "node:assert/strict";
-import { isFresh, makeEntry, contentIdsForUnit, DEFAULT_MAX_AGE_MS, cacheKeys } from "../utils/cachePolicy.js";
+import { isFresh, isFreshByAge, makeEntry, contentIdsForUnit, DEFAULT_MAX_AGE_MS, cacheKeys } from "../utils/cachePolicy.js";
 
 const now = 1_000_000_000_000;
 const e = makeEntry(42, [1, 2], now);
@@ -23,4 +23,14 @@ const nodes = [
 assert.deepEqual(contentIdsForUnit(nodes, "u1"), { quizIds: ["q1", "gate", "boss"], studyIds: ["s1", "r1"] });
 assert.deepEqual(contentIdsForUnit(nodes, "nope"), { quizIds: [], studyIds: [] });
 assert.equal(cacheKeys.quiz("q1"), "eqc:quiz:q1");
+// Game lists: fresh for a week, by age only
+{
+  const now = 1_800_000_000_000;
+  assert.equal(isFreshByAge(null, { now }), false);
+  assert.equal(isFreshByAge({ savedAt: now - 1000, data: {} }, { now }), true);
+  assert.equal(isFreshByAge({ savedAt: now - DEFAULT_MAX_AGE_MS - 1, data: {} }, { now }), false, "older than a week → refresh");
+  assert.equal(isFreshByAge({ savedAt: now + 60000, data: {} }, { now }), false, "saved in the future (clock change) → refresh");
+  assert.equal(isFreshByAge({ savedAt: now, data: null }, { now }), false);
+  assert.equal(cacheKeys.game("vocab"), "game:vocab:v1");
+}
 console.log("cachePolicy: all tests passed");

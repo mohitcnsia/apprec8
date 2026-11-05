@@ -14,6 +14,9 @@ import { getApp } from "@react-native-firebase/app"; // To get the default app i
 // Assuming authInstance is correctly configured and exported from your firebase setup.
 // Please ensure this path is correct for your project structure.
 import { authInstance } from "../config/firebaseConfig"; // Assuming this is already modular and provides auth
+import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
+import { cachedGameData } from "./gameCache";
+import { cacheKeys } from "../utils/cachePolicy";
 
 // Get the default Firebase app instance
 const app = getApp();
@@ -579,6 +582,30 @@ export const listenToUserQuizAttempt = (quizId, onData, onError) => {
  * @param {(error: Error) => void} onError - Callback invoked on listener error.
  * @returns {() => void} An unsubscribe function to detach the listener.
  */
+/**
+ * Space quest map, read once and kept on the phone for a week (cost guard 2026-11-05: the live listener read all
+ * quest_nodes on every open). The admin's copy lasts 2 minutes, so "Update Quest Map" shows quickly.
+ * Same callbacks as listenToQuestNodes; returns a cancel function.
+ */
+export function loadQuestNodes(onDataChange, onError) {
+  let cancelled = false;
+  const admin = authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+  cachedGameData(
+    cacheKeys.game("questNodes"),
+    async () => (await getDocs(query(collection(db, "quest_nodes"), orderBy("order", "asc")))).docs.map((d) => ({ id: d.id, ...d.data() })),
+    admin ? { maxAgeMs: 2 * 60 * 1000 } : {}
+  )
+    .then((nodes) => !cancelled && typeof onDataChange === "function" && onDataChange([...nodes]))
+    .catch((e) => {
+      console.error("loadQuestNodes failed", e);
+      if (!cancelled && typeof onError === "function") onError(e);
+    });
+  return () => {
+    cancelled = true;
+  };
+}
+
+/** Live listener for the Space quest map. (Not used by the app any more: see loadQuestNodes.) */
 export function listenToQuestNodes(onDataChange, onError) {
   console.log("LISTENER: Setting up for all quest nodes.");
 
