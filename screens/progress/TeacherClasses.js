@@ -13,6 +13,8 @@ import { authInstance } from "../../config/firebaseConfig";
 import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
 import { questsForTeacher, classLabel, classCodeMessage } from "../../utils/classes";
 import { markGuide } from "../../services/guideFacts";
+import { teacherWeek } from "../../utils/weeklySummary";
+import TeacherWeekCard from "../../components/teacher/TeacherWeekCard";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
 import { topicNamer } from "../../utils/progressView";
@@ -104,6 +106,15 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
   );
 }
 
+/** The weekly card's input from the rows this screen already loaded (no extra reads). */
+function weekOf(cls, rows, assignments) {
+  const nodes = rows[0]?.perQuest.flatMap((p) => bundledQuest(p.q)?.nodes || []) || [];
+  const namer = topicNamer(nodes);
+  const titles = Object.fromEntries(nodes.map((n) => [n.id, n.title]));
+  const kids = rows.map((r) => ({ uid: r.uid, firstName: r.firstName, quests: r.perQuest.map((p) => ({ questId: p.q, stats: p.stats, nodes: p.nodes })) }));
+  return teacherWeek({ kids, assignments, namer, gateTitle: (id) => titles[id] || "challenge" });
+}
+
 export default function TeacherClasses() {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
@@ -116,6 +127,7 @@ export default function TeacherClasses() {
   const [error, setError] = useState(null);
   const [pending, setPending] = useState([]);
   const [reloadKey, setReloadKey] = useState(0);
+  const [assignments, setAssignments] = useState([]);
   const decide = (kid, approve) =>
     approveMember({ classId: open.id, kidUid: kid.uid, approve })
       .then(() => setReloadKey((k) => k + 1))
@@ -144,11 +156,13 @@ export default function TeacherClasses() {
             const namer = topicNamer(bundledQuest(q)?.nodes || []);
             const week = summarize(stats, "week");
             const weak = weakTopics(stats)[0];
-            perQuest.push({ q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0 });
+            const nodes = snap.exists() ? snap.data()?.nodes || {} : {};
+            perQuest.push({ q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes });
           }
           out.push({ ...m, perQuest, last: Math.max(0, ...perQuest.map((p) => p.last)) });
         }
         out.sort((a, b) => b.last - a.last);
+        setAssignments(await listAssignments(open.id).catch(() => []));
         setRows(out);
         if (out.length) markGuide("teacher.progress"); // guide step 5: the teacher has seen students' progress
       } catch (e) {
@@ -169,6 +183,8 @@ export default function TeacherClasses() {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade} · code {c.joinCode}</Text>
         </Pressable>
       ))}
+      {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
+      {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} P={P} /> : null}
       {/* Guide step 2: share the class code (phone share menu, like the admin's SHARE CODE). */}
       {open?.joinCode ? (
         <Pressable

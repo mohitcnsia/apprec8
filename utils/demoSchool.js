@@ -33,7 +33,7 @@ const NAMES = [
 export const DEMO_CLASSES = [
   {
     id: "demo_class_10b", name: "10-B", grade: 10, size: 32, subjects: ["english"],
-    quests: [{ questId: "english-quest", units: /^eq-b[1-6]$/, weak: /questions|reported/i, startShare: 0.5 }],
+    quests: [{ questId: "english-quest", units: /^eq-b[1-6]$/, weak: /question/i, startShare: 0.5 }],
     // first kids get the patterns the teacher card should catch (mockup V4)
     personas: ["twiceFailed", "away", "dropping", "strong", "strong", "strong", "strong", "strong", "strong"],
     assignment: { id: "demo_assign_passive", questId: "english-quest", unit: "eq-b5", note: "Finish before Friday's test" },

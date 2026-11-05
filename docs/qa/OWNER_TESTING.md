@@ -299,3 +299,9 @@ Test in **light and dark** mode.
    weak topics, an assignment (Passive voice, due Friday).
 3. `demo.parent@example.com` → Me: one child, Riya (Class 5). `demo.kid@example.com` → Riya's own app.
 4. Your own account: the main leaderboard and your Kids view show no demo kids.
+
+## Teacher "This week" card (mockup V4, 2026-11-06)
+Progress tab → tap a class you teach (best with the demo teacher login after DR-16): above SHARE CODE you see
+**This week**: how many practised; **1 · Reteach one thing** (the topic most students are below 60% in);
+**2 · Who needs you** (up to 3: away 7+ days, failed a challenge twice, accuracy falling); **3 · Assignment** with a
+done / started / not started bar; 🚀 who is ready for harder work. No extra reads: it uses what the screen loads.
