@@ -11,6 +11,11 @@ import u7 from "./u7.js";
 import u8 from "./u8.js";
 import u9 from "./u9.js";
 import b1 from "./b1.js"; // Grammar Pro (Classes 9–10)
+import b2 from "./b2.js";
+import b3 from "./b3.js";
+import b4 from "./b4.js";
+import b5 from "./b5.js";
+import b6 from "./b6.js";
 
 export const extraUnits = [
   u3,
@@ -21,6 +26,11 @@ export const extraUnits = [
   u8,
   u9,
   b1,
+  b2,
+  b3,
+  b4,
+  b5,
+  b6,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
