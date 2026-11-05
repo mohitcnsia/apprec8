@@ -1790,6 +1790,17 @@ won't read that. Mockup: canvas row **R** (R1–R4), https://claude.ai/artifact/
 - **Order of rewriting:** Word Power + Treasure Words first (with spec S), then the English units Pratha uses, then Science.
 - **Open question:** should a child be allowed to skip the cards and go straight to the warm-up? (Claude: yes, from R1's
   dots: kids who know it shouldn't be slowed down.)
+- **Owner 2026-11-05: approved** ("byte sized and much more interesting"). Decisions:
+  - Skip is allowed, **unlocking stays exactly as today**: a topic is done only when its Learn step AND its quiz are done
+    (`buildSteps` in utils/questTree.js), so a child who skips can pass the quiz and finish the cards later.
+  - Dark theme: dim, muted note tints with light text (R1–R5 updated); pastels only on the light theme.
+  - R4 button renamed **TRY 8 QUESTIONS ▶** (the owner didn't know what "START WARM-UP" meant; nor will a child).
+- **Media on cards (owner asked):** the app already has `expo-av` (audio/video), `expo-image` (pictures, GIF/WebP) and
+  `lottie-react-native` (animations), so no new build. Card fields: `image`, `audio` (a recorded clip, e.g. Seema saying the
+  word), `video` (≤ 30 s, our own file, plays muted until tapped, no autoplay). Files on our jsDelivr CDN (rule 1), free.
+  **No YouTube on cards**: ads, "up next" videos and links out of the app are not safe for kids. Cost: 0 reads; mobile
+  data for the parent, so clips stay small (≤ 3 MB) and load only when the card is shown. Order: pictures + read-aloud
+  first (now), recorded audio next (Seema), short clips last (need someone to make them).
 
 ## 2026-11-05 — Draft spec (not approved): S · Word ladders: start easy, build up (owner idea) (Claude)
 Why (owner): Word Power starts straight with Synonyms & Antonyms at olympiad level (scarce, prudent, opulent, destitute)
