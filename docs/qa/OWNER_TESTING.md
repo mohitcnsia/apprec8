@@ -41,6 +41,16 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### After you approve the review page + G31: English Unit 8, Science Unit 5 (needs a "publish" first), ~15 min
+1. Me → Admin tools → seed **English** and **Science**.
+2. English Quest: after Unit 7 comes **Unit 8 Linking Words** (a Class 3–4 child goes straight from Unit 6 to Unit 8). Pratha sees
+   the **Champion: Not Only… But Also** leaf; a Class 4 child doesn't.
+3. Science (testers): **Unit 5 Light, Sound & Magnets** for Classes 3–5; "Water, Air & Weather" shows as coming soon.
+
+### After Gemini's G30 deploy (DR-12 + DR-13): leaderboards, ~2 min
+1. Progress → Leaderboard opens as before. Points can be **up to 10 minutes behind** (they're saved and reused to keep costs down).
+2. Approving a child on a class page shows them on the class board straight away. Treasure Words now counts for class points.
+
 ### ⭐ 20.0.29 (lock the phone + play time), ~5 min. Needs the IAM step first (DEPLOY_PENDING.md)
 1. Upload `build-1793820561489.aab` to Play internal testing; install.
 2. Me → MY CHILDREN → **Play as Pratha** → a sheet: lock card, HOW LONG? (15/30/45 min, No limit), LOCK & PLAY.

@@ -23,6 +23,16 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-05 (day): costs, Unit 8, Science Unit 5, safety mockup, branch `feat/quiz-redesign` (Claude)
+- **Goal:** owner away 8 h: cost guards (owner: "extremely cautious about costs"), more Class 3–5 content, safety mockup, clean-up.
+- **Completed Steps:**
+  1. OTA `4aeab2e5` (20.0.29) with Units 5–7, Science 4, G28 Word Power mixes (reviewed + fixed by Claude). Owner seeded; IAM step done.
+  2. Cost guards: DR-12 `maxInstances` on every function; DR-13 leaderboards cached 10 min server-side, top-N ≤ 50 (both owner OK → G30);
+     DR-14 dashboard reads one quest (`questId` on progress, index + backfill script; waiting for OK).
+  3. English Unit 8 Linking Words (120 Qs) + Science Unit 5 Light, Sound & Magnets (105 Qs): review page + G31 second review.
+  4. Mockup P (child safety & privacy, draft for owner + Seema). Old unused screens deleted. Owner tests = 7 in-app reminders.
+- **How to test:** `npm test`; docs/qa/OWNER_TESTING.md (new sections at the top).
+
 ## 2026-11-05 (night): 20.0.28 → 20.0.29, Word Bank, schools, leaderboard, lock, English Units 5–6, branch `feat/quiz-redesign` (Claude)
 - **Goal:** ship owner feedback over the air (OTA from 20.0.28), redesign Schools + Leaderboard (mockups L, M), keep kids in the app (N1), English content for Class 3–5.
 - **Completed Steps:**
