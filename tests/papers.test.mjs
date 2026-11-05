@@ -44,6 +44,24 @@ const { PAPERS } = await import("../data/papers/index.js");
 const SHAPES = { english: [30, 10, 5, 5], science: [10, 35, 5] };
 for (const paper of PAPERS) check(paper, { counts: SHAPES[paper.subject], totalMarks: 60 });
 assert.equal(new Set(PAPERS.map((p) => p.id)).size, PAPERS.length, "paper ids are unique");
+// New, unseen questions: no paper question is a quest question, and no two papers share one (stories may share
+// generic questions like "What is the passage mainly about?", so passage questions are keyed by their passage).
+{
+  const quest = new Set();
+  // Same question = same text AND same answer ("Which sentence is punctuated correctly?" is a common stem).
+  const id = (x) => `${x.question.content}|${x.answer ?? x.options.find((o) => o.isCorrect)?.content}`;
+  for (const m of [english, wordPower, science]) Object.values(m.quizzes).flat().forEach((x) => quest.add(id(x)));
+  const seen = new Map();
+  for (const paper of PAPERS)
+    for (const part of paper.parts)
+      for (const x of part.questions) {
+        const text = x.question.content;
+        if (!x.passage) assert.ok(!quest.has(id(x)), `${paper.id}: "${text}" is already a quest question`);
+        const key = x.passage ? `${paper.id}|${id(x)}` : id(x);
+        assert.ok(!seen.has(key), `${paper.id}: "${text}" is also in ${seen.get(key)}`);
+        seen.set(key, paper.id);
+      }
+}
 
 // Thinking-skills answers recomputed (same rules as tests/reasoningCheck.test.mjs)
 {
