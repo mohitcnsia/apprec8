@@ -312,3 +312,9 @@ A parent account with children (yours after you add / link a child, or demo.pare
 done count / next topic; **One thing to do at home**; Seema's suggestion (changes each week). English / हिंदी switch at
 the top (remembered on the phone). **Owner: please read the Hindi** (utils/parentWeek.js, WORDS.hi and TIPS.hi) and
 tell Claude what to change. Seema: please check the 4 tips (TIPS.en).
+
+## Link Pratha's account to yours (after DR-17 is deployed)
+1. Your phone: Me → **Link my child's own account** → your name, Father, tick → MAKE THE CODE → share it to Pratha.
+2. Pratha's phone (signed in as her): Me → **Link to my parent** → type the code → "Linked ✓".
+3. Your phone: Me shows "Pratha's week"; Progress → **My children** shows her week (English/हिंदी switch).
+4. Her login, stars and progress are unchanged. "Play as" and delete are not offered for her (she has her own login).

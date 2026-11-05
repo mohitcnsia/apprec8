@@ -13,6 +13,8 @@ import InviteTeacherScreen from "../screens/admin/InviteTeacherScreen";
 import JoinAsTeacherScreen from "../screens/profile/JoinAsTeacherScreen";
 import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import GuidesScreen from "../screens/guides/GuidesScreen";
+import LinkChildScreen from "../screens/profile/LinkChildScreen";
+import LinkParentScreen from "../screens/profile/LinkParentScreen";
 import GuideScreen from "../screens/guides/GuideScreen";
 import AddChildScreen from "../screens/profile/AddChildScreen";
 import ParentPinScreen from "../screens/profile/ParentPinScreen";
@@ -100,6 +102,8 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen name="JoinAsTeacher" component={JoinAsTeacherScreen} options={{ headerShown: false }} />
           <Stack.Screen name="JoinClass" component={JoinClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Guides" component={GuidesScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="LinkChild" component={LinkChildScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="LinkParent" component={LinkParentScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Guide" component={GuideScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AddChild" component={AddChildScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ParentPin" component={ParentPinScreen} options={{ headerShown: false }} />

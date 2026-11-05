@@ -2088,3 +2088,19 @@ words take un-; reading: "solar battery" → a solar panel that charges the batt
 paragraph", "affixes" → plain words; 2 Boss questions repeated warm-ups → angrily, division. Tests pass.
 Note: u10 and Grammar Pro 1 share unitOrder 10, but their classes never overlap (3–8 vs 9–10).
 Needs: publish + English re-seed (owner).
+
+## 2026-11-06 (night) — Review request + Deploy request DR-17: link a child's existing account (decision 9) (Claude)
+Needed for Pratha's parent report (her account has a year of progress). Reuses the Add-a-child / Join-as-teacher look
+(no new design); the owner can stop it before publish if he wants a mockup first.
+- Parent: Me → **Link my child's own account** → consent (name, relation, English/हिंदी, `LINK_CONSENT_TEXT`, owner
+  checks the Hindi) → one-time code (24 h) → share. `createParentLinkCode` refuses child/student accounts, max 6.
+- Child (own login, has a class, no parent yet): Me → **Link to my parent** → code → `redeemParentLinkCode`
+  (transaction: code unused + not expired, not the parent's own account, not a parent account, not demo) sets
+  `parentUids` + `ownLogin: true` on the child, `childUids` + `isParent` on the parent, writes a `consents` doc
+  (`kind: "link-existing"`), marks the code used.
+- `ownLogin` children: no "Play as" (`switchToChild` refuses) and no delete by the parent (`deleteChildProfile`
+  refuses); Me shows "<name>'s week" → Progress → My children.
+- Me: "MY CHILDREN" (add a child) is no longer shown to students (accounts with a class); before, Pratha saw "Add a child".
+- Not yet: unlinking (write to us for now).
+**DR-17 (owner OK, then Gemini):** `firebase deploy --only functions:createParentLinkCode,functions:redeemParentLinkCode,functions:deleteChildProfile,functions:switchToChild --project apprec8-ca229`.
+`parentLinkCodes` needs no client rule (server only).

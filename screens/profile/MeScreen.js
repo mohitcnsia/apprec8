@@ -161,18 +161,25 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
       </View>
 
-      {/* Parents add their children here (RB-6). Child accounts don't see this. */}
-      {!userData?.isChild ? (
+      {/* Parents add their children here (RB-6). Child accounts and students (with a class) don't see this. */}
+      {!userData?.isChild && !Number.isInteger(userData?.grade) ? (
         <>
           <Text style={styles.section}>MY CHILDREN</Text>
           <View style={styles.group}>
             {children.map((k) => (
               <View key={k.uid}>
+                {/* A linked child has their own login: no "Play as"; their week is in Progress → My children. */}
                 <Row
                   icon="happy-outline"
-                  label={`Play as ${k.firstName || "child"}`}
+                  label={k.ownLogin ? `${k.firstName || "Child"}'s week` : `Play as ${k.firstName || "child"}`}
                   detail={k.grade ? `Class ${k.grade}` : null}
-                  onPress={() => (!userData?.hasParentPin ? navigation.navigate("ParentPin", { mode: "set" }) : setPlayKid(k))}
+                  onPress={() =>
+                    k.ownLogin
+                      ? navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "family" } })
+                      : !userData?.hasParentPin
+                      ? navigation.navigate("ParentPin", { mode: "set" })
+                      : setPlayKid(k)
+                  }
                   styles={styles}
                   P={P}
                 />
@@ -180,6 +187,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
               </View>
             ))}
             <Row icon="person-add-outline" label="Add a child" onPress={() => navigation.navigate("AddChild")} styles={styles} P={P} />
+            <View style={styles.divider} />
+            <Row icon="link-outline" label="Link my child's own account" detail="they already use the app" onPress={() => navigation.navigate("LinkChild")} styles={styles} P={P} />
             <View style={styles.divider} />
             <Row icon="keypad-outline" label={userData?.hasParentPin ? "Change parent PIN" : "Set parent PIN"} onPress={() => navigation.navigate("ParentPin", { mode: "set" })} styles={styles} P={P} />
           </View>
@@ -189,6 +198,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <Row icon="swap-horizontal-outline" label="Switch to parent (PIN)" onPress={() => navigation.navigate("ParentPin", { mode: "unlock" })} styles={styles} P={P} />
         </View>
       )}
+
+      {/* A student with their own login links to a parent (decision 9). */}
+      {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length ? (
+        <View style={styles.group}>
+          <Row icon="link-outline" label="Link to my parent" detail="with a code from them" onPress={() => navigation.navigate("LinkParent")} styles={styles} P={P} />
+        </View>
+      ) : null}
 
       <Text style={styles.section}>MY CLASSES</Text>
       <View style={styles.group}>

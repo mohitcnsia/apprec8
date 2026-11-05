@@ -123,6 +123,8 @@ exports.deleteChildProfile = functions
     if (!kidDoc.exists || !(kidDoc.data().parentUids || []).includes(context.auth.uid)) {
       throw new functions.https.HttpsError("permission-denied", "Only this child's parent can do this.");
     }
+    // A linked account has its own login and history: a parent can't delete it from here (decision 9).
+    if (kidDoc.data().ownLogin) throw new functions.https.HttpsError("failed-precondition", "This child has their own account. They can delete it from their own Me tab.");
     await db.recursiveDelete(db.collection("users").doc(kidUid));
     await db.collection("users").doc(context.auth.uid).set({ childUids: admin.firestore.FieldValue.arrayRemove(kidUid) }, { merge: true });
     await admin.auth().deleteUser(kidUid).catch(() => {});
@@ -161,6 +163,7 @@ exports.switchToChild = functions
     if (!kid.exists || !(kid.data().parentUids || []).includes(context.auth.uid)) {
       throw new functions.https.HttpsError("permission-denied", "Only this child's parent can do this.");
     }
+    if (kid.data().ownLogin) throw new functions.https.HttpsError("failed-precondition", "This child signs in with their own account.");
     const pin = await db.collection("parentPins").doc(context.auth.uid).get();
     if (!pin.exists) throw new functions.https.HttpsError("failed-precondition", "Set your parent PIN first.");
     return { token: await admin.auth().createCustomToken(kid.id, { child: true }) };
@@ -187,4 +190,85 @@ exports.switchToParent = functions
     }
     await pinRef.set({ fails: 0, lockedUntil: null }, { merge: true });
     return { token: await admin.auth().createCustomToken(parentUid) };
+  });
+
+// ---------- Link a child's EXISTING account to a parent (product decision 9, owner 2026-11-05) ----------
+// For a child who already has their own login and progress (e.g. Pratha). Both sides confirm: the parent makes a
+// one-time code (24 h) with their name + relation (consent record), the child types it while signed in. The child keeps
+// their own login: ownLogin: true blocks "Play as" and "Delete" for linked accounts (those are for parent-made profiles).
+// parentLinkCodes/{code} { parentUid, parentName, relation, language, version, expiresAt, used }  (server only)
+const LINK_HOURS = 24;
+
+exports.createParentLinkCode = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const parentUid = context.auth.uid;
+    const me = await db.collection("users").doc(parentUid).get();
+    if (me.exists && (me.data().isChild || Number.isInteger(me.data().grade))) {
+      throw new functions.https.HttpsError("permission-denied", "Only a parent's own account can link a child.");
+    }
+    if (((me.exists && me.data().childUids) || []).length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can link up to 6 children.");
+    const c = data?.consent || {};
+    if (String(c.parentName || "").trim().length < 2 || !RELATIONS.includes(c.relation) || !["en", "hi"].includes(c.language) || !c.version) {
+      throw new functions.https.HttpsError("invalid-argument", "The parent's consent is needed.");
+    }
+    for (let i = 0; i < 5; i++) {
+      const code = makeCode();
+      const ref = db.collection("parentLinkCodes").doc(code);
+      if ((await ref.get()).exists) continue;
+      await ref.set({
+        parentUid,
+        parentName: String(c.parentName).trim(),
+        relation: c.relation,
+        language: c.language,
+        version: c.version,
+        used: false,
+        expiresAt: Date.now() + LINK_HOURS * 3600 * 1000,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      return { code, hours: LINK_HOURS };
+    }
+    throw new functions.https.HttpsError("internal", "Couldn't make a code. Try again.");
+  });
+
+exports.redeemParentLinkCode = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const kidUid = context.auth.uid;
+    if (kidUid.startsWith("demo_")) throw new functions.https.HttpsError("failed-precondition", "Demo accounts can't be linked.");
+    const code = String(data?.code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (code.length !== 6) throw new functions.https.HttpsError("invalid-argument", "The code has 6 letters and numbers.");
+    const ref = db.collection("parentLinkCodes").doc(code);
+    return db.runTransaction(async (t) => {
+      const snap = await t.get(ref);
+      const v = snap.exists ? snap.data() : null;
+      if (!v || v.used || !(v.expiresAt > Date.now())) throw new functions.https.HttpsError("not-found", "This code doesn't work. Ask your parent for a new one.");
+      if (v.parentUid === kidUid) throw new functions.https.HttpsError("failed-precondition", "Type this code on your child's phone, signed in as your child.");
+      const parentRef = db.collection("users").doc(v.parentUid);
+      const kidRef = db.collection("users").doc(kidUid);
+      const [parent, kid] = [await t.get(parentRef), await t.get(kidRef)];
+      if (!kid.exists) throw new functions.https.HttpsError("not-found", "Your account isn't ready yet. Open the app once and try again.");
+      if ((kid.data().childUids || []).length) throw new functions.https.HttpsError("failed-precondition", "A parent's account can't be linked as a child.");
+      const children = (parent.exists && parent.data().childUids) || [];
+      if (!children.includes(kidUid) && children.length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "That parent already has 6 children linked.");
+      const { FieldValue } = admin.firestore;
+      t.set(kidRef, { parentUids: FieldValue.arrayUnion(v.parentUid), ownLogin: true }, { merge: true });
+      t.set(parentRef, { childUids: FieldValue.arrayUnion(kidUid), isParent: true }, { merge: true });
+      t.set(db.collection("consents").doc(), {
+        kind: "link-existing",
+        kidUid,
+        parentUid: v.parentUid,
+        parentName: v.parentName,
+        relation: v.relation,
+        language: v.language,
+        version: v.version,
+        confirmedByChildAt: FieldValue.serverTimestamp(),
+      });
+      t.update(ref, { used: true, usedBy: kidUid, usedAt: FieldValue.serverTimestamp() });
+      return { parentName: v.parentName, relation: v.relation };
+    });
   });
