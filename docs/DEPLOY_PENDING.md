@@ -25,7 +25,7 @@ Steps (Gemini, once the owner says OK), from Claude's folder:
 4. After that publish: run the backfill once more (`--apply`). A phone still on the old app could start a new quest
    between the two runs, and that doc would have no `questId`, so the dashboard would not show it.
 
-## DR-13 · Cost guard 2: cache the leaderboards · **owner OK 2026-11-05 → merged → Gemini G30** (with DR-12)
+## DR-13 · Cost guard 2: cache the leaderboards · **deployed 2026-11-05 (Gemini G30)**
 
 Why: the class board read 1 doc per kid per quest on every open (a class of 40 ≈ 200 reads per open; one busy class could
 use most of the free 50,000 reads/day). Now: computed at most once per 10 min per class and kept in a server-only doc;
@@ -34,7 +34,7 @@ any number before). Also: Treasure Words now counts for class points; approving 
 What kids notice: points on the boards can be up to 10 min behind. No app update, no rules change.
 On OK: Claude merges into `feat/quiz-redesign`; Gemini deploys with G30 (`firebase deploy --only functions`).
 
-## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **owner OK 2026-11-05 → Gemini G30**
+## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **deployed 2026-11-05 (Gemini G30)**
 
 Why: today nothing limits how many copies of a function can run, so a bug, a loop or someone spamming the app could
 grow the bill without limit. `functions/common/config.js` now sets `maxInstances` for every function (all use it).

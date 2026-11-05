@@ -75,9 +75,9 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | todo (after G30, before G31) | from Claude's folder | |
+| G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | todo (after G30) | report only | |
-| G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | todo (next) | from Claude's folder | |
+| G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | **done** 2026-11-05 evening (42 functions live, report G30) | from Claude's folder | |
 | G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
 | Treasure Words quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA (owner OK) |
@@ -168,7 +168,7 @@ Read `data/englishQuest/units/u8.js`, `u9.js` and `data/scienceQuest/units/u5.js
 **Deliver:** `docs/agents/reports/G31.md`: a table `quizId · question # · problem · suggested fix` (empty table = all fine),
 commit `gemini(G31): done — N findings`. Don't edit u8.js; Claude fixes.
 
-### G30 · [todo] · gemini · ⭐ Deploy DR-12 + DR-13: cost guards (owner-approved: yes, 2026-11-05)
+### G30 · [done] · gemini · ⭐ Deploy DR-12 + DR-13: cost guards (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** for exactly this step (DR-12: "cap server copies as long as it doesn't break stuff"; DR-13: "OK DR-13", 2026-11-05).
 Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (branch `feat/quiz-redesign`, commit `72d0c27` or later).
 What changes: DR-12 `functions/common/config.js` (`maxInstances: 10`, long admin jobs `2`); DR-13 `getLeaderboard` and
