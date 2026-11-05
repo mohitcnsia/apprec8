@@ -38,6 +38,25 @@ export const tile = {
 
 // ---------- Study pages ----------
 export const studyPages = {
+  // Spec S word ladder (owner 2026-11-05): an easy first rung for Classes 2–4, before "Synonyms and Antonyms".
+  "wp-sameopp-study": {
+    name: "Same & Opposite",
+    author: "Apprec8",
+    cards: [
+      { emoji: "👯", title: "Word twins", text: "Some words mean the same thing. We call them word twins (synonyms).", examples: ["big = large", "happy = glad", "begin = start"] },
+      { kind: "check", question: "Which word is a twin of BIG?", answer: "large", wrong: ["small", "tiny", "short"], explain: "A big box is a large box." },
+      { emoji: "🔄", title: "Word opposites", text: "Some words mean the reverse. We call them opposites (antonyms).", examples: ["hot ↔ cold", "up ↔ down", "day ↔ night"] },
+      { kind: "check", question: "What is the opposite of FULL?", answer: "empty", wrong: ["heavy", "big", "round"], explain: "A full glass has water; an empty glass has none." },
+      { emoji: "✨", title: "Magic starts: un- and dis-", text: "Put un- or dis- at the start of some words and the meaning flips.", examples: ["kind → unkind", "happy → unhappy", "like → dislike"] },
+      { kind: "check", question: "What is the opposite of AGREE?", answer: "disagree", wrong: ["agreed", "agreeing", "agreement"], explain: "dis- + agree = disagree." },
+      { emoji: "🔍", title: "Try it in the sentence", text: "Not sure? Put the word into a sentence. A twin keeps the meaning; an opposite flips it.", examples: ["The cake is big. = The cake is large.", "The tea is hot. ↔ The tea is cold."] },
+    ],
+    content:
+      "### 👯 Same & Opposite\n\n**Word twins (synonyms)** mean the same: big = large, happy = glad, begin = start, fast = quick.\n\n" +
+      "**Opposites (antonyms)** mean the reverse: hot ↔ cold, up ↔ down, day ↔ night, early ↔ late.\n\n" +
+      "**un- and dis-** flip a word: kind → unkind, happy → unhappy, like → dislike, agree → disagree.\n\n" +
+      "> 💡 **Tip:** Put the word into a sentence. A twin keeps the meaning; an opposite flips it.",
+  },
   "wp-synant-study": {
     name: "Synonyms and Antonyms",
     author: "Apprec8",
@@ -80,6 +99,41 @@ export const studyPages = {
 
 // ---------- Quizzes ----------
 export const quizzes = {
+  // Spec S word ladder: easy first rung (Classes 2–4).
+  "wp-sameopp-warmup": [
+    { subtopic: "synonyms", ...q("Which word means the same as BIG?", "large", [["small", "synonym-error"], ["tiny", "synonym-error"], ["short", "synonym-error"]], "Big and large mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as HAPPY?", "glad", [["sad", "synonym-error"], ["angry", "synonym-error"], ["sleepy", "synonym-error"]], "Happy and glad mean the same.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of HOT?", "cold", [["warm", "antonym-error"], ["sunny", "antonym-error"], ["wet", "antonym-error"]], "Hot ↔ cold.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of UP?", "down", [["top", "antonym-error"], ["over", "antonym-error"], ["high", "antonym-error"]], "Up ↔ down.") },
+    { subtopic: "synonyms", ...q("Which word means the same as BEGIN?", "start", [["end", "synonym-error"], ["stop", "synonym-error"], ["finish", "synonym-error"]], "Begin and start mean the same. End, stop and finish are opposites.") },
+    { subtopic: "antonyms", ...q("What is the opposite of KIND?", "unkind", [["kindly", "antonym-error"], ["kinder", "antonym-error"], ["kindness", "antonym-error"]], "un- + kind = unkind.") },
+    { subtopic: "antonyms", ...q("What is the opposite of LIKE?", "dislike", [["likely", "antonym-error"], ["liking", "antonym-error"], ["alike", "antonym-error"]], "dis- + like = dislike.") },
+    { subtopic: "synonyms", ...q("Which two words are twins (same meaning)?", "shut and close", [["open and shut", "synonym-error"], ["hot and cold", "synonym-error"], ["up and down", "synonym-error"]], "Shut the door = close the door. The others are opposites.") },
+  ],
+  "wp-sameopp-twins": [
+    { subtopic: "synonyms", ...q("Which word means the same as FAST?", "quick", [["slow", "synonym-error"], ["late", "synonym-error"], ["still", "synonym-error"]], "Fast and quick mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as LITTLE?", "small", [["huge", "synonym-error"], ["tall", "synonym-error"], ["long", "synonym-error"]], "Little and small mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as SHOUT?", "yell", [["whisper", "synonym-error"], ["sing", "synonym-error"], ["laugh", "synonym-error"]], "Shout and yell both mean to call out loudly.") },
+    { subtopic: "synonyms", ...q("Which word means the same as JUMP?", "leap", [["sit", "synonym-error"], ["crawl", "synonym-error"], ["walk", "synonym-error"]], "Jump and leap mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as END?", "finish", [["start", "synonym-error"], ["open", "synonym-error"], ["begin", "synonym-error"]], "End and finish mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as GIFT?", "present", [["party", "synonym-error"], ["cake", "synonym-error"], ["letter", "synonym-error"]], "A gift is a present.") },
+    { subtopic: "synonyms", ...q("Which word means the same as SCARED?", "afraid", [["brave", "synonym-error"], ["bold", "synonym-error"], ["proud", "synonym-error"]], "Scared and afraid mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as RICH?", "wealthy", [["poor", "synonym-error"], ["kind", "synonym-error"], ["busy", "synonym-error"]], "Rich and wealthy both mean having lots of money.") },
+    { subtopic: "synonyms", ...q("Which word means the same as CORRECT?", "right", [["wrong", "synonym-error"], ["false", "synonym-error"], ["late", "synonym-error"]], "Correct and right mean the same.") },
+    { subtopic: "synonyms", ...q("Which word means the same as ANGRY?", "cross", [["calm", "synonym-error"], ["cheerful", "synonym-error"], ["sleepy", "synonym-error"]], "Cross can also mean angry: \"Mum was cross with me.\"") },
+  ],
+  "wp-sameopp-opposites": [
+    { subtopic: "antonyms", ...q("Which word is the opposite of EARLY?", "late", [["soon", "antonym-error"], ["first", "antonym-error"], ["quick", "antonym-error"]], "early ↔ late.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of FULL?", "empty", [["heavy", "antonym-error"], ["big", "antonym-error"], ["round", "antonym-error"]], "full ↔ empty.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of DAY?", "night", [["morning", "antonym-error"], ["sun", "antonym-error"], ["week", "antonym-error"]], "day ↔ night.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of WIN?", "lose", [["play", "antonym-error"], ["game", "antonym-error"], ["try", "antonym-error"]], "win ↔ lose.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of PUSH?", "pull", [["press", "antonym-error"], ["lift", "antonym-error"], ["kick", "antonym-error"]], "push ↔ pull.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of REMEMBER?", "forget", [["think", "antonym-error"], ["know", "antonym-error"], ["learn", "antonym-error"]], "remember ↔ forget.") },
+    { subtopic: "antonyms", ...q("Which word is the opposite of TALL?", "short", [["big", "antonym-error"], ["long", "antonym-error"], ["thin", "antonym-error"]], "tall ↔ short.") },
+    { subtopic: "antonyms", ...q("What is the opposite of HAPPY?", "unhappy", [["happily", "antonym-error"], ["happier", "antonym-error"], ["happiness", "antonym-error"]], "un- + happy = unhappy.") },
+    { subtopic: "antonyms", ...q("What is the opposite of AGREE?", "disagree", [["agreed", "antonym-error"], ["agreeing", "antonym-error"], ["agreement", "antonym-error"]], "dis- + agree = disagree.") },
+    { subtopic: "antonyms", ...q("What is the opposite of SAFE?", "unsafe", [["safely", "antonym-error"], ["safer", "antonym-error"], ["safety", "antonym-error"]], "un- + safe = unsafe.") },
+  ],
   "wp-synant-warmup": [
       {
         subtopic: "synonyms",
@@ -4387,7 +4441,14 @@ export const wordTables = {};
 
 // ---------- Nodes definition ----------
 // Unit 1
-const u1 = forGrades(unit("wp-u1", 1, "Word Power"), [3, 4, 5, 6]);
+const u1 = forGrades(unit("wp-u1", 1, "Word Power"), [2, 3, 4, 5, 6]);
+// Spec S word ladder (owner 2026-11-05): an easy first rung. Classes 2–4 only: Class 5–6 don't see it, so nothing they have
+// finished gets locked behind it (a topic opens only when the one before is cleared). branchOrder -1 = before the rest.
+const SAMEOPP_GRADES = [2, 3, 4];
+const sameOpp = forGrades(main("wp-sameopp", u1.id, -1, "Same & Opposite", [study("wp-sameopp-study"), quiz("wp-sameopp-warmup")]), SAMEOPP_GRADES);
+const sameOppP1 = forGrades(withSubtopic(practice("wp-sameopp-p1", sameOpp, 1, "Twin Words", "easy", [quiz("wp-sameopp-twins")]), "synonyms"), SAMEOPP_GRADES);
+const sameOppP2 = forGrades(withSubtopic(practice("wp-sameopp-p2", sameOpp, 2, "Opposite Words", "easy", [quiz("wp-sameopp-opposites")]), "antonyms"), SAMEOPP_GRADES);
+const sameOppEndless = forGrades(endless(sameOpp), SAMEOPP_GRADES);
 const synAnt = forGrades(
   main("wp-synant", u1.id, 0, "Synonyms and Antonyms", [study("wp-synant-study"), quiz("wp-synant-warmup")]),
   [3, 4, 5, 6]
@@ -4555,6 +4616,10 @@ const u3 = unit("wp-u3", 3, "Phrasal Verbs & Advanced Speech", { comingSoon: tru
 
 export const nodes = [
   u1,
+  sameOpp,
+  sameOppP1,
+  sameOppP2,
+  sameOppEndless,
   synAnt,
   synAntP1,
   synAntP2,

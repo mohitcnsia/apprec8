@@ -41,6 +41,11 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### Word ladder: "Same & Opposite" (after "publish" + seeding Word Power), ~5 min. Tester: unlock all, or a Class 2–4 child
+1. Word Power map: first topic "Same & Opposite" (Classes 2–4): 7 Learn cards → TRY 8 QUESTIONS.
+2. Practice leaves: Twin Words (10), Opposite Words (10).
+3. Pratha (Class 5): her map looks the same as before.
+
 ### ⭐ New login screens + first run + Science for everyone (after "publish"), ~10 min
 1. Sign out → login screen: Chamak floats in a starry sky (tap it: it jumps and sparkles), a planet circles, a shooting
    star now and then. CONTINUE WITH GOOGLE is the big bottom button.

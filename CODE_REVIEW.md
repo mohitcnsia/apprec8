@@ -1819,6 +1819,12 @@ for Class 3–6, and Treasure Words' Big Words start with abide, ambush, appall,
 - **Pratha (Class 5):** nothing she has finished is locked again; progress is kept by node id, and the new first topic
   is placed so her finished topics stay open (Claude checks this on the emulator before seeding).
 - Content only (JSON + seeding, no app update), plus the R cards for these pages. Seema reviews the words.
+- **Built 2026-11-05 (Claude), Word Power part:** topic "Same & Opposite" (`wp-sameopp`, 7 Learn cards, warm-up 8,
+  Twin Words 10, Opposite Words 10, ♾️ practice) for **Classes 2–4 only**. Change from the draft: not shown to Class 5
+  (a topic opens only when the one before it is cleared, so showing it to Class 5 would lock Pratha's finished topics);
+  Class 5 gets easy → hard through the new Learn cards instead. Checked: Class 5 path unchanged, finished topics stay done.
+- **Treasure Words re-order: on hold.** Re-ordering the Big Words groups would lock any group Pratha already finished
+  behind ones she hasn't. Needs her progress first (owner checks her map, or OK for a one-time read).
 
 ## 2026-11-05 — Fix: login / registration review (owner: "email password flow seems broken") (Claude)
 Found and fixed (`utils/authErrors.js` + tests, `hooks/useFirebaseAuth.js`, `AppContent.js`, `screens/auth/AuthScreen.js`):
