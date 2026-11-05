@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **waiting for owner OK** (owner: "fix later - ok")
+## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **owner OK 2026-11-05 ("DR-14 … yes") → Gemini G32**
 
 Why: the admin dashboard read every kid's progress for EVERY quest, then kept one quest (≈ kids × 4 reads per open).
 Now progress docs carry a `questId` field and the dashboard asks only for that quest (≈ 1 read per kid).
@@ -22,6 +22,8 @@ Steps (Gemini, once the owner says OK), from Claude's folder:
    asks to DELETE indexes that are not in the file, answer **No** and report.
 2. `node scripts/admin/backfillQuestId.cjs` (dry run: today 2 docs), then `node scripts/admin/backfillQuestId.cjs --apply`.
 3. Report both outputs. App side ships with the next over-the-air update (owner's "publish").
+4. After that publish: run the backfill once more (`--apply`). A phone still on the old app could start a new quest
+   between the two runs, and that doc would have no `questId`, so the dashboard would not show it.
 
 ## DR-13 · Cost guard 2: cache the leaderboards · **owner OK 2026-11-05 → merged → Gemini G30** (with DR-12)
 

@@ -1763,3 +1763,37 @@ pacing or checking. Mockup: canvas row **Q** (Q1–Q4), https://claude.ai/artifa
   `questAttempts` with `activity: "paper"` for the dashboard. Cost: 1 read per paper per week (phone copy), 2 writes per paper.
 - **Plan if approved tonight:** build 6 Nov → OTA; Papers 1 written 6–7 Nov → review → Pratha plays from ~8 Nov.
 - **Open questions:** (1) only for Class 3–5 at first? (2) clock default on or off? (3) show the paper on Home, or inside each quest?
+- **Owner 2026-11-05: "excellent" → approved.** Owner's note: two options in a row is also nice → short options sit 2 × 2
+  (all four fit), long ones stack (Q2 updated). Claude's defaults for the open questions (owner can change any):
+  (1) **Class 5 only at first** (+ testers): the papers are in the Class 5 shape; Class 3–4 papers come later.
+  (2) **Clock on** by default, with a "Hide the clock" switch on the start screen. (3) **On Home**, one "Practice paper" tile
+  (a paper mixes topics from several quests, so it doesn't belong inside one quest).
+
+## 2026-11-05 — Draft spec (not approved): R · Learn cards, bite-size study pages (owner idea) (Claude)
+Why (owner): the Learn pages are long, scrolling walls (e.g. Word Power's first page is two 10-row tables). A Class 5 child
+won't read that. Mockup: canvas row **R** (R1–R4), https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL.
+- **R1 Card:** one idea per card: emoji, a 3–6 word title, at most ~35 words, 2–3 examples. Sticky-note look on the dark
+  theme (the note is the one loud thing). 🔊 reads the card aloud (expo-speech, already in the app). ‹ and NEXT at the
+  bottom (thumb zone); swipe works too. Dots show how far.
+- **R2 Quick check** every 2–3 cards: one tap question, the answer shows at once, no stars or hearts lost.
+- **R3 Treasure Words:** one word per card (emoji, word, meaning, one sentence, opposite if useful); tap to flip.
+- **R4 Last card:** "You learned 3 things" + START WARM-UP (the quiz that follows today).
+- **Fold, don't delete:** "See all cards on one page" opens today's long page (good for revision the night before).
+- **Data:** a new optional `cards: [{emoji, title, text, examples[], check?}]` on the `studyContent` doc. Pages without
+  `cards` show exactly as today, so it can roll out page by page. No extra reads (same doc). JS only, ships by OTA.
+- **Order of rewriting:** Word Power + Treasure Words first (with spec S), then the English units Pratha uses, then Science.
+- **Open question:** should a child be allowed to skip the cards and go straight to the warm-up? (Claude: yes, from R1's
+  dots: kids who know it shouldn't be slowed down.)
+
+## 2026-11-05 — Draft spec (not approved): S · Word ladders: start easy, build up (owner idea) (Claude)
+Why (owner): Word Power starts straight with Synonyms & Antonyms at olympiad level (scarce, prudent, opulent, destitute)
+for Class 3–6, and Treasure Words' Big Words start with abide, ambush, appall, audacity for Class 4+. No warm-up rung.
+- **Word Power:** a new first topic **"Same & Opposite"** (Class 2–5): word twins with everyday words (big/large,
+  begin/start, shut/close), opposites (hot/cold, early/late), and un- / dis- opposites (happy/unhappy, like/dislike).
+  Then the current topic, re-ordered so its warm-up goes easy → hard, with the hardest words kept for the Mix leaves,
+  the Challenge and the Boss. Class 6 doesn't see the first topic (it would only slow them down).
+- **Treasure Words:** Big Words groups re-ordered from easiest to hardest (by how often children meet the word), and
+  inside each group the easiest words first. Class 4 sees the 2 easiest Big Words groups only; the rest from Class 5.
+- **Pratha (Class 5):** nothing she has finished is locked again; progress is kept by node id, and the new first topic
+  is placed so her finished topics stay open (Claude checks this on the emulator before seeding).
+- Content only (JSON + seeding, no app update), plus the R cards for these pages. Seema reviews the words.

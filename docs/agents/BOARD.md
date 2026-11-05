@@ -27,7 +27,9 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **Mockup Q (practice paper, exam-style, timed)** for Pratha before 17/19 Nov: canvas row Q + spec in CODE_REVIEW.md (3 open questions). Build 6 Nov if approved.
+- ~~Mockup Q practice paper~~ owner: "excellent" 2026-11-05 → **Claude builds** (short options 2 × 2). Open questions: Claude's defaults in CODE_REVIEW.md Q; owner can change them.
+- **Mockup R Learn cards** (bite-size study pages, owner idea 2026-11-05): canvas row R + spec R in CODE_REVIEW.md. Owner OK?
+- **Spec S word ladders** (Word Power + Treasure Words start too hard, owner 2026-11-05): CODE_REVIEW.md S. Owner OK?
 - **Mockup P (child safety & privacy, draft)**: P1 'Need help?' row on the child's Me tab, P2 help sheet (1098 / 14416 / 112, tap to call),
   P3 parent: what we keep + who sees it + consent, P4 delete child data (PIN). Same canvas: https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL
   (row P). Owner approves the screens; **Seema reviews the words**; safeguarding plan before any build (RB-8). Before build Claude
@@ -40,7 +42,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 - ~~IAM step~~ done by owner 2026-11-05 (Token Creator on the App Engine account): Play as / child codes work.
 - ~~DR-13 leaderboard cache~~ owner OK 2026-11-05 ("OK DR-13") → merged → **G30 (Gemini)**.
 - **Cost guard 4 (app only, ships with the next "publish")**: Vocab game (~480 reads per open → 0, refresh weekly), Spelling Bee and Space quest map kept on the phone for 7 days (admin: 2 min). Summary of all guards: docs/COSTS.md.
-- **DR-14 dashboard query** (built, `questId` on progress + one index + backfill of 2 docs): owner OK to deploy? Steps in DEPLOY_PENDING.md.
+- ~~DR-14 dashboard query~~ owner OK 2026-11-05 → **G32 (Gemini)**; run the backfill again after the next publish.
 - ~~DR-12 cost guard~~ owner OK 2026-11-05 ("as long as it doesn't break stuff") → **G30 (Gemini)**. Budget alert: owner has had one since 2025.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
 - ~~Mockups L + M~~ owner approved 2026-11-05 → built (`723fe34` leaderboard, Schools: this commit).
@@ -73,6 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | todo (after G30, before G31) | from Claude's folder | |
 | G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | todo (after G30) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
@@ -143,6 +146,16 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G32 · [todo] · gemini · ⭐ Deploy DR-14: dashboard index + backfill (owner-approved: yes, 2026-11-05)
+**Owner-approved: yes** for exactly these steps ("DR-14 OK to deploy? yes", 2026-11-05). Do this after G30, before G31.
+Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (branch `feat/quiz-redesign`).
+1. `firebase deploy --only firestore:indexes --project apprec8-ca229` (adds the `questProgress.questId` field index).
+   If the CLI asks to DELETE indexes that are not in the file, answer **No** and report.
+2. `node scripts/admin/backfillQuestId.cjs` (dry run; expect about 2 docs), then `node scripts/admin/backfillQuestId.cjs --apply`.
+3. Do NOT deploy rules or functions here. Do NOT publish an app update.
+**Deliver:** `docs/agents/reports/G32.md` (each step's output or error text), commit `gemini(G32): done — …` on your branch.
+**Rollback:** nothing to undo (one extra index and one extra field; the app works with or without them).
 
 ### G31 · [todo] · gemini · Second review of English Unit 8 + Science Unit 5 (accuracy, report only: change nothing)
 Read `data/englishQuest/units/u8.js`, `u9.js` and `data/scienceQuest/units/u5.js`, `u6.js` (commit `e1ec069` or later). For EVERY question
