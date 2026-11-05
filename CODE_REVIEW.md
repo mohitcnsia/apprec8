@@ -2078,3 +2078,13 @@ the live DR-9 rules (members are written `status: "approved"`), and the demo par
    Parent link: `demo_parent.childUids` + `demo_kid_login.parentUids` + `isChild: true`, both ways.
 6. Deletes use `recursiveDelete` on `demo_` docs; logins: `updateUser`, falling back to `createUser`.
 **DR-16 now also deploys** `functions:onQuestionReported,functions:approveMember`.
+
+## 2026-11-06 (night) — Review: Unit 10 Word Building (Gemini G37), 120 Qs (Claude)
+Merged with **19 fixes**: second right answers (loveable, useable are accepted spellings; duteous is a real word;
+"admitance" too close to admittance); "the noun of busy is business" (today it's busyness) → laziness; stems where both
+options fit (bandage painless/painful; "sudden politeness"); misunderstand/preview stems reworded; "science + ist"
+explanation; inpatient trap kept with an explanation; Learn page now teaches il-/ir- (tested in the unit) and that many
+words take un-; reading: "solar battery" → a solar panel that charges the battery, "paragraph 0" → "the first
+paragraph", "affixes" → plain words; 2 Boss questions repeated warm-ups → angrily, division. Tests pass.
+Note: u10 and Grammar Pro 1 share unitOrder 10, but their classes never overlap (3–8 vs 9–10).
+Needs: publish + English re-seed (owner).

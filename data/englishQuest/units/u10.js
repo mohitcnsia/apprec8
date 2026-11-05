@@ -42,7 +42,7 @@ export default {
         {
           emoji: "🛑",
           title: "im- and in- mean NOT",
-          text: "Use im- before words starting with m or p (impossible, immature). Use in- for others (invisible, incorrect).",
+          text: "To mean NOT: im- before m or p (impossible, immature), il- before l (illegal), ir- before r (irregular). Many other words take in- (invisible, incorrect) or un- (unhappy, untidy): learn each one.",
           examples: ["im + possible = impossible", "in + correct = incorrect"],
         },
         {
@@ -290,14 +290,14 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
     // Gate A: Prefixes Challenge (15 = 3 sub-topics × 5)
     "eq-u10-prefixes-gate-pool": [
       t("neg-prefixes", "Complete the sentence: 'It is ___ to tell lies to your parents.'", "dishonest", [["unhonest", "prefix-choice-error"], ["imhonest", "prefix-choice-error"], ["inhonest", "prefix-choice-error"]], "dis- goes with honest: dishonest."),
-      t("neg-prefixes", "Choose the opposite of 'patient':", "impatient", [["unpatient", "prefix-choice-error"], ["inpatient", "prefix-spelling-error"], ["dispatient", "prefix-choice-error"]], "Patient begins with p, so it takes im-: impatient."),
+      t("neg-prefixes", "Choose the opposite of 'patient':", "impatient", [["unpatient", "prefix-choice-error"], ["inpatient", "prefix-spelling-error"], ["dispatient", "prefix-choice-error"]], "Patient begins with p, so it takes im-: impatient. (An inpatient is a sick person who stays in hospital: a different word!)"),
       t("neg-prefixes", "Complete the sentence: 'The key was lost, so the wooden box remained ___.'", "unopened", [["disopened", "prefix-choice-error"], ["inopened", "prefix-choice-error"], ["misopened", "prefix-choice-error"]], "un- + opened = unopened."),
       t("neg-prefixes", "Which word means 'not complete'?", "incomplete", [["uncomplete", "prefix-choice-error"], ["discomplete", "prefix-choice-error"], ["imcomplete", "prefix-spelling-error"]], "in- combines with complete: incomplete."),
       t("neg-prefixes", "Choose the word that means 'not pure':", "impure", [["unpure", "prefix-choice-error"], ["dispure", "prefix-choice-error"], ["inpure", "prefix-spelling-error"]], "Pure begins with p, so it takes im-: impure."),
       t("mis-re-pre", "What does 'preheat' mean in 'Preheat the oven before baking'?", "heat beforehand", [["heat again", "prefix-meaning-error"], ["heat wrongly", "prefix-meaning-error"], ["stop heating", "prefix-meaning-error"]], "pre- means before: preheat = heat beforehand."),
-      t("mis-re-pre", "Complete the sentence: 'If you misunderstand the question, you will ___ it.'", "answer wrongly", [["answer again", "prefix-meaning-error"], ["answer in advance", "prefix-meaning-error"], ["answer correctly", "opposite-meaning"]], "mis- means wrongly: misunderstand = understand wrongly."),
+      t("mis-re-pre", "What does 'misunderstand' mean in 'Do not misunderstand the question'?", "understand wrongly", [["understand again", "prefix-meaning-error"], ["understand beforehand", "prefix-meaning-error"], ["understand fully", "opposite-meaning"]], "mis- means wrongly: misunderstand = understand wrongly."),
       t("mis-re-pre", "What does the prefix 're-' mean in 'rebuild'?", "again", [["wrongly", "prefix-meaning-error"], ["before", "prefix-meaning-error"], ["without", "prefix-meaning-error"]], "re- means again: rebuild = build again."),
-      t("mis-re-pre", "Complete the sentence: 'A short film shown before the main movie is a ___.'", "preview", [["review", "prefix-meaning-error"], ["misview", "prefix-meaning-error"], ["unview", "prefix-meaning-error"]], "pre- means before: preview = view before."),
+      t("mis-re-pre", "Complete the sentence: 'Before the film opened in cinemas, reporters watched a special ___ show.'", "preview", [["review", "prefix-meaning-error"], ["misview", "prefix-meaning-error"], ["unview", "prefix-meaning-error"]], "pre- means before: preview = view before."),
       t("mis-re-pre", "Complete the sentence: 'Because he was in a hurry, Kabir ___ the bus timetable.'", "misread", [["reread", "prefix-meaning-error"], ["preread", "prefix-meaning-error"], ["disread", "prefix-meaning-error"]], "misread means read incorrectly: Kabir misread the timetable."),
       t("prefix-spelling", "Which word is spelt correctly?", "immature", [["inmature", "prefix-spelling-error"], ["unmature", "prefix-choice-error"], ["dismature", "prefix-choice-error"]], "Mature begins with m, so it takes im-: immature."),
       t("prefix-spelling", "Pick the correct spelling for 'not responsible':", "irresponsible", [["inresponsible", "prefix-spelling-error"], ["unresponsible", "prefix-choice-error"], ["imresponsible", "prefix-spelling-error"]], "Before r, in- turns into ir-: irresponsible."),
@@ -321,9 +321,9 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
     // Practice leaf B: Building Nouns & Adjectives (8)
     "eq-u10-suffixes-p1": [
       t("ful-less", "Which word is spelt correctly?", "peaceful", [["peacefull", "suffix-spelling-error"], ["peaceless", "suffix-choice-error"], ["peacely", "suffix-choice-error"]], "The suffix -ful has only one l: peaceful."),
-      t("ful-less", "Complete the sentence: 'The bandage came off in a ___ way.'", "painless", [["painful", "opposite-meaning"], ["painment", "suffix-choice-error"], ["painness", "suffix-choice-error"]], "-less means without: painless = without pain."),
+      t("ful-less", "Complete the sentence: 'The nurse was so gentle that taking off the bandage was ___.'", "painless", [["painful", "opposite-meaning"], ["painment", "suffix-choice-error"], ["painness", "suffix-choice-error"]], "-less means without: painless = without pain."),
       t("ness-ment", "What is the noun form of 'excite'?", "excitement", [["exciteness", "suffix-choice-error"], ["exciteful", "suffix-choice-error"], ["exciting", "pos-adjective-mixup"]], "excite + ment = excitement."),
-      t("ness-ment", "Complete the sentence: 'His sudden ___ surprised everyone in the classroom.'", "politeness", [["politement", "suffix-choice-error"], ["politeful", "suffix-choice-error"], ["politeless", "suffix-choice-error"]], "polite + ness = politeness."),
+      t("ness-ment", "Complete the sentence: 'Everyone liked the ___ of the new student, who always said please and thank you.'", "politeness", [["politement", "suffix-choice-error"], ["politeful", "suffix-choice-error"], ["politeless", "suffix-choice-error"]], "polite + ness = politeness."),
       t("ness-ment", "Which suffix turns 'agree' into a noun?", "-ment", [["-ness", "suffix-choice-error"], ["-ful", "suffix-choice-error"], ["-less", "suffix-choice-error"]], "agree + ment = agreement."),
       t("ness-ment", "What is the noun form of 'sad'?", "sadness", [["sadment", "suffix-choice-error"], ["sadful", "suffix-choice-error"], ["sadless", "suffix-choice-error"]], "sad + ness = sadness."),
       t("person-suffixes", "A person who creates paintings or sculptures is an ___.", "artist", [["artor", "suffix-spelling-error"], ["arter", "suffix-choice-error"], ["arting", "pos-verb-mixup"]], "art + ist = artist."),
@@ -343,7 +343,7 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
       t("ness-ment", "Complete the sentence: 'The doctor checked the patient for any signs of ___.'", "illness", [["illment", "suffix-choice-error"], ["illful", "suffix-choice-error"], ["illless", "suffix-choice-error"]], "ill + ness = illness."),
       t("ness-ment", "Which suffix forms a noun from 'punish'?", "-ment", [["-ness", "suffix-choice-error"], ["-ful", "suffix-choice-error"], ["-less", "suffix-choice-error"]], "punish + ment = punishment."),
       t("person-suffixes", "A person who acts in a stage play is an ___.", "actor", [["acter", "suffix-spelling-error"], ["actist", "suffix-choice-error"], ["acting", "pos-verb-mixup"]], "act + or = actor."),
-      t("person-suffixes", "A person who studies science and conducts experiments is a ___.", "scientist", [["sciencer", "suffix-choice-error"], ["scienceor", "suffix-choice-error"], ["scienter", "suffix-choice-error"]], "science + ist = scientist."),
+      t("person-suffixes", "A person who studies science and conducts experiments is a ___.", "scientist", [["sciencer", "suffix-choice-error"], ["scienceor", "suffix-choice-error"], ["scienter", "suffix-choice-error"]], "science → scientist: the end of the word changes a little before -ist."),
       t("person-suffixes", "A person who sings classical songs on stage is a ___.", "singer", [["singor", "suffix-spelling-error"], ["singist", "suffix-choice-error"], ["singful", "suffix-choice-error"]], "sing + er = singer."),
       t("person-suffixes", "A person who directs a film is a ___.", "director", [["directer", "suffix-spelling-error"], ["directist", "suffix-choice-error"], ["directment", "suffix-choice-error"]], "direct + or = director."),
       t("person-suffixes", "A person who plays the violin gracefully is a ___.", "violinist", [["violiner", "suffix-choice-error"], ["violinor", "suffix-choice-error"], ["violinment", "suffix-choice-error"]], "violin + ist = violinist."),
@@ -356,7 +356,7 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
       t("spelling-y-to-i", "Complete the sentence: 'The children played ___ in the courtyard.'", "happily", [["happyly", "suffix-spelling-error"], ["happyley", "suffix-spelling-error"], ["happili", "suffix-spelling-error"]], "happy + ly: change y to i → happily."),
       t("drop-e-double", "Add -er to 'write':", "writer", [["writeer", "suffix-spelling-error"], ["writter", "suffix-spelling-error"], ["writor", "suffix-choice-error"]], "Drop the silent e before -er: writer."),
       t("drop-e-double", "Add -er to 'run':", "runner", [["runer", "suffix-spelling-error"], ["runor", "suffix-choice-error"], ["runnist", "suffix-choice-error"]], "Double the final consonant before -er: runner."),
-      t("drop-e-double", "Add -able to 'love':", "lovable", [["loveable", "suffix-spelling-error"], ["loveble", "suffix-spelling-error"], ["lovble", "suffix-spelling-error"]], "Drop the silent e before -able: lovable."),
+      t("drop-e-double", "Add -able to 'value':", "valuable", [["valueable", "suffix-spelling-error"], ["valuble", "suffix-spelling-error"], ["valable", "suffix-spelling-error"]], "Drop the silent e before -able: valuable."),
       t("word-roots", "What is the root word of 'unhappiness'?", "happy", [["unhappy", "root-identification-error"], ["happi", "root-identification-error"], ["ness", "root-identification-error"]], "The core base word is happy: un- + happy + -ness."),
       t("word-roots", "Which word belongs to the same word family as 'play'?", "playful", [["plan", "unrelated-word"], ["plate", "unrelated-word"], ["plane", "unrelated-word"]], "play and playful share the root play."),
     ],
@@ -364,7 +364,7 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
     // Practice leaf C1: Spelling Traps in Word Building (8)
     "eq-u10-families-p1": [
       t("spelling-y-to-i", "Add -est to 'heavy':", "heaviest", [["heavyest", "suffix-spelling-error"], ["heavyst", "suffix-spelling-error"], ["heavist", "suffix-spelling-error"]], "Change y to i before -est: heaviest."),
-      t("spelling-y-to-i", "What is the noun formed from 'busy'?", "business", [["busyness", "suffix-spelling-error"], ["busines", "suffix-spelling-error"], ["busyment", "suffix-choice-error"]], "busy + ness: change y to i → business."),
+      t("spelling-y-to-i", "Add -ness to 'lazy':", "laziness", [["lazyness", "suffix-spelling-error"], ["lazines", "suffix-spelling-error"], ["lazyment", "suffix-choice-error"]], "lazy + ness: change y to i → laziness."),
       t("spelling-y-to-i", "Add -ful to 'plenty':", "plentiful", [["plentyful", "suffix-spelling-error"], ["plentifull", "suffix-spelling-error"], ["plentyfull", "suffix-spelling-error"]], "plenty + ful: change y to i → plentiful."),
       t("drop-e-double", "Add -ing to 'swim':", "swimming", [["swiming", "suffix-spelling-error"], ["swimmeng", "suffix-spelling-error"], ["swimmng", "suffix-spelling-error"]], "Double the m in swim before -ing: swimming."),
       t("drop-e-double", "Add -er to 'drive':", "driver", [["driveer", "suffix-spelling-error"], ["drivver", "suffix-spelling-error"], ["drivor", "suffix-choice-error"]], "Drop the silent e before -er: driver."),
@@ -377,7 +377,7 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
     "eq-u10-families-p2": [
       t("drop-e-double", "What noun is formed from 'decide'?", "decision", [["decidement", "suffix-choice-error"], ["decidion", "suffix-spelling-error"], ["decidance", "suffix-choice-error"]], "decide changes to decision (with -sion)."),
       t("drop-e-double", "What noun is formed from 'conclude'?", "conclusion", [["concludement", "suffix-choice-error"], ["concludion", "suffix-spelling-error"], ["conclusance", "suffix-choice-error"]], "conclude changes to conclusion."),
-      t("drop-e-double", "What noun is formed from 'admit'?", "admission", [["admitment", "suffix-choice-error"], ["admittion", "suffix-spelling-error"], ["admitance", "suffix-spelling-error"]], "admit forms admission (as in admission fee or school admission)."),
+      t("drop-e-double", "What noun is formed from 'admit'?", "admission", [["admitment", "suffix-choice-error"], ["admittion", "suffix-spelling-error"], ["admitness", "suffix-choice-error"]], "admit forms admission (as in admission fee or school admission)."),
       t("word-roots", "What is the noun formed from 'invent'?", "invention", [["inventment", "suffix-choice-error"], ["inventness", "suffix-choice-error"], ["inventance", "suffix-choice-error"]], "invent + ion = invention."),
       t("word-roots", "What is the adjective formed from 'danger'?", "dangerous", [["dangerful", "suffix-choice-error"], ["dangerly", "suffix-choice-error"], ["dangerable", "suffix-choice-error"]], "danger + ous = dangerous."),
       t("word-roots", "What noun is formed from the verb 'protect'?", "protection", [["protectment", "suffix-choice-error"], ["protectness", "suffix-choice-error"], ["protectful", "suffix-choice-error"]], "protect + ion = protection."),
@@ -388,13 +388,13 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
     // Gate C: Word Building Challenge (15 = 3 sub-topics × 5)
     "eq-u10-families-gate-pool": [
       t("spelling-y-to-i", "Complete the sentence: 'Her face showed great ___ when she saw the puppy.'", "happiness", [["happyness", "suffix-spelling-error"], ["happines", "suffix-spelling-error"], ["happyment", "suffix-choice-error"]], "happy + ness = happiness."),
-      t("spelling-y-to-i", "Add -ful to 'duty':", "dutiful", [["dutyful", "suffix-spelling-error"], ["dutifull", "suffix-spelling-error"], ["duteous", "suffix-choice-error"]], "duty + ful: change y to i → dutiful."),
+      t("spelling-y-to-i", "Add -ful to 'duty':", "dutiful", [["dutyful", "suffix-spelling-error"], ["dutifull", "suffix-spelling-error"], ["dutyfull", "suffix-spelling-error"]], "duty + ful: change y to i → dutiful."),
       t("spelling-y-to-i", "Add -ly to 'easy':", "easily", [["easyly", "suffix-spelling-error"], ["easly", "suffix-spelling-error"], ["easili", "suffix-spelling-error"]], "easy + ly: change y to i → easily."),
       t("spelling-y-to-i", "Add -ness to 'lonely':", "loneliness", [["lonelyness", "suffix-spelling-error"], ["lonelines", "suffix-spelling-error"], ["lonelyment", "suffix-choice-error"]], "lonely + ness: change y to i → loneliness."),
       t("spelling-y-to-i", "Add -ly to 'lazy':", "lazily", [["lazyly", "suffix-spelling-error"], ["lazly", "suffix-spelling-error"], ["lazili", "suffix-spelling-error"]], "lazy + ly: change y to i → lazily."),
       t("drop-e-double", "Add -er to 'bake':", "baker", [["bakeer", "suffix-spelling-error"], ["bakker", "suffix-spelling-error"], ["bakor", "suffix-choice-error"]], "Drop silent e before -er: baker."),
       t("drop-e-double", "Add -ed to 'stop':", "stopped", [["stoped", "suffix-spelling-error"], ["stoppd", "suffix-spelling-error"], ["stopping", "tense-form-error"]], "Double the p before -ed: stopped."),
-      t("drop-e-double", "Add -able to 'use':", "usable", [["useable", "suffix-spelling-error"], ["useble", "suffix-spelling-error"], ["usble", "suffix-spelling-error"]], "Drop silent e before -able: usable."),
+      t("drop-e-double", "Add -able to 'adore':", "adorable", [["adoreable", "suffix-spelling-error"], ["adorble", "suffix-spelling-error"], ["adorabel", "suffix-spelling-error"]], "Drop silent e before -able: adorable."),
       t("drop-e-double", "Add -ing to 'win':", "winning", [["wining", "suffix-spelling-error"], ["winneng", "suffix-spelling-error"], ["winng", "suffix-spelling-error"]], "Double the n before -ing: winning."),
       t("drop-e-double", "Add -er to 'ride':", "rider", [["rideer", "suffix-spelling-error"], ["ridder", "suffix-spelling-error"], ["ridor", "suffix-choice-error"]], "Drop silent e before -er: rider."),
       t("word-roots", "What is the root word of 'dishonesty'?", "honest", [["dishonest", "root-identification-error"], ["honesty", "root-identification-error"], ["dis", "root-identification-error"]], "honest is the base root word."),
@@ -413,11 +413,11 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
       q("Complete the sentence: 'The night sky stretched above them with ___ wonder.'", "boundless", [["boundment", "suffix-choice-error"], ["boundness", "suffix-choice-error"], ["boundful", "suffix-choice-error"]], "-less means without limit: boundless."),
       q("What noun is formed from 'govern'?", "government", [["governness", "suffix-choice-error"], ["governful", "suffix-choice-error"], ["governless", "suffix-choice-error"]], "govern + ment = government."),
       q("A person who inspects school classrooms carefully is an ___.", "inspector", [["inspecter", "suffix-spelling-error"], ["inspectist", "suffix-choice-error"], ["inspecting", "pos-verb-mixup"]], "inspect + or = inspector."),
-      q("Add -ness to 'happy':", "happiness", [["happyness", "suffix-spelling-error"], ["happines", "suffix-spelling-error"], ["happyment", "suffix-choice-error"]], "Change y to i: happiness."),
+      q("Add -ly to 'angry':", "angrily", [["angryly", "suffix-spelling-error"], ["angrly", "suffix-spelling-error"], ["angrili", "suffix-spelling-error"]], "Change y to i before -ly: angrily."),
       q("Add -er to 'make':", "maker", [["makeer", "suffix-spelling-error"], ["makker", "suffix-spelling-error"], ["makor", "suffix-choice-error"]], "Drop the silent e: maker."),
       q("Add -ing to 'clap':", "clapping", [["claping", "suffix-spelling-error"], ["clappeng", "suffix-spelling-error"], ["clapng", "suffix-spelling-error"]], "Double the p before -ing: clapping."),
       q("What is the root word of 'misunderstanding'?", "understand", [["understanded", "root-identification-error"], ["misunderstand", "root-identification-error"], ["standing", "root-identification-error"]], "understand is the root base word."),
-      q("What noun is formed from 'decide'?", "decision", [["decidement", "suffix-choice-error"], ["decidance", "suffix-choice-error"], ["decidion", "suffix-spelling-error"]], "decide forms decision."),
+      q("What noun is formed from 'divide'?", "division", [["dividement", "suffix-choice-error"], ["divideance", "suffix-choice-error"], ["dividion", "suffix-spelling-error"]], "divide forms division (like decide → decision)."),
     ],
   },
 
@@ -435,14 +435,14 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
       },
       paragraphs: [
         "Every November, Saraswati Vidyalaya held its Young Inventors' Fair in the large school auditorium. This year, Class 5 students Ananya, Rohan and Kabir formed a team to build an automatic mango harvester. Farmers in Ananya's village were often unhappy when ripe mangoes fell and got bruised. The team wanted to build a painless solution that would gently pluck the fruit.",
-        "Before building their machine, the children sketched their design on chart paper. Rohan was very careful while measuring the wooden rods because even a small error could make the mechanism jam. Meanwhile, Kabir assembled a solar battery so the device would be rechargeable under sunlight. \"A solar battery makes the machine useful even during power cuts,\" Kabir explained.",
+        "Before building their machine, the children sketched their design on chart paper. Rohan was very careful while measuring the wooden rods because even a small error could make the mechanism jam. Meanwhile, Kabir fixed a small solar panel to charge the battery, so the device could recharge in sunlight. \"With the solar panel, the machine stays useful even during power cuts,\" Kabir explained.",
         "When they tested their first prototype, they discovered a problem. The robotic claw moved too fast and squashed the fruit. Ananya and Rohan had a brief disagreement about how to fix it. Rohan wanted to add rubber cushions, while Ananya suggested slowing the motor. In the end, they used both ideas, showing that cooperation brings the best result.",
         "On the morning of the fair, judges walked from table to table testing each invention. When the chief judge pressed the switch on the mango harvester, the soft rubber fingers reached up, gripped a wooden test sphere without a scratch, and lowered it safely into a basket. The entire audience cheered with great enjoyment and excitement.",
         "At the prize ceremony, the team received the gold medal for Young Inventors. The headmistress praised their kindness and teamwork, noting how they helped other teams carry heavy display boards. Ananya smiled proudly and said that their next invention would be a portable water purifier for village schools.",
       ],
       questions: [
         {
-          ...q("Why did the team decide to build a mango harvester?", "To pluck fruit gently without bruising them.", [["To sell wooden rods to local farmers.", "not-in-passage"], ["To win money for a new school building.", "not-in-passage"], ["To replace all fruit trees in the village.", "not-in-passage"]], "The passage states that they wanted to build a painless solution to gently pluck fruit."),
+          ...q("Why did the team decide to build a mango harvester?", "To pluck the mangoes gently without bruising them.", [["To sell wooden rods to local farmers.", "not-in-passage"], ["To win money for a new school building.", "not-in-passage"], ["To replace all fruit trees in the village.", "not-in-passage"]], "The passage states that they wanted to build a painless solution to gently pluck fruit."),
           evidence: { paragraph: 0, text: "The team wanted to build a painless solution that would gently pluck the fruit." },
         },
         {
@@ -450,8 +450,8 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
           evidence: { paragraph: 1, text: "Rohan was very careful while measuring the wooden rods because even a small error could make the mechanism jam." },
         },
         {
-          ...q("Why did Kabir assemble a solar battery for the harvester?", "It would keep working even during power cuts.", [["It was cheaper than using wooden rods.", "not-in-passage"], ["The school forbade them from using batteries.", "not-in-passage"], ["It made the wooden claw move much faster.", "not-in-passage"]], "Kabir explained: 'A solar battery makes the machine useful even during power cuts.'"),
-          evidence: { paragraph: 1, text: "\"A solar battery makes the machine useful even during power cuts,\" Kabir explained." },
+          ...q("Why did Kabir add a solar panel to the harvester?", "It would keep working even during power cuts.", [["It was cheaper than using wooden rods.", "not-in-passage"], ["The school forbade them from using batteries.", "not-in-passage"], ["It made the wooden claw move much faster.", "not-in-passage"]], "Kabir explained: 'A solar battery makes the machine useful even during power cuts.'"),
+          evidence: { paragraph: 1, text: "\"With the solar panel, the machine stays useful even during power cuts,\" Kabir explained." },
         },
         {
           ...q("How did the children solve the problem of the claw moving too fast?", "They added rubber cushions and slowed the motor.", [["They replaced the wood with steel bars.", "not-in-passage"], ["They discarded the claw and plucked by hand.", "not-in-passage"], ["They asked the headmistress to build it.", "not-in-passage"]], "The passage explains that they used both rubber cushions and slowed the motor."),
@@ -466,7 +466,7 @@ Short vowel + single consonant at the end of a one-syllable word? Double it:
           evidence: { paragraph: 4, text: "The headmistress praised their kindness and teamwork" },
         },
         {
-          ...q("What do the words 'unhappy' and 'painless' have in common in paragraph 0?", "Both words use affixes to change their meaning.", [["Both words mean exactly the same thing.", "word-meaning"], ["Both words are names of people.", "pos-noun-mixup"], ["Both words end with the suffix -ness.", "suffix-spelling-error"]], "Both unhappy (prefix un-) and painless (suffix -less) use affixes."),
+          ...q("What do the words 'unhappy' and 'painless' in the first paragraph have in common?", "Both have an added part that changes the meaning.", [["Both words mean exactly the same thing.", "word-meaning"], ["Both words are names of people.", "pos-noun-mixup"], ["Both words end with the suffix -ness.", "suffix-spelling-error"]], "Both unhappy (prefix un-) and painless (suffix -less) use affixes."),
           evidence: { paragraph: 0, text: "Farmers in Ananya's village were often unhappy when ripe mangoes fell and got bruised. The team wanted to build a painless solution" },
         },
       ],
