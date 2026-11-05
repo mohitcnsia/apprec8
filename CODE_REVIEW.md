@@ -1972,3 +1972,11 @@ normal class. No running cost.
 **Questions for the owner:**
 1. Classes OK: 10-B English (32) + 5-A (12)? 2. Names: made-up Indian first names + initial (e.g. "Aarav S.")?
 3. The demo parent sees one Class 5 child, so the parent screens look like Pratha's? 4. Weekly reset, or only when we press it?
+
+**Owner answers (2026-11-05):** 1 yes (10-B English 32 + 5-A 12) · 2 yes (made-up first name + initial) · 3 yes (demo
+parent sees one Class 5 child) · 4 Claude's call, chosen: **a scheduled function adds one new week of demo activity
+every Sunday at 7 pm IST and drops the oldest week** (keeps 6 weeks; about 350 writes a week, inside the free tier;
+Cloud Scheduler's 3 free jobs cover it), so Monday's teacher card and Sunday's parent report always show a live-looking
+class, like real use. "Reset Demo School" in Admin tools stays for a full reseed. Seema liked mockup row V.
+**Build plan:** pure generator `utils/demoSchool.js` + tests first (no live effect); the function, the filters and the
+Admin button after Gemini's G38 review; deploy by Gemini/owner.
