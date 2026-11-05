@@ -18,6 +18,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 2. ~~Science Unit 5 Light, Sound & Magnets~~ done (`3c5f77e`, 105 Qs, draft/testers) → review page + G31.
 3. Gemini G30: second-reviewer accuracy pass on Units 8 + Science 5 (after G29).
 4. ~~Mockup P (child safety & privacy)~~ done → waiting for owner + Seema.
+7. ~~Science Unit 6 Patterns & Puzzles~~ done (`e1ec069`, 105 Qs; NSO opens with 10 reasoning questions and nothing covered them) → review page + G31.
+8. ~~Cost guard 4~~ (Vocab / Spelling Bee / Space map phone copy) done, docs/COSTS.md.
 6. ~~English Unit 9 Punctuation Power~~ done (`0e87c13`, 128 Qs) → review page + G31.
 5. ~~Clean-up~~ done: old Home, StudyScreen, ProfileScreen, StatsScreen + StudyNavigator deleted (bundle builds, tests green).
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
@@ -27,7 +29,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
   P3 parent: what we keep + who sees it + consent, P4 delete child data (PIN). Same canvas: https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL
   (row P). Owner approves the screens; **Seema reviews the words**; safeguarding plan before any build (RB-8). Before build Claude
   checks the claims are true (e.g. no child photo stored from Google sign-in; delete removes attempts + codes).
-- **Review page (same link): English Units 8 + 9 (Seema) + Science Unit 5 (owner)**, 345 questions: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T8-, T9-, S5-). Seed only after OK + G31.
+- **Review page (same link): English Units 8 + 9 (Seema) + Science Units 5 + 6 (owner)**, 450 questions: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T8-, T9-, S5-, S6-). Seed only after OK + G31.
 - ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
 - **Build 20.0.29** (lock + play time): `build-1793820561489.aab`, check PASS, lock module inside. **Owner uploads to Play.**
@@ -68,7 +70,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G31 Second review: English Units 8 + 9 (248 Qs) + Science Unit 5 (105 Qs) | Gemini | todo (after G30) | report only | |
+| G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) | Gemini | todo (after G30) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | todo (next) | from Claude's folder | |
 | G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
@@ -140,8 +142,8 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
 ### G31 · [todo] · gemini · Second review of English Unit 8 + Science Unit 5 (accuracy, report only: change nothing)
-Read `data/englishQuest/units/u8.js`, `u9.js` and `data/scienceQuest/units/u5.js` (commit `0e87c13` or later). For EVERY question
-(353: warm-ups, practice leaves, gates, Champion, Boss, reading) check (for Science: is the fact true for Class 3–5 textbooks?):
+Read `data/englishQuest/units/u8.js`, `u9.js` and `data/scienceQuest/units/u5.js`, `u6.js` (commit `e1ec069` or later). For EVERY question
+(458; Science Unit 6 answers are recomputed by `tests/reasoningCheck.test.mjs`, so check its wording and level): warm-ups, practice leaves, gates, Champion, Boss, reading) check (for Science: is the fact true for Class 3–5 textbooks?):
 1. The ✓ answer is right in standard British/Indian school English.
 2. **No wrong option also works** (in grammar AND in meaning). Linking words overlap, so try each option in the sentence:
    e.g. "The baby slept although the dog barked" makes sense, so "although" can't be a wrong option there.
