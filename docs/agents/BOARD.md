@@ -17,11 +17,15 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 1. ~~English Unit 8 Linking Words~~ done (`a419e73`, 120 Qs) → review page (same link) + G31 second review.
 2. ~~Science Unit 5 Light, Sound & Magnets~~ done (`3c5f77e`, 105 Qs, draft/testers) → review page + G31.
 3. Gemini G30: second-reviewer accuracy pass on Units 8 + Science 5 (after G29).
-4. Mockup for approval: parent consent + child safety screen (needed before launch).
-5. Clean-up: delete the unused old screens (Home.js, StudyScreen, ProfileScreen, StatsScreen), tests green.
+4. ~~Mockup P (child safety & privacy)~~ done → waiting for owner + Seema.
+5. ~~Clean-up~~ done: old Home, StudyScreen, ProfileScreen, StatsScreen + StudyNavigator deleted (bundle builds, tests green).
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Mockup P (child safety & privacy, draft)**: P1 'Need help?' row on the child's Me tab, P2 help sheet (1098 / 14416 / 112, tap to call),
+  P3 parent: what we keep + who sees it + consent, P4 delete child data (PIN). Same canvas: https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL
+  (row P). Owner approves the screens; **Seema reviews the words**; safeguarding plan before any build (RB-8). Before build Claude
+  checks the claims are true (e.g. no child photo stored from Google sign-in; delete removes attempts + codes).
 - **Review page (same link): English Unit 8 (Seema) + Science Unit 5 (owner)**, 225 questions: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T8-, S5-). Seed only after OK + G31.
 - ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → published 2026-11-05 (update `4aeab2e5`, runtime 20.0.29). **Owner: install 20.0.29, restart once, then Me → Admin tools → seed English, Word Power, Science.**
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.

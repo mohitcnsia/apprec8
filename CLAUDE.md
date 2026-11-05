@@ -21,7 +21,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - `components/quiz/SeedQuestNodesButton.js` — **the Space quest seeding script** (in-app "Update Quest Map" button)
 - **Tabs (2026-11-04 redesign):** Home (`screens/home/`, stack also holds the old Study screens) · Fun (`screens/fun/`) · Progress
   (`screens/progress/`, route `Stats`; admin Kids view = embedded Dashboard) · Me (`screens/profile/MeScreen.js`, route `ProfileScreen`;
-  seed buttons in `screens/admin/AdminToolsScreen.js`). Space quest = hidden tab `Quest`. Old `Home.js`, `StudyScreen.js`, `ProfileScreen.js` unused.
+  seed buttons in `screens/admin/AdminToolsScreen.js`). Space quest = hidden tab `Quest`. Old Home/Study/Profile/Stats screens + `StudyNavigator` deleted 2026-11-05.
 - **Tile quests:** all listed in `data/quests/index.js` (English, Science draft). Seed: `components/quiz/SeedTileQuestButton.js`.
   Class tags: `grades` on nodes, filtered by `utils/gradeFilter.js` (kid's class = `users.grade`). Draft quest tile = `carouselGroup: "quest_draft"` (testers only).
 - **English Quest (tile-based quest):** `screens/englishQuest/` (intro + tree map), `utils/questTree.js` (unlock rules, pure),
