@@ -27,6 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- ~~Review page (550 Qs + Paper 2 + Same & Opposite)~~ owner 2026-11-05: **"Content approved"**; misses get reported in play (🚩 flag). English Paper 2 live for Class 5.
 - **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
 - ~~Mockups T1–T4~~ owner OK 2026-11-05 → **built** (login, email, create account, forgot sheet, first run, animations); ships with the next "publish".
 - ~~DR-15 stars for practice papers~~ **deployed** 2026-11-05 17:41 (Gemini G34).
@@ -165,6 +166,9 @@ each exactly like `data/papers/sciencePaper1.js` (copy its shape, helpers and co
 - Parts: 10 Thinking skills (series, codes, directions, ranking, calendar, family; **work every answer out twice**)
   · 35 Science (spread over Science Units 1–5: living world, body & health, matter/forces/earth, environment,
   light/sound/magnets) · 5 Champion (3 marks each, harder, two-step).
+- **Make them harder than Paper 1** (Pratha, 2026-11-05: "the paper was easier than the real exam"). Aim at the real
+  Class 5 paper's level: more two-step questions (read a table / an experiment, then reason), fewer one-fact recalls,
+  wrong options that are tempting (common misconceptions), Champion questions that need two ideas together.
 - **Original questions only.** Use `docs/exam/nso-pattern.md` and the papers in `docs/exam/papers/nso/` only as a guide to
   topics, styles and difficulty. Never copy or reword a past-paper question. No question already in a quest or in Paper 1.
 - Every question: 4 options, one right, every wrong option has a `mistakeTag`, `topic` = a real Science quest node,
