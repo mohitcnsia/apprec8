@@ -2377,7 +2377,7 @@ export const quizzes = {
       },
   ],
 
-  "4ieo11-synonyms-q1": [
+  "wp-synonyms-mix-1": [
     {
       subtopic: "synonyms",
       ...q(
@@ -2460,13 +2460,13 @@ export const quizzes = {
       subtopic: "synonyms",
       ...q(
         "Choose the synonym of the word 'strive':",
-        "struggle",
+        "try hard",
         [
-        ["slacken", "antonym-error"],
-        ["surrender", "antonym-error"],
+        ["slow down", "antonym-error"],
+        ["give up", "antonym-error"],
         ["hesitate", "indecision"],
         ],
-        "To strive means to make great efforts or struggle energetically to achieve something."
+        "To strive means to try very hard to do something, like 'She strives to win the race.'"
       ),
     },
     {
@@ -2512,13 +2512,13 @@ export const quizzes = {
       subtopic: "synonyms",
       ...q(
         "Choose the synonym of the word 'certainty':",
-        "conviction",
+        "sureness",
         [
         ["doubt", "antonym-error"],
         ["hesitation", "lack-of-confidence"],
         ["suspicion", "uncertain-belief"],
         ],
-        "Certainty means firm conviction that something is the case. Conviction means a firmly held belief."
+        "Certainty means being completely sure about something, so sureness means the same."
       ),
     },
     {
@@ -2620,9 +2620,9 @@ export const quizzes = {
         [
         ["attractive", "antonym-error"],
         ["delightful", "opposite-sensation"],
-        ["hateful", "confused-emotion"],
+        ["curious", "unrelated-meaning"],
         ],
-        "Repulsive means arousing intense distaste or disgust; revolting is its synonym. Hateful means full of hate."
+        "Repulsive means so nasty that you want to turn away; revolting means the same."
       ),
     },
     {
@@ -2705,7 +2705,7 @@ export const quizzes = {
     },
   ],
 
-  "4ieo11-synonyms-q2": [
+  "wp-synonyms-mix-2": [
     {
       subtopic: "synonyms",
       ...q(
@@ -2931,13 +2931,13 @@ export const quizzes = {
       subtopic: "synonyms",
       ...q(
         "Choose the synonym of the word 'inquire':",
-        "investigate",
+        "ask",
         [
         ["overlook", "ignore-detail"],
-        ["respond", "answering-action"],
-        ["conclude", "ending-action"],
+        ["reply", "answering-action"],
+        ["finish", "ending-action"],
         ],
-        "To inquire means to ask for information or investigate."
+        "To inquire means to ask for information, like 'She inquired about the train times.'"
       ),
     },
     {
@@ -2981,7 +2981,7 @@ export const quizzes = {
     },
   ],
 
-  "4ieo11-antonyms-q1": [
+  "wp-antonyms-mix-1": [
     {
       subtopic: "antonyms",
       ...q(
@@ -3089,14 +3089,14 @@ export const quizzes = {
     {
       subtopic: "antonyms",
       ...q(
-        "Choose the antonym of 'potential' in: 'She showed great potential as a violinist.'",
-        "limitation",
+        "Choose the antonym of the word 'generous':",
+        "selfish",
         [
-        ["talent", "synonym-association"],
-        ["promise", "future-capacity"],
-        ["capability", "positive-ability"],
+        ["giving", "synonym-error"],
+        ["kind", "synonym-error"],
+        ["helpful", "related-quality"],
         ],
-        "Potential refers to latent qualities or abilities that may be developed; limitation is its antonym."
+        "A generous person likes to share and give. A selfish person keeps things for themselves, so selfish is the opposite."
       ),
     },
     {
@@ -3207,13 +3207,13 @@ export const quizzes = {
       subtopic: "antonyms",
       ...q(
         "Which word is the antonym of 'sickness'?",
-        "wellness",
+        "health",
         [
         ["illness", "synonym-error"],
         ["ailment", "synonym-error"],
         ["fatigue", "tiredness-state"],
         ],
-        "Sickness refers to the state of being ill; wellness or health is its antonym."
+        "Sickness means being ill; health is its opposite."
       ),
     },
     {
@@ -3258,19 +3258,19 @@ export const quizzes = {
     {
       subtopic: "antonyms",
       ...q(
-        "Which word is the antonym of 'cringe'?",
-        "confront",
+        "Which word is the antonym of 'shallow'?",
+        "deep",
         [
-        ["cower", "synonym-error"],
-        ["recoil", "synonym-error"],
-        ["flinch", "shrinking-reaction"],
+        ["low", "related-meaning"],
+        ["flat", "related-meaning"],
+        ["thin", "related-meaning"],
         ],
-        "To cringe means to shrink back in fear or embarrassment; to confront means to face boldly."
+        "Shallow water does not go down far. Deep water goes down a long way, so deep is the opposite."
       ),
     },
   ],
 
-  "4ieo11-antonyms-q2": [
+  "wp-antonyms-mix-2": [
     {
       subtopic: "antonyms",
       ...q(
@@ -3598,7 +3598,7 @@ export const quizzes = {
     },
   ],
 
-  "4ieo11-idioms": [
+  "wp-idioms-mix": [
     {
       subtopic: "animal-nature-idioms",
       ...q(
@@ -3815,7 +3815,7 @@ export const quizzes = {
         [
         ["trip a person while walking", "literal-physical-action"],
         ["help someone climb an obstacle", "helpful-misinterpretation"],
-        ["annoy a friend deliberately", "malicious-intent"],
+        ["pull a muscle while running", "literal-physical-action"],
         ],
         "To 'pull someone's leg' means to tease or play a harmless practical joke on them."
       ),
@@ -3835,7 +3835,7 @@ export const quizzes = {
     },
   ],
 
-  "4ieo11-vocab-q1": [
+  "wp-vocab-mix": [
     {
       subtopic: "idiomatic-collocations",
       ...q(
@@ -3882,8 +3882,8 @@ export const quizzes = {
         "meet / meat",
         [
         ["meat / meet", "reversed-homophones"],
-        ["meet / mete", "archaic-homophone"],
-        ["mete / meat", "incorrect-verb-choice"],
+        ["meat / meat", "incorrect-verb-choice"],
+        ["meet / meet", "incorrect-noun-choice"],
         ],
         "'Meet' means to come into the presence of someone; 'meat' is animal flesh used as food."
       ),
@@ -3943,7 +3943,7 @@ export const quizzes = {
     {
       subtopic: "idiomatic-collocations",
       ...q(
-        "Choose the correct spelling of the boundary around a circle:",
+        "Choose the correct spelling of the word for the line around a circle:",
         "circumference",
         [
         ["circumferance", "spelling-vowel-trap"],
@@ -4151,7 +4151,7 @@ export const quizzes = {
     {
       subtopic: "idiomatic-collocations",
       ...q(
-        "Choose the British spelling of the small dish eaten before a three-course meal:",
+        "Choose the British spelling of the small dish eaten before the main course:",
         "appetiser",
         [
         ["appetizer", "us-spelling-with-z"],
@@ -4385,9 +4385,9 @@ const synAntP1 = forGrades(
 );
 const synAntP2 = forGrades(
   withSubtopic(
-    practice("wp-synant-p2", synAnt, 2, "Word Bank 1", "easy", [
-      quiz("4ieo11-synonyms-q1"),
-      quiz("4ieo11-synonyms-q2"),
+    practice("wp-synant-p2", synAnt, 2, "Same Meaning Mix", "easy", [
+      quiz("wp-synonyms-mix-1"),
+      quiz("wp-synonyms-mix-2"),
     ]),
     "synonyms"
   ),
@@ -4395,9 +4395,9 @@ const synAntP2 = forGrades(
 );
 const synAntP3 = forGrades(
   withSubtopic(
-    practice("wp-synant-p3", synAnt, 3, "Word Bank 2", "easy", [
-      quiz("4ieo11-antonyms-q1"),
-      quiz("4ieo11-antonyms-q2"),
+    practice("wp-synant-p3", synAnt, 3, "Opposites Mix", "easy", [
+      quiz("wp-antonyms-mix-1"),
+      quiz("wp-antonyms-mix-2"),
     ]),
     "antonyms"
   ),
@@ -4441,8 +4441,8 @@ const collocationsP1 = forGrades(
 );
 const collocationsP2 = forGrades(
   withSubtopic(
-    practice("wp-colloc-p2", collocations, 2, "Vocabulary Bank", "medium", [
-      quiz("4ieo11-vocab-q1"),
+    practice("wp-colloc-p2", collocations, 2, "Word Mix", "medium", [
+      quiz("wp-vocab-mix"),
     ]),
     "idiomatic-collocations"
   ),
@@ -4505,8 +4505,8 @@ const idiomsP1 = forGrades(
 );
 const idiomsP2 = forGrades(
   withSubtopic(
-    practice("wp-idioms-p2", idioms, 2, "Idioms Bank", "medium", [
-      quiz("4ieo11-idioms"),
+    practice("wp-idioms-p2", idioms, 2, "Idiom Mix", "medium", [
+      quiz("wp-idioms-mix"),
     ]),
     "action-phrases"
   ),

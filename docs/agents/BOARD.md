@@ -14,9 +14,8 @@ folder (`../apprec8-gemini`), and reports by commit (`gemini(Gxx): done …`) + 
 Claude reviews, merges and moves the task to done. The owner talks only to Claude. Rules: `docs/agents/GEMINI_ONBOARDING.md`.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **Science Unit 4 Our Environment** (Claude, 105 questions, `9fafd73`, draft/testers): owner checks the facts (section S4 on the same review page).
+- ~~Review page (English Units 5–7, Science Unit 4)~~ owner: "looks good" 2026-11-05 → **seed after the next publish** (the phone's seed buttons only have content that was published). Next: owner says "publish" (OTA for 20.0.29), then Me → Admin tools → seed English, Word Power, Science.
 - ~~Mockup N1~~ owner approved 2026-11-05 → built (`161934d`), ships in 20.0.29.
-- **English Units 5 Tenses, 6 Modals & Question Tags, 7 Reported Speech & Passive (Class 5+)** (Claude, 344 questions): Seema/owner review before seeding: https://claude.ai/artifact/U6LynNNiAXnAAxdWGUU9Tx (codes T5-, T6-, T7-; owner shares it with Seema).
 - **Build 20.0.29** (lock + play time): `build-1793820561489.aab`, check PASS, lock module inside. **Owner uploads to Play.**
 - ~~DR-11 deploy~~ owner OK 2026-11-05 → **G29 (Gemini deploys; next time Antigravity runs)**.
 - ~~Publish~~ done 2026-11-05 (update `7e9bc848`): leaderboard, Schools & classes, status bar, loader text.
@@ -50,8 +49,8 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | todo (next) | from Claude's folder | |
-| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | todo (after G29) | `content/wp-old-vocab` | |
+| G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **in progress** (Antigravity started 2026-11-05) | from Claude's folder | |
+| G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
 | Treasure Words quest (owner's 370 words, 17 topics, generated quizzes) | Claude | **done** `ebc69b8` | `feat/quiz-redesign` | Not in 20.0.28; OTA (owner OK) |
 | G25 Separate "Word Power" quest | Gemini | **done, merged** | `content/word-power` | Fixes checked; Claude fixed 1 backslash + 2 wrong Learn-page rules. Seeding waits for owner (Seema to review) |
 | G26 Emulator smoke test (calm pass 1) | Gemini | **done** 5 pass / 1 fail | `gemini/g26-smoke` | Fail = second Start page; Claude fixed (`d67b0ba`, `3329b72`) |
@@ -130,7 +129,7 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G29.md` (each step: done / error text), commit `gemini(G29): done — …` on your branch.
 **Rollback:** `firebase functions:delete <name> --project apprec8-ca229` for the four (nothing else uses them).
 
-### G28 · [todo] · gemini · Move the old vocabulary quizzes into Word Power (accuracy-checked)
+### G28 · [done] · gemini · Move the old vocabulary quizzes into Word Power (accuracy-checked)
 **Why (owner 2026-11-04):** the old IEO content is being retired; its 6 vocabulary quizzes (150 questions) must not be lost.
 **Source:** `tests/fixtures/ieo_questions.json` (in Claude's folder; read only): `4ieo11-synonyms-q1`, `-q2`, `4ieo11-antonyms-q1`,
 `-q2`, `4ieo11-idioms`, `4ieo11-vocab-q1`.
