@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **waiting for owner OK**
+## DR-12 · Cost guard: cap every function at 10 running copies (long admin jobs: 2) · **owner OK 2026-11-05 → Gemini G30**
 
 Why: today nothing limits how many copies of a function can run, so a bug, a loop or someone spamming the app could
 grow the bill without limit. `functions/common/config.js` now sets `maxInstances` for every function (all use it).
