@@ -41,6 +41,12 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### Grammar Pro 1: Tenses, Classes 9–10 (after "publish" + seeding English), ~10 min
+1. Tester with unlock-all (or a Class 10 test account): English Quest ends with "Grammar Pro: Tenses" (Perfect Tenses,
+   Perfect Continuous, Conditionals, Boss). Learn cards, warm-up, Board Style practice, Challenge.
+2. Class 5 (Pratha): nothing new appears, the "Word Building" coming-soon unit is still last.
+3. Teacher (Seema): Schools & classes → her Class 10 class → assign "Perfect Continuous" → a Class 10 student sees it open.
+
 ### ⭐ Picture questions (after "publish"), ~5 min
 1. Practice paper → Science → Mix paper: Thinking skills has 3 picture questions (figure series / mirror / water image /
    turned shape / plant). Pictures are soft on the dark theme; answer tiles show drawings A–D.

@@ -15,6 +15,15 @@ own questions in this style; the PDFs are not kept in the app or in git.
   part C", "how many errors are in this instruction", "which underlined phrase shows an action completed before a future
   time", "which statement shows the speaker is not sure".
 
+## From the 2025 and 2026 board papers (owner shared four sets; grammar only)
+- Same Q3 format every year: any 10 of 12 tasks, 1 mark each. Each task sits in a **real-life frame**: a message to a
+  friend, a newspaper clipping or report, a line from a school diary's rules, a grandparent's memoir, a company's letter
+  to an employee, a poster, a counsellor–student conversation. Our questions copy that idea (frames), never the sentences.
+- Frequent targets: future perfect continuous ("This July, you ___ in Japan for three years"), present perfect with
+  "since morning", past perfect after "before … could", "Each one of … has", "Neither … nor" agreement, determiners
+  (each / all / these), preference ("prefer … to"), modals for past ability / habit (could / would), question tags
+  after a past verb, reporting yes/no and wh- questions, statements and thanks.
+
 ## Topics (in the order the competency paper groups them)
 1. **Tenses**: present / past / future perfect and perfect continuous ("By the end of this quarter she will have been
    working…"), sequence of past events (which happened first), tense in reported narration, conditionals (type 2 and 3).

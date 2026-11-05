@@ -1872,3 +1872,13 @@ Plan once approved: support in the paper screen (and quests later), then ~10 pic
   picture answer tiles (fixed A–D order); Science Mix papers get 3 picture questions in Thinking skills. Picture and
   reading questions are not added to My mistakes (it shows text only). Copyright (owner asked): we draw our own; book /
   past-paper images are not used, even tweaked.
+
+## 2026-11-05 — Grammar Pro 1: Tenses for Classes 9–10 (Seema's pilot) (Claude)
+Owner: same English Quest; teachers assign topics (assigned topics open, the rest unlock as usual); grammar only, no Class
+10 papers. Built `data/englishQuest/units/b1.js` (unitOrder 10, Classes 9–10): Perfect Tenses, Perfect Continuous,
+Conditionals, each with Learn cards, warm-up (8), Board Style practice (10), Challenge (15, 3 sub-topics), ♾️ practice,
+Boss (12): 111 original questions in the CBSE style (docs/exam/cbse10-english-pattern.md, from 4 board papers + CBSE
+competency questions; nothing copied). The "Word Building" teaser is now Classes 1–8 (a coming-soon unit locks
+everything after it). Checked: Class 5 path unchanged; Class 10 reaches Grammar Pro after Unit 9; a teacher-assigned topic
+opens at once. Seema reviews (review page, code G10-). Next units: Modals, Subject–Verb Agreement + Determiners,
+Reported Speech, Passive, Editing.

@@ -1016,4 +1016,4 @@ extraUnits.forEach((u) => {
   nodes.push(...u.nodes);
 });
 // The next unit shows as "Coming soon" at the end of the path.
-if (nextUnitTeaser) nodes.push(unit(nextUnitTeaser.id, nextUnitTeaser.unitOrder, nextUnitTeaser.title, { comingSoon: true }));
+if (nextUnitTeaser) nodes.push(unit(nextUnitTeaser.id, nextUnitTeaser.unitOrder, nextUnitTeaser.title, { comingSoon: true, ...(nextUnitTeaser.grades ? { grades: nextUnitTeaser.grades } : {}) }));
