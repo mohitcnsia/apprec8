@@ -1925,3 +1925,8 @@ Reported Speech, Passive, Editing.
     premium year for a government-school child; show the real count in the app; promise it only if we do it. Later,
     olympiad fees cover costs. Needs (after the pilot + daily report): Google Play Billing (native build; Google keeps
     ~15% of subscriptions; check GST with a CA), a `premium` flag checked on the server, a sponsored-kids counter.
+    **Proposal (Claude, owner to confirm):** price lock = *as long as the subscription continues* (Play keeps legacy
+    prices), not lifetime (unknown future costs). Founding window: first 1,000 families or 31 Mar 2027, whichever first;
+    no countdown timers. Supporter tiers, same features: Family ₹99 (sponsors 1 child) · Supporter ₹299 (3) · Champion
+    ₹499 (5). Price check with Seema's pilot parents: 4 questions (too cheap to trust / bargain / getting expensive /
+    too expensive) + count real payments. Payment screen needs a mockup first.
