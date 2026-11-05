@@ -23,6 +23,21 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-06 (night, owner: "keep building and documenting"): closer to closed testing (Claude)
+- **Goal:** everything Seema's pilot and the closed test need that Claude can build; owner + Seema test in the morning.
+- **Published (OTA):** guides (Me → Guides: admin "Set up a school", teacher "Start your class"; real screens + guide
+  strip; steps tick from real data). **Not yet published (needs "publish"):** "Need help?" sheet (Me tab), old content
+  hidden except dogs/animals, teacher "This week" card, parent "My children" week card (EN/हिंदी), link a child's
+  existing account, Unit 10 Word Building (Gemini G37 + 19 fixes; needs an English re-seed), Demo School button.
+- **Server, waiting for owner OK → Gemini deploys:** DR-16 Demo School (+ G38 fixes), DR-17 account linking,
+  DR-18 weekly notifications (branch `feat/push-20.0.30`).
+- **Build 20.0.30** (branch `feat/push-20.0.30`, native): weekly summary notifications + unused permissions removed.
+  `.aab` built locally overnight; owner: `check-aab.sh`, upload to internal testing, test, then merge the branch.
+- **Gemini:** G37 + G38 done and merged; G39 (QA run) and G40 (dog fact sheet) queued.
+- **For the owner:** Play Console steps + draft form answers in `docs/release/PLAY_CONSOLE.md`; Dog Squad plan and
+  pricing decisions in CODE_REVIEW.md; Seema's review page for Grammar Pro 1–6 + Unit 10.
+- **How to test:** `docs/qa/OWNER_TESTING.md` (sections from "Guide quests" down).
+
 ## 2026-11-05 (evening): practice paper built, specs R + S, DR-14 → G32 (Claude)
 - **Goal:** act on the owner's evening feedback.
 - **Done:** practice paper (mockup Q approved) built: Home → Explore → Practice paper; bundled papers, resume, clock,
@@ -53,17 +68,6 @@ the owner; G14/G11 parked).
   4. English Unit 5 Tenses + Unit 6 Modals & Question Tags (~250 questions), not seeded; review page for Seema.
   5. Test guard: no exam labels in kid-facing quest text.
 - **How to test:** `npm test`; `docs/qa/OWNER_TESTING.md` newest sections (OTA update, Treasure Words); 20.0.29 on the phone: Me → Play as Pratha → Lock & play (Android asks "Pin this app?").
-
-## 2026-11-04 (part 2): app redesign + Science Quest groundwork, branch `feat/quiz-redesign` (Claude)
-- **Goal:** finish the owner-approved redesign (quiz, Home + tabs) and prepare NSO (Science Quest) for 19 Nov.
-- **Completed Steps:** (details + commit ids in `CODE_REVIEW.md`, entries dated 2026-11-04)
-  1. Quiz screens redesigned (mockups A–D); answers sit in the thumb zone above CHECK.
-  2. Tabs Home · Fun · Progress · Me. Study tab gone (its screens are in the Home stack); Space quest = hidden tab opened from Home. Reminders (= Tasks, max 5 per kid) in Home's Coming up. Progress merges Stats + Dashboard; Me replaces Profile, seed buttons in Admin tools.
-  3. Leaderboard shows first name + class (Class 1–12 in Edit profile, set once). DR-8 + Finding 22 wait for deploy (G10).
-  4. Multi-quest: `data/quests/index.js`, generic `SeedTileQuestButton`, class filter `utils/gradeFilter.js` (`grades` on nodes), Dashboard quest switch, Home/Progress show every quest. Science Quest draft (`data/scienceQuestData.js`, 1 sample topic) visible to testers only (`quest_draft`).
-- **How to test:** `npm test` (all suites); then `docs/qa/OWNER_TESTING.md`, newest sections first (G8, G9, G13). Nothing is deployed or seeded.
-
-(Older session: 2026-10-31 → 2026-11-04 release work, moved to `docs/history/gemini-log-2026-11.md`.)
 
 ## Future TODOs
 - **Before Seema's pilot / public release (owner 2026-11-05):** safety screens (mockup row P: "Need help?" + parent
