@@ -66,6 +66,9 @@ the owner; G14/G11 parked).
 (Older session: 2026-10-31 → 2026-11-04 release work, moved to `docs/history/gemini-log-2026-11.md`.)
 
 ## Future TODOs
+- **Before Seema's pilot / public release (owner 2026-11-05):** safety screens (mockup row P: "Need help?" + parent
+  privacy / delete; waits for Seema's wording) · privacy policy page + "delete my account" web page for Play · crash
+  reporting (none today). Tracked in docs/LAUNCH_CHECKLIST.md.
 - **Level 2 practice (owner 2026-11-05):** the owner will share Class 6 sample papers; Level 2 for Class 5 asks Class 6
   questions. Then: pattern notes (pattern only, nothing copied), Level 2 papers / Champion sets for Class 5 from the
   Class 6 syllabus, harder Mix option.
