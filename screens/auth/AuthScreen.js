@@ -6,9 +6,11 @@ import { Button, TextInput, Card, Text } from "react-native-paper";
 // import { Colors } from "../../config/colors"; // <-- Remove this direct import
 import { useTheme } from "../../context/ThemeContext"; // <-- Import useTheme
 import { signInWithChildCode } from "../../services/familyApi";
+import { looksLikeEmail, MIN_PASSWORD } from "../../utils/authErrors";
 
 export default function AuthScreen({
   externalError,
+  externalNotice,
   isAuthLoading,
   onGuestLogin,
   onGoogleLogin,
@@ -29,7 +31,14 @@ export default function AuthScreen({
   const [childCode, setChildCode] = useState("");
   const [childBusy, setChildBusy] = useState(false);
   const shouldShowEye = isFocused || password.length === 0;
-  const isValid = email.includes("@") && password.length >= 6;
+  const isValid = looksLikeEmail(email) && password.length >= MIN_PASSWORD;
+  // Say why the button is off, instead of a silent grey button.
+  const hint =
+    email.length > 0 && !looksLikeEmail(email)
+      ? "Type a full email address, like name@gmail.com"
+      : password.length > 0 && password.length < MIN_PASSWORD
+      ? `Password: at least ${MIN_PASSWORD} characters (${password.length} so far)`
+      : null;
 
   useEffect(() => {
     if (externalError) setError(externalError);
@@ -91,6 +100,8 @@ export default function AuthScreen({
           marginBottom: 10,
           textAlign: "center",
         },
+        notice: { color: theme.textSecondary, marginBottom: 10, textAlign: "center" },
+        hint: { color: theme.textSecondary, fontSize: 13, marginTop: 2 },
         bottomView: {
           flexDirection: "row",
           justifyContent: "space-evenly", // Better spacing for two buttons
@@ -106,6 +117,7 @@ export default function AuthScreen({
         <Text style={styles.title}>{isLogin ? "Login" : "Register"}</Text>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
+        {!error && externalNotice ? <Text style={styles.notice}>{externalNotice}</Text> : null}
 
         <TextInput
           label="Email"
@@ -115,6 +127,9 @@ export default function AuthScreen({
             setError("");
           }}
           autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="email"
+          textContentType="emailAddress"
           keyboardType="email-address"
           style={styles.input}
           disabled={isAuthLoading}
@@ -153,6 +168,8 @@ export default function AuthScreen({
             ) : null
           }
         />
+
+        {hint ? <Text style={styles.hint}>{hint}</Text> : null}
 
         {/* Login / Register Button */}
         <Button

@@ -41,6 +41,15 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Login, registration, guest (after the next "publish"), ~8 min. Sign out first (Me → Sign out)
+1. Login with an email that ends in a space (pick it from the keyboard suggestion) + a wrong password → "Email or password
+   is wrong…" and what you typed is still there (before: "badly formatted", or the form came back empty).
+2. Short password / half-typed email → a grey line under the fields says why the button is off.
+3. Register with an email that already has an account → "This email already has an account…" (before: nothing at all).
+4. Forgot password? → calm "If an account exists… reset link" message (not red).
+5. Continue as Guest → Home works → Me → "Sign Up or Log In" → back to the login screen.
+6. Google sign-in and "I have a code from my parent" still work.
+
 ### ⭐ Practice paper, round 2 (your feedback, after this "publish"), ~10 min
 1. Reading questions: the story looks like a book page (serif, margin line, "READ: …"), the question below has a QUESTION label.
 2. Options are bigger and sit low, near your thumb.

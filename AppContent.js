@@ -69,7 +69,9 @@ const AppContent = () => {
     user,
     isGuest,
     error: authError,
-    loading: authLoading,
+    notice: authNotice,
+    initializing: authLoading, // full-screen loader only while auth starts up
+    busy: authBusy, // a sign-in / sign-up in progress: the login screen stays, with a spinner on its button
     onGuestLogin,
     signoutHandler,
     googleLoginHandler,
@@ -159,7 +161,8 @@ const AppContent = () => {
           // --- RESTORED: All props are now correctly passed ---
           <AuthScreen
             externalError={authError}
-            isAuthLoading={authLoading}
+            externalNotice={authNotice}
+            isAuthLoading={authBusy}
             onGuestLogin={onGuestLogin}
             onGoogleLogin={googleLoginHandler}
             onEmailSignIn={emailSignInHandler}

@@ -1819,3 +1819,15 @@ for Class 3–6, and Treasure Words' Big Words start with abide, ambush, appall,
 - **Pratha (Class 5):** nothing she has finished is locked again; progress is kept by node id, and the new first topic
   is placed so her finished topics stay open (Claude checks this on the emulator before seeding).
 - Content only (JSON + seeding, no app update), plus the R cards for these pages. Seema reviews the words.
+
+## 2026-11-05 — Fix: login / registration review (owner: "email password flow seems broken") (Claude)
+Found and fixed (`utils/authErrors.js` + tests, `hooks/useFirebaseAuth.js`, `AppContent.js`, `screens/auth/AuthScreen.js`):
+1. Emails were not trimmed: a keyboard space after the email → Firebase "badly formatted" (checked against the live project).
+2. Registration called `mapAuthError`, never imported: every sign-up error crashed silently, nothing shown.
+3. Any sign-in in progress swapped the login screen for the full-screen loader: a failed try came back with empty fields.
+   Now the full-screen loader is only for app start; sign-in shows a spinner on the button.
+4. Raw Firebase messages ("[auth/invalid-credential] …") → short, kid/parent-friendly ones; reset-link success is calm, not red.
+5. A disabled button with no reason → a hint line (email format, password length). Dead `screens/auth/authService.js` removed.
+Checked, fine: guest mode (public reads only, "Sign Up or Log In" returns to login), child code sign-in, Google path unchanged.
+**Open (needs a mockup):** a new email account is never asked for a name or class, so Home says "friend" and class-based
+things (practice paper, class topics) stay hidden until Edit Profile. Proposal: a 2-question first-run sheet.
