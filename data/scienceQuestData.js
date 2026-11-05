@@ -23,6 +23,7 @@ import {
   forGrades,
 } from "./englishQuest/helpers.js";
 import sqU4 from "./scienceQuest/units/u4.js"; // Unit 4 Our Environment (2026-11-05)
+import sqU5 from "./scienceQuest/units/u5.js"; // Unit 5 Light, Sound & Magnets (2026-11-05)
 
 export const QUEST_ID = "science-quest";
 
@@ -503,6 +504,7 @@ The Moon is Earth's only natural satellite, orbiting Earth every 27.3 days.
   - **Lunar Eclipse:** The Earth passes directly between the Sun and the Moon (**Sun — Earth — Moon**). Earth's shadow falls on the Full Moon at night.`,
   },
   ...sqU4.studyPages,
+  ...sqU5.studyPages,
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -4413,6 +4415,7 @@ export const quizzes = {
     },
   ],
   ...sqU4.quizzes,
+  ...sqU5.quizzes,
 };
 
 export const readings = {};
@@ -4838,8 +4841,8 @@ const u3Boss = forGrades(
   [4, 5]
 );
 
-// Unit 4 Our Environment: data/scienceQuest/units/u4.js. Unit 5 teaser (coming soon).
-const u5 = unit("sq-u5", 5, "Light, Sound & Magnets", { comingSoon: true });
+// Units 4–5: data/scienceQuest/units/u4.js, u5.js. Unit 6 teaser (coming soon).
+const u6 = unit("sq-u6", 6, "Water, Air & Weather", { comingSoon: true });
 
 export const nodes = [
   u1,
@@ -4885,5 +4888,6 @@ export const nodes = [
   earthEndless,
   u3Boss,
   ...sqU4.nodes,
-  u5,
+  ...sqU5.nodes,
+  u6,
 ];
