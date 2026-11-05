@@ -27,7 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- ~~Mockup Q practice paper~~ owner: "excellent" 2026-11-05 → **Claude builds** (short options 2 × 2). Open questions: Claude's defaults in CODE_REVIEW.md Q; owner can change them.
+- ~~Mockup Q practice paper~~ owner: "excellent" 2026-11-05 → **built** (testers only until the paper questions are approved; ships with the next "publish"; short options 2 × 2). Open questions: Claude's defaults in CODE_REVIEW.md Q; owner can change them.
 - **Mockup R Learn cards** (bite-size study pages, owner idea 2026-11-05): canvas row R + spec R in CODE_REVIEW.md. Owner OK?
 - **Spec S word ladders** (Word Power + Treasure Words start too hard, owner 2026-11-05): CODE_REVIEW.md S. Owner OK?
 - **Mockup P (child safety & privacy, draft)**: P1 'Need help?' row on the child's Me tab, P2 help sheet (1098 / 14416 / 112, tap to call),

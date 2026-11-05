@@ -13,6 +13,7 @@ export default {
   title: "Paper 1",
   minutes: 60,
   grades: [5],
+  draft: true, // testers only until the owner approves the questions (review page + second review)
   passages: {},
   parts: [
     {

@@ -30,6 +30,7 @@ import SpellingBeeGame from "../components/SpellingBeeGame";
 import TaskEditor from "../screens/task/TaskEditor";
 import Tasks from "../screens/task/Tasks";
 import TaskDetails from "../screens/task/TaskDetails";
+import PracticePaperScreen from "../screens/paper/PracticePaperScreen";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,8 @@ const HomeNavigator = () => (
     <Stack.Screen name="TaskEditor" component={TaskEditor} />
     <Stack.Screen name="Tasks" component={Tasks} />
     <Stack.Screen name="TaskDetails" component={TaskDetails} />
+    {/* Practice paper (mockup Q), from Home's Explore tile */}
+    <Stack.Screen name="PracticePaper" component={PracticePaperScreen} />
   </Stack.Navigator>
 );
 

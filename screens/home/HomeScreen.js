@@ -26,6 +26,7 @@ import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
+import { papersFor } from "../../data/papers";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -52,6 +53,14 @@ const BookArt = ({ size = 62 }) => (
     <Path d="M10 14c16-7 32-7 50 5v62c-18-12-34-12-50-5z" fill="#85508a" />
     <Path d="M110 14c-16-7-32-7-50 5v62c18-12 34-12 50-5z" fill="#3b0940" />
     <Path d="M22 32c9-3 18-3 28 2M22 46c9-3 18-3 28 2M70 34c10-5 19-5 28-2M70 48c10-5 19-5 28-2" stroke="#F5D2F8" strokeWidth={4} strokeLinecap="round" />
+  </Svg>
+);
+const PaperArt = () => (
+  <Svg width={46} height={58} viewBox="0 0 60 76">
+    <Rect x={6} y={4} width={44} height={60} rx={6} fill="#FFFFFF" stroke="#85508a" strokeWidth={4} />
+    <Path d="M16 20h24M16 31h24M16 42h14" stroke="#C98ACF" strokeWidth={4} strokeLinecap="round" />
+    <Circle cx={44} cy={58} r={13} fill="#F5C842" />
+    <Path d="M44 51v7l5 3" stroke="#3b0940" strokeWidth={3} strokeLinecap="round" fill="none" />
   </Svg>
 );
 const RocketArt = () => (
@@ -294,6 +303,7 @@ export default function HomeScreen({ navigation }) {
   const firstName =
     userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
   const stars = userData?.stats?.totalStars || 0;
+  const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
   const mistakeCount = allQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
   const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
@@ -441,7 +451,15 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <Text style={styles.section}>Explore</Text>
-      <View style={styles.grid}>{questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace)}</View>
+      <View style={styles.grid}>
+        {questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace)}
+        {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
+        {papersFor({ grade: userGrade, isTester }).length
+          ? questTile("paper", "Practice paper", "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
+              navigation.navigate("PracticePaper", { grade: userGrade })
+            )
+          : null}
+      </View>
 
       {practiceTiles.length > 0 ? (
         <>

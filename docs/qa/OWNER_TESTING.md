@@ -41,6 +41,17 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Practice paper (after the next "publish"), your tester account only, ~15 min
+Pratha can't see it yet (draft, testers only) until you approve the paper questions.
+1. Home → Explore → **Practice paper** tile → English / Science switch, parts and counts, "Show the clock" switch.
+2. START PAPER → answer 3 questions. Short options sit 2 × 2, long ones stack. ⚑ turns gold; ‹ goes back.
+3. Reading questions (English Q31–40): the story shows above the question; tap its title to fold it.
+4. Close the app fully, open it again → tile → **CONTINUE (3 / 50 done)**, your answers are still there, clock kept running.
+5. Jump: on Q50 press CHECK → the number grid (blank = dashed, marked = gold) → tap a number → it opens.
+6. SUBMIT PAPER → "N left blank" warning → Submit → marks by part, "Practise these next" (opens that quest) → SEE ANSWERS
+   (only mistakes, switch to see all) → Done. Start again: "Last time: x / 60".
+7. Optional: hide the clock and do the whole paper as Pratha would (60 min); tell me if anything felt confusing.
+
 ### After you approve the review page + G31: English Unit 8, Science Unit 5 (needs a "publish" first), ~15 min
 1. Me → Admin tools → seed **English** and **Science**.
 2. English Quest: after Unit 7 comes **Unit 8 Linking Words** (a Class 3–4 child goes straight from Unit 6 to Unit 8). Pratha sees

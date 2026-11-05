@@ -1768,6 +1768,12 @@ pacing or checking. Mockup: canvas row **Q** (Q1–Q4), https://claude.ai/artifa
   (1) **Class 5 only at first** (+ testers): the papers are in the Class 5 shape; Class 3–4 papers come later.
   (2) **Clock on** by default, with a "Hide the clock" switch on the start screen. (3) **On Home**, one "Practice paper" tile
   (a paper mixes topics from several quests, so it doesn't belong inside one quest).
+- **Built 2026-11-05 (Claude)**, one change from the draft: papers are **bundled in the app code** (`data/papers/`), not
+  seeded to Firestore: 0 reads, no seeding, no rules change, new papers ship by OTA. Result = one `questAttempts` doc
+  (`activity: "paper"`, existing rules); "Last time" and the paper in progress are kept on the phone. Screen:
+  `screens/paper/PracticePaperScreen.js`, logic `utils/paperSession.js` + `utils/paperScore.js` (tests). `draft: true` on
+  each paper = testers only until the owner approves the questions. "Practise these next" opens the quest map (not yet
+  the exact topic).
 
 ## 2026-11-05 — Draft spec (not approved): R · Learn cards, bite-size study pages (owner idea) (Claude)
 Why (owner): the Learn pages are long, scrolling walls (e.g. Word Power's first page is two 10-row tables). A Class 5 child
