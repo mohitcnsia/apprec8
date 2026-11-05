@@ -29,7 +29,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
 - **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
 - ~~Mockups T1–T4~~ owner OK 2026-11-05 → **built** (login, email, create account, forgot sheet, first run, animations); ships with the next "publish".
-- ~~DR-15 stars for practice papers~~ owner OK 2026-11-05 ("OK for stars"; stars again after a week = spaced repetition) → **G34 (Gemini)**.
+- ~~DR-15 stars for practice papers~~ **deployed** 2026-11-05 17:41 (Gemini G34).
 - **Owner 2026-11-05 evening: "everything approved"** (review page 550 Qs, both practice papers, spec S, mockup P screens).
   Seema reviews on her phone afterwards. Published `cb0fc89e` (paper testers-only, Learn cards, cost guard 4).
   **Owner seeds** (Me → Admin tools): English (Units 8–9), Word Power (cards), Treasure Words (cards), Science (Units 5–6 + 1–3 fixes).
@@ -82,8 +82,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | todo (after G33) | from Claude's folder | |
-| G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | todo (next) | from Claude's folder | |
+| G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | **done** 17:41 (recordQuizResult only) | from Claude's folder | |
+| G33 ⭐ DR-14 backfill, second run (owner OK) | Gemini | **done** (5 docs, 0 missing) | from Claude's folder | |
 | G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |
 | G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | done: **0 findings** (Claude: too clean to trust on 558 Qs; not counted as the second review. Seema + owner on the review page remain the gate; Claude spot-checks) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | **done** 2026-11-05 evening (42 functions live, report G30) | from Claude's folder | |
@@ -156,14 +156,14 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G34 · [todo] · gemini · ⭐ Deploy DR-15: stars for practice papers (owner-approved: yes, 2026-11-05)
+### G34 · [done] · gemini · ⭐ Deploy DR-15: stars for practice papers (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** ("OK for stars", 2026-11-05). From Claude's folder (branch `feat/quiz-redesign`, commit `ce8b151` or later):
 1. `cd functions && node -e "require('./index.js')"`: loads without errors.
 2. `firebase deploy --only functions:recordQuizResult --project apprec8-ca229`. Only this one function. If it fails, STOP and report.
 **Deliver:** `docs/agents/reports/G34.md` (outputs), commit `gemini(G34): done — …`.
 **Rollback:** redeploy `recordQuizResult` from the commit before `06dee6e` (papers then earn 0 stars; nothing else changes).
 
-### G33 · [todo] · gemini · ⭐ DR-14 backfill, second run (owner-approved: yes, 2026-11-05)
+### G33 · [done] · gemini · ⭐ DR-14 backfill, second run (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** (part of DR-14: "run the backfill again after the next publish"; publish `cb0fc89e` done 2026-11-05).
 From Claude's folder: `node scripts/admin/backfillQuestId.cjs` (dry run), then `node scripts/admin/backfillQuestId.cjs --apply`
 if it lists any docs. Nothing else. **Deliver:** `docs/agents/reports/G33.md` with both outputs, commit `gemini(G33): done — …`.
