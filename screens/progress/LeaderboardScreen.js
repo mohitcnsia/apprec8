@@ -5,7 +5,7 @@
 // Shaping logic: utils/leaderboardView.js (tested).
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
@@ -13,6 +13,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { leaderboardView, formatPoints } from "../../utils/leaderboardView";
+import { showAlert } from "../../services/dialog";
 
 const AVATAR_COLORS = ["#C98ACF", "#F0904A", "#5BA4E6", "#7BC98F", "#E8C43A", "#E58FB0"];
 const CACHE_MS = 5 * 60 * 1000;
@@ -128,9 +129,9 @@ export default function LeaderboardScreen({ route }) {
     try {
       const r = await functions().httpsCallable("clapForClassmate")({ classId, toUid: row.id });
       setClapped((c) => ({ ...c, [row.id]: true })); // sent, or already sent today: either way it's done for today
-      if (!r.data.ok) Alert.alert("Already clapped", r.data.message);
+      if (!r.data.ok) showAlert("Already clapped", r.data.message);
     } catch (e) {
-      Alert.alert("Couldn't clap", e.message);
+      showAlert("Couldn't clap", e.message);
     }
   };
 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Alert, View } from 'react-native';
+import { Button, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import spaceData from '../../data/space_olympiad_data.json';
+import { showAlert } from "../../services/dialog";
 
 export default function SeedDataButton() {
   const [loading, setLoading] = useState(false);
@@ -59,10 +60,10 @@ export default function SeedDataButton() {
       }
 
       await batch.commit();
-      Alert.alert("Success", "Space Olympiad Data Seeded!");
+      showAlert("Success", "Space Olympiad Data Seeded!");
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", e.message);
+      showAlert("Error", e.message);
     }
     setLoading(false);
   };

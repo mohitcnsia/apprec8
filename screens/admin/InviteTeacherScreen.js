@@ -4,7 +4,7 @@
 // teacher; the request then waits on the class page for approval. "Add by email" stays as a folded fallback.
 
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, ScrollView, Share, Text, View } from "react-native";
+import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "../../context/ThemeContext";
@@ -12,6 +12,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, Chip, MainButton, Field } from "./schoolUi";
 import { createTeacherInvite, findUserByEmail, setTeacher } from "../../services/classesApi";
 import { SUBJECTS, SUBJECT_NAMES, teacherInviteMessage } from "../../utils/classes";
+import { showAlert } from "../../services/dialog";
 
 export default function InviteTeacherScreen({ route, navigation }) {
   const { classId, className, schoolName, subjects: classSubs = [] } = route.params || {};
@@ -32,7 +33,7 @@ export default function InviteTeacherScreen({ route, navigation }) {
   const toggle = (s) => setSubjects((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
 
   const share = async () => {
-    if (!subjects.length) return Alert.alert("Pick a subject", "Which subjects will they teach?");
+    if (!subjects.length) return showAlert("Pick a subject", "Which subjects will they teach?");
     setBusy(true);
     try {
       let c = code;
@@ -43,7 +44,7 @@ export default function InviteTeacherScreen({ route, navigation }) {
       }
       await Share.share({ message: teacherInviteMessage({ className, schoolName, subjects, code: c }) });
     } catch (e) {
-      Alert.alert("Couldn't make the invite", e?.message || String(e));
+      showAlert("Couldn't make the invite", e?.message || String(e));
     }
     setBusy(false);
   };
@@ -53,10 +54,10 @@ export default function InviteTeacherScreen({ route, navigation }) {
     try {
       const t = await findUserByEmail(email);
       await setTeacher({ classId, teacherUid: t.uid, subjects });
-      Alert.alert("Added", `${t.firstName} now teaches ${subjects.map((s) => SUBJECT_NAMES[s]).join(", ")} in ${className}.`);
+      showAlert("Added", `${t.firstName} now teaches ${subjects.map((s) => SUBJECT_NAMES[s]).join(", ")} in ${className}.`);
       navigation.goBack();
     } catch (e) {
-      Alert.alert("Couldn't add", e?.message || String(e));
+      showAlert("Couldn't add", e?.message || String(e));
     }
     setBusy(false);
   };

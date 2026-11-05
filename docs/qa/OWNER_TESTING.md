@@ -41,6 +41,14 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ App popups (raw Android popups replaced), after this "publish", ~5 min
+Every popup should now slide up from the bottom in the app's colours, the safe choice big, red outline for Delete/Leave.
+1. Me → Sign out → popup says "Sign out" / "Cancel" (it used to say "Confirm"). Tap Cancel.
+2. A quest map → tap a locked topic → "🔒 … is locked" popup with "Go to Challenge" big, "Not now" quiet.
+3. Practice paper → CHECK with blanks → SUBMIT PAPER → "N left blank" popup.
+4. Me → Reminders → delete one → "Delete" in a red outline, the safe choice big.
+5. Android back on a popup = its Cancel button.
+
 ### ⭐ Login, registration, guest (after the next "publish"), ~8 min. Sign out first (Me → Sign out)
 1. Login with an email that ends in a space (pick it from the keyboard suggestion) + a wrong password → "Email or password
    is wrong…" and what you typed is still there (before: "badly formatted", or the form came back empty).

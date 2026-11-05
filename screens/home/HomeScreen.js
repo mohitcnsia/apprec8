@@ -4,7 +4,7 @@
 // Replaces the old Home (now the Fun tab) and the Study tab. Tiles open screens in the Home stack.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
 
@@ -27,6 +27,7 @@ import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { papersFor } from "../../data/papers";
+import { showAlert } from "../../services/dialog";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -324,7 +325,7 @@ export default function HomeScreen({ navigation }) {
   const addReminder = () => {
     if (!uid) return navigation.navigate("Profile"); // guests: sign in first
     if (!canAddReminder(tasks, uid, { isAdmin: uid === APPREC8_TEAM_REVIEWER_UID })) {
-      Alert.alert("Too many reminders", LIMIT_MESSAGE);
+      showAlert("Too many reminders", LIMIT_MESSAGE);
       return navigation.navigate("Tasks");
     }
     return navigation.navigate("TaskEditor");

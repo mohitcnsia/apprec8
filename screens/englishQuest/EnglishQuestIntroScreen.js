@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Switch,
-  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,6 +29,7 @@ import { useTesterMode, setTesterMode } from "../../services/testerMode";
 import { resetMyQuestProgress } from "../../services/englishQuestApi";
 import { useTheme } from "../../context/ThemeContext";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
+import { showAlert } from "../../services/dialog";
 
 const HOW_IT_WORKS = [
   { icon: "book", text: "Each topic starts with a short Learn page and a warm-up quiz." },
@@ -155,12 +155,12 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
               accessibilityLabel="Reset my progress"
               style={styles.resetButton}
               onPress={() =>
-                Alert.alert("Reset my progress?", `This deletes YOUR ${quest?.title || "quest"} progress only.`, [
+                showAlert("Reset my progress?", `This deletes YOUR ${quest?.title || "quest"} progress only.`, [
                   { text: "Cancel", style: "cancel" },
                   {
                     text: "Reset",
                     style: "destructive",
-                    onPress: () => resetMyQuestProgress(questId).catch((e) => Alert.alert("Reset failed", e.message)),
+                    onPress: () => resetMyQuestProgress(questId).catch((e) => showAlert("Reset failed", e.message)),
                   },
                 ])
               }

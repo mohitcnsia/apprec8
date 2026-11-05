@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  Alert,
 } from "react-native";
 import Svg, { Circle, Line, Text as SvgText } from "react-native-svg";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../context/ThemeContext";
 import InfoModal from "./common/InfoModal";
+import { showAlert } from "../services/dialog";
 
 const { width, height } = Dimensions.get("window");
 const isSmallScreen = height < 700;
@@ -183,7 +183,7 @@ const ClockPracticeGenerator = ({ navigation }) => {
       userMinutes < 0 ||
       userMinutes > 59
     ) {
-      Alert.alert(
+      showAlert(
         "Invalid Input",
         "Please enter valid time values (Hours: 1-12, Minutes: 0-59)"
       );

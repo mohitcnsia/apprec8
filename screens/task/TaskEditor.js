@@ -8,7 +8,6 @@ import React, {
   useCallback,
 } from "react";
 import {
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,7 +16,8 @@ import {
   Platform,
   Switch,
   ActivityIndicator,
-  SafeAreaView, // For safe area handling
+  SafeAreaView,
+  // For safe area handling,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../context/ThemeContext"; // <<< ENSURED useTheme IS IMPORTED
@@ -31,6 +31,7 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { authInstance } from "../../config/firebaseConfig";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { useFocusEffect, useNavigation } from "@react-navigation/native"; // useNavigation can be fallback if prop not preferred
+import { showAlert } from "../../services/dialog";
 
 const TaskEditor = ({ route, navigation: propNavigation }) => {
   // Renamed prop to avoid conflict if useNavigation is primary
@@ -79,7 +80,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
     useCallback(() => {
       console.log("TASK_EDITOR: Focused. Navigation object:", navigation);
       if (error && clearError) {
-        // Example: Alert.alert("Task Editor Note", `Previous error: ${error}`);
+        // Example: showAlert("Task Editor Note", `Previous error: ${error}`);
         // clearError();
       }
       return () => {
@@ -115,7 +116,7 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
 
   const validateFormData = useCallback(() => {
     if (formData.title.trim().length === 0) {
-      Alert.alert("Validation Error", "Task Title is required!");
+      showAlert("Validation Error", "Task Title is required!");
       return false;
     }
     // Detail is optional (kids' reminders often have just a title and a date).
@@ -161,14 +162,14 @@ const TaskEditor = ({ route, navigation: propNavigation }) => {
       } else {
         const isAdmin = currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
         if (!canAddReminder(tasks, currentUser?.uid, { isAdmin })) {
-          Alert.alert("Too many reminders", LIMIT_MESSAGE);
+          showAlert("Too many reminders", LIMIT_MESSAGE);
           return;
         }
         await addTask(taskPayload);
       }
       goBackHandler();
     } catch (err) {
-      Alert.alert(
+      showAlert(
         "Operation Failed",
         err.message || "Could not save task. Please try again."
       );

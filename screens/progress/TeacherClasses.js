@@ -4,7 +4,7 @@
 // Reads: classes (teacherIds contains me), members, and each member's questProgress (rules: DR-9). One-time reads.
 
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { useTheme } from "../../context/ThemeContext";
@@ -18,6 +18,7 @@ import { topicNamer } from "../../utils/progressView";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { createAssignment, listAssignments, deleteAssignment } from "../../services/assignmentsApi";
 import { dayKey } from "../../utils/kidStats";
+import { showAlert } from "../../services/dialog";
 
 const db = getFirestore(getApp());
 
@@ -45,10 +46,10 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
       await createAssignment({ classId: cls.id, questId, nodes: topics.filter((t) => picked.includes(t.id)), kidIds: who, dueDate, note });
       setPicked([]);
       setNote("");
-      Alert.alert("Assigned", who.length ? `Sent to ${who.length} kid(s).` : "Sent to the whole class.");
+      showAlert("Assigned", who.length ? `Sent to ${who.length} kid(s).` : "Sent to the whole class.");
       reload();
     } catch (e) {
-      Alert.alert("Couldn't assign", e.message);
+      showAlert("Couldn't assign", e.message);
     }
   };
   return (
@@ -117,7 +118,7 @@ export default function TeacherClasses() {
   const decide = (kid, approve) =>
     approveMember({ classId: open.id, kidUid: kid.uid, approve })
       .then(() => setReloadKey((k) => k + 1))
-      .catch((e) => Alert.alert("Couldn't do that", e.message));
+      .catch((e) => showAlert("Couldn't do that", e.message));
 
   useEffect(() => {
     myTeachingClasses().then(setClasses).catch((e) => setError(e.message));

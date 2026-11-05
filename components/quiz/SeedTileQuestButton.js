@@ -7,11 +7,12 @@
 // Draft quests (quest.draft) get carouselGroup "quest_draft": only testers see the tile.
 
 import React, { useState } from "react";
-import { Button, Alert, View } from "react-native";
+import { Button, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { mixOptions } from "../../utils/readingFlow";
+import { showAlert } from "../../services/dialog";
 
 const BATCH_LIMIT = 400; // below Firestore's hard limit of 500 writes per batch
 
@@ -119,13 +120,13 @@ export default function SeedTileQuestButton({ data, color = "#145A3C" }) {
 
       await commitInChunks(db, ops);
       const questionCount = Object.values(quizzes).reduce((s, qs) => s + qs.length, 0);
-      Alert.alert(
+      showAlert(
         `${name} updated${quest.draft ? " (draft: testers only)" : ""}`,
         `${nodes.filter((n) => n.kind === "unit").length} units, ${nodes.length} nodes, ${questionCount} new questions, ${Object.keys(readings).length} readings.`
       );
     } catch (e) {
       console.error("SeedTileQuestButton:", e);
-      Alert.alert("Error", e.message);
+      showAlert("Error", e.message);
     }
     setLoading(false);
   };
@@ -137,7 +138,7 @@ export default function SeedTileQuestButton({ data, color = "#145A3C" }) {
 
   // Writes to live Firestore: always ask first (CLAUDE.md: content needs a second reviewer + owner OK).
   const confirmSeed = () =>
-    Alert.alert(
+    showAlert(
       `Update ${name}?`,
       quest.draft
         ? "DRAFT: only tester accounts will see this quest. Old app versions never show it."

@@ -3,13 +3,14 @@
 // request; the school's admin approves it on the class page. Me → Join as a teacher (not shown on child profiles).
 
 import React, { useMemo, useState } from "react";
-import { Alert, ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "../admin/schoolUi";
 import { redeemTeacherInvite } from "../../services/classesApi";
 import { SUBJECT_NAMES } from "../../utils/classes";
+import { showAlert } from "../../services/dialog";
 
 export default function JoinAsTeacherScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -26,7 +27,7 @@ export default function JoinAsTeacherScreen({ navigation }) {
     try {
       setDone(await redeemTeacherInvite(tidy));
     } catch (e) {
-      Alert.alert("Couldn't join", e?.message || String(e));
+      showAlert("Couldn't join", e?.message || String(e));
     }
     setBusy(false);
   };

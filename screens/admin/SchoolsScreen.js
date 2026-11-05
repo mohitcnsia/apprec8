@@ -4,7 +4,7 @@
 // Owner feedback 2026-11-04: forms between the list and the classes looked odd and stayed open; parents have no emails.
 
 import React, { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -14,6 +14,7 @@ import Sheet from "../../components/common/Sheet";
 import { makeSchoolStyles, Chip, MainButton, Field } from "./schoolUi";
 import { createSchool, listSchools, listClassesOfSchool, createClass, classMembers, findUserByEmail, addSchoolAdmin } from "../../services/classesApi";
 import { SUBJECTS, SUBJECT_NAMES, classSubjects } from "../../utils/classes";
+import { showAlert } from "../../services/dialog";
 
 const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -56,7 +57,7 @@ export default function SchoolsScreen({ navigation }) {
       setSchools(full.sort((a, b) => String(a.name).localeCompare(String(b.name))));
     } catch (e) {
       setSchools([]);
-      Alert.alert("Couldn't load schools", e?.message || String(e));
+      showAlert("Couldn't load schools", e?.message || String(e));
     }
   }, []);
   useFocusEffect(
@@ -79,7 +80,7 @@ export default function SchoolsScreen({ navigation }) {
     try {
       await fn();
     } catch (e) {
-      Alert.alert("Couldn't do that", e?.message || String(e));
+      showAlert("Couldn't do that", e?.message || String(e));
     }
     setBusy(false);
   };
@@ -103,7 +104,7 @@ export default function SchoolsScreen({ navigation }) {
     run(async () => {
       const u = await findUserByEmail(adminEmail, sheet.school.id);
       await addSchoolAdmin({ schoolId: sheet.school.id, uid: u.uid });
-      Alert.alert("Done", `${u.firstName} can now add classes and teachers for ${sheet.school.name}.`);
+      showAlert("Done", `${u.firstName} can now add classes and teachers for ${sheet.school.name}.`);
       setSheet(null);
     });
 

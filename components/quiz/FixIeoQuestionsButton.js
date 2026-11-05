@@ -5,11 +5,12 @@
 // Then bumps English Quest's contentVersion so phones re-download the corrected questions.
 
 import React, { useState } from "react";
-import { Alert, Button, View } from "react-native";
+import { Button, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { IEO_FIXES } from "../../data/fixes/ieoFixes";
+import { showAlert } from "../../services/dialog";
 
 const FIX_TAG = "ieoFixes-2026-11-04";
 
@@ -58,7 +59,7 @@ export default function FixIeoQuestionsButton() {
         .collection("quests")
         .doc("english-quest")
         .set({ contentVersion: Date.now(), updatedAt: firestore.FieldValue.serverTimestamp() }, { merge: true });
-      Alert.alert(
+      showAlert(
         "Old IEO questions fixed",
         `${result.fixed} fixed, ${result.already} already fixed.` +
           (result.changed.length ? `\nSkipped (changed since): ${result.changed.join(", ")}` : "") +
@@ -66,13 +67,13 @@ export default function FixIeoQuestionsButton() {
       );
     } catch (e) {
       console.error("FixIeoQuestionsButton:", e);
-      Alert.alert("Error", `${e.message}\n(${result.fixed} were fixed before the error.)`);
+      showAlert("Error", `${e.message}\n(${result.fixed} were fixed before the error.)`);
     }
     setLoading(false);
   };
 
   const confirm = () =>
-    Alert.alert(
+    showAlert(
       `Fix ${IEO_FIXES.length} old IEO questions?`,
       "LIVE: corrects questions kids play in English Quest Unit 1 and IEO practice. Only continue if the owner approved it.",
       [

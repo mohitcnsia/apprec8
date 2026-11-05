@@ -6,10 +6,10 @@ import {
   Text,
   View,
   ActivityIndicator,
-  TouchableOpacity, // Using TouchableOpacity for FAB
+  TouchableOpacity,
+  // Using TouchableOpacity for FAB
   SafeAreaView,
   Platform,
-  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../context/ThemeContext";
@@ -20,6 +20,7 @@ import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { showAlert } from "../../services/dialog";
 
 const TasksScreenContent = () => {
   const { theme } = useTheme();
@@ -58,7 +59,7 @@ const TasksScreenContent = () => {
         !navigation ||
         typeof navigation.navigate !== "function"
       ) {
-        Alert.alert("Nav Error", "Cannot open details.");
+        showAlert("Nav Error", "Cannot open details.");
         return;
       }
       try {
@@ -71,7 +72,7 @@ const TasksScreenContent = () => {
           },
         });
       } catch (e) {
-        Alert.alert("Nav Error", "Failed to open details: " + e.message);
+        showAlert("Nav Error", "Failed to open details: " + e.message);
       }
     },
     [navigation, convertToISO]
@@ -254,17 +255,17 @@ const TasksScreenContent = () => {
     /* ... same with logging ... */ console.log("TASKS_SCREEN_FAB: Pressed!");
     const uid = authInstance.currentUser?.uid;
     if (!canAddReminder(tasks, uid, { isAdmin: uid === APPREC8_TEAM_REVIEWER_UID })) {
-      Alert.alert("Too many reminders", LIMIT_MESSAGE);
+      showAlert("Too many reminders", LIMIT_MESSAGE);
       return;
     }
     if (navigation && typeof navigation.navigate === "function") {
       try {
         navigation.navigate("TaskEditor");
       } catch (e) {
-        Alert.alert("Nav Error", `Error: ${e.message}`);
+        showAlert("Nav Error", `Error: ${e.message}`);
       }
     } else {
-      Alert.alert("Nav Issue", "Cannot navigate.");
+      showAlert("Nav Issue", "Cannot navigate.");
     }
   }, [navigation, tasks]);
 

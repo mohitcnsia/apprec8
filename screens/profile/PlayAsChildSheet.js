@@ -4,7 +4,7 @@
 // up, TimeUpOverlay asks the child to hand the phone back; the parent's app PIN switches back and unpins.
 
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Sheet from "../../components/common/Sheet";
@@ -12,6 +12,7 @@ import { makeSchoolStyles, Chip, MainButton } from "../admin/schoolUi";
 import { DURATIONS, durationLabel } from "../../utils/playSession";
 import { startSession, endSession, lockAvailable } from "../../services/playSession";
 import { playAsChild } from "../../services/familyApi";
+import { showAlert } from "../../services/dialog";
 
 export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
   const insets = useSafeAreaInsets();
@@ -29,7 +30,7 @@ export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
       onClose();
     } catch (e) {
       await endSession(); // don't leave the phone pinned if the switch failed
-      Alert.alert("Couldn't switch", e?.message || String(e));
+      showAlert("Couldn't switch", e?.message || String(e));
     }
     setBusy(false);
   };

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Alert, View } from 'react-native';
+import { Button, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import spaceData from '../../data/space_olympiad_data.json';
+import { showAlert } from "../../services/dialog";
 
 export default function SeedDataFixButton() {
   const [loading, setLoading] = useState(false);
@@ -42,10 +43,10 @@ export default function SeedDataFixButton() {
       }
 
       await batch.commit();
-      Alert.alert("Success", "Questions fixed for V2!");
+      showAlert("Success", "Questions fixed for V2!");
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", e.message);
+      showAlert("Error", e.message);
     }
     setLoading(false);
   };

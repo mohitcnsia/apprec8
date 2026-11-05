@@ -1831,3 +1831,11 @@ Found and fixed (`utils/authErrors.js` + tests, `hooks/useFirebaseAuth.js`, `App
 Checked, fine: guest mode (public reads only, "Sign Up or Log In" returns to login), child code sign-in, Google path unchanged.
 **Open (needs a mockup):** a new email account is never asked for a name or class, so Home says "friend" and class-based
 things (practice paper, class topics) stay hidden until Edit Profile. Proposal: a 2-question first-run sheet.
+
+## 2026-11-05 — App popups + login mockups (owner) (Claude)
+- **Mockups T1–T5** (canvas row T): login, create account, forgot password sheet, first run (first name + class, or
+  parent / teacher), and the app popup. **Login screens wait for the owner's OK** before building.
+- **Popups built (owner asked directly):** `components/common/AppDialog.js` (bottom sheet, rules in `utils/dialogButtons.js`
+  + tests), `services/dialog.js` `showAlert()` = same arguments as `Alert.alert`. 67 `Alert.alert` calls in 26 files now use
+  it; `ConfirmationModal` / `InfoModal` restyled on top of it (they also ignored `confirmText` / `cancelText` / `message`:
+  fixed). Falls back to the system popup only before the app has mounted.

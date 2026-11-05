@@ -26,7 +26,7 @@ import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import CompletionCommentModal from "../../components/common/CompletionCommentModal";
 import ConfirmationModal from "../../components/common/ConfirmationModel"; // <<< IMPORT NEW MODAL
 import { useFocusEffect } from "@react-navigation/native";
-import { Alert } from "react-native"; // Keep Alert for other general messages if needed
+import { showAlert } from "../../services/dialog";
 
 const TaskDetails = ({ route, navigation }) => {
   const { theme } = useTheme();
@@ -81,7 +81,7 @@ const TaskDetails = ({ route, navigation }) => {
   const confirmDeleteTask = async () => {
     setIsDeleteConfirmVisible(false); // Close modal first
     if (!data.id) {
-      Alert.alert("Error", "Task ID is missing, cannot delete.");
+      showAlert("Error", "Task ID is missing, cannot delete.");
       return;
     }
     try {
@@ -92,14 +92,14 @@ const TaskDetails = ({ route, navigation }) => {
         navigation.navigate("Tasks");
       }
     } catch (err) {
-      Alert.alert("Delete Failed", err.message || "Could not delete task.");
+      showAlert("Delete Failed", err.message || "Could not delete task.");
     }
   };
 
   // Updated handleDelete to show the custom modal
   const handleDeletePress = useCallback(() => {
     if (!data.id) {
-      Alert.alert("Error", "Task ID is missing.");
+      showAlert("Error", "Task ID is missing.");
       return;
     }
     setIsDeleteConfirmVisible(true); // Show custom modal
@@ -107,11 +107,11 @@ const TaskDetails = ({ route, navigation }) => {
 
   const handleEdit = useCallback(() => {
     /* ... same ... */ if (!data.id) {
-      Alert.alert("Error", "Task data is incomplete.");
+      showAlert("Error", "Task data is incomplete.");
       return;
     }
     if (!navigation || typeof navigation.navigate !== "function") {
-      Alert.alert("Nav Error", "Cannot open task editor.");
+      showAlert("Nav Error", "Cannot open task editor.");
       return;
     }
     navigation.navigate("TaskEditor", {
@@ -129,7 +129,7 @@ const TaskDetails = ({ route, navigation }) => {
       /* ... same ... */ setIsCommentModalVisible(false);
       const fc = commentText || "";
       if (!data.id) {
-        Alert.alert("Error", "ID missing");
+        showAlert("Error", "ID missing");
         return;
       }
       try {
@@ -146,7 +146,7 @@ const TaskDetails = ({ route, navigation }) => {
           navigation.navigate("Tasks");
         }
       } catch (e) {
-        Alert.alert("Update Failed", e.message || "Could not mark complete");
+        showAlert("Update Failed", e.message || "Could not mark complete");
       }
     },
     [updateTask, data, navigation]

@@ -4,11 +4,12 @@
 // to switch the phone back to the parent's account.
 
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { setParentPin, backToParent } from "../../services/familyApi";
+import { showAlert } from "../../services/dialog";
 
 export default function ParentPinScreen({ route, navigation }) {
   const mode = route?.params?.mode || "set";
@@ -26,14 +27,14 @@ export default function ParentPinScreen({ route, navigation }) {
     try {
       if (mode === "set") {
         await setParentPin(pin);
-        Alert.alert("PIN saved", "Now you can tap \"Play as …\" for your child. Your child needs this PIN to switch back to you.", [
+        showAlert("PIN saved", "Now you can tap \"Play as …\" for your child. Your child needs this PIN to switch back to you.", [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);
       } else {
         await backToParent(pin); // the app reloads as the parent
       }
     } catch (e) {
-      Alert.alert(mode === "set" ? "Couldn't save" : "Couldn't switch", e?.message || String(e));
+      showAlert(mode === "set" ? "Couldn't save" : "Couldn't switch", e?.message || String(e));
     }
     setBusy(false);
   };

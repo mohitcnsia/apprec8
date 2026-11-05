@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -14,6 +13,7 @@ import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { CommonActions } from "@react-navigation/native";
+import { showAlert } from "../../services/dialog";
 
 const CONFIRMATION_PHRASE = "DELETE MY ACCOUNT"; // User must type this exactly
 
@@ -27,7 +27,7 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
 
   const handleDeleteAccount = useCallback(async () => {
     if (inputText !== CONFIRMATION_PHRASE) {
-      Alert.alert(
+      showAlert(
         "Confirmation Failed",
         `Please type the exact phrase "${CONFIRMATION_PHRASE}" to confirm deletion.`
       );
@@ -47,7 +47,7 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
       console.log("Cloud Function result:", result);
       setIsLoading(false);
 
-      Alert.alert(
+      showAlert(
         "Account Deletion Successful",
         "Your account has been deleted. You will now be signed out."
       );
@@ -71,7 +71,7 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
       const displayError =
         err.message ||
         "Could not delete your account. Please try again or contact support.";
-      Alert.alert("Deletion Error", displayError);
+      showAlert("Deletion Error", displayError);
       setError(displayError); // Optionally display this in your UI as well
     }
   }, [inputText, navigation]);

@@ -14,7 +14,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   useWindowDimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -46,6 +45,7 @@ import {
   DEFAULT_GATE_PASS_PERCENT,
   DEFAULT_BOSS_PASS_PERCENT,
 } from "../../utils/questTree";
+import { showAlert } from "../../services/dialog";
 
 // --- Layout (fixed row heights keep the path and auto-scroll predictable, like the Space quest) ---
 const ROW_HEIGHT = 150;
@@ -366,8 +366,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     );
 
   const explainClosed = (status, lockedText) => {
-    if (status === "comingSoon") Alert.alert("Coming soon!", "This will be ready in a future update.");
-    else Alert.alert("Locked", lockedText);
+    if (status === "comingSoon") showAlert("Coming soon!", "This will be ready in a future update.");
+    else showAlert("Locked", lockedText);
   };
 
   const onMainPress = (item) => {
@@ -376,7 +376,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       const mains = (tree?.path || []).filter((p) => p.kind === "main");
       const prev = mains[mains.findIndex((p) => p.id === item.id) - 1];
       if (prev && prev.status === "completed" && prev.gate && prev.gate.status !== "completed") {
-        return Alert.alert(
+        return showAlert(
           `🔒 ${item.title} is locked`,
           `Pass the "${prev.gate.title || "Challenge"}" (the gold trophy next to ${prev.title}) to open it.`,
           [
@@ -415,7 +415,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       return explainClosed(gate.status, `Finish "${main.title}" first to open its challenge.`);
     }
     if (gate.retryLocked) {
-      Alert.alert(
+      showAlert(
         "Practise first",
         "You've tried this challenge twice. Practise one of the glowing topics, then you can try again. You can do it!"
       );

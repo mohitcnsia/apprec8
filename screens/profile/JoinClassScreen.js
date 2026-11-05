@@ -3,13 +3,14 @@
 // (English or Hindi), writes their name, and agrees. Stored as a consent record (utils/classes.js). Me → Join a class.
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { findClassByCode, joinClass } from "../../services/classesApi";
 import { CONSENT_TEXT, canJoin, classLabel } from "../../utils/classes";
+import { showAlert } from "../../services/dialog";
 
 const RELATIONS = [
   ["mother", "Mother · माँ"],
@@ -40,14 +41,14 @@ export default function JoinClassScreen({ navigation }) {
     setBusy(true);
     try {
       const f = await findClassByCode(code);
-      if (!f) Alert.alert("Not found", "That code doesn't match a class. Check it with your teacher (6 letters and numbers).");
+      if (!f) showAlert("Not found", "That code doesn't match a class. Check it with your teacher (6 letters and numbers).");
       else {
         const check = canJoin(myClassIds, f.classId);
-        if (!check.ok) Alert.alert("Can't join", check.reason);
+        if (!check.ok) showAlert("Can't join", check.reason);
         else setFound(f);
       }
     } catch (e) {
-      Alert.alert("Error", e.message);
+      showAlert("Error", e.message);
     }
     setBusy(false);
   };
@@ -56,11 +57,11 @@ export default function JoinClassScreen({ navigation }) {
     setBusy(true);
     try {
       await joinClass({ found, myClassIds, firstName: user?.firstName, grade: user?.grade, parentName, relation, language: lang });
-      Alert.alert("Request sent ✉️", `Your teacher will check and approve ${classLabel(found.class)}. You'll see it in Me → My classes.`, [
+      showAlert("Request sent ✉️", `Your teacher will check and approve ${classLabel(found.class)}. You'll see it in Me → My classes.`, [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (e) {
-      Alert.alert("Couldn't join", e.message);
+      showAlert("Couldn't join", e.message);
     }
     setBusy(false);
   };

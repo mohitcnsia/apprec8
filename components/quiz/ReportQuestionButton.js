@@ -4,11 +4,12 @@
 // "🔧" when the question is already a known issue (nothing is sent).
 
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { REPORT_REASONS, hasReported, submitQuestionReport } from "../../services/reportApi";
+import { showAlert } from "../../services/dialog";
 
 export default function ReportQuestionButton({
   questionId,
@@ -44,7 +45,7 @@ export default function ReportQuestionButton({
     return (
       <TouchableOpacity
         hitSlop={10}
-        onPress={() => Alert.alert("🔧 Already known", "We know about this one and we're fixing it. Thanks!")}
+        onPress={() => showAlert("🔧 Already known", "We know about this one and we're fixing it. Thanks!")}
         style={styles.chip}
       >
         <Text style={[styles.chipText, { color: iconColor }]}>🔧</Text>
@@ -66,7 +67,7 @@ export default function ReportQuestionButton({
     setReported(true);
     setReason(null);
     setNote("");
-    Alert.alert("Thanks! 🙌", "We'll check it.");
+    showAlert("Thanks! 🙌", "We'll check it.");
   };
 
   return (

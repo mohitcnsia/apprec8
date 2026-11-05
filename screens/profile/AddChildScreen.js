@@ -4,12 +4,13 @@
 // With route.params.kid it only makes a NEW code for an existing child.
 
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View, ActivityIndicator, Share } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, ActivityIndicator, Share } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { addChild, newChildCode } from "../../services/familyApi";
 import { CHILD_CONSENT_TEXT } from "../../utils/family";
+import { showAlert } from "../../services/dialog";
 
 const RELATIONS = [
   ["mother", "Mother · माँ"],
@@ -45,7 +46,7 @@ export default function AddChildScreen({ route }) {
         setResult({ ...r, name: firstName.trim().split(/\s+/)[0] });
       }
     } catch (e) {
-      Alert.alert("Couldn't do that", e?.message || String(e));
+      showAlert("Couldn't do that", e?.message || String(e));
     }
     setBusy(false);
   };

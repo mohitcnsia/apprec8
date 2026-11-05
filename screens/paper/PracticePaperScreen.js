@@ -5,7 +5,7 @@
 // Opened from Home's "Practice paper" tile. Route params: { grade } (the child's class).
 
 import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
@@ -16,6 +16,7 @@ import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../util
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
 import { loadPaperSession, savePaperSession, loadPaperHistory, savePaperResult } from "../../services/paperApi";
+import { showAlert } from "../../services/dialog";
 
 const reducer = (state, action) => {
   if (action.type === "select") return initialPaperState(action.paperId);
@@ -273,7 +274,7 @@ export default function PracticePaperScreen({ navigation, route }) {
     const submit = () => {
       const go = () => dispatch({ type: "submit", now: Date.now() });
       if (sum.blank.length === 0) return go();
-      Alert.alert(
+      showAlert(
         `${sum.blank.length} left blank`,
         "Blank answers get no marks. Submit anyway?",
         [

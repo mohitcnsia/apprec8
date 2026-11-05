@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Alert, View } from 'react-native';
+import { Button, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { biographies } from '../../data/biographies';
+import { showAlert } from "../../services/dialog";
 
 export default function SeedQuestNodesButton() {
   const [loading, setLoading] = useState(false);
@@ -651,10 +652,10 @@ export default function SeedQuestNodesButton() {
       });
 
       await batch.commit();
-      Alert.alert("Success", "Fully Seeded Olympiad Data (Quizzes, Vocab, Spelling, Study, Quest)!");
+      showAlert("Success", "Fully Seeded Olympiad Data (Quizzes, Vocab, Spelling, Study, Quest)!");
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", e.message);
+      showAlert("Error", e.message);
     }
     setLoading(false);
   };

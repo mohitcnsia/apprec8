@@ -1,7 +1,8 @@
 // screens/ContactUsForm.js
 
 import {
-  // Alert, // Can remove Alert if not used elsewhere
+  // Alert,
+  // Can remove Alert if not used elsewhere
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
+import { showAlert } from "../../services/dialog";
 // Removed unused DateTimePicker/formatDate imports
 
 const ContactUsForm = ({ navigation }) => {
@@ -77,7 +79,7 @@ const ContactUsForm = ({ navigation }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         // Use Alert only for SUCCESS notification now
-        // Alert.alert("Success", "Email feature is Coming Soon");
+        // showAlert("Success", "Email feature is Coming Soon");
         setFormData({ subject: "", message: "" }); // Clear form on success
         navigation.goBack();
       }, 1500);

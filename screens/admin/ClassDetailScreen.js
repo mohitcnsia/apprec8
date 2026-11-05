@@ -4,7 +4,7 @@
 // Sharing uses the phone's share menu, so the admin picks WhatsApp, SMS or anything else (owner: "let the sharer decide").
 
 import React, { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Share, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Share, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -13,6 +13,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "./schoolUi";
 import { getClasses, classMembers, approveMember, classTeam, decideTeacherRequest } from "../../services/classesApi";
 import { SUBJECT_NAMES, classCodeMessage, classSubjects } from "../../utils/classes";
+import { showAlert } from "../../services/dialog";
 
 const names = (subs = []) => subs.map((s) => SUBJECT_NAMES[s] || s).join(", ");
 
@@ -55,12 +56,12 @@ export default function ClassDetailScreen({ route, navigation }) {
       await fn();
       await load();
     } catch (e) {
-      Alert.alert("Couldn't do that", e?.message || String(e));
+      showAlert("Couldn't do that", e?.message || String(e));
     }
     setBusyId(null);
   };
   const confirmDecline = (who, onYes) =>
-    Alert.alert(`Decline ${who}?`, "They can ask again with the code.", [
+    showAlert(`Decline ${who}?`, "They can ask again with the code.", [
       { text: "Cancel", style: "cancel" },
       { text: "Decline", style: "destructive", onPress: onYes },
     ]);
