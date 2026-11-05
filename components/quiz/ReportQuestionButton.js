@@ -10,6 +10,8 @@ import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { REPORT_REASONS, hasReported, submitQuestionReport } from "../../services/reportApi";
 import { showAlert } from "../../services/dialog";
+import { useCanWriteFreeText } from "../../context/FreeTextContext";
+import { ASK_A_GROWN_UP } from "../../utils/freeText";
 
 export default function ReportQuestionButton({
   questionId,
@@ -28,6 +30,7 @@ export default function ReportQuestionButton({
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState(null);
   const [note, setNote] = useState("");
+  const canWrite = useCanWriteFreeText(); // children: reason chips only (no box that reaches us)
 
   useEffect(() => {
     let alive = true;
@@ -62,7 +65,7 @@ export default function ReportQuestionButton({
 
   const send = () => {
     if (!reason) return;
-    submitQuestionReport({ questionId, questionText, options, quizId, chosen, reason, note, questContext, mode });
+    submitQuestionReport({ questionId, questionText, options, quizId, chosen, reason, note: canWrite ? note : "", questContext, mode });
     setOpen(false);
     setReported(true);
     setReason(null);
@@ -91,15 +94,19 @@ export default function ReportQuestionButton({
                 </TouchableOpacity>
               ))}
             </View>
-            <TextInput
-              value={note}
-              onChangeText={setNote}
-              placeholder="Tell us more (optional). 🎤 Tap the keyboard mic to speak"
-              placeholderTextColor={theme.placeholder}
-              maxLength={300}
-              multiline
-              style={styles.input}
-            />
+            {canWrite ? (
+              <TextInput
+                value={note}
+                onChangeText={setNote}
+                placeholder="Tell us more (optional). 🎤 Tap the keyboard mic to speak"
+                placeholderTextColor={theme.placeholder}
+                maxLength={300}
+                multiline
+                style={styles.input}
+              />
+            ) : (
+              <Text style={styles.hint}>{ASK_A_GROWN_UP}</Text>
+            )}
             <View style={styles.actions}>
               <TouchableOpacity onPress={() => setOpen(false)} style={styles.cancel}>
                 <Text style={styles.cancelText}>Cancel</Text>
@@ -122,6 +129,7 @@ const makeStyles = (theme) =>
     backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)", justifyContent: "flex-end" },
     sheet: { backgroundColor: theme.background, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, paddingBottom: 32, gap: 14 },
     title: { fontSize: 18, fontFamily: "nunitoBold", color: theme.textPrimary },
+    hint: { fontSize: 14, fontFamily: "nunito", color: theme.textSecondary },
     reasons: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
     reason: { borderWidth: 2, borderColor: theme.border, borderRadius: 20, paddingVertical: 8, paddingHorizontal: 14 },
     reasonSelected: { backgroundColor: theme.primary, borderColor: theme.primary },

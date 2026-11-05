@@ -22,6 +22,8 @@ import functions from "@react-native-firebase/functions";
 import auth from "@react-native-firebase/auth";
 import { useTheme } from "../../context/ThemeContext"; // Adjust path if your structure is different
 import InfoModal from "./InfoModal"; // Adjust path
+import { useCanWriteFreeText } from "../../context/FreeTextContext";
+import { ASK_A_GROWN_UP } from "../../utils/freeText";
 
 const MIN_CHARS_ISSUE_DESC = 10;
 const MAX_CHARS_COMMENT = 100; // For Like, Dislike, and Issue description
@@ -57,6 +59,7 @@ const FeedbackFAB = ({
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
   const [modalMode, setModalMode] = useState(null); // 'like', 'dislike', 'report_issue'
   const [feedbackText, setFeedbackText] = useState("");
+  const canWrite = useCanWriteFreeText(); // children: tap only (like / dislike / issue category), no text box
   const [textInputError, setTextInputError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -125,7 +128,7 @@ const FeedbackFAB = ({
         return false;
       }
       // Description is optional once a category is chosen (typing is hard for kids).
-    } else if (modalMode === "dislike") {
+    } else if (modalMode === "dislike" && canWrite) {
       if (feedbackText.trim().length < MIN_CHARS_DISLIKE_COMMENT) {
         setTextInputError(
           `Please tell us what can be improved (min ${MIN_CHARS_DISLIKE_COMMENT} characters).`
@@ -135,7 +138,7 @@ const FeedbackFAB = ({
     }
     // For 'like', text is optional or has different validation if any
     return true;
-  }, [feedbackText, modalMode, selectedIssueCategory]);
+  }, [feedbackText, modalMode, selectedIssueCategory, canWrite]);
 
   const showInfoAlert = (title, message) => {
     setInfoModalTitle(title);
@@ -429,7 +432,8 @@ const FeedbackFAB = ({
                 </Menu>
               )}
 
-              {/* Feedback Text Input */}
+              {/* Feedback Text Input (adults only; children tap, see utils/freeText.js) */}
+              {canWrite ? (
               <TextInput
                 label={`${placeholderText} (🎤 keyboard mic to speak)`}
                 value={feedbackText}
@@ -461,6 +465,9 @@ const FeedbackFAB = ({
                   },
                 }}
               />
+              ) : (
+                <Text style={{ color: C.textSecondary, marginVertical: 8 }}>{ASK_A_GROWN_UP}</Text>
+              )}
               {textInputError ? (
                 <Text style={styles.errorText}>{textInputError}</Text>
               ) : null}

@@ -41,6 +41,12 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### Free text only for grown-ups (after "publish"), ~3 min
+1. Your account (adult/tester): 🚩 report on a question still has the "Tell us more" box; Help → Email us works.
+2. Pratha's account: 🚩 report shows reason chips + "Something else? Ask a grown-up to tell us." (no box); the reader's
+   feedback button has no text box; Help → email form says "Ask a grown-up…". Once her email is in FREE_TEXT_EMAILS, she
+   gets the boxes back.
+
 ### Grammar Pro 1: Tenses, Classes 9–10 (after "publish" + seeding English), ~10 min
 1. Tester with unlock-all (or a Class 10 test account): English Quest ends with "Grammar Pro: Tenses" (Perfect Tenses,
    Perfect Continuous, Conditionals, Boss). Learn cards, warm-up, Board Style practice, Challenge.

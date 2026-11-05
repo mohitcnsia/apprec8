@@ -10,6 +10,9 @@ import FirstRunScreen, { grownUpKey } from "./screens/auth/FirstRunScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { listenToUserDocument } from "./services/firestoreContentApi";
 import { needsFirstRun } from "./utils/firstRun";
+import { canWriteFreeText } from "./utils/freeText";
+import { FreeTextContext } from "./context/FreeTextContext";
+import { isTesterUser, FREE_TEXT_EMAILS } from "./config/appConfig";
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
 import { useTheme } from "./context/ThemeContext";
@@ -104,6 +107,7 @@ const AppContent = () => {
   }, [uid]);
   const createdMs = Date.parse(user?.metadata?.creationTime || "") || 0;
   const brandNew = !!uid && Date.now() - createdMs < 5 * 60 * 1000; // its doc may still be on the way
+  const freeText = canWriteFreeText({ email: user?.email, doc: userDoc, isTester: isTesterUser(user), allowEmails: FREE_TEXT_EMAILS });
   const showFirstRun =
     !!uid && grownUp !== null && (needsFirstRun(userDoc, { grownUp }) || (userDoc === null && brandNew));
 
@@ -173,6 +177,7 @@ const AppContent = () => {
 
   return (
     <PaperProvider theme={currentPaperTheme}>
+     <FreeTextContext.Provider value={freeText}>
       <ThemedStatusBar />
       <View style={styles.container}>
         {showFirstRun ? (
@@ -203,6 +208,7 @@ const AppContent = () => {
       {user ? <TimeUpOverlay uid={user.uid} /> : null}
       {/* The app's own popups (showAlert in services/dialog.js), mockup T5 */}
       <AppDialogHost />
+     </FreeTextContext.Provider>
     </PaperProvider>
   );
 };

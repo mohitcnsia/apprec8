@@ -16,6 +16,8 @@ export const APPREC8_TEAM_REVIEWER_UID = UID_FROM_ENV || ADMIN_UID;
  * Compared case-insensitively. The admin (APPREC8_TEAM_REVIEWER_UID) is always a tester.
  */
 export const TESTER_EMAILS = ["mohitchilkoti@gmail.com"];
+// Children who may type free text (owner 2026-11-05: Pratha, supervised by the owner). Add her sign-in email here.
+export const FREE_TEXT_EMAILS = [];
 
 export const isTesterUser = (user) => {
   if (!user) return false;

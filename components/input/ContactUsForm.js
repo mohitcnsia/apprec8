@@ -16,9 +16,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { showAlert } from "../../services/dialog";
+import { useCanWriteFreeText } from "../../context/FreeTextContext";
 // Removed unused DateTimePicker/formatDate imports
 
 const ContactUsForm = ({ navigation }) => {
+  const canWrite = useCanWriteFreeText();
   const { theme, isDark } = useTheme();
 
   // Form data state
@@ -134,6 +136,21 @@ const ContactUsForm = ({ navigation }) => {
   );
 
   // --- RENDER ---
+  // Children don't get a free-text box that reaches us (owner 2026-11-05); a grown-up writes from their own account.
+  if (!canWrite) {
+    return (
+      <LinearGradient colors={[theme.gradientStart || "#3b0940", theme.gradientEnd || "#d7d1d3"]} style={styles.container}>
+        <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
+          <Text style={styles.heading}>Want to tell us something?</Text>
+          <Text style={{ fontSize: 16, lineHeight: 24, color: theme.textPrimaryOnGradient || "#FFFFFF", marginTop: 12 }}>
+            Ask a grown-up (your parent or teacher) to write to us from their phone. You can also tap 🚩 on any question to tell
+            us it looks wrong.
+          </Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+
   return (
     <LinearGradient
       colors={[
