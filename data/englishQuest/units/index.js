@@ -9,6 +9,7 @@ import u5 from "./u5.js";
 import u6 from "./u6.js";
 import u7 from "./u7.js";
 import u8 from "./u8.js";
+import u9 from "./u9.js";
 
 export const extraUnits = [
   u3,
@@ -17,7 +18,8 @@ export const extraUnits = [
   u6,
   u7,
   u8,
+  u9,
 ];
 
 /** Shown as "Coming soon" after the last unit (null = nothing). */
-export const nextUnitTeaser = { id: "eq-u9", unitOrder: 9, title: "Punctuation Power" };
+export const nextUnitTeaser = { id: "eq-u10", unitOrder: 10, title: "Word Building: Prefixes & Suffixes" };

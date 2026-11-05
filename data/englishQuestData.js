@@ -52,6 +52,8 @@ export const tile = {
 // reported-pronoun-error, reported-question-error, reported-order-error, said-told-error
 // Unit 8 (linking words): because-so-mixup (reason vs result), because-of-error (because of + sentence), conjunction-double-error
 // (although … but), when-while-mixup, conjunction-pair-error (neither … or); reuses conjunction-meaning-error, time-word-mixup
+// Unit 9 (punctuation): comma-list-error, comma-address-error (yes/no, names), comma-extra-error, apostrophe-contraction-error,
+// apostrophe-owner-error, apostrophe-plural-error (apple's), its-its-mixup, speech-marks-error, speech-capital-error, speech-punctuation-error
 
 // ---------- Study pages (new) ----------
 export const studyPages = {
