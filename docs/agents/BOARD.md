@@ -84,6 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G37 English Unit 10 Word Building (Classes 3–8) | Gemini | todo (next) | `gemini/g37-word-building` | |
 | G36 Grammar Pro 2–6 (Class 9–10 grammar, 555 Qs) | Gemini | **done, reviewed by Claude: 91 fixes** (27 Modals, 9 Agreement, 7 Reported, 31 Passive, 17 Editing): wrong options that were also right ("Might I…?", "should have" vs "could have", "is being uploaded tomorrow"), "error" options that were the same correction reworded, style debates sold as errors (congratulate for, who/whom, committee have), a wrong key, sentences with two errors | `gemini/g36-grammar-pro` | |
 | G35 Science Papers 2–4 (150 original Qs) | Gemini | **done, reviewed, live** (Claude fixed: pasteurisation wording, ship floats "balances" not "exceeds", a second right answer on shadows, padded options, jargon in explanations; Paper 3 had dropped from the paper list) | `gemini/g35-papers` | |
 | G34 ⭐ Deploy DR-15 paper stars (owner OK) | Gemini | **done** 17:41 (recordQuizResult only) | from Claude's folder | |
@@ -160,7 +161,21 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G36 · [todo] · gemini · Grammar Pro 2–6: the rest of Class 9–10 grammar (draft, CBSE board style)
+### G37 · [todo] · gemini · English Unit 10 "Word Building: Prefixes & Suffixes" (Classes 3–8, draft)
+The "coming soon" unit after Unit 9 (`nextUnitTeaser` in `data/englishQuest/units/index.js`). Olympiad papers test it.
+**Model to copy:** `data/englishQuest/units/u8.js` (Class 3–5 style, Learn `cards` + `content`, warm-up 8, one practice
+leaf per topic, a Champion leaf for Classes 5+, gates of 15 = 3 sub-topics × 5, endless, a short reading, Boss 12).
+Make it `u10.js`, unitOrder 10, **grades [3, 4, 5, 6, 7, 8] on every node** (`forGrades`), add it to `extraUnits` after
+u9, and set `nextUnitTeaser` to null (or to a new Unit 11 idea, Classes 1–8 only).
+Topics: **un- / dis- / im- / in- / mis- / re- / pre-** (meaning + spelling: impossible, irregular, misspell) ·
+**-ful / -less / -ness / -ment / -er / -or / -ist** (word class changes: careful, kindness, enjoyment, visitor) ·
+**word families & spelling changes** (happy → happiness, beauty → beautiful, decide → decision).
+**Read the "Lessons from review" section at the end of `docs/agents/GEMINI_ONBOARDING.md` first: Claude rejects
+questions that break any of the 5 self-checks.** Words Class 3–5 children meet; kid-friendly sentences; one right answer;
+no padded options. `npm test` must pass.
+**Deliver:** `gemini(G37): Unit 10 Word Building` then `gemini(G37): done — N questions`. Claude reviews before seeding.
+
+### G36 · [done] · gemini · Grammar Pro 2–6: the rest of Class 9–10 grammar (draft, CBSE board style)
 Owner 2026-11-05: finish the Class 10 grammar syllabus for Seema's pilot; Claude reviews every question for accuracy.
 **Model to copy exactly:** `data/englishQuest/units/b1.js` (Grammar Pro 1: Tenses): same helpers, `GRADES = [9, 10]`,
 every node passed through `forGrades` (the `.map` at the end), Learn `cards` + `content` per topic, warm-up (8), one
