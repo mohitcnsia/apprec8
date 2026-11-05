@@ -1988,3 +1988,5 @@ join as teacher → share code → approve students → assign a topic → see p
 (kids, 4). Each step opens the **real screen** with a guide strip saying what to tap (W3) and **ticks itself from real
 data** (school exists, class exists, members approved, assignment exists), then shows the next step (W4). No fake
 screens, no extra reads beyond what those screens already do (the checks reuse the data the screen loads).
+**Owner approved (2026-11-05):** guide quests row W, the "Need help?" sheet with the current wording (row P), Play
+Console plan (docs/release/PLAY_CONSOLE.md: pilot on internal testing now, closed test in parallel for the 12/14 rule).

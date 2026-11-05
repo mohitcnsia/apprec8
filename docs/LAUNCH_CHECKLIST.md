@@ -8,6 +8,11 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 - Treasure Words: 13 Big Words topics (fits Class 10).
 - Word Power, Science: nothing (tagged Classes 2–6 / 3–5). Practice papers and Mix papers: nothing (Class 5 / Classes 3–6).
 
+## ⏰ Owner, 2026-11-06 (reminders)
+- Send Claude the privacy policy + delete-account page links (A7 check).
+- Google Group for the 50 pilot students; check the Play "12 testers / 14 days" rule ([release/PLAY_CONSOLE.md](release/PLAY_CONSOLE.md)).
+- Re-seed English (Grammar Pro 2–6, Unit 5 practice) if not done.
+
 ## A. Seema's Class 10 pilot (closed testing on Play)
 | # | Item | Who | State |
 |---|---|---|---|
@@ -16,7 +21,7 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 | A3 | **Teacher dry run**: Seema creates the school + class (Admin tools → Schools & classes), 2 test students join with the code, she approves, assigns a topic, sees progress + class leaderboard | Seema + owner | **through guide quests** (mockup row W): owner and Seema learn by doing |
 | A4 | **Parent consent**: students are under 18. In-app consent at "Join a class" exists (EN/HI); for the pilot also the school's usual signed consent form | Seema / school | in-app ready |
 | A5 | **"Need help?" sheet** (mockup P1–P2: 1098, Tele-MANAS 14416) before teens use it; Seema finalises the wording | Seema → Claude | **wording OK for now (owner 2026-11-05)**: build it; more feedback later |
-| A6 | **Distribution**: Play Console → Closed testing → testers = the 50 students' Google accounts (or a Google Group) → opt-in link. Upload the latest build there | Owner | not done |
+| A6 | **Distribution** (steps + form answers: [release/PLAY_CONSOLE.md](release/PLAY_CONSOLE.md)): start on internal testing (≤100, works today); in parallel Play Console → Closed testing → testers = the 50 students' Google accounts (or a Google Group) → opt-in link. Upload the latest build there | Owner | not done |
 | A7 | **Privacy policy page + "delete my account" web page** (public URLs; Play asks for both) | owner | **exists** (owner 2026-11-05); Claude to check it mentions classes, teachers, parent consent, attempts |
 | A8 | Remote Config `update_url_android` → the Play link the students use (today: internal-testing link) | Owner | pending |
 | A10 | **Demo School** (fake class for Seema to try the teacher screens + Play reviewer login): generator done; server function, filters, Admin button after Gemini's review; deploy by Gemini/owner | Claude → Gemini | in progress |
