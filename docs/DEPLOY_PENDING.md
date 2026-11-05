@@ -12,7 +12,7 @@ else breaks meanwhile. Gemini (devops) can run it after the owner says OK. Detai
 **Before:** back up the live rules (`firebase firestore:rules:get` or copy `firestore.rules`; a copy from 2026-11-04 is in
 `~/apprec8-backups/`). Firebase Console also keeps rule history (one-click rollback).
 
-## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **owner OK 2026-11-05 ("DR-14 … yes") → Gemini G32**
+## DR-14 · Cost guard 3: dashboard reads only the chosen quest · **deployed 2026-11-05 (Gemini G32)**; run the backfill once more after the next publish
 
 Why: the admin dashboard read every kid's progress for EVERY quest, then kept one quest (≈ kids × 4 reads per open).
 Now progress docs carry a `questId` field and the dashboard asks only for that quest (≈ 1 read per kid).

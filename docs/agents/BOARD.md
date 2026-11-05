@@ -75,8 +75,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | todo (next) | from Claude's folder | |
-| G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | todo (after G30) | report only | |
+| G32 ⭐ Deploy DR-14 dashboard index + backfill (owner OK) | Gemini | **done** (index live, 3 docs backfilled; run the backfill again after the next publish) | from Claude's folder | |
+| G31 Second review: English Units 8 + 9 (248 Qs) + Science Units 5 + 6 (210 Qs) + 2 practice papers (100 Qs) | Gemini | done: **0 findings** (Claude: too clean to trust on 558 Qs; not counted as the second review. Seema + owner on the review page remain the gate; Claude spot-checks) | report only | |
 | G30 ⭐ Deploy DR-12 + DR-13 cost guards (maxInstances; leaderboard cache) (owner OK) | Gemini | **done** 2026-11-05 evening (42 functions live, report G30) | from Claude's folder | |
 | G29 ⭐ Deploy DR-11 teacher invite functions (owner OK) | Gemini | **done** 07:07 (4 functions live, report G29) | from Claude's folder | |
 | G28 Move old vocab quizzes (150 Qs) into Word Power | Gemini | **done, merged** | `content/wp-old-vocab` | 136 kept, 14 duplicates dropped. Claude fixed: 2 weak antonyms replaced (potential, cringe), 4 keys (inquire→ask, strive→try hard, certainty→sureness, sickness→health), 1 second right answer removed (repulsive/hateful), appetiser + circle wording, meet/meat options; quiz ids `4ieo11-*` → `wp-*-mix` (no clash with old quizzes); leaf names → Same Meaning Mix, Opposites Mix, Word Mix, Idiom Mix (no clash with Treasure Words). Seed with Word Power. |
@@ -147,7 +147,7 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G32 · [todo] · gemini · ⭐ Deploy DR-14: dashboard index + backfill (owner-approved: yes, 2026-11-05)
+### G32 · [done] · gemini · ⭐ Deploy DR-14: dashboard index + backfill (owner-approved: yes, 2026-11-05)
 **Owner-approved: yes** for exactly these steps ("DR-14 OK to deploy? yes", 2026-11-05). Do this after G30, before G31.
 Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (branch `feat/quiz-redesign`).
 1. `firebase deploy --only firestore:indexes --project apprec8-ca229` (adds the `questProgress.questId` field index).
@@ -157,7 +157,7 @@ Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (
 **Deliver:** `docs/agents/reports/G32.md` (each step's output or error text), commit `gemini(G32): done — …` on your branch.
 **Rollback:** nothing to undo (one extra index and one extra field; the app works with or without them).
 
-### G31 · [todo] · gemini · Second review of English Unit 8 + Science Unit 5 (accuracy, report only: change nothing)
+### G31 · [done] · gemini · Second review of English Unit 8 + Science Unit 5 (accuracy, report only: change nothing)
 Read `data/englishQuest/units/u8.js`, `u9.js` and `data/scienceQuest/units/u5.js`, `u6.js` (commit `e1ec069` or later). For EVERY question
 (558, incl. `data/papers/englishPaper1.js` + `sciencePaper1.js`; Science Unit 6 answers are recomputed by `tests/reasoningCheck.test.mjs`, so check its wording and level): warm-ups, practice leaves, gates, Champion, Boss, reading) check (for Science: is the fact true for Class 3–5 textbooks?):
 1. The ✓ answer is right in standard British/Indian school English.
