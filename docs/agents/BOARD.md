@@ -84,6 +84,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **todo (next)** | report only | |
+| G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | todo (after G39) | `gemini/g40-dog-facts` | |
 | G38 ⭐ Review the Demo School spec (CODE_REVIEW.md, 2026-11-05) | Gemini | **done** (good catches: 🚩 auto-hide by demo kids, rank count, demo↔real joins; all fixed by Claude) | review only | |
 | G37 English Unit 10 Word Building (Classes 3–8) | Gemini | **done, reviewed by Claude: 19 fixes** (loveable/useable/duteous are real words → second right answers; "busy → business" misleading; bandage and politeness stems allowed two answers; il-/ir- missing from the Learn page; "solar battery" → solar panel; 2 Boss repeats) | `gemini/g37-word-building` | |
 | G36 Grammar Pro 2–6 (Class 9–10 grammar, 555 Qs) | Gemini | **done, reviewed by Claude: 91 fixes** (27 Modals, 9 Agreement, 7 Reported, 31 Passive, 17 Editing): wrong options that were also right ("Might I…?", "should have" vs "could have", "is being uploaded tomorrow"), "error" options that were the same correction reworded, style debates sold as errors (congratulate for, who/whom, committee have), a wrong key, sentences with two errors | `gemini/g36-grammar-pro` | |
@@ -161,6 +163,24 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G39 · [todo] · gemini · QA run: tonight's changes (emulator, tester account)
+Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
+Follow `docs/qa/OWNER_TESTING.md` sections **Guide quests**, **"Need help?" sheet** and **Old content hidden** (the tester
+account is not the owner: old tiles except dog/animal ones must be gone, Space hidden). Check: the guide strip shows on
+other screens and folds; "Guide ›" returns and the step ticks; Call opens the dialer only (never press call); dark and
+light theme; no overlap of the strip with the main button. Report bugs with screenshots in `docs/agents/reports/G39.md`.
+No code changes, no Firestore writes except what the tester account does in the app (no seeding, no deploys).
+
+### G40 · [todo] · gemini · Research: dog fact sheet with sources (no app content yet)
+Pratha (Class 5) loves dogs, especially German Shepherds. Before any content is written, make a fact sheet in
+`docs/content/dogs-factsheet.md`: each fact one line, kid-level, with a reliable source link (vet schools, AKC/Kennel
+Club, WHO, Indian health ministry/NCDC, peer-reviewed). Cover: German Shepherd origin (Germany, 1899, herding), body and
+senses (smell, hearing: give ranges and say when numbers vary by source), wolves → dogs, working dogs in India (police,
+army, rescue, guide dogs), caring for a dog (food, exercise, vet, vaccines), **staying safe around dogs** (approaching,
+body language, stray dogs, what to do after a bite: wash the wound with soap and running water for 15 minutes, tell an
+adult, see a doctor the same day for rabies vaccine; check against WHO/NCDC wording). Mark anything disputed. Also list
+3 places to get **free-licence photos** (licence named) of German Shepherds. No questions, no images, no app changes.
 
 ### G38 · [todo] · gemini · ⭐ Review: Demo School spec (do first, before G37: Seema wants to start the pilot)
 Read "Spec for review: Demo School" at the end of CODE_REVIEW.md. Check against the code: will demo users really stay
