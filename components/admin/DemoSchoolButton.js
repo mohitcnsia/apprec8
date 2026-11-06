@@ -13,6 +13,7 @@ import { showAlert } from "../../services/dialog";
 
 export default function DemoSchoolButton({ P }) {
   const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false); // owner 2026-11-06: let people see what they typed (mistakes lock the demo logins)
   const [busy, setBusy] = useState(false);
   const run = async () => {
     setBusy(true);
@@ -39,15 +40,21 @@ export default function DemoSchoolButton({ P }) {
   return (
     <View style={{ gap: 8 }}>
       <Text style={[s.soft, { color: P.textSoft }]}>Demo School: 2 classes, 44 made-up kids, 6 weeks of practice. For Seema's tour, testing and Play reviewers. Moves forward every Sunday by itself.</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        placeholder="Password for the 3 demo logins (8+ characters)"
-        placeholderTextColor={P.dimText}
-        style={[s.input, { borderColor: P.border, color: P.text, backgroundColor: P.bg }]}
-      />
+      <View style={{ justifyContent: "center" }}>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!show}
+          autoCapitalize="none"
+          autoCorrect={false}
+          placeholder="Password for the 3 demo logins (8+ characters)"
+          placeholderTextColor={P.dimText}
+          style={[s.input, { borderColor: P.border, color: P.text, backgroundColor: P.bg, paddingRight: 52 }]}
+        />
+        <Pressable onPress={() => setShow(!show)} hitSlop={8} accessibilityRole="button" accessibilityLabel={show ? "Hide password" : "Show password"} style={s.eye}>
+          <Text style={{ fontSize: 18, color: P.textSoft }}>{show ? "🙈" : "👁"}</Text>
+        </Pressable>
+      </View>
       <Pressable onPress={confirm} disabled={!ok} accessibilityRole="button" style={[s.button, { backgroundColor: P.primary }, !ok && { opacity: 0.5 }]}>
         {busy ? <ActivityIndicator color={P.onPrimary} /> : <Text style={[s.buttonText, { color: P.onPrimary }]}>RESET DEMO SCHOOL</Text>}
       </Pressable>
@@ -58,6 +65,7 @@ export default function DemoSchoolButton({ P }) {
 const s = StyleSheet.create({
   soft: { fontSize: 14, lineHeight: 20, fontFamily: "nunitoBold" },
   input: { height: 50, borderRadius: 14, borderWidth: 2, paddingHorizontal: 14, fontSize: 16, fontFamily: "nunitoBold" },
+  eye: { position: "absolute", right: 6, width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   button: { height: 52, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   buttonText: { fontSize: 16, fontFamily: "nunitoBold", letterSpacing: 0.5 },
 });
