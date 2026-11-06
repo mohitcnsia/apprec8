@@ -1,7 +1,7 @@
 # Seema's Class 10 pilot kit (Claude, 2026-11-06)
 
 ## Before the first student day
-- [ ] **Re-seed English** (owner, 2 min): Me → Admin tools → Update English Quest. Grammar Pro is not on phones without it.
+- [x] **Re-seed English** (owner, done): Me → Admin tools → Update English Quest. Grammar Pro is not on phones without it.
 - [ ] **Seema, Mohit (and Pratha) check Grammar Pro 1–6** while Google reviews: on Mohit's phone (his account opens
   every unit). Anything wrong or unclear: 🚩 on the question.
 - [ ] **Google approves the closed test** (20.0.30) → owner: Play Console → Publishing overview → **Publish**.
