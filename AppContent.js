@@ -25,6 +25,8 @@ import useStartupUpdate from "./hooks/useStartupUpdate";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
+import { listenForSummaryTaps } from "./services/push";
+import { navigateTo } from "./navigation/navRef";
 
 const MIN_LOADER_DISPLAY_TIME = 3000;
 
@@ -131,6 +133,9 @@ const AppContent = () => {
       }),
     [theme, isDark]
   );
+
+  // Weekly summary notifications (20.0.30+): a tap opens Progress on the right view. No-op on older builds.
+  useEffect(() => listenForSummaryTaps((view) => setTimeout(() => navigateTo("Stats", { screen: "ProgressScreen", params: { view } }), 300)), []);
 
   useEffect(() => {
     if (fontError) console.error("Font Loading Error:", fontError);

@@ -9,6 +9,7 @@ const userActionsCallable = require("./callable/userActions");
 const schoolActionsCallable = require("./callable/schoolActions");
 const familyActionsCallable = require("./callable/familyActions");
 const demoActionsCallable = require("./callable/demoActions");
+const pushActionsCallable = require("./callable/pushActions");
 const wordInspectorBulkOperations = require("./api/wordInspectorBulkOperations");
 const gameManagementApi = require("./api/gameManagement");
 
@@ -24,6 +25,7 @@ module.exports = {
   ...schoolActionsCallable,
   ...familyActionsCallable,
   ...demoActionsCallable,
+  ...pushActionsCallable,
   ...wordInspectorBulkOperations,
   ...gameManagementApi,
 };
