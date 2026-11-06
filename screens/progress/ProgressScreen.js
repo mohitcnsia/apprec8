@@ -5,7 +5,7 @@
 // English Quest numbers come from the kid's progress doc; topic names and topic counts come from
 // the quest content bundled in the app (no extra Firestore reads).
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -130,10 +130,26 @@ export default function ProgressScreen({ navigation, route }) {
     if (!childKey) return setChildren([]);
     myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
   }, [childKey]);
-  // The guide (and later the weekly notification) can open a view directly.
+  // Progress opens on the right view (G49): family for parents, classes for teachers, Me for children (today always "me").
+  const hasAutoSelected = useRef(false);
   useEffect(() => {
-    if (route?.params?.view) setView(route.params.view);
-  }, [route?.params?.view]);
+    if (route?.params?.view) {
+      setView(route.params.view);
+      return;
+    }
+    if (hasAutoSelected.current || !userData) return;
+    const isGrownUp = !userData?.isChild && !Number.isInteger(userData?.grade);
+    if (isGrownUp) {
+      if (children.length > 0) {
+        setView("family");
+        hasAutoSelected.current = true;
+      } else if (isTeacher) {
+        setView("classes");
+        hasAutoSelected.current = true;
+      }
+    }
+  }, [userData, children.length, isTeacher, route?.params?.view]);
+
   const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
   const segment = tabs.length > 1 ? (
     <View style={styles.segment} accessibilityRole="tablist">
