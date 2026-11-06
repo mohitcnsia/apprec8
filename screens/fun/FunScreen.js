@@ -92,11 +92,12 @@ export default function FunScreen({ navigation }) {
 
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`FunScreen: ${what} failed to load`, e);
+    // Old reading carousels: owner only (Seema 2026-11-05), so nobody else pays for the reads.
+    if (!isOwner()) return undefined;
     const subs = [
-      // Old reading carousels: owner only, except dog/animal favourites (Seema 2026-11-05).
-      listenToCategoriesByGroup("story", (d) => setStories(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("stories")),
-      listenToCategoriesByGroup("book_summary", (d) => setBooks(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("book summaries")),
-      listenToCategoriesByGroup("popular_read", (d) => setReads(visibleOldTiles(d.map(tileOf), { isAdmin: isOwner() })), warn("popular reads")),
+      listenToCategoriesByGroup("story", (d) => setStories(visibleOldTiles(d.map(tileOf), { isAdmin: true })), warn("stories")),
+      listenToCategoriesByGroup("book_summary", (d) => setBooks(visibleOldTiles(d.map(tileOf), { isAdmin: true })), warn("book summaries")),
+      listenToCategoriesByGroup("popular_read", (d) => setReads(visibleOldTiles(d.map(tileOf), { isAdmin: true })), warn("popular reads")),
     ];
     return () => subs.forEach((u) => u && u());
   }, []);

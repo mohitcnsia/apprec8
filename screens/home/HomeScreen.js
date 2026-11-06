@@ -248,9 +248,12 @@ export default function HomeScreen({ navigation }) {
       listenToCategoriesByGroup("quest", (d) => setQuests(d.map(tileOf)), warn("quests")),
       // Old IEO / NSO / IMO tiles hidden (owner 2026-11-04: decommission slowly, see if anyone misses them).
       // Nothing is deleted: English Quest Unit 1 still uses some of those quizzes inside the quest.
-      listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")),
-      listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")),
     ];
+    // Old tiles: owner only (utils/oldContent.js), so nobody else pays for the reads.
+    if (uid === APPREC8_TEAM_REVIEWER_UID) {
+      subs.push(listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")));
+      subs.push(listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")));
+    }
     // Draft quests (e.g. Science while Gemini writes it): only testers see them.
     if (isTester) subs.push(listenToCategoriesByGroup("quest_draft", (d) => setDraftQuests(d.map(tileOf)), warn("draft quests")));
     let unsubUser = () => {};

@@ -1,14 +1,11 @@
 // utils/oldContent.js
-// Old (V1) content tiles: hidden for everyone except the owner (Seema's feedback 2026-11-05: "looks ugly"), apart
-// from Pratha's favourites (dogs, animals), which stay for everyone until they move to the new style. Nothing is
-// deleted; English Quest Unit 1 still uses some old quizzes inside the quest.
+// Old (V1) content tiles: hidden for everyone except the owner (Seema's feedback 2026-11-05: "looks ugly"). The dog
+// and animal quizzes are hidden too (owner, 2026-11-06): they come back as exploration quests (Dog Squad plan).
+// Nothing is deleted; English Quest Unit 1 still uses some old quizzes inside the quest.
 
-export const FAVOURITES = /\b(dogs?|puppy|puppies|german shepherds?|animals?|animal kingdom)\b/i;
-
-/** Old tiles this person sees. */
+/** Old tiles this person sees: all for the owner, none for anyone else. */
 export function visibleOldTiles(tiles = [], { isAdmin = false } = {}) {
-  if (isAdmin) return tiles;
-  return tiles.filter((t) => FAVOURITES.test(`${t?.title || ""} ${t?.subtitle || ""}`));
+  return isAdmin ? tiles : [];
 }
 
 /** The old Space quest map (legacy look): owner only for now. */
