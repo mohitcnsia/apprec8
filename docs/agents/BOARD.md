@@ -231,14 +231,16 @@ decisions.json). In Claude's folder: stop the running `node scripts/admin/decisi
 start `--watch` again in the background. Commit `gemini(G47): done` with the dry-run output (no emails, no uids).
 
 ### G48 · [todo] · gemini · ⭐ Brand set: 3 logo + icon directions (owner asked 2026-11-06)
-Owner: "app-specific logos and images will give us much better control and feel"; he likes the **8 lying down as ∞**
-(infinite learning) and **dislikes green check circles**. Use your image generation. If you have none, commit
+Owner: "app-specific logos and images will give us much better control and feel". **His logo idea:** the 8 lies down
+as **∞**, and its **right loop breaks into small digital blocks that scatter into space** (infinite learning, digital).
+Rough sketch by Claude: `docs/release/graphics/feature-graphic-v4.png`; make it beautiful. He **dislikes green check
+circles**. Use your image generation. If you have none, commit
 `gemini(G48): blocked — no image tool` and stop.
 **Brand facts:** name "Apprec8", said "appreciate" (8 = "ate"). Learning + well-being for Classes 1–12 in India, for
 children, parents and teachers. Calm, warm, kid-friendly; never neon. Palette from the app: plum #3b0940, #85508a,
 light #F5D2F8, star gold #dcb51b; must work on the dark theme. Mascot: **Chamak**, the smiling star already in the app
-(components/auth/HeroScene.js): keep him. Reference: `docs/release/graphics/feature-graphic-v3.png` (∞ wordmark).
-**Per direction (3 different directions):** wordmark "apprec∞", app icon 512×512 (no small text), Android adaptive icon
+(components/auth/HeroScene.js): keep him. References: `feature-graphic-v4.png` (the dissolving ∞), `feature-graphic-v3.png` (plain ∞).
+**Per direction (3 different directions, all built on the dissolving ∞):** wordmark "apprec∞", app icon 512×512 (no small text), Android adaptive icon
 foreground (1024×1024, logo inside the central 66%), a one-colour notification mark (white on transparent, 96×96),
 7 subject icons 256×256 (English, Science, Word Power, Treasure Words, Maths, Reasoning, Well-being), and a
 1024×500 feature graphic. Original work only (no copying other brands' styles or characters). No green checks.
