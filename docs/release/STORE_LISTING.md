@@ -2,7 +2,7 @@
 
 **Feature graphic (1024×500), draft:**
 
-![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)
+![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png)
 
 App icon: the app's own (assets/icon.png, 512×512). Screenshots: Gemini G43.
 

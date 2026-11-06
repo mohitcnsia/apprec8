@@ -33,7 +33,10 @@
     "ask": "Use \"Apprec8: Learn & Grow\", the short description \"Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.\" and feature graphic draft 2?",
     "details": "The full description is in My notes → Store listing. It starts \"Apprec8 (say it \"appreciate\") helps children learn a little every day…\" and lists subjects as \"English and Science today, with Maths and reasoning coming next\".\n\n![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)\n\n**YES** = paste it into Play Console (Store listing). **MORE DETAILS** = Claude explains or changes it.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved on the review page (chat 6 Nov evening). Graphic: draft 2 without green checks until Gemini's logos.",
+    "via": "chat"
   },
   {
     "id": "home-first-day-card",
@@ -176,13 +179,24 @@
     "ask": "Home shows what each person came for: a child gets ▶ CONTINUE (1 tap to the next step), a parent sees their child's week, a teacher sees their class. Me shows help + 3 rows, the rest under More. Build it like this?",
     "details": "**Taps today → after:**\n- Child continues learning: 3–4 → **1**\n- Child fixes mistakes: 2–3 → **1–2**\n- Parent sees child's week: 3 → **0**\n- Teacher sees class: 3 → **0**\n- Help: 2 → 2\n\n**Z1 child:** \"Up next: Kinds of sentences\" + big ▶ CONTINUE at the bottom; mistakes card; other quests small below.\n**Z2 parent:** \"Pratha's week\" card (days, minutes, % right, one topic to practise together) + ▶ LET PRATHA PLAY.\n**Z3 teacher:** class card (waiting, who practised, what to reteach) + ASSIGN NEXT TOPIC.\n**Z4 Me:** Need help, My class, My children, Guides, More (reminders, messages, edit profile, delete account).\n\nSomeone who is parent and teacher sees both cards. Nothing is deleted. With this, the Home guide card (row Y) may not be needed.\n\nCanvas: scroll to row Z.",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved after the review page, with owner's fixes: a ▶ per subject (no single Continue), parent/teacher cards low in thumb reach (chat 6 Nov evening).",
+    "via": "chat"
   },
   {
     "id": "name-appreci8",
     "title": "Later: rename to Appreci8?",
     "ask": "With the \"i\", the name reads \"appreciate\" by itself. Decide once Gemini's logos (both spellings) are in. Rename?",
     "details": "**What changes:** the name on the Play Store, the app's home screen label, the logo, the store text and the policy pages. **What can't change:** the internal app ID (com.mohitchilkoti.apprec8); nobody sees it. Existing users just see the new name after an update.\n\nCheapest before the public launch. Tap **LATER** until you've seen the logos.",
+    "from": "claude"
+  },
+  {
+    "id": "task-store-listing",
+    "title": "Task: paste the store listing into Play Console (10 min)",
+    "ask": "Play Console → Grow users → Store presence → Main store listing: paste the name, short and full description, upload the feature graphic. Tap YES when done, MORE DETAILS if stuck.",
+    "details": "Everything to paste is in **My notes → Store listing**:\n- App name: **Apprec8: Learn & Grow**\n- Short description: **Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.**\n- Full description: copy from My notes.\n- Feature graphic (1024×500): https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png (save it on the laptop, then upload).\n- Phone screenshots: Gemini's in docs/release/screenshots (light), 4–8 of them.\n\nThen Save → it goes with the next review. Gemini's logos can replace the graphic later.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png",
     "from": "claude"
   }
 ]
