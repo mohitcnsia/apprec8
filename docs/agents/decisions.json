@@ -146,7 +146,10 @@
     "title": "What confused you most?",
     "ask": "Type the 2–3 moments in the app that confused you or took too many taps (e.g. \"finding my mistakes\", \"where is Pratha's progress\"). Then tap YES.",
     "details": "These go first in the simplicity pass, together with Seema's.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "How to use the app; how to add a child like Pratha (can see her in My children but not sure how she got there); a few dummy kids would have helped; how would parents or teachers figure it out? (chat)",
+    "via": "chat"
   },
   {
     "id": "publish-teacher-page",

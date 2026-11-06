@@ -271,8 +271,15 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
 5. **Me (Z4)** `screens/profile/MeScreen.js`: content low. Need help (green row) + My class + My children + Guides,
    then one "More" row opening a sheet/screen with everything else (reminders, messages, join a class, link parent,
    edit profile, delete account, sign out…). Nothing deleted. ADMIN section stays for the owner.
-6. Don't touch QuestMap/quiz screens, rules or functions. `npm test` passes; a Metro bundle builds.
-7. QA on the emulator with the tester account (child view) + Demo School logins (parent, teacher): screenshots of the
+6. **Empty states (owner's top confusion: "how do I add a child? how would a parent or teacher figure it out?"):**
+   a grown-up with **no children and no class** sees, low on Home, one card "Who is learning?" with 3 big choices:
+   **"My child, on this phone"** (→ Add a child: name + class + agree, then Play as), **"My child has their own
+   phone"** (→ Link my child's own account: shows the 6-number code + one line "on your child's phone: Me → Link to my
+   parent → type this code"), **"I'm a teacher"** (→ Join as a teacher). Each choice opens the existing screen. Plain
+   words, no jargon. A parent with children but no class sees a small "+ Add another child" under the child cards.
+   A teacher with no class yet sees "Type your school's code" (→ Join as a teacher).
+7. Don't touch QuestMap/quiz screens, rules or functions. `npm test` passes; a Metro bundle builds.
+8. QA on the emulator with the tester account (child view) + Demo School logins (parent, teacher): screenshots of the
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
