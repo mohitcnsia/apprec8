@@ -2136,3 +2136,10 @@ Branch **`feat/push-20.0.30`** (native: not on `feat/quiz-redesign`, so no OTA c
 **DR-18 (owner OK, then Gemini):** `firebase deploy --only functions:savePushSettings,functions:weeklyParentPush,functions:weeklyTeacherPush --project apprec8-ca229` (2 more Cloud Scheduler jobs: with shiftDemoSchool that is 3 = the free limit).
 **Release:** Claude builds the `.aab` locally tonight; owner runs `scripts/release/check-aab.sh <aab> 20.0.30`, uploads to
 internal testing, tests; then `feat/push-20.0.30` merges into `feat/quiz-redesign` and OTAs go to runtime 20.0.30.
+
+## 2026-11-06 (morning) — owner: publish, deploys OK, dogs hidden too, notes in the app (Claude)
+- Old dog/animal quizzes hidden too (owner: they become exploration quests soon); old tiles are now read from Firestore only for the owner.
+- `feat/push-20.0.30` merged (owner uploaded 20.0.30 to internal testing). Published: 20.0.29 (`27e55afa`, pre-merge) and 20.0.30 (`56835008`).
+- DR-16 + DR-17 + DR-18 approved → Gemini G41 (12 functions, no rules).
+- New: Admin tools → **My notes** (owner only): LAUNCH_CHECKLIST + OWNER_TESTING in the app, folded sections, tickable boxes
+  (ticks on the phone only). Bundled by `scripts/genOwnerNotes.mjs` before each publish; private emails removed. Not yet published.

@@ -73,6 +73,9 @@ the owner; G14/G11 parked).
 - **Before Seema's pilot / public release (owner 2026-11-05):** safety screens (mockup row P: "Need help?" + parent
   privacy / delete; waits for Seema's wording) · privacy policy page + "delete my account" web page for Play · crash
   reporting (none today). Tracked in docs/LAUNCH_CHECKLIST.md.
+- **Dog + animal exploration quests (owner 2026-11-06, soon):** the old dog quiz and Animal Kingdom are hidden for everyone
+  but the owner; they come back as exploration quests (Dog Squad plan in CODE_REVIEW.md, fact sheet docs/content/dogs-factsheet.md
+  from G40: fix the homepage links and the "legally mandatory" line first). Pratha's favourites.
 - **Apprec8 Challenge / own olympiad (owner 2026-11-05, after the pilot):** month-long qualifier in the app + 1-hour Sunday final in the school hall. Needs server work for the final: questions released at start time, server marking, one attempt, time window, per-school results. Certificates, medals, free premium first; scholarships later. Winners shown as first name + initial, school, class; photo/full name only with a parent tick box. Spec: CODE_REVIEW.md product decision 10.
 - **"Beat your past self" (owner 2026-11-05):** honest healthy competition, no fake kids: paper results show "Last time: 34/40. Beat it?" (and later the same on gates/Mix papers); family challenge (parent takes the same Mix paper). Fits the daily report work.
 - **Level 2 practice (owner 2026-11-05):** the owner will share Class 6 sample papers; Level 2 for Class 5 asks Class 6

@@ -41,6 +41,65 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ My notes in the app (after the next "publish"), ~2 min
+- [ ] Me → Admin tools → **My notes**: two tabs, Launch checklist and Testing. Sections are folded; tap to open.
+- [ ] Tick a box, leave the screen, come back: still ticked (saved on this phone only).
+- [ ] Only you see the row. The notes are refreshed with every "publish".
+
+### ⭐ 20.0.30 on your phone (Play internal testing), ~5 min
+- [ ] Play Store → Apprec8 → Update (internal testing). Me → About / version shows 20.0.30.
+- [ ] Progress tab → as a parent or teacher: **Weekly summary** card → Turn on → Android asks to allow notifications → Allow.
+- [ ] After DR-18 is deployed: parents get the summary on Sunday 18:30, teachers on Monday 07:30. Tap it → the Progress tab opens.
+- [ ] Pratha's account never shows the switch (children get no notifications).
+
+### Link Pratha's account to yours (after DR-17 is deployed)
+1. Your phone: Me → **Link my child's own account** → your name, Father, tick → MAKE THE CODE → share it to Pratha.
+2. Pratha's phone (signed in as her): Me → **Link to my parent** → type the code → "Linked ✓".
+3. Your phone: Me shows "Pratha's week"; Progress → **My children** shows her week (English/हिंदी switch).
+4. Her login, stars and progress are unchanged. "Play as" and delete are not offered for her (she has her own login).
+
+### Parent "week at a glance" (mockups V2/V3, 2026-11-06)
+A parent account with children (yours after you add / link a child, or demo.parent after DR-16): Progress tab →
+**My children**: practised days (7 boxes, Monday first) and time, ↑/↓ vs last week; per subject Strong / Practise /
+done count / next topic; **One thing to do at home**; Seema's suggestion (changes each week). English / हिंदी switch at
+the top (remembered on the phone). **Owner: please read the Hindi** (utils/parentWeek.js, WORDS.hi and TIPS.hi) and
+tell Claude what to change. Seema: please check the 4 tips (TIPS.en).
+Folded at the bottom: **Questions to talk about**: her latest mistakes with the right answer (Challenge questions show
+only the topic, so the answers stay secret).
+
+### Teacher "This week" card (mockup V4, 2026-11-06)
+Progress tab → tap a class you teach (best with the demo teacher login after DR-16): above SHARE CODE you see
+**This week**: how many practised; **1 · Reteach one thing** (the topic most students are below 60% in);
+**2 · Who needs you** (up to 3: away 7+ days, failed a challenge twice, accuracy falling); **3 · Assignment** with a
+done / started / not started bar; 🚀 who is ready for harder work. No extra reads: it uses what the screen loads.
+
+### Demo School (after DR-16 is deployed)
+1. Admin tools → DEMO SCHOOL → type a password (8+ characters, keep it in your password manager) → RESET → about 1 min.
+2. Sign out, sign in with `demo.teacher@example.com` + that password → Progress tab: classes 10-B and 5-A with kids,
+   weak topics, an assignment (Passive voice, due Friday).
+3. `demo.parent@example.com` → Me: one child, Riya (Class 5). `demo.kid@example.com` → Riya's own app.
+4. Your own account: the main leaderboard and your Kids view show no demo kids.
+
+### Old content hidden (Seema's feedback, 2026-11-05)
+- **You (owner):** Home and Fun look as before (More practice, My classrooms, Space, Featured / Book Summaries).
+- **Everyone else (check with the tester account or Pratha's):** all old tiles are gone, the dog quiz and Animal
+  Kingdom too (owner 2026-11-06: they come back as exploration quests). Space is hidden. "Explore" only shows when a practice paper fits the child's class.
+
+### "Need help?" sheet (row P1–P2, 2026-11-05)
+1. Me tab: a calm green **Need help? Talk to someone** row under your profile card (everyone sees it).
+2. Tap it: CHILDLINE 1098 and Tele MANAS 14416 have **Call** buttons. Call opens the dialer with the number typed;
+   **don't press the green button** while testing. 112 has no call button (by design).
+3. Close, Android back and tapping outside all close it. Nothing is saved.
+
+### Guide quests (row W, 2026-11-05)
+1. Me → **Guides** (you see "Set up a school" and "Start your class"; Pratha sees no Guides row).
+2. Set up a school → **DO STEP 1** → the Schools screen opens with a 🧭 strip at the top saying what to tap.
+   Tap the strip text: it folds to a small "Step 1/5" pill; tap again to open. ✕ stops it.
+3. Create the school → tap **Guide ›** on the strip → "✅ Step 1 done!" and step 2 is next.
+4. Steps tick themselves: class created; invite code made (or a teacher added); teacher approved; a test student approved.
+5. Seema: Me → Guides → Start your class → join with your invite code ("waiting for the admin" until you approve her)
+   → Progress tab: tap the class → **SHARE CODE** → approve students → assign a topic → see progress.
+
 ### Free text only for grown-ups (after "publish"), ~3 min
 1. Your account (adult/tester): 🚩 report on a question still has the "Tell us more" box; Help → Email us works.
 2. Pratha's account: 🚩 report shows reason chips + "Something else? Ask a grown-up to tell us." (no box); the reader's
@@ -272,49 +331,3 @@ Test in **light and dark** mode.
 - [ ] Get an Adverbs Challenge question wrong → My mistakes → it can be fixed (2 right in a row).
 - [ ] Dashboard → a kid who played Unit 0 shows topic rows.
 - [ ] Unit 2 content (after seeding): play A and an, Using 'the', Determiners.
-
-## Guide quests (row W, 2026-11-05)
-1. Me → **Guides** (you see "Set up a school" and "Start your class"; Pratha sees no Guides row).
-2. Set up a school → **DO STEP 1** → the Schools screen opens with a 🧭 strip at the top saying what to tap.
-   Tap the strip text: it folds to a small "Step 1/5" pill; tap again to open. ✕ stops it.
-3. Create the school → tap **Guide ›** on the strip → "✅ Step 1 done!" and step 2 is next.
-4. Steps tick themselves: class created; invite code made (or a teacher added); teacher approved; a test student approved.
-5. Seema: Me → Guides → Start your class → join with your invite code ("waiting for the admin" until you approve her)
-   → Progress tab: tap the class → **SHARE CODE** → approve students → assign a topic → see progress.
-
-## "Need help?" sheet (row P1–P2, 2026-11-05)
-1. Me tab: a calm green **Need help? Talk to someone** row under your profile card (everyone sees it).
-2. Tap it: CHILDLINE 1098 and Tele MANAS 14416 have **Call** buttons. Call opens the dialer with the number typed;
-   **don't press the green button** while testing. 112 has no call button (by design).
-3. Close, Android back and tapping outside all close it. Nothing is saved.
-
-## Old content hidden (Seema's feedback, 2026-11-05)
-- **You (owner):** Home and Fun look as before (More practice, My classrooms, Space, Featured / Book Summaries).
-- **Everyone else (check with the tester account or Pratha's):** old tiles are gone except titles with dogs / animals
-  (e.g. the dog quiz, Animal Kingdom). Space is hidden. "Explore" only shows when a practice paper fits the child's class.
-
-## Demo School (after DR-16 is deployed)
-1. Admin tools → DEMO SCHOOL → type a password (8+ characters, keep it in your password manager) → RESET → about 1 min.
-2. Sign out, sign in with `demo.teacher@example.com` + that password → Progress tab: classes 10-B and 5-A with kids,
-   weak topics, an assignment (Passive voice, due Friday).
-3. `demo.parent@example.com` → Me: one child, Riya (Class 5). `demo.kid@example.com` → Riya's own app.
-4. Your own account: the main leaderboard and your Kids view show no demo kids.
-
-## Teacher "This week" card (mockup V4, 2026-11-06)
-Progress tab → tap a class you teach (best with the demo teacher login after DR-16): above SHARE CODE you see
-**This week**: how many practised; **1 · Reteach one thing** (the topic most students are below 60% in);
-**2 · Who needs you** (up to 3: away 7+ days, failed a challenge twice, accuracy falling); **3 · Assignment** with a
-done / started / not started bar; 🚀 who is ready for harder work. No extra reads: it uses what the screen loads.
-
-## Parent "week at a glance" (mockups V2/V3, 2026-11-06)
-A parent account with children (yours after you add / link a child, or demo.parent after DR-16): Progress tab →
-**My children**: practised days (7 boxes, Monday first) and time, ↑/↓ vs last week; per subject Strong / Practise /
-done count / next topic; **One thing to do at home**; Seema's suggestion (changes each week). English / हिंदी switch at
-the top (remembered on the phone). **Owner: please read the Hindi** (utils/parentWeek.js, WORDS.hi and TIPS.hi) and
-tell Claude what to change. Seema: please check the 4 tips (TIPS.en).
-
-## Link Pratha's account to yours (after DR-17 is deployed)
-1. Your phone: Me → **Link my child's own account** → your name, Father, tick → MAKE THE CODE → share it to Pratha.
-2. Pratha's phone (signed in as her): Me → **Link to my parent** → type the code → "Linked ✓".
-3. Your phone: Me shows "Pratha's week"; Progress → **My children** shows her week (English/हिंदी switch).
-4. Her login, stars and progress are unchanged. "Play as" and delete are not offered for her (she has her own login).

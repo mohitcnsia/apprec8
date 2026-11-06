@@ -49,6 +49,11 @@ export default function AdminToolsScreen({ navigation }) {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.h1}>Admin tools</Text>
 
+      <Pressable onPress={() => navigation.navigate("OwnerNotes")} style={styles.row} accessibilityRole="button">
+        <Ionicons name="document-text-outline" size={20} color={P.selectedText} />
+        <Text style={styles.rowText}>My notes (launch checklist, testing)</Text>
+        <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+      </Pressable>
       <Pressable onPress={() => navigation.navigate("AdminDashboard")} style={styles.row} accessibilityRole="button">
         <Ionicons name="stats-chart-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>Dashboard (also in Progress → Kids)</Text>

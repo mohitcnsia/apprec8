@@ -71,6 +71,8 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - **Over-the-air updates (from 20.0.28):** JS/asset-only changes ship without a build:
   `npx eas update --channel production --message "<what changed>"` → phones get it on their next app start (`hooks/useStartupUpdate.js` loads it behind the start loader, up to 6 s; on a slow network, the start after).
   An update reaches only builds with the same version (runtime version). Native changes (new libraries, android/) still need a build.
+  Before every update: `node scripts/genOwnerNotes.mjs` (refreshes Admin tools → My notes from LAUNCH_CHECKLIST + OWNER_TESTING)
+  and `npm install` (a missing optional library, e.g. messaging, is silently left out of the bundle).
 - **Release builds don't include `.env`** (gitignored, so EAS skips it): anything read from `@env` is `undefined` there.
   Values the app needs at runtime go in code (`config/appConfig.js`); `tests/releaseConfig.test.mjs` guards this.
 - Before every upload: `scripts/release/check-aab.sh <file.aab> <version>` must say PASS (version, admin ID, signature).
