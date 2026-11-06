@@ -2304,3 +2304,19 @@ they see "Ask a parent"; erase only if there's still no yes 14 days after the ga
 Q1 needs **no rules change** after all: a "College / grown-up" learner is saved like parents and teachers (no class,
 so every quest shows and the gate never applies; the year is checked, not stored). Mockup row X updated (X1, X2, X3,
 new X5). Store name changed to "Apprec8: Learn & Grow" (owner: don't box it into two subjects).
+
+## 2026-11-06 — Review request + DR-21: Decisions inbox, guides for everyone (Claude)
+Owner (away for days): "implement push notifications and get approval on the app itself … Yes, No, More details,
+Later … work on learning guides as much as possible. A great app difficult to use and not intuitive is a waste."
+**Decisions inbox (owner only):** Claude writes questions in `docs/agents/decisions.json` → `scripts/admin/decisions.mjs`
+(Gemini runs it, `--watch` = every 10 min) creates `ownerDecisions/{id}` and sends one push to the phone saved in
+`ownerConfig/device` → the owner taps an answer in **Me → Decisions** (`screens/admin/DecisionsScreen.js`) → the script
+copies answers back into the file. Logic: `utils/decisions.js` + `tests/decisions.test.mjs`. Push tap opens Decisions
+(AppContent). Cost: ~1,600 reads/day while the watch runs (free tier); FCM is free; no new function, no scheduler.
+**DR-21 (rules only):** `ownerDecisions`: owner reads, owner updates only answer/note/status/answeredAt/laterUntil,
+nobody creates/deletes (script = admin SDK). `ownerConfig`: owner only. Gemini G46 reviews + deploys.
+**Guides:** three more guides in the approved row W design (`utils/guides.js`): **Tour of Apprec8** (grown-ups, 6
+screens, ticks by visiting), **For parents** (4: add child, Play as, their week, Sunday summary), **Your first day**
+(children and students, 4: start a quest, finish a topic, fix a mistake, see your stars). Me → Guides now shows for
+everyone (children see only theirs; the owner sees all). Data checks reuse reads the target screens already do.
+**App map:** `docs/APP_MAP.md`, a 4th tab in My notes.

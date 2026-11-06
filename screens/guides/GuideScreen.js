@@ -11,7 +11,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "../admin/schoolUi";
 import { guideById, guideState, newlyDone } from "../../utils/guides";
-import { loadGuideFacts } from "../../services/guideFacts";
+import { loadGuideFacts, markGuide } from "../../services/guideFacts";
 import { setActiveGuide } from "../../services/guideActive";
 
 const seen = new Map(); // guideId → ids done at the last look (this app session)
@@ -50,8 +50,9 @@ export default function GuideScreen({ route, navigation }) {
 
   const doStep = (s) => {
     setActiveGuide({ guideId: guide.id, stepId: s.id, n: s.n, total: guide.steps.length, hint: s.hint });
-    if (s.go.tab) navigation.navigate(s.go.tab, { screen: "ProgressScreen", params: { view: s.go.view || "classes" } });
-    else navigation.navigate(s.go.screen);
+    markGuide(`${guide.id}.${s.id}.visited`); // "visit" steps tick once their screen was opened (utils/guides.js)
+    if (s.go.tab) navigation.navigate(s.go.tab, { screen: s.go.screen || "ProgressScreen", params: s.go.params || { view: s.go.view || "classes" } });
+    else navigation.navigate(s.go.screen, s.go.params);
   };
 
   return (

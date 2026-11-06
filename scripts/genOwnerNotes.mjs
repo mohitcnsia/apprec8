@@ -11,6 +11,7 @@ const NOTES = [
   { id: "launch", title: "Launch checklist", file: "docs/LAUNCH_CHECKLIST.md" },
   { id: "testing", title: "Testing", file: "docs/qa/OWNER_TESTING.md" },
   { id: "store", title: "Store listing", file: "docs/release/STORE_LISTING.md" },
+  { id: "map", title: "App map", file: "docs/APP_MAP.md" },
 ];
 const updated = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 const notes = NOTES.map(({ id, title, file }) => ({ id, title, md: redactEmails(readFileSync(join(root, file), "utf8")) }));

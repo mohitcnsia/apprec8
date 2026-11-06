@@ -5,6 +5,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { listSchools, listClassesOfSchool, classMembers, myTeachingClasses } from "./classesApi";
 import { listAssignments } from "./assignmentsApi";
+import { db, authInstance } from "../config/firebaseConfig";
+
+const QUESTS = ["english-quest", "science-quest", "word-power", "word-bank"];
 
 const MARKS_KEY = "guideMarks:v1";
 
@@ -53,6 +56,19 @@ export async function loadGuideFacts(guideId) {
     let assignments = 0;
     for (const c of teaching.slice(0, 20)) assignments += (await listAssignments(c.id).catch(() => [])).length;
     return { teaching: teaching.length, assignments, ...(await countMembers(teaching)), marks };
+  }
+  const uid = authInstance.currentUser?.uid;
+  if (guideId === "parent" && uid) {
+    const me = await db.collection("users").doc(uid).get().catch(() => null);
+    const d = (me && me.data && me.data()) || {};
+    return { children: (d.childUids || []).length, pushParent: !!d.pushOptIn?.parent, marks };
+  }
+  if (guideId === "kid-first-day" && uid) {
+    // The same 4 progress docs the Progress tab reads.
+    const docs = await Promise.all(QUESTS.map((q) => db.collection("users").doc(uid).collection("questProgress").doc(q).get().catch(() => null)));
+    const data = docs.map((s) => (s && s.data && s.data()) || null).filter(Boolean);
+    const topicsDone = data.reduce((n, d) => n + Object.values(d.nodes || {}).filter((x) => x?.status === "completed").length, 0);
+    return { questsStarted: data.length, topicsDone, marks };
   }
   return { marks };
 }

@@ -224,6 +224,19 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
+### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy the rules, keep the sync running
+Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
+Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).
+1. Review: `utils/decisions.js`, `services/decisionsApi.js`, `screens/admin/DecisionsScreen.js`, `scripts/admin/decisions.mjs`,
+   and the DR-21 block at the end of the local `firestore.rules` (`ownerDecisions`, `ownerConfig`, owner only).
+   Blocking = anyone but the owner can read/write them, or the rules file differs from the live rules by more than
+   the DR-21 block (check the live rules in Firebase console → Firestore → Rules). If blocking: `gemini(G46): blocked — …`.
+2. Deploy: `firebase deploy --only firestore:rules --project apprec8-ca229` (from Claude's folder).
+3. `node scripts/admin/decisions.mjs --dry`, then `node scripts/admin/decisions.mjs`, then leave
+   `node scripts/admin/decisions.mjs --watch` running in the background (sync every 10 min). At every later check-in:
+   if it stopped, start it again. Don't commit `docs/agents/decisions.json` (Claude does).
+4. Report in `docs/agents/reports/G46.md`: review findings + the script's output lines (no emails, no uids).
+
 ### G45 · [done] · gemini · List students without a parent's yes (read-only, for spec X; after G43)
 From Claude's folder: `cd /Users/mohitchilkoti/Documents/projects/apprec8 && node scripts/admin/unconsented.cjs`.
 **List mode only: never `--apply`.** Report in `docs/agents/reports/G45.md`: how many, and for each only the first name,

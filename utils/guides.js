@@ -106,15 +106,164 @@ export const GUIDES = [
   },
 ];
 
+// Owner 2026-11-06: "a great app difficult to use is a waste". Three more guides (row W design, approved 2026-11-05):
+// a tour for grown-ups (you, Seema, parents, teachers), the parents' guide and the children's first day. A "visit"
+// step ticks once its screen was opened from the guide (mark `${guideId}.${stepId}.visited`, saved by GuideScreen).
+const visited = (guideId, stepId) => (f) => !!f.marks[`${guideId}.${stepId}.visited`];
+
+GUIDES.unshift({
+  id: "tour",
+  icon: "🗺️",
+  title: "Tour of Apprec8",
+  who: "Grown-ups",
+  adultOnly: true,
+  steps: [
+    {
+      id: "home",
+      title: "Home: the quests",
+      why: "Each tile is a quest: English, Science, Word Power, Treasure Words. ▶ opens where the child left off. Reminders for tests sit on top.",
+      hint: "This is Home. Each tile is a quest; ▶ continues it. Then tap Guide ›.",
+      go: { tab: "Apprec8", screen: "HomeScreen" },
+      done: visited("tour", "home"),
+    },
+    {
+      id: "map",
+      title: "A quest map",
+      why: "One path of topics. Each topic: Learn cards first, then practice. A Boss at the end of a unit opens the next one. A lock means \"not yet\".",
+      hint: "Scroll the path. Tap any open circle to see Learn cards and practice. Then tap Guide ›.",
+      go: { tab: "Apprec8", screen: "EnglishQuestMap", params: { questId: "english-quest" } },
+      done: visited("tour", "map"),
+    },
+    {
+      id: "mistakes",
+      title: "My mistakes",
+      why: "Every wrong answer comes back here until the child gets it right twice. The button sits at the bottom of each quest map.",
+      hint: "This is My mistakes: wrong answers wait here until they're right twice. Then tap Guide ›.",
+      go: { tab: "Apprec8", screen: "EnglishQuestMap", params: { questId: "english-quest", openMistakes: true } },
+      done: visited("tour", "mistakes"),
+    },
+    {
+      id: "progress",
+      title: "Progress",
+      why: "Stars, streaks, time spent, strong topics and one topic to practise. Parents see each child; teachers see their classes.",
+      hint: "This is Progress. Parents: tap a child. Teachers: tap a class. Then tap Guide ›.",
+      go: { tab: "Stats", screen: "ProgressScreen", params: {} },
+      done: visited("tour", "progress"),
+    },
+    {
+      id: "help",
+      title: "Need help?",
+      why: "For a child who is sad, scared or hurt: national helplines (1098, 14416, 112), always one tap away on Me.",
+      hint: "Tap the green \"Need help? Talk to someone\" row to see what a child sees. Then tap Guide ›.",
+      go: { screen: "ProfileScreen" },
+      done: visited("tour", "help"),
+    },
+    {
+      id: "children",
+      title: "Children on your phone",
+      why: "Each child gets their own profile, stars and a play-time timer on your phone. The parents' guide shows how.",
+      hint: "Under My children: Add a child, then Play as. Then tap Guide ›.",
+      go: { screen: "ProfileScreen" },
+      done: visited("tour", "children"),
+    },
+  ],
+});
+
+GUIDES.push(
+  {
+    id: "parent",
+    icon: "👪",
+    title: "For parents",
+    who: "Parents",
+    adultOnly: true,
+    steps: [
+      {
+        id: "add",
+        title: "Add your child",
+        why: "Their first name and class. You agree for them once, as their parent or guardian. No email needed.",
+        hint: "Type your child's first name, pick the class, read the short note and agree.",
+        go: { screen: "AddChild" },
+        done: (f) => f.children > 0,
+      },
+      {
+        id: "play",
+        title: "Let them play on your phone",
+        why: "Play as your child: their own stars and progress. Set a play time if you like; your PIN brings you back.",
+        hint: "Under My children, tap your child, then Play as. Pick a play time, or none.",
+        go: { screen: "ProfileScreen" },
+        done: visited("parent", "play"),
+      },
+      {
+        id: "week",
+        title: "See their week",
+        why: "Days practised, time spent, strong topics and one thing to do at home together.",
+        hint: "Tap your child's name to see their week. Then tap Guide ›.",
+        go: { tab: "Stats", screen: "ProgressScreen", params: { view: "family" } },
+        done: visited("parent", "week"),
+      },
+      {
+        id: "summary",
+        title: "Get the Sunday summary",
+        why: "One notification on Sunday evening with each child's week. Turn it off any time.",
+        hint: "On Progress, find Weekly summary and turn it on.",
+        go: { tab: "Stats", screen: "ProgressScreen", params: { view: "family" } },
+        done: (f) => !!f.pushParent,
+      },
+    ],
+  },
+  {
+    id: "kid-first-day",
+    icon: "⭐",
+    title: "Your first day",
+    who: "You",
+    kidOnly: true,
+    steps: [
+      {
+        id: "start",
+        title: "Start a quest",
+        why: "Pick English or Science on Home. Your path of topics opens.",
+        hint: "Tap ▶ on a quest tile.",
+        go: { tab: "Apprec8", screen: "HomeScreen" },
+        done: (f) => f.questsStarted > 0,
+      },
+      {
+        id: "topic",
+        title: "Finish one topic",
+        why: "Read the Learn cards, then answer. Every answer tells you why. You win stars!",
+        hint: "Tap the glowing circle. Read the cards, then answer the questions.",
+        go: { tab: "Apprec8", screen: "HomeScreen" },
+        done: (f) => f.topicsDone > 0,
+      },
+      {
+        id: "mistakes",
+        title: "Fix a mistake",
+        why: "Wrong answers wait in My mistakes. Get them right twice and they're gone.",
+        hint: "Tap My mistakes at the bottom of your quest map.",
+        go: { tab: "Apprec8", screen: "EnglishQuestMap", params: { questId: "english-quest", openMistakes: true } },
+        done: visited("kid-first-day", "mistakes"),
+      },
+      {
+        id: "stars",
+        title: "See your stars",
+        why: "Progress shows your stars, your streak and the topics you're great at.",
+        hint: "This is your Progress. Look for your streak 🔥. Then tap Guide ›.",
+        go: { tab: "Stats", screen: "ProgressScreen", params: {} },
+        done: visited("kid-first-day", "stars"),
+      },
+    ],
+  }
+);
+
 export const guideById = (id) => GUIDES.find((g) => g.id === id) || null;
 
-/** Guides this person sees: admins see all; other adults see the teacher guide; children none (yet). */
+/** Guides this person sees. Children (and students with a class) see the kids' guide; grown-ups the rest; admins all. */
 export function guidesFor({ isAdmin = false, isChild = false } = {}) {
-  if (isChild) return [];
-  return GUIDES.filter((g) => !g.adminOnly || isAdmin);
+  if (isAdmin) return GUIDES; // the owner tries them all
+  if (isChild) return GUIDES.filter((g) => g.kidOnly);
+  return GUIDES.filter((g) => !g.kidOnly && !g.adminOnly);
 }
 
-const EMPTY = { schools: 0, classes: 0, teachers: 0, kids: 0, approvedKids: 0, teaching: 0, assignments: 0, marks: {} };
+const EMPTY = { schools: 0, classes: 0, teachers: 0, kids: 0, approvedKids: 0, teaching: 0, assignments: 0, children: 0, pushParent: false, questsStarted: 0, topicsDone: 0, marks: {} };
 
 /**
  * Step states in order: "done" | "now" | "next". The first not-done step is "now".

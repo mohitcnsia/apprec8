@@ -23,6 +23,8 @@ import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
+import { listenDecisions } from "../../services/decisionsApi";
+import { inbox } from "../../utils/decisions";
 
 const THEMES = [
   ["system", "Phone setting"],
@@ -70,6 +72,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [children, setChildren] = useState([]);
   const [playKid, setPlayKid] = useState(null); // "Play as" sheet (mockup N1)
   const [helpOpen, setHelpOpen] = useState(false); // "Need help?" (mockup P1–P2)
+  const [decisionsWaiting, setDecisionsWaiting] = useState(0); // owner only (Me → Decisions)
+  useEffect(() => (isAdmin ? listenDecisions((list) => setDecisionsWaiting(inbox(list).waiting.length)) : undefined), [isAdmin]);
   const childKey = (userData?.childUids || []).join(",");
   useEffect(() => {
     if (!childKey) return setChildren([]);
@@ -143,6 +147,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <Text style={styles.outlineButtonText}>Edit profile</Text>
         </Pressable>
       </View>
+
+      {/* Owner only: questions from Claude waiting for a one-tap answer. */}
+      {isAdmin && decisionsWaiting > 0 ? (
+        <View style={styles.group}>
+          <Row icon="checkmark-done-outline" label="Decisions for you" detail={String(decisionsWaiting)} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+        </View>
+      ) : null}
 
       {/* Always here, for every child (mockup P1): calm green, safe to tap. */}
       <NeedHelpRow onPress={() => setHelpOpen(true)} P={P} />
@@ -249,13 +260,17 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
       <Text style={styles.section}>HELP</Text>
       <View style={styles.group}>
-        {/* Guide quests (mockup W1): learn by doing. Adults only for now (kids/parents guides come later). */}
-        {isAdmin || (!userData?.isChild && !Number.isInteger(userData?.grade)) ? (
-          <>
-            <Row icon="compass-outline" label="Guides" detail="Learn by doing" onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild })} styles={styles} P={P} />
-            <View style={styles.divider} />
-          </>
-        ) : null}
+        {/* Guide quests (mockup W1): learn by doing. Children and students get "Your first day"; grown-ups the tour,
+            parents' and teachers' guides (utils/guides.js). */}
+        <Row
+          icon="compass-outline"
+          label="Guides"
+          detail="Learn by doing"
+          onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild || Number.isInteger(userData?.grade) })}
+          styles={styles}
+          P={P}
+        />
+        <View style={styles.divider} />
         <Row icon="help-circle-outline" label="Help" onPress={openHelp} styles={styles} P={P} />
         <View style={styles.divider} />
         <Row icon="chatbubble-ellipses-outline" label="Tell us what you think" onPress={() => navigation.navigate("cntct")} styles={styles} P={P} />
@@ -265,6 +280,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <>
           <Text style={styles.section}>ADMIN</Text>
           <View style={styles.group}>
+            <Row icon="checkmark-done-outline" label="Decisions" detail={decisionsWaiting ? String(decisionsWaiting) : null} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+            <View style={styles.divider} />
             <Row icon="construct-outline" label="Admin tools" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
           </View>
         </>

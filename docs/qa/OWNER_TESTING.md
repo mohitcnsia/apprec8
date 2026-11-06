@@ -41,6 +41,20 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Decisions on your phone + push (after the next "publish" and Gemini's G46), ~3 min
+- [ ] Me → **Decisions** (under ADMIN; also at the top of Me when something waits). Questions from Claude show with
+  👍 YES · ✋ NO · ❓ MORE DETAILS · ⏰ LATER. "More details" first opens the full story; tapping it again asks Claude to explain more.
+- [ ] Tap **🔔 NOTIFY ME ON THIS PHONE** (bottom) → allow notifications. Within ~10 minutes a notification arrives
+  ("Apprec8: … decisions for you"); tapping it opens Decisions. Answer "Test: did the notification work?".
+- [ ] Optional note: type a short note before tapping an answer; Claude reads it.
+
+### ⭐ Guides for everyone (after the next "publish"), ~5 min
+- [ ] Me → **Guides**: you see all five. **Tour of Apprec8** (6 screens): DO STEP opens the real screen with a tip on
+  top; "Guide ›" comes back and the step is ticked.
+- [ ] **For parents** (4 steps) and **Your first day** (children, 4 steps). On Pratha's phone, Me → Guides shows only
+  "Your first day".
+- [ ] My notes has a new tab **App map**: every feature, who sees it and where.
+
 ### ⭐ My notes in the app (after the next "publish"), ~2 min
 - [ ] Me → Admin tools → **My notes**: two tabs, Launch checklist and Testing. Sections are folded; tap to open.
 - [ ] Tick a box, leave the screen, come back: still ticked (saved on this phone only).

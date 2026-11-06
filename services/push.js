@@ -42,6 +42,14 @@ export async function turnOffWeekly(role) {
   return { ok: true };
 }
 
+/** The owner's phone for Decisions notifications (utils/decisions.js). → { ok, token?, reason? } */
+export async function ownerPhoneToken() {
+  const m = messaging();
+  if (!m) return { ok: false, reason: "This app build has no notifications. Update the app from Play." };
+  if (!(await askPermission())) return { ok: false, reason: "Notifications are off for Apprec8. Turn them on in your phone's Settings → Apps → Apprec8." };
+  return { ok: true, token: await m.getToken() };
+}
+
 /** Tapping a summary opens the right Progress view ("family" | "classes"). Call once at start. */
 export function listenForSummaryTaps(open) {
   const m = messaging();

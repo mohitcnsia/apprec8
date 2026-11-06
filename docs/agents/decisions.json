@@ -1,0 +1,32 @@
+[
+  {
+    "id": "push-test-1",
+    "title": "Test: did the notification work?",
+    "ask": "Did a notification arrive on your phone, and did tapping it open this screen?",
+    "details": "This checks the whole loop: Claude writes a question → Gemini's script sends it → your phone buzzes → you tap an answer → Claude reads it.\n\n**YES** = all worked. **NO** = something didn't (add a note: no buzz, or the tap opened the wrong screen).",
+    "from": "claude"
+  },
+  {
+    "id": "row-x-ship",
+    "title": "Ship the parent-consent screens (row X)?",
+    "ask": "Students who signed up alone see \"Ask a parent or guardian\" until a parent links them or they join a class. Plus College / grown-up and \"say it appreciate\". Ship it?",
+    "details": "**What changes for kids:** a student with no parent linked and no class sees only the \"Ask a parent or guardian\" screen: send a WhatsApp message to the parent, type the parent's code, or join a class with a code. Nothing is saved before a parent says yes (India's DPDP Act and Google Play's family rules).\n\n**Your 3 yeses are in:** College / grown-up (year of birth, 18+ skips the gate), \"parent or guardian\" wording, sign-in says \"appreciate\" out loud once.\n\n**Before it ships:** link Pratha to your account (Me → Link my child's own account), or she sees the gate too. Gemini's test account Sam also gets the gate (good: it tests it).\n\n**YES** = Claude merges and publishes to everyone on 20.0.30. Mockup: rows X1–X5 on the canvas (link above).",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude"
+  },
+  {
+    "id": "unconsented-erase",
+    "title": "The one old student with no parent",
+    "ask": "One account (Class 5, signed up April 2025) has no parent linked. Delete it only if no parent says yes within 14 days after the gate ships?",
+    "details": "Found by Gemini (G45). After the gate ships, this child sees \"Ask a parent or guardian\" on their next open. If nobody says yes in 14 days, the account and its data are deleted (same deletion as \"Delete my account\").\n\n**YES** = wait 14 days, then delete. **NO** = keep it (say why in the note).",
+    "from": "claude"
+  },
+  {
+    "id": "store-listing-1",
+    "title": "Store name and text",
+    "ask": "Use \"Apprec8: Learn & Grow\", the short description \"Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.\" and feature graphic draft 2?",
+    "details": "The full description is in My notes → Store listing. It starts \"Apprec8 (say it \"appreciate\") helps children learn a little every day…\" and lists subjects as \"English and Science today, with Maths and reasoning coming next\".\n\n![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)\n\n**YES** = paste it into Play Console (Store listing). **MORE DETAILS** = Claude explains or changes it.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png",
+    "from": "claude"
+  }
+]

@@ -147,7 +147,7 @@ export default function OwnerNotesScreen() {
   );
 }
 
-const markdownStyles = (P) => ({
+export const markdownStyles = (P) => ({
   body: { color: P.text, fontSize: 15, lineHeight: 22, fontFamily: "nunito" },
   strong: { fontFamily: "nunitoBold" },
   link: { color: P.selectedText, textDecorationLine: "underline" },

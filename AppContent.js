@@ -135,7 +135,14 @@ const AppContent = () => {
   );
 
   // Weekly summary notifications (20.0.30+): a tap opens Progress on the right view. No-op on older builds.
-  useEffect(() => listenForSummaryTaps((view) => setTimeout(() => navigateTo("Stats", { screen: "ProgressScreen", params: { view } }), 300)), []);
+  // "decisions" = the owner's Decisions inbox (scripts/admin/decisions.mjs).
+  useEffect(
+    () =>
+      listenForSummaryTaps((view) =>
+        setTimeout(() => (view === "decisions" ? navigateTo("Profile", { screen: "Decisions" }) : navigateTo("Stats", { screen: "ProgressScreen", params: { view } })), 300)
+      ),
+    []
+  );
 
   useEffect(() => {
     if (fontError) console.error("Font Loading Error:", fontError);
