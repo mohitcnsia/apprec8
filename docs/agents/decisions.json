@@ -6,7 +6,7 @@
     "details": "This checks the whole loop: Claude writes a question → Gemini's script sends it → your phone buzzes → you tap an answer → Claude reads it.\n\n**YES** = all worked. **NO** = something didn't (add a note: no buzz, or the tap opened the wrong screen).",
     "from": "claude",
     "answer": "no",
-    "note": " [Owner in chat 11:46: notifications working.]",
+    "note": null,
     "answeredAt": "2026-11-06T06:06:21.448Z"
   },
   {
@@ -108,14 +108,20 @@
     "title": "A \"View as\" switch for you?",
     "ask": "Your account sees about twice what a child sees. Add an owner-only switch: View as child · parent · teacher, to see exactly what they see?",
     "details": "Your Home also shows Explore, More practice, old classrooms, the Fun tab, every unit open and admin. That makes the app feel more complex to you (and to Seema on your phone) than it is for a child.\n\nThe switch changes only what your phone shows; nothing is saved to anyone.\n\n**YES** = build it with the simplicity pass.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:30:20.992Z"
   },
   {
     "id": "row-x-learn-first",
     "title": "Row X change: children learn right away?",
     "ask": "Instead of blocking, children learn right away on the phone with nothing saved to their name. A parent's yes is needed only to save stars, join a class or appear on leaderboards. OK?",
     "details": "Today's row X stops a child who signed up alone at \"Ask a parent\". That ends \"log in and learn right away\", which is what you liked.\n\n**New idea:** the child learns at once; progress stays on the phone and nothing identifies them. A small card says \"Ask a parent to save your stars ⭐\" (the same 2 ways: parent's code or a class code).\n\nLegally sound in our reading (nothing about the child is stored under their name before the yes), but a lawyer checks before the public release.\n\n**YES** = Claude redraws row X like this (mockup first). **NO** = keep the gate as designed.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:32:58.739Z"
   },
   {
     "id": "owner-confusions",
@@ -129,6 +135,21 @@
     "title": "Publish the teachers' page to phones now?",
     "ask": "Ready: \"For teachers: start here\" (Me → Guides, and Admin tools) with a SHARE button for WhatsApp, the show/hide eye on the Demo password, and new My notes tabs (Play forms, Seema's pilot). Publish to everyone on 20.0.30?",
     "details": "Nothing changes for children. Grown-ups see one more card at the top of Me → Guides. You see it in Admin tools too, to share it with Seema.\n\n**YES** = Claude publishes (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat). **LATER** = ask again tomorrow.",
+    "from": "claude"
+  },
+  {
+    "id": "row-x-learn-first-mockup",
+    "title": "Mockup: children learn first (row X, 4 new screens)",
+    "ask": "Your yes, drawn: a child learns right after name + class; a calm card says \"12 stars, on this phone only. Ask a parent to save them\". Only the leaderboard and class wait. Build it like this?",
+    "details": "**X6 Home:** learning starts at once; the card never blocks.\n\n**X7 Tap the card:** ask a parent or guardian (send on WhatsApp, the parent's 6-number code, or a class code), or **Not now**.\n\n**X8 Progress:** stars and streak work; the leaderboard says \"Opens when a parent says yes\".\n\n**X9 Parent said yes:** \"Your 23 stars are saved now\", leaderboard and class open.\n\n**What it means for the build:** until the yes, answers and stars stay on the phone (not on our servers); on the yes they move to the child's account. About 1–2 days of work; replaces the blocking gate. College / grown-up, the message to the parent and \"say it appreciate\" stay.\n\nCanvas, scroll to the newest row X (X6–X9).",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude"
+  },
+  {
+    "id": "owner-extras-built",
+    "title": "Built: Owner extras switch (your \"View as\")",
+    "ask": "Me → ADMIN → Owner extras: Off shows what other grown-ups see. For a child's view: My children → add a test child (e.g. \"Test\", Class 10) → Play as. Publish it with the teachers' page?",
+    "details": "**Off hides:** old quizzes and classrooms on Home, Fun extras, tester mode (unlock-all, drafts), admin-only guides, the Kids view in Progress. **Stays:** Me → ADMIN (to switch back), Decisions, Admin tools.\n\nOnly your phone changes; nothing is saved to anyone.\n\n**YES** = publish it together with the teachers' page (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat).",
     "from": "claude"
   }
 ]
