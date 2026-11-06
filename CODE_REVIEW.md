@@ -2185,3 +2185,75 @@ existing Sunday job (`shiftDemoSchool` → renamed weekly job), so no 4th Cloud 
 child's own account) before this ships, or she sees the gate.
 **Later, not now:** server rules that refuse progress writes without consent (today the app enforces it).
 **Owner to decide:** approve row X as drawn? Year of birth for grown-ups, or a simpler "I'm 18 or older" tick (easier, but Google prefers a neutral question)?
+## 2026-11-06 — Review: DR-19 "delete means delete" (Gemini)
+
+**Scope:** Review of `functions/utils/eraseUser.js`, `tests/eraseUser.test.mjs`, callers in `userActions.js` and `familyActions.js`, `scripts/admin/eraseAccount.cjs`, and policy documents against personal data retention, cross-account deletion safety, scale/timeouts, and policy parity. No code changes or deploys performed.
+
+### Summary of Findings (7 findings: 2 Critical, 2 Medium, 3 Low)
+
+1. **CRITICAL: `childLoginCodes` not deleted when a child profile is deleted (`deleteChildProfile`)**
+   - **Code:** `functions/utils/eraseUser.js:97-99`
+     ```javascript
+     for (const col of ["childLoginCodes", "parentLinkCodes"]) {
+       await deleteWhere(db, db.collection(col).where("parentUid", "==", uid)).catch(() => 0);
+     }
+     ```
+   - **Issue:** When a parent deletes a child profile via `deleteChildProfile(kidUid)`, `eraseUser` executes with `uid = kidUid`. The query `where("parentUid", "==", kidUid)` returns 0 results because `parentUid` holds the parent's UID, while the child's UID is in `kidUid`.
+   - **Hazard:** Active 6-char child login codes in `childLoginCodes` remain in Firestore. If redeemed via `redeemChildLoginCode`, line 113 creates a custom token (`admin.auth().createCustomToken(kidUid, { child: true })`), which re-creates the deleted child in Firebase Auth and triggers `auth.js:initializeNewUser`, resurrecting the deleted child account.
+   - **Fix:** In `eraseUser.js`, also delete where `kidUid == uid`:
+     ```javascript
+     await deleteWhere(db, db.collection("childLoginCodes").where("kidUid", "==", uid)).catch(() => 0);
+     ```
+
+2. **CRITICAL: 60-second function timeout for accounts with thousands of attempts / child profiles**
+   - **Code:** `functions/callable/userActions.js:262-264`, `functions/callable/familyActions.js:117-119`, and `functions/common/config.js:5-9`
+   - **Issue:** Both `requestAccountDeletion` and `deleteChildProfile` use `runtimeOptions` (`timeoutSeconds: 60`, `memory: "256MB"`).
+   - **Hazard:** For a student with thousands of `questAttempts` (e.g. 5,000 attempts = 13 sequential batch reads + batch commits), or a parent whose profile children each have thousands of attempts and subcollections, plus `recursiveDelete` and Auth API calls, the total execution time can easily exceed 60 seconds on standard network latency. Cloud Functions forcefully terminates at 60s, leaving the account in a half-deleted, corrupt state where subsequent retries may fail because the parent document was already removed.
+   - **Fix:** Run both `requestAccountDeletion` and `deleteChildProfile` with `longRuntimeOptions` (`timeoutSeconds: 300`, `memory: "512MB"`).
+
+3. **MEDIUM: Pending teacher requests orphaned when an unapproved teacher deletes their account**
+   - **Code:** `functions/utils/eraseUser.js:22, 78-83`
+   - **Issue:** `plan.teaches` is derived from `user.teachesClassIds`. A teacher who enters an invite code via `redeemTeacherInvite` creates `classes/{classId}/teacherRequests/{uid}` (holding `{ firstName, subjects, code, requestedAt }`). They are NOT added to `teachesClassIds` until approved by an admin.
+   - **Hazard:** If an unapproved teacher deletes their account, `plan.teaches` is empty. Their `teacherRequests/{uid}` document remains in Firestore with their first name.
+   - **Fix:** Track pending class IDs on the teacher's user document (e.g. `pendingTeacherClassIds`), or inspect/delete pending requests if tracked.
+
+4. **MEDIUM: School admin UID retained in `schools/{schoolId}.admins`**
+   - **Code:** `services/classesApi.js:101`, `functions/utils/eraseUser.js`
+   - **Issue:** `schools/{schoolId}` stores admin UIDs in `admins: [uid, ...]`. `eraseUser` cleans `roles/{uid}`, but has no reference to clean `uid` from `schools/{schoolId}.admins`.
+   - **Fix:** If the user has a school admin role or `schoolIds` array, remove `uid` from `schools/{schoolId}.admins`.
+
+5. **LOW: Class and Global Leaderboard caches retain deleted student's name for up to 10 minutes**
+   - **Code:** `functions/callable/schoolActions.js:105-106, 186`
+   - **Issue:** `classes/{classId}/cache/board` and `leaderboardCache/top${topN}` hold 10-minute server caches. When a student deletes their account, their member doc is deleted, but the cached board continues to display their first name, score, and avatar until the cache doc expires (up to 10 min).
+   - **Fix:** In `eraseUser.js`, when removing a student from `plan.memberOf`, invalidate the class board cache:
+     ```javascript
+     await cls.collection("cache").doc("board").delete().catch(() => {});
+     ```
+
+6. **LOW: Consents cleanup query lacks pagination / loop**
+   - **Code:** `functions/utils/eraseUser.js:89-96`
+   - **Issue:** While `questAttempts` and `userFeedback` use `deleteWhere` (paginated loop up to `MAX_DOCS`), `consents` uses a single `.limit(200).get()`. If a user had >200 consents across years of activity, records beyond 200 would retain `parentName`.
+   - **Fix:** Use `deleteWhere` with an update payload for `consents`.
+
+7. **LOW (Tooling): `scripts/admin/eraseAccount.cjs` does not support deleting profile-only children**
+   - **Code:** `scripts/admin/eraseAccount.cjs:14-17`
+   - **Issue:** The policy allows parents to request deletion of a child profile by email. Profile-only children do not have an email in Firebase Auth (`getUserByEmail` throws `user-not-found`).
+   - **Fix:** Support passing `--uid <kidUid>` directly to `eraseAccount.cjs`.
+
+---
+
+### Answers to Specific Review Questions
+
+1. **Any collection or field holding personal data that `eraseUser` misses?**
+   - `childLoginCodes` where `kidUid == uid` (Finding 1).
+   - `classes/{classId}/teacherRequests/{uid}` for unapproved teachers (Finding 3).
+   - `schools/{schoolId}.admins` for school admins (Finding 4).
+   - All other user-identifying collections (`users`, `questProgress`, `quizAttempts`, `questAttempts`, `userFeedback`, `consents`, `parentPins`, `roles`, and Firebase Auth) are properly deleted or anonymized.
+2. **Anything it deletes that belongs to someone else?**
+   - **Verified SAFE.** Child profiles are only deleted if `ownLogin` is false AND `onlyThisParent` is true. Shared children and own-login children are only unlinked. Classes, schools, questionIssues, and feedback text are preserved.
+3. **Batch sizes and function timeout for accounts with thousands of attempts?**
+   - Batch size 400 is optimal and well within Firestore's 500-op limit.
+   - **Timeout is a hazard (Finding 2):** `runtimeOptions` (60s) is too short for large accounts and multi-child cascades. Must use `longRuntimeOptions` (300s).
+4. **Does `docs/policies/privacy-policy.html` say anything the code doesn't do?**
+   - **Policy Parity is Strong.** The policy promises full deletion of the sign-in account, profile, progress, answers, stars, class memberships, parent links, PIN, and child profiles, while retaining anonymized consent proof and report text. This matches `eraseUser.js` design, provided Findings 1 and 2 are addressed so deletion doesn't leave active child login codes or time out midway.
+
