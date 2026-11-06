@@ -292,6 +292,29 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
+### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
+Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
+question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
+check: exactly one correct option, the answer key matches, the explanation says why, Indian English spelling, CBSE
+level, kid-friendly wording, no copied board-paper text. **Don't edit content.** Report in
+`docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
+of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
+
+### G51 · [todo] · gemini · Mockup: the parent's "yes" web page (no app needed)
+Spec: CODE_REVIEW.md "learn first + parent web link". Make a static HTML mockup (no backend), 390 px wide, in
+`docs/mockups/parent-link/index.html` + a PNG screenshot: Apprec8 header, "<Child> wants to learn on Apprec8",
+3 lines on what is kept (first name, class, answers; no ads, no chat; delete any time), a Hindi / English switch,
+🔊 read-aloud button (browser speech), parent's name field, Mother / Father / Guardian chips, a tick "I am this child's
+parent or guardian and I agree", big button "हाँ, मैं सहमत हूँ / YES, I AGREE", and a done state "Thank you! <Child>'s
+stars are saved now." Calm, plum palette, thumb zone (button at the bottom), plain words for parents who read little.
+Commit `gemini(G51): done — mockup`. Claude puts it in the owner's inbox.
+
+### G50 · [todo] · gemini · Build learn first (only after Claude has reviewed G49)
+Spec: CODE_REVIEW.md "learn first + parent web link" + mockups docs/mockups/rowX-learn-first/X6–X9. Branch
+`feat/learn-first` from the G49 branch. Start by writing the plan in `docs/agents/reports/G50-plan.md` (which files,
+how progress is kept on the phone and moved on the parent's yes, tests) and commit it **before** coding:
+`gemini(G50): plan — review please`. Claude approves the plan, then you build.
+
 ### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy + start the sync (owner-approved: yes, 2026-11-06 "ok for DR-21")
 Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
 Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).
