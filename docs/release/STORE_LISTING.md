@@ -9,14 +9,14 @@ App icon: the app's own (assets/icon.png, 512×512). Screenshots: Gemini G43.
 For parents and teachers (they choose the app), in plain words. No exam names (they belong to other organisations,
 and we don't claim to prepare for any one exam). Owner checks; Seema checks the tone.
 
-**App name (30 max):** Apprec8: Learn English & Science
+**App name (30 max):** Apprec8: English & Science (26). The earlier draft "Apprec8: Learn English & Science" was 32: too long.
 
 **Short description (80 max, 78 used):**
 Fun, calm practice in English and Science for Classes 1–10. Free, with no ads.
 
 **Full description:**
 
-Apprec8 helps children practise English and Science a little every day, at their own pace.
+Apprec8 (say it "appreciate") helps children practise English and Science a little every day, at their own pace.
 
 📚 LEARN BY DOING
 • English Quest: grammar, words and reading, from first sentences to Class 10 grammar (tenses, modals, reported

@@ -13,13 +13,13 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 **Your review today:** row X mockup (parent consent) → [canvas, scroll to row X](https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL); store text + graphic → the **Store listing** tab here.
 | # | Step | Who | Time | State |
 |---|---|---|---|---|
-| C1 | Policy pages updated (privacy + deletion): add `mohitcnsia` as collaborator on FailedCommit/app-policies, Claude pushes | Owner 2 min → Claude | today | waiting for collaborator |
+| C1 | Policy pages updated (privacy + deletion): add `mohitcnsia` as collaborator on FailedCommit/app-policies, Claude pushes | Owner 2 min → Claude | done | live 2026-11-06 (both pages load) |
 | C2 | Delete in the app: Me → Delete my account, Delete a child's profile | Claude | done | published 2026-11-06 (20.0.30) |
-| C3 | DR-19 server deletion (everything goes) | Gemini G42 | today | review + deploy |
-| C4 | **Parent consent (row X)**: approve mockup → Claude builds gate + year of birth → publish; DR-20 cleanup | Owner OK → Claude → Gemini | ~1 day after OK | mockup ready |
+| C3 | DR-19 server deletion (everything goes) | Gemini G42/G44 | done | deployed + tested with a throwaway account 2026-11-06 |
+| C4 | **Parent consent (row X)**: approve mockup → Claude builds gate + year of birth → publish; DR-20 cleanup | Owner OK → Claude → Gemini | ~1 day after OK | owner asked 3 questions (adult students, two parents, grandparents): answers in CODE_REVIEW.md "Spec X: owner questions" |
 | C5 | Demo School logins for Google's reviewer: Admin tools → Reset Demo School | Owner | 5 min | todo |
 | C6 | Store listing text (short + full description) | Claude drafts, owner checks | — | draft: release/STORE_LISTING.md |
-| C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | today | todo |
+| C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | done | 14 in docs/release/screenshots/ (light + dark). Before public release: redo Home (0 stars, empty card) and Me (shows the test email) |
 | C8 | App icon 512 px (the app icon) + feature graphic 1024×500 | Claude drafts, owner picks | — | drafts in docs/release/graphics/ |
 | C9 | Play Console → App content forms (answers in release/PLAY_CONSOLE.md, updated today) | Owner | ~45 min | todo |
 | C10 | Google Group with 12+ testers who stay 14 days (family, Seema, pilot students) | Owner | — | todo |

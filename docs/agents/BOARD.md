@@ -204,7 +204,7 @@ Otherwise deploy from Claude's folder (branch `feat/quiz-redesign`, commit `3155
 kid): sign up, play one quiz, Me → Delete my account → Firebase Console shows no `users/<uid>` and no questAttempts
 for it. Report in `docs/agents/reports/G42.md`, commit `gemini(G42): done — N findings, deployed`. No code changes.
 
-### G44 · [todo] · gemini · ⭐ Re-check the 7 fixes, then deploy DR-19 (owner-approved: yes, 2026-11-06: "ok for DR-19")
+### G44 · [done] · gemini · ⭐ Re-check the 7 fixes, then deploy DR-19 (owner-approved: yes, 2026-11-06: "ok for DR-19")
 Read "Author Response: DR-19 review" in CODE_REVIEW.md and the diff since your G42 commit (`git diff a89a9a5 -- functions tests scripts`).
 If every fix holds and you find nothing new that is blocking (same definition as G42), deploy from Claude's folder
 (branch `feat/quiz-redesign`; `npm test` passes; `cd functions && node -e "require('./index.js')"` loads):
@@ -214,7 +214,7 @@ real kid) → play one quiz → Me → Delete my account → Firebase Console: n
 **Make sure Metro serves `feat/quiz-redesign`** (Claude's folder; check `git -C /Users/mohitchilkoti/Documents/projects/apprec8 branch --show-current`).
 Report in `docs/agents/reports/G44.md`, commit `gemini(G44): done — deployed` (or `gemini(G44): blocked — …`). No code changes.
 
-### G43 · [todo] · gemini · Play Store screenshots (after G42)
+### G43 · [done] · gemini · Play Store screenshots (after G42)
 Dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`), latest `feat/quiz-redesign`, the **tester account** (never a kid's).
 Light theme first, then the same set in dark. 8 portrait screenshots (`adb exec-out screencap -p > file.png`), no status
 bar clutter (`adb shell settings put global sysui_demo_allowed 1` + demo mode clock 10:00, full battery, no notifications):
@@ -224,7 +224,7 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
-### G45 · [todo] · gemini · List students without a parent's yes (read-only, for spec X; after G43)
+### G45 · [done] · gemini · List students without a parent's yes (read-only, for spec X; after G43)
 From Claude's folder: `cd /Users/mohitchilkoti/Documents/projects/apprec8 && node scripts/admin/unconsented.cjs`.
 **List mode only: never `--apply`.** Report in `docs/agents/reports/G45.md`: how many, and for each only the first name,
 class and sign-up date (no emails or uids: the repo is public). Commit `gemini(G45): done — N students`.

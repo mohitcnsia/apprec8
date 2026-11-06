@@ -2272,3 +2272,31 @@ All 7 accepted and fixed (`functions/utils/eraseUser.js`, tests extended for eac
    consent still matches `kidUid` after the name is removed.
 7. ✅ `eraseAccount.cjs --uid <uid>` for profile children.
 **DR-19 now deploys:** `functions:requestAccountDeletion,functions:deleteChildProfile,functions:redeemTeacherInvite,functions:decideTeacherRequest`.
+
+## 2026-11-06 — Spec X: owner questions (Claude) · waiting for owner decisions
+Spec X itself is on `feat/consent-gate`. Owner asked before approving row X:
+
+**Q1. A grown-up who wants to study (e.g. in college) signs up as a student.** Today they'd pick a class and hit
+"Ask a parent". Proposal: add a last chip **"College / grown-up"** to the class picker. Tapping it asks the year of
+birth (same neutral decade → year screen as parents/teachers). 18+ → no parent needed; under 18 → "Then pick your class
+above". Children who pick a class are not asked their year (a Class 1 child may not know it).
+Needs: a new user field `adultLearner: true` (+ grade 12 so they see all content), `needsParentConsent` skips it,
+firestore.rules allow it (**DR-20 rules**), mockup frame in row X.
+
+**Q2. Mum and dad both want to link.** Already works for a child with their own login: each parent makes a link code,
+the child enters both (`parentUids` is a list). A profile child (made with Play as) belongs to one parent: a second
+parent can't join it today. Proposal: later ("Add the other parent" code), not a closed-testing blocker.
+
+**Q3. Grandparents / no parent available.** The DPDP Act counts a child's "parent" as parents **or lawful guardian**.
+Proposal: every consent line says "I'm this child's parent or guardian"; kid text says "Ask a parent or the grown-up
+who looks after you". The grown-up declares it and is responsible for it.
+**Q3b. Any grown-up account lets a child use the app on their responsibility.** That already exists: a grown-up signs
+in on their own account and adds the child with Play as; making the profile is the consent. Not proposed: a child
+using a grown-up's account as themselves (wrong class, adult on child leaderboards, hides that a child uses it).
+DPDP Rule 10 (verifiable parental consent) applies from 13 May 2027; Google Play's Families policy applies now.
+Check with a lawyer before the public release.
+
+**Also before merging the gate:** the tester account "Sam" (Gemini's emulator account) has no parent and isn't in
+`TESTER_EMAILS`, so it will see the gate: link it to the owner's account first (or use it to test the gate).
+G45 found one other student without a parent (signed up 2025-04-17). Proposal: don't erase now; after the gate ships
+they see "Ask a parent"; erase only if there's still no yes 14 days after the gate ships (owner OK needed).
