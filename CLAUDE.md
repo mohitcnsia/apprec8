@@ -48,8 +48,8 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - Note: `gemini.md` says `study_content`, but the code uses `studyContent`.
 
 ## Rules of the project
-1. **Images**: host in `data/media_backup` (GitHub repo `mohitcnsia/media_backup`) and link via
-   `https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/<file>`. Don't link Wikimedia directly.
+1. **Images**: host in `data/media_backup` (its GitHub repo is `mohitcnsia/images`; `media_backup` links 404) and link via
+   `https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/<file>`. Don't link Wikimedia directly.
 2. **Seeding**: every node needs its content seeded with it, or it opens to a blank screen.
    Space (legacy): `quest_nodes` + content in `SeedQuestNodesButton.js`. Tile quests: `quests/{questId}/nodes` + content
    in `data/englishQuestData.js` via `SeedEnglishQuestButton.js`. Never put tile-quest nodes in `quest_nodes`.

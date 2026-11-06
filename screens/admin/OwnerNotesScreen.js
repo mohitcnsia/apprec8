@@ -4,7 +4,7 @@
 // (data/ownerNotes.js), so it is refreshed with every "publish". No Firestore reads.
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -56,6 +56,10 @@ export default function OwnerNotesScreen() {
     setTicks(next);
     AsyncStorage.setItem(TICKS_KEY, JSON.stringify(next)).catch(() => {});
   };
+  // Images (e.g. the feature graphic): full width, wide shape.
+  const mdRules = {
+    image: (node) => <Image key={node.key} source={{ uri: node.attributes.src }} style={{ width: "100%", aspectRatio: 1024 / 500, borderRadius: 12, marginVertical: 6 }} resizeMode="contain" />,
+  };
   const onLink = (url) => {
     if (/^https?:/.test(url)) Linking.openURL(url).catch(() => {});
     return false; // links to other .md files don't open on the phone
@@ -82,13 +86,13 @@ export default function OwnerNotesScreen() {
         >
           <Ionicons name={(b.key in ticks ? ticks[b.key] : b.done) ? "checkbox" : "square-outline"} size={24} color={(b.key in ticks ? ticks[b.key] : b.done) ? P.correctBorder : P.dimText} />
           <View style={{ flex: 1 }}>
-            <Markdown style={md} onLinkPress={onLink}>
+            <Markdown style={md} rules={mdRules} onLinkPress={onLink}>
               {b.text}
             </Markdown>
           </View>
         </Pressable>
       ) : (
-        <Markdown key={`md-${i}`} style={md} onLinkPress={onLink}>
+        <Markdown key={`md-${i}`} style={md} rules={mdRules} onLinkPress={onLink}>
           {b.text}
         </Markdown>
       )

@@ -55,31 +55,31 @@ export default function SeedQuestNodesButton() {
           id: 'study-node-6-content',
           name: "Aryabhata to Chandrayaan",
           author: "ISRO Space Academy",
-          content: "# Aryabhata: India's First Satellite\n\n![Aryabhata](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/960px-Indian_Space_Research_Organisation_Logo.svg.png)\n\nIndia's space journey began with the launch of its very first satellite, **Aryabhata**, on April 19, 1975. Named after the famous ancient Indian astronomer and mathematician, it was completely designed and built in India but launched from the Soviet Union.\n\n# Chandrayaan: Reaching the Moon\n\n![Chandrayaan](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/Vikram_Lander.jpg)\n\nDecades later, India made history with the **Chandrayaan** program. Chandrayaan-1 found water on the moon, and in 2023, **Chandrayaan-3** successfully landed the Vikram lander near the Moon's south pole, making India the fourth country to land on the Moon!"
+          content: "# Aryabhata: India's First Satellite\n\n![Aryabhata](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/960px-Indian_Space_Research_Organisation_Logo.svg.png)\n\nIndia's space journey began with the launch of its very first satellite, **Aryabhata**, on April 19, 1975. Named after the famous ancient Indian astronomer and mathematician, it was completely designed and built in India but launched from the Soviet Union.\n\n# Chandrayaan: Reaching the Moon\n\n![Chandrayaan](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Vikram_Lander.jpg)\n\nDecades later, India made history with the **Chandrayaan** program. Chandrayaan-1 found water on the moon, and in 2023, **Chandrayaan-3** successfully landed the Vikram lander near the Moon's south pole, making India the fourth country to land on the Moon!"
         },
         {
           id: 'study-node-7-content',
           name: "Mangalyaan's Journey",
           author: "ISRO Space Academy",
-          content: "# Mars Orbiter Mission (Mangalyaan)\n\n![Mangalyaan](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/960px-Mars_Orbiter_Mission_Over_Mars_(15237158879).jpg)\n\nIn 2013, ISRO launched the **Mars Orbiter Mission (MOM)**, affectionately known as Mangalyaan. It was India's first interplanetary mission.\n\nRemarkably, ISRO became the **first space agency in the world** to successfully reach Mars orbit on its very first attempt! It was also one of the most cost-effective Mars missions ever, costing less than the budget of the Hollywood space movie *Gravity*."
+          content: "# Mars Orbiter Mission (Mangalyaan)\n\n![Mangalyaan](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/960px-Mars_Orbiter_Mission_Over_Mars_(15237158879).jpg)\n\nIn 2013, ISRO launched the **Mars Orbiter Mission (MOM)**, affectionately known as Mangalyaan. It was India's first interplanetary mission.\n\nRemarkably, ISRO became the **first space agency in the world** to successfully reach Mars orbit on its very first attempt! It was also one of the most cost-effective Mars missions ever, costing less than the budget of the Hollywood space movie *Gravity*."
         },
         {
           id: 'study-node-8-content',
           name: "Aditya-L1 and Beyond",
           author: "ISRO Space Academy",
-          content: "# Aditya-L1: Studying the Sun\n\n![Aditya-L1](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/Aditya_L1.png)\n\nAfter reaching the Moon and Mars, ISRO set its sights on our star: the Sun. **Aditya-L1** is India's first dedicated solar observatory mission.\n\nIt is positioned at the Lagrange point 1 (L1), about 1.5 million kilometers from Earth. From this special vantage point, Aditya-L1 can continuously study the Sun's atmosphere and solar storms without any eclipses blocking the view."
+          content: "# Aditya-L1: Studying the Sun\n\n![Aditya-L1](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Aditya_L1.png)\n\nAfter reaching the Moon and Mars, ISRO set its sights on our star: the Sun. **Aditya-L1** is India's first dedicated solar observatory mission.\n\nIt is positioned at the Lagrange point 1 (L1), about 1.5 million kilometers from Earth. From this special vantage point, Aditya-L1 can continuously study the Sun's atmosphere and solar storms without any eclipses blocking the view."
         },
         {
           id: 'study-node-9-content',
           name: "Gaganyaan and Human Spaceflight",
           author: "ISRO Space Academy",
-          content: "# Gaganyaan Mission\n\n![Gaganyaan](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/960px-Gaganyaan_vehicle_used_for_TVD1_mission.webp)\n\nThe **Gaganyaan** project is ISRO's mission to send humans into space. The goal is to launch a crew of astronauts (called *Gaganauts*) into a low earth orbit and bring them safely back to Earth.\n\nBefore human missions, ISRO is testing the spacecraft with **Vyommitra**, a half-humanoid robot designed to simulate human functions in space. If successful, India will become the fourth nation to launch humans into space independently."
+          content: "# Gaganyaan Mission\n\n![Gaganyaan](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/960px-Gaganyaan_vehicle_used_for_TVD1_mission.webp)\n\nThe **Gaganyaan** project is ISRO's mission to send humans into space. The goal is to launch a crew of astronauts (called *Gaganauts*) into a low earth orbit and bring them safely back to Earth.\n\nBefore human missions, ISRO is testing the spacecraft with **Vyommitra**, a half-humanoid robot designed to simulate human functions in space. If successful, India will become the fourth nation to launch humans into space independently."
         },
         {
           id: 'study-node-10-content',
           name: "Future of Indian Space",
           author: "ISRO Space Academy",
-          content: "# Bharatiya Antariksha Station (BAS)\n\n![BAS](https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/Indian_space_station_concept_rough_drawing.png)\n\nThe future of Indian space exploration is incredibly exciting. ISRO is currently planning the **Bharatiya Antariksha Station (BAS)**, which will be India's very own space station!\n\nAdditionally, ISRO is developing the Next Generation Launch Vehicle (NGLV) to carry heavier payloads, and planning new missions to explore Venus and return samples from the Moon. The sky is no longer the limit for India!"
+          content: "# Bharatiya Antariksha Station (BAS)\n\n![BAS](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Indian_space_station_concept_rough_drawing.png)\n\nThe future of Indian space exploration is incredibly exciting. ISRO is currently planning the **Bharatiya Antariksha Station (BAS)**, which will be India's very own space station!\n\nAdditionally, ISRO is developing the Next Generation Launch Vehicle (NGLV) to carry heavier payloads, and planning new missions to explore Venus and return samples from the Moon. The sky is no longer the limit for India!"
         }
       ];
 

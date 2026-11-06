@@ -2,7 +2,7 @@
 
 ## Project Ground Rules & Architecture
 0. **Team roles:** owner decides, Claude builds, Gemini reviews + deploys + runs QA. Who merges, deploys, seeds and releases is written down in `docs/TEAM.md` (single source of truth).
-1. **Media Asset Management:** All images must be hosted on the `data/media_backup` GitHub repository to save space, and accessed via `cdn.jsdelivr.net` links (e.g., `https://cdn.jsdelivr.net/gh/mohitcnsia/media_backup@main/[filename]`). Avoid direct Wikimedia links as they are prone to breaking or rate-limiting.
+1. **Media Asset Management:** All images must be hosted on the `data/media_backup` GitHub repository to save space, and accessed via `cdn.jsdelivr.net` links (e.g., `https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/[filename]`). Avoid direct Wikimedia links as they are prone to breaking or rate-limiting.
 2. **Release Strategy:** Differentiate between dynamic data updates (updating `space_olympiad_data.json` and seeding Firestore via the "Update Quest Map" button) which do NOT require an app update, versus native/UI changes (like bumping `expo-image` or adding `react-native-image-zoom-viewer`) which DO require a production build.
 3. **Database Seeding:** Every node must ship together with its content, or it opens to a blank screen.
    - **Space Olympiad (legacy):** `quest_nodes` entry + `studyContent`/`categories`/`topics` payload in `components/quiz/SeedQuestNodesButton.js`.

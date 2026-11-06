@@ -1,5 +1,11 @@
 # Play Store listing: draft (Claude, 2026-11-06)
 
+**Feature graphic (1024×500), draft:**
+
+![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft1.png)
+
+App icon: the app's own (assets/icon.png, 512×512). Screenshots: Gemini G43.
+
 For parents and teachers (they choose the app), in plain words. No exam names (they belong to other organisations,
 and we don't claim to prepare for any one exam). Owner checks; Seema checks the tone.
 
