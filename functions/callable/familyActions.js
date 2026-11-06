@@ -4,7 +4,7 @@
 // Needs the functions' service account to have "Service Account Token Creator" (for createCustomToken).
 const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
-const { region, runtimeOptions } = require("../common/config");
+const { region, runtimeOptions, longRuntimeOptions } = require("../common/config");
 
 const db = admin.firestore();
 const { eraseUser } = require("../utils/eraseUser");
@@ -116,7 +116,7 @@ exports.redeemChildLoginCode = functions
 /** { kidUid } → deletes the child's account and data (parent only). */
 exports.deleteChildProfile = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(longRuntimeOptions) // G42: erasing can take longer than 60 s
   .https.onCall(async (data, context) => {
     if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
     const kidUid = String(data?.kidUid || "");

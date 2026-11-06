@@ -85,7 +85,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
 | G43 Store screenshots for Play (emulator, tester account) | Gemini | todo (after G42) | `gemini/g43-screens` | |
-| G42 ⭐ Review + deploy DR-19 account deletion (owner OK 2026-11-06) | Gemini | **todo (next)** | from Claude's folder | |
+| G44 ⭐ Re-check fixes + deploy DR-19 (owner OK) | Gemini | **todo (next)** | from Claude's folder | |
+| G42 ⭐ Review + deploy DR-19 account deletion (owner OK 2026-11-06) | Gemini | **blocked → fixed by Claude** (7 findings, all accepted; 2 blocking) | from Claude's folder | |
 | G41 ⭐ Deploy DR-16 + DR-17 + DR-18 (owner OK 2026-11-06) | Gemini | **done** (12 functions live, 3 scheduler jobs, rules check OK) | from Claude's folder | |
 | G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **done** (20 pass; Claude: a code read, not a device run: no screenshots. Next QA tasks must attach screenshots) | `gemini/g39-qa` | |
 | G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | **done** (49 facts; bite first-aid matches WHO/NCDC. To fix before use: homepage links → exact pages; "rabies vaccine legally mandatory" → a city licence rule) | `gemini/g40-dog-facts` | |
@@ -187,7 +188,7 @@ Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (
 **Rollback if something breaks:** redeploy the same function names from commit `7b0eac7` (before the merge); the new
 functions can be deleted with `firebase functions:delete <name>` after the owner's OK.
 
-### G42 · [todo] · gemini · ⭐ Review, then deploy DR-19 "delete means delete" (owner-approved: yes, 2026-11-06: "ok for DR-19")
+### G42 · [done] · gemini · ⭐ Review, then deploy DR-19 "delete means delete" (owner-approved: yes, 2026-11-06: "ok for DR-19")
 Read "Privacy policy check + Review request + DR-19" at the end of CODE_REVIEW.md, then `functions/utils/eraseUser.js`,
 `tests/eraseUser.test.mjs`, the two callers (`requestAccountDeletion` in userActions.js, `deleteChildProfile` in
 familyActions.js) and `scripts/admin/eraseAccount.cjs`. Check: (1) any collection or field holding a user's personal data
@@ -201,6 +202,16 @@ Otherwise deploy from Claude's folder (branch `feat/quiz-redesign`, commit `3155
 (answer **No** to any delete prompt). Then test with a throwaway account you create in the emulator app (never a real
 kid): sign up, play one quiz, Me → Delete my account → Firebase Console shows no `users/<uid>` and no questAttempts
 for it. Report in `docs/agents/reports/G42.md`, commit `gemini(G42): done — N findings, deployed`. No code changes.
+
+### G44 · [todo] · gemini · ⭐ Re-check the 7 fixes, then deploy DR-19 (owner-approved: yes, 2026-11-06: "ok for DR-19")
+Read "Author Response: DR-19 review" in CODE_REVIEW.md and the diff since your G42 commit (`git diff a89a9a5 -- functions tests scripts`).
+If every fix holds and you find nothing new that is blocking (same definition as G42), deploy from Claude's folder
+(branch `feat/quiz-redesign`; `npm test` passes; `cd functions && node -e "require('./index.js')"` loads):
+`firebase deploy --only functions:requestAccountDeletion,functions:deleteChildProfile,functions:redeemTeacherInvite,functions:decideTeacherRequest --project apprec8-ca229`
+(answer **No** to any delete prompt). Then the G42 test: a throwaway account you create in the emulator app (never a
+real kid) → play one quiz → Me → Delete my account → Firebase Console: no `users/<uid>`, no questAttempts with its uid.
+**Make sure Metro serves `feat/quiz-redesign`** (Claude's folder; check `git -C /Users/mohitchilkoti/Documents/projects/apprec8 branch --show-current`).
+Report in `docs/agents/reports/G44.md`, commit `gemini(G44): done — deployed` (or `gemini(G44): blocked — …`). No code changes.
 
 ### G43 · [todo] · gemini · Play Store screenshots (after G42)
 Dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`), latest `feat/quiz-redesign`, the **tester account** (never a kid's).

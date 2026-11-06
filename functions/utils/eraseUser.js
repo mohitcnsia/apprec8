@@ -6,7 +6,9 @@
 // - users/{uid} with every subcollection (questProgress, quizAttempts, …): deleted
 // - questAttempts with userId == uid (every answer): deleted
 // - classes/{id}/members/{uid} and teacherRequests/{uid}: deleted; teacherIds / teacherSubjects: removed
-// - parentPins/{uid}, roles/{uid}, unused childLoginCodes / parentLinkCodes made by this parent: deleted
+// - parentPins/{uid}, roles/{uid}, childLoginCodes / parentLinkCodes made by or for this account: deleted (G42: an old
+//   child login code could otherwise sign a deleted child back in)
+// - schools/{id}.admins: removed; class leaderboard caches of their classes + the global one: cleared (no name left behind)
 // - child profiles this parent made (no own login): erased the same way; children with their own login: unlinked
 // - this child's parents: unlinked (childUids)
 // - consents: kept as proof that consent was given, with the parent's name removed (kind, version and dates stay)
@@ -19,7 +21,7 @@ function erasePlan(uid, user = {}) {
   const uniq = (a) => [...new Set((a || []).filter((x) => typeof x === "string" && x))];
   return {
     memberOf: uniq([...(user.classIds || []), ...(user.pendingClassIds || [])]),
-    teaches: uniq(user.teachesClassIds),
+    teaches: uniq([...(user.teachesClassIds || []), ...(user.pendingTeachClassIds || [])]),
     parents: uniq(user.parentUids).filter((p) => p !== uid),
     children: uniq(user.childUids).filter((c) => c !== uid),
   };
@@ -36,6 +38,24 @@ async function deleteWhere(db, query, { update } = {}) {
     snap.docs.forEach((d) => (update ? batch.update(d.ref, update) : batch.delete(d.ref)));
     await batch.commit();
     n += snap.size;
+    if (snap.size < 400 || n >= MAX_DOCS) return n;
+  }
+}
+
+/** Updates every doc of a query, page by page with a cursor (the docs still match after the update). */
+async function updateAll(db, query, update) {
+  let n = 0;
+  let last = null;
+  for (;;) {
+    let q = query.orderBy("__name__").limit(400);
+    if (last) q = q.startAfter(last);
+    const snap = await q.get();
+    if (snap.empty) return n;
+    const batch = db.batch();
+    snap.docs.forEach((d) => batch.update(d.ref, update));
+    await batch.commit();
+    n += snap.size;
+    last = snap.docs[snap.docs.length - 1];
     if (snap.size < 400 || n >= MAX_DOCS) return n;
   }
 }
@@ -73,6 +93,7 @@ async function eraseUser(admin, uid, opts = {}) {
   for (const classId of plan.memberOf) {
     const cls = db.collection("classes").doc(classId);
     await cls.collection("members").doc(uid).delete().catch(() => {});
+    await cls.collection("cache").doc("board").delete().catch(() => {}); // G42: no name left in the 10-min cache
     out.classes += 1;
   }
   for (const classId of plan.teaches) {
@@ -87,16 +108,15 @@ async function eraseUser(admin, uid, opts = {}) {
     update: { userId: "deleted", userName: null, userEmail: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() },
   });
   for (const field of ["kidUid", "parentUid"]) {
-    const cs = await db.collection("consents").where(field, "==", uid).limit(200).get();
-    if (!cs.empty) {
-      const b = db.batch();
-      cs.docs.forEach((d) => b.update(d.ref, { parentName: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() }));
-      await b.commit();
-    }
+    await updateAll(db, db.collection("consents").where(field, "==", uid), { parentName: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() });
   }
-  for (const col of ["childLoginCodes", "parentLinkCodes"]) {
-    await deleteWhere(db, db.collection(col).where("parentUid", "==", uid)).catch(() => 0);
+  for (const [col, field] of [["childLoginCodes", "parentUid"], ["childLoginCodes", "kidUid"], ["parentLinkCodes", "parentUid"]]) {
+    await deleteWhere(db, db.collection(col).where(field, "==", uid));
   }
+  const schools = await db.collection("schools").where("admins", "array-contains", uid).limit(50).get();
+  for (const sc of schools.docs) await sc.ref.update({ admins: FieldValue.arrayRemove(uid) });
+  const boards = await db.collection("leaderboardCache").limit(20).get();
+  for (const b of boards.docs) await b.ref.delete();
   await db.collection("parentPins").doc(uid).delete().catch(() => {});
   await db.collection("roles").doc(uid).delete().catch(() => {});
 

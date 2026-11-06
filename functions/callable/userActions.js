@@ -3,7 +3,7 @@ const functions = require("firebase-functions");
 // We need to explicitly import modular functions from `firebase-admin/firestore`
 // and access `FieldValue` through the imported firestore object.
 const { admin } = require("../common/admin"); // Keep admin for auth and other services
-const { region, runtimeOptions } = require("../common/config");
+const { region, runtimeOptions, longRuntimeOptions } = require("../common/config");
 const { countFeedbackWords } = require("../utils/helpers"); // Import specific helper
 const { eraseUser } = require("../utils/eraseUser");
 const { clampTopN, cachedResult } = require("../utils/serverCache");
@@ -261,7 +261,7 @@ exports.submitFeedback = functions
 /** V1 Callable Function: Handles user account deletion request. */
 exports.requestAccountDeletion = functions
   .region(region)
-  .runWith(runtimeOptions)
+  .runWith(longRuntimeOptions) // G42: a big account (thousands of answers, child profiles) needs more than 60 s
   .https.onCall(async (data, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(

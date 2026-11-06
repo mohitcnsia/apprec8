@@ -3,6 +3,7 @@
 //
 // Look up (writes nothing):       node scripts/admin/eraseAccount.cjs someone@example.com
 // Delete (owner OK needed):       node scripts/admin/eraseAccount.cjs someone@example.com --apply
+// A child profile (no email):     node scripts/admin/eraseAccount.cjs --uid <kidUid> [--apply]
 // Credentials: GOOGLE_APPLICATION_CREDENTIALS, or the Firebase CLI's application-default login.
 
 const admin = require("../../functions/node_modules/firebase-admin");
@@ -12,9 +13,12 @@ admin.initializeApp({ projectId: "apprec8-ca229" });
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
 
 (async () => {
+  const i = process.argv.indexOf("--uid");
   const email = process.argv[2];
-  if (!email || !email.includes("@")) throw new Error("Usage: node scripts/admin/eraseAccount.cjs <email> [--apply]");
-  const u = await admin.auth().getUserByEmail(email);
+  let u;
+  if (i > 0 && process.argv[i + 1]) u = { uid: process.argv[i + 1], displayName: null };
+  else if (email && email.includes("@")) u = await admin.auth().getUserByEmail(email);
+  else throw new Error("Usage: node scripts/admin/eraseAccount.cjs <email> | --uid <uid>  [--apply]");
   if (u.uid === OWNER_UID) throw new Error("That is the owner's account. Not deleting.");
   const doc = await admin.firestore().collection("users").doc(u.uid).get();
   const d = doc.exists ? doc.data() : {};

@@ -254,6 +254,8 @@ exports.redeemTeacherInvite = functions
       const firstName = (user.exists && String(user.data().firstName || "").trim()) || (context.auth.token.name || "Teacher").split(" ")[0];
       t.update(ref, { usedBy: uid, usedAt: FieldValue.serverTimestamp() });
       t.set(clsRef.collection("teacherRequests").doc(uid), { firstName, subjects: v.subjects, code, requestedAt: FieldValue.serverTimestamp() });
+      // So "Delete my account" finds a request that was never approved (G42 finding 3).
+      t.set(db.collection("users").doc(uid), { pendingTeachClassIds: FieldValue.arrayUnion(clsRef.id) }, { merge: true });
       return { className: cls.data().name, schoolName: cls.data().schoolName || "", subjects: v.subjects };
     });
     return result;
@@ -304,6 +306,7 @@ exports.decideTeacherRequest = functions
       batch.set(db.collection("users").doc(uid), { teachesClassIds: FieldValue.arrayUnion(cls.id) }, { merge: true });
     }
     batch.delete(reqRef);
+    batch.set(db.collection("users").doc(uid), { pendingTeachClassIds: FieldValue.arrayRemove(cls.id) }, { merge: true });
     await batch.commit();
     return { ok: true };
   });

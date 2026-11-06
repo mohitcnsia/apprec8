@@ -35,14 +35,18 @@ function makeAdmin(seed) {
     delete: async () => store.delete(path),
     collection: (c) => colRef(`${path}/${c}`),
   });
-  const colRef = (path, filters = [], lim = Infinity) => ({
+  const colRef = (path, filters = [], lim = Infinity, after = null) => ({
     doc: (id) => docRef(`${path}/${id}`),
-    where: (f, op, v) => colRef(path, [...filters, [f, v]], lim),
-    limit: (n) => colRef(path, filters, n),
+    where: (f, op, v) => colRef(path, [...filters, [f, op, v]], lim, after),
+    orderBy: () => colRef(path, filters, lim, after),
+    startAfter: (d) => colRef(path, filters, lim, d.ref.path),
+    limit: (n) => colRef(path, filters, n, after),
     get: async () => {
       const docs = [...store.keys()]
         .filter((k) => k.startsWith(path + "/") && !k.slice(path.length + 1).includes("/"))
-        .filter((k) => filters.every(([f, v]) => store.get(k)[f] === v))
+        .sort()
+        .filter((k) => !after || k > after)
+        .filter((k) => filters.every(([f, op, v]) => (op === "array-contains" ? (store.get(k)[f] || []).includes(v) : store.get(k)[f] === v)))
         .slice(0, lim)
         .map((k) => ({ ref: docRef(k), data: () => store.get(k) }));
       return { empty: !docs.length, size: docs.length, docs };
@@ -87,7 +91,16 @@ const seed = {
   "parentPins/parent": { hash: "x" },
   "childLoginCodes/123456": { kidUid: "kidP", parentUid: "parent" },
   "parentLinkCodes/654321": { parentUid: "parent" },
+  "childLoginCodes/777777": { kidUid: "kidP", parentUid: "someoneElse" }, // G42 finding 1: matched by kidUid
+  "users/parent/x": {},
+  "classes/cP": { teacherIds: ["t5"] }, // G42 finding 3: a request never approved
+  "classes/cP/teacherRequests/parent": { firstName: "Mohit" },
+  "classes/cA/cache/board": { rows: ["Ria"] }, // G42 finding 5
+  "leaderboardCache/top10": { rows: ["Ria"] },
+  "schools/s1": { admins: ["parent", "a2"] }, // G42 finding 4
 };
+for (let i = 0; i < 450; i++) seed[`consents/many${String(i).padStart(3, "0")}`] = { kind: "join-class", parentUid: "parent", parentName: "Mohit" }; // G42 finding 6
+seed["users/parent"].pendingTeachClassIds = ["cP"];
 const { admin, store, deletedAuth } = makeAdmin(structuredClone(seed));
 const res = await eraseUser(admin, "parent");
 const has = (p) => store.has(p);
@@ -109,6 +122,11 @@ assert.equal(store.get("userFeedback/f1").userName, null);
 assert.equal(store.get("userFeedback/f1").feedbackText, "typo in Q3", "report text kept for fixing the question");
 assert.ok(!has("parentPins/parent") && !has("childLoginCodes/123456") && !has("parentLinkCodes/654321"));
 assert.ok(has("users/other"), "other users untouched");
+assert.ok(!has("childLoginCodes/777777"), "the child's login code goes even if another parent made it");
+assert.ok(!has("classes/cP/teacherRequests/parent"), "a teacher request that was never approved goes");
+assert.ok(!has("classes/cA/cache/board") && !has("leaderboardCache/top10"), "no name left in leaderboard caches");
+assert.deepEqual(store.get("schools/s1").admins, ["a2"], "removed as school admin");
+assert.ok([...store.keys()].filter((k) => k.startsWith("consents/many")).every((k) => store.get(k).parentName === undefined && store.get(k).kind), "all 450 consents lose the name, none deleted");
 assert.deepEqual(deletedAuth.sort(), ["kidP", "parent"], "sign-in accounts deleted");
 assert.equal(res.children, 1);
 

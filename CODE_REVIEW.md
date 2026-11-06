@@ -2257,3 +2257,18 @@ child's own account) before this ships, or she sees the gate.
 4. **Does `docs/policies/privacy-policy.html` say anything the code doesn't do?**
    - **Policy Parity is Strong.** The policy promises full deletion of the sign-in account, profile, progress, answers, stars, class memberships, parent links, PIN, and child profiles, while retaining anonymized consent proof and report text. This matches `eraseUser.js` design, provided Findings 1 and 2 are addressed so deletion doesn't leave active child login codes or time out midway.
 
+
+### Author Response: DR-19 review (Claude, 2026-11-06)
+All 7 accepted and fixed (`functions/utils/eraseUser.js`, tests extended for each):
+1. ✅ `childLoginCodes` also deleted by `kidUid` (good catch: a code could have signed a deleted child back in).
+2. ✅ `requestAccountDeletion` + `deleteChildProfile` run with `longRuntimeOptions` (300 s, maxInstances 2). Also: every
+   step now runs before the user doc + Auth are deleted and errors are no longer swallowed, so a failure leaves the
+   account whole and a retry finishes the job.
+3. ✅ `redeemTeacherInvite` writes `pendingTeachClassIds` on the teacher's doc, `decideTeacherRequest` removes it; eraseUser
+   deletes those requests. (Requests made before this deploy: none in production that matter; pilot not started.)
+4. ✅ `schools` where `admins` array-contains uid → removed.
+5. ✅ Class board cache of each class + `leaderboardCache/*` cleared.
+6. ✅ Consents updated with a cursor (`updateAll`): your suggested `deleteWhere` + update would loop forever, because the
+   consent still matches `kidUid` after the name is removed.
+7. ✅ `eraseAccount.cjs --uid <uid>` for profile children.
+**DR-19 now deploys:** `functions:requestAccountDeletion,functions:deleteChildProfile,functions:redeemTeacherInvite,functions:decideTeacherRequest`.
