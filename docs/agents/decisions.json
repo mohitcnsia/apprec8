@@ -101,7 +101,10 @@
     "title": "Simplicity first: pause new features?",
     "ask": "Pause new features (Dog Squad, What's new, Home guide card) until the 5 most common jobs take 2 taps or fewer. Pilot, fixes and content go on.",
     "details": "**The 5 jobs:** a child continues learning (one big ▶ Continue at the bottom of Home), a child fixes mistakes, a parent sees their child's week (on Home), a teacher sees their class (on Home), anyone finds help.\n\nEverything else folds under **More** on Me (nothing deleted). Claude counts today's taps for each job, draws a mockup (row Z) and asks you here before building.\n\n**YES** = pause + simplicity pass now. **NO** = keep building features.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:34:58.539Z"
   },
   {
     "id": "owner-view-as",
@@ -135,7 +138,10 @@
     "title": "Publish the teachers' page to phones now?",
     "ask": "Ready: \"For teachers: start here\" (Me → Guides, and Admin tools) with a SHARE button for WhatsApp, the show/hide eye on the Demo password, and new My notes tabs (Play forms, Seema's pilot). Publish to everyone on 20.0.30?",
     "details": "Nothing changes for children. Grown-ups see one more card at the top of Me → Guides. You see it in Admin tools too, to share it with Seema.\n\n**YES** = Claude publishes (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat). **LATER** = ask again tomorrow.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:34:39.055Z"
   },
   {
     "id": "row-x-learn-first-mockup",
