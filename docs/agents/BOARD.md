@@ -224,7 +224,7 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
-### G47 · [todo] · gemini · Restart the Decisions sync (script updated)
+### G47 · [todo] · gemini · ⭐ URGENT: start the Decisions sync again (it stopped at ~19:00 on 6 Nov; script updated)
 `scripts/admin/decisions.mjs` now also closes inbox cards the owner answered in the chat (`via: "chat"` in
 decisions.json). In Claude's folder: stop the running `node scripts/admin/decisions.mjs --watch`, run
 `node scripts/admin/decisions.mjs --dry` (read-only; expect "closed in the inbox" to list 4 ids on the real run), then
