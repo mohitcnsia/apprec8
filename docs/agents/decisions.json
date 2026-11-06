@@ -209,7 +209,10 @@
     "ask": "Play Console → Grow users → Store presence → Main store listing: paste the name, short and full description, upload the feature graphic. Tap YES when done, MORE DETAILS if stuck.",
     "details": "Everything to paste is in **My notes → Store listing**:\n- App name: **Apprec8: Learn & Grow**\n- Short description: **Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.**\n- Full description: copy from My notes.\n- Feature graphic (1024×500): https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png (save it on the laptop, then upload).\n- Phone screenshots: Gemini's in docs/release/screenshots (light), 4–8 of them.\n\nThen Save → it goes with the next review. Gemini's logos can replace the graphic later.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Done in chat 6 Nov (submitted with 9 changes).",
+    "via": "chat"
   },
   {
     "id": "task-seema-whatsapp",
