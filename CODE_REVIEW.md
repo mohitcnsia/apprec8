@@ -2341,3 +2341,17 @@ everyone (children see only theirs; the owner sees all). Data checks reuse reads
 - **Row Z and the store text:** owner wants to see them first → review page https://claude.ai/artifact/RwDpduy4VGZTnL7ew5c8eE.
 - **Row Y:** folded into the simplicity pass.
 - Inbox cards answered in the chat are closed by the sync (`via: "chat"`), G47 restarts it.
+
+## 2026-11-06 (night) — Spec for later: learn first (row X6–X9, owner-approved) + parent web link (approved idea)
+Gemini builds after G49 (budget: Claude reviews only). Mockups: docs/mockups/rowX-learn-first/.
+- A student without a parent's yes (utils/consent.js needsParentConsent) **learns right away**. Their progress is kept
+  **on the phone** (AsyncStorage) instead of Firestore; Home shows the calm "N stars, on this phone only. Ask a parent
+  to save them" card (X6) → sheet with the 2 ways + Not now (X7). Leaderboard and Join a class wait (X8).
+- On the parent's yes, the phone's progress is uploaded once to the child's questProgress/questAttempts (X9).
+- Existing accounts without a parent (G45: 1) keep their server data; they just see the card and no leaderboard.
+- **Parent web link (owner: parents far away won't install the app):** "Send to my parent" shares a one-time link
+  (expires 7 days) to a 1-page form on GitHub Pages (Hindi/English, read aloud): parent's name, Mother/Father/
+  Guardian, "हाँ, मैं सहमत हूँ / Yes, I agree" → an HTTP function records the consent (same record as in-app) and links
+  the child. Needs: page mockup (owner OK), DR for the function + rules, cost check (free tier).
+- Replaces the blocking gate on `feat/consent-gate` (keep its College / grown-up, "parent or guardian" wording and
+  "say it appreciate" parts).

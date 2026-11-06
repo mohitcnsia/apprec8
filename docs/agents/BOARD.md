@@ -248,6 +248,34 @@ foreground (1024×1024, logo inside the central 66%), a one-colour notification 
 report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). Don't change any app files.
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
+### G49 · [todo] · gemini · ⭐ Build row Z: the simpler Home and Me (owner-approved 2026-11-06)
+Owner: "earlier anyone could log in and learn right away; now too many taps". Approved mockups (with his fixes):
+`docs/mockups/rowZ/Z1…Z4.png`. Claude is short on budget: **you build, Claude reviews.** Branch `feat/simple-home`
+from `feat/quiz-redesign`, in your worktree. Small commits. Rules: docs/DESIGN_RULES.md (thumb zone, calm, fold
+don't delete), no new Firestore reads beyond what Home/Progress already read (docs/COSTS.md).
+1. **Child Home (Z1)** `screens/home/HomeScreen.js`: content sits LOW (empty space on top). Order: "FROM YOUR TEACHER"
+   (assigned topics, existing teacher-task data, each row with ▶), "YOUR SUBJECTS" (one row per quest the child sees:
+   icon, name, "Up next: <next leaf title>", thin progress bar, ▶), the My mistakes card, a small "Practice paper ›".
+   Subjects ordered by last used (progress doc `updatedAt`). **▶ opens the next step directly** (the same step the map
+   would glow): put the "next step" logic in a pure util (`utils/nextStep.js` + `tests/nextStep.test.mjs`) using
+   `utils/questTree.js`; the screen navigates like EnglishQuestMapScreen.openStep does (study → Apprec8Reader, quiz →
+   QuizDetails/QuizScreenV2, reading → ReadingScreen) with the same questContext. Tapping the row (not ▶) opens the map.
+   No single global CONTINUE (owner: kids do English + Science + teacher work in one sitting).
+2. **Parent Home (Z2)**: a grown-up with linked children sees one card per child, low on the screen: "<name>'s week"
+   (days, minutes, % right, one topic to practise, from the data Progress → My children already uses) → tap = that
+   child's week in Progress; bottom button "▶ LET <NAME> PLAY" (opens the existing Play as sheet).
+3. **Teacher Home (Z3)**: a teacher sees one card per class, low: name, students, "N waiting" pill, "this week: X of Y
+   practised", topic + due date, "Teach again: <weakest topic>" (same data as Progress → My classes) → tap = that class
+   in Progress; bottom button "ASSIGN NEXT TOPIC" (opens the assign part of that class). Parent + teacher: both cards.
+4. **Progress opens on the right view**: family for parents, classes for teachers, Me for children (today always "me").
+5. **Me (Z4)** `screens/profile/MeScreen.js`: content low. Need help (green row) + My class + My children + Guides,
+   then one "More" row opening a sheet/screen with everything else (reminders, messages, join a class, link parent,
+   edit profile, delete account, sign out…). Nothing deleted. ADMIN section stays for the owner.
+6. Don't touch QuestMap/quiz screens, rules or functions. `npm test` passes; a Metro bundle builds.
+7. QA on the emulator with the tester account (child view) + Demo School logins (parent, teacher): screenshots of the
+   4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
+Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
+
 ### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy + start the sync (owner-approved: yes, 2026-11-06 "ok for DR-21")
 Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
 Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).
