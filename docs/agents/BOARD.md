@@ -166,15 +166,6 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G42 · [todo] · gemini · ⭐ Review: DR-19 "delete means delete" (after G41; review only, no deploy)
-Read "Privacy policy check + Review request + DR-19" at the end of CODE_REVIEW.md, then `functions/utils/eraseUser.js`,
-`tests/eraseUser.test.mjs`, the two callers (`requestAccountDeletion` in userActions.js, `deleteChildProfile` in
-familyActions.js) and `scripts/admin/eraseAccount.cjs`. Check: (1) any collection or field holding a user's personal data
-that eraseUser misses (search functions/, services/, screens/ for every write that stores a uid, name or email);
-(2) anything it deletes that belongs to someone else; (3) batch sizes and the function timeout for an account with
-thousands of attempts; (4) does `docs/policies/privacy-policy.html` say anything the code doesn't do?
-Write findings under "Review: DR-19 (Gemini)" in CODE_REVIEW.md, commit `gemini(G42): done — N findings`. No code, no deploy.
-
 ### G41 · [todo] · gemini · ⭐ Deploy DR-16 + DR-17 + DR-18: Demo School, account linking, weekly notifications (owner-approved: yes, 2026-11-06)
 **Owner-approved: yes** for exactly these functions ("Waiting for your OK, then Gemini deploys the server parts: go ahead", 2026-11-06).
 Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (branch `feat/quiz-redesign`, commit `fb65e92` or later:
@@ -194,6 +185,15 @@ Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (
 **Deliver:** `docs/agents/reports/G41.md` (each step: output or error text), commit `gemini(G41): done — …` on your branch.
 **Rollback if something breaks:** redeploy the same function names from commit `7b0eac7` (before the merge); the new
 functions can be deleted with `firebase functions:delete <name>` after the owner's OK.
+
+### G42 · [todo] · gemini · ⭐ Review: DR-19 "delete means delete" (after G41; review only, no deploy)
+Read "Privacy policy check + Review request + DR-19" at the end of CODE_REVIEW.md, then `functions/utils/eraseUser.js`,
+`tests/eraseUser.test.mjs`, the two callers (`requestAccountDeletion` in userActions.js, `deleteChildProfile` in
+familyActions.js) and `scripts/admin/eraseAccount.cjs`. Check: (1) any collection or field holding a user's personal data
+that eraseUser misses (search functions/, services/, screens/ for every write that stores a uid, name or email);
+(2) anything it deletes that belongs to someone else; (3) batch sizes and the function timeout for an account with
+thousands of attempts; (4) does `docs/policies/privacy-policy.html` say anything the code doesn't do?
+Write findings under "Review: DR-19 (Gemini)" in CODE_REVIEW.md, commit `gemini(G42): done — N findings`. No code, no deploy.
 
 ### G39 · [done] · gemini · QA run: tonight's changes (emulator, tester account)
 Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
