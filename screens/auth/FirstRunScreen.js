@@ -13,6 +13,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import HeroScene from "../../components/auth/HeroScene";
 import { canSave, firstRunUpdate, bubbleText } from "../../utils/firstRun";
+import { isAdultByYear, birthDecades, yearsOf } from "../../utils/consent";
 
 const DEFAULT_AVATAR =
   "https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/avatars%2Fbee3.webp?alt=media&token=e4b96cb2-7180-4a9b-900d-14c34dbaa6ba";
@@ -27,13 +28,30 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
   const [name, setName] = useState(userDoc?.firstName || "");
   const [grade, setGrade] = useState(Number.isInteger(userDoc?.grade) ? userDoc.grade : null);
   const [role, setRole] = useState(null); // null (child) | "parent" | "teacher"
+  // Grown-ups give a year of birth (mockup X1: a neutral age screen, Google Families policy). Checked, never stored.
+  const [decade, setDecade] = useState(null);
+  const [year, setYear] = useState(null);
+  const [tooYoung, setTooYoung] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const ready = !!userDoc; // the account doc is made by the server a few seconds after sign-up
   const gradeFixed = Number.isInteger(userDoc?.grade);
 
+  const pickRole = (r) => {
+    setRole(role === r ? null : r);
+    setTooYoung(false);
+  };
+  const pickYear = (y) => {
+    if (isAdultByYear(y)) return setYear(y);
+    // Under 18: a student here (the parent says yes next, mockup X2).
+    setYear(null);
+    setDecade(null);
+    setRole(null);
+    setTooYoung(true);
+  };
+
   const save = async () => {
-    if (!canSave({ name, grade, role }) || !ready || busy) return;
+    if (!canSave({ name, grade, role }) || (role && !isAdultByYear(year)) || !ready || busy) return;
     setBusy(true);
     setError("");
     try {
@@ -59,7 +77,7 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
       <Text style={[s.chipText, on && { color: P.selectedText }]}>{label}</Text>
     </Pressable>
   );
-  const ok = canSave({ name, grade, role }) && ready;
+  const ok = canSave({ name, grade, role }) && (!role || isAdultByYear(year)) && ready;
 
   return (
     <KeyboardAvoidingView style={s.screen} behavior={Platform.OS === "ios" ? "padding" : undefined}>
@@ -101,10 +119,18 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
               )}
             </View>
             <View style={s.chips}>
-              {chip("I'm a parent", role === "parent", () => setRole(role === "parent" ? null : "parent"))}
-              {chip("I'm a teacher", role === "teacher", () => setRole(role === "teacher" ? null : "teacher"))}
+              {chip("I'm a parent", role === "parent", () => pickRole("parent"))}
+              {chip("I'm a teacher", role === "teacher", () => pickRole("teacher"))}
             </View>
+            {tooYoung ? <Text style={s.small}>Then you're a student here: pick your class above. 🙂</Text> : null}
           </View>
+          {role ? (
+            <View style={{ gap: 8 }}>
+              <Text style={s.label}>YEAR YOU WERE BORN</Text>
+              <View style={s.chips}>{birthDecades().map((d) => chip(`${d}s`, decade === d, () => { setDecade(d); setYear(null); }, `d${d}`))}</View>
+              {decade !== null ? <View style={s.chips}>{yearsOf(decade).map((y) => chip(String(y), year === y, () => pickYear(y), `y${y}`))}</View> : null}
+            </View>
+          ) : null}
           <Text style={s.small}>Others only see your first name and class.</Text>
           {error ? <Text style={s.error}>{error}</Text> : null}
           <Pressable onPress={save} disabled={!ok || busy} style={[s.primary, (!ok || busy) && s.primaryOff]} accessibilityRole="button">

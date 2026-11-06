@@ -41,6 +41,14 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ A parent says yes (row X, branch `feat/consent-gate`, after your OK + "publish"), ~10 min
+Use a new throwaway Google/email account (not yours: testers skip the gate).
+- [ ] Sign up → first name → tap a class → LET'S GO → **Ask a parent** screen; Home/Quest/Progress are not reachable.
+- [ ] SEND TO MY PARENT → WhatsApp opens with the message (send it to yourself).
+- [ ] On your phone: Me → Link my child's own account → code. On the test phone: "I have the code" → type it → the app opens with "Your parent said yes! 🎉".
+- [ ] Another new account: "My teacher gave me a class code" → join with a class code → the app opens (waiting for the teacher).
+- [ ] First run, tap "I'm a parent" → YEAR YOU WERE BORN: decades, then years; a year under 18 → "pick your class above".
+
 ### ⭐ My notes in the app (after the next "publish"), ~2 min
 - [ ] Me → Admin tools → **My notes**: two tabs, Launch checklist and Testing. Sections are folded; tap to open.
 - [ ] Tick a box, leave the screen, come back: still ticked (saved on this phone only).

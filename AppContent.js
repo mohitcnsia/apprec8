@@ -12,7 +12,7 @@ import { listenToUserDocument } from "./services/firestoreContentApi";
 import { needsFirstRun } from "./utils/firstRun";
 import { canWriteFreeText } from "./utils/freeText";
 import { FreeTextContext } from "./context/FreeTextContext";
-import { isTesterUser, FREE_TEXT_EMAILS } from "./config/appConfig";
+import { isTesterUser, FREE_TEXT_EMAILS, APPREC8_TEAM_REVIEWER_UID } from "./config/appConfig";
 import { remoteList } from "./services/remoteLists";
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import CalmLoader from "./components/common/CalmLoader";
@@ -24,7 +24,10 @@ import InAppMessageModal from "./components/common/InAppMessageModal";
 import useStartupUpdate from "./hooks/useStartupUpdate";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
+import { showAlert } from "./services/dialog";
 import GuideStrip from "./components/guides/GuideStrip";
+import ConsentNavigator from "./screens/auth/ConsentGateScreen";
+import { needsParentConsent } from "./utils/consent";
 import { listenForSummaryTaps } from "./services/push";
 import { navigateTo } from "./navigation/navRef";
 
@@ -116,6 +119,17 @@ const AppContent = () => {
   const freeText = canWriteFreeText({ email: user?.email, doc: userDoc, isTester: isTesterUser(user), allowEmails: freeTextEmails });
   const showFirstRun =
     !!uid && grownUp !== null && (needsFirstRun(userDoc, { grownUp }) || (userDoc === null && brandNew));
+  // A parent says yes (mockup X, DPDP): a student who signed up alone sees only "Ask a parent" until linked or in a class.
+  const showConsentGate = !!uid && !showFirstRun && needsParentConsent(userDoc, { exempt: uid === APPREC8_TEAM_REVIEWER_UID || isTesterUser(user) });
+  // Mockup X4: the moment the parent's yes arrives (link or class), say so once.
+  const gatedUid = React.useRef(null);
+  useEffect(() => {
+    if (showConsentGate) gatedUid.current = uid;
+    else if (gatedUid.current && gatedUid.current === uid && userDoc) {
+      gatedUid.current = null;
+      showAlert("Your parent said yes! 🎉", "From now on your stars and progress are saved. Let's go! 🚀");
+    } else if (gatedUid.current && gatedUid.current !== uid) gatedUid.current = null;
+  }, [showConsentGate, userDoc, uid]);
 
   const styles = React.useMemo(
     () =>
@@ -191,6 +205,8 @@ const AppContent = () => {
       <View style={styles.container}>
         {showFirstRun ? (
           <FirstRunScreen uid={uid} userDoc={userDoc} onDone={({ grownUp: g }) => g && setGrownUp(true)} />
+        ) : showConsentGate ? (
+          <ConsentNavigator firstName={userDoc?.firstName} signoutHandler={signoutHandler} />
         ) : user || isGuest ? (
           // --- RESTORED: All props are now correctly passed ---
           <BottomTabNavigator

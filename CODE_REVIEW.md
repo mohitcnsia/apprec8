@@ -2178,10 +2178,15 @@ form was filled and a teacher approves). Admin and tester accounts never see it.
 **Until then nothing is saved** (DPDP: consent before processing): the gate replaces Home/Quest/Progress; only Need help,
 Sign out and Delete my account stay reachable. The sign-in itself (email) can't wait: see cleanup.
 **Grown-ups give a year of birth (X1)**, a neutral age screen (Google Families policy): under 18 → the student path. Stops
-a child tapping "I'm a parent" to skip the gate. No age is stored, only `grownUpConfirmedAt`.
-**Cleanup (DR-20):** a student account still without consent 14 days after sign-up is deleted with `eraseUser`, inside the
-existing Sunday job (`shiftDemoSchool` → renamed weekly job), so no 4th Cloud Scheduler job (3 = free limit). Bounded: ≤ 200 per run.
+a child tapping "I'm a parent" to skip the gate. Nothing is stored: the year is only checked (rules allow no new user fields anyway).
+**Cleanup:** `scripts/admin/unconsented.cjs` lists students still without a parent's yes; `--apply` erases those older than
+14 days (eraseUser). Run weekly by Gemini with the owner's OK; no new scheduled job (3 = the free limit), no deploy.
 **Existing accounts** get the gate on their next open (all internal testers today). Pratha: link her to you (Me → Link my
 child's own account) before this ships, or she sees the gate.
 **Later, not now:** server rules that refuse progress writes without consent (today the app enforces it).
 **Owner to decide:** approve row X as drawn? Year of birth for grown-ups, or a simpler "I'm 18 or older" tick (easier, but Google prefers a neutral question)?
+
+**Built on branch `feat/consent-gate` (2026-11-06, ready for the owner's OK on row X; not published):** `utils/consent.js`
+(+ tests), `screens/auth/ConsentGateScreen.js` (gate + its own small stack: LinkParent, JoinClass, Delete), AppContent
+shows it instead of the tabs, "Your parent said yes! 🎉" once when it lifts (same account only), FirstRun asks grown-ups
+for a year of birth (decade → year, none pre-selected; under 18 → "pick your class"). Admin + tester accounts exempt.
