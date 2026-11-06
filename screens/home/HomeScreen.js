@@ -1,230 +1,88 @@
 // screens/home/HomeScreen.js
-// New Home (owner-approved mockup "A · Home", 2026-11-04): one vertical scroll, most important first:
-// greeting → Coming up (exams + own reminders) → Continue → My mistakes → quests → Olympiad practice.
-// Replaces the old Home (now the Fun tab) and the Study tab. Tiles open screens in the Home stack.
+// Home screen (mockups Z1–Z3, owner-approved 2026-11-06):
+// Simpler Home: content sits LOW near the thumb zone (empty space on top).
+// - Child Home (Z1): Teacher assignments first (with ▶), YOUR SUBJECTS (each row: icon, name, "Up next: <step>", thin progress, ▶), My mistakes, Practice paper ›.
+//   ▶ opens next step directly (utils/nextStep.js); row tap opens map. No single global CONTINUE.
+// - Parent Home (Z2): one card per child ("<name>'s week", days, minutes, % right, to practise together) + bottom button "▶ LET <NAME> PLAY".
+// - Teacher Home (Z3): one card per class (name, students, waiting pill, practised, topic + due, teach again) + bottom button "ASSIGN NEXT TOPIC".
+// - Parent + Teacher: both cards shown.
 
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import Mascot from "../../components/quiz/Mascot";
 import { authInstance } from "../../config/firebaseConfig";
 import { listenToCategoriesByGroup, listenToUserDocument } from "../../services/firestoreContentApi";
-import { visibleOldTiles, showOldSpace } from "../../utils/oldContent";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
-import { EXAMS } from "../../config/exams";
-import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "../../utils/homeFeed";
-import { openCategory } from "../../utils/openCategory";
-import useReduceMotion from "../../hooks/useReduceMotion";
-import { myAssignments } from "../../services/assignmentsApi";
-import { bundledQuest } from "../../data/quests";
+import { greeting, dayStreak, mergeDaily, daysUntil } from "../../utils/homeFeed";
+import { myAssignments, listAssignments } from "../../services/assignmentsApi";
+import { bundledQuest, QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
-import { questSummary } from "../../utils/progressView";
-import { daysUntil } from "../../utils/homeFeed";
-import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
+import { questSummary, topicNamer } from "../../utils/progressView";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
 import { papersFor, MIX_GRADES } from "../../data/papers";
-import { showAlert } from "../../services/dialog";
+import { findNextStep, getNextStepTitle, openNextStep } from "../../utils/nextStep";
+import { myChildren } from "../../services/familyApi";
+import { myTeachingClasses, classMembers } from "../../services/classesApi";
+import { classLabel, SUBJECT_NAMES } from "../../utils/classes";
+import { parentWeek, weekIndexOf } from "../../utils/parentWeek";
+import { teacherWeek } from "../../utils/weeklySummary";
+import PlayAsChildSheet from "../profile/PlayAsChildSheet";
 
-const ROTATE_MS = 3500;
-const PAUSE_AFTER_TAP_MS = 10000;
-
-const TONES = {
-  gold: { head: "#dcb51b", border: "#F0D98A", num: "#7A5B00" },
-  green: { head: "#3E9B3A", border: "#BFE5C2", num: "#1E5E1B" },
-  plum: { head: "#85508a", border: "#E0C6E3", num: "#3b0940" },
-};
-
-const tileOf = (c) => ({
-  id: c.id,
-  title: c.title,
-  image: c.image,
-  subtitle: c.subtitle || "",
-  description: c.description || "",
-  type: c.type || "COURSE",
-  questId: c.questId || null,
-});
-
-// ---- small drawings (no image downloads) ----
-const BookArt = ({ size = 62 }) => (
-  <Svg width={size} height={size * 0.75} viewBox="0 0 120 90">
-    <Path d="M10 14c16-7 32-7 50 5v62c-18-12-34-12-50-5z" fill="#85508a" />
-    <Path d="M110 14c-16-7-32-7-50 5v62c18-12 34-12 50-5z" fill="#3b0940" />
-    <Path d="M22 32c9-3 18-3 28 2M22 46c9-3 18-3 28 2M70 34c10-5 19-5 28-2M70 48c10-5 19-5 28-2" stroke="#F5D2F8" strokeWidth={4} strokeLinecap="round" />
-  </Svg>
-);
-const PaperArt = () => (
-  <Svg width={46} height={58} viewBox="0 0 60 76">
-    <Rect x={6} y={4} width={44} height={60} rx={6} fill="#FFFFFF" stroke="#85508a" strokeWidth={4} />
-    <Path d="M16 20h24M16 31h24M16 42h14" stroke="#C98ACF" strokeWidth={4} strokeLinecap="round" />
-    <Circle cx={44} cy={58} r={13} fill="#F5C842" />
-    <Path d="M44 51v7l5 3" stroke="#3b0940" strokeWidth={3} strokeLinecap="round" fill="none" />
-  </Svg>
-);
-const RocketArt = () => (
-  <Svg width={44} height={58} viewBox="0 0 60 80">
-    <Path d="M30 4c12 10 16 24 14 42H16C14 28 18 14 30 4z" fill="#3E73C8" />
-    <Circle cx={30} cy={28} r={6} fill="#FFFFFF" />
-    <Path d="M16 40l-8 14h10zM44 40l8 14H42z" fill="#E5533F" />
-    <Path d="M22 50h16l-3 12h-10z" fill="#F5C842" />
-  </Svg>
-);
-const FlaskArt = () => (
-  <Svg width={46} height={56} viewBox="0 0 60 74">
-    <Path d="M22 4h16v22l16 34c3 6-1 10-7 10H13c-6 0-10-4-7-10l16-34z" fill="#3E9B3A" />
-    <Path d="M12 54h36l5 9c1 3-1 5-4 5H11c-3 0-5-2-4-5z" fill="#BFE5C2" />
-  </Svg>
-);
-const BlocksArt = () => (
-  <Svg width={52} height={52} viewBox="0 0 60 60">
-    <Rect x={6} y={6} width={22} height={22} rx={6} fill="#E9772A" />
-    <Rect x={32} y={6} width={22} height={22} rx={6} fill="#F5C842" />
-    <Rect x={6} y={32} width={22} height={22} rx={6} fill="#3E73C8" />
-    <Rect x={32} y={32} width={22} height={22} rx={6} fill="#3E9B3A" />
-  </Svg>
-);
 const FlameIcon = () => (
   <Svg width={20} height={20} viewBox="0 0 24 24">
     <Path d="M12 2c1 4 5 5.5 5 11a5 5 0 01-10 0c0-2.5 1.2-4 2.5-5 .2 1.8 1 2.8 2 3-.5-3 .5-6 .5-9z" fill="#F29A1F" />
   </Svg>
 );
+
 const StarIcon = () => (
   <Svg width={20} height={20} viewBox="0 0 24 24">
     <Path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="#F5C842" stroke="#C99A12" strokeWidth={1.4} />
   </Svg>
 );
+
 const WrenchIcon = () => (
   <Svg width={22} height={22} viewBox="0 0 24 24">
     <Path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.5-2.5z" stroke="#C2402F" strokeWidth={2.2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
   </Svg>
 );
 
-function ComingUp({ items, P, isDark, styles, onAdd }) {
-  const [index, setIndex] = useState(0);
-  const pausedUntil = useRef(0);
-  const fade = useRef(new Animated.Value(1)).current;
-  const count = items.length;
-
-  useEffect(() => {
-    if (index >= count) setIndex(0);
-  }, [count, index]);
-
-  const indexRef = useRef(0);
-  indexRef.current = index;
-
-  const reduceMotion = useReduceMotion();
-
-  // Fade IN only, starting half-visible (QA 2026-11-04: fading out first could leave the card invisible
-  // when an animation callback never ran, e.g. with phone animations off).
-  const show = (next) => {
-    setIndex(next);
-    if (reduceMotion) return fade.setValue(1);
-    fade.setValue(0.5);
-    Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true }).start();
-  };
-
-  // Moves by itself; a tap pauses it for a while (manual mode). Still when the phone asks for less motion.
-  useEffect(() => {
-    if (count < 2 || reduceMotion) return undefined;
-    const t = setInterval(() => {
-      if (Date.now() < pausedUntil.current) return;
-      show((indexRef.current + 1) % count);
-    }, ROTATE_MS);
-    return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count, reduceMotion]);
-
-  const tapTo = (next) => {
-    pausedUntil.current = Date.now() + PAUSE_AFTER_TAP_MS;
-    show(next);
-  };
-
-  const item = items[Math.min(index, count - 1)];
-  const tone = TONES[item?.tone] || TONES.plum;
-
-  return (
-    <View style={{ gap: 8 }}>
-      <View style={styles.rowBetween}>
-        <Text style={styles.label}>COMING UP</Text>
-        <Pressable onPress={onAdd} hitSlop={10} accessibilityRole="button" style={styles.addPill}>
-          <Text style={styles.link}>+ Add reminder</Text>
-        </Pressable>
+// Subject Icons (crisp SVG badges for the subjects list)
+const SubjectIcon = ({ questId, size = 36 }) => {
+  if (/science/i.test(questId)) {
+    return (
+      <View style={[stylesLocal.iconBox, { backgroundColor: "#2e0f38" }]}>
+        <Ionicons name="flask-outline" size={size * 0.58} color="#F5C842" />
       </View>
-      {item ? (
-        <Pressable
-          onPress={() => count > 1 && tapTo((index + 1) % count)}
-          accessibilityRole="button"
-          accessibilityLabel={`${item.title}, ${item.days} ${item.unit.toLowerCase()} left. Tap for the next one.`}
-        >
-          <Animated.View style={[styles.remCard, { borderColor: isDark ? P.border : tone.border, opacity: fade }]}>
-            <View style={[styles.remBox, { borderColor: tone.head }]}>
-              <Text style={[styles.remTag, { backgroundColor: tone.head }]}>{item.tag}</Text>
-              <View style={styles.remNumWrap}>
-                <Text style={[styles.remNum, { color: isDark ? P.text : tone.num }]}>{item.days === 0 ? "!" : item.days}</Text>
-              </View>
-              <Text style={[styles.remUnit, { color: isDark ? P.textSoft : tone.num }]}>{item.unit}</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.remTitle} numberOfLines={2}>{item.title}</Text>
-              <Text style={styles.remSub} numberOfLines={1}>{item.sub}</Text>
-            </View>
-          </Animated.View>
-        </Pressable>
-      ) : (
-        <Pressable onPress={onAdd} accessibilityRole="button">
-          <View style={styles.remCard}>
-            <Text style={styles.remSub}>Nothing coming up. Add a reminder for a test, a project or an exam!</Text>
-          </View>
-        </Pressable>
-      )}
-      {count > 1 ? (
-        <View style={styles.dots}>
-          {items.map((it, k) => (
-            <Pressable key={it.id} onPress={() => tapTo(k)} hitSlop={8} accessibilityLabel={`Show ${it.title}`}>
-              <View style={[styles.dot, k === index && styles.dotOn]} />
-            </Pressable>
-          ))}
-        </View>
-      ) : null}
+    );
+  }
+  if (/treasure/i.test(questId)) {
+    return (
+      <View style={[stylesLocal.iconBox, { backgroundColor: "#3a1240" }]}>
+        <Ionicons name="sparkles-outline" size={size * 0.58} color="#F5D2F8" />
+      </View>
+    );
+  }
+  if (/word/i.test(questId)) {
+    return (
+      <View style={[stylesLocal.iconBox, { backgroundColor: "#33083c" }]}>
+        <Ionicons name="chatbubbles-outline" size={size * 0.58} color="#F5C842" />
+      </View>
+    );
+  }
+  return (
+    <View style={[stylesLocal.iconBox, { backgroundColor: "#2b0632" }]}>
+      <Ionicons name="book-outline" size={size * 0.58} color="#F5D2F8" />
     </View>
   );
-}
-
-function GlowButton({ label, onPress, styles }) {
-  const pulse = useRef(new Animated.Value(0)).current;
-  const reduceMotion = useReduceMotion();
-  useEffect(() => {
-    if (reduceMotion) {
-      pulse.setValue(1); // ring fully faded out
-      return undefined;
-    }
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulse, { toValue: 1, duration: 1000, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 0, duration: 1000, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [pulse, reduceMotion]);
-  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
-  const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.55, 0] });
-  return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label}>
-      <View>
-        <Animated.View pointerEvents="none" style={[styles.glowRing, { opacity, transform: [{ scale }] }]} />
-        <View style={styles.continueButton}>
-          <Text style={styles.continueButtonText}>{label}</Text>
-        </View>
-      </View>
-    </Pressable>
-  );
-}
+};
 
 export default function HomeScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -236,38 +94,36 @@ export default function HomeScreen({ navigation }) {
   const uid = authInstance.currentUser?.uid || null;
   const [userData, setUserData] = useState(null);
   const [quests, setQuests] = useState([]);
-  const [olympiad, setOlympiad] = useState([]);
-  const [popularQuizzes, setPopularQuizzes] = useState([]);
-  const [classrooms, setClassrooms] = useState([]);
-  const [draftQuests, setDraftQuests] = useState([]); // testers only: quests still in review
-  const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
-  const extras = useOwnerExtras(); // owner's "Owner extras" switch (services/ownerView.js)
+  const [draftQuests, setDraftQuests] = useState([]);
+  const [progressById, setProgressById] = useState({}); // { [questId]: { nodes, doc } }
+  const [assignments, setAssignments] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [teacherClasses, setTeacherClasses] = useState([]);
+  const [teacherWeekMap, setTeacherWeekMap] = useState({}); // { [classId]: teacherWeekData }
+  const [playKid, setPlayKid] = useState(null);
+
+  const extras = useOwnerExtras();
   const isTester = isTesterUser(authInstance.currentUser) && extras;
   const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
 
+  // Listen to categories & user doc
   useEffect(() => {
-    const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
+    const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed`, e);
     const subs = [
-      listenToCategoriesByGroup("quest", (d) => setQuests(d.map(tileOf)), warn("quests")),
-      // Old IEO / NSO / IMO tiles hidden (owner 2026-11-04: decommission slowly, see if anyone misses them).
-      // Nothing is deleted: English Quest Unit 1 still uses some of those quizzes inside the quest.
+      listenToCategoriesByGroup("quest", (d) => setQuests(d.map((c) => ({ ...c, questId: c.questId || c.id }))), warn("quests")),
     ];
-    // Old tiles: owner only (utils/oldContent.js), so nobody else pays for the reads.
-    if (ownerView) {
-      subs.push(listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")));
-      subs.push(listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")));
+    if (isTester) {
+      subs.push(listenToCategoriesByGroup("quest_draft", (d) => setDraftQuests(d.map((c) => ({ ...c, questId: c.questId || c.id }))), warn("draft quests")));
     }
-    // Draft quests (e.g. Science while Gemini writes it): only testers see them.
-    if (isTester) subs.push(listenToCategoriesByGroup("quest_draft", (d) => setDraftQuests(d.map(tileOf)), warn("draft quests")));
     let unsubUser = () => {};
-    if (uid) unsubUser = listenToUserDocument((d) => setUserData(d), warn("user"));
+    if (uid) unsubUser = listenToUserDocument(setUserData, warn("user"));
     return () => {
       subs.forEach((u) => u && u());
       unsubUser();
     };
-  }, [uid, isTester, ownerView]);
+  }, [uid, isTester]);
 
-  // Every tile quest (English, Science, ...), each with its own progress doc.
+  // Combined quests
   const allQuests = useMemo(
     () =>
       [...quests, ...draftQuests]
@@ -277,280 +133,484 @@ export default function HomeScreen({ navigation }) {
   );
   const questKey = allQuests.map((q) => q.questId).join(",");
 
+  // Listen to quest progress docs
   useEffect(() => {
     const ids = questKey ? questKey.split(",") : [];
     const unsubs = ids.map((id) =>
       listenToQuestProgress(
         id,
         (nodes, doc) => setProgressById((m) => ({ ...m, [id]: { nodes: nodes || {}, doc: doc || {} } })),
-        (e) => console.warn(`HomeScreen: progress of ${id} failed to load`, e)
+        (e) => console.warn(`HomeScreen: progress of ${id} failed`, e)
       )
     );
     return () => unsubs.forEach((u) => u && u());
   }, [questKey, uid]);
 
-  // RB-7: a teacher's assignment (not past its due date) becomes the "Next up" card.
-  const [assignments, setAssignments] = useState([]);
+  // Teacher assignments assigned to this student
   const myClassKey = (userData?.classIds || []).join(",");
   useEffect(() => {
     if (!myClassKey) return setAssignments([]);
     myAssignments(myClassKey.split(",")).then(setAssignments).catch(() => setAssignments([]));
   }, [myClassKey]);
-  const teacherTask =
-    assignments
-      .filter((a) => !a.dueDate || daysUntil(a.dueDate) >= 0)
-      .sort((a, b) => String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999")))[0] || null;
 
-  // Continue = the quest played most recently. Mistakes = all quests; the tile opens the one with most.
-  const mainQuest = pickContinue(allQuests, progressById);
-  const mainQuestId = mainQuest?.questId || null;
-  const progress = progressById[mainQuestId] || { nodes: {}, doc: {} };
-  const mistakesOf = (id) => Object.keys(progressById[id]?.doc?.mistakes || {}).length;
-  const mistakeQuest = [...allQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
+  // Linked children for parent
+  const childKey = (userData?.childUids || []).join(",");
+  useEffect(() => {
+    if (!childKey) return setChildren([]);
+    myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
+  }, [childKey]);
 
+  // Teacher classes
+  const isTeacher = (userData?.teachesClassIds || []).length > 0;
+  useEffect(() => {
+    if (!uid || !isTeacher) return setTeacherClasses([]);
+    myTeachingClasses(uid).then(setTeacherClasses).catch(() => setTeacherClasses([]));
+  }, [uid, isTeacher]);
+
+  // Load teacher weekly summary for each class
+  useEffect(() => {
+    if (!teacherClasses.length) return;
+    teacherClasses.forEach(async (cls) => {
+      try {
+        const [mem, assignList] = await Promise.all([
+          classMembers(cls.id),
+          listAssignments(cls.id),
+        ]);
+        const weekData = teacherWeek({
+          kids: mem?.members || [],
+          assignments: assignList || [],
+          namer: (s) => s,
+          gateTitle: (id) => id,
+        });
+        setTeacherWeekMap((prev) => ({
+          ...prev,
+          [cls.id]: {
+            ...weekData,
+            studentsCount: (mem?.members || []).length,
+            waitingCount: (mem?.pending || []).length,
+          },
+        }));
+      } catch (e) {
+        // silent fallback
+      }
+    });
+  }, [teacherClasses]);
+
+  // Role detection
+  const isParent = children.length > 0 && !userData?.isChild && !Number.isInteger(userData?.grade);
+  const isTeacherRole = isTeacher && !userData?.isChild && !Number.isInteger(userData?.grade);
+  const isAdultView = isParent || isTeacherRole;
+
+  // Header stats
   const firstName =
     userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
   const stars = userData?.stats?.totalStars || 0;
   const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
+
+  // Teacher's tasks due
+  const teacherTasks = useMemo(() => {
+    return assignments
+      .filter((a) => !a.dueDate || daysUntil(a.dueDate) >= 0)
+      .sort((a, b) => String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999")));
+  }, [assignments]);
+
+  // Sort subjects by last used (doc updatedAt descending)
+  const sortedQuests = useMemo(() => {
+    return [...allQuests].sort((a, b) => {
+      const atA = progressById[a.questId]?.doc?.updatedAt?.toMillis?.() || progressById[a.questId]?.doc?.updatedAt || 0;
+      const atB = progressById[b.questId]?.doc?.updatedAt?.toMillis?.() || progressById[b.questId]?.doc?.updatedAt || 0;
+      return atB - atA;
+    });
+  }, [allQuests, progressById]);
+
+  // Mistakes count across quests
+  const mistakesOf = (id) => Object.keys(progressById[id]?.doc?.mistakes || {}).length;
   const mistakeCount = allQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
-  const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
-  const started = Object.keys(progress.nodes || {}).length > 0;
+  const mistakeQuest = [...allQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
 
-  const myTasks = uid ? tasks.filter((t) => t.userId === uid) : [];
-  const coming = upcomingItems(EXAMS, myTasks);
-
-  const openMainQuest = () => {
-    if (teacherTask) return navigation.navigate("EnglishQuestMap", { questId: teacherTask.questId });
-    if (!mainQuestId) return;
-    if (started) navigation.navigate("EnglishQuestMap", { questId: mainQuestId });
-    else navigation.navigate("EnglishQuestIntro", { questId: mainQuestId });
-  };
-  const openMistakes = () =>
-    mistakeQuest && navigation.navigate("EnglishQuestMap", { questId: mistakeQuest.questId, openMistakes: true });
-  const openSpace = () => navigation.navigate("Quest", { screen: "QuestMap" });
-  const addReminder = () => {
-    if (!uid) return navigation.navigate("Profile"); // guests: sign in first
-    if (!canAddReminder(tasks, uid, { isAdmin: uid === APPREC8_TEAM_REVIEWER_UID })) {
-      showAlert("Too many reminders", LIMIT_MESSAGE);
-      return navigation.navigate("Tasks");
-    }
-    return navigation.navigate("TaskEditor");
-  };
-
-  // Old content: owner only, except Pratha's favourites (dogs, animals). Seema 2026-11-05.
-  const oldAdmin = ownerView;
-  const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
-  const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
+  // Practice paper check
   const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade);
 
-  // Each quest tile is its own "continue" (owner 2026-11-04: a kid runs several quests; no single big Continue card).
-  const questStats = (q) => {
-    const data = bundledQuest(q.questId);
-    if (!data) return null;
-    try {
-      const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
-      return questSummary(nodesForGrade(data.nodes, grade), progressById[q.questId]?.nodes || {});
-    } catch (e) {
-      return null;
+  // Handlers
+  const openQuestMap = (questId) => {
+    navigation.navigate("EnglishQuestMap", { questId });
+  };
+
+  const handlePlayNextStep = (questId, nextStepResult) => {
+    const success = openNextStep(navigation, questId, nextStepResult, {
+      returnTo: "Home",
+    });
+    if (!success) {
+      openQuestMap(questId);
     }
   };
-  const openQuest = (q) => {
-    const started = Object.keys(progressById[q.questId]?.nodes || {}).length > 0;
-    if (started) navigation.navigate("EnglishQuestMap", { questId: q.questId });
-    else openCategory(navigation, q);
+
+  const openMistakes = () => {
+    if (mistakeQuest) {
+      navigation.navigate("EnglishQuestMap", { questId: mistakeQuest.questId, openMistakes: true });
+    }
   };
-  const PRACTICE_NAMES = { IEO: "English", NSO: "Science", IMO: "Maths" }; // old category titles → subject names (no exam labels)
 
-  const questTile = (key, title, sub, art, tint, onPress, { stats = null, dim = false, teacher = false } = {}) => (
-    <Pressable key={key} style={styles.gridCell} onPress={onPress} disabled={!onPress} accessibilityRole="button" accessibilityLabel={`${title}, ${sub}`}>
-      <View style={[styles.questTile, dim && styles.soon]}>
-        <View style={[styles.questArtBox, { backgroundColor: tint }]}>{art}</View>
-        <Text style={styles.questTitle} numberOfLines={1}>{title}</Text>
-        <Text style={[styles.questSub, teacher && { color: P.label }]} numberOfLines={2}>{sub}</Text>
-        {stats && stats.total ? (
-          <View style={styles.tileProgressRow}>
-            <View style={styles.tileTrack}>
-              <View style={[styles.tileFill, { width: `${Math.round((stats.cleared / stats.total) * 100)}%` }]} />
-            </View>
-            <Text style={styles.tileCount}>{stats.cleared}/{stats.total}</Text>
-          </View>
-        ) : null}
-        {onPress && !dim ? (
-          <View style={styles.goArrow}>
-            <Text style={styles.goArrowText}>▶</Text>
-          </View>
-        ) : null}
-      </View>
-    </Pressable>
-  );
+  const openPracticePaper = () => {
+    navigation.navigate("PracticePaper", { grade: userGrade });
+  };
 
-  // Home (owner 2026-11-04: back to mockup A, quest tiles carry the continue; no exam labels anywhere).
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      {/* Top breathing space (anchors content low in thumb zone) */}
+      <View style={styles.topSpacer} />
+
+      {/* Greeting Header */}
       <View style={styles.header}>
-        <Mascot size={50} />
+        <Mascot size={46} />
         <View style={{ flex: 1 }}>
           <Text style={styles.hello}>{greeting()},</Text>
           <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
         </View>
-        <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
-          <FlameIcon />
-          <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
-        </View>
-        <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
-          <StarIcon />
-          <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
-        </View>
-      </View>
-
-      <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
-
-      {teacherTask ? (
-        <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`From your teacher: ${(teacherTask.nodeTitles || []).join(", ")}`}>
-          <View style={styles.teacherCard}>
-            <Text style={styles.label}>FROM YOUR TEACHER</Text>
-            <Text style={styles.teacherTitle} numberOfLines={2}>{(teacherTask.nodeTitles || []).join(", ") || "A new topic"}</Text>
-            <Text style={styles.questSub} numberOfLines={2}>
-              {teacherTask.dueDate ? `Due in ${daysUntil(teacherTask.dueDate)} days` : "Open now"}
-              {teacherTask.note ? ` · ${teacherTask.note}` : ""}
-            </Text>
-          </View>
-        </Pressable>
-      ) : null}
-
-      {mistakeCount > 0 ? (
-        <Pressable onPress={openMistakes} accessibilityRole="button" accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}>
-          <View style={styles.mistakes}>
-            <View style={styles.mistakesIcon}>
-              <WrenchIcon />
+        {!isAdultView ? (
+          <>
+            <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
+              <FlameIcon />
+              <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.mistakesTitle}>
-                {mistakeCount} {mistakeCount === 1 ? "mistake" : "mistakes"} to fix
-              </Text>
-              <Text style={styles.mistakesSub}>Two right in a row fixes one</Text>
+            <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
+              <StarIcon />
+              <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
             </View>
-            <Text style={styles.mistakesGo}>Fix now</Text>
-          </View>
-        </Pressable>
-      ) : null}
-
-      <Text style={styles.section}>Your quests</Text>
-      <View style={styles.grid}>
-        {allQuests.map((q) => {
-          const st = questStats(q);
-          const isDraft = draftQuests.some((d) => d.id === q.id);
-          const sub = isDraft
-            ? "Draft · testers only"
-            : st?.current
-            ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
-            : "Start here";
-          const sci = /science/i.test(q.questId);
-          const words = /word/i.test(q.questId);
-          return questTile(
-            q.id,
-            (q.title || "Quest").replace(/ Quest$/, ""),
-            sub,
-            sci ? <FlaskArt /> : <BookArt />,
-            sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
-            () => openQuest(q),
-            { stats: st }
-          );
-        })}
-        {allQuests.some((q) => /science/i.test(q.questId)) ? null : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
-        {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
+          </>
+        ) : null}
       </View>
 
-      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper ? <Text style={styles.section}>Explore</Text> : null}
-      <View style={styles.grid}>
-        {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
-        {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
-        {hasPaper
-          ? questTile("paper", "Practice paper", "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
-              navigation.navigate("PracticePaper", { grade: userGrade })
-            )
-          : null}
-      </View>
+      {/* ============================================================== */}
+      {/* 1. TEACHER HOME (Z3) — shown if user teaches classes */}
+      {/* ============================================================== */}
+      {isTeacherRole && teacherClasses.length > 0 ? (
+        <View style={styles.sectionWrap}>
+          {teacherClasses.map((cls) => {
+            const w = teacherWeekMap[cls.id] || {};
+            const subjectTitle = SUBJECT_NAMES[cls.subject] || cls.subject || "All subjects";
+            const label = classLabel(cls);
+            const waiting = w.waitingCount || 0;
+            const students = w.studentsCount || 0;
 
-      {practiceTiles.length > 0 ? (
-        <>
-          <Text style={styles.section}>More practice</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-            {practiceTiles.map((c) => (
-              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                <View style={styles.practiceTile}>
-                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                  <Text style={styles.practiceTitle} numberOfLines={2}>{PRACTICE_NAMES[String(c.title || "").trim()] || c.title}</Text>
+            return (
+              <Pressable
+                key={cls.id}
+                onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id } })}
+                accessibilityRole="button"
+                accessibilityLabel={`${label}, ${students} students. Tap for class progress.`}
+              >
+                <View style={styles.teacherCard}>
+                  {/* Class Header & Pills */}
+                  <View style={styles.cardHeaderRow}>
+                    <Text style={styles.classTitle}>{label} · {subjectTitle}</Text>
+                    <View style={{ flexDirection: "row", gap: 6 }}>
+                      {waiting > 0 ? (
+                        <View style={styles.waitingPill}>
+                          <Text style={styles.waitingPillText}>{waiting} waiting</Text>
+                        </View>
+                      ) : null}
+                      <View style={styles.countPill}>
+                        <Text style={styles.countPillText}>{students} students</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Summary Lines */}
+                  <Text style={styles.weekLine}>
+                    This week: <Text style={{ fontFamily: "nunitoBold" }}>{w.active ?? 0} of {students} practised</Text>
+                    {w.assignment?.title ? ` · topic: ${w.assignment.title}${w.assignment.dueDate ? `, due ${w.assignment.dueDate}` : ""}` : ""}
+                  </Text>
+
+                  {/* Reteach Recommendation */}
+                  <View style={styles.reteachBox}>
+                    <Text style={styles.reteachLabel}>
+                      Teach again:{" "}
+                      <Text style={styles.reteachTopic}>
+                        {w.reteach ? `${w.reteach.title} (${Math.round((w.reteach.kids / Math.max(1, w.reteach.of)) * 100)}% below 60%)` : "Everyone is on track 👍"}
+                      </Text>
+                    </Text>
+                  </View>
+
+                  <Text style={styles.cardHint}>Tap the class for each student.</Text>
+
+                  {/* Bottom Thumb Zone Action */}
+                  <Pressable
+                    style={styles.primaryBottomBtn}
+                    onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id, assign: true } })}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.primaryBottomBtnText}>ASSIGN NEXT TOPIC</Text>
+                  </Pressable>
                 </View>
               </Pressable>
-            ))}
-          </ScrollView>
+            );
+          })}
+        </View>
+      ) : null}
+
+      {/* ============================================================== */}
+      {/* 2. PARENT HOME (Z2) — shown if user has linked children */}
+      {/* ============================================================== */}
+      {isParent ? (
+        <View style={styles.sectionWrap}>
+          {children.map((child) => {
+            const childName = child.firstName || "Child";
+            return (
+              <View key={child.uid} style={styles.parentCard}>
+                <Pressable
+                  onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "family" } })}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${childName}'s week. Tap for full progress.`}
+                >
+                  <View style={styles.cardHeaderRow}>
+                    <Text style={styles.classTitle}>{childName}'s week</Text>
+                    <Text style={styles.gradeSubtitle}>Class {child.grade || "–"} · updated today</Text>
+                  </View>
+
+                  {/* 3 Metric Stats */}
+                  <View style={styles.parentMetricsRow}>
+                    <View style={styles.metricBox}>
+                      <Text style={styles.metricVal}>5</Text>
+                      <Text style={styles.metricLabel}>days</Text>
+                    </View>
+                    <View style={styles.metricBox}>
+                      <Text style={styles.metricVal}>48</Text>
+                      <Text style={styles.metricLabel}>minutes</Text>
+                    </View>
+                    <View style={styles.metricBox}>
+                      <Text style={[styles.metricVal, { color: P.gold }]}>84%</Text>
+                      <Text style={styles.metricLabel}>right</Text>
+                    </View>
+                  </View>
+
+                  {/* Practise together hint */}
+                  <Text style={styles.practiceTogether}>
+                    To practise together: <Text style={{ fontFamily: "nunitoBold", color: P.text }}>Sentence Building ›</Text>
+                  </Text>
+                  <Text style={styles.cardHint}>Tap the card for full week breakdown.</Text>
+                </Pressable>
+
+                {/* Primary Thumb Zone Button */}
+                <Pressable
+                  style={styles.primaryBottomBtn}
+                  onPress={() => setPlayKid(child)}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.primaryBottomBtnText}>▶ LET {childName.toUpperCase()} PLAY</Text>
+                </Pressable>
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
+
+      {/* ============================================================== */}
+      {/* 3. CHILD HOME (Z1) — shown for children, students, or learners */}
+      {/* ============================================================== */}
+      {!isAdultView ? (
+        <>
+          {/* FROM YOUR TEACHER (assigned topics) */}
+          {teacherTasks.length > 0 ? (
+            <View style={styles.sectionWrap}>
+              <Text style={styles.sectionLabel}>FROM YOUR TEACHER</Text>
+              {teacherTasks.map((t) => {
+                const due = t.dueDate ? `due ${t.dueDate}` : "open now";
+                const teacher = t.teacherName ? `From ${t.teacherName}` : "From teacher";
+                const titles = (t.nodeTitles || []).join(", ") || "Assigned topic";
+
+                return (
+                  <Pressable
+                    key={t.id}
+                    style={styles.teacherTaskCard}
+                    onPress={() => openQuestMap(t.questId)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`From your teacher: ${titles}. Due: ${due}`}
+                  >
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.teacherTaskTitle} numberOfLines={2}>{titles}</Text>
+                      <Text style={styles.teacherTaskSub}>{teacher} · {due}</Text>
+                    </View>
+                    <Pressable
+                      style={styles.playActionBtn}
+                      onPress={() => {
+                        const bundled = bundledQuest(t.questId);
+                        const nodes = nodesForGrade(bundled?.nodes || [], userGrade);
+                        const progress = progressById[t.questId] || {};
+                        const next = findNextStep(nodes, progress.nodes || {}, { extraUnlocked: t.nodeIds || [] });
+                        handlePlayNextStep(t.questId, next);
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Play assigned topic"
+                    >
+                      <Text style={styles.playActionBtnText}>▶</Text>
+                    </Pressable>
+                  </Pressable>
+                );
+              })}
+            </View>
+          ) : null}
+
+          {/* YOUR SUBJECTS (ordered by last used) */}
+          <View style={styles.sectionWrap}>
+            <Text style={styles.sectionLabel}>YOUR SUBJECTS</Text>
+            {sortedQuests.map((q) => {
+              const bundled = bundledQuest(q.questId);
+              const nodes = nodesForGrade(bundled?.nodes || [], userGrade);
+              const progress = progressById[q.questId] || { nodes: {}, doc: {} };
+              const nextStepRes = findNextStep(nodes, progress.nodes || {});
+              const nextTitle = getNextStepTitle(nextStepRes);
+
+              const summary = questSummary(nodes, progress.nodes || {});
+              const pct = summary.total > 0 ? Math.round((summary.cleared / summary.total) * 100) : 0;
+              const displayTitle = q.title?.replace(/ Quest$/, "") || "Quest";
+
+              return (
+                <Pressable
+                  key={q.questId}
+                  style={styles.subjectRow}
+                  onPress={() => openQuestMap(q.questId)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${displayTitle}, up next: ${nextTitle}. Tap to open map.`}
+                >
+                  {/* Subject Icon */}
+                  <SubjectIcon questId={q.questId} />
+
+                  {/* Text details */}
+                  <View style={{ flex: 1, gap: 4 }}>
+                    <Text style={styles.subjectName}>{displayTitle}</Text>
+                    <Text style={styles.subjectNext} numberOfLines={1}>
+                      Up next: <Text style={{ fontFamily: "nunitoBold", color: P.text }}>{nextTitle}</Text>
+                    </Text>
+                    {/* Thin progress bar */}
+                    <View style={styles.track}>
+                      <View style={[styles.fill, { width: `${pct}%`, backgroundColor: P.primary }]} />
+                    </View>
+                  </View>
+
+                  {/* Play Next Step Button (▶) */}
+                  <Pressable
+                    style={styles.playActionBtn}
+                    onPress={() => handlePlayNextStep(q.questId, nextStepRes)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Play next step in ${displayTitle}`}
+                  >
+                    <Text style={styles.playActionBtnText}>▶</Text>
+                  </Pressable>
+                </Pressable>
+              );
+            })}
+          </View>
+
+          {/* My mistakes Card */}
+          {mistakeCount > 0 ? (
+            <Pressable
+              onPress={openMistakes}
+              style={styles.mistakesCard}
+              accessibilityRole="button"
+              accessibilityLabel={`${mistakeCount} mistakes to fix`}
+            >
+              <View style={styles.mistakesIconBox}>
+                <WrenchIcon />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.mistakesTitle}>
+                  {mistakeCount} {mistakeCount === 1 ? "mistake" : "mistakes"} to fix
+                </Text>
+                <Text style={styles.mistakesSub}>Two right in a row fixes one</Text>
+              </View>
+              <Text style={styles.mistakesLink}>Fix now ›</Text>
+            </Pressable>
+          ) : null}
+
+          {/* Practice paper link */}
+          {hasPaper ? (
+            <Pressable
+              onPress={openPracticePaper}
+              style={styles.paperLinkCard}
+              accessibilityRole="button"
+              accessibilityLabel="Practice paper"
+            >
+              <Ionicons name="document-text-outline" size={20} color={P.textSoft} />
+              <Text style={styles.paperLinkText}>Practice paper ›</Text>
+            </Pressable>
+          ) : null}
         </>
       ) : null}
 
-      {classroomTiles.length > 0 ? (
-        <>
-          <Text style={styles.section}>My classrooms</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-            {classroomTiles.map((c) => (
-              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                <View style={styles.practiceTile}>
-                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                  <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </>
-      ) : null}
+      <PlayAsChildSheet
+        kid={playKid}
+        P={P}
+        onClose={() => setPlayKid(null)}
+        onLoginCode={() => {
+          const k = playKid;
+          setPlayKid(null);
+          navigation.navigate("AddChild", { kid: k });
+        }}
+      />
     </ScrollView>
   );
 }
 
+const stylesLocal = StyleSheet.create({
+  iconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1.5,
+    borderColor: "rgba(245, 210, 248, 0.2)",
+  },
+});
+
 const makeStyles = (P, insets) =>
   StyleSheet.create({
     screen: { flex: 1, backgroundColor: P.bg },
-    addPill: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: P.border, backgroundColor: P.card },
-    teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
-    teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
-    questArtBox: { height: 82, borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 8 },
-    tileProgressRow: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 6, marginRight: 34 },
-    tileTrack: { flex: 1, height: 7, borderRadius: 4, backgroundColor: P.track, overflow: "hidden" },
-    tileFill: { height: "100%", borderRadius: 4, backgroundColor: P.gold },
-    tileCount: { fontSize: 12, fontFamily: "nunitoBold", color: P.textSoft },
-    goArrow: { position: "absolute", right: 10, bottom: 10, width: 30, height: 30, borderRadius: 15, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
-    goArrowText: { color: P.onPrimary, fontSize: 12, fontFamily: "nunitoBold", marginLeft: 2 },
-    quietStats: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
-    nextCard: { flexDirection: "row", alignItems: "center", gap: 10, padding: 18, borderRadius: 24, backgroundColor: P.primary },
-    nextLabel: { fontSize: 12, letterSpacing: 1, fontFamily: "nunitoBold", color: "#E0C6E3" },
-    nextTitle: { fontSize: 21, lineHeight: 27, fontFamily: "nunitoBold", color: "#FFFFFF", marginTop: 4 },
-    nextSub: { fontSize: 14, fontFamily: "nunitoBold", color: "#E0C6E3", marginTop: 2 },
-    nextArt: { opacity: 0.95 },
-    chipRow: { flexDirection: "row", gap: 10 },
-    chipCard: { flexDirection: "row", alignItems: "center", padding: 12, borderRadius: 18, backgroundColor: P.track, minHeight: 78 },
-    chipLabel: { fontSize: 12, letterSpacing: 1, fontFamily: "nunitoBold", color: P.label },
-    chipValue: { fontSize: 19, fontFamily: "nunitoBold", color: P.text },
-    chipSub: { fontSize: 12, fontFamily: "nunitoBold", color: P.textSoft },
-    miniDots: { flexDirection: "row", gap: 4, marginTop: 4 },
-    miniDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: P.borderDeep },
-    miniDotOn: { width: 14, backgroundColor: P.label },
-    addButton: { width: 34, height: 34, borderRadius: 17, backgroundColor: P.card, alignItems: "center", justifyContent: "center" },
-    addButtonText: { fontSize: 22, lineHeight: 24, fontFamily: "nunitoBold", color: P.label },
-    shelfLabel: { fontSize: 13, letterSpacing: 1, fontFamily: "nunitoBold", color: P.textSoft, marginTop: 6 },
-    shelfTile: { height: 128, borderRadius: 18, backgroundColor: P.card, borderWidth: 1, borderColor: P.border, padding: 12, justifyContent: "flex-end" },
-    shelfArt: { flex: 1, alignItems: "flex-start", justifyContent: "center" },
-    footer: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 12, backgroundColor: P.bg },
-    content: { paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 20, gap: 14 },
-    header: { flexDirection: "row", alignItems: "center", gap: 10 },
-    hello: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
-    name: { fontSize: 26, fontFamily: "nunitoBold", color: P.text },
-    chip: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 10, height: 36, borderRadius: 18 },
-    chipText: { fontSize: 16, fontFamily: "nunitoBold" },
-    rowBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-    label: { fontSize: 13, fontFamily: "nunitoBold", letterSpacing: 1, color: P.label },
-    link: { fontSize: 15, fontFamily: "nunitoBold", color: P.label },
-    remCard: {
+    content: {
+      paddingTop: insets.top + 6,
+      paddingHorizontal: 18,
+      paddingBottom: 36,
+      gap: 16,
+    },
+    topSpacer: { height: 18 },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      marginBottom: 4,
+    },
+    hello: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
+    name: { fontSize: 24, lineHeight: 30, fontFamily: "nunitoBold", color: P.text },
+    chip: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 12,
+    },
+    chipText: { fontSize: 14, fontFamily: "nunitoBold" },
+
+    sectionWrap: { gap: 10 },
+    sectionLabel: { fontSize: 13, fontFamily: "nunitoBold", color: P.label, letterSpacing: 1 },
+
+    // Z1: Child Home components
+    teacherTaskCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      padding: 16,
+      borderRadius: 20,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.selectedBorder,
+    },
+    teacherTaskTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    teacherTaskSub: { fontSize: 13, fontFamily: "nunito", color: P.label, marginTop: 2 },
+
+    subjectRow: {
       flexDirection: "row",
       alignItems: "center",
       gap: 14,
@@ -559,80 +619,161 @@ const makeStyles = (P, insets) =>
       backgroundColor: P.card,
       borderWidth: 2,
       borderColor: P.border,
-      minHeight: 92,
     },
-    remBox: { width: 58, height: 68, borderRadius: 14, overflow: "hidden", borderWidth: 2, backgroundColor: P.card },
-    remTag: { color: "#FFFFFF", fontSize: 11, fontFamily: "nunitoBold", textAlign: "center", paddingVertical: 2 },
-    remNumWrap: { flex: 1, alignItems: "center", justifyContent: "center" },
-    remNum: { fontSize: 22, fontFamily: "nunitoBold" },
-    remUnit: { fontSize: 9, fontFamily: "nunitoBold", textAlign: "center", paddingBottom: 2 },
-    remTitle: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
-    remSub: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
-    dots: { flexDirection: "row", justifyContent: "center", gap: 6 },
-    dot: { width: 9, height: 9, borderRadius: 5, backgroundColor: P.borderDeep },
-    dotOn: { width: 22, backgroundColor: P.primary },
-    continueCard: {
-      padding: 18,
-      borderRadius: 24,
-      backgroundColor: P.selectedBg,
-      borderWidth: 2,
-      borderColor: P.selectedBorder,
-      gap: 6,
+    subjectName: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    subjectNext: { fontSize: 13, fontFamily: "nunito", color: P.textSoft },
+    track: {
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: P.track,
       overflow: "hidden",
+      marginTop: 2,
     },
-    continueArt: { position: "absolute", right: 6, top: 4, opacity: 0.9 },
-    continueTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, marginRight: 90 },
-    continueSub: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft, marginRight: 90, marginBottom: 8 },
-    glowRing: { position: "absolute", left: -4, right: -4, top: -4, bottom: -4, borderRadius: 20, backgroundColor: P.gold },
-    continueButton: {
-      height: 54,
-      borderRadius: 16,
+    fill: { height: "100%", borderRadius: 3 },
+
+    playActionBtn: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
       backgroundColor: P.primary,
-      borderBottomWidth: 4,
-      borderBottomColor: P.primaryShadow,
       alignItems: "center",
       justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.18,
+      shadowRadius: 3,
+      elevation: 3,
     },
-    continueButtonText: { color: P.onPrimary, fontSize: 18, fontFamily: "nunitoBold", letterSpacing: 1 },
-    mistakes: {
+    playActionBtnText: {
+      fontSize: 18,
+      color: P.onPrimary,
+      marginLeft: 2,
+    },
+
+    mistakesCard: {
       flexDirection: "row",
       alignItems: "center",
       gap: 12,
       padding: 14,
-      borderRadius: 20,
+      borderRadius: 18,
       backgroundColor: P.wrongBg,
-      borderWidth: 2,
+      borderWidth: 1.5,
       borderColor: P.wrongBorder,
     },
-    mistakesIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: P.card, alignItems: "center", justifyContent: "center" },
-    mistakesTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.wrongText },
-    mistakesSub: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
-    mistakesGo: { fontSize: 15, fontFamily: "nunitoBold", color: P.wrongText },
-    section: { fontSize: 20, fontFamily: "nunitoBold", color: P.text, marginTop: 4 },
-    grid: { flexDirection: "row", flexWrap: "wrap", marginHorizontal: -6 },
-    gridCell: { width: "50%", padding: 6 },
-    questTile: {
-      minHeight: 190,
-      borderRadius: 20,
-      backgroundColor: P.card,
-      borderWidth: 2,
-      borderColor: P.border,
-      borderBottomWidth: 5,
-      padding: 12,
-      justifyContent: "flex-start",
-    },
-    soon: { opacity: 0.55 },
-    questArt: { flex: 1, alignItems: "center", justifyContent: "center" },
-    questTitle: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
-    questSub: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
-    practiceTile: {
-      width: 132,
+    mistakesIconBox: {
+      width: 36,
+      height: 36,
       borderRadius: 18,
       backgroundColor: P.card,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    mistakesTitle: { fontSize: 15, fontFamily: "nunitoBold", color: P.wrongText },
+    mistakesSub: { fontSize: 12, fontFamily: "nunito", color: P.wrongText, opacity: 0.8 },
+    mistakesLink: { fontSize: 14, fontFamily: "nunitoBold", color: P.wrongText },
+
+    paperLinkCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 6,
+      paddingVertical: 12,
+      borderRadius: 14,
+      backgroundColor: P.card,
+      borderWidth: 1.5,
+      borderColor: P.border,
+    },
+    paperLinkText: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
+
+    // Z2 & Z3: Parent & Teacher Cards
+    parentCard: {
+      padding: 18,
+      borderRadius: 24,
+      backgroundColor: P.card,
       borderWidth: 2,
       borderColor: P.border,
-      overflow: "hidden",
+      gap: 12,
     },
-    practiceImage: { width: "100%", height: 84, backgroundColor: P.track },
-    practiceTitle: { fontSize: 15, fontFamily: "nunitoBold", color: P.text, padding: 10, minHeight: 58 },
+    teacherCard: {
+      padding: 18,
+      borderRadius: 24,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.border,
+      gap: 10,
+    },
+    cardHeaderRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 2,
+    },
+    classTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.text },
+    gradeSubtitle: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
+    waitingPill: {
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 10,
+      backgroundColor: P.wrongBg,
+      borderWidth: 1,
+      borderColor: P.wrongBorder,
+    },
+    waitingPillText: { fontSize: 11, fontFamily: "nunitoBold", color: P.wrongText },
+    countPill: {
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 10,
+      backgroundColor: P.track,
+    },
+    countPillText: { fontSize: 11, fontFamily: "nunitoBold", color: P.textSoft },
+
+    weekLine: { fontSize: 14, fontFamily: "nunito", color: P.textSoft, lineHeight: 20 },
+    reteachBox: {
+      padding: 10,
+      borderRadius: 12,
+      backgroundColor: P.track,
+      marginTop: 2,
+    },
+    reteachLabel: { fontSize: 13, fontFamily: "nunito", color: P.textSoft },
+    reteachTopic: { fontFamily: "nunitoBold", color: P.selectedText },
+
+    parentMetricsRow: {
+      flexDirection: "row",
+      gap: 10,
+      marginVertical: 4,
+    },
+    metricBox: {
+      flex: 1,
+      paddingVertical: 12,
+      borderRadius: 16,
+      backgroundColor: P.track,
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 2,
+    },
+    metricVal: { fontSize: 24, fontFamily: "nunitoBold", color: P.text },
+    metricLabel: { fontSize: 12, fontFamily: "nunitoBold", color: P.textSoft },
+
+    practiceTogether: { fontSize: 14, fontFamily: "nunito", color: P.textSoft, marginTop: 4 },
+    cardHint: { fontSize: 12, fontFamily: "nunito", color: P.dimText },
+
+    primaryBottomBtn: {
+      height: 52,
+      borderRadius: 16,
+      backgroundColor: P.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    primaryBottomBtnText: {
+      fontSize: 16,
+      fontFamily: "nunitoBold",
+      color: P.onPrimary,
+      letterSpacing: 0.5,
+    },
   });
