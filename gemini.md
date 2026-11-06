@@ -23,6 +23,15 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-06 (day): closed-testing push (Claude)
+- **Goal:** owner: "make app ready for closed testing soon"; plan = docs/LAUNCH_CHECKLIST.md "Road to closed testing" (C1–C11).
+- **Done:** published 3× (20.0.29 once, then 20.0.30): old content owner-only (dogs too), My notes (Admin tools: checklist,
+  testing, store listing), Me → Delete my account + delete a child profile. DR-16/17/18 live (G41). DR-19 "delete means
+  delete" (eraseUser): G42 found 7 issues, all fixed → G44 re-check + deploy. New policy pages (docs/policies/, waiting
+  for repo access: C1). Spec + mockup row X (parent consent), built on branch `feat/consent-gate` (waits for owner OK).
+  Store text + feature graphic drafts. 22 broken Space image links fixed (repo is `mohitcnsia/images`).
+- **How to test:** Admin tools → My notes → Testing (top sections).
+
 ## 2026-11-06 (night, owner: "keep building and documenting"): closer to closed testing (Claude)
 - **Goal:** everything Seema's pilot and the closed test need that Claude can build; owner + Seema test in the morning.
 - **Published (OTA):** guides (Me → Guides: admin "Set up a school", teacher "Start your class"; real screens + guide
@@ -73,7 +82,7 @@ the owner; G14/G11 parked).
 - **Before Seema's pilot / public release (owner 2026-11-05):** safety screens (mockup row P: "Need help?" + parent
   privacy / delete; waits for Seema's wording) · privacy policy page + "delete my account" web page for Play · crash
   reporting (none today). Tracked in docs/LAUNCH_CHECKLIST.md.
-- **Dog + animal exploration quests (owner 2026-11-06, soon):** the old dog quiz and Animal Kingdom are hidden for everyone
+- **Dog + animal exploration quests (owner 2026-11-06: later, after closed testing):** the old dog quiz and Animal Kingdom are hidden for everyone
   but the owner; they come back as exploration quests (Dog Squad plan in CODE_REVIEW.md, fact sheet docs/content/dogs-factsheet.md
   from G40: fix the homepage links and the "legally mandatory" line first). Pratha's favourites.
 - **Apprec8 Challenge / own olympiad (owner 2026-11-05, after the pilot):** month-long qualifier in the app + 1-hour Sunday final in the school hall. Needs server work for the final: questions released at start time, server marking, one attempt, time window, per-school results. Certificates, medals, free premium first; scholarships later. Winners shown as first name + initial, school, class; photo/full name only with a parent tick box. Spec: CODE_REVIEW.md product decision 10.
