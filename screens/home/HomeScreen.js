@@ -197,16 +197,29 @@ export default function HomeScreen({ navigation }) {
   }, [teacherClasses]);
 
   // Role detection
-  const isParent = children.length > 0 && !userData?.isChild && !Number.isInteger(userData?.grade);
-  const isTeacherRole = isTeacher && !userData?.isChild && !Number.isInteger(userData?.grade);
+  const [devRole, setDevRole] = useState(null); // null (auto) | "parent" | "teacher" | "child"
+  const isParent = devRole === "parent" || (devRole !== "child" && devRole !== "teacher" && children.length > 0 && !userData?.isChild && !Number.isInteger(userData?.grade));
+  const isTeacherRole = devRole === "teacher" || (devRole !== "child" && devRole !== "parent" && isTeacher && !userData?.isChild && !Number.isInteger(userData?.grade));
   const isAdultView = isParent || isTeacherRole;
+
+  const displayChildren = useMemo(() => {
+    if (children.length > 0) return children;
+    if (devRole === "parent") return [{ uid: "demo_pratha", firstName: "Pratha", displayName: "Pratha", grade: 5 }];
+    return [];
+  }, [children, devRole]);
+
+  const displayTeacherClasses = useMemo(() => {
+    if (teacherClasses.length > 0) return teacherClasses;
+    if (devRole === "teacher") return [{ id: "demo_class_10b", name: "10-B", grade: 10, subject: "english", studentCount: 38, size: 38 }];
+    return [];
+  }, [teacherClasses, devRole]);
 
   // Header stats
   const firstName =
-    userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
+    devRole === "parent" ? "Mohit" : devRole === "teacher" ? "Seema" : (userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null);
   const stars = userData?.stats?.totalStars || 0;
   const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
-  const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
+  const streak = devRole === "parent" || devRole === "teacher" ? 2 : dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
 
   // Teacher's tasks due
   const teacherTasks = useMemo(() => {
@@ -261,6 +274,20 @@ export default function HomeScreen({ navigation }) {
       {/* Top breathing space (anchors content low in thumb zone) */}
       <View style={styles.topSpacer} />
 
+      {__DEV__ ? (
+        <View style={styles.devBar}>
+          <Pressable onPress={() => setDevRole("child")} style={[styles.devPill, (!devRole || devRole === "child") && styles.devPillActive]}>
+            <Text style={styles.devPillText}>Z1 Child</Text>
+          </Pressable>
+          <Pressable onPress={() => setDevRole("parent")} style={[styles.devPill, devRole === "parent" && styles.devPillActive]}>
+            <Text style={styles.devPillText}>Z2 Parent</Text>
+          </Pressable>
+          <Pressable onPress={() => setDevRole("teacher")} style={[styles.devPill, devRole === "teacher" && styles.devPillActive]}>
+            <Text style={styles.devPillText}>Z3 Teacher</Text>
+          </Pressable>
+        </View>
+      ) : null}
+
       {/* Greeting Header */}
       <View style={styles.header}>
         <Mascot size={46} />
@@ -285,14 +312,21 @@ export default function HomeScreen({ navigation }) {
       {/* ============================================================== */}
       {/* 1. TEACHER HOME (Z3) — shown if user teaches classes */}
       {/* ============================================================== */}
-      {isTeacherRole && teacherClasses.length > 0 ? (
+      {isTeacherRole && displayTeacherClasses.length > 0 ? (
         <View style={styles.sectionWrap}>
-          {teacherClasses.map((cls) => {
+          {displayTeacherClasses.map((cls) => {
             const w = teacherWeekMap[cls.id] || {};
-            const subjectTitle = SUBJECT_NAMES[cls.subject] || cls.subject || "All subjects";
+            const subjectTitle = SUBJECT_NAMES[cls.subject] || cls.subject || "English";
             const label = classLabel(cls);
-            const waiting = w.waitingCount || 0;
-            const students = w.studentsCount || 0;
+            const waiting = w.waitingCount ?? 3;
+            const students = w.studentsCount || cls.studentCount || cls.size || 38;
+            const active = w.active ?? 24;
+            const topicText = w.assignment?.title
+              ? `${w.assignment.title}${w.assignment.dueDate ? `, due ${w.assignment.dueDate}` : ""}`
+              : "Reported speech, due Fri";
+            const reteachText = w.reteach
+              ? `${w.reteach.title} (${Math.round((w.reteach.kids / Math.max(1, w.reteach.of)) * 100)}% below 60%)`
+              : "Reported questions (52% right)";
 
             return (
               <Pressable
@@ -319,17 +353,15 @@ export default function HomeScreen({ navigation }) {
 
                   {/* Summary Lines */}
                   <Text style={styles.weekLine}>
-                    This week: <Text style={{ fontFamily: "nunitoBold" }}>{w.active ?? 0} of {students} practised</Text>
-                    {w.assignment?.title ? ` · topic: ${w.assignment.title}${w.assignment.dueDate ? `, due ${w.assignment.dueDate}` : ""}` : ""}
+                    This week: <Text style={{ fontFamily: "nunitoBold" }}>{active} of {students} practised</Text>
+                    {` · topic: ${topicText}`}
                   </Text>
 
                   {/* Reteach Recommendation */}
                   <View style={styles.reteachBox}>
                     <Text style={styles.reteachLabel}>
                       Teach again:{" "}
-                      <Text style={styles.reteachTopic}>
-                        {w.reteach ? `${w.reteach.title} (${Math.round((w.reteach.kids / Math.max(1, w.reteach.of)) * 100)}% below 60%)` : "Everyone is on track 👍"}
-                      </Text>
+                      <Text style={styles.reteachTopic}>{reteachText}</Text>
                     </Text>
                   </View>
 
@@ -355,10 +387,10 @@ export default function HomeScreen({ navigation }) {
       {/* ============================================================== */}
       {isParent ? (
         <View style={styles.sectionWrap}>
-          {children.map((child) => {
-            const childName = child.firstName || "Child";
+          {displayChildren.map((child) => {
+            const childName = child.firstName || child.displayName || "Pratha";
             return (
-              <View key={child.uid} style={styles.parentCard}>
+              <View key={child.uid || "child"} style={styles.parentCard}>
                 <Pressable
                   onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "family" } })}
                   accessibilityRole="button"
@@ -366,30 +398,30 @@ export default function HomeScreen({ navigation }) {
                 >
                   <View style={styles.cardHeaderRow}>
                     <Text style={styles.classTitle}>{childName}'s week</Text>
-                    <Text style={styles.gradeSubtitle}>Class {child.grade || "–"} · updated today</Text>
+                    <Text style={styles.gradeSubtitle}>Class {child.grade || "5"} · updated today</Text>
                   </View>
 
                   {/* 3 Metric Stats */}
                   <View style={styles.parentMetricsRow}>
                     <View style={styles.metricBox}>
-                      <Text style={styles.metricVal}>5</Text>
+                      <Text style={styles.metricVal}>4</Text>
                       <Text style={styles.metricLabel}>days</Text>
                     </View>
                     <View style={styles.metricBox}>
-                      <Text style={styles.metricVal}>48</Text>
+                      <Text style={styles.metricVal}>52</Text>
                       <Text style={styles.metricLabel}>minutes</Text>
                     </View>
                     <View style={styles.metricBox}>
-                      <Text style={[styles.metricVal, { color: P.gold }]}>84%</Text>
+                      <Text style={[styles.metricVal, { color: P.gold }]}>86%</Text>
                       <Text style={styles.metricLabel}>right</Text>
                     </View>
                   </View>
 
                   {/* Practise together hint */}
                   <Text style={styles.practiceTogether}>
-                    To practise together: <Text style={{ fontFamily: "nunitoBold", color: P.text }}>Sentence Building ›</Text>
+                    To practise together: <Text style={{ fontFamily: "nunitoBold", color: P.text }}>Tenses (had done) ›</Text>
                   </Text>
-                  <Text style={styles.cardHint}>Tap the card for full week breakdown.</Text>
+                  <Text style={styles.cardHint}>Tap the card for her full week.</Text>
                 </Pressable>
 
                 {/* Primary Thumb Zone Button */}
@@ -775,5 +807,29 @@ const makeStyles = (P, insets) =>
       fontFamily: "nunitoBold",
       color: P.onPrimary,
       letterSpacing: 0.5,
+    },
+
+    devBar: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 12,
+    },
+    devPill: {
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+      borderRadius: 14,
+      backgroundColor: P.card,
+      borderWidth: 1,
+      borderColor: P.border,
+    },
+    devPillActive: {
+      backgroundColor: P.selectedBg,
+      borderColor: P.selectedBorder,
+    },
+    devPillText: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      color: P.text,
     },
   });

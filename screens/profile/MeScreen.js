@@ -118,17 +118,21 @@ export default function MeScreen({ navigation, signoutHandler }) {
       );
   }, [uid]);
 
-  const name = nameOf(userData, auth);
+  const name = userData ? nameOf(userData, auth) : (__DEV__ ? "Seema" : "Me");
   const photo = userData?.photoURL || auth?.photoURL || null;
   const activeReminders = tasks.filter((t) => t.userId === uid && !t.completed).length;
   const version = Constants.expoConfig?.version || "";
 
-  const isTeacher = (userData?.teachesClassIds || []).length > 0;
-  const isParent = children.length > 0 || (userData?.childUids || []).length > 0;
+  const isTeacher = (userData?.teachesClassIds || []).length > 0 || (__DEV__ && !userData);
+  const isParent = children.length > 0 || (userData?.childUids || []).length > 0 || (__DEV__ && !userData);
   const isStudent = Number.isInteger(userData?.grade);
+
+  const displayClasses = myClasses.length > 0 ? myClasses : (__DEV__ && !userData ? [{ id: "demo_10b", name: "10-B" }] : []);
+  const displayChildren = children.length > 0 ? children : (__DEV__ && !userData ? [{ uid: "demo_pratha", firstName: "Pratha", displayName: "Pratha" }] : []);
 
   // Role subtitle for the profile card
   const roleSubtitle = useMemo(() => {
+    if (__DEV__ && !userData) return "Teacher · Parent";
     if (userData?.isChild || isStudent) {
       return userData?.grade ? `Class ${userData.grade}` : "Student";
     }
@@ -137,7 +141,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
     if (isParent) roles.push("Parent");
     if (roles.length > 0) return roles.join(" · ");
     return auth?.email || "";
-  }, [userData?.isChild, isStudent, userData?.grade, isTeacher, isParent, auth?.email]);
+  }, [userData?.isChild, isStudent, userData?.grade, isTeacher, isParent, auth?.email, userData]);
 
   const editProfile = () => {
     setMoreOpen(false);
@@ -187,16 +191,16 @@ export default function MeScreen({ navigation, signoutHandler }) {
       {/* Primary 3 rows (mockup Z4) */}
       <View style={styles.group}>
         {/* Row 2: My class (if teacher or student has classes, or allows quick tap) */}
-        {isTeacher || myClasses.length > 0 ? (
+        {isTeacher || displayClasses.length > 0 ? (
           <>
             <Row
               icon="school-outline"
               label="My class"
-              detail={myClasses.length > 0 ? `${classLabel(myClasses[0])} ›` : isTeacher ? "Classes ›" : "Join ›"}
+              detail={displayClasses.length > 0 ? classLabel(displayClasses[0]) : isTeacher ? "Classes" : "Join"}
               onPress={() => {
                 if (isTeacher) {
                   navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes" } });
-                } else if (myClasses.length > 0) {
+                } else if (displayClasses.length > 0) {
                   navigation.navigate("JoinClass");
                 } else {
                   navigation.navigate("JoinClass");
@@ -215,7 +219,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
             <Row
               icon="happy-outline"
               label="My children"
-              detail={children[0]?.firstName ? `${children[0].firstName} ›` : "Children ›"}
+              detail={displayChildren[0]?.firstName || displayChildren[0]?.displayName || "Children"}
               onPress={() => {
                 navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "family" } });
               }}
@@ -230,15 +234,14 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <Row
           icon="compass-outline"
           label="Guides"
-          detail="Learn by doing"
           onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild || isStudent })}
           styles={styles}
           P={P}
         />
+      </View>
 
-        <View style={styles.divider} />
-
-        {/* Row 5: More (reminders, messages, edit profile, delete account ›) */}
+      {/* Row 5: More card (mockup Z4) */}
+      <View style={styles.group}>
         <Row
           icon="ellipsis-horizontal-circle-outline"
           label="More"

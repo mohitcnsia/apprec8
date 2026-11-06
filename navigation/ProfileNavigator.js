@@ -63,7 +63,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
       screenOptions={defaultScreenOptionsConfig}
     >
       {/* Guest User Screens */}
-      {isGuest ? (
+      {isGuest && !__DEV__ ? (
         <Stack.Screen
           name="GuestProfile"
           options={{
