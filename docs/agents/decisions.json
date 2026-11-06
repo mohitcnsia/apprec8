@@ -220,5 +220,12 @@
     "ask": "Send it when: 1) Google approved and you pressed Publish, 2) Seema's class exists (you have the code), 3) Seema tried it with 2 test students. Tap YES when sent.",
     "details": "**Message (fill in the class code):**\n\n📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this **with a parent**, on the phone the student will use:\n\n1️⃣ Join the testers' group (use the Google account on that phone): https://groups.google.com/g/apprec8-testers → Join group\n\n2️⃣ Become a tester: https://play.google.com/apps/testing/com.mohitchilkoti.apprec8 → Become a tester\n\n3️⃣ Install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\n4️⃣ Open Apprec8 → Continue with Google → first name → Class 10.\n\n5️⃣ Me → Join a class → code ______ → the parent reads the short note (English or हिंदी), types their name, agrees.\n\nPlease stay in the group for at least 2 weeks. 🙏",
     "from": "claude"
+  },
+  {
+    "id": "task-owner-practice",
+    "title": "Task: master the app first (45 min, private)",
+    "ask": "Before the dry run with Seema: practise alone with the Demo School (nothing reaches real people). Tap YES when done, LATER for a reminder.",
+    "details": "5 short parts: 1) see it as everyone else (Owner extras Off + the Tour guide), 2) be a child (Play as a test child), 3) be a parent (demo.parent login), 4) be a teacher (demo.teacher login), 5) back to you.\n\nStep by step: **My notes → Master the app** (after the next update), or ask Claude to send the steps.",
+    "from": "claude"
   }
 ]

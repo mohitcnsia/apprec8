@@ -281,8 +281,14 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    parent → type this code"), **"I'm a teacher"** (→ Join as a teacher). Each choice opens the existing screen. Plain
    words, no jargon. A parent with children but no class sees a small "+ Add another child" under the child cards.
    A teacher with no class yet sees "Type your school's code" (→ Join as a teacher).
-7. Don't touch QuestMap/quiz screens, rules or functions. `npm test` passes; a Metro bundle builds.
-8. QA on the emulator with the tester account (child view) + Demo School logins (parent, teacher): screenshots of the
+7. **Guide card on Home (owner 2026-11-06, mockups docs/mockups/rowY/Y1–Y3):** after sign-up, everyone sees their own
+   guide as one calm card on Home (child: "Your first day · 1 of 4", parent: "For parents", teacher: "Start your
+   class", grown-up with nobody yet: the tour), with progress, › to open it and ✕ to close. It shows on **every open
+   until the guide is finished or ✕ is tapped**; after ✕, one green note "The guides are always in Me → Guides"
+   (Got it), shown once, then never again (AsyncStorage per uid). It sits above the subject rows / child cards, still
+   in the lower half. Reuse utils/guides.js state (guideState, loadGuideFacts).
+8. Don't touch QuestMap/quiz screens, rules or functions. `npm test` passes; a Metro bundle builds.
+9. QA on the emulator with the tester account (child view) + Demo School logins (parent, teacher): screenshots of the
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
