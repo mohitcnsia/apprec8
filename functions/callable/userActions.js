@@ -5,6 +5,7 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin"); // Keep admin for auth and other services
 const { region, runtimeOptions } = require("../common/config");
 const { countFeedbackWords } = require("../utils/helpers"); // Import specific helper
+const { eraseUser } = require("../utils/eraseUser");
 const { clampTopN, cachedResult } = require("../utils/serverCache");
 
 // Initialize Firestore from the admin SDK (once)
@@ -269,27 +270,10 @@ exports.requestAccountDeletion = functions
       );
     }
     const userId = context.auth.uid;
-    // Use modular `doc` to get a document reference
-    const userDocRef = doc(collection(firestore, "users"), userId);
     try {
-      const anonymizedData = {
-        email: `deleted_${userId.substring(0, 8)}@apprec8.example.com`,
-        firstName: "User",
-        lastName: "Deleted",
-        username: `deleted_user_${userId.substring(0, 8)}`,
-        displayName: "Deleted User",
-        photoURL: null,
-        phone: null,
-        accountStatus: "anonymized_by_user_request",
-        anonymizedAt: serverTimestamp(), // Use modular `serverTimestamp()`
-        profileLastSavedAt: serverTimestamp(), // Use modular `serverTimestamp()`
-        lastUpdatedAt: serverTimestamp(), // Use modular `serverTimestamp()`
-        // stats: deleteField(), // Example: To delete stats (requires importing `deleteField`)
-      };
-      // Use modular `updateDoc`
-      await updateDoc(userDocRef, anonymizedData);
-      await admin.auth().deleteUser(userId); // `admin.auth()` is already modular/top-level
-
+      // Everything goes: progress, answers, class lists, consent names, sign-in (functions/utils/eraseUser.js).
+      const res = await eraseUser(admin, userId);
+      console.log("requestAccountDeletion", JSON.stringify(res));
       return { success: true, message: "Account deleted successfully." };
     } catch (error) {
       console.error(`Error during account deletion for user ${userId}:`, error);

@@ -11,7 +11,7 @@ import Sheet from "../../components/common/Sheet";
 import { makeSchoolStyles, Chip, MainButton } from "../admin/schoolUi";
 import { DURATIONS, durationLabel } from "../../utils/playSession";
 import { startSession, endSession, lockAvailable } from "../../services/playSession";
-import { playAsChild } from "../../services/familyApi";
+import { playAsChild, deleteChild } from "../../services/familyApi";
 import { showAlert } from "../../services/dialog";
 
 export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
@@ -34,6 +34,26 @@ export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
     }
     setBusy(false);
   };
+
+  // Play and DPDP: a parent can delete a child profile they made, with all its progress (functions/utils/eraseUser.js).
+  const removeProfile = () =>
+    showAlert(`Delete ${name}'s profile?`, `${name}'s progress, answers, stars and class places are deleted for good. This can't be undone.`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          setBusy(true);
+          try {
+            await deleteChild(kid.uid);
+            onClose();
+          } catch (e) {
+            showAlert("Couldn't delete", e?.message || String(e));
+          }
+          setBusy(false);
+        },
+      },
+    ]);
 
   return (
     <Sheet visible={!!kid} onClose={onClose} title={`Play as ${name}`} subtitle={kid?.grade ? `Class ${kid.grade}` : null} P={P}>
@@ -72,6 +92,9 @@ export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
       </Pressable>
       <Pressable onPress={onLoginCode} accessibilityRole="button" style={[styles.link, { justifyContent: "center" }]}>
         <Text style={[styles.dim, { textDecorationLine: "underline" }]}>{name} has another phone? Get a login code</Text>
+      </Pressable>
+      <Pressable onPress={removeProfile} disabled={busy} accessibilityRole="button" style={[styles.link, { justifyContent: "center" }]}>
+        <Text style={[styles.dim, { color: P.wrongText }]}>Delete {name}'s profile</Text>
       </Pressable>
     </Sheet>
   );

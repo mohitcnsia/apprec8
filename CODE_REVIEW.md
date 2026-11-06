@@ -2143,3 +2143,25 @@ internal testing, tests; then `feat/push-20.0.30` merges into `feat/quiz-redesig
 - DR-16 + DR-17 + DR-18 approved → Gemini G41 (12 functions, no rules).
 - New: Admin tools → **My notes** (owner only): LAUNCH_CHECKLIST + OWNER_TESTING in the app, folded sections, tickable boxes
   (ticks on the phone only). Bundled by `scripts/genOwnerNotes.mjs` before each publish; private emails removed. Not yet published.
+
+## 2026-11-06 — Privacy policy check + Review request + DR-19: delete means delete (Claude)
+Owner sent the policy pages (github.com/FailedCommit/app-policies, live at failedcommit.github.io/app-policies/…).
+**Findings (Play blockers):**
+1. The privacy policy says we collect **only an email** and that the app is **not for children under 13**. The app
+   collects names, classes, answers, progress, class lists, consent records, push tokens; it is for children. Google
+   checks the policy against the Data safety form and the target audience: this would be rejected.
+2. **No way to delete an account in the app:** the Me redesign (2026-11-04) dropped the row; `DeleteAccountConfirmation`
+   was unreachable. Play requires in-app deletion. No UI to delete a child profile either (`deleteChildProfile` unused).
+3. `requestAccountDeletion` only blanked name + email and deleted the sign-in; answers (`questAttempts`), progress,
+   class memberships (with the parent's name), consents, PINs stayed. `deleteChildProfile` left attempts + memberships.
+**Built (needs "publish" for the app part, DR-19 for the server part):**
+- `functions/utils/eraseUser.js` (+ `tests/eraseUser.test.mjs`, in-memory Firestore): user doc + subcollections,
+  questAttempts, class memberships / teacher places, parent PIN, codes, child profiles the parent made (own-login
+  children only unlinked; shared children unlinked), parents unlinked, consents kept without `parentName`, 🚩 report text
+  kept without name, Auth user. Used by `requestAccountDeletion` and `deleteChildProfile`.
+- Me → **Delete my account** (not on "Play as" child profiles); Play-as sheet → **Delete <name>'s profile** (confirm dialog).
+- `scripts/admin/eraseAccount.cjs <email> [--apply]` for emailed requests (look-up by default; refuses the owner's account).
+- New policy drafts: `docs/policies/privacy-policy.html`, `docs/policies/data-deletion-policy.html` (owner reviews; home
+  address left out on purpose, not required for a free app). Upload only after DR-19 is live (they promise full deletion).
+**DR-19 (owner OK, then Gemini):** `firebase deploy --only functions:requestAccountDeletion,functions:deleteChildProfile --project apprec8-ca229`.
+**Review asked (Gemini, before deploy):** anything per-user that eraseUser misses? Batch limits and the 60 s timeout for big accounts?

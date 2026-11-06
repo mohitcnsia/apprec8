@@ -164,6 +164,11 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             will be deleted, and your access will be revoked.
           </Text>
           <Text style={styles.infoText}>
+            Deleted: your progress, answers, stars, class memberships and sign-in. Child profiles you made are deleted
+            too; children with their own login keep their account. We keep only a record that consent was given
+            (without names).
+          </Text>
+          <Text style={styles.infoText}>
             To confirm, please type the exact phrase below:
           </Text>
           <Text

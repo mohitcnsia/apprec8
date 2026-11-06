@@ -273,6 +273,21 @@ export default function MeScreen({ navigation, signoutHandler }) {
       {typeof signoutHandler === "function" ? (
         <View style={styles.group}>
           <Row icon="log-out-outline" label="Sign out" onPress={() => setConfirmSignOut(true)} styles={styles} P={P} danger />
+          {/* Play and DPDP: everyone with their own login can delete their account in the app. A "Play as" child
+              profile can't: its parent removes it (Me → the child → Remove). */}
+          {!(userData?.isChild && !userData?.ownLogin) ? (
+            <>
+              <View style={styles.divider} />
+              <Row
+                icon="trash-outline"
+                label="Delete my account"
+                onPress={() => navigation.navigate("DeleteAccountConfirmation", { userEmail: authInstance.currentUser?.email || null })}
+                styles={styles}
+                P={P}
+                danger
+              />
+            </>
+          ) : null}
         </View>
       ) : null}
 

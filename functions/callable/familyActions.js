@@ -7,6 +7,7 @@ const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
 
 const db = admin.firestore();
+const { eraseUser } = require("../utils/eraseUser");
 const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 const CODE_HOURS = 48;
 const MAX_CHILDREN = 6;
@@ -125,9 +126,8 @@ exports.deleteChildProfile = functions
     }
     // A linked account has its own login and history: a parent can't delete it from here (decision 9).
     if (kidDoc.data().ownLogin) throw new functions.https.HttpsError("failed-precondition", "This child has their own account. They can delete it from their own Me tab.");
-    await db.recursiveDelete(db.collection("users").doc(kidUid));
-    await db.collection("users").doc(context.auth.uid).set({ childUids: admin.firestore.FieldValue.arrayRemove(kidUid) }, { merge: true });
-    await admin.auth().deleteUser(kidUid).catch(() => {});
+    // Everything goes: progress, answers, class lists, consent names, sign-in; the parent is unlinked (utils/eraseUser.js).
+    await eraseUser(admin, kidUid, { depth: 1 });
     return { ok: true };
   });
 
