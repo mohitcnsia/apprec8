@@ -23,7 +23,7 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 | C8 | App icon 512 px (the app icon) + feature graphic 1024×500 | Claude drafts, owner picks | — | drafts in docs/release/graphics/ |
 | C9 | Play Console → App content forms | Owner + Claude | ~45 min | done 2026-11-06: sign-in details = 3 demo logins; ages 6–18+; Data safety 6 types, nothing shared (2025 form said email was shared: fixed). Sent for review |
 | C10 | Google Group with 12+ testers who stay 14 days (family, Seema, pilot students) | Owner | — | todo |
-| C11 | Closed testing track | Owner | — | already live (Play dashboard: closed release published, 1 tester opted in). Next: 12 testers (C10) |
+| C11 | Closed testing track → 20.0.30 | Owner + Claude | — | 2026-11-06: 20.0.30 submitted for review on the closed track (was 19 = 1.0.0; an old 20.0.6 draft removed). **Managed publishing is on: after approval, Publishing overview → Publish.** |
 Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owner: later).
 
 ## ⏰ Owner, 2026-11-06 (reminders)
