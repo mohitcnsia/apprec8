@@ -234,7 +234,10 @@ start `--watch` again in the background. Commit `gemini(G47): done` with the dry
 Owner: "app-specific logos and images will give us much better control and feel". **His logo idea:** the 8 lies down
 as **∞**, and its **right loop breaks into small digital blocks that scatter into space** (infinite learning, digital).
 Rough sketch by Claude: `docs/release/graphics/feature-graphic-v4.png`; make it beautiful. He **dislikes green check
-circles**. Use your image generation. If you have none, commit
+circles**. **Warmth:** the current Play feature graphic (purple, illustrated Indian children: one with a heart, one with a
+book and medal, a brain icon; tagline **"Learn. Grow. Shine."**) is warmer than Claude's text-only drafts and the owner
+likes its feel. Keep that warmth (children + well-being + the tagline) in one consistent illustration style; avoid
+competition symbols like medals. Use your image generation. If you have none, commit
 `gemini(G48): blocked — no image tool` and stop.
 **Brand facts:** name "Apprec8", said "appreciate" (8 = "ate"). Learning + well-being for Classes 1–12 in India, for
 children, parents and teachers. Calm, warm, kid-friendly; never neon. Palette from the app: plum #3b0940, #85508a,

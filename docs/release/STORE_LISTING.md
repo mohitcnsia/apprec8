@@ -1,6 +1,6 @@
 # Play Store listing: draft (Claude, 2026-11-06)
 
-**Feature graphic (1024×500), draft:**
+**Feature graphic:** keep the current Play graphic (illustrated children, "Learn. Grow. Shine.") until Gemini's brand set (G48). Claude's draft, not used:
 
 ![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png)
 
