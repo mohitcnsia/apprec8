@@ -28,4 +28,13 @@ assert.equal(bubbleText({ name: "" }), "Hi! What's your name?");
 assert.equal(bubbleText({ name: "pratha" }), "Hi pratha! 👋");
 assert.equal(bubbleText({ name: "Pratha", grade: 5 }), "Class 5! Let's go, Pratha! 🚀");
 assert.equal(bubbleText({ name: "Seema", role: "teacher" }), "Hello, Seema! 🍎");
+// "College / grown-up" (spec X Q1): a grown-up with no class, never asked for a parent
+assert.equal(canSave({ name: "Asha", role: "learner" }), true);
+assert.equal(canSave({ name: "Asha", role: "student" }), false);
+assert.equal(bubbleText({ name: "Asha", role: "learner" }), "Welcome, Asha! 📚");
+assert.equal("grade" in firstRunUpdate({}, { name: "Asha", grade: 5, role: "learner" }, { stamp: 1, defaultAvatar: "a" }), false, "a grown-up learner has no class");
+{
+  const { needsParentConsent } = await import("../utils/consent.js");
+  assert.equal(needsParentConsent({ firstName: "Asha" }), false, "no class → no parent gate");
+}
 console.log("firstRun tests passed");

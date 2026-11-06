@@ -43,11 +43,15 @@ Tick items as you go. Details and expected results for each are in the named `CO
 
 ### ⭐ A parent says yes (row X, branch `feat/consent-gate`, after your OK + "publish"), ~10 min
 Use a new throwaway Google/email account (not yours: testers skip the gate).
-- [ ] Sign up → first name → tap a class → LET'S GO → **Ask a parent** screen; Home/Quest/Progress are not reachable.
+- [ ] Sign-in screen: "Welcome to Apprec8!" and **🔊 say it "appreciate"**. On the first open (new install) Chamak says
+  "Appreciate!" once by itself; tapping the line or Chamak says it again.
+- [ ] Sign up → first name → tap a class → LET'S GO → **Ask a parent or guardian** screen; Home/Quest/Progress are not reachable.
 - [ ] SEND TO MY PARENT → WhatsApp opens with the message (send it to yourself).
 - [ ] On your phone: Me → Link my child's own account → code. On the test phone: "I have the code" → type it → the app opens with "Your parent said yes! 🎉".
 - [ ] Another new account: "My teacher gave me a class code" → join with a class code → the app opens (waiting for the teacher).
 - [ ] First run, tap "I'm a parent" → YEAR YOU WERE BORN: decades, then years; a year under 18 → "pick your class above".
+- [ ] Another new account: first run → last chip **College / grown-up** → year of birth 18+ → LET'S GO → no gate; Home
+  shows every quest (no class). A year under 18 → "pick your class above".
 
 ### ⭐ My notes in the app (after the next "publish"), ~2 min
 - [ ] Me → Admin tools → **My notes**: two tabs, Launch checklist and Testing. Sections are folded; tap to open.

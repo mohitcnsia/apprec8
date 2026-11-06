@@ -17,7 +17,10 @@ export const cleanName = (name = "") =>
     .trim()
     .slice(0, 24);
 
-export const canSave = ({ name, grade, role }) => cleanName(name).length >= 1 && (Number.isInteger(grade) || role === "parent" || role === "teacher");
+/** Grown-ups have no class: parents, teachers and grown-ups who learn themselves ("College / grown-up", spec X Q1). */
+export const GROWN_UP_ROLES = ["parent", "teacher", "learner"];
+
+export const canSave = ({ name, grade, role }) => cleanName(name).length >= 1 && (Number.isInteger(grade) || GROWN_UP_ROLES.includes(role));
 
 /**
  * Fields for users/{uid}.update(). `stamp` = the server timestamp value. The class is set once (rules), so it's only sent
@@ -40,6 +43,7 @@ export function bubbleText({ name, grade, role }) {
   const n = cleanName(name).split(" ")[0];
   if (role === "parent") return n ? `Welcome, ${n}! 👋` : "Welcome! 👋";
   if (role === "teacher") return n ? `Hello, ${n}! 🍎` : "Hello, teacher! 🍎";
+  if (role === "learner") return n ? `Welcome, ${n}! 📚` : "Welcome! 📚";
   if (n && Number.isInteger(grade)) return `Class ${grade}! Let's go, ${n}! 🚀`;
   if (n) return `Hi ${n}! 👋`;
   return "Hi! What's your name?";

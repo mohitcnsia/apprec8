@@ -27,7 +27,7 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
 
   const [name, setName] = useState(userDoc?.firstName || "");
   const [grade, setGrade] = useState(Number.isInteger(userDoc?.grade) ? userDoc.grade : null);
-  const [role, setRole] = useState(null); // null (child) | "parent" | "teacher"
+  const [role, setRole] = useState(null); // null (child) | "parent" | "teacher" | "learner" (College / grown-up)
   // Grown-ups give a year of birth (mockup X1: a neutral age screen, Google Families policy). Checked, never stored.
   const [decade, setDecade] = useState(null);
   const [year, setYear] = useState(null);
@@ -117,6 +117,7 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
                   setRole(null);
                 })
               )}
+              {gradeFixed ? null : chip("College / grown-up", role === "learner", () => pickRole("learner"))}
             </View>
             <View style={s.chips}>
               {chip("I'm a parent", role === "parent", () => pickRole("parent"))}

@@ -27,4 +27,5 @@ const m = parentAskMessage("Pratha Chilkoti");
 assert.ok(m.startsWith("Pratha wants to learn on Apprec8"));
 assert.ok(m.includes("Me → Link my child's own account") && m.includes("Send Pratha the 6-number code"));
 assert.ok(!m.includes("Chilkoti"), "first name only");
+assert.ok(parentAskMessage("Pratha").includes("parent or guardian"), "a guardian can say yes too");
 console.log("consent tests passed");

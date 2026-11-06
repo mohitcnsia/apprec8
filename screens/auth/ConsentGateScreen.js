@@ -53,12 +53,12 @@ function ConsentGateScreen({ navigation, firstName, signoutHandler }) {
       <ScrollView contentContainerStyle={[styles.content, { flexGrow: 1, justifyContent: "flex-end" }]}>
         <View style={styles.bubble}>
           <Text style={styles.bubbleText}>
-            {`Hi${name ? ` ${name}` : ""}! One more step: a grown-up in your family says yes. Then your stars and progress are saved. ⭐`}
+            {`Hi${name ? ` ${name}` : ""}! One more step: a parent or the grown-up who looks after you says yes. Then your stars and progress are saved. ⭐`}
           </Text>
         </View>
-        <Text style={styles.h1}>Ask a parent</Text>
-        {way("👪", "My parent will link me", "Your parent opens Apprec8 on their phone and gets a 6-number code. You type it here.", send, true)}
-        {way("🏫", "My teacher gave me a class code", "Your parent fills in the form with you, and your teacher lets you in.", () => navigation.navigate("JoinClass"))}
+        <Text style={styles.h1}>Ask a parent or guardian</Text>
+        {way("👪", "My parent or guardian will link me", "They open Apprec8 on their own phone and get a 6-number code. You type it here.", send, true)}
+        {way("🏫", "My teacher gave me a class code", "Your parent or guardian fills in the form with you, and your teacher lets you in.", () => navigation.navigate("JoinClass"))}
         <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
           {small("I have the code", () => navigation.navigate("LinkParent"))}
           {small("Need help?", () => setHelpOpen(true))}

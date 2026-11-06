@@ -71,12 +71,13 @@ function Sparkles({ burst, color }) {
   ));
 }
 
-function useTapCheer(still) {
+function useTapCheer(still, onTap) {
   const [mood, setMood] = useState("happy");
   const burst = useRef(new Animated.Value(0)).current;
   const timer = useRef(null);
   useEffect(() => () => clearTimeout(timer.current), []);
   const tap = () => {
+    onTap?.();
     setMood("cheer");
     burst.setValue(0);
     if (!still) Animated.timing(burst, { toValue: 1, duration: 900, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
@@ -86,11 +87,11 @@ function useTapCheer(still) {
   return { mood, burst, tap };
 }
 
-function SkyScene({ isDark, still }) {
+function SkyScene({ isDark, still, onTap }) {
   const starColor = isDark ? "#CFC3D1" : "#B48BBA";
   const orbit = useRef(new Animated.Value(0)).current;
   const shoot = useRef(new Animated.Value(0)).current;
-  const { mood, burst, tap } = useTapCheer(still);
+  const { mood, burst, tap } = useTapCheer(still, onTap);
   useEffect(() => {
     if (still) return undefined;
     const o = Animated.loop(Animated.timing(orbit, { toValue: 1, duration: 9000, easing: Easing.linear, useNativeDriver: true }));
@@ -232,13 +233,14 @@ function HelloScene({ isDark, still, bubble }) {
  * @param {"sky"|"grow"|"hello"} variant
  * @param {boolean} isDark
  * @param {string} [bubble] - "hello" only: what Chamak says
+ * @param {Function} [onTap] - "sky" only: also called when Chamak is tapped (says "Appreciate!")
  */
-export default function HeroScene({ variant = "sky", isDark, bubble = "" }) {
+export default function HeroScene({ variant = "sky", isDark, bubble = "", onTap }) {
   const still = useReduceMotion();
   const scene = useMemo(() => variant, [variant]);
   if (scene === "grow") return <GrowScene isDark={isDark} still={still} />;
   if (scene === "hello") return <HelloScene isDark={isDark} still={still} bubble={bubble} />;
-  return <SkyScene isDark={isDark} still={still} />;
+  return <SkyScene isDark={isDark} still={still} onTap={onTap} />;
 }
 
 const styles = StyleSheet.create({

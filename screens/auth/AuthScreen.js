@@ -8,10 +8,14 @@ import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleS
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Speech from "expo-speech";
 import HeroScene from "../../components/auth/HeroScene";
 import Sheet from "../../components/common/Sheet";
 import { signInWithChildCode } from "../../services/familyApi";
 import { looksLikeEmail, MIN_PASSWORD } from "../../utils/authErrors";
+
+const NAME_SAID_KEY = "appNameSaid:v1";
 
 export default function AuthScreen({
   externalError,
@@ -39,6 +43,25 @@ export default function AuthScreen({
   const [childBusy, setChildBusy] = useState(false);
   const [childError, setChildError] = useState("");
   const [keyboard, setKeyboard] = useState(false);
+
+  // People read "Apprec8" as "app-rec-eight" (owner, 2026-11-06): Chamak says the name once on the first open, and
+  // again when the name line or Chamak is tapped.
+  const sayName = () => {
+    Speech.stop();
+    Speech.speak("Appreciate!", { language: "en-IN", rate: 0.9 });
+  };
+  useEffect(() => {
+    const t = setTimeout(() => {
+      AsyncStorage.getItem(NAME_SAID_KEY)
+        .then((v) => {
+          if (v) return;
+          sayName();
+          return AsyncStorage.setItem(NAME_SAID_KEY, "1");
+        })
+        .catch(() => {});
+    }, 900);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (externalError) setError(externalError);
@@ -107,7 +130,10 @@ export default function AuthScreen({
     mode === "choose" ? (
       <>
         <View>
-          <Text style={s.title}>Welcome!</Text>
+          <Text style={s.title}>Welcome to Apprec8!</Text>
+          <Pressable onPress={sayName} hitSlop={8} accessibilityRole="button" accessibilityLabel="Say the name: appreciate">
+            <Text style={s.sayIt}>🔊 say it "appreciate"</Text>
+          </Pressable>
           <Text style={s.sub}>Log in to keep your stars and streak.</Text>
         </View>
         {messages}
@@ -189,7 +215,7 @@ export default function AuthScreen({
     <KeyboardAvoidingView style={s.screen} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={s.scroll} keyboardShouldPersistTaps="handled" bounces={false}>
         {/* Empty top space: the friendly animation. Hidden while typing, so the form stays in view. */}
-        <View style={s.hero}>{keyboard ? null : <HeroScene variant={register ? "grow" : "sky"} isDark={isDark} />}</View>
+        <View style={s.hero}>{keyboard ? null : <HeroScene variant={register ? "grow" : "sky"} isDark={isDark} onTap={sayName} />}</View>
         <View style={s.block}>{content}</View>
       </ScrollView>
 
@@ -255,6 +281,7 @@ const makeStyles = (P, insets) =>
     block: { paddingHorizontal: 22, paddingBottom: Math.max(16, insets.bottom + 10), gap: 14 },
     title: { fontSize: 27, fontWeight: "900", color: P.text },
     sub: { fontSize: 15, lineHeight: 21, fontWeight: "700", color: P.textSoft, marginTop: 2 },
+    sayIt: { fontSize: 15, fontWeight: "800", color: P.selectedText, marginTop: 4, marginBottom: 2 },
     fieldLabel: { fontSize: 13, fontWeight: "800", letterSpacing: 0.5, color: P.textSoft },
     input: { height: 56, borderRadius: 16, borderWidth: 2, borderColor: P.border, backgroundColor: P.card, paddingHorizontal: 16, fontSize: 18, fontWeight: "700", color: P.text },
     eye: { position: "absolute", right: 8, top: 6, width: 44, height: 44, alignItems: "center", justifyContent: "center" },

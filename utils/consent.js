@@ -34,7 +34,7 @@ export function parentAskMessage(name, link = "https://play.google.com/store/app
   return [
     `${n} wants to learn on Apprec8 (English and Science practice; free, no ads).`,
     "",
-    "To say yes:",
+    "To say yes (a parent or guardian):",
     `1. Install Apprec8: ${link}`,
     "2. Sign in with your own account → Me → Link my child's own account",
     `3. Send ${n} the 6-number code.`,
