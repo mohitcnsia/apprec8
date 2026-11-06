@@ -292,6 +292,13 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
+### G53 · [todo] · gemini · Logo fix: the ∞ as the last letter (after G49)
+Claude's review of G48: subject icons and app icon good. The 3 directions are too similar, and the ∞ floats beside
+"apprec" / "appreci" (raised, with a gap) instead of being the word's last letter. Redo the **wordmark only**, both
+spellings: the ∞ sits on the baseline at x-height like a letter, same weight as the text, left loop solid, right loop
+breaking into pixel blocks that drift up-right. 2 variants: white on plum, plum on white. Output
+`docs/release/brand/wordmark-v2/` + `gemini(G53): done`.
+
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one

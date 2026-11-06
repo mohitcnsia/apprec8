@@ -227,5 +227,13 @@
     "ask": "Before the dry run with Seema: practise alone with the Demo School (nothing reaches real people). Tap YES when done, LATER for a reminder.",
     "details": "5 short parts: 1) see it as everyone else (Owner extras Off + the Tour guide), 2) be a child (Play as a test child), 3) be a parent (demo.parent login), 4) be a teacher (demo.teacher login), 5) back to you.\n\nStep by step: **My notes → Master the app** (after the next update), or ask Claude to send the steps.",
     "from": "claude"
+  },
+  {
+    "id": "brand-pick-1",
+    "title": "Gemini's logos: which direction?",
+    "ask": "3 sheets below. YES = go with Direction 1 (Cosmic Star: Chamak above a gold ∞ that breaks into pixels). NO = none yet. Type in the note which one you like, or what to change.",
+    "details": "**Claude's view:** the 7 subject icons are good (same in all 3). The app icon works. The 3 directions are very similar, and in the wordmark the ∞ floats beside the word instead of being its last letter; Gemini fixes that next.\n\n**1. Cosmic Star**\n\n![1](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg)\n\n**2. Infinite Bloom**\n\n![2](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-infinite-bloom.jpg)\n\n**3. Playful Geometric**\n\n![3](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-playful-geometric.jpg)",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg",
+    "from": "claude"
   }
 ]
