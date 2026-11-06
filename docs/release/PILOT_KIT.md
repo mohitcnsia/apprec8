@@ -2,7 +2,8 @@
 
 ## Before the first student day
 - [ ] **Re-seed English** (owner, 2 min): Me → Admin tools → Update English Quest. Grammar Pro is not on phones without it.
-- [ ] **Seema checks Grammar Pro 1–6** questions (accuracy first). Anything wrong: 🚩 on the question in the app.
+- [ ] **Seema, Mohit (and Pratha) check Grammar Pro 1–6** while Google reviews: on Mohit's phone (his account opens
+  every unit). Anything wrong or unclear: 🚩 on the question.
 - [ ] **Google approves the closed test** (20.0.30) → owner: Play Console → Publishing overview → **Publish**.
 - [ ] **Dry run (30 min, owner + Seema):**
   - Owner: Me → Guides → **Set up a school**: create the school, a class (e.g. 10-B, Class 10, English), invite Seema.
@@ -10,7 +11,9 @@
   - Seema: Me → Guides → **Start your class**: share the code with 2 test students (family phones), approve them,
     **assign a Grammar Pro topic** with a due date, see their progress.
   - Why assigning matters: a Class 10 student otherwise starts at the basic units; assigned topics open at once.
-- [ ] School's usual signed consent form for the 50 students (on top of the parent's yes in the app).
+- [ ] Consent is in the app (no paper form: owner 2026-11-06): the parent reads the note (English / हिंदी), types their
+  name, Mother / Father / Guardian, agrees; Seema approves only children she knows. Optional: a class WhatsApp group
+  where Seema sends a Hindi voice note and parents reply "हाँ".
 
 ## WhatsApp message for students and parents (Seema sends; fill in the class code and the opt-in link)
 > 📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this together, with a parent, on the phone the student will use:

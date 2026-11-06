@@ -80,5 +80,12 @@
     "ask": "3 things before students join: Seema checks Grammar Pro questions, a 30-minute dry run with her, the school's consent form. Tap YES when done, LATER for a reminder.",
     "details": "**Dry run (owner + Seema):** you: Me → Guides → Set up a school (school, class 10-B, invite Seema). Seema: Join as a teacher → you approve → Me → Guides → Start your class with 2 test students → **assign a Grammar Pro topic** (Class 10 students otherwise start at the basics).\n\n**Students:** they join the testers' Google Group too, so they also count for Google's 12 testers (C10).\n\nThe WhatsApp message for students and parents is ready: My notes → Seema's pilot (after the next publish).",
     "from": "claude"
+  },
+  {
+    "id": "consent-listen-button",
+    "title": "🔊 Listen button on the parent's consent note?",
+    "ask": "Many parents can't read well. Add a 🔊 Listen button that reads the consent note aloud (हिंदी or English), on Join a class and Link my child?",
+    "details": "Uses the phone's voice, the same as the quiz read-aloud. No new data, no cost. One small button next to the note; the parent still types their name and ticks agree.\n\n**YES** = Claude builds it (small change) and asks before publishing. **NO** = leave as is.",
+    "from": "claude"
   }
 ]
