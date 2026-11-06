@@ -87,5 +87,13 @@
     "ask": "Many parents can't read well. Add a 🔊 Listen button that reads the consent note aloud (हिंदी or English), on Join a class and Link my child?",
     "details": "Uses the phone's voice, the same as the quiz read-aloud. No new data, no cost. One small button next to the note; the parent still types their name and ticks agree.\n\n**YES** = Claude builds it (small change) and asks before publishing. **NO** = leave as is.",
     "from": "claude"
+  },
+  {
+    "id": "seema-confusions",
+    "title": "What confuses Seema most?",
+    "ask": "Ask Seema for her 3 biggest confusions in the app, in her own words. Type them in the note, then tap YES.",
+    "details": "Before we build anything else, we fix what confuses her: if she finds it hard, every teacher will.\n\nHer one-page start (4 jobs, what to ignore, the legal part in plain words) is here; share it with her from the page's Share menu:\nhttps://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5\n\nThen 20 minutes together on the Demo School teacher login (made-up class, nothing reaches real children).",
+    "link": "https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5",
+    "from": "claude"
   }
 ]
