@@ -123,5 +123,12 @@
     "ask": "Type the 2–3 moments in the app that confused you or took too many taps (e.g. \"finding my mistakes\", \"where is Pratha's progress\"). Then tap YES.",
     "details": "These go first in the simplicity pass, together with Seema's.",
     "from": "claude"
+  },
+  {
+    "id": "publish-teacher-page",
+    "title": "Publish the teachers' page to phones now?",
+    "ask": "Ready: \"For teachers: start here\" (Me → Guides, and Admin tools) with a SHARE button for WhatsApp, the show/hide eye on the Demo password, and new My notes tabs (Play forms, Seema's pilot). Publish to everyone on 20.0.30?",
+    "details": "Nothing changes for children. Grown-ups see one more card at the top of Me → Guides. You see it in Admin tools too, to share it with Seema.\n\n**YES** = Claude publishes (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat). **LATER** = ask again tomorrow.",
+    "from": "claude"
   }
 ]

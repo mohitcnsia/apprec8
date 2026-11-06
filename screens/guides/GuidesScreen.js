@@ -41,6 +41,16 @@ export default function GuidesScreen({ route, navigation }) {
       <ScrollView contentContainerStyle={[styles.content, { flexGrow: 1, justifyContent: "flex-end" }]}>
         <Text style={styles.h1}>Guides</Text>
         <Text style={styles.soft}>Learn by doing. Each step opens the real screen and ticks itself when you finish.</Text>
+        {/* The teachers' one-pager (owner 2026-11-06): every grown-up sees it, so a teacher finds it before joining. */}
+        {!route.params?.isChild || isAdmin ? (
+          <Pressable onPress={() => navigation.navigate("TeacherStart")} accessibilityRole="button" style={[styles.card, { flexDirection: "row", alignItems: "center" }]}>
+            <Text style={{ fontSize: 30 }}>📄</Text>
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={styles.text}>For teachers: start here</Text>
+              <Text style={styles.small}>One page: your 4 jobs, the legal part in plain words. Share it on WhatsApp.</Text>
+            </View>
+          </Pressable>
+        ) : null}
         {states === null ? <ActivityIndicator color={P.label} /> : null}
         {guides.map((g) => {
           const st = states?.[g.id];

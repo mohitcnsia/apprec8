@@ -18,6 +18,7 @@ import DecisionsScreen from "../screens/admin/DecisionsScreen";
 import LinkChildScreen from "../screens/profile/LinkChildScreen";
 import LinkParentScreen from "../screens/profile/LinkParentScreen";
 import GuideScreen from "../screens/guides/GuideScreen";
+import TeacherStartScreen from "../screens/guides/TeacherStartScreen";
 import AddChildScreen from "../screens/profile/AddChildScreen";
 import ParentPinScreen from "../screens/profile/ParentPinScreen";
 import GuestProfileScreen from "../screens/profile/GuestProfileScreen"; // Adjust path
@@ -100,6 +101,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen name="AdminTools" component={AdminToolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OwnerNotes" component={OwnerNotesScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Decisions" component={DecisionsScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="TeacherStart" component={TeacherStartScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Schools" component={SchoolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ClassDetail" component={ClassDetailScreen} options={{ headerShown: false }} />
           <Stack.Screen name="InviteTeacher" component={InviteTeacherScreen} options={{ headerShown: false }} />
