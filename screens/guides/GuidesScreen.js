@@ -11,6 +11,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "../admin/schoolUi";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
+import { ownerExtrasOn } from "../../services/ownerView";
 import { guidesFor, guideState } from "../../utils/guides";
 import { loadGuideFacts } from "../../services/guideFacts";
 
@@ -20,7 +21,7 @@ export default function GuidesScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeSchoolStyles(P, insets), [P, insets]);
   const uid = authInstance.currentUser?.uid;
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID && ownerExtrasOn();
   const guides = guidesFor({ isAdmin, isChild: !!route.params?.isChild });
   const [states, setStates] = useState(null);
 

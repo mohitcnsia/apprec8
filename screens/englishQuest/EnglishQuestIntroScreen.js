@@ -24,7 +24,7 @@ import {
 } from "../../services/englishQuestApi";
 import { buildQuestPath } from "../../utils/questTree";
 import { getQuest, getQuestNodes } from "../../services/contentCache";
-import { isTesterUser } from "../../config/appConfig";
+import { isTesterView } from "../../services/ownerView";
 import { useTesterMode, setTesterMode } from "../../services/testerMode";
 import { resetMyQuestProgress } from "../../services/englishQuestApi";
 import { useTheme } from "../../context/ThemeContext";
@@ -45,7 +45,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   const { questId } = route.params || {};
   const insets = useSafeAreaInsets();
   const user = authInstance.currentUser;
-  const isTester = isTesterUser(user);
+  const isTester = isTesterView(user);
   const tester = useTesterMode();
 
   const [quest, setQuest] = useState(null);

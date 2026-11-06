@@ -24,7 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
-import { isTesterUser } from "../../config/appConfig";
+import { isTesterView } from "../../services/ownerView";
 import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
 import { buildWindow } from "../../utils/questWindow";
@@ -104,7 +104,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   // Tester mode (Spec A): only for tester accounts; view-only unlock + short quizzes.
   const testerSettings = useTesterMode();
-  const isTester = isTesterUser(authInstance.currentUser);
+  const isTester = isTesterView(authInstance.currentUser);
   const unlockAll = isTester && testerSettings.unlockAll;
   const shortQuizzes = isTester && testerSettings.shortQuizzes;
 

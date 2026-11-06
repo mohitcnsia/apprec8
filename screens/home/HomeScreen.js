@@ -27,6 +27,7 @@ import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
+import { useOwnerExtras } from "../../services/ownerView";
 import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 
@@ -240,7 +241,9 @@ export default function HomeScreen({ navigation }) {
   const [classrooms, setClassrooms] = useState([]);
   const [draftQuests, setDraftQuests] = useState([]); // testers only: quests still in review
   const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
-  const isTester = isTesterUser(authInstance.currentUser);
+  const extras = useOwnerExtras(); // owner's "Owner extras" switch (services/ownerView.js)
+  const isTester = isTesterUser(authInstance.currentUser) && extras;
+  const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
 
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
@@ -250,7 +253,7 @@ export default function HomeScreen({ navigation }) {
       // Nothing is deleted: English Quest Unit 1 still uses some of those quizzes inside the quest.
     ];
     // Old tiles: owner only (utils/oldContent.js), so nobody else pays for the reads.
-    if (uid === APPREC8_TEAM_REVIEWER_UID) {
+    if (ownerView) {
       subs.push(listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")));
       subs.push(listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")));
     }
@@ -262,7 +265,7 @@ export default function HomeScreen({ navigation }) {
       subs.forEach((u) => u && u());
       unsubUser();
     };
-  }, [uid, isTester]);
+  }, [uid, isTester, ownerView]);
 
   // Every tile quest (English, Science, ...), each with its own progress doc.
   const allQuests = useMemo(
@@ -336,7 +339,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   // Old content: owner only, except Pratha's favourites (dogs, animals). Seema 2026-11-05.
-  const oldAdmin = uid === APPREC8_TEAM_REVIEWER_UID;
+  const oldAdmin = ownerView;
   const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
   const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
   const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade);

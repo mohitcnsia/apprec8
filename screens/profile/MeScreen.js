@@ -24,6 +24,7 @@ import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 import { listenDecisions } from "../../services/decisionsApi";
+import { useOwnerExtras, setOwnerExtras } from "../../services/ownerView";
 import { inbox } from "../../utils/decisions";
 
 const THEMES = [
@@ -73,6 +74,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [playKid, setPlayKid] = useState(null); // "Play as" sheet (mockup N1)
   const [helpOpen, setHelpOpen] = useState(false); // "Need help?" (mockup P1–P2)
   const [decisionsWaiting, setDecisionsWaiting] = useState(0); // owner only (Me → Decisions)
+  const ownerExtras = useOwnerExtras(); // owner's "View as": off = see what other grown-ups see
   useEffect(() => (isAdmin ? listenDecisions((list) => setDecisionsWaiting(inbox(list).waiting.length)) : undefined), [isAdmin]);
   const childKey = (userData?.childUids || []).join(",");
   useEffect(() => {
@@ -281,6 +283,15 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <Text style={styles.section}>ADMIN</Text>
           <View style={styles.group}>
             <Row icon="checkmark-done-outline" label="Decisions" detail={decisionsWaiting ? String(decisionsWaiting) : null} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+            <View style={styles.divider} />
+            <Row
+              icon={ownerExtras ? "eye-outline" : "eye-off-outline"}
+              label="Owner extras"
+              detail={ownerExtras ? "On" : "Off: you see what others see"}
+              onPress={() => setOwnerExtras(!ownerExtras)}
+              styles={styles}
+              P={P}
+            />
             <View style={styles.divider} />
             <Row icon="construct-outline" label="Admin tools" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
           </View>

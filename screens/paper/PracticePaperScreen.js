@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
-import { isTesterUser } from "../../config/appConfig";
+import { isTesterView } from "../../services/ownerView";
 import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES } from "../../data/papers";
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
@@ -36,7 +36,7 @@ export default function PracticePaperScreen({ navigation, route }) {
   const s = useMemo(() => makeStyles(P, insets), [P, insets]);
 
   const grade = Number.isInteger(route?.params?.grade) ? route.params.grade : null;
-  const isTester = isTesterUser(authInstance.currentUser);
+  const isTester = isTesterView(authInstance.currentUser);
   const fixedPapers = useMemo(() => papersFor({ grade, isTester }), [grade, isTester]);
   const [history, setHistory] = useState([]);
   // Mix papers (data/papers/mix.js): a new one per subject after each finished one, built from quest questions.

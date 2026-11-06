@@ -15,9 +15,10 @@ import { THOUGHTS } from "../../data/thoughts";
 import { listenToCategoriesByGroup } from "../../services/firestoreContentApi";
 import { visibleOldTiles } from "../../utils/oldContent";
 import { authInstance } from "../../config/firebaseConfig";
+import { ownerExtrasOn } from "../../services/ownerView";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 
-const isOwner = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+const isOwner = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID && ownerExtrasOn();
 
 const tileOf = (c) => ({
   id: c.id,

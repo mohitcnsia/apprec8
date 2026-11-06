@@ -14,6 +14,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
+import { useOwnerExtras } from "../../services/ownerView";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS } from "../../data/quests";
@@ -54,12 +55,13 @@ export default function ProgressScreen({ navigation, route }) {
 
   const user = authInstance.currentUser;
   const uid = user?.uid || null;
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
+  const extras = useOwnerExtras();
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID && extras;
   const [view, setView] = useState("me");
   const [userData, setUserData] = useState(null);
   const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
   // Bundled quests (topic names + counts without extra reads). Drafts only for testers.
-  const quests = useMemo(() => QUESTS.filter((m) => !m.quest.draft || isTesterUser(user)), [uid]); // eslint-disable-line react-hooks/exhaustive-deps
+  const quests = useMemo(() => QUESTS.filter((m) => !m.quest.draft || (isTesterUser(user) && extras)), [uid, extras]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!uid) return undefined;
