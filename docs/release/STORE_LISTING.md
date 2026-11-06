@@ -18,7 +18,11 @@ Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.
 
 **Full description** (no emojis: owner 2026-11-06; the parent-yes line returns when learn first ships):
 
-Apprec8 (say it "appreciate") helps children learn a little every day, at their own pace: English and Science today, with Maths and reasoning coming next.
+Apprec8 (say it "appreciate") helps every child learn a little every day, at their own pace, with fun and care.
+
+Learn smarter. Think sharper. Feel better.
+
+English and Science today, with Maths and reasoning coming next.
 
 LEARN BY DOING
 • English Quest: grammar, words and reading, from first sentences to Class 10 grammar (tenses, modals, reported
