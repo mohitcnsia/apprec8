@@ -84,8 +84,9 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **todo (next)** | report only | |
-| G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | todo (after G39) | `gemini/g40-dog-facts` | |
+| G41 ⭐ Deploy DR-16 + DR-17 + DR-18 (owner OK 2026-11-06) | Gemini | **todo (next)** | from Claude's folder | |
+| G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **done** (20 pass; Claude: a code read, not a device run: no screenshots. Next QA tasks must attach screenshots) | `gemini/g39-qa` | |
+| G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | **done** (49 facts; bite first-aid matches WHO/NCDC. To fix before use: homepage links → exact pages; "rabies vaccine legally mandatory" → a city licence rule) | `gemini/g40-dog-facts` | |
 | G38 ⭐ Review the Demo School spec (CODE_REVIEW.md, 2026-11-05) | Gemini | **done** (good catches: 🚩 auto-hide by demo kids, rank count, demo↔real joins; all fixed by Claude) | review only | |
 | G37 English Unit 10 Word Building (Classes 3–8) | Gemini | **done, reviewed by Claude: 19 fixes** (loveable/useable/duteous are real words → second right answers; "busy → business" misleading; bandage and politeness stems allowed two answers; il-/ir- missing from the Learn page; "solar battery" → solar panel; 2 Boss repeats) | `gemini/g37-word-building` | |
 | G36 Grammar Pro 2–6 (Class 9–10 grammar, 555 Qs) | Gemini | **done, reviewed by Claude: 91 fixes** (27 Modals, 9 Agreement, 7 Reported, 31 Passive, 17 Editing): wrong options that were also right ("Might I…?", "should have" vs "could have", "is being uploaded tomorrow"), "error" options that were the same correction reworded, style debates sold as errors (congratulate for, who/whom, committee have), a wrong key, sentences with two errors | `gemini/g36-grammar-pro` | |
@@ -164,7 +165,27 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
 
-### G39 · [todo] · gemini · QA run: tonight's changes (emulator, tester account)
+### G41 · [todo] · gemini · ⭐ Deploy DR-16 + DR-17 + DR-18: Demo School, account linking, weekly notifications (owner-approved: yes, 2026-11-06)
+**Owner-approved: yes** for exactly these functions ("Waiting for your OK, then Gemini deploys the server parts: go ahead", 2026-11-06).
+Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (branch `feat/quiz-redesign`, commit `fb65e92` or later:
+`feat/push-20.0.30` is merged in, so `pushActions` is there). Specs: CODE_REVIEW.md DR-16, DR-17, DR-18.
+1. `git -C /Users/mohitchilkoti/Documents/projects/apprec8 status`: clean except docs; branch `feat/quiz-redesign`.
+2. `cd functions && node -e "require('./index.js')"`: loads without errors; `npm test` in the main folder passes.
+3. Deploy only these 12 (not `--only functions`, not rules):
+   `firebase deploy --only functions:seedDemoSchool,functions:shiftDemoSchool,functions:getLeaderboard,functions:onQuestionReported,functions:approveMember,functions:createParentLinkCode,functions:redeemParentLinkCode,functions:deleteChildProfile,functions:switchToChild,functions:savePushSettings,functions:weeklyParentPush,functions:weeklyTeacherPush --project apprec8-ca229`
+   If the CLI asks to enable Cloud Scheduler or Pub/Sub APIs, say yes (3 jobs total = the free limit). If it asks to
+   DELETE any function, answer **No** and report. If a function fails, STOP and report the error text (no retry loops).
+4. `firebase functions:list --project apprec8-ca229`: all 12 listed; `gcloud scheduler jobs list --project apprec8-ca229 --location us-central1`
+   : exactly 3 jobs (shiftDemoSchool, weeklyParentPush, weeklyTeacherPush) with IST times
+   Sun 19:00, Sun 18:30, Mon 07:30. If gcloud isn't available, say so.
+5. **Rules check (read only):** under the live rules, can the demo teacher read members + questProgress of the demo classes
+   (members are written `status: "approved"`), and can `demo_parent` read `users/demo_kid_login`? Answer from the rules file; don't deploy rules.
+6. Do NOT seed the Demo School (the owner presses Reset Demo School in Admin tools), do NOT publish an app update.
+**Deliver:** `docs/agents/reports/G41.md` (each step: output or error text), commit `gemini(G41): done — …` on your branch.
+**Rollback if something breaks:** redeploy the same function names from commit `7b0eac7` (before the merge); the new
+functions can be deleted with `firebase functions:delete <name>` after the owner's OK.
+
+### G39 · [done] · gemini · QA run: tonight's changes (emulator, tester account)
 Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
 Follow `docs/qa/OWNER_TESTING.md` sections **Guide quests**, **"Need help?" sheet** and **Old content hidden** (the tester
 account is not the owner: old tiles except dog/animal ones must be gone, Space hidden). Check: the guide strip shows on
@@ -172,7 +193,7 @@ other screens and folds; "Guide ›" returns and the step ticks; Call opens the 
 light theme; no overlap of the strip with the main button. Report bugs with screenshots in `docs/agents/reports/G39.md`.
 No code changes, no Firestore writes except what the tester account does in the app (no seeding, no deploys).
 
-### G40 · [todo] · gemini · Research: dog fact sheet with sources (no app content yet)
+### G40 · [done] · gemini · Research: dog fact sheet with sources (no app content yet)
 Pratha (Class 5) loves dogs, especially German Shepherds. Before any content is written, make a fact sheet in
 `docs/content/dogs-factsheet.md`: each fact one line, kid-level, with a reliable source link (vet schools, AKC/Kennel
 Club, WHO, Indian health ministry/NCDC, peer-reviewed). Cover: German Shepherd origin (Germany, 1899, herding), body and
