@@ -84,7 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
-| G42 ⭐ Review DR-19 account deletion (eraseUser) | Gemini | **todo (next)** | review only | |
+| G42 ⭐ Review + deploy DR-19 account deletion (owner OK 2026-11-06) | Gemini | **todo (next)** | from Claude's folder | |
 | G41 ⭐ Deploy DR-16 + DR-17 + DR-18 (owner OK 2026-11-06) | Gemini | **done** (12 functions live, 3 scheduler jobs, rules check OK) | from Claude's folder | |
 | G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **done** (20 pass; Claude: a code read, not a device run: no screenshots. Next QA tasks must attach screenshots) | `gemini/g39-qa` | |
 | G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | **done** (49 facts; bite first-aid matches WHO/NCDC. To fix before use: homepage links → exact pages; "rabies vaccine legally mandatory" → a city licence rule) | `gemini/g40-dog-facts` | |
@@ -186,14 +186,20 @@ Run from **Claude's folder** `/Users/mohitchilkoti/Documents/projects/apprec8` (
 **Rollback if something breaks:** redeploy the same function names from commit `7b0eac7` (before the merge); the new
 functions can be deleted with `firebase functions:delete <name>` after the owner's OK.
 
-### G42 · [todo] · gemini · ⭐ Review: DR-19 "delete means delete" (after G41; review only, no deploy)
+### G42 · [todo] · gemini · ⭐ Review, then deploy DR-19 "delete means delete" (owner-approved: yes, 2026-11-06: "ok for DR-19")
 Read "Privacy policy check + Review request + DR-19" at the end of CODE_REVIEW.md, then `functions/utils/eraseUser.js`,
 `tests/eraseUser.test.mjs`, the two callers (`requestAccountDeletion` in userActions.js, `deleteChildProfile` in
 familyActions.js) and `scripts/admin/eraseAccount.cjs`. Check: (1) any collection or field holding a user's personal data
 that eraseUser misses (search functions/, services/, screens/ for every write that stores a uid, name or email);
 (2) anything it deletes that belongs to someone else; (3) batch sizes and the function timeout for an account with
 thousands of attempts; (4) does `docs/policies/privacy-policy.html` say anything the code doesn't do?
-Write findings under "Review: DR-19 (Gemini)" in CODE_REVIEW.md, commit `gemini(G42): done — N findings`. No code, no deploy.
+Write findings under "Review: DR-19 (Gemini)" in CODE_REVIEW.md. **Blocking** = it deletes someone else's data, or
+it can fail half-way and leave an account broken. If any finding is blocking: STOP, commit `gemini(G42): blocked — …`.
+Otherwise deploy from Claude's folder (branch `feat/quiz-redesign`, commit `3155de0` or later; `npm test` passes first):
+`firebase deploy --only functions:requestAccountDeletion,functions:deleteChildProfile --project apprec8-ca229`
+(answer **No** to any delete prompt). Then test with a throwaway account you create in the emulator app (never a real
+kid): sign up, play one quiz, Me → Delete my account → Firebase Console shows no `users/<uid>` and no questAttempts
+for it. Report in `docs/agents/reports/G42.md`, commit `gemini(G42): done — N findings, deployed`. No code changes.
 
 ### G39 · [done] · gemini · QA run: tonight's changes (emulator, tester account)
 Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
