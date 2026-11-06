@@ -35,9 +35,10 @@ test with the same build. Once Google approves it, move the pilot group to the c
 ## 4. "App content" forms: draft answers
 Policy → App content. Each one must say "Completed".
 
-**Privacy policy:** the owner's existing URL (check it mentions classes, teachers, parent consent and quiz answers).
+**Privacy policy:** `https://failedcommit.github.io/app-policies/privacy-policy.html` (rewritten 2026-11-06 to match the app; live once C1 is done).
+**Delete account URL** (Data safety asks for it): `https://failedcommit.github.io/app-policies/data-deletion-policy.html`.
 
-**App access:** "Some functionality is restricted" → give the Demo School logins once they exist
+**App access:** "Some functionality is restricted" → give the Demo School logins (Admin tools → Reset Demo School; DR-16 is live)
 (`demo.teacher@example.com`, `demo.parent@example.com`, `demo.kid@example.com` + password, written only in Play
 Console). Until then, a tester account the owner controls.
 
@@ -65,7 +66,7 @@ precise location, no device IDs for ads, child-friendly content, a privacy polic
 | Other: parent's name + relation in the consent record | yes | consent (DPDP) | required to join a class |
 - Shared with third parties: **No** (Google Firebase is our processor, which counts as a service provider, not sharing).
 - Encrypted in transit: **Yes** (HTTPS).
-- Users can request deletion: **Yes** (in-app "Delete account" + the owner's delete-account web page).
+- Users can request deletion: **Yes** (in-app Me → Delete my account, parents: Delete a child's profile; + the deletion web page). Data is deleted, not just hidden (DR-19).
 - Committed to the Families policy: Yes.
 
 **Government app / Financial features / Health / News / COVID:** No / No / No / No / No.

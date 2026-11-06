@@ -2165,3 +2165,23 @@ Owner sent the policy pages (github.com/FailedCommit/app-policies, live at faile
   address left out on purpose, not required for a free app). Upload only after DR-19 is live (they promise full deletion).
 **DR-19 (owner OK, then Gemini):** `firebase deploy --only functions:requestAccountDeletion,functions:deleteChildProfile --project apprec8-ca229`.
 **Review asked (Gemini, before deploy):** anything per-user that eraseUser misses? Batch limits and the 60 s timeout for big accounts?
+
+## 2026-11-06 — Spec for owner approval: X "a parent says yes" (DPDP consent for students) (Claude)
+Owner: "this is priority" (the gap: a child can sign up alone, with no parent's consent). Mockup row X on the canvas.
+**Who sees the gate (X2):** a signed-in account with a class (a student) that has none of: `isChild` (a profile a parent
+made, consent recorded), `parentUids` (linked to a parent), `classIds` / `pendingClassIds` (joined a class: the parent's
+form was filled and a teacher approves). Admin and tester accounts never see it.
+**Two ways through, both already built and live:**
+1. **Link to a parent** (DR-17): SEND TO MY PARENT shares a WhatsApp message (X3) → the parent installs, signs in,
+   Me → Link my child's own account (consent text EN/हिंदी) → a 6-number code → the child types it → X4.
+2. **Class code from school**: Join a class (parent's name + relation + tick, EN/HI) → the teacher approves.
+**Until then nothing is saved** (DPDP: consent before processing): the gate replaces Home/Quest/Progress; only Need help,
+Sign out and Delete my account stay reachable. The sign-in itself (email) can't wait: see cleanup.
+**Grown-ups give a year of birth (X1)**, a neutral age screen (Google Families policy): under 18 → the student path. Stops
+a child tapping "I'm a parent" to skip the gate. No age is stored, only `grownUpConfirmedAt`.
+**Cleanup (DR-20):** a student account still without consent 14 days after sign-up is deleted with `eraseUser`, inside the
+existing Sunday job (`shiftDemoSchool` → renamed weekly job), so no 4th Cloud Scheduler job (3 = free limit). Bounded: ≤ 200 per run.
+**Existing accounts** get the gate on their next open (all internal testers today). Pratha: link her to you (Me → Link my
+child's own account) before this ships, or she sees the gate.
+**Later, not now:** server rules that refuse progress writes without consent (today the app enforces it).
+**Owner to decide:** approve row X as drawn? Year of birth for grown-ups, or a simpler "I'm 18 or older" tick (easier, but Google prefers a neutral question)?

@@ -84,6 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G43 Store screenshots for Play (emulator, tester account) | Gemini | todo (after G42) | `gemini/g43-screens` | |
 | G42 ⭐ Review + deploy DR-19 account deletion (owner OK 2026-11-06) | Gemini | **todo (next)** | from Claude's folder | |
 | G41 ⭐ Deploy DR-16 + DR-17 + DR-18 (owner OK 2026-11-06) | Gemini | **done** (12 functions live, 3 scheduler jobs, rules check OK) | from Claude's folder | |
 | G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **done** (20 pass; Claude: a code read, not a device run: no screenshots. Next QA tasks must attach screenshots) | `gemini/g39-qa` | |
@@ -200,6 +201,16 @@ Otherwise deploy from Claude's folder (branch `feat/quiz-redesign`, commit `3155
 (answer **No** to any delete prompt). Then test with a throwaway account you create in the emulator app (never a real
 kid): sign up, play one quiz, Me → Delete my account → Firebase Console shows no `users/<uid>` and no questAttempts
 for it. Report in `docs/agents/reports/G42.md`, commit `gemini(G42): done — N findings, deployed`. No code changes.
+
+### G43 · [todo] · gemini · Play Store screenshots (after G42)
+Dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`), latest `feat/quiz-redesign`, the **tester account** (never a kid's).
+Light theme first, then the same set in dark. 8 portrait screenshots (`adb exec-out screencap -p > file.png`), no status
+bar clutter (`adb shell settings put global sysui_demo_allowed 1` + demo mode clock 10:00, full battery, no notifications):
+1. Home (quests) · 2. English Quest map · 3. A quiz question (picture or Learn card if one shows) · 4. Right-answer
+screen with the explanation · 5. Progress tab · 6. My mistakes · 7. Teacher view of a class (log in as the demo teacher
+only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab with "Need help?".
+No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
+commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
 ### G39 · [done] · gemini · QA run: tonight's changes (emulator, tester account)
 Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
