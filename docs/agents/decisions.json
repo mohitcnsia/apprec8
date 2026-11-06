@@ -59,5 +59,12 @@
     "details": "**Y1/Y2 Home:** a calm card above the quests: children see \"Your first day · 1 of 4\", grown-ups \"Tour of Apprec8\". It shows on every open until all steps are done or ✕ is tapped (your note).\n\n**Y3 after ✕:** one green note, \"The guides are always in Me → Guides\", then never again.\n\n**Y4 Me:** \"What's new · 3 things\" for grown-ups after each update, each with DO IT (opens that screen). ✕ hides it until the next update. Children never see it.\n\n**YES** = Claude builds it and asks you before publishing.",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
     "from": "claude"
+  },
+  {
+    "id": "task-c10-testers",
+    "title": "Task for tomorrow: 12+ testers (C10)",
+    "ask": "Set up the testers' Google Group and send the WhatsApp message. Tap YES when done, LATER to be reminded in 24 hours, MORE DETAILS if you're stuck.",
+    "details": "**1. Google Group (laptop, 5 min):** groups.google.com → Create group → name \"Apprec8 testers\", email `apprec8-testers`. Who can join: anyone on the web. Who can see members / post / view conversations: **group managers only**.\n\n**2. Play Console (5 min):** Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups → `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link.\n\n**3. WhatsApp to 15–16 grown-ups** (parents, family, friends, Seema and colleagues):\n1) Join: https://groups.google.com/g/apprec8-testers → Join group\n2) Become a tester: (the Join on the web link)\n3) Install after Sunday: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\"Please stay in the group for 2 weeks.\"\n\nGoogle's 14-day clock starts once 12 have opted in. Full steps: My notes → Play forms.",
+    "from": "claude"
   }
 ]
