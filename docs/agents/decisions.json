@@ -66,5 +66,19 @@
     "ask": "Set up the testers' Google Group and send the WhatsApp message. Tap YES when done, LATER to be reminded in 24 hours, MORE DETAILS if you're stuck.",
     "details": "**1. Google Group (laptop, 5 min):** groups.google.com → Create group → name \"Apprec8 testers\", email `apprec8-testers`. Who can join: anyone on the web. Who can see members / post / view conversations: **group managers only**.\n\n**2. Play Console (5 min):** Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups → `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link.\n\n**3. WhatsApp to 15–16 grown-ups** (parents, family, friends, Seema and colleagues):\n1) Join: https://groups.google.com/g/apprec8-testers → Join group\n2) Become a tester: (the Join on the web link)\n3) Install after Sunday: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\"Please stay in the group for 2 weeks.\"\n\nGoogle's 14-day clock starts once 12 have opted in. Full steps: My notes → Play forms.",
     "from": "claude"
+  },
+  {
+    "id": "english-reseeded",
+    "title": "Did you re-seed English?",
+    "ask": "Admin tools → Update English Quest, after 5 Nov. Without it, Grammar Pro (Class 9–10) isn't on phones. Done?",
+    "details": "**YES** = done. **NO** = not yet: do it now (2 minutes; close and reopen the app first). **LATER** = remind me tomorrow.",
+    "from": "claude"
+  },
+  {
+    "id": "task-seema-pilot-prep",
+    "title": "Task: Seema's pilot prep",
+    "ask": "3 things before students join: Seema checks Grammar Pro questions, a 30-minute dry run with her, the school's consent form. Tap YES when done, LATER for a reminder.",
+    "details": "**Dry run (owner + Seema):** you: Me → Guides → Set up a school (school, class 10-B, invite Seema). Seema: Join as a teacher → you approve → Me → Guides → Start your class with 2 test students → **assign a Grammar Pro topic** (Class 10 students otherwise start at the basics).\n\n**Students:** they join the testers' Google Group too, so they also count for Google's 12 testers (C10).\n\nThe WhatsApp message for students and parents is ready: My notes → Seema's pilot (after the next publish).",
+    "from": "claude"
   }
 ]
