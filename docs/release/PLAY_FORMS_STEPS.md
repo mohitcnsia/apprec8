@@ -53,3 +53,15 @@ Save each.
 **8. Families: "Comply with the Families policy"** (if a card asks) → tick that you've read it → Save.
 
 When all cards are ✓: tell Claude "C9 done". Next: C10 (Google Group) and C11 (promote 20.0.30 to closed testing).
+
+## C10 · 12+ testers in a Google Group (15 minutes to set up)
+Testers = the grown-up whose Google account is on the phone (parents, family, friends, Seema and colleagues). Children
+under 13 can't join Google Groups. Everyone with an Android phone already has the Google account (Play Store →
+profile picture). A test app can't be found by search: testers need the links.
+- [ ] groups.google.com → Create group: name "Apprec8 testers", email `apprec8-testers`. Who can join: anyone on the
+  web. Who can see members / post / view conversations: **group managers only** (testers never see each other's emails).
+- [ ] Play Console → Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups →
+  `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link (opt-in link).
+- [ ] WhatsApp message: 1) join the group (groups.google.com/g/apprec8-testers), 2) the opt-in link → Become a tester,
+  3) install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8 . "Please stay 2 weeks."
+- [ ] Aim for 15–16 people: Google's 14-day clock needs 12 opted in, without a break. Opting in counts, not installing.
