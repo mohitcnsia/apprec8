@@ -84,6 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G45 List students without a parent's yes (read-only) | Gemini | todo (after G43) | report only | |
 | G43 Store screenshots for Play (emulator, tester account) | Gemini | todo (after G42) | `gemini/g43-screens` | |
 | G44 ⭐ Re-check fixes + deploy DR-19 (owner OK) | Gemini | **todo (next)** | from Claude's folder | |
 | G42 ⭐ Review + deploy DR-19 account deletion (owner OK 2026-11-06) | Gemini | **blocked → fixed by Claude** (7 findings, all accepted; 2 blocking) | from Claude's folder | |
@@ -222,6 +223,11 @@ screen with the explanation · 5. Progress tab · 6. My mistakes · 7. Teacher v
 only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab with "Need help?".
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
+
+### G45 · [todo] · gemini · List students without a parent's yes (read-only, for spec X; after G43)
+From Claude's folder: `cd /Users/mohitchilkoti/Documents/projects/apprec8 && node scripts/admin/unconsented.cjs`.
+**List mode only: never `--apply`.** Report in `docs/agents/reports/G45.md`: how many, and for each only the first name,
+class and sign-up date (no emails or uids: the repo is public). Commit `gemini(G45): done — N students`.
 
 ### G39 · [done] · gemini · QA run: tonight's changes (emulator, tester account)
 Build: the dev app on the emulator (`docs/qa/QA_PLAYBOOK.md`, `scripts/qa/eq.sh`), latest `feat/quiz-redesign`.
