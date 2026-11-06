@@ -62,5 +62,6 @@ Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owne
 | B5 | Sign-up policy: today anyone can register (email / Google). Decision from 2026-11-04 was invite-only; keep open for the pilot or switch? | Owner |
 | B6 | Production build from `main` (merge `feat/quiz-redesign` after the pilot), `check-aab.sh` PASS, release notes | Claude builds, owner uploads |
 | B7 | Crash reporting: none today (we only hear from users). Add before public | Claude |
+| B8 | **Money, later** (owner 2026-11-06: competitions with fees + scholarships, sponsors for children): when fees start → Play "trader" status = yes (ideally a business entity, so its address shows, not home); in-app fees need Google Play Billing + a parent gate (children's app), or collect outside the app (website / school); contests with fees and prizes need a Play policy + Indian law check; donations/sponsorship best via a website or trust, outside the app. Today: "not a trader" (no sales) | Owner (+ CA/lawyer once) |
 
 Not blockers: My mistakes for picture / reading questions, English Units 10+, Science Unit 7, Paper 2–4 for Science (Gemini G35).
