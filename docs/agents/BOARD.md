@@ -240,7 +240,7 @@ circles**. Use your image generation. If you have none, commit
 children, parents and teachers. Calm, warm, kid-friendly; never neon. Palette from the app: plum #3b0940, #85508a,
 light #F5D2F8, star gold #dcb51b; must work on the dark theme. Mascot: **Chamak**, the smiling star already in the app
 (components/auth/HeroScene.js): keep him. References: `feature-graphic-v4.png` (the dissolving ∞), `feature-graphic-v3.png` (plain ∞).
-**Per direction (3 different directions, all built on the dissolving ∞):** wordmark "apprec∞", app icon 512×512 (no small text), Android adaptive icon
+**Per direction (3 different directions, all built on the dissolving ∞):** wordmark in **both spellings**, "apprec∞" and "appreci∞" (owner is thinking of renaming to Appreci8, so it reads "appreciate" by itself), app icon 512×512 (no small text), Android adaptive icon
 foreground (1024×1024, logo inside the central 66%), a one-colour notification mark (white on transparent, 96×96),
 7 subject icons 256×256 (English, Science, Word Power, Treasure Words, Maths, Reasoning, Well-being), and a
 1024×500 feature graphic. Original work only (no copying other brands' styles or characters). No green checks.

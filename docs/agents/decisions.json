@@ -177,5 +177,12 @@
     "details": "**Taps today → after:**\n- Child continues learning: 3–4 → **1**\n- Child fixes mistakes: 2–3 → **1–2**\n- Parent sees child's week: 3 → **0**\n- Teacher sees class: 3 → **0**\n- Help: 2 → 2\n\n**Z1 child:** \"Up next: Kinds of sentences\" + big ▶ CONTINUE at the bottom; mistakes card; other quests small below.\n**Z2 parent:** \"Pratha's week\" card (days, minutes, % right, one topic to practise together) + ▶ LET PRATHA PLAY.\n**Z3 teacher:** class card (waiting, who practised, what to reteach) + ASSIGN NEXT TOPIC.\n**Z4 Me:** Need help, My class, My children, Guides, More (reminders, messages, edit profile, delete account).\n\nSomeone who is parent and teacher sees both cards. Nothing is deleted. With this, the Home guide card (row Y) may not be needed.\n\nCanvas: scroll to row Z.",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
     "from": "claude"
+  },
+  {
+    "id": "name-appreci8",
+    "title": "Later: rename to Appreci8?",
+    "ask": "With the \"i\", the name reads \"appreciate\" by itself. Decide once Gemini's logos (both spellings) are in. Rename?",
+    "details": "**What changes:** the name on the Play Store, the app's home screen label, the logo, the store text and the policy pages. **What can't change:** the internal app ID (com.mohitchilkoti.apprec8); nobody sees it. Existing users just see the new name after an update.\n\nCheapest before the public launch. Tap **LATER** until you've seen the logos.",
+    "from": "claude"
   }
 ]
