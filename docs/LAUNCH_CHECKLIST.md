@@ -17,13 +17,13 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 | C2 | Delete in the app: Me → Delete my account, Delete a child's profile | Claude | done | published 2026-11-06 (20.0.30) |
 | C3 | DR-19 server deletion (everything goes) | Gemini G42/G44 | done | deployed + tested with a throwaway account 2026-11-06 |
 | C4 | **Parent consent (row X)**: approve mockup → Claude builds gate + year of birth → publish; DR-20 cleanup | Owner OK → Claude → Gemini | ~1 day after OK | owner asked 3 questions (adult students, two parents, grandparents): answers in CODE_REVIEW.md "Spec X: owner questions" |
-| C5 | Demo School logins for Google's reviewer: Admin tools → Reset Demo School | Owner | 5 min | todo |
+| C5 | Demo School logins for Google's reviewer: Admin tools → Reset Demo School | Owner | 5 min | done 2026-11-06 (password only in Play Console) |
 | C6 | Store listing text (short + full description) | Claude drafts, owner checks | — | draft: release/STORE_LISTING.md |
 | C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | done | 14 in docs/release/screenshots/ (light + dark). Before public release: redo Home (0 stars, empty card) and Me (shows the test email) |
 | C8 | App icon 512 px (the app icon) + feature graphic 1024×500 | Claude drafts, owner picks | — | drafts in docs/release/graphics/ |
-| C9 | Play Console → App content forms (answers in release/PLAY_CONSOLE.md, updated today) | Owner | ~45 min | todo |
+| C9 | Play Console → App content forms | Owner + Claude | ~45 min | done 2026-11-06: sign-in details = 3 demo logins; ages 6–18+; Data safety 6 types, nothing shared (2025 form said email was shared: fixed). Sent for review |
 | C10 | Google Group with 12+ testers who stay 14 days (family, Seema, pilot students) | Owner | — | todo |
-| C11 | Closed testing track → promote 20.0.30 from internal → send for review | Owner | 15 min | after C1–C10 |
+| C11 | Closed testing track | Owner | — | already live (Play dashboard: closed release published, 1 tester opted in). Next: 12 testers (C10) |
 Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owner: later).
 
 ## ⏰ Owner, 2026-11-06 (reminders)

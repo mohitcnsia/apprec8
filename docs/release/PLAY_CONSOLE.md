@@ -33,6 +33,11 @@ test with the same build. Once Google approves it, move the pilot group to the c
 6. Remote Config `update_url_android` → the Play Store link (A8).
 
 ## 4. "App content" forms: draft answers
+**Updated in Play Console 2026-11-06 (owner + Claude):** Sign in details = Parent / Teacher / Student demo logins with
+one shared note ("Use email instead"); target ages 6–8, 9–12, 13–15, 16–17, 18+ (not 5 and under: no pre-reader
+content yet); Data safety = Name, Email, User IDs, App interactions, Other user-generated content (optional), Device or
+other IDs; all collected, none shared, App functionality (+ Account management for the 3 personal ones). The other 6
+declarations from May 2025 were still right.
 Policy → App content. Each one must say "Completed".
 
 **Privacy policy:** `https://failedcommit.github.io/app-policies/privacy-policy.html` (rewritten 2026-11-06 to match the app; live once C1 is done).
