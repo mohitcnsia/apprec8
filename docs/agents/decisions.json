@@ -15,7 +15,10 @@
     "ask": "Students who signed up alone see \"Ask a parent or guardian\" until a parent links them or they join a class. Plus College / grown-up and \"say it appreciate\". Ship it?",
     "details": "**What changes for kids:** a student with no parent linked and no class sees only the \"Ask a parent or guardian\" screen: send a WhatsApp message to the parent, type the parent's code, or join a class with a code. Nothing is saved before a parent says yes (India's DPDP Act and Google Play's family rules).\n\n**Your 3 yeses are in:** College / grown-up (year of birth, 18+ skips the gate), \"parent or guardian\" wording, sign-in says \"appreciate\" out loud once.\n\n**Before it ships:** link Pratha to your account (Me → Link my child's own account), or she sees the gate too. Gemini's test account Sam also gets the gate (good: it tests it).\n\n**YES** = Claude merges and publishes to everyone on 20.0.30. Mockup: rows X1–X5 on the canvas (link above).",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": "Replaced by learn first (X6–X9), approved in chat.",
+    "via": "chat"
   },
   {
     "id": "unconsented-erase",
@@ -171,7 +174,10 @@
     "title": "Built: Owner extras switch (your \"View as\")",
     "ask": "Me → ADMIN → Owner extras: Off shows what other grown-ups see. For a child's view: My children → add a test child (e.g. \"Test\", Class 10) → Play as. Publish it with the teachers' page?",
     "details": "**Off hides:** old quizzes and classrooms on Home, Fun extras, tester mode (unlock-all, drafts), admin-only guides, the Kids view in Progress. **Stays:** Me → ADMIN (to switch back), Decisions, Admin tools.\n\nOnly your phone changes; nothing is saved to anyone.\n\n**YES** = publish it together with the teachers' page (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Published 6 Nov 13:04 with the teachers page.",
+    "via": "chat"
   },
   {
     "id": "row-z-simple-home",
