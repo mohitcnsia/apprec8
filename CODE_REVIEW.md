@@ -2314,7 +2314,8 @@ Later … work on learning guides as much as possible. A great app difficult to 
 copies answers back into the file. Logic: `utils/decisions.js` + `tests/decisions.test.mjs`. Push tap opens Decisions
 (AppContent). Cost: ~1,600 reads/day while the watch runs (free tier); FCM is free; no new function, no scheduler.
 **DR-21 (rules only):** `ownerDecisions`: owner reads, owner updates only answer/note/status/answeredAt/laterUntil,
-nobody creates/deletes (script = admin SDK). `ownerConfig`: owner only. Gemini G46 reviews + deploys.
+nobody creates/deletes (script = admin SDK). `ownerConfig`: owner only. Gemini G46 reviews now; **deploy waits for
+the owner's "ok for DR-21"**, and the app part for the owner's "publish".
 **Guides:** three more guides in the approved row W design (`utils/guides.js`): **Tour of Apprec8** (grown-ups, 6
 screens, ticks by visiting), **For parents** (4: add child, Play as, their week, Sunday summary), **Your first day**
 (children and students, 4: start a quest, finish a topic, fix a mistake, see your stars). Me → Guides now shows for

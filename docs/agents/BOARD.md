@@ -224,13 +224,15 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
-### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy the rules, keep the sync running
+### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21 now; deploy + sync only after the owner's OK (owner-approved: not yet)
 Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
 Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).
 1. Review: `utils/decisions.js`, `services/decisionsApi.js`, `screens/admin/DecisionsScreen.js`, `scripts/admin/decisions.mjs`,
    and the DR-21 block at the end of the local `firestore.rules` (`ownerDecisions`, `ownerConfig`, owner only).
    Blocking = anyone but the owner can read/write them, or the rules file differs from the live rules by more than
    the DR-21 block (check the live rules in Firebase console → Firestore → Rules). If blocking: `gemini(G46): blocked — …`.
+**Steps 2–3 wait** until Claude changes "owner-approved: not yet" in this title to "yes". Without it: do step 1 + 4
+(`node scripts/admin/decisions.mjs --dry` is fine: read-only) and commit `gemini(G46): reviewed — waiting for owner OK`.
 2. Deploy: `firebase deploy --only firestore:rules --project apprec8-ca229` (from Claude's folder).
 3. `node scripts/admin/decisions.mjs --dry`, then `node scripts/admin/decisions.mjs`, then leave
    `node scripts/admin/decisions.mjs --watch` running in the background (sync every 10 min). At every later check-in:
