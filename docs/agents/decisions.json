@@ -4,7 +4,10 @@
     "title": "Test: did the notification work?",
     "ask": "Did a notification arrive on your phone, and did tapping it open this screen?",
     "details": "This checks the whole loop: Claude writes a question → Gemini's script sends it → your phone buzzes → you tap an answer → Claude reads it.\n\n**YES** = all worked. **NO** = something didn't (add a note: no buzz, or the tap opened the wrong screen).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": " [Owner in chat 11:46: notifications working.]",
+    "answeredAt": "2026-11-06T06:06:21.448Z"
   },
   {
     "id": "row-x-ship",
@@ -34,13 +37,27 @@
     "title": "\"Your first day\" card on Home for new children?",
     "ask": "New children see a small card on Home, \"⭐ Your first day · 0 of 4\", until they finish the 4 guide steps. Add it?",
     "details": "Today the guides sit in Me → Guides, where a new child won't look. The card would sit under the quests, calm (one line + a small progress bar), and disappear for good after the 4th step or after 7 days. Tapping it opens the guide.\n\n**YES** = Claude draws a mockup first, then builds it. **NO** = guides stay in Me only.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "This should be everyone. Every time app is opened and if they deliberately close it. Then on we don't show but tell them once where it can be found",
+    "answeredAt": "2026-11-06T06:07:33.653Z"
   },
   {
     "id": "whats-new-card",
     "title": "A \"What's new\" card after each update?",
     "ask": "After an update, grown-ups see one card on Me: \"What's new: 3 things\", each with a DO IT button that opens the screen. Add it?",
     "details": "Helps you, Seema, parents and teachers keep up as features arrive (you said you can't follow them all anymore). Children don't see it. One card per update, dismissed with one tap.\n\n**YES** = mockup first, then build. **NO** = the App map in My notes is enough.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T06:06:01.293Z"
+  },
+  {
+    "id": "row-y-guide-cards",
+    "title": "Mockup: guide card on Home + What's new",
+    "ask": "Your 2 yeses as screens (canvas row Y, 4 screens). Build it like this?",
+    "details": "**Y1/Y2 Home:** a calm card above the quests: children see \"Your first day · 1 of 4\", grown-ups \"Tour of Apprec8\". It shows on every open until all steps are done or ✕ is tapped (your note).\n\n**Y3 after ✕:** one green note, \"The guides are always in Me → Guides\", then never again.\n\n**Y4 Me:** \"What's new · 3 things\" for grown-ups after each update, each with DO IT (opens that screen). ✕ hides it until the next update. Children never see it.\n\n**YES** = Claude builds it and asks you before publishing.",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
     "from": "claude"
   }
 ]
