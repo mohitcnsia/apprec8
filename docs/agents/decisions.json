@@ -28,5 +28,19 @@
     "details": "The full description is in My notes → Store listing. It starts \"Apprec8 (say it \"appreciate\") helps children learn a little every day…\" and lists subjects as \"English and Science today, with Maths and reasoning coming next\".\n\n![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)\n\n**YES** = paste it into Play Console (Store listing). **MORE DETAILS** = Claude explains or changes it.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png",
     "from": "claude"
+  },
+  {
+    "id": "home-first-day-card",
+    "title": "\"Your first day\" card on Home for new children?",
+    "ask": "New children see a small card on Home, \"⭐ Your first day · 0 of 4\", until they finish the 4 guide steps. Add it?",
+    "details": "Today the guides sit in Me → Guides, where a new child won't look. The card would sit under the quests, calm (one line + a small progress bar), and disappear for good after the 4th step or after 7 days. Tapping it opens the guide.\n\n**YES** = Claude draws a mockup first, then builds it. **NO** = guides stay in Me only.",
+    "from": "claude"
+  },
+  {
+    "id": "whats-new-card",
+    "title": "A \"What's new\" card after each update?",
+    "ask": "After an update, grown-ups see one card on Me: \"What's new: 3 things\", each with a DO IT button that opens the screen. Add it?",
+    "details": "Helps you, Seema, parents and teachers keep up as features arrive (you said you can't follow them all anymore). Children don't see it. One card per update, dismissed with one tap.\n\n**YES** = mockup first, then build. **NO** = the App map in My notes is enough.",
+    "from": "claude"
   }
 ]
