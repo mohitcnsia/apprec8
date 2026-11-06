@@ -41,6 +41,12 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Teachers' page + Owner extras (after the next "publish"), ~3 min
+- [ ] Me → Guides: first card **For teachers: start here** → the one-pager → **SHARE WITH A TEACHER** opens WhatsApp. Also in Admin tools.
+- [ ] Me → ADMIN → **Owner extras** → Off: Home loses Explore / More practice / old classrooms, Progress loses "Kids",
+  Guides shows the grown-up set, quest maps follow the normal locks. Tap again → On: everything is back.
+- [ ] Child's view: My children → add "Test" (Class 10) → Play as → you see exactly what a Class 10 student sees.
+
 ### ⭐ Decisions on your phone + push (after the next "publish" and Gemini's G46), ~3 min
 - [ ] Me → **Decisions** (under ADMIN; also at the top of Me when something waits). Questions from Claude show with
   👍 YES · ✋ NO · ❓ MORE DETAILS · ⏰ LATER. "More details" first opens the full story; tapping it again asks Claude to explain more.

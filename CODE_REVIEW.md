@@ -2321,3 +2321,12 @@ screens, ticks by visiting), **For parents** (4: add child, Play as, their week,
 (children and students, 4: start a quest, finish a topic, fix a mistake, see your stars). Me → Guides now shows for
 everyone (children see only theirs; the owner sees all). Data checks reuse reads the target screens already do.
 **App map:** `docs/APP_MAP.md`, a 4th tab in My notes.
+
+## 2026-11-06 (afternoon) — Owner answers via the Decisions inbox (Claude)
+- **View as: yes** → built "Owner extras" (services/ownerView.js): off hides owner-only UI (old tiles + their reads,
+  Fun extras, tester mode, admin guides, Progress → Kids). Permission checks are untouched (display only). Child view
+  = Play as a test child profile (exists).
+- **Row X learn-first: yes** → mockup X6–X9 on the canvas, approval asked in the inbox. Replaces the blocking gate
+  (feat/consent-gate X2) once approved: progress stays on the phone until a parent's yes, then moves to the account.
+- **Teachers' one-pager** in the app (data/teacherStart.js, Me → Guides + Admin tools, SHARE for WhatsApp).
+- Publishing waits for the owner's "publish" (asked in the inbox).
