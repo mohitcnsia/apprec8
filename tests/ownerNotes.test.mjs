@@ -40,11 +40,11 @@ assert.deepEqual(sectionCount(a, { [a.body[0].key]: true }), { done: 2, total: 2
 assert.equal(redactEmails("a me@gmail.com b demo.kid@example.com"), "a (your email) b demo.kid@example.com");
 
 // The bundled notes: both files, parsed, no private email (the bundle ships to every phone).
-assert.deepEqual(OWNER_NOTES.map((x) => x.id), ["launch", "testing", "store", "map"]);
+assert.deepEqual(OWNER_NOTES.map((x) => x.id), ["launch", "testing", "store", "map", "play"]);
 OWNER_NOTES.forEach((x) => {
   assert.equal(redactEmails(x.md), x.md, `${x.id}: private email in data/ownerNotes.js`);
   const p = parseNotes(x.md);
-  assert.ok(p.sections.length >= (x.id === "store" ? 0 : 4), `${x.id}: sections`);
+  assert.ok(p.sections.length >= (x.id === "store" ? 0 : x.id === "play" ? 2 : 4), `${x.id}: sections`);
 });
 const testing = parseNotes(OWNER_NOTES[1].md);
 assert.ok(testing.sections.some((s) => s.body.some((b) => b.type === "check")), "testing has boxes");
