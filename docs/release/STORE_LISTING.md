@@ -2,21 +2,23 @@
 
 **Feature graphic (1024×500), draft:**
 
-![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft1.png)
+![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)
 
 App icon: the app's own (assets/icon.png, 512×512). Screenshots: Gemini G43.
 
 For parents and teachers (they choose the app), in plain words. No exam names (they belong to other organisations,
 and we don't claim to prepare for any one exam). Owner checks; Seema checks the tone.
 
-**App name (30 max):** Apprec8: English & Science (26). The earlier draft "Apprec8: Learn English & Science" was 32: too long.
+**App name (30 max):** Apprec8: Learn & Grow (21). Broad on purpose (owner 2026-11-06: Maths, reasoning and well-being
+are coming; don't box the app into two subjects). Subjects go in the descriptions, which we update as they arrive.
+Not "Wellbeing" in the name: Play may then treat it as a health app (extra forms).
 
-**Short description (80 max, 78 used):**
-Fun, calm practice in English and Science for Classes 1–10. Free, with no ads.
+**Short description (80 max, 77 used):**
+Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.
 
 **Full description:**
 
-Apprec8 (say it "appreciate") helps children practise English and Science a little every day, at their own pace.
+Apprec8 (say it "appreciate") helps children learn a little every day, at their own pace: English and Science today, with Maths and reasoning coming next.
 
 📚 LEARN BY DOING
 • English Quest: grammar, words and reading, from first sentences to Class 10 grammar (tenses, modals, reported
@@ -54,6 +56,6 @@ Made in India by a parent, with a teacher, for children.
 **Privacy policy:** https://failedcommit.github.io/app-policies/privacy-policy.html
 
 **Check before using:**
-- "Classes 1–10" and the Class 10 grammar line: checked 2026-11-06: quests cover Classes 1–12 together; Science is Classes 3–5 only.
+- "Classes 1–12" and the Class 10 grammar line: checked 2026-11-06: quests cover Classes 1–12 together; Science is Classes 3–5 only.
 - "A parent says yes before a child's progress is saved" is true only once row X (C4) ships. Until then, remove that line.
 - "Several children on one phone … timer": Play as + play time (20.0.29).
