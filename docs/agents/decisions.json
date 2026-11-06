@@ -95,5 +95,33 @@
     "details": "Before we build anything else, we fix what confuses her: if she finds it hard, every teacher will.\n\nHer one-page start (4 jobs, what to ignore, the legal part in plain words) is here; share it with her from the page's Share menu:\nhttps://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5\n\nThen 20 minutes together on the Demo School teacher login (made-up class, nothing reaches real children).",
     "link": "https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5",
     "from": "claude"
+  },
+  {
+    "id": "simplicity-pass",
+    "title": "Simplicity first: pause new features?",
+    "ask": "Pause new features (Dog Squad, What's new, Home guide card) until the 5 most common jobs take 2 taps or fewer. Pilot, fixes and content go on.",
+    "details": "**The 5 jobs:** a child continues learning (one big ▶ Continue at the bottom of Home), a child fixes mistakes, a parent sees their child's week (on Home), a teacher sees their class (on Home), anyone finds help.\n\nEverything else folds under **More** on Me (nothing deleted). Claude counts today's taps for each job, draws a mockup (row Z) and asks you here before building.\n\n**YES** = pause + simplicity pass now. **NO** = keep building features.",
+    "from": "claude"
+  },
+  {
+    "id": "owner-view-as",
+    "title": "A \"View as\" switch for you?",
+    "ask": "Your account sees about twice what a child sees. Add an owner-only switch: View as child · parent · teacher, to see exactly what they see?",
+    "details": "Your Home also shows Explore, More practice, old classrooms, the Fun tab, every unit open and admin. That makes the app feel more complex to you (and to Seema on your phone) than it is for a child.\n\nThe switch changes only what your phone shows; nothing is saved to anyone.\n\n**YES** = build it with the simplicity pass.",
+    "from": "claude"
+  },
+  {
+    "id": "row-x-learn-first",
+    "title": "Row X change: children learn right away?",
+    "ask": "Instead of blocking, children learn right away on the phone with nothing saved to their name. A parent's yes is needed only to save stars, join a class or appear on leaderboards. OK?",
+    "details": "Today's row X stops a child who signed up alone at \"Ask a parent\". That ends \"log in and learn right away\", which is what you liked.\n\n**New idea:** the child learns at once; progress stays on the phone and nothing identifies them. A small card says \"Ask a parent to save your stars ⭐\" (the same 2 ways: parent's code or a class code).\n\nLegally sound in our reading (nothing about the child is stored under their name before the yes), but a lawyer checks before the public release.\n\n**YES** = Claude redraws row X like this (mockup first). **NO** = keep the gate as designed.",
+    "from": "claude"
+  },
+  {
+    "id": "owner-confusions",
+    "title": "What confused you most?",
+    "ask": "Type the 2–3 moments in the app that confused you or took too many taps (e.g. \"finding my mistakes\", \"where is Pratha's progress\"). Then tap YES.",
+    "details": "These go first in the simplicity pass, together with Seema's.",
+    "from": "claude"
   }
 ]
