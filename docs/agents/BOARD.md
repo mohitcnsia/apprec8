@@ -84,6 +84,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | G22 "Word Power" vocabulary unit | Gemini | done → restructure in G25 | `content/eq-u4-vocab` | 108 questions; Claude reviews after G25 |
 | G23 Spot the error, dialogue & idioms | Gemini | done → restructure in G25 | `content/eq-u5-error-dialogue` | 108 questions; Claude reviews after G25 |
 | G27 ⭐ Deploy DR-8, Finding 22, DR-9, DR-10 (owner OK) | Gemini | **done** 2026-11-04 21:46 | from Claude's folder | Functions + rules live; IAM token role → owner (Console) |
+| G42 ⭐ Review DR-19 account deletion (eraseUser) | Gemini | todo (after G41) | review only | |
 | G41 ⭐ Deploy DR-16 + DR-17 + DR-18 (owner OK 2026-11-06) | Gemini | **todo (next)** | from Claude's folder | |
 | G39 QA run: Guides, "Need help?", old content hidden (emulator, tester account) | Gemini | **done** (20 pass; Claude: a code read, not a device run: no screenshots. Next QA tasks must attach screenshots) | `gemini/g39-qa` | |
 | G40 Dog fact sheet with sources (research only, for Pratha's dog content) | Gemini | **done** (49 facts; bite first-aid matches WHO/NCDC. To fix before use: homepage links → exact pages; "rabies vaccine legally mandatory" → a city licence rule) | `gemini/g40-dog-facts` | |
@@ -164,6 +165,15 @@ Claude already merged all the new rules into `firestore.rules` (backup: `~/appre
 **Not yours:** making Seema an admin (needs her uid after she signs in; owner/Claude do it).
 **Deliver:** `docs/agents/reports/G27.md` (each step: done / error text), commit `gemini(G27): done — …` on your branch.
 **Rollback if the app breaks:** Rules tab → previous version → publish; functions: redeploy from `backup/2026-11-04/feat/quiz-redesign`.
+
+### G42 · [todo] · gemini · ⭐ Review: DR-19 "delete means delete" (after G41; review only, no deploy)
+Read "Privacy policy check + Review request + DR-19" at the end of CODE_REVIEW.md, then `functions/utils/eraseUser.js`,
+`tests/eraseUser.test.mjs`, the two callers (`requestAccountDeletion` in userActions.js, `deleteChildProfile` in
+familyActions.js) and `scripts/admin/eraseAccount.cjs`. Check: (1) any collection or field holding a user's personal data
+that eraseUser misses (search functions/, services/, screens/ for every write that stores a uid, name or email);
+(2) anything it deletes that belongs to someone else; (3) batch sizes and the function timeout for an account with
+thousands of attempts; (4) does `docs/policies/privacy-policy.html` say anything the code doesn't do?
+Write findings under "Review: DR-19 (Gemini)" in CODE_REVIEW.md, commit `gemini(G42): done — N findings`. No code, no deploy.
 
 ### G41 · [todo] · gemini · ⭐ Deploy DR-16 + DR-17 + DR-18: Demo School, account linking, weekly notifications (owner-approved: yes, 2026-11-06)
 **Owner-approved: yes** for exactly these functions ("Waiting for your OK, then Gemini deploys the server parts: go ahead", 2026-11-06).
