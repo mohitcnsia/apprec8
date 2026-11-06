@@ -2300,3 +2300,7 @@ Check with a lawyer before the public release.
 `TESTER_EMAILS`, so it will see the gate: link it to the owner's account first (or use it to test the gate).
 G45 found one other student without a parent (signed up 2025-04-17). Proposal: don't erase now; after the gate ships
 they see "Ask a parent"; erase only if there's still no yes 14 days after the gate ships (owner OK needed).
+**Owner (2026-11-06): yes to Q1, Q3 and the name ("say it appreciate").** Built on `feat/consent-gate` (f9729a5):
+Q1 needs **no rules change** after all: a "College / grown-up" learner is saved like parents and teachers (no class,
+so every quest shows and the gate never applies; the year is checked, not stored). Mockup row X updated (X1, X2, X3,
+new X5). Store name changed to "Apprec8: Learn & Grow" (owner: don't box it into two subjects).
