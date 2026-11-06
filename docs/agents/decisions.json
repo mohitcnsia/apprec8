@@ -22,7 +22,10 @@
     "title": "The one old student with no parent",
     "ask": "One account (Class 5, signed up April 2025) has no parent linked. Delete it only if no parent says yes within 14 days after the gate ships?",
     "details": "Found by Gemini (G45). After the gate ships, this child sees \"Ask a parent or guardian\" on their next open. If nobody says yes in 14 days, the account and its data are deleted (same deletion as \"Delete my account\").\n\n**YES** = wait 14 days, then delete. **NO** = keep it (say why in the note).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": "Don't delete: restrict to learning only; the rest unlocks when a parent approves (= learn first).",
+    "via": "chat"
   },
   {
     "id": "store-listing-1",
@@ -58,7 +61,10 @@
     "ask": "Your 2 yeses as screens (canvas row Y, 4 screens). Build it like this?",
     "details": "**Y1/Y2 Home:** a calm card above the quests: children see \"Your first day · 1 of 4\", grown-ups \"Tour of Apprec8\". It shows on every open until all steps are done or ✕ is tapped (your note).\n\n**Y3 after ✕:** one green note, \"The guides are always in Me → Guides\", then never again.\n\n**Y4 Me:** \"What's new · 3 things\" for grown-ups after each update, each with DO IT (opens that screen). ✕ hides it until the next update. Children never see it.\n\n**YES** = Claude builds it and asks you before publishing.",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-    "from": "claude"
+    "from": "claude",
+    "answer": "later",
+    "note": "Folded into the simplicity pass (row Z).",
+    "via": "chat"
   },
   {
     "id": "task-c10-testers",
@@ -72,7 +78,10 @@
     "title": "Did you re-seed English?",
     "ask": "Admin tools → Update English Quest, after 5 Nov. Without it, Grammar Pro (Class 9–10) isn't on phones. Done?",
     "details": "**YES** = done. **NO** = not yet: do it now (2 minutes; close and reopen the app first). **LATER** = remind me tomorrow.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Already seeded (chat).",
+    "via": "chat"
   },
   {
     "id": "task-seema-pilot-prep",
@@ -149,7 +158,10 @@
     "ask": "Your yes, drawn: a child learns right after name + class; a calm card says \"12 stars, on this phone only. Ask a parent to save them\". Only the leaderboard and class wait. Build it like this?",
     "details": "**X6 Home:** learning starts at once; the card never blocks.\n\n**X7 Tap the card:** ask a parent or guardian (send on WhatsApp, the parent's 6-number code, or a class code), or **Not now**.\n\n**X8 Progress:** stars and streak work; the leaderboard says \"Opens when a parent says yes\".\n\n**X9 Parent said yes:** \"Your 23 stars are saved now\", leaderboard and class open.\n\n**What it means for the build:** until the yes, answers and stars stay on the phone (not on our servers); on the yes they move to the child's account. About 1–2 days of work; replaces the blocking gate. College / grown-up, the message to the parent and \"say it appreciate\" stay.\n\nCanvas, scroll to the newest row X (X6–X9).",
     "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Build it (chat 6 Nov evening).",
+    "via": "chat"
   },
   {
     "id": "owner-extras-built",

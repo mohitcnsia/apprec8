@@ -224,6 +224,12 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
+### G47 · [todo] · gemini · Restart the Decisions sync (script updated)
+`scripts/admin/decisions.mjs` now also closes inbox cards the owner answered in the chat (`via: "chat"` in
+decisions.json). In Claude's folder: stop the running `node scripts/admin/decisions.mjs --watch`, run
+`node scripts/admin/decisions.mjs --dry` (read-only; expect "closed in the inbox" to list 4 ids on the real run), then
+start `--watch` again in the background. Commit `gemini(G47): done` with the dry-run output (no emails, no uids).
+
 ### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy + start the sync (owner-approved: yes, 2026-11-06 "ok for DR-21")
 Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
 Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).

@@ -65,7 +65,16 @@ async function syncOnce() {
     for (const d of unpushed) batch.update(db.collection("ownerDecisions").doc(d.id), { pushedAt: now });
     await batch.commit();
   }
-  const merged = mergeAnswers(list, docs);
+  // Answered in the chat (the file has answer + via: "chat"): close the card in the inbox too.
+  const chatClosed = list.filter((q) => q.via === "chat" && q.answer && docs.some((d) => d.id === q.id && d.status !== "answered"));
+  if (!dry && chatClosed.length) {
+    const batch = db.batch();
+    for (const q of chatClosed) batch.update(db.collection("ownerDecisions").doc(q.id), { answer: q.answer, note: q.note || "answered in the chat", status: "answered", answeredAt: now, laterUntil: null });
+    await batch.commit();
+    log.push(`closed in the inbox (answered in chat): ${chatClosed.map((q) => q.id).join(", ")}`);
+  }
+  const chatIds = new Set(list.filter((q) => q.via === "chat").map((q) => q.id));
+  const merged = mergeAnswers(list, docs.filter((d) => !chatIds.has(d.id))); // same order as the file
   const answered = merged.filter((q, i) => q.answer && q.answer !== list[i].answer);
   for (const q of answered) log.push(`answer ${q.id}: ${answerLabel(q.answer)}${q.note ? ` · "${q.note}"` : ""}`);
   if (!dry && answered.length) writeFileSync(FILE, JSON.stringify(merged, null, 2) + "\n");

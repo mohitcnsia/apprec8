@@ -2330,3 +2330,14 @@ everyone (children see only theirs; the owner sees all). Data checks reuse reads
   (feat/consent-gate X2) once approved: progress stays on the phone until a parent's yes, then moves to the account.
 - **Teachers' one-pager** in the app (data/teacherStart.js, Me → Guides + Admin tools, SHARE for WhatsApp).
 - Publishing waits for the owner's "publish" (asked in the inbox).
+
+## 2026-11-06 (evening) — Owner decisions in the chat (Claude)
+- **Learn first (row X6–X9): yes, build it.** The old account without a parent: **don't delete**; it becomes
+  learn-first (learning only, the rest unlocks when a parent approves). Replaces the blocking gate on feat/consent-gate.
+- **Parent says yes from a web link (no app): yes.** Owner: many kids are in other states; parents can't be expected
+  to install and understand the app. Plan: the child's "Send to my parent" WhatsApp message carries a one-time link
+  (expires in 7 days) to a 1-page form (Hindi / English, read aloud): name, Mother / Father / Guardian, "हाँ, मैं सहमत
+  हूँ". A small HTTP function records the consent and unlocks the child. Mockup first (X10–X11), then DR for the function.
+- **Row Z and the store text:** owner wants to see them first → review page https://claude.ai/artifact/RwDpduy4VGZTnL7ew5c8eE.
+- **Row Y:** folded into the simplicity pass.
+- Inbox cards answered in the chat are closed by the sync (`via: "chat"`), G47 restarts it.
