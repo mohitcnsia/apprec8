@@ -197,10 +197,14 @@ export default function HomeScreen({ navigation }) {
   }, [teacherClasses]);
 
   // Role detection
-  const [devRole, setDevRole] = useState(null); // null (auto) | "parent" | "teacher" | "child"
-  const isParent = devRole === "parent" || (devRole !== "child" && devRole !== "teacher" && children.length > 0 && !userData?.isChild && !Number.isInteger(userData?.grade));
-  const isTeacherRole = devRole === "teacher" || (devRole !== "child" && devRole !== "parent" && isTeacher && !userData?.isChild && !Number.isInteger(userData?.grade));
-  const isAdultView = isParent || isTeacherRole;
+  const [devRole, setDevRole] = useState(null); // null (auto) | "parent" | "teacher" | "child" | "new_grownup"
+  const isChildUser = devRole === "child" || !!userData?.isChild || Number.isInteger(userData?.grade);
+  const isNewGrownUp =
+    devRole === "new_grownup" ||
+    (!isChildUser && children.length === 0 && teacherClasses.length === 0 && devRole !== "parent" && devRole !== "teacher");
+  const isParent = devRole === "parent" || (!isChildUser && !isNewGrownUp && (children.length > 0 || devRole === "parent"));
+  const isTeacherRole = devRole === "teacher" || (!isChildUser && !isNewGrownUp && (isTeacher || devRole === "teacher"));
+  const isAdultView = isNewGrownUp || isParent || isTeacherRole;
 
   const displayChildren = useMemo(() => {
     if (children.length > 0) return children;
@@ -285,6 +289,9 @@ export default function HomeScreen({ navigation }) {
           <Pressable onPress={() => setDevRole("teacher")} style={[styles.devPill, devRole === "teacher" && styles.devPillActive]}>
             <Text style={styles.devPillText}>Z3 Teacher</Text>
           </Pressable>
+          <Pressable onPress={() => setDevRole("new_grownup")} style={[styles.devPill, devRole === "new_grownup" && styles.devPillActive]}>
+            <Text style={styles.devPillText}>Empty State</Text>
+          </Pressable>
         </View>
       ) : null}
 
@@ -312,73 +319,87 @@ export default function HomeScreen({ navigation }) {
       {/* ============================================================== */}
       {/* 1. TEACHER HOME (Z3) — shown if user teaches classes */}
       {/* ============================================================== */}
-      {isTeacherRole && displayTeacherClasses.length > 0 ? (
+      {isTeacherRole ? (
         <View style={styles.sectionWrap}>
-          {displayTeacherClasses.map((cls) => {
-            const w = teacherWeekMap[cls.id] || {};
-            const subjectTitle = SUBJECT_NAMES[cls.subject] || cls.subject || "English";
-            const label = classLabel(cls);
-            const waiting = w.waitingCount ?? 3;
-            const students = w.studentsCount || cls.studentCount || cls.size || 38;
-            const active = w.active ?? 24;
-            const topicText = w.assignment?.title
-              ? `${w.assignment.title}${w.assignment.dueDate ? `, due ${w.assignment.dueDate}` : ""}`
-              : "Reported speech, due Fri";
-            const reteachText = w.reteach
-              ? `${w.reteach.title} (${Math.round((w.reteach.kids / Math.max(1, w.reteach.of)) * 100)}% below 60%)`
-              : "Reported questions (52% right)";
+          {displayTeacherClasses.length > 0 ? (
+            displayTeacherClasses.map((cls) => {
+              const w = teacherWeekMap[cls.id] || {};
+              const subjectTitle = SUBJECT_NAMES[cls.subject] || cls.subject || "English";
+              const label = classLabel(cls);
+              const waiting = w.waitingCount ?? 3;
+              const students = w.studentsCount || cls.studentCount || cls.size || 38;
+              const active = w.active ?? 24;
+              const topicText = w.assignment?.title
+                ? `${w.assignment.title}${w.assignment.dueDate ? `, due ${w.assignment.dueDate}` : ""}`
+                : "Reported speech, due Fri";
+              const reteachText = w.reteach
+                ? `${w.reteach.title} (${Math.round((w.reteach.kids / Math.max(1, w.reteach.of)) * 100)}% below 60%)`
+                : "Reported questions (52% right)";
 
-            return (
-              <Pressable
-                key={cls.id}
-                onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id } })}
-                accessibilityRole="button"
-                accessibilityLabel={`${label}, ${students} students. Tap for class progress.`}
-              >
-                <View style={styles.teacherCard}>
-                  {/* Class Header & Pills */}
-                  <View style={styles.cardHeaderRow}>
-                    <Text style={styles.classTitle}>{label} · {subjectTitle}</Text>
-                    <View style={{ flexDirection: "row", gap: 6 }}>
-                      {waiting > 0 ? (
-                        <View style={styles.waitingPill}>
-                          <Text style={styles.waitingPillText}>{waiting} waiting</Text>
+              return (
+                <Pressable
+                  key={cls.id}
+                  onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id } })}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${label}, ${students} students. Tap for class progress.`}
+                >
+                  <View style={styles.teacherCard}>
+                    {/* Class Header & Pills */}
+                    <View style={styles.cardHeaderRow}>
+                      <Text style={styles.classTitle}>{label} · {subjectTitle}</Text>
+                      <View style={{ flexDirection: "row", gap: 6 }}>
+                        {waiting > 0 ? (
+                          <View style={styles.waitingPill}>
+                            <Text style={styles.waitingPillText}>{waiting} waiting</Text>
+                          </View>
+                        ) : null}
+                        <View style={styles.countPill}>
+                          <Text style={styles.countPillText}>{students} students</Text>
                         </View>
-                      ) : null}
-                      <View style={styles.countPill}>
-                        <Text style={styles.countPillText}>{students} students</Text>
                       </View>
                     </View>
-                  </View>
 
-                  {/* Summary Lines */}
-                  <Text style={styles.weekLine}>
-                    This week: <Text style={{ fontFamily: "nunitoBold" }}>{active} of {students} practised</Text>
-                    {` · topic: ${topicText}`}
-                  </Text>
-
-                  {/* Reteach Recommendation */}
-                  <View style={styles.reteachBox}>
-                    <Text style={styles.reteachLabel}>
-                      Teach again:{" "}
-                      <Text style={styles.reteachTopic}>{reteachText}</Text>
+                    {/* Summary Lines */}
+                    <Text style={styles.weekLine}>
+                      This week: <Text style={{ fontFamily: "nunitoBold" }}>{active} of {students} practised</Text>
+                      {` · topic: ${topicText}`}
                     </Text>
+
+                    {/* Reteach Recommendation */}
+                    <View style={styles.reteachBox}>
+                      <Text style={styles.reteachLabel}>
+                        Teach again:{" "}
+                        <Text style={styles.reteachTopic}>{reteachText}</Text>
+                      </Text>
+                    </View>
+
+                    <Text style={styles.cardHint}>Tap the class for each student.</Text>
+
+                    {/* Bottom Thumb Zone Action */}
+                    <Pressable
+                      style={styles.primaryBottomBtn}
+                      onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id, assign: true } })}
+                      accessibilityRole="button"
+                    >
+                      <Text style={styles.primaryBottomBtnText}>ASSIGN NEXT TOPIC</Text>
+                    </Pressable>
                   </View>
-
-                  <Text style={styles.cardHint}>Tap the class for each student.</Text>
-
-                  {/* Bottom Thumb Zone Action */}
-                  <Pressable
-                    style={styles.primaryBottomBtn}
-                    onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: cls.id, assign: true } })}
-                    accessibilityRole="button"
-                  >
-                    <Text style={styles.primaryBottomBtnText}>ASSIGN NEXT TOPIC</Text>
-                  </Pressable>
-                </View>
+                </Pressable>
+              );
+            })
+          ) : (
+            <View style={styles.emptyTeacherCard}>
+              <Text style={styles.emptyCardTitle}>Connect your school</Text>
+              <Text style={styles.emptyCardSub}>Join as a teacher with your school's invite code to view your classes and assign topics.</Text>
+              <Pressable
+                style={styles.primaryBottomBtn}
+                onPress={() => navigation.navigate("JoinAsTeacher")}
+                accessibilityRole="button"
+              >
+                <Text style={styles.primaryBottomBtnText}>Type your school's code</Text>
               </Pressable>
-            );
-          })}
+            </View>
+          )}
         </View>
       ) : null}
 
@@ -435,6 +456,81 @@ export default function HomeScreen({ navigation }) {
               </View>
             );
           })}
+
+          {/* Small '+ Add another child' under the child cards */}
+          <Pressable
+            style={styles.addAnotherChildBtn}
+            onPress={() => navigation.navigate("AddChild")}
+            accessibilityRole="button"
+            accessibilityLabel="Add another child"
+          >
+            <Ionicons name="add-circle-outline" size={20} color={P.selectedText} />
+            <Text style={styles.addAnotherChildText}>+ Add another child</Text>
+          </Pressable>
+        </View>
+      ) : null}
+
+      {/* ============================================================== */}
+      {/* 3. GROWN-UP EMPTY STATE ("Who is learning?") */}
+      {/* ============================================================== */}
+      {isNewGrownUp ? (
+        <View style={styles.sectionWrap}>
+          <View style={styles.whoIsLearningCard}>
+            <Text style={styles.whoTitle}>Who is learning?</Text>
+            <Text style={styles.whoSub}>Pick how you want to use Apprec8:</Text>
+
+            {/* Choice 1: My child, on this phone */}
+            <Pressable
+              style={({ pressed }) => [styles.whoChoice, pressed && { opacity: 0.8 }]}
+              onPress={() => navigation.navigate("AddChild")}
+              accessibilityRole="button"
+            >
+              <View style={[styles.whoIconWrap, { backgroundColor: P.selectedBg }]}>
+                <Ionicons name="phone-portrait-outline" size={22} color={P.selectedText} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.whoChoiceTitle}>My child, on this phone</Text>
+                <Text style={styles.whoChoiceSub}>Set their name and class, then hand them the phone</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={P.dimText} />
+            </Pressable>
+
+            <View style={styles.divider} />
+
+            {/* Choice 2: My child has their own phone */}
+            <Pressable
+              style={({ pressed }) => [styles.whoChoice, pressed && { opacity: 0.8 }]}
+              onPress={() => navigation.navigate("LinkChild")}
+              accessibilityRole="button"
+            >
+              <View style={[styles.whoIconWrap, { backgroundColor: P.streakBg }]}>
+                <Ionicons name="link-outline" size={22} color={P.streakText} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.whoChoiceTitle}>My child has their own phone</Text>
+                <Text style={styles.whoChoiceSub}>Link with a 6-number code so you see their week</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={P.dimText} />
+            </Pressable>
+
+            <View style={styles.divider} />
+
+            {/* Choice 3: I'm a teacher */}
+            <Pressable
+              style={({ pressed }) => [styles.whoChoice, pressed && { opacity: 0.8 }]}
+              onPress={() => navigation.navigate("JoinAsTeacher")}
+              accessibilityRole="button"
+            >
+              <View style={[styles.whoIconWrap, { backgroundColor: P.track }]}>
+                <Ionicons name="school-outline" size={22} color={P.text} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.whoChoiceTitle}>I'm a teacher</Text>
+                <Text style={styles.whoChoiceSub}>Type your school's invite code to see your class</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={P.dimText} />
+            </Pressable>
+          </View>
         </View>
       ) : null}
 
@@ -831,5 +927,86 @@ const makeStyles = (P, insets) =>
       fontSize: 12,
       fontFamily: "nunitoBold",
       color: P.text,
+    },
+
+    // Empty state & who is learning card
+    whoIsLearningCard: {
+      padding: 20,
+      borderRadius: 24,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.border,
+      gap: 10,
+    },
+    whoTitle: {
+      fontSize: 22,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    whoSub: {
+      fontSize: 14,
+      fontFamily: "nunito",
+      color: P.textSoft,
+      marginBottom: 4,
+    },
+    whoChoice: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      paddingVertical: 10,
+    },
+    whoIconWrap: {
+      width: 44,
+      height: 44,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    whoChoiceTitle: {
+      fontSize: 16,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    whoChoiceSub: {
+      fontSize: 12,
+      fontFamily: "nunito",
+      color: P.textSoft,
+      marginTop: 2,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: P.border,
+    },
+    addAnotherChildBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      paddingVertical: 12,
+      marginTop: 4,
+    },
+    addAnotherChildText: {
+      fontSize: 14,
+      fontFamily: "nunitoBold",
+      color: P.selectedText,
+    },
+    emptyTeacherCard: {
+      padding: 20,
+      borderRadius: 24,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.border,
+      gap: 10,
+    },
+    emptyCardTitle: {
+      fontSize: 20,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    emptyCardSub: {
+      fontSize: 14,
+      fontFamily: "nunito",
+      color: P.textSoft,
+      lineHeight: 20,
     },
   });

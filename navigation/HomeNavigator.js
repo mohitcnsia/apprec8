@@ -31,6 +31,9 @@ import TaskEditor from "../screens/task/TaskEditor";
 import Tasks from "../screens/task/Tasks";
 import TaskDetails from "../screens/task/TaskDetails";
 import PracticePaperScreen from "../screens/paper/PracticePaperScreen";
+import AddChildScreen from "../screens/profile/AddChildScreen";
+import LinkChildScreen from "../screens/profile/LinkChildScreen";
+import JoinAsTeacherScreen from "../screens/profile/JoinAsTeacherScreen";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +69,10 @@ const HomeNavigator = () => (
     <Stack.Screen name="TaskDetails" component={TaskDetails} />
     {/* Practice paper (mockup Q), from Home's Explore tile */}
     <Stack.Screen name="PracticePaper" component={PracticePaperScreen} />
+    {/* Child & Teacher actions from Home empty states */}
+    <Stack.Screen name="AddChild" component={AddChildScreen} />
+    <Stack.Screen name="LinkChild" component={LinkChildScreen} />
+    <Stack.Screen name="JoinAsTeacher" component={JoinAsTeacherScreen} />
   </Stack.Navigator>
 );
 
