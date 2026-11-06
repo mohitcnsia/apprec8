@@ -9,7 +9,8 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 - Word Power, Science: nothing (tagged Classes 2–6 / 3–5). Practice papers and Mix papers: nothing (Class 5 / Classes 3–6).
 
 ## ⏰ Owner, 2026-11-06 (reminders)
-- [ ] Send Claude the privacy policy + delete-account page links (A7 check).
+- [ ] Privacy + deletion pages: Claude's drafts in docs/policies/ (old pages said "email only, not for children"). Owner reads them; upload to app-policies after DR-19 is live.
+- [ ] OK **DR-19** (delete means delete) after Gemini's review G42; then "publish" (Me → Delete my account is back).
 - [ ] Google Group for the 50 pilot students; check the Play "12 testers / 14 days" rule ([release/PLAY_CONSOLE.md](release/PLAY_CONSOLE.md)).
 - [ ] **Re-seed English** (Grammar Pro 2–6, Unit 5 practice, Unit 10 Word Building): close and reopen the app first so it has today's update.
 - [ ] Test **20.0.30** on your phone (Testing → "20.0.30 on your phone").
@@ -17,7 +18,8 @@ Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of w
 - [ ] Decide the **Dog Squad** plan (CODE_REVIEW.md, 2026-11-06). Owner: old dog/animal quizzes become exploration quests soon.
 - [x] "publish": done 2026-11-06 for 20.0.29 and 20.0.30 phones (old content hidden for everyone but you, dogs too).
 - [x] Build 20.0.30 uploaded to internal testing (check-aab PASS); `feat/push-20.0.30` merged into `feat/quiz-redesign`.
-- [x] Deploys DR-16 / DR-17 / DR-18 approved → Gemini task G41. After it: Admin tools → Reset Demo School.
+- [x] Deploys DR-16 / DR-17 / DR-18 live (Gemini G41).
+- [ ] Admin tools → **Reset Demo School** (type a password; gives the demo logins for Seema and Play Console).
 
 ## A. Seema's Class 10 pilot (closed testing on Play)
 | # | Item | Who | State |
