@@ -77,7 +77,10 @@
     "title": "Task for tomorrow: 12+ testers (C10)",
     "ask": "Set up the testers' Google Group and send the WhatsApp message. Tap YES when done, LATER to be reminded in 24 hours, MORE DETAILS if you're stuck.",
     "details": "**1. Google Group (laptop, 5 min):** groups.google.com → Create group → name \"Apprec8 testers\", email `apprec8-testers`. Who can join: anyone on the web. Who can see members / post / view conversations: **group managers only**.\n\n**2. Play Console (5 min):** Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups → `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link.\n\n**3. WhatsApp to 15–16 grown-ups** (parents, family, friends, Seema and colleagues):\n1) Join: https://groups.google.com/g/apprec8-testers → Join group\n2) Become a tester: (the Join on the web link)\n3) Install after Sunday: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\"Please stay in the group for 2 weeks.\"\n\nGoogle's 14-day clock starts once 12 have opted in. Full steps: My notes → Play forms.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Done in chat 6 Nov: Google Group apprec8-testers created (managers-only privacy), set on the closed track, early members invited.",
+    "via": "chat"
   },
   {
     "id": "english-reseeded",
@@ -206,6 +209,13 @@
     "ask": "Play Console → Grow users → Store presence → Main store listing: paste the name, short and full description, upload the feature graphic. Tap YES when done, MORE DETAILS if stuck.",
     "details": "Everything to paste is in **My notes → Store listing**:\n- App name: **Apprec8: Learn & Grow**\n- Short description: **Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.**\n- Full description: copy from My notes.\n- Feature graphic (1024×500): https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png (save it on the laptop, then upload).\n- Phone screenshots: Gemini's in docs/release/screenshots (light), 4–8 of them.\n\nThen Save → it goes with the next review. Gemini's logos can replace the graphic later.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png",
+    "from": "claude"
+  },
+  {
+    "id": "task-seema-whatsapp",
+    "title": "Task: send Seema's WhatsApp message (when 3 things are done)",
+    "ask": "Send it when: 1) Google approved and you pressed Publish, 2) Seema's class exists (you have the code), 3) Seema tried it with 2 test students. Tap YES when sent.",
+    "details": "**Message (fill in the class code):**\n\n📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this **with a parent**, on the phone the student will use:\n\n1️⃣ Join the testers' group (use the Google account on that phone): https://groups.google.com/g/apprec8-testers → Join group\n\n2️⃣ Become a tester: https://play.google.com/apps/testing/com.mohitchilkoti.apprec8 → Become a tester\n\n3️⃣ Install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\n4️⃣ Open Apprec8 → Continue with Google → first name → Class 10.\n\n5️⃣ Me → Join a class → code ______ → the parent reads the short note (English or हिंदी), types their name, agrees.\n\nPlease stay in the group for at least 2 weeks. 🙏",
     "from": "claude"
   }
 ]

@@ -18,11 +18,11 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 | C3 | DR-19 server deletion (everything goes) | Gemini G42/G44 | done | deployed + tested with a throwaway account 2026-11-06 |
 | C4 | **Parent consent (row X)**: approve mockup → Claude builds gate + year of birth → publish; DR-20 cleanup | Owner OK → Claude → Gemini | ~1 day after OK | owner asked 3 questions (adult students, two parents, grandparents): answers in CODE_REVIEW.md "Spec X: owner questions" |
 | C5 | Demo School logins for Google's reviewer: Admin tools → Reset Demo School | Owner | 5 min | done 2026-11-06 (password only in Play Console) |
-| C6 | Store listing text | Claude drafts, owner checks | — | **approved 2026-11-06**; owner pastes into Play Console (inbox task) |
+| C6 | Store listing | Owner + Claude | — | done 2026-11-06: name "Apprec8: Learn & Grow", descriptions, 6 new phone screenshots, old tablet shots removed; submitted with 20.0.30 (9 changes) |
 | C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | done | 14 in docs/release/screenshots/ (light + dark). Before public release: redo Home (0 stars, empty card) and Me (shows the test email) |
 | C8 | App icon + feature graphic | Claude drafts, owner picks | — | draft 3 approved for now (no green checks); Gemini G48 makes the brand set (dissolving ∞) |
 | C9 | Play Console → App content forms | Owner + Claude | ~45 min | done 2026-11-06: sign-in details = 3 demo logins; ages 6–18+; Data safety 6 types, nothing shared (2025 form said email was shared: fixed). Sent for review |
-| C10 | Google Group with 12+ testers who stay 14 days (family, Seema, pilot students) | Owner | — | todo |
+| C10 | 12+ testers | Owner + Seema | — | 2026-11-06: Google Group apprec8-testers on the closed track; early members invited. Seema's class message waits for: Google approval + Publish, her class code, her test run (inbox task) |
 | C11 | Closed testing track → 20.0.30 | Owner + Claude | — | 2026-11-06: 20.0.30 submitted for review on the closed track (was 19 = 1.0.0; an old 20.0.6 draft removed). **Managed publishing is on: after approval, Publishing overview → Publish.** |
 Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owner: later).
 
