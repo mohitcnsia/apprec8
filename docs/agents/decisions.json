@@ -104,7 +104,10 @@
     "title": "🔊 Listen button on the parent's consent note?",
     "ask": "Many parents can't read well. Add a 🔊 Listen button that reads the consent note aloud (हिंदी or English), on Join a class and Link my child?",
     "details": "Uses the phone's voice, the same as the quiz read-aloud. No new data, no cost. One small button next to the note; the parent still types their name and ticks agree.\n\n**YES** = Claude builds it (small change) and asks before publishing. **NO** = leave as is.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T02:36:19.996Z"
   },
   {
     "id": "seema-confusions",
@@ -112,7 +115,10 @@
     "ask": "Ask Seema for her 3 biggest confusions in the app, in her own words. Type them in the note, then tap YES.",
     "details": "Before we build anything else, we fix what confuses her: if she finds it hard, every teacher will.\n\nHer one-page start (4 jobs, what to ignore, the legal part in plain words) is here; share it with her from the page's Share menu:\nhttps://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5\n\nThen 20 minutes together on the Demo School teacher login (made-up class, nothing reaches real children).",
     "link": "https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Send this to seems too. Maybe on her homepage. She will start the exploration of app today.",
+    "answeredAt": "2026-11-07T02:40:41.579Z"
   },
   {
     "id": "simplicity-pass",
@@ -201,7 +207,10 @@
     "title": "Later: rename to Appreci8?",
     "ask": "With the \"i\", the name reads \"appreciate\" by itself. Decide once Gemini's logos (both spellings) are in. Rename?",
     "details": "**What changes:** the name on the Play Store, the app's home screen label, the logo, the store text and the policy pages. **What can't change:** the internal app ID (com.mohitchilkoti.apprec8); nobody sees it. Existing users just see the new name after an update.\n\nCheapest before the public launch. Tap **LATER** until you've seen the logos.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "I am open to ideas here. I need something that looks good and is punchy. I really like the sound of appreciate and the idea behind it",
+    "answeredAt": "2026-11-07T02:39:40.617Z"
   },
   {
     "id": "task-store-listing",
@@ -234,6 +243,9 @@
     "ask": "3 sheets below. YES = go with Direction 1 (Cosmic Star: Chamak above a gold ∞ that breaks into pixels). NO = none yet. Type in the note which one you like, or what to change.",
     "details": "**Claude's view:** the 7 subject icons are good (same in all 3). The app icon works. The 3 directions are very similar, and in the wordmark the ∞ floats beside the word instead of being its last letter; Gemini fixes that next.\n\n**1. Cosmic Star**\n\n![1](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg)\n\n**2. Infinite Bloom**\n\n![2](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-infinite-bloom.jpg)\n\n**3. Playful Geometric**\n\n![3](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-playful-geometric.jpg)",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": "The infinity symbol looks like a worm rather then inspiring eight and infinity. Rest is good. Fis the infinity symbol please..you can just show me the infinity symbol and then use it to save effort",
+    "answeredAt": "2026-11-06T20:01:27.037Z"
   }
 ]

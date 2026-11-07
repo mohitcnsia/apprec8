@@ -310,12 +310,13 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
-### G53 · [todo] · gemini · Logo fix: the ∞ as the last letter (after G49)
-Claude's review of G48: subject icons and app icon good. The 3 directions are too similar, and the ∞ floats beside
-"apprec" / "appreci" (raised, with a gap) instead of being the word's last letter. Redo the **wordmark only**, both
-spellings: the ∞ sits on the baseline at x-height like a letter, same weight as the text, left loop solid, right loop
-breaking into pixel blocks that drift up-right. 2 variants: white on plum, plum on white. Output
-`docs/release/brand/wordmark-v2/` + `gemini(G53): done`.
+### G53 · [todo] · gemini · ∞ redo: show the owner the infinity alone first
+Owner (inbox, 2026-11-07): "The infinity symbol looks like a **worm** rather than an inspiring eight and infinity.
+Rest is good. Fix the infinity symbol; you can just show me the infinity." So: **the ∞ mark alone**, no wordmark yet.
+A clean, symmetric, bold infinity (a proper lemniscate, even stroke like a figure 8 lying down, not a ribbon or a
+twisted tube), the right loop breaking into small square pixels that drift up-right. 4 variants on one sheet
+(e.g. solid gold, plum, white-on-plum, gradient gold→plum), each also at 48 px to check it still reads small.
+`docs/release/brand/infinity-v2/` + sheet PNG. `gemini(G53): done — 4 infinity variants`.
 
 ### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
 Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
@@ -379,6 +380,12 @@ in `docs/mockups/teacher-class/` (+ PNGs), 3 screens:
 Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Also: **Demo School gets 2 students
 waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
 Google's reviewer can try approving.
+
+### G58 · [todo] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
+For parents who read little. On the consent notes (Join a class, Add a child, Link my child's own account): a
+"🔊 Listen" button that reads the note aloud in the chosen language (Hindi `hi-IN`, English `en-IN`) with
+expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
+`gemini(G58): done`.
 
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
