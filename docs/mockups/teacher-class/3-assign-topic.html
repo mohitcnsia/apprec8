@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>10-B · Assign a Topic (Teacher)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Nunito", sans-serif; }
+  body { background: #0E0A12; display: flex; justify-content: center; padding: 20px 0; }
+  .phone { width: 390px; height: 844px; background: #18121E; color: #F4EDF5; border-radius: 44px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 4px solid #33243D; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+  
+  /* Status Bar */
+  .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 14px; font-weight: 600; color: #C4B5C6; }
+  
+  /* Top App Bar */
+  .app-bar { padding: 8px 18px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2B1D33; background: #18121E; }
+  .bar-left { display: flex; align-items: center; gap: 10px; }
+  .back-btn { font-size: 20px; color: #D7A9DC; background: #261A2E; width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+  .app-title { font-size: 19px; font-weight: 800; color: #FFFFFF; }
+  .app-sub { font-size: 12px; color: #9E8CA8; font-weight: 500; }
+  .class-pill { background: #2A1736; border: 1px solid #4D2861; color: #D7A9DC; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 10px; }
+
+  /* Scrollable Content */
+  .content { flex: 1; overflow-y: auto; padding: 14px 16px 100px; display: flex; flex-direction: column; gap: 14px; }
+  
+  /* Due Date Selector Section */
+  .due-section { background: #23172C; border: 1.5px solid #3A2346; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .section-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #D8B4FE; display: flex; justify-content: space-between; }
+  .due-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .due-chips::-webkit-scrollbar { display: none; }
+  .due-chip { font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 12px; border: 1px solid #3D264E; background: #2A1A35; color: #C4B5C6; cursor: pointer; white-space: nowrap; }
+  .due-chip.active { background: #7E22CE; border-color: #C084FC; color: #FFFFFF; box-shadow: 0 2px 8px rgba(168,85,247,0.3); }
+
+  /* Suggested Topics Section (Direct 1-Tap Action) */
+  .suggested-section { display: flex; flex-direction: column; gap: 8px; }
+  .suggested-header { font-size: 13.5px; font-weight: 800; color: #FFFFFF; display: flex; align-items: center; gap: 6px; }
+  
+  .suggest-card { background: linear-gradient(135deg, #1E2333 0%, #25233B 100%); border: 1.5px solid #38BDF8; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 14px rgba(56,189,248,0.12); position: relative; }
+  .suggest-card.syllabus { background: linear-gradient(135deg, #241D35 0%, #2A1E3C 100%); border-color: #A855F7; box-shadow: 0 4px 14px rgba(168,85,247,0.12); }
+  
+  .badge-row { display: flex; justify-content: space-between; align-items: center; }
+  .badge-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 3px 8px; border-radius: 6px; }
+  .tag-weak { background: #0369A1; color: #E0F2FE; }
+  .tag-syllabus { background: #6B21A8; color: #F3E8FF; }
+  .suggest-stat { font-size: 11.5px; font-weight: 700; color: #7DD3FC; }
+  .suggest-stat.purple { color: #D8B4FE; }
+
+  .topic-name { font-size: 15.5px; font-weight: 800; color: #FFFFFF; line-height: 1.3; }
+  .topic-unit { font-size: 12px; color: #94A3B8; }
+  .topic-unit.purple { color: #C4B5C6; }
+  
+  .card-action-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+  .btn-assign-direct { background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 12.5px; padding: 9px 16px; border-radius: 12px; border: none; letter-spacing: 0.4px; box-shadow: 0 3px 10px rgba(2,132,199,0.3); cursor: pointer; }
+  .btn-assign-direct.purple { background: #9333EA; box-shadow: 0 3px 10px rgba(147,51,234,0.3); }
+
+  /* All Topics Browse Section */
+  .browse-section { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .browse-header { font-size: 13.5px; font-weight: 800; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; }
+  .search-wrap { position: relative; display: flex; align-items: center; }
+  .search-icon { position: absolute; left: 12px; color: #8F7B99; font-size: 13px; }
+  .search-input { width: 100%; height: 38px; background: #23172C; border: 1.5px solid #362242; border-radius: 13px; padding: 0 12px 0 32px; color: #FFFFFF; font-size: 13px; font-weight: 600; outline: none; }
+  .search-input::placeholder { color: #8F7B99; font-weight: 500; }
+
+  /* Unit Accordion */
+  .unit-card { background: #211629; border: 1px solid #362242; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .unit-header { padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; background: #271A31; cursor: pointer; border-bottom: 1px solid #362242; }
+  .unit-header.folded { border-bottom: none; }
+  .unit-title-group { display: flex; flex-direction: column; gap: 2px; }
+  .unit-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #D7A9DC; letter-spacing: 0.5px; }
+  .unit-name { font-size: 13.5px; font-weight: 800; color: #FFFFFF; }
+  .unit-toggle { font-size: 14px; color: #9E8CA8; }
+
+  /* Topic Rows inside expanded unit */
+  .topic-list { display: flex; flex-direction: column; }
+  .topic-row { padding: 11px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2B1D33; }
+  .topic-row:last-child { border-bottom: none; }
+  .topic-row.selected { background: #2E1B3B; }
+  
+  .topic-info { display: flex; align-items: center; gap: 10px; }
+  .radio-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #5A3A6E; display: flex; align-items: center; justify-content: center; }
+  .radio-check.checked { border-color: #C084FC; background: #9333EA; }
+  .radio-dot { width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF; }
+  
+  .topic-details { display: flex; flex-direction: column; }
+  .t-title { font-size: 13px; font-weight: 700; color: #FFFFFF; }
+  .t-sub { font-size: 11px; color: #9E8CA8; }
+  .t-acc { font-size: 11px; font-weight: 700; color: #A7F3D0; }
+
+  /* Sticky Bottom Floating Bar (Thumb Zone) */
+  .floating-bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 18px 22px; background: linear-gradient(180deg, rgba(24,18,30,0) 0%, #18121E 30%, #18121E 100%); display: flex; flex-direction: column; gap: 8px; }
+  .btn-assign-main { background: linear-gradient(135deg, #7E22CE 0%, #9333EA 100%); color: #FFFFFF; font-size: 14.5px; font-weight: 800; padding: 14px; border-radius: 16px; border: none; text-align: center; box-shadow: 0 4px 16px rgba(147,51,234,0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+  .btn-assign-main:hover { filter: brightness(1.1); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>📶 🔋</span>
+  </div>
+
+  <!-- Top App Bar -->
+  <div class="app-bar">
+    <div class="bar-left">
+      <a href="1-class-screen.html" class="back-btn">‹</a>
+      <div>
+        <div class="app-title">Assign a Topic</div>
+        <div class="app-sub">Class 10-B · English</div>
+      </div>
+    </div>
+    <div class="class-pill">32 students</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    
+    <!-- 1. Due Date Selection (Top & Clear) -->
+    <div class="due-section">
+      <div class="section-label">
+        <span>Set Due Date</span>
+        <span style="color:#C084FC;">Tuesday, 10 Nov</span>
+      </div>
+      <div class="due-chips">
+        <div class="due-chip active">⚡ 3 days (Tue)</div>
+        <div class="due-chip">📅 1 week (Fri)</div>
+        <div class="due-chip">📅 2 weeks</div>
+        <div class="due-chip">🗓️ Custom</div>
+      </div>
+    </div>
+
+    <!-- 2. Suggested for 10-B (Direct 1-Tap Action) -->
+    <div class="suggested-section">
+      <div class="suggested-header">
+        <span>⭐ Recommended for 10-B</span>
+      </div>
+
+      <!-- Weakest Topic Card -->
+      <div class="suggest-card">
+        <div class="badge-row">
+          <span class="badge-tag tag-weak">⚠️ Weakest Topic</span>
+          <span class="suggest-stat">52% Class Accuracy</span>
+        </div>
+        <div>
+          <div class="topic-name">Reported Questions & Commands</div>
+          <div class="topic-unit">Unit 2: Reported Speech · 12 questions</div>
+        </div>
+        <div class="card-action-row">
+          <span style="font-size:11px; color:#94A3B8;">14 students scored below 60%</span>
+          <button class="btn-assign-direct" onclick="alert('Assigned Reported Questions to 10-B due Tuesday!')">ASSIGN PRACTICE ▶</button>
+        </div>
+      </div>
+
+      <!-- Next in Syllabus Card -->
+      <div class="suggest-card syllabus">
+        <div class="badge-row">
+          <span class="badge-tag tag-syllabus">📚 Next in Syllabus</span>
+          <span class="suggest-stat purple">Not yet assigned</span>
+        </div>
+        <div>
+          <div class="topic-name">Passive Voice: Past & Modals</div>
+          <div class="topic-unit purple">Unit 1: Active & Passive · 15 questions</div>
+        </div>
+        <div class="card-action-row">
+          <span style="font-size:11px; color:#C4B5C6;">Recommended next progression</span>
+          <button class="btn-assign-direct purple" onclick="alert('Assigned Passive Voice to 10-B due Tuesday!')">ASSIGN PRACTICE ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. All Topics (Folded Unit Hierarchy) -->
+    <div class="browse-section">
+      <div class="browse-header">
+        <span>Or choose from curriculum</span>
+        <span style="font-size:11.5px; color:#D7A9DC;">10 Units</span>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Search topics (e.g. Tenses, Modals)...">
+      </div>
+
+      <!-- Unit 1: Expanded -->
+      <div class="unit-card">
+        <div class="unit-header">
+          <div class="unit-title-group">
+            <span class="unit-label">Unit 1 · 4 Topics</span>
+            <span class="unit-name">Active & Passive Voice</span>
+          </div>
+          <span class="unit-toggle">▼</span>
+        </div>
+        <div class="topic-list">
+          <!-- Topic 1 -->
+          <div class="topic-row">
+            <div class="topic-info">
+              <div class="radio-check"></div>
+              <div class="topic-details">
+                <span class="t-title">Simple Present & Past Passive</span>
+                <span class="t-sub">10 Qs · 82% class mastery</span>
+              </div>
+            </div>
+            <span class="t-acc">82%</span>
+          </div>
+
+          <!-- Topic 2 (Selected) -->
+          <div class="topic-row selected">
+            <div class="topic-info">
+              <div class="radio-check checked">
+                <div class="radio-dot"></div>
+              </div>
+              <div class="topic-details">
+                <span class="t-title">Passive with Modals (can, must)</span>
+                <span class="t-sub">12 Qs · Syllabus node 3</span>
+              </div>
+            </div>
+            <span style="font-size:11px; color:#C084FC; font-weight:700;">Selected</span>
+          </div>
+
+          <!-- Topic 3 -->
+          <div class="topic-row">
+            <div class="topic-info">
+              <div class="radio-check"></div>
+              <div class="topic-details">
+                <span class="t-title">Impersonal Passive Reporting</span>
+                <span class="t-sub">8 Qs · Advanced node</span>
+              </div>
+            </div>
+            <span class="t-acc">71%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unit 2: Folded -->
+      <div class="unit-card">
+        <div class="unit-header folded">
+          <div class="unit-title-group">
+            <span class="unit-label">Unit 2 · 3 Topics</span>
+            <span class="unit-name">Direct & Indirect Speech</span>
+          </div>
+          <span class="unit-toggle">▶</span>
+        </div>
+      </div>
+
+      <!-- Unit 3: Folded -->
+      <div class="unit-card">
+        <div class="unit-header folded">
+          <div class="unit-title-group">
+            <span class="unit-label">Unit 3 · 5 Topics</span>
+            <span class="unit-name">Conditionals & Wish Clauses</span>
+          </div>
+          <span class="unit-toggle">▶</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Sticky Bottom Thumb Zone Button -->
+  <div class="floating-bottom">
+    <button class="btn-assign-main" onclick="alert('Assigned Passive with Modals to 10-B due Tuesday, 10 Nov!')">
+      <span>ASSIGN SELECTED (1 topic)</span>
+      <span>▶</span>
+    </button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>10-B · Class Screen (Teacher)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Nunito", sans-serif; }
+  body { background: #0E0A12; display: flex; justify-content: center; padding: 20px 0; }
+  .phone { width: 390px; height: 844px; background: #18121E; color: #F4EDF5; border-radius: 44px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 4px solid #33243D; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+  
+  /* Status Bar */
+  .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 14px; font-weight: 600; color: #C4B5C6; }
+  
+  /* Top App Bar */
+  .app-bar { padding: 8px 18px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2B1D33; }
+  .bar-left { display: flex; align-items: center; gap: 10px; }
+  .back-btn { font-size: 20px; color: #D7A9DC; background: #261A2E; width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+  .class-title { font-size: 19px; font-weight: 800; color: #FFFFFF; }
+  .class-sub { font-size: 12px; color: #9E8CA8; font-weight: 500; }
+  .code-badge { background: #2A1736; border: 1.5px solid #85508a; padding: 6px 12px; border-radius: 14px; display: flex; align-items: center; gap: 6px; }
+  .code-label { font-size: 10px; color: #D7A9DC; font-weight: 700; letter-spacing: 0.5px; }
+  .code-val { font-size: 13px; color: #FFFFFF; font-weight: 800; letter-spacing: 1px; }
+
+  /* Scroll Content */
+  .content { flex: 1; overflow-y: auto; padding: 14px 16px 80px; display: flex; flex-direction: column; gap: 12px; }
+  
+  /* Monday Summary Switch (Coloured & Prominent) */
+  .notify-card { background: linear-gradient(135deg, #2E1B3B 0%, #3B1B47 100%); border: 1.5px solid #A855F7; border-radius: 18px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(168,85,247,0.15); }
+  .notify-left { display: flex; align-items: center; gap: 10px; }
+  .notify-icon { font-size: 20px; }
+  .notify-text { font-size: 13px; font-weight: 700; color: #FFFFFF; }
+  .notify-sub { font-size: 11px; color: #D8B4FE; }
+  .switch-btn { background: #10B981; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 12px; border: none; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(16,185,129,0.3); }
+
+  /* Summary Line */
+  .summary-pill { background: #23182C; border: 1px solid #382544; border-radius: 14px; padding: 10px 14px; font-size: 12.5px; color: #E9D5FF; display: flex; align-items: center; justify-content: space-between; }
+  .summary-stat { font-weight: 700; color: #34D399; }
+  .summary-tag { background: #351C42; color: #F0ABFC; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+
+  /* Action Cards */
+  .action-card { background: #23172C; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; border: 1.5px solid #3D244D; }
+  
+  /* 1. Waiting Card */
+  .waiting-card { background: #26181B; border-color: #E11D48; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; }
+  .card-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
+  .tag-red { color: #FDA4AF; }
+  .waiting-title { font-size: 16px; font-weight: 800; color: #FFE4E6; }
+  .waiting-sub { font-size: 12px; color: #F43F5E; }
+  .btn-approve { background: #E11D48; color: #FFFFFF; border: none; font-weight: 800; font-size: 12.5px; padding: 8px 16px; border-radius: 12px; align-self: flex-start; }
+
+  /* 2. Teach Again Card (Direct Action) */
+  .teach-card { background: linear-gradient(135deg, #1A1F2C 0%, #202636 100%); border-color: #38BDF8; }
+  .tag-blue { color: #7DD3FC; }
+  .teach-title { font-size: 16px; font-weight: 800; color: #FFFFFF; }
+  .teach-stat-row { display: flex; align-items: center; gap: 8px; }
+  .accuracy-pill { background: #0369A1; color: #E0F2FE; font-weight: 800; font-size: 11.5px; padding: 3px 8px; border-radius: 8px; }
+  .teach-desc { font-size: 12px; color: #94A3B8; }
+  .action-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .btn-assign-direct { background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 13px; padding: 10px 18px; border-radius: 14px; border: none; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
+  .due-quick { font-size: 11px; color: #38BDF8; font-weight: 600; }
+
+  /* 3. Inactive Card */
+  .inactive-card { background: #261E14; border-color: #F59E0B; }
+  .tag-amber { color: #FCD34D; }
+  .inactive-title { font-size: 15px; font-weight: 800; color: #FEF3C7; }
+  .inactive-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .chip-inactive { background: #3B2B15; color: #FDE68A; font-size: 11.5px; padding: 4px 10px; border-radius: 10px; font-weight: 600; }
+
+  /* Section: Students List Teaser */
+  .section-card { background: #211629; border-radius: 20px; padding: 14px; border: 1px solid #362242; display: flex; flex-direction: column; gap: 10px; }
+  .section-row { display: flex; justify-content: space-between; align-items: center; }
+  .section-title { font-size: 14px; font-weight: 800; color: #FFFFFF; }
+  .section-link { font-size: 12.5px; color: #D7A9DC; font-weight: 700; text-decoration: none; }
+  
+  /* Bottom Tab Bar */
+  .tab-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 68px; background: #160F1C; border-top: 1px solid #291A30; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: #8F7B99; font-weight: 600; text-decoration: none; }
+  .tab-item.active { color: #E9D5FF; }
+  .tab-icon { font-size: 20px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>📶 🔋</span>
+  </div>
+
+  <!-- Top App Bar -->
+  <div class="app-bar">
+    <div class="bar-left">
+      <div class="back-btn">‹</div>
+      <div>
+        <div class="class-title">10-B · English</div>
+        <div class="class-sub">Glorious Academy · 32 students</div>
+      </div>
+    </div>
+    <div class="code-badge">
+      <span class="code-label">CODE</span>
+      <span class="code-val">7A6NBB</span>
+    </div>
+  </div>
+
+  <!-- Scroll Content -->
+  <div class="content">
+    
+    <!-- Clear Coloured Monday Summary Switch -->
+    <div class="notify-card">
+      <div class="notify-left">
+        <span class="notify-icon">🔔</span>
+        <div>
+          <div class="notify-text">Monday Morning Summary</div>
+          <div class="notify-sub">Weekly progress report to your phone</div>
+        </div>
+      </div>
+      <button class="switch-btn">TURN ON</button>
+    </div>
+
+    <!-- Summary Line -->
+    <div class="summary-pill">
+      <div>📊 This week: <span class="summary-stat">24 of 32 practised</span></div>
+      <div class="summary-tag">Reported speech (due Fri)</div>
+    </div>
+
+    <!-- Top Action 1: Waiting to Join -->
+    <div class="action-card waiting-card">
+      <div class="card-header">
+        <span class="card-tag tag-red">⚠️ Approval Needed</span>
+        <button class="btn-approve">Approve (3) ▶</button>
+      </div>
+      <div>
+        <div class="waiting-title">3 waiting to join your class</div>
+        <div class="waiting-sub">Kabir M. (mother: Pooja), Ananya R., Vihaan P.</div>
+      </div>
+    </div>
+
+    <!-- Top Action 2: Teach Again (Direct Action) -->
+    <div class="action-card teach-card">
+      <div class="card-header">
+        <span class="card-tag tag-blue">🎯 Reteach One Thing</span>
+        <span class="due-quick">Default: due in 3 days</span>
+      </div>
+      <div>
+        <div class="teach-title">Reported questions</div>
+        <div class="teach-stat-row">
+          <span class="accuracy-pill">52% right</span>
+          <span class="teach-desc">14 students struggled with word order</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="teach-desc">One tap sends practice to whole class</span>
+        <button class="btn-assign-direct">ASSIGN PRACTICE ▶</button>
+      </div>
+    </div>
+
+    <!-- Top Action 3: Inactivity / Who Needs You -->
+    <div class="action-card inactive-card">
+      <div class="card-header">
+        <span class="card-tag tag-amber">⏳ Inactive This Week</span>
+        <span style="font-size:12px; color:#FCD34D; font-weight:700;">Remind all ›</span>
+      </div>
+      <div class="inactive-title">8 students haven't practised in 7 days</div>
+      <div class="inactive-chips">
+        <span class="chip-inactive">Aarav S. (9d)</span>
+        <span class="chip-inactive">Diya K. (7d)</span>
+        <span class="chip-inactive">Reyansh D.</span>
+        <span class="chip-inactive">+5 more</span>
+      </div>
+    </div>
+
+    <!-- Students Quick Access -->
+    <div class="section-card">
+      <div class="section-row">
+        <span class="section-title">Students (32)</span>
+        <span class="section-link">View all & search ›</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#C4B5C6;">
+        <span>5 need help · 8 inactive · 19 doing well</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Tabs -->
+  <div class="tab-bar">
+    <div class="tab-item"><span class="tab-icon">🏠</span>Home</div>
+    <div class="tab-item"><span class="tab-icon">🎮</span>Fun</div>
+    <div class="tab-item active"><span class="tab-icon">📊</span>Progress</div>
+    <div class="tab-item"><span class="tab-icon">👤</span>Me</div>
+  </div>
+</div>
+</body>
+</html>

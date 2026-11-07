@@ -245,8 +245,12 @@ export function buildDemoSchool({ quests, now = Date.now(), seed = 7 }) {
         sim.attempts.forEach((a, k) => put(`questAttempts/${uid}_${q.questId}_${k}`, a, ["createdAt"]));
         summary.attempts += sim.attempts.length;
       });
+      const isPending = cls.id === "demo_class_10b" && i >= cls.size - 2;
       put(`users/${uid}`, {
-        firstName, lastName: "", grade: cls.grade, isChild: true, classIds: [cls.id], demoPersona: persona,
+        firstName, lastName: "", grade: cls.grade, isChild: true,
+        classIds: isPending ? [] : [cls.id],
+        pendingClassIds: isPending ? [cls.id] : [],
+        demoPersona: persona,
         parentUids: persona === "parentsChild" ? ["demo_parent"] : [],
         // No stats.totalStars at all (Gemini G38): docs without the field never appear in the global board or the
         // rank count. Demo stars live in demoStars.
@@ -254,8 +258,10 @@ export function buildDemoSchool({ quests, now = Date.now(), seed = 7 }) {
         demoStars: stars,
       });
       put(`classes/${cls.id}/members/${uid}`, {
-        firstName, grade: cls.grade, code: null, consentId: null, status: "approved",
-        parentName: "Demo parent", relation: "parent", joinedAt: now - DEMO_WEEKS * 7 * DAY,
+        firstName, grade: cls.grade, code: null, consentId: null,
+        status: isPending ? "pending" : "approved",
+        parentName: "Demo parent", relation: "parent",
+        joinedAt: isPending ? now - 2 * DAY : now - DEMO_WEEKS * 7 * DAY,
       }, ["joinedAt"]);
     }
     if (cls.assignment) {

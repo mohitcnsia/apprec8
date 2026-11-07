@@ -32,6 +32,7 @@ const doc = (path) => ops.find((o) => o.path === path)?.data;
 const kidsOf = (cls) => ops.filter((o) => o.path.startsWith(`classes/${cls}/members/`)).map((o) => o.path.split("/")[3]);
 assert.equal(kidsOf("demo_class_10b").length, 32);
 assert.equal(kidsOf("demo_class_5a").length, 12);
+assert.equal(ops.filter((o) => o.path.startsWith("classes/demo_class_10b/members/") && o.data.status === "pending").length, 2);
 
 // Patterns the teacher card must catch (mockup V4)
 const progress = (uid, q = "english-quest") => doc(`users/${uid}/questProgress/${q}`);
