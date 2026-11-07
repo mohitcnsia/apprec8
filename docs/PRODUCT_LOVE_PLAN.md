@@ -93,7 +93,9 @@ agrees; published rules; winners by first name + class with parent consent; anno
 measures (avoids an in-app contest under Play rules). Needs the effort score from the mastery model first.
 **Two stages (owner):** the app's effort score picks the **top 20** (spread across class groups, e.g. 4 per group) →
 a **supervised exam in the school** (the app's Exam mode on school devices with the teacher watching, or paper) →
-**top 5** win. Beats cheating at home, proves learning in person, clearly not a draw.
+**top 5** win. Beats cheating at home, proves learning in person, clearly not a draw. **T-shirts (owner):** all top 20 get an
+Apprec8 T-shirt + certificate (≈₹250–400 each; free advertising), top 5 get the fee scholarship; the same shirt as
+an avatar outfit in the app. Print only logo + tagline (never the child's name); print after the final logo.
 **Same first names (owner: 3 children share a first name in one class):** leaderboard today shows "first name ·
 Class". Proposal: the child's **avatar** next to the name + **section** ("Riya · 5-B") everywhere; **last-name
 initial** ("Riya S.") only on the class / school leaderboard where children know each other (owner decides: it bends
