@@ -23,3 +23,8 @@ Mockups: quiz canvas boards E–I. Colours come from `components/quiz/quizPalett
 **Bottom-heavy screens (owner 2026-11-05, login mockups):** anchor the whole content block low, near the thumb, not only the
 main button. Empty space goes at the TOP (room for a small, friendly animation later), never at the bottom. The most-used
 choice is the big bottom button (login: Google); rarer ones fold behind a quiet link (email, parent code, guest).
+
+## Characters, not emojis (owner 2026-11-07)
+Our own cast (the star host **Chamku**, wise tortoise, monkey, bee, ant, owl: docs/release/brand/cast/) replaces
+small emojis in cards, empty screens, celebrations and help. Each character has a job; keep to the cast (5–6), one
+consistent style. Emojis stay only inside text written by people (e.g. a teacher's message).

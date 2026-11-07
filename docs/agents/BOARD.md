@@ -336,7 +336,10 @@ options: Chamak, Chamku, Jugnu, Sitara, Dhruv), 🐢 wise old tortoise (mentor, 
 (playful, challenges and "oops, let's fix it"), 🐝 bee (spelling, words), 🐜 ant (teamwork, class goal), 🦉 owl
 (storyteller, read-aloud). Each: a name idea (Indian-friendly, easy for 6-year-olds), one line of personality, its job
 in the app, and 2 outfits (specs for reading, lab coat for Science). Consistent style, works on the dark theme,
-calm colours. `docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
+calm colours. **Owner 2026-11-07: the star is "Chamku"** (Pratha confirms by vote); **characters replace small
+emojis** in the app, so also deliver each character as small PNG icons (64, 128, 256 px; transparent) in 4 moods
+(happy, thinking, cheering, oops) for guide cards, empty screens, celebrations and help.
+`docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
 
 ### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
 Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
