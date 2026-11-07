@@ -271,6 +271,10 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    practised", topic + due date, "Teach again: <weakest topic>" (same data as Progress → My classes) → tap = that class
    in Progress; bottom button "ASSIGN NEXT TOPIC" (opens the assign part of that class). Parent + teacher: both cards.
 4. **Progress opens on the right view**: family for parents, classes for teachers, Me for children (today always "me").
+   **Progress "Me" view stays short (owner 2026-11-07: "the list of all quests will grow too long"):** top = this
+   week (stars, streak, minutes, one topic to practise); then "Your subjects" = only quests the child has started,
+   most recent first, ONE line each (name, % done, strongest + weakest topic) → tap to expand its topics; quests not
+   started fold under "Not started yet (N)" at the bottom. Same data as today (no new reads).
 5. **Me (Z4)** `screens/profile/MeScreen.js`: content low. Need help (green row) + My class + My children + Guides,
    then one "More" row opening a sheet/screen with everything else (reminders, messages, join a class, link parent,
    edit profile, delete account, sign out…). Nothing deleted. ADMIN section stays for the owner.
