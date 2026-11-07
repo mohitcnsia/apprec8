@@ -256,6 +256,23 @@
     "title": "Task: ask Pratha 3 questions (before we build the hook)",
     "ask": "5 relaxed minutes, no pressure. Type her answers in the note, then tap YES. LATER = remind me tomorrow.",
     "details": "**Ask her:**\n1. \"What's the most fun thing you'd want in a learning app?\"\n2. \"Would you like to make a quest or questions for other kids?\"\n3. \"What would you do if a friend sent you a challenge in the app?\"\n\n**And tell her:** she's the official tester of the fun names for the English units (Gemini's list comes soon); her vote decides.\n\nHer answers tell us which hook to build first: stories with read-aloud, creator mode, or challenge a friend (plan: My notes → Why they'll love it).",
+    "from": "claude",
+    "answer": "no",
+    "note": "No we will make an autonomous activity for her to answer these to the app. Why should I ask, the app is her buddy. It is between them.",
+    "answeredAt": "2026-11-07T08:47:51.724Z"
+  },
+  {
+    "id": "task-reseed-eng-sci",
+    "title": "Task: re-seed English and Science (2 min)",
+    "ask": "Me → Admin tools → update English Quest, then Science Quest. Tap YES when done.",
+    "details": "**English:** removes the old IEO picture from the quest page.\n**Science:** fixes the teeth fact Pratha found (20 milk teeth are replaced; extra molars make 32).\n\nContent only: no app update needed. Close and reopen the app afterwards to see it.",
+    "from": "claude"
+  },
+  {
+    "id": "task-play-publish",
+    "title": "Task: when Google approves → Publish",
+    "ask": "When Google's email says the changes are approved: Play Console → Publishing overview → Publish. Tap YES when done, LATER to keep the reminder.",
+    "details": "**Managed publishing is on**, so nothing goes live by itself. One click publishes: closed testing 20.0.30, the new store listing, target audience, Data safety.\n\nAfter that, testers who join get 20.0.30, and Seema's WhatsApp message can go out (once her class exists).",
     "from": "claude"
   }
 ]
