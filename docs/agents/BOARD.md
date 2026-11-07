@@ -306,6 +306,9 @@ update because a child's voice is sensitive data. First 3 questions: "What's the
 "What would you do if a friend challenged you?". **Owner 2026-11-07:** it is also the children's feedback channel
 (G66 part 1 = this) and a fun activity when there's no question (a riddle, a word of the day, "+5 ⭐"). Rollout:
 **one child first** (Remote Config `chamku_asks_uids` list; the owner adds Pratha), then **everyone** (`chamku_asks_all`).
+**Chains (owner):** one sticky can lead to the next (a poll → "why?" → a follow-up idea) **as long as the child
+is happy to answer**: after each answer, Chamku offers "One more?" (big YES) or "That's all for today" (easy exit,
+still thanked with ⭐). Questions are a small tree in the config (`next` per answer), max ~5 in a row, never pushy.
 After the owner approves the mockup in the inbox, build it (JS only, OTA). `gemini(G62): done — mockup`.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
