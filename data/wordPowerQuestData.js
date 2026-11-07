@@ -78,22 +78,257 @@ export const studyPages = {
   "wp-spelling-study": {
     name: "Spelling Traps & Rules",
     author: "Apprec8",
+    cards: [
+        {
+            "emoji": "✍️",
+            "title": "Spelling memory tricks",
+            "text": "Remember tough words with funny memory pictures: in sep-a-rat-e there is 'a rat' in the middle! For ne-c-e-ss-a-ry, remember a shirt has one collar (c) and two sleeves (ss).",
+            "examples": [
+                "sep-A-rat-e ('a rat' inside)",
+                "ne-C-e-SS-a-ry (1 collar, 2 sleeves)",
+                "gramm-AR (ends in -ar, not -er)",
+                "enviro-N-ment (silent n before m)"
+            ]
+        },
+        {
+            "emoji": "🪞",
+            "title": "I before E, except after C",
+            "text": "Write i before e for sounds like 'ee', except straight after the letter c: r-e-c-e-i-v-e and c-e-i-l-i-n-g. But without c, write i first: b-e-l-i-e-v-e and p-i-e-c-e!",
+            "examples": [
+                "After c: receive and ceiling",
+                "After c: deceive and receipt",
+                "Not after c: believe and piece",
+                "Not after c: thief and field"
+            ]
+        },
+        {
+            "emoji": "👯",
+            "title": "Tricky double consonants",
+            "text": "Watch out for double letters in long words! Accommodate has two c's and two m's. Embarrass has two r's and two s's. But occasion has two c's and only one s!",
+            "examples": [
+                "a-cc-o-mm-o-date (2 c, 2 m)",
+                "e-m-ba-rr-a-ss (2 r, 2 s)",
+                "o-cc-a-s-ion (2 c, 1 s)",
+                "be-g-i-nn-ing (double n)"
+            ]
+        },
+        {
+            "kind": "check",
+            "question": "Which is the correct spelling of the word meaning needed or essential?",
+            "answer": "necessary",
+            "wrong": [
+                "neccessary",
+                "necesary",
+                "necessery"
+            ],
+            "explain": "Remember: one collar (c) and two sleeves (ss) → necessary!"
+        },
+        {
+            "kind": "check",
+            "question": "Which spelling correctly follows the 'i before e except after c' rule?",
+            "answer": "receive",
+            "wrong": [
+                "recieve",
+                "recieveing",
+                "receve"
+            ],
+            "explain": "After the letter c, the rule says e comes before i: r-e-c-e-i-v-e."
+        }
+    ],
     content: "### ✍️ Conquering Tricky Spelling Traps\n\nSpelling questions often test words that have silent letters, double consonants, or confusing vowel combinations.\n\n---\n\n### 🎯 The Big 10 Spelling Traps\n\n1. **Separate:**\n   - Notice the **a** in the middle: *s-e-p-**a**-r-a-t-e*.\n   - 💡 Memory trick: There is **a rat** in sep-**a-rat**-e!\n2. **Necessary:**\n   - One **c**, double **s**: *n-e-**c**-e-**ss**-a-r-y*.\n   - 💡 Memory trick: A shirt has **one collar** (c) and **two sleeves** (ss)!\n3. **Beautiful:**\n   - Starts with *b-e-a-u*: *b-**e-a-u**-t-i-f-u-l*.\n4. **Receive, Deceive, Conceive:**\n   - Remember the golden rule: **i before e except after c**!\n   - *r-e-**c-e-i**-v-e*, *d-e-**c-e-i**-v-e*, *c-e-i-l-i-n-g*.\n   - But when not after c: *b-e-l-**i-e**-v-e*, *p-**i-e**-c-e*, *f-**i-e**-l-d*.\n5. **Accommodate:**\n   - Double **c** AND double **m**: *a-**cc**-o-**mm**-o-d-a-t-e*.\n6. **Embarrass:**\n   - Double **r** AND double **s**: *e-m-b-a-**rr**-a-**ss**-e-d*.\n7. **Definite:**\n   - Contains the word **finite**: *d-e-**f-i-n-i-t**-e*. Never write \"definate\"!\n8. **Occasion:**\n   - Double **c**, single **s**: *o-**cc**-a-**s**-i-o-n*.\n9. **Environment:**\n   - Do not forget the silent **n** before m: *e-n-v-i-r-o-**n**-m-e-n-t*.\n10. **Grammar:**\n    - Ends in **-ar**, never -er: *g-r-a-m-m-**a-r**!\n\n---\n\n### 🔍 Quick Checklist\n\n- Does it drop the 'e' when adding -ing? (*make* → *making*, *write* → *writing*)\n- Does it double the last consonant after a short vowel? (*begin* → *beginning*, *stop* → *stopped*)\n- Does it keep the 'e' before -able for soft c or g? (*notice* → *noticeable*, *change* → *changeable*)",
   },
   "wp-colloc-study": {
     name: "Natural Word Choice & Collocations",
     author: "Apprec8",
+    cards: [
+        {
+            "emoji": "🤝",
+            "title": "Words that travel together",
+            "text": "Collocations are word partnerships that sound completely natural to English speakers. A candle flame flickers, a cold person shivers, old floorboards creak, and dry autumn leaves rustle in the wind.",
+            "examples": [
+                "Candle flame flickers",
+                "Person shivers with cold",
+                "Floorboards creak",
+                "Leaves rustle"
+            ]
+        },
+        {
+            "emoji": "🌦️",
+            "title": "Describing the weather",
+            "text": "English uses special adjectives for weather. We speak of torrential rain, howling winds, dense fog, and scorching summer heat. We never say 'thick rain' or 'loud wind'!",
+            "examples": [
+                "Torrential rain (heavy downpour)",
+                "Howling wind (strong gale)",
+                "Dense fog (thick mist)",
+                "Scorching heat (sweltering)"
+            ]
+        },
+        {
+            "emoji": "💼",
+            "title": "Make vs Do",
+            "text": "Use 'make' when creating something or choosing: make a decision, make a mistake, make an effort. Use 'do' for tasks, jobs, and chores: do your homework, do research, do your best!",
+            "examples": [
+                "Make a decision / mistake",
+                "Make an effort / phone call",
+                "Do homework / chores",
+                "Do your best / do research"
+            ]
+        },
+        {
+            "kind": "check",
+            "question": "Which verb pairs naturally with a little candle flame?",
+            "answer": "flickers",
+            "wrong": [
+                "shivers",
+                "rustles",
+                "creaks"
+            ],
+            "explain": "Flames flicker! People shiver in the cold, dry leaves rustle, and old doors creak."
+        },
+        {
+            "kind": "check",
+            "question": "Which is the natural English combination for school work?",
+            "answer": "do homework",
+            "wrong": [
+                "make homework",
+                "create homework",
+                "build homework"
+            ],
+            "explain": "We say 'do homework' for tasks and chores, but 'make a mistake' or 'make a choice'."
+        }
+    ],
     content: "### 🤝 Natural Word Choice & Collocations\n\nWords in English love to travel in natural partnerships called **collocations**. Even if two words have similar dictionary meanings, native speakers only use specific combinations!\n\n---\n\n### 🌟 Natural Movement and Sound Collocations\n\n| Subject | Natural Verb | Never Say |\n|---|---|---|\n| **Candle flame** | *flickers* | flames do not shiver or tremble |\n| **Cold person** | *shivers* | people do not flicker in the cold |\n| **Nervous voice** | *trembles / wavers* | voices do not flicker or rustle |\n| **Dry autumn leaves** | *rustle* | leaves do not roar or creak |\n| **Gentle stream** | *babbles / murmurs* | streams do not shout or snap |\n| **Floorboards** | *creak* | old wood creaks under footsteps |\n\n---\n\n### 🌦️ Nature and Weather Collocations\n\n- **Torrential rain:** We say *torrential rain* or *heavy downpour*, never \"thick rain\".\n- **Howling wind:** A strong storm has *howling* or *gale-force* winds, not \"loud wind\".\n- **Dense fog:** Visibility drops in *dense*, *thick* or *heavy* fog, never \"tall fog\".\n- **Scorching heat:** Summer brings *scorching* or *sweltering* heat, not \"burning air\".\n\n---\n\n### 💼 Action and Verb Collocations\n\n- **Make** vs **Do:**\n  - *make a decision*, *make an effort*, *make a mistake*, *make a phone call*.\n  - *do homework*, *do chores*, *do research*, *do your best*.\n- **Take:**\n  - *take a risk*, *take a break*, *take a seat*, *take responsibility*.\n- **Burst:**\n  - *burst into tears*, *burst into laughter*, *burst into song*.\n\n---\n\n### 👑 Special Group Collocations\n\n- A royal **cavalcade** of horse-drawn carriages.\n- A **pride** of wild lions resting in the shade.\n- A **fleet** of cargo ships sailing into the harbour.\n- A **flock** of migratory birds flying south.",
   },
   "wp-dialogue-study": {
     name: "Situational Dialogue & Everyday Speech",
     author: "Apprec8",
+    cards: [
+        {
+            "emoji": "🤝",
+            "title": "Polite requests & offers",
+            "text": "In natural English, polite requests soften commands into gentle questions. Instead of saying 'give me help', ask 'Could you please lend me a hand?' Always reply warmly: 'That is very kind of you!'",
+            "examples": [
+                "'Could you lend me a hand?'",
+                "'Please have a seat.'",
+                "'That is very kind of you!'",
+                "'You are most welcome.'"
+            ]
+        },
+        {
+            "emoji": "🚪",
+            "title": "The 'Would you mind' trap",
+            "text": "When someone asks 'Would you mind opening the window?', answering 'No, not at all!' means 'I am glad to help!' Answering 'Yes' means 'Yes, it bothers me, so I won't open it!'",
+            "examples": [
+                "'Would you mind helping?'",
+                "→ 'Not at all!' (happy to help)",
+                "→ 'Of course not!' (pleased to help)",
+                "Never say 'Yes' to agree!"
+            ]
+        },
+        {
+            "emoji": "🎭",
+            "title": "Clever spoken responses",
+            "text": "When you have no idea about an answer, say 'Your guess is as good as mine!' To delay worrying about a future trouble, say 'We will cross that bridge when we come to it.'",
+            "examples": [
+                "'Your guess is as good as mine' = I don't know either",
+                "'Cross that bridge when we come to it' = deal with it later",
+                "'By all means!' = gladly agree"
+            ]
+        },
+        {
+            "kind": "check",
+            "question": "A friend asks: 'Would you mind passing the water bottle?' How should you politely agree?",
+            "answer": "'Not at all, here you go!'",
+            "wrong": [
+                "'Yes, I mind very much!'",
+                "'Yes, I will mind!'",
+                "'No, do not pass!'"
+            ],
+            "explain": "'Not at all' means you do not object and are very happy to pass the bottle!"
+        },
+        {
+            "kind": "check",
+            "question": "What does someone mean when they say: 'Your guess is as good as mine'?",
+            "answer": "I do not know the answer either",
+            "wrong": [
+                "You gave the best guess",
+                "We are playing a guessing game",
+                "I know the answer secretly"
+            ],
+            "explain": "This friendly expression means: 'I have just as little information as you do!'"
+        }
+    ],
     content: "### 💬 Spoken and Written Expression\n\nIn everyday English, conversations test natural, polite, and situational conversation.\n\n---\n\n### 🤝 Polite Requests and Offers\n\n| Situation | Natural Spoken Expression | What to Avoid |\n|---|---|---|\n| Asking for help | *\"Could you lend me a hand with this trunk?\"* | *\"Give me help now.\"* |\n| Accepting help | *\"That is very kind of you, thank you!\"* | *\"Yes, you must.\"* |\n| Offering a seat | *\"Please have a seat.\"* | *\"Sit down here.\"* |\n| Mind questions | *\"Would you mind opening the door?\"* → *\"Not at all!\"* | *\"Yes, I mind.\"* |\n\n---\n\n### 🎭 Common Conversational Responses\n\n1. **When nobody knows the answer:**\n   - **Rohan:** *\"Do you think the team will win tomorrow?\"*\n   - **Meera:** *\"Your guess is **as good as mine**.\"* (Meaning: I have no idea either!)\n2. **When delaying an unnecessary worry:**\n   - **Father:** *\"What if it rains during the picnic next week?\"*\n   - **Mother:** *\"We will **cross that bridge when we come to it**.\"* (Meaning: deal with it only if it happens!)\n3. **When providing reassurance:**\n   - **Aman:** *\"I will try to reach on time, but do not worry **in case** I am delayed by traffic.\"*\n   - **Priya:** *\"All right, just keep me informed.\"*\n4. **When agreeing warmly:**\n   - **Teacher:** *\"Shall we invite the principal to our exhibition?\"*\n   - **Class:** *\"**By all means**, that is a wonderful idea!\"*",
   },
   "wp-idioms-study": {
     name: "Common Idioms and Proverbs",
     author: "Apprec8",
-    content: "### 🎨 Colourful Everyday Idioms\n\nAn **idiom** is a figurative phrase whose overall meaning cannot be understood from the literal definitions of its individual words.\n\n---\n\n### 🏆 Essential Idioms for Class 5\n\n| Idiom | True Meaning | Example Sentence |\n|---|---|---|\n| **A piece of cake** | Very easy to do | The maths quiz was a piece of cake for Ravi. |\n| **Bite the bullet** | Face a tough situation bravely | She decided to bite the bullet and apologize. |\n| **Burn the midnight oil** | Study late into the night | Students burn the midnight oil before exams. |\n| **Spill the beans** | Reveal a secret accidentally | Rohan spilled the beans about the surprise party. |\n| **Cost an arm and a leg** | Extremely expensive | That imported sports bicycle costs an arm and a leg. |\n| **Under the weather** | Feeling slightly ill | Kavita stayed home because she felt under the weather. |\n| **See eye to eye** | Agree completely | The two friends rarely see eye to eye on football. |\n| **Hit the nail on the head** | Say exactly the right thing | The teacher hit the nail on the head with her explanation. |\n| **Barking up the wrong tree** | Accusing the wrong person | If you suspect Arun, you are barking up the wrong tree. |\n| **Once in a blue moon** | Happening very rarely | We visit our cousins in Kerala once in a blue moon. |\n\n> 💡 **Exam Tip:** In questions, read the whole sentence carefully to see whether the idiom fits the mood and meaning of the speaker!",
+    cards: [
+        {
+            "emoji": "🎨",
+            "title": "What is an idiom?",
+            "text": "An idiom is a colourful phrase where words together mean something completely different from their literal words. When a puzzle is 'a piece of cake', nobody is eating actual bakery cake—it is just very easy!",
+            "examples": [
+                "Piece of cake = very easy",
+                "Once in a blue moon = very rarely",
+                "Cost an arm and a leg = very expensive"
+            ]
+        },
+        {
+            "emoji": "🦉",
+            "title": "Late nights & secrets",
+            "text": "To 'burn the midnight oil' means studying or working late into the night. If someone accidentally reveals a surprise secret before the party, they 'spilled the beans'!",
+            "examples": [
+                "Burn the midnight oil = study late",
+                "Spill the beans = reveal a secret",
+                "Bite the bullet = face tough situation bravely"
+            ]
+        },
+        {
+            "emoji": "🎯",
+            "title": "Health and agreeing",
+            "text": "Feeling slightly sick or feverish means you are 'under the weather'. When two good friends agree completely on a plan, they 'see eye to eye'. Saying exactly the right answer 'hits the nail on the head'!",
+            "examples": [
+                "Under the weather = feeling unwell",
+                "See eye to eye = agree completely",
+                "Hit the nail on the head = exactly right",
+                "Barking up the wrong tree = mistaken idea"
+            ]
+        },
+        {
+            "emoji": "🔍",
+            "title": "Understanding context",
+            "text": "Always read the full sentence to figure out an idiom's meaning. Look at the speaker's tone and mood to see if the phrase shows happiness, surprise, or difficulty.",
+            "examples": [
+                "Look at clue words in the story",
+                "Check if the mood is happy or serious",
+                "Think beyond the literal words"
+            ]
+        },
+        {
+            "kind": "check",
+            "question": "What does it mean if Priya says she is feeling 'under the weather'?",
+            "answer": "She is feeling slightly unwell",
+            "wrong": [
+                "She is standing outside in the rain",
+                "She is checking the weather forecast",
+                "She is enjoying sunny weather"
+            ],
+            "explain": "'Under the weather' is an idiom meaning feeling a little sick or tired."
+        },
+        {
+            "kind": "check",
+            "question": "Which idiom means to agree completely with another person?",
+            "answer": "To see eye to eye",
+            "wrong": [
+                "To bite the bullet",
+                "To spill the beans",
+                "To bark up the wrong tree"
+            ],
+            "explain": "When two people see eye to eye, they share the exact same view or opinion."
+        }
+    ],
+    content: "### 🎨 Colourful Everyday Idioms\n\nAn **idiom** is a figurative phrase whose overall meaning cannot be understood from the literal definitions of its individual words.\n\n---\n\n### 🏆 Essential Idioms for Class 5\n\n| Idiom | True Meaning | Example Sentence |\n|---|---|---|\n| **A piece of cake** | Very easy to do | The maths quiz was a piece of cake for Ravi. |\n| **Bite the bullet** | Face a tough situation bravely | She decided to bite the bullet and apologize. |\n| **Burn the midnight oil** | Study late into the night | Students burn the midnight oil before exams. |\n| **Spill the beans** | Reveal a secret accidentally | Rohan spilled the beans about the surprise party. |\n| **Cost an arm and a leg** | Extremely expensive | That imported sports bicycle costs an arm and a leg. |\n| **Under the weather** | Feeling slightly ill | Kavita stayed home because she felt under the weather. |\n| **See eye to eye** | Agree completely | The two friends rarely see eye to eye on football. |\n| **Hit the nail on the head** | Say exactly the right thing | The teacher hit the nail on the head with her explanation. |\n| **Barking up the wrong tree** | Accusing the wrong person | If you suspect Arun, you are barking up the wrong tree. |\n| **Once in a blue moon** | Happening very rarely | We visit our cousins in Kerala once in a blue moon. |\n\n> 💡 **Tip:** In questions, read the whole sentence carefully to see whether the idiom fits the mood and meaning of the speaker!",
   },
 };
 
