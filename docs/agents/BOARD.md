@@ -253,7 +253,7 @@ Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Dec
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
 Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
-screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
+screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
@@ -314,6 +314,19 @@ playful, Classes 9–10 cool not childish. Indian setting welcome; no exam names
 Also list the old chapter names you find (G60) that are worth reusing. Output a table in
 `docs/agents/reports/G61-names.md` (current name → proposed name → why). **Don't change the app**: Seema checks the
 English, Pratha votes, then Claude applies the chosen ones. `gemini(G61): done — names to review`.
+
+### G62 · [todo] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
+Owner: "instead of me asking Pratha 3 questions: a sticky note on her Home, the mascot asks, she answers the app in
+her own time, fun acknowledgements, a poll." **Draw, don't build:** HTML mockups (390 px, plum style, thumb zone) in
+`docs/mockups/chamak-asks/` + PNGs: 1) Home with a sticky-note card "Chamak asks: Quick question!" (low on the
+screen, ✕ = not now); 2) the question screen: Chamak's speech bubble, ONE question, 3–4 big tappable answers with
+emoji (+ a text box only for children allowed to type, e.g. supervised accounts); 3) the thank-you: Chamak dances,
+confetti, "+5 ⭐ for helping!"; 4) owner view: Admin tools → "Chamak asks results" (counts per answer + the typed
+answers). Questions come from a Firestore doc / Remote Config so new polls need no app update. **Voice (🎤 Say it)
+is v2:** note in the mockup that it needs a native speech library (next build), parent consent and a privacy-policy
+update because a child's voice is sensitive data. First 3 questions: "What's the most fun thing you'd want here?"
+(stories / games / challenges with friends / making quests), "Would you like to make a quest for other kids?",
+"What would you do if a friend challenged you?". `gemini(G62): done — mockup`.
 
 ### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
 Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
