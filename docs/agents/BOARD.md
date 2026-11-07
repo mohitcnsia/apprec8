@@ -252,7 +252,7 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 0d) G62 Chamku asks (mockup, then build), 0e) G67 Progress facts (no code), 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 0d) G62 Chamku asks (mockup, then build), 0e) G67 Progress facts (no code), 0f) G68 Challenge words (Pratha), 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
@@ -322,6 +322,20 @@ Kids · Reported section is quite messy. A fresh discussion (not a rushed build)
    written for that play (read only the TESTER's own docs; no real children's data). Say exactly what is missing.
 3. **What each view shows today:** a short list per view (sections, order, what's empty, what repeats), and anything
    confusing or broken. Report `docs/agents/reports/G67.md`. `gemini(G67): done — facts for the Progress review`.
+
+### G68 · [todo] · gemini · ⭐ Challenge words for strong readers (owner 2026-11-07: Pratha found the app boring)
+Pratha (strong Class 5 reader) went back to paper sheets: "no good practice for antonyms and synonyms"; last year's
+old Olympiad vocabulary quizzes had **real good words, high difficulty** and fun explanations ("Gemini's jokes").
+Claude gave supervised children the old Olympiad tiles back as a stopgap (HomeScreen `oldView`).
+1. Find where G28's 150 old vocabulary questions went in `data/wordPowerQuestData.js` (ids no longer say ieo) and
+   check whether a Class 5 child can actually reach them (grade tags, locks). Report.
+2. Add a **Champion** rung to Word Power's Synonyms & Antonyms (and Idioms): harder words (Classes 6–9 vocabulary),
+   **open to any class** (no grade filter on this leaf; label "Challenge: for word lovers"), unlocked after the
+   class-level topic or straight away for supervised / tester accounts. At least 60 new original questions + the best
+   old ones, each with a **fun, witty explanation** (a short joke or memorable image, kid-safe), one right answer,
+   Indian English, no exam names.
+3. **G60 cleanup must keep** the old vocab quizzes and their explanations until this is live.
+Report `docs/agents/reports/G68.md`; Claude spot-checks; owner re-seeds Word Power. `gemini(G68): done`.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
