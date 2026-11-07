@@ -350,6 +350,18 @@ Server: `resetParentPin` callable (caller must be the parent account, not a chil
 (`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
 next build.
 
+### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
+Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
+trust." On the emulator, latest published code (feat/quiz-redesign), **fresh throwaway accounts** (never real
+people): 1) a new teacher signs up (first-run sheet → "I'm a teacher" → year of birth if shown), 2) Me → Join as a
+teacher with a code from the Demo School admin flow if possible (else note what's missing), 3) a new parent signs up,
+Add a child (this phone) → Play as → a topic, 4) the parent joins the teacher's class for that child with the consent
+note, 5) the teacher approves, assigns a Grammar Pro topic, sees progress, 6) Me → Guides → For teachers: start here,
+Start your class. **Write down every stumble:** confusing words, dead ends, errors, slow screens, anything that would
+embarrass a teacher in front of colleagues: `docs/agents/reports/G56.md` with screenshots, sorted worst first, each
+with a suggested fix. Don't change code. Delete the throwaway accounts afterwards (Me → Delete my account).
+`gemini(G56): done — N stumbles`.
+
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
