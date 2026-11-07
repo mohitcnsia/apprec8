@@ -83,6 +83,14 @@ improved + most consistent, not only top scores, so unsupported children can win
 learning evidence from the mastery model, human check, pay the school directly, never cash); **keep feedback rewards
 separate** (stars/stickers), or feedback gets biased. Shape: monthly scholarships, start small after the pilot shows
 real learning data, grow with sponsors; legal + Play check first. Not to build yet.
+**Owner's refinement (same day):** capped at **₹1,000/month per student**, **top 5 monthly**, effort-based (not a
+draw), app stays free; pilot in **one school** (Pratha's), paid as donations to the school against fees
+(₹5,000/month total). **Claude's conditions:** exclude the owner's family (Pratha) from prizes and say so in the
+rules; rank on a **monthly effort score** (days practised + improvement on own weak topics + mastery on fresh
+questions, daily cap so binge sessions don't win), not raw stars; only students approved by their class teacher
+(one child, one account); fair across ages (5 across class groups, or 3 most consistent + 2 most improved); principal
+agrees; published rules; winners by first name + class with parent consent; announced by the school, the app only
+measures (avoids an in-app contest under Play rules). Needs the effort score from the mastery model first.
 
 ## What to do, in order
 **Phase 1: pilot-ready (next 2 weeks).** Row Z + learn first (built, in review), Learn cards everywhere (G59),
