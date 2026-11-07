@@ -110,7 +110,13 @@ build the sentence), class team goal, **story mode with read-aloud**, **challeng
 spelling bee in quests; **creator mode** pilot with one child. **From Pratha (loves Duolingo's owl, "10 minutes to keep your streak", the evening chest):** a **daily / evening
 treasure chest** after practice (sticker, buddy outfit, fun fact); a **streak saver** once a week (excitement without
 fear); "your streak ends tonight" **inside the app**, and as a phone notification **only if a parent turns it on and
-picks the time**, in kind words, never guilt (Seema checks the wording). **Expressive characters** (fun to look at, animated) and an **avatar builder** (items won from the chest; children see themselves, no photos).
+picks the time**, in kind words, never guilt (Seema checks the wording). **Expressive characters** (fun to look at, animated) and an **avatar builder** (items won from the chest; children see themselves, no photos). **Reward nodes (owner):** after a unit / Boss the quest opens a treat
+and the child **picks the kind**: next chapter of a **serial story** with read-aloud (two age tracks: funny adventure
+for younger, mystery / fantasy for Classes 6–12), a **comic page** with our own cast, a **chess puzzle** (openly
+licensed puzzle set) / sudoku / brain teaser, a **draw-this** prompt or colouring page (on paper, nothing uploaded),
+a **5-minute home experiment** / origami, a calm **breathing / listening** moment. Interests come from Chamku's
+stickies (feedback = personalisation). Original stories and characters only (Dog Man is inspiration, not content);
+Seema checks the tone. Main effort = content (Gemini writes/draws, Seema reviews); the node type is small.
 **Phase 3: teachers' reason to choose us (weeks 6–10).** Class tests in the app (assign, auto-mark, results sheet), one-tap praise / nudges, teacher cards per topic, class
 team goal ("no one left behind"), NEP-aligned own chapters mapped by topic, PDF / print worksheets with answer keys,
 monthly class report, certificates.
