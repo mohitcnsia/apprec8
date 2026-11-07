@@ -252,7 +252,7 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 0d) G62 Chamku asks (mockup, then build), 0e) G67 Progress facts (no code), 0f) G68 Challenge words (Pratha), 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. **Owner 2026-11-07: the feedback mechanism is a must (we need to know what clicks with users): G66 + G62 first. No stopgaps; think before building.** 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, **FIRST: G66 feedback pipeline (plan first) + G62 Chamku asks (mockup, then build)**, 0e) G67 Progress facts (no code), 0f) G68 Challenge words (Pratha), 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
@@ -326,7 +326,7 @@ Kids · Reported section is quite messy. A fresh discussion (not a rushed build)
 ### G68 · [todo] · gemini · ⭐ Challenge words for strong readers (owner 2026-11-07: Pratha found the app boring)
 Pratha (strong Class 5 reader) went back to paper sheets: "no good practice for antonyms and synonyms"; last year's
 old Olympiad vocabulary quizzes had **real good words, high difficulty** and fun explanations ("Gemini's jokes").
-Claude gave supervised children the old Olympiad tiles back as a stopgap (HomeScreen `oldView`).
+(A stopgap that showed old tiles was reverted: the owner wants this proper fix within 2–3 days.)
 1. Find where G28's 150 old vocabulary questions went in `data/wordPowerQuestData.js` (ids no longer say ieo) and
    check whether a Class 5 child can actually reach them (grade tags, locks). Report.
 2. Add a **Champion** rung to Word Power's Synonyms & Antonyms (and Idioms): harder words (Classes 6–9 vocabulary),
