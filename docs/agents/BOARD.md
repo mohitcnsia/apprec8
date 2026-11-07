@@ -252,7 +252,7 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
@@ -277,6 +277,20 @@ uses and reuse it) with contentId + card index / section, and tap-only reasons f
 "spelling", "picture missing"). Children tap only (no free text, except supervised accounts). Tests for pure parts.
 `gemini(G65): done`. Also bump **G59 Science pages up**: do Science right after Class 9–10 (owner: "old reading sheet,
 no images, nothing fun, a dumpyard of text"), with a picture idea per card.
+
+### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
+Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
+that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
+1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another
+   app?", "What should we add?", "What's boring here?"; tap answers for everyone, a text box only for supervised
+   accounts (free-text list; Remote Config `free_text_emails`), voice later (needs consent, see G62). Reuse the G62
+   "Chamak asks" data shape if it exists by then.
+2. **Owner:** Admin tools → "Ideas & reports": userFeedback + 🚩 reports + poll answers, newest first, filter by type,
+   a "done" tick (owner-only rules: DR).
+3. **Claude:** `scripts/admin/feedback.mjs` (like decisions.mjs, `--watch` optional) exports to
+   `docs/agents/private/feedback.json`, which is **git-ignored** (add the folder to `.gitignore`): children's words never
+   go to the public repo. First name + class only, no emails or uids.
+Costs: one small read per owner visit; the export reads only new docs since the last run.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
