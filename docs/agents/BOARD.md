@@ -313,7 +313,7 @@ Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agen
   classroom, story, book_summary, popular_read, olympiad tiles, old `quizQuestions`, `studyContent` IEO pages, games
   `gameVocabCategories`, `gameSpellingBee`, …): doc counts, approximate size, and **who still uses each** (grep the
   app + quest data: e.g. English Unit 1 reuses IEO study pages and quizzes; G59 moves the study pages, the quizzes need
-  moving too). Mark each: delete / keep (still used) / keep (owner: dogs + animals become exploration quests later).
+  moving too). Mark each: delete / keep (still used). Owner 2026-11-07: old dogs / animals / plants content can go too (they come back as new quests). Keep a list of the old chapter names (owner liked them: fun for kids) in the report.
 - **Cloud Functions:** deployed list (`firebase functions:list`) vs `functions/index.js`; for each: still called by
   the app? last used? Flag risky ones (HTTP admin endpoints in `functions/api/`). Also Storage folders and Firestore
   indexes no longer needed, and Artifact Registry / Cloud Scheduler leftovers. Rough monthly cost of each.

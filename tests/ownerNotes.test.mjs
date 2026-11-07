@@ -40,13 +40,13 @@ assert.deepEqual(sectionCount(a, { [a.body[0].key]: true }), { done: 2, total: 2
 assert.equal(redactEmails("a me@gmail.com b demo.kid@example.com"), "a (your email) b demo.kid@example.com");
 
 // The bundled notes: both files, parsed, no private email (the bundle ships to every phone).
-assert.deepEqual(OWNER_NOTES.map((x) => x.id), ["launch", "testing", "store", "map", "play", "practice", "pilot"]);
+assert.deepEqual(OWNER_NOTES.map((x) => x.id), ["launch", "love", "testing", "store", "map", "play", "practice", "pilot"]);
 OWNER_NOTES.forEach((x) => {
   assert.equal(redactEmails(x.md), x.md, `${x.id}: private email in data/ownerNotes.js`);
   const p = parseNotes(x.md);
   assert.ok(p.sections.length >= (x.id === "store" ? 0 : ["play", "pilot"].includes(x.id) ? 2 : 4), `${x.id}: sections`);
 });
-const testing = parseNotes(OWNER_NOTES[1].md);
+const testing = parseNotes(OWNER_NOTES[2].md);
 assert.ok(testing.sections.some((s) => s.body.some((b) => b.type === "check")), "testing has boxes");
 const stale = ["docs/LAUNCH_CHECKLIST.md", "docs/qa/OWNER_TESTING.md"].some((f, i) => redactEmails(readFileSync(new URL(`../${f}`, import.meta.url), "utf8")) !== OWNER_NOTES[i].md);
 if (stale) console.log("ownerNotes: note, data/ownerNotes.js is older than the .md files (run node scripts/genOwnerNotes.mjs before publishing)");

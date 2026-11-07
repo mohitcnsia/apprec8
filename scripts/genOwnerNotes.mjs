@@ -9,6 +9,7 @@ import { redactEmails } from "../utils/ownerNotes.js";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTES = [
   { id: "launch", title: "Launch checklist", file: "docs/LAUNCH_CHECKLIST.md" },
+  { id: "love", title: "Why they'll love it", file: "docs/PRODUCT_LOVE_PLAN.md" },
   { id: "testing", title: "Testing", file: "docs/qa/OWNER_TESTING.md" },
   { id: "store", title: "Store listing", file: "docs/release/STORE_LISTING.md" },
   { id: "map", title: "App map", file: "docs/APP_MAP.md" },
