@@ -115,7 +115,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 ## Task details (Gemini reads these; one task at a time, top to bottom)
 
-### G15 · [todo] · gemini · English Unit 2 answer-key review
+### G15 · [later] · gemini · English Unit 2 answer-key review
 **Why:** Unit 2 (Articles & Determiners) is written but not seeded; IEO is on 17 Nov. **Base:** `feat/quiz-redesign`.
 **Do:** read every Unit 2 question in `data/englishQuestData.js` (section "Unit 2: Articles & Determiners", quizzes `eq-u2-*`
 and reading `eq-read-rooftop-garden`). For each: exactly one correct option; no wrong option also defensible; facts true;
@@ -140,7 +140,7 @@ face); Progress and Me open. Then close the emulator (it slows the Mac a lot).
 **Deliver:** branch `gemini/g14-qa`; `docs/agents/reports/G14.md` = table (item · PASS / FAIL / SKIPPED · screenshot · note),
 FAILs first with steps to repeat. Commit `gemini(G14): done — P pass, F fail`. Then `eq.sh unprep`.
 
-### G18 · [todo] · gemini · NSO (and IEO) exam pattern notes from the owner's papers
+### G18 · [later] · gemini · NSO (and IEO) exam pattern notes from the owner's papers
 **Feedback on G15 first:** your table notes were generated from a template ("Clean: egg before target noun/phrase"), so
 they don't show what you checked. A review note must say what you actually verified, or the review doesn't count.
 Quality over speed: one honest UNSURE is worth more than 111 OKs.
@@ -153,7 +153,7 @@ Achievers section; **gap list** = what Science Quest Unit 1 (your G16) and plann
 **Deliver:** branch `gemini/g18-exam-patterns` (base `feat/quiz-redesign`), the pattern files, `docs/agents/reports/G18.md`;
 commit `gemini(G18): done — N papers read`. Then re-check your G16 questions against the patterns and note changes for Claude.
 
-### G27 · [todo] · gemini · ⭐ Deploy DR-8 + Finding 22 + DR-9 + DR-10 (owner-approved: yes, 2026-11-04)
+### G27 · [done] · gemini · ⭐ Deploy DR-8 + Finding 22 + DR-9 + DR-10 (owner-approved: yes, 2026-11-04)
 **Owner-approved: yes** for exactly these production steps. Run them from **Claude's folder**
 `/Users/mohitchilkoti/Documents/projects/apprec8` (it has `firestore.rules` and `firebase.json`; don't edit any file there).
 Claude already merged all the new rules into `firestore.rules` (backup: `~/apprec8-backups/firestore.rules.before-DR9-10`).
@@ -224,13 +224,13 @@ only if the owner has pressed Reset Demo School; otherwise skip) · 8. Me tab wi
 No real children's names on screen (tester account + demo data only). Save to `docs/release/screenshots/{light,dark}/NN-name.png`,
 commit `gemini(G43): done — N screenshots` on your branch. No code changes, no Firestore writes beyond normal play.
 
-### G47 · [todo] · gemini · ⭐ URGENT: start the Decisions sync again (it stopped at ~19:00 on 6 Nov; script updated)
+### G47 · [done] · gemini · ⭐ URGENT: start the Decisions sync again (it stopped at ~19:00 on 6 Nov; script updated)
 `scripts/admin/decisions.mjs` now also closes inbox cards the owner answered in the chat (`via: "chat"` in
 decisions.json). In Claude's folder: stop the running `node scripts/admin/decisions.mjs --watch`, run
 `node scripts/admin/decisions.mjs --dry` (read-only; expect "closed in the inbox" to list 4 ids on the real run), then
 start `--watch` again in the background. Commit `gemini(G47): done` with the dry-run output (no emails, no uids).
 
-### G48 · [todo] · gemini · ⭐ Brand set: 3 logo + icon directions (owner asked 2026-11-06)
+### G48 · [done] · gemini · ⭐ Brand set: 3 logo + icon directions (owner asked 2026-11-06)
 Owner: "app-specific logos and images will give us much better control and feel". **His logo idea:** the 8 lies down
 as **∞**, and its **right loop breaks into small digital blocks that scatter into space** (infinite learning, digital).
 Rough sketch by Claude: `docs/release/graphics/feature-graphic-v4.png`; make it beautiful. He **dislikes green check
@@ -251,7 +251,106 @@ foreground (1024×1024, logo inside the central 66%), a one-colour notification 
 report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). Don't change any app files.
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
-### G49 · [todo] · gemini · ⭐ Build row Z: the simpler Home and Me (owner-approved 2026-11-06)
+### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
+Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
+screen mockup, 3) G52 Grammar Pro accuracy, 4) G54 one-pager DO IT buttons, 5) G58 Listen button, 6) G55 PIN safety
+(plan first), 7) G53 ∞ redo, 8) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
+
+### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
+Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
+trust." On the emulator, latest published code (feat/quiz-redesign), **fresh throwaway accounts** (never real
+people): 1) a new teacher signs up (first-run sheet → "I'm a teacher" → year of birth if shown), 2) Me → Join as a
+teacher with a code from the Demo School admin flow if possible (else note what's missing), 3) a new parent signs up,
+Add a child (this phone) → Play as → a topic, 4) the parent joins the teacher's class for that child with the consent
+note, 5) the teacher approves, assigns a Grammar Pro topic, sees progress, 6) Me → Guides → For teachers: start here,
+Start your class. **Write down every stumble:** confusing words, dead ends, errors, slow screens, anything that would
+embarrass a teacher in front of colleagues: `docs/agents/reports/G56.md` with screenshots, sorted worst first, each
+with a suggested fix. Don't change code. Delete the throwaway accounts afterwards (Me → Delete my account).
+`gemini(G56): done — N stumbles`.
+
+### G57 · [todo] · gemini · ⭐ Mockup first: the teacher's class screen (owner tested it as demo.teacher, 2026-11-07)
+Owner: "Reteach one thing asks to assign from below, several topics listed, very difficult to find; a direct action
+button right there would be easy. Turning on the weekly summary is way below and not easy to see; colour difference
+and bringing it up would be better. In a class of 32 the list is very long, teachers will have a hard time finding
+kids. Need thinking before building." **Draw, don't build:** static HTML mockups, 390 px, plum app style, thumb zone,
+in `docs/mockups/teacher-class/` (+ PNGs), 3 screens:
+1. **Class screen:** header "10-B · English · 32 students" + SHARE CODE + a clear coloured switch "🔔 Monday summary:
+   Off · Turn on". **Action cards at the top:** "3 waiting to join → Approve" (only if any); "Teach again: Reported
+   questions (52% right) → ASSIGN PRACTICE ▶" (one tap, due in 3 days, changeable); "8 didn't practise this week ›".
+   Summary line: "This week: 24 of 32 practised · Assigned: Reported speech, due Fri".
+2. **Students list:** filter chips "Needs help (5) · Didn't practise (8) · Doing well (19) · All (32)" + search by name;
+   one short row per student (name, one coloured status chip) → tap = that student's week.
+3. **Assign a topic:** "Suggested" first (next in order, weakest for this class), each with ASSIGN; "All topics ›"
+   folded, grouped by unit, with search; due-date chips (3 days / 1 week / pick).
+Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Also: **Demo School gets 2 students
+waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
+Google's reviewer can try approving.
+
+### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
+Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
+question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
+check: exactly one correct option, the answer key matches, the explanation says why, Indian English spelling, CBSE
+level, kid-friendly wording, no copied board-paper text. **Don't edit content.** Report in
+`docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
+of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
+
+### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
+Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
+In `screens/guides/TeacherStartScreen.js` (+ `data/teacherStart.js`): under each of the 4 jobs put a small
+**DO IT ▶** button that starts the matching step of the "teacher-class" guide in `utils/guides.js` exactly like
+GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide strip shows what to tap:
+job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
+Small change; branch from your G49 branch. `gemini(G54): done`.
+
+### G58 · [todo] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
+For parents who read little. On the consent notes (Join a class, Add a child, Link my child's own account): a
+"🔊 Listen" button that reads the note aloud in the chosen language (Hindi `hi-IN`, English `en-IN`) with
+expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
+`gemini(G58): done`.
+
+### G55 · [todo] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
+Owner: "forgot PIN alone is not enough; avoid abuse when a child tries to get into the parent's phone." Today: app
+PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. **Design (Claude):**
+1. **"Switch to parent" asks the phone's own lock first** (fingerprint / face / phone PIN or pattern) via
+   `expo-local-authentication` (install with `npx expo install`; native → ships in the next build, so guard with a
+   capability check like services/push.js does, and fall back to the app PIN on builds or phones without it).
+2. The app PIN stays only as the fallback (phones with no screen lock). Keep the 5-tries / 15-min lock.
+3. **"Forgot PIN?"** = unlock with the phone's own lock → choose a new PIN twice. Phones with no screen lock: sign in
+   again with the parent's account **and** wait 1 hour before the new PIN works (so a child can't do it in one go).
+4. **Every PIN change notifies the parent** (push to the parent's tokens if they have the weekly summary on, and a
+   line in Me): "Your Apprec8 parent PIN was changed. Not you? Tap to reset."
+5. Never "sign in again → new PIN at once" (Google often signs in silently on the parent's own phone).
+6. **Never lock a parent out (owner: "make sure our app doesn't lock parents out of their phone or earn a bad
+   reputation; worst case there must be a way to delete the app and unlock with admin help").** Every PIN screen has a
+   **"Locked out?"** link: "Use your fingerprint or phone lock" → "Or remove Apprec8 (Settings → Apps → Apprec8 →
+   Uninstall), install it again and sign in: your children's stars are saved" → "Or write to us at the support email
+   from your account's email address; we reset it." The app lock is Android app pinning: the phone's own PIN/pattern
+   or a restart always ends it; say so on the lock screen too.
+7. **Admin reset:** Admin tools → "Reset a parent's PIN" (owner only: callable `adminResetParentPin`, deletes
+   `parentPins/{uid}` by the parent's email, logs who/when), plus `scripts/admin/resetPin.cjs <email>` for Gemini.
+   Used only after the parent writes from their account's email.
+Server: `resetParentPin` callable (caller must be the parent account, not a child session). Write the plan first
+(`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
+next build.
+
+### G53 · [todo] · gemini · ∞ redo: show the owner the infinity alone first
+Owner (inbox, 2026-11-07): "The infinity symbol looks like a **worm** rather than an inspiring eight and infinity.
+Rest is good. Fix the infinity symbol; you can just show me the infinity." So: **the ∞ mark alone**, no wordmark yet.
+A clean, symmetric, bold infinity (a proper lemniscate, even stroke like a figure 8 lying down, not a ribbon or a
+twisted tube), the right loop breaking into small square pixels that drift up-right. 4 variants on one sheet
+(e.g. solid gold, plum, white-on-plum, gradient gold→plum), each also at 48 px to check it still reads small.
+`docs/release/brand/infinity-v2/` + sheet PNG. `gemini(G53): done — 4 infinity variants`.
+
+### G51 · [todo] · gemini · Mockup: the parent's "yes" web page (no app needed)
+Spec: CODE_REVIEW.md "learn first + parent web link". Make a static HTML mockup (no backend), 390 px wide, in
+`docs/mockups/parent-link/index.html` + a PNG screenshot: Apprec8 header, "<Child> wants to learn on Apprec8",
+3 lines on what is kept (first name, class, answers; no ads, no chat; delete any time), a Hindi / English switch,
+🔊 read-aloud button (browser speech), parent's name field, Mother / Father / Guardian chips, a tick "I am this child's
+parent or guardian and I agree", big button "हाँ, मैं सहमत हूँ / YES, I AGREE", and a done state "Thank you! <Child>'s
+stars are saved now." Calm, plum palette, thumb zone (button at the bottom), plain words for parents who read little.
+Commit `gemini(G51): done — mockup`. Claude puts it in the owner's inbox.
+
+### G49 · [review] · gemini · ⭐ Build row Z: the simpler Home and Me (owner-approved 2026-11-06)
 Owner: "earlier anyone could log in and learn right away; now too many taps". Approved mockups (with his fixes):
 `docs/mockups/rowZ/Z1…Z4.png`. Claude is short on budget: **you build, Claude reviews.** Branch `feat/simple-home`
 from `feat/quiz-redesign`, in your worktree. Small commits. Rules: docs/DESIGN_RULES.md (thumb zone, calm, fold
@@ -310,101 +409,7 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    4 screens into `docs/agents/reports/G49/`, compare with the mockups, report differences in `G49.md`.
 Commit `gemini(G49): done — review please` (Claude reviews, then the owner tests on the phone before any publish).
 
-### G53 · [todo] · gemini · ∞ redo: show the owner the infinity alone first
-Owner (inbox, 2026-11-07): "The infinity symbol looks like a **worm** rather than an inspiring eight and infinity.
-Rest is good. Fix the infinity symbol; you can just show me the infinity." So: **the ∞ mark alone**, no wordmark yet.
-A clean, symmetric, bold infinity (a proper lemniscate, even stroke like a figure 8 lying down, not a ribbon or a
-twisted tube), the right loop breaking into small square pixels that drift up-right. 4 variants on one sheet
-(e.g. solid gold, plum, white-on-plum, gradient gold→plum), each also at 48 px to check it still reads small.
-`docs/release/brand/infinity-v2/` + sheet PNG. `gemini(G53): done — 4 infinity variants`.
-
-### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
-Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
-In `screens/guides/TeacherStartScreen.js` (+ `data/teacherStart.js`): under each of the 4 jobs put a small
-**DO IT ▶** button that starts the matching step of the "teacher-class" guide in `utils/guides.js` exactly like
-GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide strip shows what to tap:
-job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
-Small change; branch from your G49 branch. `gemini(G54): done`.
-
-### G55 · [todo] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
-Owner: "forgot PIN alone is not enough; avoid abuse when a child tries to get into the parent's phone." Today: app
-PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. **Design (Claude):**
-1. **"Switch to parent" asks the phone's own lock first** (fingerprint / face / phone PIN or pattern) via
-   `expo-local-authentication` (install with `npx expo install`; native → ships in the next build, so guard with a
-   capability check like services/push.js does, and fall back to the app PIN on builds or phones without it).
-2. The app PIN stays only as the fallback (phones with no screen lock). Keep the 5-tries / 15-min lock.
-3. **"Forgot PIN?"** = unlock with the phone's own lock → choose a new PIN twice. Phones with no screen lock: sign in
-   again with the parent's account **and** wait 1 hour before the new PIN works (so a child can't do it in one go).
-4. **Every PIN change notifies the parent** (push to the parent's tokens if they have the weekly summary on, and a
-   line in Me): "Your Apprec8 parent PIN was changed. Not you? Tap to reset."
-5. Never "sign in again → new PIN at once" (Google often signs in silently on the parent's own phone).
-6. **Never lock a parent out (owner: "make sure our app doesn't lock parents out of their phone or earn a bad
-   reputation; worst case there must be a way to delete the app and unlock with admin help").** Every PIN screen has a
-   **"Locked out?"** link: "Use your fingerprint or phone lock" → "Or remove Apprec8 (Settings → Apps → Apprec8 →
-   Uninstall), install it again and sign in: your children's stars are saved" → "Or write to us at the support email
-   from your account's email address; we reset it." The app lock is Android app pinning: the phone's own PIN/pattern
-   or a restart always ends it; say so on the lock screen too.
-7. **Admin reset:** Admin tools → "Reset a parent's PIN" (owner only: callable `adminResetParentPin`, deletes
-   `parentPins/{uid}` by the parent's email, logs who/when), plus `scripts/admin/resetPin.cjs <email>` for Gemini.
-   Used only after the parent writes from their account's email.
-Server: `resetParentPin` callable (caller must be the parent account, not a child session). Write the plan first
-(`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
-next build.
-
-### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
-Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
-trust." On the emulator, latest published code (feat/quiz-redesign), **fresh throwaway accounts** (never real
-people): 1) a new teacher signs up (first-run sheet → "I'm a teacher" → year of birth if shown), 2) Me → Join as a
-teacher with a code from the Demo School admin flow if possible (else note what's missing), 3) a new parent signs up,
-Add a child (this phone) → Play as → a topic, 4) the parent joins the teacher's class for that child with the consent
-note, 5) the teacher approves, assigns a Grammar Pro topic, sees progress, 6) Me → Guides → For teachers: start here,
-Start your class. **Write down every stumble:** confusing words, dead ends, errors, slow screens, anything that would
-embarrass a teacher in front of colleagues: `docs/agents/reports/G56.md` with screenshots, sorted worst first, each
-with a suggested fix. Don't change code. Delete the throwaway accounts afterwards (Me → Delete my account).
-`gemini(G56): done — N stumbles`.
-
-### G57 · [todo] · gemini · ⭐ Mockup first: the teacher's class screen (owner tested it as demo.teacher, 2026-11-07)
-Owner: "Reteach one thing asks to assign from below, several topics listed, very difficult to find; a direct action
-button right there would be easy. Turning on the weekly summary is way below and not easy to see; colour difference
-and bringing it up would be better. In a class of 32 the list is very long, teachers will have a hard time finding
-kids. Need thinking before building." **Draw, don't build:** static HTML mockups, 390 px, plum app style, thumb zone,
-in `docs/mockups/teacher-class/` (+ PNGs), 3 screens:
-1. **Class screen:** header "10-B · English · 32 students" + SHARE CODE + a clear coloured switch "🔔 Monday summary:
-   Off · Turn on". **Action cards at the top:** "3 waiting to join → Approve" (only if any); "Teach again: Reported
-   questions (52% right) → ASSIGN PRACTICE ▶" (one tap, due in 3 days, changeable); "8 didn't practise this week ›".
-   Summary line: "This week: 24 of 32 practised · Assigned: Reported speech, due Fri".
-2. **Students list:** filter chips "Needs help (5) · Didn't practise (8) · Doing well (19) · All (32)" + search by name;
-   one short row per student (name, one coloured status chip) → tap = that student's week.
-3. **Assign a topic:** "Suggested" first (next in order, weakest for this class), each with ASSIGN; "All topics ›"
-   folded, grouped by unit, with search; due-date chips (3 days / 1 week / pick).
-Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Also: **Demo School gets 2 students
-waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
-Google's reviewer can try approving.
-
-### G58 · [todo] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
-For parents who read little. On the consent notes (Join a class, Add a child, Link my child's own account): a
-"🔊 Listen" button that reads the note aloud in the chosen language (Hindi `hi-IN`, English `en-IN`) with
-expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
-`gemini(G58): done`.
-
-### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
-Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
-question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
-check: exactly one correct option, the answer key matches, the explanation says why, Indian English spelling, CBSE
-level, kid-friendly wording, no copied board-paper text. **Don't edit content.** Report in
-`docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
-of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
-
-### G51 · [todo] · gemini · Mockup: the parent's "yes" web page (no app needed)
-Spec: CODE_REVIEW.md "learn first + parent web link". Make a static HTML mockup (no backend), 390 px wide, in
-`docs/mockups/parent-link/index.html` + a PNG screenshot: Apprec8 header, "<Child> wants to learn on Apprec8",
-3 lines on what is kept (first name, class, answers; no ads, no chat; delete any time), a Hindi / English switch,
-🔊 read-aloud button (browser speech), parent's name field, Mother / Father / Guardian chips, a tick "I am this child's
-parent or guardian and I agree", big button "हाँ, मैं सहमत हूँ / YES, I AGREE", and a done state "Thank you! <Child>'s
-stars are saved now." Calm, plum palette, thumb zone (button at the bottom), plain words for parents who read little.
-Commit `gemini(G51): done — mockup`. Claude puts it in the owner's inbox.
-
-### G50 · [todo] · gemini · Build learn first (only after Claude has reviewed G49)
+### G50 · [review] · gemini · Build learn first (only after Claude has reviewed G49)
 Spec: CODE_REVIEW.md "learn first + parent web link" + mockups docs/mockups/rowX-learn-first/X6–X9. Branch
 `feat/learn-first` from the G49 branch. Start by writing the plan in `docs/agents/reports/G50-plan.md` (which files,
 how progress is kept on the phone and moved on the parent's yes, tests) and commit it **before** coding:
