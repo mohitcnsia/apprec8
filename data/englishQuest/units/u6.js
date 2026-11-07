@@ -18,6 +18,60 @@ export default {
     "eq-u6-can": {
       name: "Can, Could and May",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🦸",
+                "title": "Modals take the base form",
+                "text": "Modal helpers like can, could, may, must, and should always take the bare base verb. Never add -s, -ed, -ing, or 'to' after them!",
+                "examples": [
+                      "She can swim. (NOT can swims)",
+                      "He may come. (NOT may to come)",
+                      "We should help. (NOT should helping)"
+                ]
+          },
+          {
+                "emoji": "💪",
+                "title": "CAN (now) and COULD (past)",
+                "text": "Use 'can' for abilities you have right now. Use 'could' for abilities you had in the past.",
+                "examples": [
+                      "I can speak English now.",
+                      "When I was five, I could swim.",
+                      "Last year I could not reach the top shelf."
+                ]
+          },
+          {
+                "emoji": "🙋",
+                "title": "Asking politely with MAY",
+                "text": "When asking a teacher or elder for permission, 'May I' is the most polite choice! You can also use 'Could I' or 'Can I' with friends.",
+                "examples": [
+                      "May I come in, teacher?",
+                      "Could I borrow your eraser, please?",
+                      "Can I play with your ball?"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is grammatically correct?",
+                "answer": "He can run faster than anyone in class.",
+                "wrong": [
+                      "He can runs faster than anyone in class.",
+                      "He can to run faster than anyone in class.",
+                      "He can running faster than anyone in class."
+                ],
+                "explain": "Modals are followed directly by the base verb without -s: 'can run'."
+          },
+          {
+                "kind": "check",
+                "question": "Choose the best polite request to ask a teacher: '___ I drink some water, please?'",
+                "answer": "May",
+                "wrong": [
+                      "Should",
+                      "Must",
+                      "Might to"
+                ],
+                "explain": "'May I' is the most polite, respectful way to request permission from a teacher."
+          }
+    ],
       content: `### 🦸 Helper words with super powers
 
 **Can, could, may, must, should** are *modals*. They help the main verb.
@@ -60,6 +114,60 @@ Clue words for COULD: *when I was…, last year, yesterday, ago*.
     "eq-u6-must": {
       name: "Must and Should",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "📏",
+                "title": "MUST: an essential rule",
+                "text": "Use 'must' when an action is a strict rule or duty that everyone has to obey. There is no choice!",
+                "examples": [
+                      "You must wear a helmet on a scooter.",
+                      "Drivers must stop at red lights.",
+                      "Students must carry their ID cards."
+                ]
+          },
+          {
+                "emoji": "💬",
+                "title": "SHOULD: friendly advice",
+                "text": "Use 'should' to give good advice or suggest what is sensible. It is a recommendation, not a strict punishment rule!",
+                "examples": [
+                      "You should eat fresh vegetables.",
+                      "You should sleep eight hours.",
+                      "You shouldn't watch screens so late."
+                ]
+          },
+          {
+                "emoji": "🚫",
+                "title": "MUST NOT vs DO NOT HAVE TO",
+                "text": "'Must not' means strictly forbidden—do not do it! 'Do not have to' means it is not necessary, but you may if you want.",
+                "examples": [
+                      "You must not touch wet plugs! (Forbidden)",
+                      "It is Sunday; you don't have to wake up early. (Optional)",
+                      "No 'to' after must: 'must go', not 'must to go'!"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence expresses a strict, mandatory rule?",
+                "answer": "All passengers must fasten their seat belts.",
+                "wrong": [
+                      "You should try reading this adventure book.",
+                      "You might like strawberry ice cream.",
+                      "We could visit the museum tomorrow."
+                ],
+                "explain": "'Must' indicates an obligatory rule that must be obeyed."
+          },
+          {
+                "kind": "check",
+                "question": "What does 'You do not have to wash the dishes' mean?",
+                "answer": "It is not necessary, but you can if you wish",
+                "wrong": [
+                      "You are forbidden from washing the dishes",
+                      "You must wash the dishes immediately",
+                      "You broke the kitchen dishes"
+                ],
+                "explain": "'Do not have to' means an action is optional, unlike 'must not' which means forbidden."
+          }
+    ],
       content: `### 📏 MUST: a rule
 
 - You **must** wear a seat belt.
@@ -100,6 +208,60 @@ They look alike but mean very different things!
     "eq-u6-tags": {
       name: "Question Tags",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🏷️",
+                "title": "What is a question tag?",
+                "text": "A question tag is a mini question placed at the end of a sentence to confirm something: 'It is a sunny day, isn't it?'",
+                "examples": [
+                      "You are coming, aren't you?",
+                      "She can swim, can't she?",
+                      "They were happy, weren't they?"
+                ]
+          },
+          {
+                "emoji": "➕➖",
+                "title": "The flip rule",
+                "text": "If the sentence is positive, the tag is negative. If the sentence is negative, the tag is positive! Words like never and nobody count as negative.",
+                "examples": [
+                      "She is ready, isn't she? (Positive → Negative)",
+                      "She isn't ready, is she? (Negative → Positive)",
+                      "He never lies, does he? ('never' is negative!)"
+                ]
+          },
+          {
+                "emoji": "🎩",
+                "title": "Tricky tags: I am & Let us",
+                "text": "Watch out for special exceptions! 'I am late, aren't I?' (never 'amn't I'). 'Let us go for a walk, shall we?' Words like everyone take the pronoun 'they'.",
+                "examples": [
+                      "I am right, aren't I?",
+                      "Let's play cricket, shall we?",
+                      "Everyone was pleased, weren't they?"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "What is the correct question tag: 'You haven't seen my keys, ___?'",
+                "answer": "have you",
+                "wrong": [
+                      "haven't you",
+                      "did you",
+                      "do you"
+                ],
+                "explain": "A negative sentence ('haven't seen') takes a positive tag using the same helper: 'have you?'"
+          },
+          {
+                "kind": "check",
+                "question": "Which tag correctly completes: 'I am your best friend, ___?'",
+                "answer": "aren't I",
+                "wrong": [
+                      "amn't I",
+                      "am I not",
+                      "isn't I"
+                ],
+                "explain": "In standard English, the question tag for 'I am' is always 'aren't I?'"
+          }
+    ],
       content: `### 🏷️ A tiny question at the end
 
 A **question tag** turns a sentence into a question: *It is hot, **isn't it**?*

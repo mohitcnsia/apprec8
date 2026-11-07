@@ -61,6 +61,58 @@ export const studyPages = {
   "eq-u0-what-is-sentence": {
     name: "What is a Sentence?",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🧱",
+                "title": "A complete idea",
+                "text": "A sentence is a group of words that tells a complete thought. When you read it, you understand the whole picture with nothing missing!",
+                "examples": [
+                      "The dog barks. (Complete)",
+                      "The little dog... (Incomplete!)"
+                ]
+          },
+          {
+                "emoji": "🧩",
+                "title": "Subject and Predicate",
+                "text": "Every sentence has two parts: the subject (who or what it is about) and the predicate (what the subject does or is). The predicate always contains a verb!",
+                "examples": [
+                      "Riya (subject) | sings sweetly (predicate)",
+                      "The puppy (subject) | is sleeping (predicate)"
+                ]
+          },
+          {
+                "emoji": "✍️",
+                "title": "Sentence rules",
+                "text": "Always start a sentence with a capital letter. End it with a full stop, a question mark, or an exclamation mark.",
+                "examples": [
+                      "The sun is hot.",
+                      "Where is my book?",
+                      "What a lovely day!"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which of these is a complete sentence?",
+                "answer": "The kitten drinks warm milk.",
+                "wrong": [
+                      "The fluffy kitten in the basket",
+                      "Drinking milk quickly",
+                      "Because the kitten was hungry"
+                ],
+                "explain": "A sentence needs a subject and a verb to express a complete thought."
+          },
+          {
+                "kind": "check",
+                "question": "What is the predicate in: 'My grandfather reads the newspaper'?",
+                "answer": "reads the newspaper",
+                "wrong": [
+                      "My grandfather",
+                      "the newspaper",
+                      "My grandfather reads"
+                ],
+                "explain": "The predicate tells what the grandfather does, starting with the verb 'reads'."
+          }
+    ],
     content: `### 🧱 Sentences are like LEGO towers
 
 A **sentence** is a group of words that tells a **complete idea**.
@@ -107,6 +159,58 @@ Every sentence has two parts:
   "eq-u0-kinds-of-sentences": {
     name: "Four Kinds of Sentences",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "📢",
+                "title": "Statements and Questions",
+                "text": "A statement tells something and ends with a full stop. A question asks something and ends with a question mark.",
+                "examples": [
+                      "Statement: The train has arrived.",
+                      "Question: When will the train arrive?"
+                ]
+          },
+          {
+                "emoji": "👉",
+                "title": "Commands and Requests",
+                "text": "A command or polite request tells someone to do an action. The subject 'you' is hidden! It ends with a full stop.",
+                "examples": [
+                      "Please pass the salt.",
+                      "Close the gate.",
+                      "Listen carefully."
+                ]
+          },
+          {
+                "emoji": "🎉",
+                "title": "Exclamations",
+                "text": "An exclamation bursts with strong emotion, surprise, or joy! It often starts with 'What a...' or 'How...' and ends with an exclamation mark.",
+                "examples": [
+                      "What a magnificent rainbow!",
+                      "How fast she runs!"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which end mark belongs on: 'Please turn off the light'?",
+                "answer": "Full stop (.)",
+                "wrong": [
+                      "Question mark (?)",
+                      "Exclamation mark (!)",
+                      "Comma (,)"
+                ],
+                "explain": "This is a polite request (imperative sentence), so it ends with a full stop."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is an exclamation showing strong emotion?",
+                "answer": "What a stunning view this is!",
+                "wrong": [
+                      "What is your sister's name?",
+                      "This is a very nice view.",
+                      "Look at the mountain view."
+                ],
+                "explain": "Sentences starting with 'What a...' that show big emotion are exclamations and end with '!'."
+          }
+    ],
     content: `### 🎭 Sentences do different jobs
 
 Sentences can **tell**, **ask**, **order** or **show strong feelings**. Each kind has its own end mark.
@@ -147,6 +251,62 @@ Ends with an **exclamation mark (!)**
   "eq-u1-adverbs": {
     name: "Adverbs: How, When, Where",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🏃",
+                "title": "What is an adverb?",
+                "text": "An adverb tells us more about a verb. It answers: How? When? Where? or How often? did the action happen.",
+                "examples": [
+                      "How: The turtle walked slowly.",
+                      "When: We will leave soon.",
+                      "Where: Birds fly everywhere.",
+                      "How often: He always smiles."
+                ]
+          },
+          {
+                "emoji": "🔍",
+                "title": "The -ly clue and the trap",
+                "text": "Many adverbs end in -ly by adding it to adjectives: quick becomes quickly. But watch out: lovely, friendly, and lonely describe nouns, so they are adjectives!",
+                "examples": [
+                      "quick → quickly (adverb)",
+                      "careful → carefully (adverb)",
+                      "a friendly dog (adjective!)",
+                      "a lovely song (adjective!)"
+                ]
+          },
+          {
+                "emoji": "🎯",
+                "title": "Describing adjectives too",
+                "text": "Adverbs can also describe adjectives or other adverbs by showing degree: very tall, extremely bright, or too fast.",
+                "examples": [
+                      "She is very tall.",
+                      "He drove too quickly.",
+                      "The soup is extremely hot."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which word in this sentence is an adverb: 'The tortoise walked slowly across the grass'?",
+                "answer": "slowly",
+                "wrong": [
+                      "tortoise",
+                      "walked",
+                      "across"
+                ],
+                "explain": "'Slowly' tells us HOW the tortoise walked, so it is an adverb."
+          },
+          {
+                "kind": "check",
+                "question": "Which of these words is an ADJECTIVE, not an adverb?",
+                "answer": "friendly",
+                "wrong": [
+                      "loudly",
+                      "cheerfully",
+                      "quietly"
+                ],
+                "explain": "'Friendly' describes a noun (a friendly neighbour), making it an adjective!"
+          }
+    ],
     content: `### 🏃 What is an Adverb?
 
 An **adverb** tells us more about a **verb** (an action). It answers questions like:
@@ -183,6 +343,60 @@ quick → quick**ly** · careful → careful**ly** · happy → happ**ily**
   "eq-read-tips": {
     name: "Reading Detective Tips",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "👀",
+                "title": "Preview the questions first",
+                "text": "Before reading a long passage, glance at the questions! Now your detective eyes know exactly which clues, names, and dates to hunt for.",
+                "examples": [
+                      "Look for names and places",
+                      "Spot numbers and years",
+                      "Notice key words"
+                ]
+          },
+          {
+                "emoji": "🔑",
+                "title": "Hunt the key word",
+                "text": "Pick a distinctive word from the question and scan the passage until you spot it. The answer usually hides in that exact sentence or the next one!",
+                "examples": [
+                      "Scan capital letters for names",
+                      "Scan digits for dates",
+                      "Read the sentence before and after"
+                ]
+          },
+          {
+                "emoji": "⚖️",
+                "title": "True, false & word meaning",
+                "text": "For 'INCORRECT statement' questions, check every option against the story—the one missing or wrong is your answer! For hard words, read surrounding sentences for clues.",
+                "examples": [
+                      "Check statement 1: True or False",
+                      "Check statement 2: True or False",
+                      "Answer ONLY from the story"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "When answering questions on a story, what is the golden rule?",
+                "answer": "Base every answer on facts stated in the passage",
+                "wrong": [
+                      "Guess based on things you read elsewhere",
+                      "Always pick the longest possible option",
+                      "Only read the first paragraph of the story"
+                ],
+                "explain": "Always answer from the passage itself, not from outside assumptions!"
+          },
+          {
+                "kind": "check",
+                "question": "What should you do first when tackling a reading comprehension passage?",
+                "answer": "Skim the questions quickly to know what clues to hunt for",
+                "wrong": [
+                      "Memorise every single word in the story",
+                      "Answer all questions without reading the story",
+                      "Read the story backwards from the end"
+                ],
+                "explain": "Previewing questions turns you into a focused detective who knows what to look for."
+          }
+    ],
     content: `### 🕵️ Be a reading detective!
 
 Reading questions are not about remembering everything. They are about **finding the clue** in the passage.
@@ -215,6 +429,74 @@ Find each event in the passage. The order in the passage is usually the order of
   "eq-u2-a-an": {
     name: "A and An",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🍎",
+                "title": "The sound, not the letter!",
+                "text": "Use a or an before one person or thing. The rule depends on the first sound you hear, not the written letter: vowel sounds take an, consonant sounds take a.",
+                "examples": [
+                      "a book",
+                      "a cat",
+                      "an apple",
+                      "an umbrella"
+                ]
+          },
+          {
+                "emoji": "🤫",
+                "title": "Silent H takes AN",
+                "text": "In words like hour and honest, the initial letter h is silent! Because the word begins with an 'ow' or 'o' vowel sound, we say an hour and an honest person.",
+                "examples": [
+                      "an hour (silent h)",
+                      "an honest child",
+                      "an heir to the throne",
+                      "a horse (h is sounded!)"
+                ]
+          },
+          {
+                "emoji": "🎺",
+                "title": "The 'you' sound takes A",
+                "text": "Uniform and university begin with the vowel letter u, but they sound like 'you' (a consonant sound). So we say a uniform and a university!",
+                "examples": [
+                      "a uniform",
+                      "a university",
+                      "a European trip",
+                      "a one-rupee note (w sound)"
+                ]
+          },
+          {
+                "emoji": "👩‍⚕️",
+                "title": "Jobs need A or AN",
+                "text": "In English, naming someone's profession always needs a or an. Never say 'My mother is doctor'—say 'My mother is a doctor!'",
+                "examples": [
+                      "She is a doctor.",
+                      "He is an architect.",
+                      "Rohan is an engineer.",
+                      "Asha is a pilot."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which phrase uses 'an' correctly before a silent h?",
+                "answer": "an honest leader",
+                "wrong": [
+                      "a honest leader",
+                      "an hotel room",
+                      "an house"
+                ],
+                "explain": "'Honest' starts with a silent h, so the first sound is an 'o' vowel sound: an honest leader."
+          },
+          {
+                "kind": "check",
+                "question": "Why do we say 'a uniform' instead of 'an uniform'?",
+                "answer": "'Uniform' begins with a consonant 'you' sound",
+                "wrong": [
+                      "'Uniform' is a plural noun",
+                      "'Uniform' has a silent letter",
+                      "'Uniform' is an ancient Latin word"
+                ],
+                "explain": "Even though u is a vowel letter, it sounds like the consonant 'y' in 'you', so it takes 'a'."
+          }
+    ],
     content: `### 🍎 A or An?
 
 We use **a** or **an** before **one** thing (a singular noun). It means "any one".
@@ -258,6 +540,72 @@ The rule is about the **first sound** we say, not the first letter we write.
   "eq-u2-the": {
     name: "Using The",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "👉",
+                "title": "The: the one we both know",
+                "text": "Say 'a' the first time you mention something. Switch to 'the' once the listener knows which specific one you mean: 'I bought a puppy. The puppy loves balls!'",
+                "examples": [
+                      "A bird landed. The bird sang.",
+                      "Pass me the blue pen on your desk."
+                ]
+          },
+          {
+                "emoji": "🌞",
+                "title": "The only one in the world",
+                "text": "Use 'the' for unique things, famous monuments, and superlatives: the sun, the moon, the Red Fort, the tallest boy in class.",
+                "examples": [
+                      "the sun and the moon",
+                      "the Taj Mahal",
+                      "the tallest mountain",
+                      "the first prize"
+                ]
+          },
+          {
+                "emoji": "🌊",
+                "title": "Waters and mountain ranges",
+                "text": "Use 'the' with rivers, seas, oceans, and mountain chains: the Ganga, the Indian Ocean, the Himalayas. But a single mountain has no 'the': Mount Everest!",
+                "examples": [
+                      "the Ganga (river)",
+                      "the Indian Ocean (ocean)",
+                      "the Himalayas (mountain range)",
+                      "Mount Everest (single peak: no the!)"
+                ]
+          },
+          {
+                "emoji": "🚫",
+                "title": "When to skip the article",
+                "text": "Do not put 'the' before names of people, cities, sports, school subjects, or daily meals.",
+                "examples": [
+                      "Priya lives in Delhi. (not the Priya)",
+                      "We play cricket. (not the cricket)",
+                      "Breakfast is ready. (not the breakfast)",
+                      "She likes Maths. (not the Maths)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence uses 'the' correctly with a mountain range?",
+                "answer": "The Himalayas are covered in deep snow.",
+                "wrong": [
+                      "The Mount Everest is very high.",
+                      "Mount Everest has the peak.",
+                      "A Himalayas are in Asia."
+                ],
+                "explain": "Mountain ranges take 'the' (the Himalayas), but individual mountain peaks do not take 'the'."
+          },
+          {
+                "kind": "check",
+                "question": "Which of these phrases should NOT have 'the' in front of it?",
+                "answer": "dinner",
+                "wrong": [
+                      "sun",
+                      "Arabian Sea",
+                      "Taj Mahal"
+                ],
+                "explain": "Names of meals (breakfast, lunch, dinner) do not take an article."
+          }
+    ],
     content: `### 👉 The = the one we both know
 
 Say **a** the first time. Say **the** when we already know which one.
@@ -301,6 +649,74 @@ Say **a** the first time. Say **the** when we already know which one.
   "eq-u2-determiners": {
     name: "Determiners: This, Some, Many",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "👆",
+                "title": "Pointing: near and far",
+                "text": "Use 'this' and 'these' for things close to you. Use 'that' and 'those' for things far away: this book (here in hand), that kite (up in the sky).",
+                "examples": [
+                      "this book (1 thing, near)",
+                      "these books (many, near)",
+                      "that bird (1 thing, far)",
+                      "those birds (many, far)"
+                ]
+          },
+          {
+                "emoji": "🍬",
+                "title": "Some vs Any",
+                "text": "Use 'some' in positive statements and when making polite offers. Use 'any' in negative sentences and questions.",
+                "examples": [
+                      "I have some grapes.",
+                      "Would you like some tea?",
+                      "I do not have any coins.",
+                      "Do you have any pencils?"
+                ]
+          },
+          {
+                "emoji": "🔢",
+                "title": "Many vs Much",
+                "text": "Use 'many' for things you can count individually (books, rupees, apples). Use 'much' for uncountable things (water, rice, time, sugar).",
+                "examples": [
+                      "many books / students",
+                      "much water / patience",
+                      "How many pens do you have?",
+                      "How much milk is left?"
+                ]
+          },
+          {
+                "emoji": "🤏",
+                "title": "Few vs Little",
+                "text": "Countable nouns take 'few' or 'a few'. Uncountable nouns take 'little' or 'a little'. Adding 'a' means you have some; without 'a' it means almost none at all!",
+                "examples": [
+                      "a few biscuits (a small number)",
+                      "few friends (hardly any 😟)",
+                      "a little milk (enough for tea)",
+                      "little hope (almost no hope 😟)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which determiner fits: 'There isn't ___ milk left in the bottle.'?",
+                "answer": "any",
+                "wrong": [
+                      "some",
+                      "many",
+                      "few"
+                ],
+                "explain": "In negative sentences with 'not', use 'any': 'There isn't any milk.'"
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence uses 'many' correctly with a countable noun?",
+                "answer": "How many apples are in the basket?",
+                "wrong": [
+                      "How many water is in the glass?",
+                      "How many sugar do you want?",
+                      "How many luggage do you carry?"
+                ],
+                "explain": "Apples can be counted, so we ask 'How many apples?' Water and sugar take 'much'."
+          }
+    ],
     content: `### 🧭 What is a determiner?
 
 A **determiner** comes **before a noun**. It tells us **which one** or **how many**.

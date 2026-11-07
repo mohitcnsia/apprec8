@@ -14,6 +14,62 @@ export default {
     "eq-u3-basics": {
       name: "Subject and Verb: Best Friends",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🤝",
+                "title": "Singular subjects take -S",
+                "text": "In the present tense, a singular subject takes a verb ending in -s or -es. A plural subject takes the base verb without an -s!",
+                "examples": [
+                      "The tiger roars. (1 tiger → roars)",
+                      "The tigers roar. (many → roar)",
+                      "She writes neatly.",
+                      "They write neatly."
+                ]
+          },
+          {
+                "emoji": "🌟",
+                "title": "Special rules for I and YOU",
+                "text": "The pronoun I takes base verbs without -s (I run, I like), and uses am or was. The pronoun YOU always takes plural-style verbs: You are, You were, You know!",
+                "examples": [
+                      "I sing and I dance.",
+                      "I am ready.",
+                      "You are my best friend. (Never 'you is'!)",
+                      "You play brilliantly."
+                ]
+          },
+          {
+                "emoji": "⚙️",
+                "title": "Helper verbs: Singular vs Plural",
+                "text": "Match helper verbs carefully: singular subjects use is, was, has, and does. Plural subjects use are, were, have, and do.",
+                "examples": [
+                      "He has a puppy. / They have puppies.",
+                      "She does her work. / They do their work.",
+                      "The bird is flying. / The birds are flying."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence correctly pairs a singular subject with its verb?",
+                "answer": "The young boy walks to school every day.",
+                "wrong": [
+                      "The young boy walk to school every day.",
+                      "The young boys walks to school every day.",
+                      "The boy are walking to school."
+                ],
+                "explain": "A single boy is singular, so the present-tense verb ends in -s: walks."
+          },
+          {
+                "kind": "check",
+                "question": "Which verb correctly completes: 'You ___ always very helpful.'?",
+                "answer": "are",
+                "wrong": [
+                      "is",
+                      "was",
+                      "has"
+                ],
+                "explain": "'You' always pairs with plural verb forms: 'You are', never 'You is'."
+          }
+    ],
       content: `### 🤝 When the subject changes, the verb changes!
 
 A **subject** and its **verb** are like best friends: they must always agree!
@@ -62,6 +118,61 @@ Watch out for these helpers:
     "eq-u3-tricky": {
       name: "Tricky Subjects: Each, Every and Pairs",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🎁",
+                "title": "Everyone means ONE at a time",
+                "text": "Words like everyone, everybody, each, and somebody feel like a crowd, but grammatically they mean each single person. They always take a SINGULAR verb!",
+                "examples": [
+                      "Everyone loves music. (NOT love)",
+                      "Each girl has a notebook. (NOT have)",
+                      "Somebody is knocking at the door."
+                ]
+          },
+          {
+                "emoji": "🔗",
+                "title": "AND vs OR",
+                "text": "Subjects joined by 'and' make a team, so use a plural verb. But subjects joined by 'or' or 'nor' match whichever subject is closest to the verb!",
+                "examples": [
+                      "Rohan and Kabir are friends.",
+                      "Neither the teacher nor the students were late.",
+                      "Either tea or milk is fine."
+                ]
+          },
+          {
+                "emoji": "👟",
+                "title": "The 'A pair of' trap",
+                "text": "Trousers, scissors, and shoes are plural by themselves. But when you say 'a pair of shoes', the true subject is the singular word 'pair', so use a singular verb!",
+                "examples": [
+                      "The scissors are sharp.",
+                      "A pair of scissors is on the desk.",
+                      "The shoes are dirty.",
+                      "A pair of shoes is clean."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is grammatically correct?",
+                "answer": "Everyone has finished their drawing.",
+                "wrong": [
+                      "Everyone have finished their drawing.",
+                      "Each student have a pencil.",
+                      "Somebody are calling your name."
+                ],
+                "explain": "'Everyone', 'each', and 'somebody' always take singular verbs: 'has', not 'have'."
+          },
+          {
+                "kind": "check",
+                "question": "Fill in the blank: 'A new pair of sports shoes ___ in the box.'",
+                "answer": "is",
+                "wrong": [
+                      "are",
+                      "were",
+                      "have"
+                ],
+                "explain": "The subject is 'pair' (singular), so we say 'A pair of shoes is in the box.'"
+          }
+    ],
       content: `### 🎁 Each, Every and Everyone mean ONE at a time!
 
 Even though **everyone** feels like a big crowd, in grammar it looks at **every single person** one by one.
@@ -106,6 +217,60 @@ BUT when you put **"a pair of"** in front, the true subject is the singular word
     "eq-u3-there": {
       name: "There is, There are and Questions",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔍",
+                "title": "Look behind the verb for THERE",
+                "text": "In sentences starting with 'There', the subject hides AFTER the verb! Look at the noun following the verb to pick is or are.",
+                "examples": [
+                      "There is a big banyan tree. (1 tree → is)",
+                      "There are five parrots on the wire. (many → are)",
+                      "There is some juice in the jug. (uncountable → is)"
+                ]
+          },
+          {
+                "emoji": "📍",
+                "title": "Here is and Here are",
+                "text": "The same rule applies to 'Here': match the noun that comes right after. Single things take is, multiple items take are.",
+                "examples": [
+                      "Here is your notebook.",
+                      "Here are your colour pencils.",
+                      "Here is the bus."
+                ]
+          },
+          {
+                "emoji": "❓",
+                "title": "Questions with DO and DOES",
+                "text": "Use 'Does' with singular subjects (he, she, it). Use 'Do' with plurals and with I/you. After Does, the main verb always bounces back to its simple base form!",
+                "examples": [
+                      "Does she play tennis? (NOT plays!)",
+                      "Do they want some fruit?",
+                      "Does he know the way? (NOT knows!)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Choose the correct verb: 'There ___ ten monkeys swinging in the trees.'",
+                "answer": "are",
+                "wrong": [
+                      "is",
+                      "was",
+                      "has"
+                ],
+                "explain": "The subject 'ten monkeys' comes after the verb and is plural, so we use 'are'."
+          },
+          {
+                "kind": "check",
+                "question": "Which question is formed correctly?",
+                "answer": "Does your sister like mangoes?",
+                "wrong": [
+                      "Does your sister likes mangoes?",
+                      "Do your sister like mangoes?",
+                      "Does your sister liking mangoes?"
+                ],
+                "explain": "After 'Does', the main verb must be in its base form: 'like', not 'likes'."
+          }
+    ],
       content: `### 🔍 Look BEHIND the verb for 'There is' and 'There are'!
 
 In most sentences, the subject comes first. But in sentences starting with **There**, the real subject hides **AFTER** the verb!

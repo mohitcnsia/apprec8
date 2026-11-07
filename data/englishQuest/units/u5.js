@@ -19,6 +19,62 @@ export default {
     "eq-u5-simple": {
       name: "Every Day or Yesterday?",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔁",
+                "title": "Simple present: habits & facts",
+                "text": "Use the simple present for everyday routines and eternal truths. With he, she, it, or one person, add -s or -es to the verb!",
+                "examples": [
+                      "I brush my teeth every morning.",
+                      "The sun rises in the east.",
+                      "She plays badminton every Saturday.",
+                      "He catches the school bus."
+                ]
+          },
+          {
+                "emoji": "⏪",
+                "title": "Simple past: finished moments",
+                "text": "Use the simple past for actions completed in the past. Look for clue words like yesterday, last year, or two days ago.",
+                "examples": [
+                      "Regular: walk → walked, play → played",
+                      "Irregular: go → went, eat → ate",
+                      "Irregular: see → saw, buy → bought",
+                      "Irregular: swim → swam, write → wrote"
+                ]
+          },
+          {
+                "emoji": "🛑",
+                "title": "DID brings the base form!",
+                "text": "In past-tense questions and negative sentences with 'did' or 'didn't', the main verb resets to its base form. Never double the past tense!",
+                "examples": [
+                      "✅ Did you go to the park? (NOT Did you went)",
+                      "✅ She didn't see the movie. (NOT didn't saw)",
+                      "✅ Did he eat lunch? (NOT Did he ate)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence correctly uses the simple past with 'did'?",
+                "answer": "Did you finish your project yesterday?",
+                "wrong": [
+                      "Did you finished your project yesterday?",
+                      "Did you went to school yesterday?",
+                      "Did you saw the parade yesterday?"
+                ],
+                "explain": "'Did' already carries the past tense, so the verb stays in base form: 'finish'."
+          },
+          {
+                "kind": "check",
+                "question": "What is the past tense form of the irregular verb 'catch'?",
+                "answer": "caught",
+                "wrong": [
+                      "catched",
+                      "caughted",
+                      "cot"
+                ],
+                "explain": "'Catch' is irregular: catch → caught. There is no such word as 'catched'!"
+          }
+    ],
       content: `### ⏰ A verb tells us WHEN
 
 The **tense** of a verb tells us *when* something happens.
@@ -74,6 +130,62 @@ After **did**, the verb goes back to its **base form**.
     "eq-u5-cont": {
       name: "Happening Now",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "▶️",
+                "title": "Present continuous: happening now",
+                "text": "Use am, is, or are with verb-ing for actions taking place right at this moment. Watch for clue words like now, right now, Look!, and Listen!",
+                "examples": [
+                      "I am reading a story.",
+                      "Look! The baby is smiling.",
+                      "The boys are playing football now.",
+                      "She is drawing a picture."
+                ]
+          },
+          {
+                "emoji": "⏸️",
+                "title": "Past continuous & interruptions",
+                "text": "Use was or were + verb-ing for an ongoing past background action. When a sudden short event interrupts it, use the simple past!",
+                "examples": [
+                      "I was sleeping when the alarm rang.",
+                      "They were walking home when it started raining.",
+                      "While she was cooking, the bell rang."
+                ]
+          },
+          {
+                "emoji": "✋",
+                "title": "Verbs that dislike -ING",
+                "text": "Stative verbs express thoughts, emotions, and possession. We do not use them in continuous forms: say 'I know the answer', never 'I am knowing'!",
+                "examples": [
+                      "I understand. (NOT am understanding)",
+                      "She likes mangoes. (NOT is liking)",
+                      "This bag belongs to me. (NOT is belonging)",
+                      "We want ice cream. (NOT are wanting)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is grammatically correct?",
+                "answer": "I understand the grammar rule clearly.",
+                "wrong": [
+                      "I am understanding the grammar rule clearly.",
+                      "She is knowing the right answer.",
+                      "This pencil is belonging to Arjun."
+                ],
+                "explain": "Verbs of thinking and knowing (understand, know, belong) do not take -ing."
+          },
+          {
+                "kind": "check",
+                "question": "Fill in the blank: 'We ___ dinner when the power went out.'",
+                "answer": "were eating",
+                "wrong": [
+                      "was eating",
+                      "are eating",
+                      "ate"
+                ],
+                "explain": "An ongoing background action in the past with 'we' uses 'were eating'."
+          }
+    ],
       content: `### 🎬 In the middle of an action
 
 The **continuous** tense shows an action that is *still going on*.
@@ -131,6 +243,62 @@ Some verbs talk about what we **know, like, want or have**. We do not use them w
     "eq-u5-future": {
       name: "Will and Going To",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔮",
+                "title": "WILL: base form for all",
+                "text": "Use 'will + base form' to express future predictions and promises. It stays exactly the same for every subject—no -s, no -ed, no -ing!",
+                "examples": [
+                      "I will call you tomorrow.",
+                      "She will help us.",
+                      "They will arrive soon.",
+                      "Never say 'will goes' or 'will helping'!"
+                ]
+          },
+          {
+                "emoji": "📋",
+                "title": "GOING TO: plans and signs",
+                "text": "Use 'am / is / are going to + base form' when talking about future plans or when you see obvious signs happening right now.",
+                "examples": [
+                      "Look at those dark clouds; it is going to rain!",
+                      "We are going to visit our grandparents on Sunday.",
+                      "I am going to bake a cake."
+                ]
+          },
+          {
+                "emoji": "🕵️",
+                "title": "Clue words tell the tense",
+                "text": "Look for time markers: every day and usually point to simple present; Look! and now signal continuous; yesterday and ago signal past; tomorrow and next week mean future.",
+                "examples": [
+                      "always / usually → present",
+                      "now / at the moment → continuous",
+                      "yesterday / ago → past",
+                      "tomorrow / next week → future"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence expresses a future intention correctly?",
+                "answer": "We are going to paint our room tomorrow.",
+                "wrong": [
+                      "We going to paint our room tomorrow.",
+                      "We will painted our room tomorrow.",
+                      "We are going paint our room tomorrow."
+                ],
+                "explain": "Always include the helping verb with going to: 'are going to paint'."
+          },
+          {
+                "kind": "check",
+                "question": "Which future sentence uses 'will' correctly?",
+                "answer": "She will join the art club next week.",
+                "wrong": [
+                      "She will joins the art club next week.",
+                      "She will joined the art club next week.",
+                      "She will joining the art club next week."
+                ],
+                "explain": "'Will' is always followed by the simple base verb: 'will join'."
+          }
+    ],
       content: `### 🔮 Talking about tomorrow
 
 ---
@@ -179,6 +347,73 @@ For plans, and when we can *see* something coming.
     "eq-u5-perfect": {
       name: "Have Done",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "✅",
+                "title": "Past actions that matter now",
+                "text": "The present perfect links past actions to the present moment: 'has / have + past participle'. Use it when the result still matters right now!",
+                "examples": [
+                      "I have lost my key. (I still do not have it!)",
+                      "She has finished her homework. (She can play now!)",
+                      "They have cleaned the room."
+                ]
+          },
+          {
+                "emoji": "🤝",
+                "title": "HAS or HAVE?",
+                "text": "Use 'has' with singular subjects (he, she, it, Rohan). Use 'have' with plural subjects and with I and you.",
+                "examples": [
+                      "Rohan has arrived.",
+                      "The boys have arrived.",
+                      "I have eaten lunch.",
+                      "Have you seen my notebook?"
+                ]
+          },
+          {
+                "emoji": "📚",
+                "title": "Third forms: past participles",
+                "text": "Many verbs change form in the perfect tense: go → gone, see → seen, eat → eaten, write → written, do → done, sing → sung.",
+                "examples": [
+                      "write → wrote → written",
+                      "sing → sang → sung",
+                      "do → did → done",
+                      "break → broke → broken"
+                ]
+          },
+          {
+                "emoji": "⏳",
+                "title": "SINCE vs FOR",
+                "text": "Use 'since' for a specific starting point in time (since Monday, since 2021). Use 'for' to measure a length of time (for three hours, for two days).",
+                "examples": [
+                      "since Monday (starting point)",
+                      "since 9 AM",
+                      "for two hours (duration)",
+                      "for five years"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence correctly uses 'since' for a starting point in time?",
+                "answer": "I have lived in this city since 2018.",
+                "wrong": [
+                      "I have lived in this city for 2018.",
+                      "I lived in this city since five years.",
+                      "I have lived in this city since five years."
+                ],
+                "explain": "Use 'since' with a specific starting date or year: 'since 2018'."
+          },
+          {
+                "kind": "check",
+                "question": "Why is 'I have seen a tiger yesterday' incorrect?",
+                "answer": "'Yesterday' specifies a finished past time and requires simple past ('I saw')",
+                "wrong": [
+                      "'Tiger' requires the verb 'watch', not 'see'",
+                      "'Have' should be replaced with 'has'",
+                      "'Seen' is not an English verb"
+                ],
+                "explain": "Never use the present perfect with finished time words like yesterday or last week; use simple past 'I saw'."
+          }
+    ],
       content: `### ✅ Done, and it matters now
 
 **has / have + past participle**
