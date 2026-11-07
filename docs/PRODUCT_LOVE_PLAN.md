@@ -78,7 +78,7 @@ AI: students may "know more", so teachers build walls to avoid looking lesser.
 **Phase 1: pilot-ready (next 2 weeks).** Row Z + learn first (built, in review), Learn cards everywhere (G59),
 fun names for English units and topics (Gemini proposes, Seema checks, Pratha votes), pictures on Learn cards
 for Classes 1–5, celebrations polish. Seema's class pilot + Pratha.
-**Phase 2: the hook (weeks 3–6).** Daily quest, stickers / collection, 3 new question types (tap picture, match,
+**Phase 2: the hook (weeks 3–6).** A **cast of characters** (star host, wise tortoise, monkey, bee, ant, owl; each with a job; children pick a buddy), daily quest, stickers / collection, 3 new question types (tap picture, match,
 build the sentence), class team goal, **story mode with read-aloud**, **challenge a friend**, **beat your best**,
 spelling bee in quests; **creator mode** pilot with one child.
 **Phase 3: teachers' reason to choose us (weeks 6–10).** Class tests in the app (assign, auto-mark, results sheet), one-tap praise / nudges, teacher cards per topic, class

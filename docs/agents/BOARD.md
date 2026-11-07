@@ -253,7 +253,7 @@ Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Dec
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
 Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
-screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
+screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
@@ -327,6 +327,16 @@ is v2:** note in the mockup that it needs a native speech library (next build), 
 update because a child's voice is sensitive data. First 3 questions: "What's the most fun thing you'd want here?"
 (stories / games / challenges with friends / making quests), "Would you like to make a quest for other kids?",
 "What would you do if a friend challenged you?". `gemini(G62): done — mockup`.
+
+### G63 · [todo] · gemini · Character cast: concept sheet for the owner and Pratha to vote (owner 2026-11-07)
+Owner: "why just one mascot? Many fun creatures: a Yoda-like (wise mentor), a tortoise, a monkey, a bee, an ant,
+sometimes wearing specs, sometimes a lab coat." Make ONE concept sheet (image) in the app's style, original designs
+(nothing that looks like Yoda or other film/game characters): ⭐ the star host (now "Chamak"; also show 4 name
+options: Chamak, Chamku, Jugnu, Sitara, Dhruv), 🐢 wise old tortoise (mentor, explains hard things), 🐒 monkey
+(playful, challenges and "oops, let's fix it"), 🐝 bee (spelling, words), 🐜 ant (teamwork, class goal), 🦉 owl
+(storyteller, read-aloud). Each: a name idea (Indian-friendly, easy for 6-year-olds), one line of personality, its job
+in the app, and 2 outfits (specs for reading, lab coat for Science). Consistent style, works on the dark theme,
+calm colours. `docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
 
 ### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
 Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
