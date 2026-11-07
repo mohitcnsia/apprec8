@@ -412,7 +412,7 @@ that can animate (wave, jump, slump, dance). Also sketch an **avatar builder** f
 glasses, hats; Indian children should see themselves) whose items are won from the treasure chest.
 `docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
 
-### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
+### G60 · [review] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
 Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
 Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agents/reports/G60-inventory.md`:
 - **Firestore:** every old collection / category group (Space `quest_nodes`, `categories` groups popular_quiz,
