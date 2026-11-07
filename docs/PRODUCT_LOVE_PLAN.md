@@ -29,6 +29,18 @@ What hooks 6–16-year-olds (and what's missing today):
 Guard rail (mission first): no tricks that make children anxious (streak panic, endless rewards). Calm, short,
 happy sessions.
 
+## Children who are ahead of their class (and children who love stories)
+A strong reader who is ahead of classmates doesn't get a "challenge from friends", and doesn't love bare practice
+questions; she spends hours on stories, audiobooks, funny comics, curiosity trivia and spelling games. So:
+1. **Learning inside funny stories:** short, silly, illustrated stories (comic humour), **read aloud** like an
+   audiobook; the child picks the right word to move the story on.
+2. **Creator mode:** children who are ahead write questions or a mini-quest (supervised free text), a teacher
+   checks them, others play them ("by <first name>, Class 5"). Teaching others = mastery + pride.
+3. **Challenge beyond classmates:** beat your own best (speed, streak, Champion hard mode); a safe **"challenge a
+   friend"** (5 questions shared by link, compare scores, no chat), so friends see something cool and join.
+4. **Curiosity quests** (dogs, space, animals, plants) with fun facts and audio; the **spelling bee** inside quests.
+5. **Ownership:** let early children co-design (vote names, test first, design a quest). Never more pressure.
+
 ## Parents: peace of mind with zero effort
 1. **Starts in one minute** (learn first, row Z): the child learns at once; the parent says yes by WhatsApp link.
 2. **Matches school:** "This week Pratha practised the same topics as her Class 5 English book." (Missing:
@@ -65,7 +77,8 @@ AI: students may "know more", so teachers build walls to avoid looking lesser.
 fun names for English units and topics (Gemini proposes, Seema checks, Pratha votes), pictures on Learn cards
 for Classes 1–5, celebrations polish. Seema's class pilot + Pratha.
 **Phase 2: the hook (weeks 3–6).** Daily quest, stickers / collection, 3 new question types (tap picture, match,
-build the sentence), class team goal.
+build the sentence), class team goal, **story mode with read-aloud**, **challenge a friend**, **beat your best**,
+spelling bee in quests; **creator mode** pilot with one child.
 **Phase 3: teachers' reason to choose us (weeks 6–10).** One-tap praise / nudges, teacher cards per topic, class
 team goal ("no one left behind"), NEP-aligned own chapters mapped by topic, PDF / print worksheets with answer keys,
 monthly class report, certificates.
