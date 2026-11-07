@@ -28,6 +28,7 @@ import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
+import { remoteList } from "../../services/remoteLists";
 import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 
@@ -244,6 +245,10 @@ export default function HomeScreen({ navigation }) {
   const extras = useOwnerExtras(); // owner's "Owner extras" switch (services/ownerView.js)
   const isTester = isTesterUser(authInstance.currentUser) && extras;
   const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
+  // Supervised children (Remote Config "free_text_emails", e.g. Pratha) keep the old Olympiad practice tiles: owner
+  // 2026-11-07, she missed the hard synonym / antonym practice. Until those questions live in Word Power Challenge (G68).
+  const supervisedOld = remoteList("free_text_emails").map((e) => e.toLowerCase()).includes(String(authInstance.currentUser?.email || "").toLowerCase());
+  const oldView = ownerView || supervisedOld;
 
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
@@ -253,7 +258,8 @@ export default function HomeScreen({ navigation }) {
       // Nothing is deleted: English Quest Unit 1 still uses some of those quizzes inside the quest.
     ];
     // Old tiles: owner only (utils/oldContent.js), so nobody else pays for the reads.
-    if (ownerView) {
+    if (oldView) {
+      subs.push(listenToCategoriesByGroup("olympiad", (d) => setOlympiad(d.map(tileOf)), warn("olympiad")));
       subs.push(listenToCategoriesByGroup("popular_quiz", (d) => setPopularQuizzes(d.map(tileOf)), warn("popular quizzes")));
       subs.push(listenToCategoriesByGroup("classroom", (d) => setClassrooms(d.map(tileOf)), warn("classrooms")));
     }
@@ -265,7 +271,7 @@ export default function HomeScreen({ navigation }) {
       subs.forEach((u) => u && u());
       unsubUser();
     };
-  }, [uid, isTester, ownerView]);
+  }, [uid, isTester, oldView]);
 
   // Every tile quest (English, Science, ...), each with its own progress doc.
   const allQuests = useMemo(
@@ -339,7 +345,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   // Old content: owner only, except Pratha's favourites (dogs, animals). Seema 2026-11-05.
-  const oldAdmin = ownerView;
+  const oldAdmin = oldView;
   const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
   const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
   const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade);
