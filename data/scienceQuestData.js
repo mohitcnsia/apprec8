@@ -245,7 +245,7 @@ Teeth help us bite, chew, and break down food so our body can digest it easily.
 
 - **Two sets of teeth in a lifetime:**
   - **Temporary teeth (Milk teeth):** A child develops **20 milk teeth** starting around six months of age.
-  - **Permanent teeth:** Between ages 6 and 12, milk teeth fall out and are replaced by **32 permanent teeth** (16 in the upper jaw and 16 in the lower jaw).
+  - **Permanent teeth:** Between ages 6 and 12, the 20 milk teeth fall out one by one and permanent teeth grow in their place. Extra molars grow at the back without replacing any milk tooth, so a grown-up has **32 permanent teeth** (16 in the upper jaw and 16 in the lower jaw). The last four molars, the wisdom teeth, usually come after the age of 17.
 
 ---
 
