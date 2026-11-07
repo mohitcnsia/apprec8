@@ -252,7 +252,7 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
@@ -268,6 +268,15 @@ subjects combined** ("This week: 3 days · 42 min · Science 30 min, English 12 
 this week, most recent first, already expanded; subjects not practised this week fold into one line ("Not practised
 this week: English, Word Power"). No subject picker as the first step. Same rule for the Sunday summary text if it is
 per subject. Tests for the pure parts (utils/parentWeek.js). `gemini(G64): done`.
+
+### G65 · [todo] · gemini · ⭐ 🚩 Report a mistake on reading pages too (owner 2026-11-07: Pratha found a mistake, no way to report it)
+Quiz questions have 🚩; study pages (old reader `components/common/reader/Apprec8Reader.js` and Learn cards
+`components/learn/LearnCards.js`) don't. Add the same 🚩 "Something's wrong here" button (top corner, small) that
+creates the same kind of report the quiz 🚩 creates (userFeedback / onQuestionReported path; check what the quiz
+uses and reuse it) with contentId + card index / section, and tap-only reasons for children ("wrong fact", "confusing",
+"spelling", "picture missing"). Children tap only (no free text, except supervised accounts). Tests for pure parts.
+`gemini(G65): done`. Also bump **G59 Science pages up**: do Science right after Class 9–10 (owner: "old reading sheet,
+no images, nothing fun, a dumpyard of text"), with a picture idea per card.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
