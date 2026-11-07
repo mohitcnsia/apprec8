@@ -337,6 +337,15 @@ PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. 
 4. **Every PIN change notifies the parent** (push to the parent's tokens if they have the weekly summary on, and a
    line in Me): "Your Apprec8 parent PIN was changed. Not you? Tap to reset."
 5. Never "sign in again → new PIN at once" (Google often signs in silently on the parent's own phone).
+6. **Never lock a parent out (owner: "make sure our app doesn't lock parents out of their phone or earn a bad
+   reputation; worst case there must be a way to delete the app and unlock with admin help").** Every PIN screen has a
+   **"Locked out?"** link: "Use your fingerprint or phone lock" → "Or remove Apprec8 (Settings → Apps → Apprec8 →
+   Uninstall), install it again and sign in: your children's stars are saved" → "Or write to us at the support email
+   from your account's email address; we reset it." The app lock is Android app pinning: the phone's own PIN/pattern
+   or a restart always ends it; say so on the lock screen too.
+7. **Admin reset:** Admin tools → "Reset a parent's PIN" (owner only: callable `adminResetParentPin`, deletes
+   `parentPins/{uid}` by the parent's email, logs who/when), plus `scripts/admin/resetPin.cjs <email>` for Gemini.
+   Used only after the parent writes from their account's email.
 Server: `resetParentPin` callable (caller must be the parent account, not a child session). Write the plan first
 (`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
 next build.
