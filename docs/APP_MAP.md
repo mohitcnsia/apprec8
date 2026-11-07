@@ -35,7 +35,7 @@ For you and Seema: what each part is, who sees it, and where it is. To try it ha
 - **Fun tab and old quizzes** (Space, dogs, animals): hidden from everyone else for now.
 
 ### 🛡️ Safety and privacy, everywhere
-No ads, no chat, children tap only (no typing to others). A parent or guardian says yes before a child's progress is saved (shipping with row X). Delete an account from Me any time.
+No ads, no chat, children tap only (no typing to others). Children learn right away; a parent or guardian says yes before their progress is saved to their name or they join a class or leaderboard ("learn first", built, in review). Delete an account from Me any time.
 
 ### 📊 What the Progress tab shows today (checked in code, 2026-11-07; redesign under discussion)
 - **Child (Progress → Me):** streak + this week's 7 days (✓ on days practised); 3 tiles: total stars, questions this
