@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Screen 2: Question Screen</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EFEAF2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #241027;
+    padding: 20px 0;
+  }
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: #FAF7FB;
+    border-radius: 44px;
+    box-shadow: 0 25px 60px rgba(59, 9, 64, 0.18), 0 0 0 10px #2D2531;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Status Bar */
+  .status-bar {
+    height: 48px;
+    padding: 14px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #241027;
+    z-index: 10;
+  }
+  .notch {
+    width: 125px;
+    height: 28px;
+    background: #2D2531;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+  }
+
+  /* Screen Header */
+  .screen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid #E8DCE9;
+    background: #FFFFFF;
+  }
+  .btn-back {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background: #F7E8F8;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #3b0940;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .poll-progress {
+    font-size: 12px;
+    font-weight: 800;
+    color: #85508a;
+    background: #F7E8F8;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .close-icon {
+    font-size: 16px;
+    color: #6B5A6E;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Scrollable Content */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Mascot Speech Bubble Area */
+  .mascot-ask-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 2px;
+  }
+  .mascot-img {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+  .speech-bubble {
+    background: #FFFFFF;
+    border: 2px solid #85508a;
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    padding: 14px 16px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(59, 9, 64, 0.06);
+    flex: 1;
+  }
+  .speech-bubble h2 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #3b0940;
+    line-height: 1.35;
+  }
+  .speech-bubble p {
+    font-size: 12px;
+    color: #6B5A6E;
+    margin-top: 4px;
+  }
+
+  /* Big Tappable Answers */
+  .options-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #6B5A6E;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-top: 4px;
+  }
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-card {
+    background: #FFFFFF;
+    border: 2px solid #E8DCE9;
+    border-radius: 16px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .option-card.selected {
+    background: #F7E8F8;
+    border-color: #85508a;
+    box-shadow: 0 4px 12px rgba(133, 80, 138, 0.15);
+  }
+  .opt-emoji {
+    font-size: 26px;
+    line-height: 1;
+  }
+  .opt-info {
+    flex: 1;
+  }
+  .opt-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #241027;
+  }
+  .option-card.selected .opt-info h4 {
+    color: #3b0940;
+  }
+  .opt-info p {
+    font-size: 11.5px;
+    color: #6B5A6E;
+  }
+  .opt-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    border: 2px solid #E8DCE9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    font-size: 12px;
+  }
+  .option-card.selected .opt-check {
+    background: #85508a;
+    border-color: #85508a;
+    color: #FFFFFF;
+  }
+
+  /* Supervised Text Input Card */
+  .typed-answer-box {
+    background: #FFFFFF;
+    border: 1px dashed #C4B5C6;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .typed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .typed-header span {
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b0940;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .supervised-tag {
+    font-size: 10px;
+    background: #E6F6E4;
+    color: #1E5E1B;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+  .typed-input {
+    width: 100%;
+    border: 1px solid #E8DCE9;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: #241027;
+    background: #FAF7FB;
+    resize: none;
+    height: 48px;
+    outline: none;
+  }
+  .typed-input:focus {
+    border-color: #85508a;
+    background: #FFFFFF;
+  }
+
+  /* v2 Voice Note Callout */
+  .v2-voice-note {
+    background: #F4EFF6;
+    border: 1px solid #E0D3E3;
+    border-radius: 12px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .voice-pill-dim {
+    background: #E2D5E5;
+    color: #6B5A6E;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .voice-text {
+    font-size: 10.5px;
+    color: #6B5A6E;
+    line-height: 1.3;
+  }
+
+  /* Bottom Submit Button in Thumb Zone */
+  .thumb-action-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border-top: 1px solid #E8DCE9;
+    padding: 12px 18px 24px;
+    box-shadow: 0 -4px 12px rgba(59, 9, 64, 0.05);
+    z-index: 20;
+  }
+  .btn-submit {
+    width: 100%;
+    height: 52px;
+    background: #3b0940;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 0 #200424;
+    cursor: pointer;
+  }
+  .home-bar {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 4px;
+    background: #241027;
+    border-radius: 2px;
+    z-index: 30;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  
+  <div class="status-bar">
+    <span>9:41</span>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span>📶</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="screen-header">
+    <button class="btn-back">←</button>
+    <div class="poll-progress">⭐ Quick Poll · 1 Question</div>
+    <span class="close-icon">✕</span>
+  </div>
+
+  <div class="content">
+    <!-- Mascot with Speech Bubble -->
+    <div class="mascot-ask-area">
+      <svg class="mascot-img" viewBox="0 0 76 76">
+        <path d="M38 4l9.5 19.3 21.3 3.1-15.4 15 3.6 21.2L38 52.6 19 62.6l3.6-21.2-15.4-15 21.3-3.1z" fill="#F5C842" stroke="#C99A12" stroke-width="2"/>
+        <ellipse cx="28" cy="40" rx="4" ry="2.5" fill="#F8A8B8"/>
+        <ellipse cx="48" cy="40" rx="4" ry="2.5" fill="#F8A8B8"/>
+        <ellipse cx="31" cy="34" rx="3.6" ry="4.6" fill="#3b0940"/>
+        <ellipse cx="45" cy="34" rx="3.6" ry="4.6" fill="#3b0940"/>
+        <circle cx="32.2" cy="32.4" r="1.2" fill="#FFFFFF"/>
+        <circle cx="46.2" cy="32.4" r="1.2" fill="#FFFFFF"/>
+        <path d="M31.5 42c3.8 4 9.2 4 13 0" stroke="#3b0940" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="speech-bubble">
+        <h2>What's the most fun thing you'd want here?</h2>
+        <p>Pick the one you'd be most excited to open tomorrow!</p>
+      </div>
+    </div>
+
+    <div class="options-label">Tap your favourite answer:</div>
+
+    <!-- 4 Big Tappable Answers -->
+    <div class="options-list">
+      <!-- Option 1: Selected state shown -->
+      <div class="option-card selected">
+        <div class="opt-emoji">📚</div>
+        <div class="opt-info">
+          <h4>Silly & funny stories</h4>
+          <p>Read-aloud audiobooks with comic twists</p>
+        </div>
+        <div class="opt-check">✓</div>
+      </div>
+
+      <!-- Option 2 -->
+      <div class="option-card">
+        <div class="opt-emoji">🎮</div>
+        <div class="opt-info">
+          <h4>Mini-games & puzzles</h4>
+          <p>Spelling bee, anagrams & word search</p>
+        </div>
+        <div class="opt-check"></div>
+      </div>
+
+      <!-- Option 3 -->
+      <div class="option-card">
+        <div class="opt-emoji">⚔️</div>
+        <div class="opt-info">
+          <h4>Challenges with friends</h4>
+          <p>Send 5 questions safely & compare stars</p>
+        </div>
+        <div class="opt-check"></div>
+      </div>
+
+      <!-- Option 4 -->
+      <div class="option-card">
+        <div class="opt-emoji">🛠️</div>
+        <div class="opt-info">
+          <h4>Making my own quests</h4>
+          <p>Write fun questions for other kids to play</p>
+        </div>
+        <div class="opt-check"></div>
+      </div>
+    </div>
+
+    <!-- Supervised Typed Input (Optional) -->
+    <div class="typed-answer-box">
+      <div class="typed-header">
+        <span>Want to tell Chamku more? ✍️</span>
+        <span class="supervised-tag">Supervised Text</span>
+      </div>
+      <textarea class="typed-input" placeholder="Type your idea here... (e.g. stories about detective dogs)"></textarea>
+    </div>
+
+    <!-- v2 Voice Callout / Note -->
+    <div class="v2-voice-note">
+      <div class="voice-pill-dim">🎤 Say it (v2)</div>
+      <div class="voice-text">
+        <strong>Voice input planned for v2:</strong> requires native audio module, explicit parent consent & policy update for child voice data.
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Thumb Zone: Submit Button -->
+  <div class="thumb-action-bar">
+    <button class="btn-submit">
+      <span>Send Answer & Collect 5 ⭐</span>
+      <span>›</span>
+    </button>
+  </div>
+
+  <div class="home-bar"></div>
+</div>
+
+</body>
+</html>

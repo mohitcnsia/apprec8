@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Screen 1: Home with Sticky-Note Card</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EFEAF2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #241027;
+    padding: 20px 0;
+  }
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: #FAF7FB;
+    border-radius: 44px;
+    box-shadow: 0 25px 60px rgba(59, 9, 64, 0.18), 0 0 0 10px #2D2531;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Status Bar */
+  .status-bar {
+    height: 48px;
+    padding: 14px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #241027;
+    z-index: 10;
+  }
+  .notch {
+    width: 125px;
+    height: 28px;
+    background: #2D2531;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+  }
+
+  /* Content Scroll Area */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 18px 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Home Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .greeting h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #241027;
+  }
+  .greeting p {
+    font-size: 13px;
+    color: #6B5A6E;
+    font-weight: 500;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+  }
+  .badge {
+    background: #FFFFFF;
+    border: 1px solid #E8DCE9;
+    border-radius: 20px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #3b0940;
+    box-shadow: 0 2px 4px rgba(59,9,64,0.04);
+  }
+  .badge.streak { color: #9A6B00; background: #FFF9E6; border-color: #F5D67B; }
+
+  /* Continue Card */
+  .quest-card {
+    background: linear-gradient(135deg, #3b0940 0%, #5E1766 100%);
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 10px 20px rgba(59, 9, 64, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .quest-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #E0C6E3;
+    margin-bottom: 6px;
+  }
+  .quest-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .quest-topic {
+    font-size: 13px;
+    color: #F5D2F8;
+    margin-bottom: 14px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 65%;
+    background: #F5C842;
+    border-radius: 4px;
+  }
+  .btn-continue {
+    background: #F5C842;
+    color: #3b0940;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 0 #C99A12;
+    cursor: pointer;
+  }
+
+  /* Secondary Row */
+  .section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #6B5A6E;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-top: 4px;
+  }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .quick-card {
+    background: #FFFFFF;
+    border: 1px solid #E8DCE9;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .quick-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #F7E8F8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .quick-info h4 { font-size: 14px; font-weight: 700; color: #241027; }
+  .quick-info p { font-size: 11px; color: #6B5A6E; }
+
+  /* --------------------------------------------------------------------- */
+  /* STICKY-NOTE CARD: Chamku Asks (Thumb Zone Placement)                 */
+  /* --------------------------------------------------------------------- */
+  .chamak-sticky-card {
+    margin-top: auto;
+    background: #FFFDF0;
+    border: 2px solid #F3DB85;
+    border-radius: 20px;
+    padding: 16px 16px 14px;
+    position: relative;
+    box-shadow: 0 8px 18px rgba(184, 142, 28, 0.12), 0 2px 4px rgba(0,0,0,0.03);
+    animation: gentle-tilt 4s ease-in-out infinite alternate;
+  }
+  .sticky-tape {
+    position: absolute;
+    top: -9px;
+    left: 36px;
+    width: 70px;
+    height: 18px;
+    background: rgba(245, 200, 66, 0.45);
+    border-radius: 3px;
+    transform: rotate(-3deg);
+  }
+  .sticky-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 13px;
+    background: rgba(0,0,0,0.05);
+    border: none;
+    font-size: 14px;
+    color: #8C7853;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .sticky-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .mascot-thumb {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .sticky-texts h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #3b0940;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sticky-texts p {
+    font-size: 12.5px;
+    color: #5C4B29;
+    line-height: 1.35;
+    margin-top: 2px;
+  }
+  .sticky-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #EADB9E;
+  }
+  .reward-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #9A6B00;
+    background: #FFF0BD;
+    padding: 4px 9px;
+    border-radius: 10px;
+  }
+  .btn-ask-me {
+    background: #3b0940;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 0 #200424;
+    cursor: pointer;
+  }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: #FFFFFF;
+    border-top: 1px solid #E8DCE9;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 12px;
+    z-index: 20;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6B5A6E;
+    text-decoration: none;
+  }
+  .nav-item.active {
+    color: #85508a;
+  }
+  .nav-item svg { width: 22px; height: 22px; }
+
+  /* Home indicator */
+  .home-bar {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 4px;
+    background: #241027;
+    border-radius: 2px;
+    z-index: 30;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  
+  <div class="status-bar">
+    <span>9:41</span>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span>📶</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Greeting & Streaks -->
+    <div class="header">
+      <div class="greeting">
+        <h1>Hi, Pratha! 👋</h1>
+        <p>Class 5 · St. Mary's School</p>
+      </div>
+      <div class="badges">
+        <div class="badge streak">🔥 6 days</div>
+        <div class="badge">⭐ 42</div>
+      </div>
+    </div>
+
+    <!-- Active Continuing Quest Card -->
+    <div class="quest-card">
+      <div class="quest-label">Continue Learning</div>
+      <div class="quest-title">English Quest · Unit 1</div>
+      <div class="quest-topic">The Great Word Bazaar · Noun Town</div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <button class="btn-continue">
+        <span>▶ Continue Topic</span>
+      </button>
+    </div>
+
+    <!-- Quick Access Rows -->
+    <div class="section-title">Your Practice Hub</div>
+    <div class="quick-grid">
+      <div class="quick-card">
+        <div class="quick-icon">🌿</div>
+        <div class="quick-info">
+          <h4>My Mistakes</h4>
+          <p>3 to polish</p>
+        </div>
+      </div>
+      <div class="quick-card">
+        <div class="quick-icon">📝</div>
+        <div class="quick-info">
+          <h4>Mock Paper 1</h4>
+          <p>Score: 34/40</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- STICKY NOTE: Chamku Asks (Positioned Low in Thumb Zone)            -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="chamak-sticky-card">
+      <div class="sticky-tape"></div>
+      <button class="sticky-close" title="Not now">✕</button>
+
+      <div class="sticky-header">
+        <!-- Exact Chamku Vector Mascot -->
+        <svg class="mascot-thumb" viewBox="0 0 76 76">
+          <path d="M38 4l9.5 19.3 21.3 3.1-15.4 15 3.6 21.2L38 52.6 19 62.6l3.6-21.2-15.4-15 21.3-3.1z" fill="#F5C842" stroke="#C99A12" stroke-width="2"/>
+          <ellipse cx="28" cy="40" rx="4" ry="2.5" fill="#F8A8B8"/>
+          <ellipse cx="48" cy="40" rx="4" ry="2.5" fill="#F8A8B8"/>
+          <ellipse cx="31" cy="34" rx="3.6" ry="4.6" fill="#3b0940"/>
+          <ellipse cx="45" cy="34" rx="3.6" ry="4.6" fill="#3b0940"/>
+          <circle cx="32.2" cy="32.4" r="1.2" fill="#FFFFFF"/>
+          <circle cx="46.2" cy="32.4" r="1.2" fill="#FFFFFF"/>
+          <path d="M31.5 42c3.8 4 9.2 4 13 0" stroke="#3b0940" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        </svg>
+
+        <div class="sticky-texts">
+          <h3>Chamku asks: Quick question! ⭐</h3>
+          <p>Got 10 seconds? Help choose what new fun activities Chamku should add next!</p>
+        </div>
+      </div>
+
+      <div class="sticky-action-row">
+        <div class="reward-pill">+5 ⭐ Reward</div>
+        <button class="btn-ask-me">Answer Poll ›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="#85508a"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="#6B5A6E"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Fun</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="#6B5A6E"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      <span>Progress</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="#6B5A6E"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>Me</span>
+    </div>
+  </div>
+
+  <div class="home-bar"></div>
+</div>
+
+</body>
+</html>
