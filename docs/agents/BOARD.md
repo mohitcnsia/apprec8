@@ -415,7 +415,7 @@ Spec: CODE_REVIEW.md "learn first + parent web link" + mockups docs/mockups/rowX
 how progress is kept on the phone and moved on the parent's yes, tests) and commit it **before** coding:
 `gemini(G50): plan — review please`. Claude approves the plan, then you build.
 
-### G46 · [todo] · gemini · ⭐ Decisions inbox: review DR-21, deploy + start the sync (owner-approved: yes, 2026-11-06 "ok for DR-21")
+### G46 · [done] · gemini · ⭐ Decisions inbox: review DR-21, deploy + start the sync (owner-approved: yes, 2026-11-06 "ok for DR-21")
 Owner asked 2026-11-06: "implement push notifications and get approval on the app itself… Yes, No, More details,
 Later" (CODE_REVIEW.md "Decisions inbox + DR-21"). Work in **Claude's folder** (`/Users/mohitchilkoti/Documents/projects/apprec8`).
 1. Review: `utils/decisions.js`, `services/decisionsApi.js`, `screens/admin/DecisionsScreen.js`, `scripts/admin/decisions.mjs`,
