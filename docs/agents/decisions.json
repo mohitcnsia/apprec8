@@ -235,7 +235,10 @@
     "title": "Task: master the app first (45 min, private)",
     "ask": "Before the dry run with Seema: practise alone with the Demo School (nothing reaches real people). Tap YES when done, LATER for a reminder.",
     "details": "5 short parts: 1) see it as everyone else (Owner extras Off + the Tour guide), 2) be a child (Play as a test child), 3) be a parent (demo.parent login), 4) be a teacher (demo.teacher login), 5) back to you.\n\nStep by step: **My notes → Master the app** (after the next update), or ask Claude to send the steps.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T05:30:11.884Z"
   },
   {
     "id": "brand-pick-1",
@@ -247,5 +250,12 @@
     "answer": "no",
     "note": "The infinity symbol looks like a worm rather then inspiring eight and infinity. Rest is good. Fis the infinity symbol please..you can just show me the infinity symbol and then use it to save effort",
     "answeredAt": "2026-11-06T20:01:27.037Z"
+  },
+  {
+    "id": "task-ask-pratha",
+    "title": "Task: ask Pratha 3 questions (before we build the hook)",
+    "ask": "5 relaxed minutes, no pressure. Type her answers in the note, then tap YES. LATER = remind me tomorrow.",
+    "details": "**Ask her:**\n1. \"What's the most fun thing you'd want in a learning app?\"\n2. \"Would you like to make a quest or questions for other kids?\"\n3. \"What would you do if a friend sent you a challenge in the app?\"\n\n**And tell her:** she's the official tester of the fun names for the English units (Gemini's list comes soon); her vote decides.\n\nHer answers tell us which hook to build first: stories with read-aloud, creator mode, or challenge a friend (plan: My notes → Why they'll love it).",
+    "from": "claude"
   }
 ]
