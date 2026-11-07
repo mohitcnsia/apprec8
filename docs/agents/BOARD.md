@@ -325,14 +325,21 @@ GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide st
 job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
 Small change; branch from your G49 branch. `gemini(G54): done`.
 
-### G55 · [todo] · gemini · ⭐ "Forgot PIN?" for parents (owner 2026-11-07: "what if a parent forgets the PIN?")
-Today a parent who forgets the app PIN is stuck in the child's profile. Add **"Forgot PIN?"** under every PIN box
-(ParentPinScreen, TimeUpOverlay, Switch to parent): 1) "Sign in again as the parent" (re-authenticate the parent's own
-account: Google or email + password), 2) "Choose a new PIN" twice. Server: a callable `resetParentPin` that accepts
-the new PIN only if the caller **is the parent** (not the child profile) and `auth_time` is within the last 5 minutes;
-it overwrites `parentPins/{uid}` (same hash as today). Plain words; also say "To leave the app lock, use your
-phone's own PIN or pattern". Tests for the pure parts. Write the plan first (`gemini(G55): plan — review please`),
-Claude reviews; the callable goes out as a deploy request (DR) after the owner's OK.
+### G55 · [todo] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
+Owner: "forgot PIN alone is not enough; avoid abuse when a child tries to get into the parent's phone." Today: app
+PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. **Design (Claude):**
+1. **"Switch to parent" asks the phone's own lock first** (fingerprint / face / phone PIN or pattern) via
+   `expo-local-authentication` (install with `npx expo install`; native → ships in the next build, so guard with a
+   capability check like services/push.js does, and fall back to the app PIN on builds or phones without it).
+2. The app PIN stays only as the fallback (phones with no screen lock). Keep the 5-tries / 15-min lock.
+3. **"Forgot PIN?"** = unlock with the phone's own lock → choose a new PIN twice. Phones with no screen lock: sign in
+   again with the parent's account **and** wait 1 hour before the new PIN works (so a child can't do it in one go).
+4. **Every PIN change notifies the parent** (push to the parent's tokens if they have the weekly summary on, and a
+   line in Me): "Your Apprec8 parent PIN was changed. Not you? Tap to reset."
+5. Never "sign in again → new PIN at once" (Google often signs in silently on the parent's own phone).
+Server: `resetParentPin` callable (caller must be the parent account, not a child session). Write the plan first
+(`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
+next build.
 
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
