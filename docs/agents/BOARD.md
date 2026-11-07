@@ -325,6 +325,15 @@ GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide st
 job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
 Small change; branch from your G49 branch. `gemini(G54): done`.
 
+### G55 · [todo] · gemini · ⭐ "Forgot PIN?" for parents (owner 2026-11-07: "what if a parent forgets the PIN?")
+Today a parent who forgets the app PIN is stuck in the child's profile. Add **"Forgot PIN?"** under every PIN box
+(ParentPinScreen, TimeUpOverlay, Switch to parent): 1) "Sign in again as the parent" (re-authenticate the parent's own
+account: Google or email + password), 2) "Choose a new PIN" twice. Server: a callable `resetParentPin` that accepts
+the new PIN only if the caller **is the parent** (not the child profile) and `auth_time` is within the last 5 minutes;
+it overwrites `parentPins/{uid}` (same hash as today). Plain words; also say "To leave the app lock, use your
+phone's own PIN or pattern". Tests for the pure parts. Write the plan first (`gemini(G55): plan — review please`),
+Claude reviews; the callable goes out as a deploy request (DR) after the owner's OK.
+
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
