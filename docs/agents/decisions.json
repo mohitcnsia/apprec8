@@ -282,7 +282,7 @@
     "id": "meet-progress-review",
     "title": "Tomorrow 7 pm: Progress tab design discussion",
     "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
-    "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.",
+    "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.\n\n**Also on the table:** ChatGPT's four-dashboard brief + concept image (docs/product/PROGRESS_REVIEW_TODO.md). Central question: activity vs real learning (mastery).",
     "from": "claude"
   }
 ]
