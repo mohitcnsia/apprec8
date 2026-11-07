@@ -7,7 +7,7 @@ useful**, but not yet **fun**. Text-heavy pages, plain topic names and few surpr
 ## One promise per person
 - **Child:** "10 happy minutes a day, and I can see myself getting better."
 - **Parent:** "My child practises what school teaches, safely, and I know how they're doing without nagging."
-- **Teacher:** "I know who needs help and what to reteach, with no marking and no extra work."
+- **Teacher:** "The app checks and sorts; I do the human part: connect and encourage."
 Everything we build must serve one of these three lines. If it doesn't, we don't build it.
 
 ## Children: from homework to a game they come back to
@@ -37,13 +37,28 @@ happy sessions.
 4. **Safe screen time:** no ads, no chat, play timer, app lock, helplines (exists).
 5. **Free.** Learning stays free (mission-first pricing).
 
-## Teachers: saves time on day one
-1. **"Who needs help and what to reteach" on Home** (row Z + G57): one tap to assign practice for the weakest topic.
-2. **Linked to the syllabus:** topics tagged with the CBSE / NCERT chapter, so "assign Chapter 4" is one tap.
-   (Missing: the biggest reason a teacher would choose us.)
-3. **No marking, no setup:** auto-marked practice; parents join with the class code.
-4. **Something to show:** a monthly class report for the principal and parents; certificates for children.
-   (Missing.)
+## Teachers: take away the two impossible jobs (owner's talks with teachers, 2026-11-07)
+Every teacher has two jobs nobody can do: **checking ~200 copies a day** (5 classes × 40 students, and parents
+complain about careless marking) and **giving each child even 1 minute** in a 40-minute period. Teachers also fear
+AI: students may "know more", so teachers build walls to avoid looking lesser.
+**Promise: the app does the checking and the sorting; the teacher does the human part: connecting and encouraging.**
+1. **Marking done for them.** Daily practice moves from copies into the app and is marked instantly and fairly, the
+   same way for every child, with the reason shown. Fewer copies to check, and no "careless marking" complaints.
+   Later (Phase 4, needs care): photo of a notebook page → AI suggests marks + one comment, **the teacher approves**
+   (costs money per page, accuracy and children's-photo privacy to solve first).
+2. **The 1 minute, well spent.** Home tells the teacher **who** needs help and **exactly what** they got wrong, and
+   each child automatically gets practice on their own weak spots. The teacher's minute becomes encouragement:
+   one tap sends "👏 well done" to the 12 who improved, or "let's try again together" to the 5 who are stuck.
+3. **Collaborators, not know-it-alls.** Every question explains itself, so the teacher never has to know everything.
+   Each topic gets a short teacher card ("teach this in 5 minutes", common mistakes, one class activity). A weekly
+   **class challenge** the teacher and students solve together. Reports give the credit to the teacher: "Ms Seema's
+   10-B improved Tenses by 18%".
+4. **No one left behind.** Class team goal that only completes when **everyone** has practised; children cheer each
+   other on; the teacher sees who hasn't joined in yet.
+5. **Our own syllabus, offline too.** Original chapters aligned to **NEP 2020** learning outcomes (not copied from
+   NCERT or private books; schools use different books), mapped by topic so any teacher can find "their" chapter.
+   **PDF export + print** of worksheets (with answer key) for classes with few phones, and parents who prefer paper.
+6. **Something to show:** monthly class report for the principal and parents; certificates for children.
 
 ## What to do, in order
 **Phase 1: pilot-ready (next 2 weeks).** Row Z + learn first (built, in review), Learn cards everywhere (G59),
@@ -51,8 +66,11 @@ fun names for English units and topics (Gemini proposes, Seema checks, Pratha vo
 for Classes 1–5, celebrations polish. Seema's class pilot + Pratha.
 **Phase 2: the hook (weeks 3–6).** Daily quest, stickers / collection, 3 new question types (tap picture, match,
 build the sentence), class team goal.
-**Phase 3: teachers' reason to choose us (weeks 6–10).** Syllabus tags (CBSE / NCERT chapters) for English
-Classes 1–10 and Science 3–8, monthly class report, certificates.
+**Phase 3: teachers' reason to choose us (weeks 6–10).** One-tap praise / nudges, teacher cards per topic, class
+team goal ("no one left behind"), NEP-aligned own chapters mapped by topic, PDF / print worksheets with answer keys,
+monthly class report, certificates.
+**Phase 4: careful, costs money.** Notebook photo → AI-suggested marks, teacher approves (cost per page, accuracy,
+children's-photo privacy first).
 
 ## How we'll know it works (from the pilot)
 - Children: do they come back the next day (day-1 return) and after a week (day-7)? Minutes per session, topics
