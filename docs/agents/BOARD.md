@@ -299,6 +299,14 @@ spellings: the ∞ sits on the baseline at x-height like a letter, same weight a
 breaking into pixel blocks that drift up-right. 2 variants: white on plum, plum on white. Output
 `docs/release/brand/wordmark-v2/` + `gemini(G53): done`.
 
+### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
+Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
+In `screens/guides/TeacherStartScreen.js` (+ `data/teacherStart.js`): under each of the 4 jobs put a small
+**DO IT ▶** button that starts the matching step of the "teacher-class" guide in `utils/guides.js` exactly like
+GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide strip shows what to tap:
+job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
+Small change; branch from your G49 branch. `gemini(G54): done`.
+
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
