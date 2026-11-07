@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+      
+        <!-- Star Body jumping -->
+        <g transform="translate(0, -10)">
+          <polygon points="128,24 158,92 232,96 174,146 194,218 128,176 62,218 82,146 24,96 98,92"
+                   fill="#FFD23F" stroke="#F59E0B" stroke-width="6" stroke-linejoin="round"/>
+          <polygon points="128,38 152,94 212,98 166,138 182,196 128,162 74,196 90,138 44,98 104,94"
+                   fill="#FFE66D" opacity="0.6"/>
+          <!-- Cheeks -->
+          <ellipse cx="84" cy="134" rx="15" ry="10" fill="#FF8BA7" opacity="0.9"/>
+          <ellipse cx="172" cy="134" rx="15" ry="10" fill="#FF8BA7" opacity="0.9"/>
+          <!-- Joyful Laughing Closed Eyes ^ ^ -->
+          <path d="M 88 118 Q 102 102 114 118" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <path d="M 142 118 Q 156 102 168 118" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <!-- Big Cheering Open Mouth -->
+          <path d="M 106 130 Q 128 168 150 130 Z" fill="#E11D48"/>
+          <path d="M 114 142 Q 128 162 142 142" fill="#FDA4AF"/>
+          <!-- Hands Up Cheering! -->
+          <path d="M 58 126 Q 36 96 30 76" stroke="#F59E0B" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <path d="M 198 126 Q 220 96 226 76" stroke="#F59E0B" stroke-width="8" stroke-linecap="round" fill="none"/>
+        </g>
+        <!-- Confetti / Mini Stars -->
+        <polygon points="36,44 40,52 48,54 40,58 36,66 32,58 24,54 32,52" fill="#38BDF8"/>
+        <polygon points="220,44 224,52 232,54 224,58 220,66 216,58 208,54 216,52" fill="#F43F5E"/>
+        <circle cx="128" cy="16" r="5" fill="#A855F7"/>
+        
+    </svg>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apprec8 Character Cast &amp; Avatar Builder Concept Guide</title>
+  <style>
+    :root {
+      --bg: #0B0F19;
+      --card-bg: #161F30;
+      --card-border: #23314D;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --primary: #F59E0B;
+      --accent: #38BDF8;
+      --success: #10B981;
+      --rose: #F43F5E;
+    }
+    body.light-mode {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --primary: #D97706;
+      --accent: #0284C7;
+      --success: #059669;
+      --rose: #E11D48;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 32px 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .title-area h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+    .title-area p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-top: 4px;
+    }
+    .theme-toggle-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--primary);
+    }
+    .hero-banner {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .hero-banner h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .hero-img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin-top: 16px;
+      border: 1px solid var(--card-border);
+    }
+
+    .vote-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 36px;
+    }
+    .vote-box h3 {
+      font-size: 18px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .vote-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .vote-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .vote-chip.winner {
+      border-color: var(--primary);
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--primary);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .cast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .cast-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .avatar-preview {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar-preview img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+    .card-title-group h3 {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-group .role-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .personality-quote {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      border-left: 3px solid var(--primary);
+      padding-left: 10px;
+    }
+    .app-job {
+      font-size: 13.5px;
+      color: var(--text-main);
+    }
+    .outfits-list {
+      background: rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .outfit-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .outfit-badge {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 60px;
+    }
+
+    .mood-tabs {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      background: rgba(0,0,0,0.15);
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .mood-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .mood-btn.active {
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .mood-icons-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 12px 0 4px;
+      border-top: 1px dashed var(--card-border);
+    }
+    .mood-icon-slot {
+      text-align: center;
+    }
+    .mood-icon-slot img {
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+    .mood-icon-slot span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Animation demonstration */
+    .animation-demo-row {
+      display: flex;
+      gap: 20px;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+    }
+    .anim-item {
+      text-align: center;
+    }
+    .anim-box {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .anim-wave {
+      animation: wave 1.8s infinite ease-in-out;
+      transform-origin: bottom center;
+    }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(14deg); }
+      40% { transform: rotate(-10deg); }
+      60% { transform: rotate(10deg); }
+      80% { transform: rotate(-4deg); }
+    }
+    .anim-jump {
+      animation: jump 1.2s infinite ease-in-out;
+    }
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-24px) scale(1.08, 0.94); }
+      75% { transform: translateY(0) scale(0.96, 1.04); }
+    }
+    .anim-slump {
+      animation: slump 2.4s infinite ease-in-out;
+      transform-origin: bottom center;
+    }
+    @keyframes slump {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(0.95, 0.92) translateY(6px); opacity: 0.85; }
+    }
+    .anim-dance {
+      animation: dance 1.5s infinite ease-in-out;
+    }
+    @keyframes dance {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-12px) rotate(8deg); }
+      75% { transform: translateY(-12px) rotate(-8deg); }
+    }
+
+    /* Avatar builder section */
+    .avatar-builder-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
+    .avatar-builder-section h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .avatar-spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .avatar-spec-card {
+      background: rgba(0,0,0,0.12);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .avatar-spec-card h4 {
+      font-size: 15px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .avatar-spec-card ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .avatar-spec-card ul li {
+      margin-bottom: 4px;
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding-top: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-area">
+        <h1>Apprec8 Character Cast &amp; Avatar Guide</h1>
+        <p>Concept Sheet &amp; Mood Icon Collection for Owner &amp; Pratha's Review (G63)</p>
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="theme-icon">☀️</span> <span id="theme-text">Switch to Light Theme</span>
+      </button>
+    </header>
+
+    <!-- Master Lineup Concept Sheet -->
+    <section class="hero-banner">
+      <h2>⭐ The Mascot Lineup (16:9 Concept Sheet)</h2>
+      <p style="color: var(--text-muted); font-size: 14.5px;">
+        Designed to replace emojis across the app with lovable, animatable companions. Big expressive eyes (Duolingo appeal), simple shapes, calm colours on dark theme (#0B0F19).
+      </p>
+      <img src="concept-sheet.png" alt="Apprec8 Cast Concept Lineup" class="hero-img">
+    </section>
+
+    <!-- Star Host Name Decision -->
+    <div class="vote-box">
+      <h3>⭐ Star Host Name (Pratha Confirmed)</h3>
+      <p style="font-size: 14px; color: var(--text-main);">
+        Owner 2026-11-07: Pratha has voted and confirmed <strong>Chamku</strong>! Here are the 5 options considered:
+      </p>
+      <div class="vote-options">
+        <div class="vote-chip winner">⭐ 1. Chamku (CONFIRMED BY PRATHA)</div>
+        <div class="vote-chip">2. Chamak (Original draft)</div>
+        <div class="vote-chip">3. Jugnu (Little firefly star)</div>
+        <div class="vote-chip">4. Sitara (Classic star)</div>
+        <div class="vote-chip">5. Dhruv (Steadfast pole star)</div>
+      </div>
+    </div>
+
+    <!-- 6 Characters Grid -->
+    <h2 class="section-title">🐾 The 6 Companions: Personality, Role &amp; Outfits</h2>
+    <p class="section-desc">Each character has an Indian-friendly name, a distinct app job, and 2 specialised outfits (Reading Spectacles &amp; Science Lab Coat).</p>
+
+    <div class="cast-grid">
+      <!-- 1. Chamku -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/chamku_happy_128.png" id="avatar-chamku" alt="Chamku">
+          </div>
+          <div class="card-title-group">
+            <h3>⭐ Chamku <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(चमकु)</span></h3>
+            <span class="role-badge">The Joyful Star Host</span>
+          </div>
+        </div>
+        <p class="personality-quote">"You got this! Every question is a spark of magic!"</p>
+        <p class="app-job"><strong>App Job:</strong> Greets kids on Home feed, keeps daily streak, leads celebration confetti on result screens.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Cosy sky-blue round spectacles perched warmly on top points.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>Crisp white lab coat with colourful bubbling flask badge.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('chamku', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('chamku', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('chamku', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('chamku', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/chamku_happy_64.png" width="48" height="48" id="chamku-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/chamku_happy_128.png" width="64" height="64" id="chamku-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/chamku_happy_256.png" width="80" height="80" id="chamku-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Kurma -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/kurma_happy_128.png" id="avatar-kurma" alt="Kurma">
+          </div>
+          <div class="card-title-group">
+            <h3>🐢 Kurma <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(कूर्म / Dadaji)</span></h3>
+            <span class="role-badge">The Wise Old Mentor</span>
+          </div>
+        </div>
+        <p class="personality-quote">"Take your time, deep breath. Slow and steady wins the race."</p>
+        <p class="app-job"><strong>App Job:</strong> Explains tricky grammar rules, breaks down mistakes in 'My Mistakes', gives step-by-step hints.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Classic golden half-moon spectacles and a cosy saffron scarf.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>Fitted green-trimmed lab coat with a brass magnifying glass in pocket.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('kurma', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('kurma', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('kurma', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('kurma', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/kurma_happy_64.png" width="48" height="48" id="kurma-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/kurma_happy_128.png" width="64" height="64" id="kurma-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/kurma_happy_256.png" width="80" height="80" id="kurma-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Chiku -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/chiku_happy_128.png" id="avatar-chiku" alt="Chiku">
+          </div>
+          <div class="card-title-group">
+            <h3>🐒 Chiku <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(चीकू)</span></h3>
+            <span class="role-badge">The Playful Challenger</span>
+          </div>
+        </div>
+        <p class="personality-quote">"Oops! No biggie, let's bounce back and try that again!"</p>
+        <p class="app-job"><strong>App Job:</strong> Speed challenges, boss battles, time-attack games, turns slips into fun laughter.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Funky oversized round specs tilted slightly askew.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>Lab coat with rolled-up sleeves &amp; safety goggles on his forehead.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('chiku', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('chiku', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('chiku', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('chiku', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/chiku_happy_64.png" width="48" height="48" id="chiku-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/chiku_happy_128.png" width="64" height="64" id="chiku-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/chiku_happy_256.png" width="80" height="80" id="chiku-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Madhu -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/madhu_happy_128.png" id="avatar-madhu" alt="Madhu">
+          </div>
+          <div class="card-title-group">
+            <h3>🐝 Madhu <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(मधु / Buzzy)</span></h3>
+            <span class="role-badge">The Spelling &amp; Word Bee</span>
+          </div>
+        </div>
+        <p class="personality-quote">"Buzz-buzz! Let's sound it out letter by letter!"</p>
+        <p class="app-job"><strong>App Job:</strong> Spelling Bee quests, word building, syllable games, vocabulary treasure chest.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Delicate wireframe oval specs resting between her antennae.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>Miniature white lab coat with yellow honeycomb trim.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('madhu', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('madhu', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('madhu', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('madhu', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/madhu_happy_64.png" width="48" height="48" id="madhu-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/madhu_happy_128.png" width="64" height="64" id="madhu-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/madhu_happy_256.png" width="80" height="80" id="madhu-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Cheenu -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/cheenu_happy_128.png" id="avatar-cheenu" alt="Cheenu">
+          </div>
+          <div class="card-title-group">
+            <h3>🐜 Cheenu <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(चीनू)</span></h3>
+            <span class="role-badge">The Teamwork Champion</span>
+          </div>
+        </div>
+        <p class="personality-quote">"Together our class can lift mountains! Every question counts."</p>
+        <p class="app-job"><strong>App Job:</strong> Class team goals ('500 questions this week!'), daily consistency, shared streaks.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Sturdy square blue reading frames and a tiny teal bandana.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>Pocket lab coat holding a tiny clipboard and miniature pencil.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('cheenu', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('cheenu', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('cheenu', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('cheenu', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/cheenu_happy_64.png" width="48" height="48" id="cheenu-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/cheenu_happy_128.png" width="64" height="64" id="cheenu-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/cheenu_happy_256.png" width="80" height="80" id="cheenu-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Veda -->
+      <div class="cast-card">
+        <div class="card-header">
+          <div class="avatar-preview">
+            <img src="icons/veda_happy_128.png" id="avatar-veda" alt="Veda">
+          </div>
+          <div class="card-title-group">
+            <h3>🦉 Veda <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(वेदा / Ullu)</span></h3>
+            <span class="role-badge">The Cosy Storyteller</span>
+          </div>
+        </div>
+        <p class="personality-quote">"Open your ears, open your heart... a grand adventure awaits!"</p>
+        <p class="app-job"><strong>App Job:</strong> Read-aloud narrator, listening comprehension guide, story mode companion, library keeper.</p>
+        <div class="outfits-list">
+          <div class="outfit-item">
+            <span class="outfit-badge">📖 Reading:</span>
+            <span>Scholarly round tortoiseshell spectacles balanced on beak.</span>
+          </div>
+          <div class="outfit-item">
+            <span class="outfit-badge">🔬 Science:</span>
+            <span>White lab coat adorned with starry constellations.</span>
+          </div>
+        </div>
+        <div class="mood-tabs">
+          <button class="mood-btn active" onclick="switchCardMood('veda', 'happy', this)">Happy</button>
+          <button class="mood-btn" onclick="switchCardMood('veda', 'thinking', this)">Thinking</button>
+          <button class="mood-btn" onclick="switchCardMood('veda', 'cheering', this)">Cheering</button>
+          <button class="mood-btn" onclick="switchCardMood('veda', 'oops', this)">Oops</button>
+        </div>
+        <div class="mood-icons-row">
+          <div class="mood-icon-slot">
+            <img src="icons/veda_happy_64.png" width="48" height="48" id="veda-64">
+            <span>64px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/veda_happy_128.png" width="64" height="64" id="veda-128">
+            <span>128px</span>
+          </div>
+          <div class="mood-icon-slot">
+            <img src="icons/veda_happy_256.png" width="80" height="80" id="veda-256">
+            <span>256px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animatable Vector Shapes Demonstration -->
+    <h2 class="section-title">✨ Expressive Animatable Shapes (Duolingo Style)</h2>
+    <p class="section-desc">Pratha's requirement: mascots must be fun to look at with simple silhouettes that animate smoothly in React Native (wave, jump, slump, dance).</p>
+    <div class="animation-demo-row">
+      <div class="anim-item">
+        <div class="anim-box anim-wave">
+          <img src="icons/chamku_happy_128.png" width="84" height="84" alt="Wave">
+        </div>
+        <strong>Wave</strong>
+        <p style="font-size: 12px; color: var(--text-muted);">Guide card greeting</p>
+      </div>
+      <div class="anim-item">
+        <div class="anim-box anim-jump">
+          <img src="icons/chamku_cheering_128.png" width="84" height="84" alt="Jump">
+        </div>
+        <strong>Jump</strong>
+        <p style="font-size: 12px; color: var(--text-muted);">Question correct!</p>
+      </div>
+      <div class="anim-item">
+        <div class="anim-box anim-slump">
+          <img src="icons/chamku_oops_128.png" width="84" height="84" alt="Slump">
+        </div>
+        <strong>Slump</strong>
+        <p style="font-size: 12px; color: var(--text-muted);">Gentle 'oops, fix it'</p>
+      </div>
+      <div class="anim-item">
+        <div class="anim-box anim-dance">
+          <img src="icons/chiku_cheering_128.png" width="84" height="84" alt="Dance">
+        </div>
+        <strong>Dance</strong>
+        <p style="font-size: 12px; color: var(--text-muted);">Unit completion</p>
+      </div>
+    </div>
+
+    <!-- Avatar Builder Section -->
+    <section class="avatar-builder-section">
+      <h2>🎨 Indian Children's Avatar Builder</h2>
+      <p style="color: var(--text-muted); font-size: 14.5px;">
+        Every child sees themselves. Modular vector layers unlocked through practice stars and daily treasure chests (100% free, no real money).
+      </p>
+      <img src="avatar-builder.png" alt="Apprec8 Avatar Builder Concept" class="hero-img">
+
+      <div class="avatar-spec-grid">
+        <div class="avatar-spec-card">
+          <h4>🧏 Skin &amp; Face Tones</h4>
+          <ul>
+            <li><strong>Wheatish (गेहूंआ):</strong> Natural warm tone</li>
+            <li><strong>Golden Honey (स्वर्ण):</strong> Warm glowing olive</li>
+            <li><strong>Caramel (सांवला):</strong> Rich warm brown</li>
+            <li><strong>Deep Bronze:</strong> Deep earthy shade</li>
+          </ul>
+        </div>
+        <div class="avatar-spec-card">
+          <h4>💇 Hairstyles</h4>
+          <ul>
+            <li><strong>Double Plaits / Braids:</strong> With bright ribbons</li>
+            <li><strong>Neat Side-Part Crop:</strong> Classic school look</li>
+            <li><strong>Curly Mop:</strong> Bouncy expressive curls</li>
+            <li><strong>Topknot / Patka:</strong> Sikh cultural representation</li>
+          </ul>
+        </div>
+        <div class="avatar-spec-card">
+          <h4>👕 Outfits</h4>
+          <ul>
+            <li><strong>Classic School Uniform:</strong> Crisp shirt &amp; tie</li>
+            <li><strong>Festive Kurta / Kurti:</strong> Bright celebratory colors</li>
+            <li><strong>Cosy Chamku Hoodie:</strong> Warm everyday wear</li>
+            <li><strong>Junior Lab Coat:</strong> For Science champions</li>
+          </ul>
+        </div>
+        <div class="avatar-spec-card">
+          <h4>🎁 Treasure Chest System</h4>
+          <ul>
+            <li>Won from daily practice chests (evening reward)</li>
+            <li>Never real money — 100% earned by learning</li>
+            <li>Special accessory badges (star pin, specs, caps)</li>
+            <li>Streak saver protection unlocked once a week</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Apprec8 Design System · Brand &amp; Mascot Guidelines · Ready for Pratha &amp; Owner Vote</p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+      document.getElementById('theme-text').textContent = isLight ? 'Switch to Dark Theme' : 'Switch to Light Theme';
+    }
+
+    function switchCardMood(charName, mood, btn) {
+      const card = btn.closest('.cast-card');
+      card.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const avatar = document.getElementById('avatar-' + charName);
+      if (avatar) avatar.src = 'icons/' + charName + '_' + mood + '_128.png';
+
+      const s64 = document.getElementById(charName + '-64');
+      const s128 = document.getElementById(charName + '-128');
+      const s256 = document.getElementById(charName + '-256');
+
+      if (s64) s64.src = 'icons/' + charName + '_' + mood + '_64.png';
+      if (s128) s128.src = 'icons/' + charName + '_' + mood + '_128.png';
+      if (s256) s256.src = 'icons/' + charName + '_' + mood + '_256.png';
+    }
+  </script>
+</body>
+</html>

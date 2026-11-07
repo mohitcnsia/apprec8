@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+      
+        
+    <!-- Middle & Back Legs -->
+    <path d="M 90 148 Q 50 156 42 186" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M 166 148 Q 206 156 214 186" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M 96 190 Q 64 210 58 234" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M 160 190 Q 192 210 198 234" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+    
+        <ellipse cx="128" cy="194" rx="42" ry="34" fill="#D9532F" stroke="#9A3412" stroke-width="4"/>
+        <ellipse cx="128" cy="144" rx="28" ry="24" fill="#EA580C" stroke="#9A3412" stroke-width="4"/>
+        <ellipse cx="128" cy="88" rx="36" ry="32" fill="#D9532F" stroke="#9A3412" stroke-width="4"/>
+        
+    <!-- Ant Antennae -->
+    <path d="M 116 66 Q 96 34 84 40" stroke="#9A3412" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <circle cx="82" cy="40" r="5" fill="#D9532F"/>
+    <path d="M 140 66 Q 160 34 172 40" stroke="#9A3412" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <circle cx="174" cy="40" r="5" fill="#D9532F"/>
+    
+        <!-- Dropping a tiny leaf / pebble -->
+        <circle cx="168" cy="160" r="10" fill="#65A30D"/>
+        <!-- Hands in cute 'whoops' surprise -->
+        <path d="M 104 136 Q 78 120 86 102" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <path d="M 152 136 Q 176 130 168 116" stroke="#9A3412" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <!-- Eyes wide in mild surprise -->
+        <ellipse cx="112" cy="86" rx="9" ry="11" fill="#1E293B"/>
+        <ellipse cx="144" cy="86" rx="9" ry="11" fill="#1E293B"/>
+        <circle cx="110" cy="82" r="3.5" fill="#FFFFFF"/>
+        <circle cx="142" cy="82" r="3.5" fill="#FFFFFF"/>
+        <!-- Wavy little smile -->
+        <path d="M 120 102 Q 124 98 128 102 Q 132 106 136 102" stroke="#9A3412" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- Sweatdrop -->
+        <path d="M 174 76 Q 180 64 184 76 Q 184 84 174 84 Q 164 84 174 76 Z" fill="#38BDF8"/>
+        
+    </svg>

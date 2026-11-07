@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+      
+        <!-- Back Feet -->
+        <ellipse cx="78" cy="204" rx="20" ry="14" fill="#40916C"/>
+        <ellipse cx="178" cy="204" rx="20" ry="14" fill="#40916C"/>
+        <!-- Big Round Shell -->
+        <ellipse cx="128" cy="154" rx="76" ry="62" fill="#2D6A4F" stroke="#1B4332" stroke-width="5"/>
+        <!-- Shell Scutes Pattern -->
+        <polygon points="128,114 154,132 144,164 112,164 102,132" fill="#40916C" stroke="#1B4332" stroke-width="3"/>
+        <polygon points="128,114 102,132 72,130 84,106 112,106" fill="#52B788" stroke="#1B4332" stroke-width="2.5" opacity="0.8"/>
+        <polygon points="128,114 154,132 184,130 172,106 144,106" fill="#52B788" stroke="#1B4332" stroke-width="2.5" opacity="0.8"/>
+        <!-- Front Feet / Flippers -->
+        <ellipse cx="64" cy="180" rx="18" ry="14" fill="#52B788" stroke="#2D6A4F" stroke-width="3"/>
+        <path d="M 188 170 Q 212 152 216 136" stroke="#52B788" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <!-- Friendly Head -->
+        <circle cx="128" cy="98" r="38" fill="#52B788" stroke="#2D6A4F" stroke-width="4"/>
+        <!-- Eyes Behind Specs -->
+        <ellipse cx="106" cy="98" rx="8" ry="10" fill="#1E293B"/>
+        <ellipse cx="150" cy="98" rx="8" ry="10" fill="#1E293B"/>
+        <circle cx="103" cy="94" r="3" fill="#FFFFFF"/>
+        <circle cx="147" cy="94" r="3" fill="#FFFFFF"/>
+        
+    <!-- Golden Spectacles -->
+    <circle cx="106" cy="98" r="16" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <circle cx="150" cy="98" r="16" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <line x1="122" y1="98" x2="134" y2="98" stroke="#F59E0B" stroke-width="4"/>
+    <line x1="90" y1="96" x2="76" y2="92" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <line x1="166" y1="96" x2="180" y2="92" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    
+        <!-- Gentle Warm Smile -->
+        <path d="M 116 118 Q 128 128 140 118" stroke="#1B4332" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <ellipse cx="92" cy="114" rx="7" ry="5" fill="#FF8BA7" opacity="0.6"/>
+        <ellipse cx="164" cy="114" rx="7" ry="5" fill="#FF8BA7" opacity="0.6"/>
+        
+    </svg>

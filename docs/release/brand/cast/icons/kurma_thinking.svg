@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+      
+        <!-- Back Feet -->
+        <ellipse cx="78" cy="204" rx="20" ry="14" fill="#40916C"/>
+        <ellipse cx="178" cy="204" rx="20" ry="14" fill="#40916C"/>
+        <!-- Big Round Shell -->
+        <ellipse cx="128" cy="154" rx="76" ry="62" fill="#2D6A4F" stroke="#1B4332" stroke-width="5"/>
+        <polygon points="128,114 154,132 144,164 112,164 102,132" fill="#40916C" stroke="#1B4332" stroke-width="3"/>
+        <!-- Head tilted slightly -->
+        <g transform="rotate(-6 128 98)">
+          <circle cx="128" cy="98" r="38" fill="#52B788" stroke="#2D6A4F" stroke-width="4"/>
+          <!-- Eyes Looking Upwards -->
+          <ellipse cx="106" cy="94" rx="8" ry="10" fill="#1E293B"/>
+          <ellipse cx="150" cy="94" rx="8" ry="10" fill="#1E293B"/>
+          <circle cx="104" cy="88" r="3" fill="#FFFFFF"/>
+          <circle cx="148" cy="88" r="3" fill="#FFFFFF"/>
+          
+    <!-- Golden Spectacles -->
+    <circle cx="106" cy="98" r="16" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <circle cx="150" cy="98" r="16" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <line x1="122" y1="98" x2="134" y2="98" stroke="#F59E0B" stroke-width="4"/>
+    <line x1="90" y1="96" x2="76" y2="92" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <line x1="166" y1="96" x2="180" y2="92" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    
+          <!-- Thoughtful Pursed Mouth -->
+          <path d="M 120 120 Q 128 122 134 118" stroke="#1B4332" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Tapping Glasses with Flipper -->
+          <path d="M 174 150 Q 186 118 166 98" stroke="#52B788" stroke-width="10" stroke-linecap="round" fill="none"/>
+        </g>
+        <!-- Idea twinkle -->
+        <circle cx="196" cy="54" r="6" fill="#FBBF24"/>
+        <circle cx="210" cy="42" r="3" fill="#FBBF24"/>
+        
+    </svg>

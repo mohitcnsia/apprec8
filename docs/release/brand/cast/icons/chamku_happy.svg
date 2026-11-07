@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+      
+        <!-- Star Body -->
+        <polygon points="128,24 158,92 232,96 174,146 194,218 128,176 62,218 82,146 24,96 98,92"
+                 fill="#FFD23F" stroke="#F59E0B" stroke-width="6" stroke-linejoin="round"/>
+        <!-- Soft Inner Glow / Gradient -->
+        <polygon points="128,38 152,94 212,98 166,138 182,196 128,162 74,196 90,138 44,98 104,94"
+                 fill="#FFE66D" opacity="0.6"/>
+        <!-- Cheeks -->
+        <ellipse cx="86" cy="138" rx="14" ry="9" fill="#FF8BA7" opacity="0.8"/>
+        <ellipse cx="170" cy="138" rx="14" ry="9" fill="#FF8BA7" opacity="0.8"/>
+        <!-- Big Expressive Eyes -->
+        <ellipse cx="100" cy="118" rx="14" ry="18" fill="#1E293B"/>
+        <ellipse cx="156" cy="118" rx="14" ry="18" fill="#1E293B"/>
+        <circle cx="95" cy="112" r="6" fill="#FFFFFF"/>
+        <circle cx="104" cy="124" r="2.5" fill="#FFFFFF"/>
+        <circle cx="151" cy="112" r="6" fill="#FFFFFF"/>
+        <circle cx="160" cy="124" r="2.5" fill="#FFFFFF"/>
+        <!-- Joyful Open Smile -->
+        <path d="M 112 136 Q 128 158 144 136 Z" fill="#E11D48"/>
+        <path d="M 116 142 Q 128 154 140 142" fill="#FDA4AF"/>
+        <!-- Cute Little Waving Hands -->
+        <path d="M 52 134 Q 30 120 28 106" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M 204 134 Q 226 120 234 102" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
+        
+    </svg>
