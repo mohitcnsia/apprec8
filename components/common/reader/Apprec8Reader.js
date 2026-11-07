@@ -29,6 +29,7 @@ import FeedbackFAB from "../FeedbackFAB";
 import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
 import LearnCards from "../../learn/LearnCards";
 import { learnCards, nextStepId, tryLabel } from "../../../utils/learnCards";
+import ReportStudyButton from "../../quiz/ReportStudyButton";
 
 const screenWidth = Dimensions.get("window").width;
 const coverImageHeight = screenWidth * 0.6;
@@ -456,6 +457,7 @@ const Apprec8Reader = ({ route, navigation }) => {
         cards={cards}
         title={studyData.name || ""}
         cardKey={contentId}
+        questContext={questContext}
         isDark={isDark}
         finishLabel={!questContext ? "DONE" : questContext.nextStep ? tryLabel(questContext.nextStep.count) : "BACK TO QUEST"}
         canSkip={!!questContext?.nextStep}
@@ -492,6 +494,15 @@ const Apprec8Reader = ({ route, navigation }) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 }}>
+          <ReportStudyButton
+            contentId={contentId}
+            cardTitle={name}
+            cardText={name}
+            questContext={questContext}
+            color={C.textSecondary}
+          />
+        </View>
         <View style={styles.header}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.author}>By {author}</Text>

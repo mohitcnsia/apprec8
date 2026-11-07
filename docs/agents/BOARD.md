@@ -269,7 +269,7 @@ this week, most recent first, already expanded; subjects not practised this week
 this week: English, Word Power"). No subject picker as the first step. Same rule for the Sunday summary text if it is
 per subject. Tests for the pure parts (utils/parentWeek.js). `gemini(G64): done`.
 
-### G65 · [todo] · gemini · ⭐ 🚩 Report a mistake on reading pages too (owner 2026-11-07: Pratha found a mistake, no way to report it)
+### G65 · [done] · gemini · ⭐ 🚩 Report a mistake on reading pages too (owner 2026-11-07: Pratha found a mistake, no way to report it)
 Quiz questions have 🚩; study pages (old reader `components/common/reader/Apprec8Reader.js` and Learn cards
 `components/learn/LearnCards.js`) don't. Add the same 🚩 "Something's wrong here" button (top corner, small) that
 creates the same kind of report the quiz 🚩 creates (userFeedback / onQuestionReported path; check what the quiz
@@ -357,7 +357,7 @@ English pages that already have them: **4–7 cards** each, `idea` cards (emoji,
 least **one `check` card** (one right answer + 2–3 wrong), same facts as the old page, kid-friendly, Indian English,
 **no exam names** (IEO/NSO/IMO). The 18 old Firestore pages: read them (read-only), write NEW bundled pages with
 cards under new ids, and point the nodes' study steps to them (keep the old docs; nothing deleted).
-**Order:** Class 9–10 pages first (Seema's pilot), then Science, then the rest. `npm test` (learnCards + content tests)
+**Order:** Class 9–10 pages first (Seema's pilot), then Science right after Class 9–10 (owner 2026-11-07: "old reading sheet, no images, nothing fun, a dumpyard of text" — with a picture idea per card), then the rest. `npm test` (learnCards + content tests)
 passes. Commit per quest; report `docs/agents/reports/G59.md` (pages converted, any facts you were unsure of).
 `gemini(G59): done — N pages`. Claude spot-checks; then the owner re-seeds (content only, no app update).
 
