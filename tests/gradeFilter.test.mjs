@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { nodesForGrade, gradesLabel } from "../utils/gradeFilter.js";
 import { buildQuestPath } from "../utils/questTree.js";
 import * as English from "../data/englishQuestData.js";
+import * as WordPower from "../data/wordPowerQuestData.js";
 
 const N = [
   { id: "u1", kind: "unit", unitOrder: 1, title: "Living things" },
@@ -51,6 +52,15 @@ for (const g of [3, 5, 10]) {
   assert.equal(nodesForGrade(English.nodes, g).length, English.nodes.length - tagged.filter((n) => !n.grades.includes(g)).length);
 }
 assert.ok(ids(nodesForGrade(English.nodes, 5)).includes("eq-u5-perfect-p2") && !ids(nodesForGrade(English.nodes, 4)).includes("eq-u5-perfect-p2"));
+
+// Word Power: Champion leaves (wp-synant-champion, wp-idioms-champion) have no grade filter and are open to any class
+const wp5Ids = ids(nodesForGrade(WordPower.nodes, 5));
+assert.ok(wp5Ids.includes("wp-synant-champion"), "Word Power: Class 5 sees synAnt Champion leaf");
+assert.ok(wp5Ids.includes("wp-idioms-champion"), "Word Power: Class 5 sees idioms Champion leaf");
+const wpSynChamp = WordPower.nodes.find((n) => n.id === "wp-synant-champion");
+assert.equal(wpSynChamp.grades, undefined, "Word Power: synAnt Champion has no grade filter");
+const wpIdiomsChamp = WordPower.nodes.find((n) => n.id === "wp-idioms-champion");
+assert.equal(wpIdiomsChamp.grades, undefined, "Word Power: idioms Champion has no grade filter");
 
 // labels
 assert.equal(gradesLabel([5, 3, 4]), "Class 3–5");

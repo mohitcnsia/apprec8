@@ -323,7 +323,7 @@ Kids · Reported section is quite messy. A fresh discussion (not a rushed build)
 3. **What each view shows today:** a short list per view (sections, order, what's empty, what repeats), and anything
    confusing or broken. Report `docs/agents/reports/G67.md`. `gemini(G67): done — facts for the Progress review`.
 
-### G68 · [todo] · gemini · ⭐ Challenge words for strong readers (owner 2026-11-07: Pratha found the app boring)
+### G68 · [review] · gemini · ⭐ Challenge words for strong readers (owner 2026-11-07: Pratha found the app boring)
 Pratha (strong Class 5 reader) went back to paper sheets: "no good practice for antonyms and synonyms"; last year's
 old Olympiad vocabulary quizzes had **real good words, high difficulty** and fun explanations ("Gemini's jokes").
 (A stopgap that showed old tiles was reverted: the owner wants this proper fix within 2–3 days.)

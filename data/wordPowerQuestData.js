@@ -2444,6 +2444,13 @@ export const quizzes = {
       },
   ],
 
+  // ---------------------------------------------------------------------------
+  // G60 CLEANUP GUARD: DO NOT DELETE OR PURGE!
+  // These 6 converted legacy quizzes (wp-synonyms-mix-1, wp-synonyms-mix-2,
+  // wp-antonyms-mix-1, wp-antonyms-mix-2, wp-idioms-mix, wp-vocab-mix) are active
+  // content in Word Power branches (synAntP2, synAntP3, collocationsP2, idiomsP2)
+  // and feed the endless practice generator. Their explanations must be kept intact.
+  // ---------------------------------------------------------------------------
   "wp-synonyms-mix-1": [
     {
       subtopic: "synonyms",
@@ -4229,6 +4236,1185 @@ export const quizzes = {
       ),
     },
   ],
+
+  "wp-synant-champion-1": [
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is the best synonym for 'ubiquitous'?",
+        "everywhere",
+        [
+        ["rare", "antonym-error"],
+        ["hidden", "confused-meaning"],
+        ["foreign", "unrelated-concept"],
+        ],
+        "Ubiquitous means found or appearing everywhere—like smartphones, stray pigeons at a railway station, or someone yelling 'Sixer!' during a cricket match."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'ephemeral':",
+        "fleeting",
+        [
+        ["eternal", "antonym-error"],
+        ["gigantic", "unrelated-concept"],
+        ["stubborn", "confused-meaning"],
+        ],
+        "Ephemeral describes something that lasts for only a brief moment—like a soap bubble, a shooting star, or a tray of hot kachoris left unattended!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'tenacious'?",
+        "persistent",
+        [
+        ["fearful", "confused-trait"],
+        ["careless", "antonym-error"],
+        ["lazy", "antonym-error"],
+        ],
+        "Tenacious means holding on firmly and refusing to give up—like a determined gecko on a wall, or your grandmother insisting you finish a second glass of milk."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'meticulous':",
+        "painstaking",
+        [
+        ["hasty", "antonym-error"],
+        ["clumsy", "confused-trait"],
+        ["forgetful", "unrelated-trait"],
+        ],
+        "Meticulous means showing immense attention to every tiny detail—like an artist painting individual eyebrows on a miniature portrait, or a detective inspecting dust."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is the closest synonym for 'prudent'?",
+        "sensible",
+        [
+        ["reckless", "antonym-error"],
+        ["furious", "confused-emotion"],
+        ["hasty", "antonym-error"],
+        ],
+        "Prudent means acting with wise caution and foresight—like packing an umbrella before heading out into the Mumbai monsoon rather than trusting an optimistic cloud."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'candid':",
+        "frank",
+        [
+        ["secretive", "antonym-error"],
+        ["cunning", "confused-trait"],
+        ["silent", "unrelated-trait"],
+        ],
+        "Candid means completely truthful, direct, and straightforward—like a bathroom mirror, or a four-year-old child telling you that your new hat looks ridiculous."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word has the same meaning as 'frugal'?",
+        "thrifty",
+        [
+        ["wasteful", "antonym-error"],
+        ["wealthy", "confused-concept"],
+        ["greedy", "negative-trait-error"],
+        ],
+        "Frugal means careful and economical with money and food—like saving every sheet of shiny Diwali gift wrap neatly folded in a cupboard for the next five years."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'resilient':",
+        "tough",
+        [
+        ["delicate", "antonym-error"],
+        ["rigid", "confused-property"],
+        ["timid", "unrelated-trait"],
+        ],
+        "Resilient means able to quickly recover from difficulties or spring back into shape—like a rubber ball, or a student who trips, bounces up, and yells 'I meant to do that!'"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym for 'voracious'?",
+        "insatiable",
+        [
+        ["picky", "antonym-error"],
+        ["sluggish", "unrelated-trait"],
+        ["frightened", "confused-emotion"],
+        ],
+        "Voracious means having a huge, unstoppable appetite—whether for exciting mystery novels, or for three plates of pani puri after a long school sports day!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'benevolent':",
+        "generous",
+        [
+        ["spiteful", "antonym-error"],
+        ["boastful", "confused-trait"],
+        ["suspicious", "unrelated-trait"],
+        ],
+        "Benevolent means kind-hearted, charitable, and generous—like a kind uncle who secretly hands you chocolate while pretending he was simply checking your pocket."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'arduous'?",
+        "gruelling",
+        [
+        ["effortless", "antonym-error"],
+        ["cheerful", "unrelated-concept"],
+        ["peaceful", "confused-meaning"],
+        ],
+        "Arduous means requiring strenuous and exhausting effort—like cycling uphill against a gale, or carrying a backpack filled with four heavy encyclopaedias."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'eloquent':",
+        "articulate",
+        [
+        ["stammering", "antonym-error"],
+        ["noisy", "confused-sound"],
+        ["confusing", "antonym-error"],
+        ],
+        "Eloquent means expressing ideas clearly, smoothly, and persuasively—the opposite of mumbling into your collar when your teacher asks who broke the beaker!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym for 'gregarious'?",
+        "sociable",
+        [
+        ["reclusive", "antonym-error"],
+        ["grumpy", "confused-trait"],
+        ["anxious", "unrelated-emotion"],
+        ],
+        "Gregarious means fond of company and enjoying being around others—like a lively parrot in a bustling flock, or a classmate who knows everyone on the bus."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'pragmatic':",
+        "practical",
+        [
+        ["fanciful", "antonym-error"],
+        ["stubborn", "confused-trait"],
+        ["careless", "unrelated-trait"],
+        ],
+        "Pragmatic means dealing with matters sensibly and realistically based on actual practice rather than theoretical ideals or daydreams about flying carpets."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word has the same meaning as 'placid'?",
+        "tranquil",
+        [
+        ["turbulent", "antonym-error"],
+        ["hostile", "confused-trait"],
+        ["noisy", "unrelated-sensory"],
+        ],
+        "Placid means calm, peaceful, and not easily irritated—like a clear mountain lake at sunrise, or a well-fed cat snoozing happily on a warm windowsill."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'lucid':",
+        "crystal-clear",
+        [
+        ["vague", "antonym-error"],
+        ["foggy", "antonym-error"],
+        ["bizarre", "confused-meaning"],
+        ],
+        "Lucid means easy to comprehend, clear, and logical—unlike instructions translated three times through a broken online dictionary."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is the closest synonym for 'precarious'?",
+        "hazardous",
+        [
+        ["stable", "antonym-error"],
+        ["reliable", "antonym-error"],
+        ["comfortable", "unrelated-property"],
+        ],
+        "Precarious means dangerously uncertain, insecure, or likely to fall—like balancing a wobbly stack of ten tiffin boxes on a single trembling finger!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'diligent':",
+        "hard-working",
+        [
+        ["idle", "antonym-error"],
+        ["hasty", "confused-speed"],
+        ["playful", "unrelated-trait"],
+        ],
+        "Diligent means showing steady, earnest, and energetic effort in one's work—like an ant industriously preparing its winter burrow leaf by leaf."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word means the same as 'astute'?",
+        "shrewd",
+        [
+        ["foolish", "antonym-error"],
+        ["clueless", "antonym-error"],
+        ["blunt", "unrelated-trait"],
+        ],
+        "Astute means possessing sharp practical intellect and keen insight—like a clever detective who spots the single dropped button that solves the entire case."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'apprehensive':",
+        "anxious",
+        [
+        ["confident", "antonym-error"],
+        ["delighted", "opposite-emotion"],
+        ["furious", "confused-emotion"],
+        ],
+        "Apprehensive means fearful or worried that something unpleasant might happen—like staring at a math exam paper and seeing letters where numbers used to be!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is a synonym for 'exuberant'?",
+        "buoyant",
+        [
+        ["gloomy", "antonym-error"],
+        ["weary", "antonym-error"],
+        ["timid", "unrelated-trait"],
+        ],
+        "Exuberant means overflowing with lively energy, high spirits, and cheerful joy—like puppies being released into a wide grassy park for the very first time."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'serene':",
+        "peaceful",
+        [
+        ["frantic", "antonym-error"],
+        ["boisterous", "antonym-error"],
+        ["spiteful", "unrelated-trait"],
+        ],
+        "Serene means calm, undisturbed, and deeply peaceful—like the early morning breeze blowing across the river before the town wakes up."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word has the same meaning as 'obsolete'?",
+        "outdated",
+        [
+        ["brand-new", "antonym-error"],
+        ["stylish", "confused-quality"],
+        ["durable", "unrelated-property"],
+        ],
+        "Obsolete means no longer used or produced because something newer and better replaced it—like listening to music on audio cassettes with a pencil!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Choose the synonym of 'belligerent':",
+        "aggressive",
+        [
+        ["peaceable", "antonym-error"],
+        ["humble", "unrelated-trait"],
+        ["tender", "antonym-error"],
+        ],
+        "Belligerent means combative and eager to pick a fight—like an angry stray rooster puffing out its neck feathers at anyone who dares walk by."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Which word is the closest synonym for 'haughty'?",
+        "arrogant",
+        [
+        ["modest", "antonym-error"],
+        ["polite", "antonym-error"],
+        ["ashamed", "confused-emotion"],
+        ],
+        "Haughty describes someone blatantly arrogant and disdainful of others—walking with their nose tilted so high in the air they would bump into lampposts!"
+      ),
+    },
+  ],
+  "wp-synant-champion-2": [
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'morose':",
+        "cheerful",
+        [
+        ["gloomy", "synonym-error"],
+        ["sullen", "synonym-error"],
+        ["weary", "confused-state"],
+        ],
+        "Morose means sullen and ill-tempered; its opposite is cheerful and upbeat, ready to whistle a catchy tune even while cleaning your room!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'diffident'?",
+        "confident",
+        [
+        ["shy", "synonym-error"],
+        ["hesitant", "synonym-error"],
+        ["polite", "confused-trait"],
+        ],
+        "Diffident means lacking self-belief, shy, and modest; confident is its true antonym—someone who steps onto the debate stage without shaking knees."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'pernicious':",
+        "beneficial",
+        [
+        ["harmful", "synonym-error"],
+        ["deadly", "synonym-error"],
+        ["silent", "unrelated-property"],
+        ],
+        "Pernicious means having a subtle or insidious destructive effect; beneficial means helpful and wholesome—like fresh vegetables instead of stale crisps!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'loathsome'?",
+        "delightful",
+        [
+        ["repulsive", "synonym-error"],
+        ["disgusting", "synonym-error"],
+        ["strange", "confused-concept"],
+        ],
+        "Loathsome means causing intense hatred or disgust; delightful is its exact opposite—like a warm gulab jamun versus a scoop of soggy muddy leaves."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'apathy':",
+        "enthusiasm",
+        [
+        ["indifference", "synonym-error"],
+        ["coldness", "synonym-error"],
+        ["boredom", "related-state"],
+        ],
+        "Apathy means complete lack of interest or concern; enthusiasm is its vibrant opposite, where your eyes sparkle with excitement about an idea!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'opulent'?",
+        "impoverished",
+        [
+        ["luxurious", "synonym-error"],
+        ["lavish", "synonym-error"],
+        ["gleaming", "confused-appearance"],
+        ],
+        "Opulent means rich, luxurious, and lavish; impoverished or poor is its opposite—living with bare necessities rather than velvet cushions and golden spoons."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'transient':",
+        "permanent",
+        [
+        ["temporary", "synonym-error"],
+        ["momentary", "synonym-error"],
+        ["speedy", "confused-speed"],
+        ],
+        "Transient describes something that passes by quickly; permanent means lasting indefinitely, like carved stone inscriptions or stubborn ink stains on a white shirt."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'amicable'?",
+        "hostile",
+        [
+        ["friendly", "synonym-error"],
+        ["agreeable", "synonym-error"],
+        ["polite", "synonym-error"],
+        ],
+        "Amicable means characterized by friendly goodwill and peace; hostile means unfriendly and combative, like two rival alley cats arching their backs."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'vulnerable':",
+        "invincible",
+        [
+        ["exposed", "synonym-error"],
+        ["helpless", "synonym-error"],
+        ["fragile", "synonym-error"],
+        ],
+        "Vulnerable means easily hurt or attacked; invincible means impossible to defeat or damage—like a knight in enchanted impenetrable armour!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'sluggish'?",
+        "brisk",
+        [
+        ["slow", "synonym-error"],
+        ["lethargic", "synonym-error"],
+        ["sleepy", "synonym-error"],
+        ],
+        "Sluggish means slow-moving and inactive like a sleepy snail on wet clay; brisk means energetic, quick, and full of lively pace!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'mundane':",
+        "extraordinary",
+        [
+        ["ordinary", "synonym-error"],
+        ["dull", "synonym-error"],
+        ["routine", "synonym-error"],
+        ],
+        "Mundane means ordinary and routine—like washing socks; extraordinary is its opposite, like finding a mysterious map tucked behind your library shelf!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'obscure'?",
+        "prominent",
+        [
+        ["hidden", "synonym-error"],
+        ["unclear", "synonym-error"],
+        ["gloomy", "confused-meaning"],
+        ],
+        "Obscure means not well known or hard to see; prominent means famous, clear, and standing out conspicuously for everyone to admire."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'erratic':",
+        "predictable",
+        [
+        ["unpredictable", "synonym-error"],
+        ["wild", "synonym-error"],
+        ["clumsy", "unrelated-trait"],
+        ],
+        "Erratic means irregular and uneven—like the flight of a startled moth; predictable means consistent, reliable, and following an orderly pattern."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'superficial'?",
+        "profound",
+        [
+        ["shallow", "synonym-error"],
+        ["exterior", "synonym-error"],
+        ["slight", "confused-intensity"],
+        ],
+        "Superficial means only on the surface; profound means deep, meaningful, and reaching the very core of things—like great poetry or deep oceanic trenches."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'discord':",
+        "harmony",
+        [
+        ["conflict", "synonym-error"],
+        ["quarrel", "synonym-error"],
+        ["noise", "confused-concept"],
+        ],
+        "Discord is harsh disagreement or clashing noise; harmony is sweet agreement, peaceful unity, and voices singing in pleasant unison."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'sparse'?",
+        "dense",
+        [
+        ["scattered", "synonym-error"],
+        ["meagre", "synonym-error"],
+        ["rare", "synonym-error"],
+        ],
+        "Sparse means thinly scattered or scarce—like hair on an egg; dense means crowded closely together, like trees in an ancient rainforest!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'rigid':",
+        "pliable",
+        [
+        ["inflexible", "synonym-error"],
+        ["stiff", "synonym-error"],
+        ["hard", "synonym-error"],
+        ],
+        "Rigid means stiff and unbending like a steel ruler; pliable means easily bent, flexible, and adaptable like wet clay or willow twigs."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'desolate'?",
+        "vibrant",
+        [
+        ["barren", "synonym-error"],
+        ["deserted", "synonym-error"],
+        ["bleak", "synonym-error"],
+        ],
+        "Desolate means empty, barren, and bleak; vibrant is its lively opposite—bursting with joyous laughter, bright colours, and bustling activity!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'frugal':",
+        "extravagant",
+        [
+        ["thrifty", "synonym-error"],
+        ["sparing", "synonym-error"],
+        ["modest", "confused-concept"],
+        ],
+        "Frugal means saving carefully; extravagant means spending wildly on luxuries—like ordering five chocolate cakes when you can only eat half a slice!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'novice'?",
+        "veteran",
+        [
+        ["beginner", "synonym-error"],
+        ["learner", "synonym-error"],
+        ["student", "synonym-error"],
+        ],
+        "A novice is a beginner just starting out; a veteran is an experienced old hand who knows every trick, trap, and turn of the trade."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'cautious':",
+        "reckless",
+        [
+        ["wary", "synonym-error"],
+        ["careful", "synonym-error"],
+        ["timid", "confused-trait"],
+        ],
+        "Cautious means thinking twice before taking a step; reckless means charging blindly forward without even checking if there is a puddle ahead!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'authentic'?",
+        "spurious",
+        [
+        ["genuine", "synonym-error"],
+        ["original", "synonym-error"],
+        ["valuable", "unrelated-property"],
+        ],
+        "Authentic means real and genuine; spurious means fake or false—like an autograph signed by 'William Shakespeare' with a blue ballpoint pen!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'tedious':",
+        "fascinating",
+        [
+        ["boring", "synonym-error"],
+        ["monotonous", "synonym-error"],
+        ["dreary", "synonym-error"],
+        ],
+        "Tedious means painfully boring and repetitive; fascinating is its opposite, keeping you glued to the page until the final sentence!"
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Which word is the opposite of 'lenient'?",
+        "stringent",
+        [
+        ["merciful", "synonym-error"],
+        ["gentle", "synonym-error"],
+        ["forgiving", "synonym-error"],
+        ],
+        "Lenient means easy-going and tolerant of mistakes; stringent or strict means enforcing every single rule down to the millimetre."
+      ),
+    },
+    {
+      subtopic: "antonyms",
+      ...q(
+        "Choose the antonym of 'conspicuous':",
+        "inconspicuous",
+        [
+        ["noticeable", "synonym-error"],
+        ["prominent", "synonym-error"],
+        ["flashy", "synonym-error"],
+        ],
+        "Conspicuous means standing out obviously—like wearing bright neon green pyjamas to a solemn graduation ceremony; inconspicuous blends right in."
+      ),
+    },
+  ],
+  "wp-synant-champion-3": [
+    {
+      subtopic: "synonyms",
+      ...q(
+        "What does 'acumen' mean?",
+        "sharp judgment",
+        [
+        ["foolishness", "antonym-error"],
+        ["stubbornness", "confused-trait"],
+        ["bitterness", "root-word-trap"],
+        ],
+        "Business or mental acumen means having the sharp wit to make clever decisions quickly—like spotting a winning trade before anyone else realizes it."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'sedulous' student is one who is:",
+        "persistently dedicated",
+        [
+        ["easily distracted", "antonym-error"],
+        ["proud and boastful", "confused-trait"],
+        ["silent and gloomy", "unrelated-mood"],
+        ],
+        "Sedulous means showing relentless, patient dedication—like a watchmaker assembling fifty tiny gears without sighing even once!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "What is the best meaning of 'bombastic'?",
+        "pompous in speech",
+        [
+        ["quiet and humble", "antonym-error"],
+        ["explosive and fiery", "literal-word-trap"],
+        ["brief and concise", "antonym-error"],
+        ],
+        "Bombastic language sounds grand and puffed-up to impress people, but has very little real substance—like a giant balloon filled entirely with hot air!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "The word 'corpulent' refers to being:",
+        "bulky and stout",
+        [
+        ["slender and bony", "antonym-error"],
+        ["ghostly and pale", "confused-meaning"],
+        ["decaying and old", "word-confusion"],
+        ],
+        "Corpulent means stout, portly, or having a bulky body—like an affectionate royal tomcat who has eaten cream for five years straight."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "To 'ostracize' someone means to:",
+        "exclude from a group",
+        [
+        ["welcome with open arms", "antonym-error"],
+        ["praise publicly", "confused-action"],
+        ["imprison secretly", "extreme-interpretation"],
+        ],
+        "To ostracize means to socially banish or shut someone out of a group—giving them the chilly cold shoulder on the playground."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'whimsical' idea is:",
+        "playfully quaint",
+        [
+        ["strictly scientific", "antonym-error"],
+        ["cruel and hurtful", "confused-tone"],
+        ["boring and routine", "antonym-error"],
+        ],
+        "Whimsical means playfully quaint, fanciful, and unpredictable—like an umbrella shaped like an upside-down cabbage."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'terse' reply is:",
+        "short and abrupt",
+        [
+        ["long and rambling", "antonym-error"],
+        ["warm and friendly", "confused-tone"],
+        ["poetic and musical", "unrelated-style"],
+        ],
+        "A terse response uses as few words as possible and often sounds curt—like replying 'No.' when someone asks for a five-page explanation."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "Someone with 'impeccable' taste has:",
+        "flawless standards",
+        [
+        ["faulty judgment", "antonym-error"],
+        ["cheap preferences", "confused-value"],
+        ["strange quirks", "unrelated-trait"],
+        ],
+        "Impeccable means without any fault, blemish, or error—like a pristine white cricket uniform that has somehow survived four innings without a single grass stain."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'strident' voice sounds:",
+        "loud and harsh",
+        [
+        ["soft and soothing", "antonym-error"],
+        ["melodic and sweet", "antonym-error"],
+        ["whispering faintly", "confused-volume"],
+        ],
+        "Strident describes a sound that is loud, grating, and harsh—like a metal chalk-holder screeching down a slate blackboard!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "An 'arbitrary' decision is based on:",
+        "random personal whims",
+        [
+        ["strict logical laws", "antonym-error"],
+        ["careful evidence", "antonym-error"],
+        ["unanimous voting", "confused-concept"],
+        ],
+        "Arbitrary means decided on a sudden impulse or whim rather than on reason—like deciding who does the dishes by whichever cat blinks first!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'plausible' explanation is one that is:",
+        "reasonable and believable",
+        [
+        ["completely impossible", "antonym-error"],
+        ["proven absolute fact", "overstatement"],
+        ["ridiculous and silly", "antonym-error"],
+        ],
+        "Plausible means seeming reasonable or likely to be true—unlike claiming your homework was carried away by a passing herd of friendly zebras."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "If a cost is 'negligible', it is:",
+        "too small to matter",
+        [
+        ["enormously expensive", "antonym-error"],
+        ["strictly required", "confused-meaning"],
+        ["difficult to measure", "unrelated-concept"],
+        ],
+        "Negligible means so tiny and insignificant that it can be safely disregarded—like a single drop of water added to a swimming pool."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "The word 'enmity' means:",
+        "deep mutual hostility",
+        [
+        ["close friendship", "antonym-error"],
+        ["casual politeness", "confused-relationship"],
+        ["fear of strangers", "unrelated-feeling"],
+        ],
+        "Enmity is the state of deep, active, mutual hatred—like the ancient rivalry between mongooses and cobras, or two neighbours arguing over fence paint."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'retort' is best described as:",
+        "a sharp, witty reply",
+        [
+        ["a quiet apology", "antonym-error"],
+        ["a lengthy lecture", "confused-format"],
+        ["a friendly greeting", "unrelated-exchange"],
+        ],
+        "A retort is a quick, clever answer that turns someone's remark right back on them—hitting the verbal tennis ball straight back over the net!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "If you are 'perplexed', you feel:",
+        "utterly baffled",
+        [
+        ["completely certain", "antonym-error"],
+        ["deeply angered", "confused-emotion"],
+        ["thoroughly relaxed", "antonym-error"],
+        ],
+        "Perplexed means thoroughly puzzled or confused—like staring at a riddle where the answer seems to be both a carrot and a grandfather clock!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'disreputable' character has:",
+        "a bad public reputation",
+        [
+        ["an honourable name", "antonym-error"],
+        ["a silent personality", "unrelated-trait"],
+        ["a wealthy family", "confused-concept"],
+        ],
+        "Disreputable means not considered respectable or trusted in society—someone whose promises evaporate faster than water on a hot tawa."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "To be 'afflicted' by something means to be:",
+        "troubled with pain",
+        [
+        ["blessed with fortune", "antonym-error"],
+        ["delighted with gifts", "opposite-experience"],
+        ["cured of disease", "confused-state"],
+        ],
+        "To be afflicted means to suffer from pain, illness, or hardship—like having a sore throat right on the day of the school singing audition."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "A 'tentative' plan is:",
+        "provisional and unconfirmed",
+        [
+        ["firm and unchangeable", "antonym-error"],
+        ["secret and illegal", "confused-nature"],
+        ["completely abandoned", "confused-state"],
+        ],
+        "Tentative means hesitant, provisional, and not yet final—like dipping one cautious toe into the swimming pool before deciding whether to jump in."
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "The audience gave a 'rapturous' applause, meaning:",
+        "ecstatically enthusiastic",
+        [
+        ["polite and lukewarm", "antonym-error"],
+        ["scornful and rude", "opposite-attitude"],
+        ["silent and hesitant", "antonym-error"],
+        ],
+        "Rapturous applause expresses intense ecstasy, delight, and adoration—standing on chairs and cheering until the theatre roof rattles!"
+      ),
+    },
+    {
+      subtopic: "synonyms",
+      ...q(
+        "The word 'flimsy' is an antonym for:",
+        "sturdy",
+        [
+        ["breakable", "synonym-error"],
+        ["thin", "synonym-error"],
+        ["feeble", "synonym-error"],
+        ],
+        "Flimsy means fragile and easily broken—like a bridge made of wet cardboard; sturdy means robust, strong, and built to withstand a tempest!"
+      ),
+    },
+  ],
+  "wp-idioms-champion-1": [
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does it mean to 'burn the candle at both ends'?",
+        "overwork from early till late",
+        [
+        ["waste expensive wax candles", "literal-trap"],
+        ["light a campfire during a storm", "unrelated-action"],
+        ["celebrate two festivals at once", "confused-meaning"],
+        ],
+        "Burning the candle at both ends means exhausting your energy by waking up early and sleeping late to work—eventually running out of wick!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "If someone is 'barking up the wrong tree', they are:",
+        "pursuing a mistaken course",
+        [
+        ["imitating a guard dog", "literal-trap"],
+        ["climbing without a safety rope", "unrelated-action"],
+        ["chopping wood in the dark", "confused-metaphor"],
+        ],
+        "Originating from hunting dogs that bark up an empty tree while the clever squirrel is in another, it means looking for answers in completely the wrong place."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does 'bite the bullet' mean?",
+        "face a grim situation bravely",
+        [
+        ["eat iron rations during a trek", "literal-trap"],
+        ["start a foolish argument", "confused-concept"],
+        ["refuse to accept defeat", "imprecise-meaning"],
+        ],
+        "To bite the bullet means to brace yourself and endure an unavoidable, unpleasant ordeal—like sitting still in the dentist's chair without squirming."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "To 'throw in the towel' means to:",
+        "admit defeat and surrender",
+        [
+        ["clean the gymnasium floor", "literal-trap"],
+        ["celebrate a sports victory", "antonym-error"],
+        ["start a fresh laundry cycle", "humorous-literal"],
+        ],
+        "Borrowed from boxing, where a coach throws a towel into the ring to stop the fight, it means giving up after a hard struggle."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "If someone 'jumps on the bandwagon', they:",
+        "join a popular trend",
+        [
+        ["play an orchestral instrument", "literal-trap"],
+        ["board a moving passenger bus", "confused-action"],
+        ["organise a musical parade", "unrelated-activity"],
+        ],
+        "To jump on the bandwagon means joining a trend or cause only after it becomes popular—like supporting a cricket team only when they reach the finals!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "Getting 'cold feet' before an event means:",
+        "losing courage at the last minute",
+        [
+        ["catching a winter chill in the feet", "literal-trap"],
+        ["walking barefoot on cold tiles", "literal-trap"],
+        ["forgetting your woollen socks", "humorous-literal"],
+        ],
+        "Getting cold feet means suddenly feeling nervous and hesitating before doing something big—like freezing right before stepping up to the microphone!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "A 'storm in a teacup' refers to:",
+        "great fuss over a trivial matter",
+        [
+        ["hot tea spilled on a clean table", "literal-trap"],
+        ["a sudden monsoon thunderstorm", "unrelated-weather"],
+        ["a severe kitchen emergency", "confused-meaning"],
+        ],
+        "A storm in a teacup means making an enormous drama out of something tiny—like arguing for half an hour over who took the last blue pencil."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does 'let sleeping dogs lie' advise you to do?",
+        "avoid stirring up past trouble",
+        [
+        ["never disturb a napping pet", "literal-trap"],
+        ["allow stray animals to rest", "literal-trap"],
+        ["forget your daily chores", "unrelated-advice"],
+        ],
+        "It warns you not to restart an old argument or bring up past problems that have calmed down—lest you wake up a canine that bites!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "If a decision is made 'at the eleventh hour', it happens:",
+        "at the very last possible moment",
+        [
+        ["late in the morning before lunch", "literal-trap"],
+        ["exactly when the clock strikes eleven", "literal-trap"],
+        ["well ahead of the deadline", "antonym-error"],
+        ],
+        "The eleventh hour means the very last moment before it is too late—like submitting your science project just thirty seconds before the bell rings."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "To 'spill the beans' means to:",
+        "reveal a secret prematurely",
+        [
+        ["knock over a plate of cooked pulses", "literal-trap"],
+        ["cook dinner for the entire family", "unrelated-action"],
+        ["waste grocery money at the market", "confused-metaphor"],
+        ],
+        "Spilling the beans means accidentally or indiscreetly blurting out a secret—like revealing what your brother's surprise birthday present is!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "What does 'take it with a pinch of salt' mean?",
+        "view something with healthy scepticism",
+        [
+        ["add extra seasoning to your food", "literal-trap"],
+        ["refuse to eat bland dishes", "literal-trap"],
+        ["believe every single detail blindly", "antonym-error"],
+        ],
+        "It means not believing every detail of a story, knowing it is likely exaggerated—like your friend claiming he caught a fish the size of an auto-rickshaw!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "If you 'burn bridges', you:",
+        "destroy a way of returning",
+        [
+        ["light fires across a river", "literal-trap"],
+        ["repair old public crossings", "antonym-error"],
+        ["travel to uncharted territories", "unrelated-concept"],
+        ],
+        "Burning bridges means doing something that permanently cuts off your relationships or ability to go back to a past situation."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "A 'feather in your cap' is:",
+        "an achievement to be proud of",
+        [
+        ["a fashionable traditional headdress", "literal-trap"],
+        ["a bird feather collected on a walk", "literal-trap"],
+        ["a light, insignificant accomplishment", "confused-weight"],
+        ],
+        "A feather in your cap is an honour or special achievement—like winning the school storytelling trophy or scoring the match-winning goal!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "To 'fly off the handle' means to:",
+        "lose one's temper suddenly",
+        [
+        ["break a loose hammer head", "literal-trap"],
+        ["escape out of a closed window", "unrelated-action"],
+        ["soar smoothly like an eagle", "confused-flight"],
+        ],
+        "Like an axe-head flying loose from its wooden handle, this means unexpectedly losing control and exploding in a fit of sudden anger."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "Someone with their 'head in the clouds' is:",
+        "daydreaming and impractical",
+        [
+        ["climbing a tall Himalayan peak", "literal-trap"],
+        ["very tall compared to peers", "literal-trap"],
+        ["studying atmospheric science", "unrelated-concept"],
+        ],
+        "Having your head in the clouds means being lost in daydreams and disconnected from practical reality—staring out the window during maths class!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "Feeling 'on cloud nine' means being:",
+        "in a state of blissful happiness",
+        [
+        ["caught in a heavy storm cloud", "literal-trap"],
+        ["fearful of high altitudes", "confused-emotion"],
+        ["confused by multiple choices", "unrelated-feeling"],
+        ],
+        "Being on cloud nine means feeling supreme joy and delight—like finding out your school sports day has been rescheduled so you get a free picnic day!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "If a speaker 'hits the nail on the head', they:",
+        "describe the exact truth",
+        [
+        ["hammer a carpentry peg correctly", "literal-trap"],
+        ["hurt their own thumb in workshop", "literal-trap"],
+        ["miss the main point completely", "antonym-error"],
+        ],
+        "Hitting the nail on the head means stating something with absolute precision and hitting upon the exact root cause of a problem."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "To 'cut corners' means to:",
+        "do a job cheaply or carelessly",
+        [
+        ["trim the edges of chart paper", "literal-trap"],
+        ["take a quick turn on a bicycle", "literal-trap"],
+        ["work overtime with perfection", "antonym-error"],
+        ],
+        "Cutting corners means skipping essential steps to save time or money, which usually produces a shoddy result—like gluing broken glass with sticky tape!"
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "The 'apple of someone's eye' refers to someone who is:",
+        "cherished above all others",
+        [
+        ["an expert fruit orchard farmer", "literal-trap"],
+        ["suffering from a vision defect", "literal-trap"],
+        ["unpopular with the family", "antonym-error"],
+        ],
+        "The apple of someone's eye is someone who is dearly loved and treasured—like a beloved grandchild who can do no wrong in their grandparents' eyes."
+      ),
+    },
+    {
+      subtopic: "action-phrases",
+      ...q(
+        "To 'turn over a new leaf' means to:",
+        "begin behaving in a better way",
+        [
+        ["flip pages in an old notebook", "literal-trap"],
+        ["plant new saplings in autumn", "literal-trap"],
+        ["hide mistakes under foliage", "confused-meaning"],
+        ],
+        "Turning over a new leaf means making a fresh start and adopting better habits—like deciding to pack your school bag every night before sleeping!"
+      ),
+    },
+  ],
 };
 
 // ---------- Readings ----------
@@ -4477,6 +5663,24 @@ const synAntP3 = forGrades(
   ),
   [3, 4, 5, 6]
 );
+// Champion rung: harder words (Classes 6–9 vocabulary), open to any class (no grade filter).
+// Labeled "Challenge: for word lovers", difficulty "hard".
+const synAntChampion = withSubtopic(
+  practice(
+    "wp-synant-champion",
+    synAnt,
+    4,
+    "Challenge: for word lovers",
+    "hard",
+    [
+      quiz("wp-synant-champion-1"),
+      quiz("wp-synant-champion-2"),
+      quiz("wp-synant-champion-3"),
+    ]
+  ),
+  "synonyms"
+);
+
 const synAntGate = forGrades(
   gate("wp-synant-gate", synAnt, "Synonyms & Antonyms Challenge", "wp-synant-gate-pool", {
     "synonyms": "Synonyms and similar meanings",
@@ -4586,6 +5790,22 @@ const idiomsP2 = forGrades(
   ),
   [4, 5, 6]
 );
+// Champion rung: harder idioms (Classes 6–9), open to any class (no grade filter).
+// Labeled "Challenge: for word lovers", difficulty "hard".
+const idiomsChampion = withSubtopic(
+  practice(
+    "wp-idioms-champion",
+    idioms,
+    3,
+    "Challenge: for word lovers",
+    "hard",
+    [
+      quiz("wp-idioms-champion-1"),
+    ]
+  ),
+  "action-phrases"
+);
+
 const idiomsGate = forGrades(
   gate("wp-idioms-gate", idioms, "Idioms & Proverbs Challenge", "wp-idioms-gate-pool", {
     "popular-sayings": "Popular proverbs and sayings",
@@ -4624,6 +5844,7 @@ export const nodes = [
   synAntP1,
   synAntP2,
   synAntP3,
+  synAntChampion,
   synAntGate,
   synAntEndless,
   spelling,
@@ -4645,6 +5866,7 @@ export const nodes = [
   idioms,
   idiomsP1,
   idiomsP2,
+  idiomsChampion,
   idiomsGate,
   idiomsEndless,
   u2r,
