@@ -253,8 +253,8 @@ Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Dec
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
 Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
-screen mockup, 3) G52 Grammar Pro accuracy, 4) G54 one-pager DO IT buttons, 5) G58 Listen button, 6) G55 PIN safety
-(plan first), 7) G53 ∞ redo, 8) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
+screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G54 one-pager DO IT buttons, 6) G58 Listen button, 7) G55 PIN safety
+(plan first), 8) G53 ∞ redo, 9) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
@@ -293,6 +293,18 @@ check: exactly one correct option, the answer key matches, the explanation says 
 level, kid-friendly wording, no copied board-paper text. **Don't edit content.** Report in
 `docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
 of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
+
+### G59 · [todo] · gemini · ⭐ Learn cards for every study page (owner 2026-11-07: "lots of study pages are still the old reader")
+66 study pages still open as the old long page (Claude's count): English 44 (26 bundled in data/englishQuestData.js
+`studyPages` without `cards`, 18 old IEO pages that live only in Firestore `studyContent`), Science 18, Word Power 4.
+Treasure Words is done (17/17). Give every one `cards` in the format of `utils/learnCards.js` (spec R), like the 21
+English pages that already have them: **4–7 cards** each, `idea` cards (emoji, title, short text, ≤4 examples) and at
+least **one `check` card** (one right answer + 2–3 wrong), same facts as the old page, kid-friendly, Indian English,
+**no exam names** (IEO/NSO/IMO). The 18 old Firestore pages: read them (read-only), write NEW bundled pages with
+cards under new ids, and point the nodes' study steps to them (keep the old docs; nothing deleted).
+**Order:** Class 9–10 pages first (Seema's pilot), then Science, then the rest. `npm test` (learnCards + content tests)
+passes. Commit per quest; report `docs/agents/reports/G59.md` (pages converted, any facts you were unsure of).
+`gemini(G59): done — N pages`. Claude spot-checks; then the owner re-seeds (content only, no app update).
 
 ### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
 Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
