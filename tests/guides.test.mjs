@@ -1,6 +1,7 @@
 // tests/guides.test.mjs — guide quests (utils/guides.js)
 import assert from "node:assert/strict";
 import { GUIDES, guidesFor, guideState, guideById, newlyDone } from "../utils/guides.js";
+import { TEACHER_JOBS, TEACHER_START_MD, TEACHER_START_SHARE } from "../data/teacherStart.js";
 
 assert.deepEqual(guidesFor({ isChild: true }).map((g) => g.id), ["kid-first-day"], "children: their first day");
 assert.deepEqual(guidesFor({}).map((g) => g.id), ["tour", "teacher-class", "parent"], "grown-ups: tour, teachers, parents");
@@ -50,4 +51,17 @@ assert.deepEqual(newlyDone(["a"], ["a", "b"]), ["b"]);
   assert.ok(guideState(tour, { marks }).finished, "the tour ticks by visiting each screen");
   for (const g of GUIDES) for (const s of g.steps) assert.ok(s.go && (s.go.screen || s.go.tab) && s.hint && s.why, `${g.id}.${s.id} has a target, hint and why`);
 }
+// G54: Teachers' one-pager interactive jobs
+assert.equal(TEACHER_JOBS.length, 4, "4 teacher jobs");
+assert.deepEqual(
+  TEACHER_JOBS.map((j) => j.stepId),
+  ["join", "share", "approve", "assign"],
+  "jobs match teacher-class steps"
+);
+for (const j of TEACHER_JOBS) {
+  assert.ok(teacher.steps.some((s) => s.id === j.stepId), `step ${j.stepId} exists in teacher-class guide`);
+  assert.ok(TEACHER_START_MD.includes(j.title), `TEACHER_START_MD contains ${j.title}`);
+}
+assert.ok(TEACHER_START_SHARE.length > 50, "TEACHER_START_SHARE valid");
+
 console.log("guides tests passed");
