@@ -18,6 +18,62 @@ export default {
     "sq-chains-study": {
       name: "Who Eats Whom?",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "☀️",
+                "title": "Producers and consumers",
+                "text": "Green plants make food using sunlight, air, and water—they are producers! Animals cannot make food and must eat plants or other animals, so they are consumers.",
+                "examples": [
+                      "Producer: Grass and mango tree",
+                      "Herbivore: Deer and rabbit",
+                      "Carnivore: Tiger and eagle",
+                      "Omnivore: Bear and crow"
+                ]
+          },
+          {
+                "emoji": "➡️",
+                "title": "Reading a food chain",
+                "text": "In a food chain, the arrow means 'is eaten by' and shows where energy flows: grass → grasshopper → frog → snake → eagle. Every chain always begins with a green producer!",
+                "examples": [
+                      "grass → grasshopper",
+                      "grasshopper → frog",
+                      "frog → snake",
+                      "snake → eagle"
+                ]
+          },
+          {
+                "emoji": "🍄",
+                "title": "Food webs & decomposers",
+                "text": "Many food chains link into a food web. Decomposers like mushrooms and bacteria break down dead plants and animals, returning vital nutrients to the soil for new plants.",
+                "examples": [
+                      "Fungi (mushrooms)",
+                      "Bacteria in soil",
+                      "Decomposers recycle nutrients"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "What does the arrow in a food chain (grass → zebra → lion) show?",
+                "answer": "The flow of energy (who is eaten by whom)",
+                "wrong": [
+                      "Which animal runs the fastest",
+                      "Which animal lives the longest",
+                      "Which animal is bigger"
+                ],
+                "explain": "The arrow points from the food to the eater, showing how energy flows from producer to consumer."
+          },
+          {
+                "kind": "check",
+                "question": "Which organism is a producer in a food chain?",
+                "answer": "Green grass",
+                "wrong": [
+                      "Grasshopper",
+                      "Frog",
+                      "Eagle"
+                ],
+                "explain": "Green plants produce their own food using sunlight. All other animals in the chain are consumers."
+          }
+    ],
       content: `### ☀️ It all starts with the Sun
 
 **Green plants** make their own food from sunlight, air and water. They are **producers**.
@@ -64,6 +120,63 @@ If one animal disappears, others are affected. No frogs → more grasshoppers, a
     "sq-farming-study": {
       name: "From Farm to Plate",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🌾",
+                "title": "Preparing and planting",
+                "text": "Farming begins by ploughing the soil with a tractor to loosen it. Next, farmers sow healthy seeds using a seed drill. Drip irrigation gives water drop-by-drop right at the roots.",
+                "examples": [
+                      "Ploughing: Loosens soil",
+                      "Sowing: Seed drill puts seeds",
+                      "Irrigation: Watering crops",
+                      "Drip irrigation: Saves water"
+                ]
+          },
+          {
+                "emoji": "🚜",
+                "title": "Harvesting and threshing",
+                "text": "Weeding removes unwanted wild plants using a khurpi. When crops ripen, farmers harvest them with sickles. Threshing separates grains from stalks, and winnowing uses wind to blow away light husk.",
+                "examples": [
+                      "Weeding = removing wild weeds",
+                      "Harvesting = cutting ripe crops",
+                      "Threshing = separating grain from stalk",
+                      "Winnowing = wind removes husk"
+                ]
+          },
+          {
+                "emoji": "🌧️",
+                "title": "Kharif and rabi seasons",
+                "text": "India has two main crop seasons. Kharif crops like rice and maize are sown in monsoon rains (June). Rabi crops like wheat and mustard are sown in winter (October).",
+                "examples": [
+                      "Kharif (rainy season): Rice and maize",
+                      "Kharif: Cotton and groundnut",
+                      "Rabi (winter season): Wheat and mustard",
+                      "Rabi: Gram and peas"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which tool or method uses wind to blow away the light husk from grain?",
+                "answer": "Winnowing",
+                "wrong": [
+                      "Ploughing",
+                      "Irrigation",
+                      "Threshing"
+                ],
+                "explain": "Winnowing lets wind carry away the lighter husk while the heavier grains drop straight down."
+          },
+          {
+                "kind": "check",
+                "question": "Which crop is a Rabi crop sown in winter?",
+                "answer": "Wheat",
+                "wrong": [
+                      "Rice",
+                      "Maize",
+                      "Cotton"
+                ],
+                "explain": "Wheat, mustard, and gram are winter (Rabi) crops sown in October-November."
+          }
+    ],
       content: `### 🌾 The steps of farming, in order
 
 | Step | What happens | Tool |
@@ -102,6 +215,63 @@ If one animal disappears, others are affected. No frogs → more grasshoppers, a
     "sq-pollution-study": {
       name: "Pollution and Saving Earth",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🏭",
+                "title": "Four types of pollution",
+                "text": "Smoke from factories and cars causes air pollution. Chemical waste and sewage cause water pollution. Excessive chemical fertilisers harm soil, and loud vehicle horns create noise pollution.",
+                "examples": [
+                      "Air: Vehicle and factory smoke",
+                      "Water: Sewage and plastic in rivers",
+                      "Soil: Chemical sprays and plastic",
+                      "Noise: Loud horns and crackers"
+                ]
+          },
+          {
+                "emoji": "🌡️",
+                "title": "Global warming",
+                "text": "Greenhouse gases like carbon dioxide and methane trap heat like a blanket around Earth. Extra heat causes global warming, melting polar glaciers and raising sea levels. Planting trees absorbs carbon dioxide!",
+                "examples": [
+                      "Carbon dioxide traps heat",
+                      "Glaciers melt as temperatures rise",
+                      "Trees absorb carbon dioxide",
+                      "Trees release fresh oxygen"
+                ]
+          },
+          {
+                "emoji": "♻️",
+                "title": "The 3 Rs: Reduce, Reuse, Recycle",
+                "text": "Reduce waste by using less, like switching off lights. Reuse old glass jars as pencil holders. Recycle old paper and metal to make fresh goods. Biodegradable peelings rot naturally into compost.",
+                "examples": [
+                      "Reduce: Turn off taps and fans",
+                      "Reuse: Use cloth shopping bags",
+                      "Recycle: Old paper into fresh books",
+                      "Biodegradable: Fruit and vegetable peels"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which of these materials is biodegradable and rots away naturally in soil?",
+                "answer": "Banana peel",
+                "wrong": [
+                      "Plastic bottle",
+                      "Glass jar",
+                      "Aluminium can"
+                ],
+                "explain": "Banana peel and plant matter rot into nutrient-rich compost. Plastic and glass remain for hundreds of years."
+          },
+          {
+                "kind": "check",
+                "question": "What is the best way to help reduce carbon dioxide in the air?",
+                "answer": "Planting more trees",
+                "wrong": [
+                      "Burning dry fallen leaves",
+                      "Using more private cars",
+                      "Leaving air conditioners on"
+                ],
+                "explain": "Green trees take in carbon dioxide during photosynthesis and give out clean oxygen."
+          }
+    ],
       content: `### 🏭 Four kinds of pollution
 
 | Pollution | Some causes |

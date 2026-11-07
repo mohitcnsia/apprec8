@@ -19,6 +19,61 @@ export default {
     "sq-patterns-study": {
       name: "Patterns and Series",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔢",
+                "title": "Find the number rule",
+                "text": "Every series follows a secret pattern. Look at the difference between numbers: are they adding, subtracting, doubling, or growing by +1, +2, +3?",
+                "examples": [
+                      "2, 4, 6, 8 → add 2 (+2)",
+                      "3, 6, 12, 24 → double (×2)",
+                      "100, 90, 80 → take away 10 (-10)",
+                      "1, 2, 4, 7, 11 → add 1, 2, 3, 4 (+5 next)"
+                ]
+          },
+          {
+                "emoji": "🔤",
+                "title": "Letter patterns & skipping",
+                "text": "Number the letters: A=1, B=2, C=3 up to Z=26. Look for skipping patterns like A, C, E (skip one letter) or backwards patterns like Z, Y, X.",
+                "examples": [
+                      "A, C, E, G → skip one (I is next)",
+                      "Z, Y, X, W → reverse alphabet (V is next)",
+                      "B, D, F, H → even positions"
+                ]
+          },
+          {
+                "emoji": "🧩",
+                "title": "Analogies & odd one out",
+                "text": "An analogy pairs words with the same link: bird is to nest as bee is to hive! For odd-one-out, spot which three share a rule and which one does not belong.",
+                "examples": [
+                      "Bird : Nest :: Bee : Hive (homes)",
+                      "Car : Road :: Ship : Sea (travel)",
+                      "Mars, Venus, Moon, Earth → Moon is odd (satellite)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "What is the next number in the pattern: 3, 6, 12, 24, ___?",
+                "answer": "48",
+                "wrong": [
+                      "30",
+                      "36",
+                      "42"
+                ],
+                "explain": "Each number is doubled (multiplied by 2) to get the next number: 24 × 2 = 48."
+          },
+          {
+                "kind": "check",
+                "question": "Which one is the ODD one out: Apple, Mango, Potato, Banana?",
+                "answer": "Potato",
+                "wrong": [
+                      "Apple",
+                      "Mango",
+                      "Banana"
+                ],
+                "explain": "Apple, mango, and banana are sweet fruits that grow on trees. Potato is an underground vegetable (tuber)!"
+          }
+    ],
       content: `### 🔢 Find the rule
 
 A **series** follows a rule. Find the rule, then use it for the next one.
@@ -62,6 +117,62 @@ Give each letter its number: A = 1, B = 2, C = 3 … Z = 26.
     "sq-codes-study": {
       name: "Codes and Directions",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🕵️",
+                "title": "Secret letter codes",
+                "text": "A code shifts letters by a rule. One step forward turns C-A-T into D-B-U. One step back turns H-O-T into G-N-S. Reversing writes letters backwards, turning B-O-O-K into K-O-O-B.",
+                "examples": [
+                      "Forward (+1): CAT → DBU",
+                      "Backward (-1): HOT → GNS",
+                      "Reverse: BOOK → KOOB",
+                      "Numbers: CAB → 3 + 1 + 2 = 6"
+                ]
+          },
+          {
+                "emoji": "🧭",
+                "title": "Finding directions",
+                "text": "Face North: East is to your right, West is on your left, and South is behind you. If you face North and turn right 90 degrees, you are now facing East!",
+                "examples": [
+                      "Facing North: Right turn → East",
+                      "Facing East: Right turn → South",
+                      "Facing South: Right turn → West",
+                      "Facing West: Right turn → North"
+                ]
+          },
+          {
+                "emoji": "☀️",
+                "title": "Sun and shadows",
+                "text": "The Sun rises in the East and sets in the West. Because shadows fall away from light, morning shadows point West and evening shadows point East.",
+                "examples": [
+                      "Morning Sun in East → Shadow points West",
+                      "Evening Sun in West → Shadow points East",
+                      "Noon Sun overhead → Tiny shadow"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "If B-A-T is coded as C-B-U (each letter shifted +1 forward), how is P-E-N coded?",
+                "answer": "Q-F-O",
+                "wrong": [
+                      "Q-D-M",
+                      "O-D-M",
+                      "Q-E-O"
+                ],
+                "explain": "P + 1 = Q, E + 1 = F, N + 1 = O. So PEN becomes QFO."
+          },
+          {
+                "kind": "check",
+                "question": "You are standing facing North. If you turn to your right, which direction are you facing?",
+                "answer": "East",
+                "wrong": [
+                      "West",
+                      "South",
+                      "North-West"
+                ],
+                "explain": "When facing North, turning right points you directly East."
+          }
+    ],
       content: `### 🕵️ Secret codes
 
 | Code | Example |
@@ -97,6 +208,62 @@ Stand facing **North**. **East** is on your right, **West** on your left, **Sout
     "sq-order-study": {
       name: "Order, Time and Family",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🏃",
+                "title": "Ranking in a line",
+                "text": "To find total people in a line, add place from front + place from back − 1. If Tina is 4th from front and 4th from back: 4 + 4 − 1 = 7 children!",
+                "examples": [
+                      "Total = Front + Back − 1",
+                      "Place from other end = Total − Place + 1",
+                      "4th from both ends = 4 + 4 − 1 = 7"
+                ]
+          },
+          {
+                "emoji": "📅",
+                "title": "Days and clocks",
+                "text": "Days repeat in cycles of 7. If today is Friday, 8 days later is 8 − 7 = 1 day after Friday, which is Saturday. February has 29 days in a leap year.",
+                "examples": [
+                      "7 days make a full week",
+                      "1 hour = 60 minutes",
+                      "Leap year: February has 29 days",
+                      "4:30 + 45 minutes = 5:15"
+                ]
+          },
+          {
+                "emoji": "👨‍👩‍👧",
+                "title": "Family relations",
+                "text": "Your father's or mother's brother is your uncle, and their sister is your aunt. Their children are your cousins. A brother's or sister's son is a nephew; their daughter is a niece.",
+                "examples": [
+                      "Uncle / Aunt = Parent's brother / sister",
+                      "Cousin = Uncle or aunt's child",
+                      "Nephew = Sibling's son",
+                      "Niece = Sibling's daughter"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Rohan is 5th from the front and 5th from the back in a single file. How many students are in the row?",
+                "answer": "9 students",
+                "wrong": [
+                      "10 students",
+                      "8 students",
+                      "11 students"
+                ],
+                "explain": "5 + 5 − 1 = 9 students (Rohan is counted only once, so subtract 1)."
+          },
+          {
+                "kind": "check",
+                "question": "What is your father's sister called?",
+                "answer": "Aunt",
+                "wrong": [
+                      "Niece",
+                      "Cousin",
+                      "Grandmother"
+                ],
+                "explain": "Your father's or mother's sister is your aunt (bua or masi)."
+          }
+    ],
       content: `### 🏃 Places in a row
 
 - **Place from the other end** = total − place + 1.

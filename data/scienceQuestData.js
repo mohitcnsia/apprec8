@@ -61,6 +61,60 @@ export const studyPages = {
   "sq-living-study": {
     name: "Living and Non-living Things",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🌱",
+                "title": "Signs of living things",
+                "text": "Living things need food and water, breathe air, grow from within, reproduce, and respond to their surroundings. In time, every living thing completes its life cycle and dies.",
+                "examples": [
+                      "Mango tree",
+                      "Honeybee",
+                      "Cat",
+                      "Human"
+                ]
+          },
+          {
+                "emoji": "🚗",
+                "title": "Cars move, but are not alive!",
+                "text": "A car moves and drinks petrol for energy, but it cannot breathe, grow, or have babies. Natural non-living things like rocks and clouds were never alive.",
+                "examples": [
+                      "Rock (natural non-living)",
+                      "Cloud (natural non-living)",
+                      "Car (man-made non-living)"
+                ]
+          },
+          {
+                "emoji": "🪵",
+                "title": "Once living, but non-living now",
+                "text": "Some non-living things were once part of a living organism. Wood came from a tree, leather from animal hide, and cotton from a plant. Glass and rocks were never alive.",
+                "examples": [
+                      "Wooden desk (from a tree)",
+                      "Leather shoes (from an animal)",
+                      "Cotton shirt (from a plant)"
+                ]
+          },
+          {
+                "emoji": "🌰",
+                "title": "Is a dry seed alive?",
+                "text": "Yes! A dry bean in a jar seems lifeless, but inside is a sleeping baby plant called an embryo. With water, air, and warmth, it wakes up and sprouts into a plant!",
+                "examples": [
+                      "Bean seed",
+                      "Gram seed",
+                      "Wheat grain"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which of these was once part of a living thing?",
+                "answer": "A wooden pencil",
+                "wrong": [
+                      "A glass marble",
+                      "A steel spoon",
+                      "A plastic ruler"
+                ],
+                "explain": "Wood comes from trees, which are living plants! Glass, steel, and plastic were never alive."
+          }
+    ],
     content: `### 🌱 Is it alive?
 
 Everything around us is either **living** or **non-living**.
@@ -107,6 +161,72 @@ In contrast, things like rocks, gold, glass, and synthetic plastic were **never 
   "sq-plants-study": {
     name: "How Plants Grow and Reproduce",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🌰",
+                "title": "Inside a seed",
+                "text": "A seed has three main parts: a tough outer seed coat (testa), fleshy cotyledons that store food, and a tiny baby plant called the embryo.",
+                "examples": [
+                      "Testa = outer protective coat",
+                      "Cotyledons = store food",
+                      "Embryo = baby plant"
+                ]
+          },
+          {
+                "emoji": "💧",
+                "title": "What seeds need to wake up",
+                "text": "Germination needs water to soften the coat, air for oxygen, and warmth. Seeds do not need sunlight to sprout underground—light is only needed once green leaves appear!",
+                "examples": [
+                      "Water (softens the coat)",
+                      "Air (provides oxygen)",
+                      "Warmth (activates growth)"
+                ]
+          },
+          {
+                "emoji": "🌬️",
+                "title": "How seeds travel",
+                "text": "Plants scatter their seeds so seedlings do not crowd each other. Light seeds float on the wind, fibrous coconuts float on water, and spiky burs stick to animal fur.",
+                "examples": [
+                      "Wind: Dandelion and cotton",
+                      "Water: Coconut and lotus",
+                      "Animals: Cocklebur and mango",
+                      "Explosion: Pea and balsam"
+                ]
+          },
+          {
+                "emoji": "🌿",
+                "title": "Growing without seeds",
+                "text": "Many plants reproduce from vegetative parts. Potatoes grow from stem buds called eyes, sweet potatoes from roots, and Bryophyllum sprouts tiny plantlets directly along its leaf edges!",
+                "examples": [
+                      "Stem: Potato and ginger",
+                      "Root: Sweet potato and carrot",
+                      "Leaf: Bryophyllum",
+                      "Spores: Ferns and mosses"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which condition is NOT required for a seed to germinate underground?",
+                "answer": "Sunlight",
+                "wrong": [
+                      "Air",
+                      "Water",
+                      "Warmth"
+                ],
+                "explain": "Seeds germinate in dark soil. They only need sunlight after their green leaves sprout!"
+          },
+          {
+                "kind": "check",
+                "question": "Which plant grows tiny new plantlets along the edges of its leaves?",
+                "answer": "Bryophyllum",
+                "wrong": [
+                      "Potato",
+                      "Rose",
+                      "Ginger"
+                ],
+                "explain": "Bryophyllum has buds along the notches of its leaves that drop and grow into new plants."
+          }
+    ],
     content: `### 🌰 Structure of a Seed
 
 Most flowering plants begin their life as a seed. A seed has three main parts:
@@ -153,6 +273,63 @@ Many plants can grow from parts other than seeds:
   "sq-animals-study": {
     name: "Animal Habitats and Adaptations",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🌬️",
+                "title": "How animals breathe",
+                "text": "Mammals, birds, and reptiles breathe with lungs. Whales surface to breathe air. Fish use gills, earthworms breathe through moist skin, and insects breathe through tiny body holes called spiracles.",
+                "examples": [
+                      "Lungs: Humans, cows, whales",
+                      "Gills: Fish and tadpoles",
+                      "Moist skin: Earthworms and frogs",
+                      "Spiracles: Cockroaches and bees"
+                ]
+          },
+          {
+                "emoji": "🛡️",
+                "title": "Protective body coverings",
+                "text": "Feathers keep birds warm and help them fly. Thick fur traps air for polar bears in icy cold. Tortoises hide under hard shells, while chameleons camouflage to match tree bark.",
+                "examples": [
+                      "Feathers: Birds",
+                      "Shell: Tortoise and snail",
+                      "Fur: Polar bear and yak",
+                      "Camouflage: Stick insect"
+                ]
+          },
+          {
+                "emoji": "✈️",
+                "title": "Animal migration journeys",
+                "text": "Migration is a seasonal journey to escape extreme cold, find food, or breed. The Arctic tern flies from the Arctic to Antarctica and back, making the longest migration on Earth!",
+                "examples": [
+                      "Arctic tern: Pole to pole",
+                      "Bar-headed goose: Over Himalayas",
+                      "Amur falcon: Asia to Africa",
+                      "Monarch butterfly: Canada to Mexico"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Through which organ do adult frogs breathe while underwater?",
+                "answer": "Moist skin",
+                "wrong": [
+                      "Lungs",
+                      "Gills",
+                      "Spiracles"
+                ],
+                "explain": "Adult frogs breathe with lungs on land, but absorb oxygen through their moist skin underwater!"
+          },
+          {
+                "kind": "check",
+                "question": "How do insects like grasshoppers and cockroaches take in air?",
+                "answer": "Through spiracles",
+                "wrong": [
+                      "Through lungs",
+                      "Through gills",
+                      "Through nostrils"
+                ],
+                "explain": "Insects have tiny breathing holes called spiracles along the sides of their bodies."
+          }
+    ],
     content: `### 🌬️ How Animals Breathe
 
 Animals need oxygen to break down food and release energy:
@@ -189,6 +366,73 @@ An animal's outer covering protects it from weather and enemies:
   "sq-bones-study": {
     name: "Bones, Joints and Muscles",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🦴",
+                "title": "The human skeleton",
+                "text": "An adult skeleton has 206 bones. It gives shape, protects delicate organs, and stores calcium. Long bones contain soft bone marrow, which manufactures red and white blood cells.",
+                "examples": [
+                      "206 bones in an adult",
+                      "Femur = longest bone (thigh)",
+                      "Skull = 22 bones",
+                      "Rib cage = 12 pairs"
+                ]
+          },
+          {
+                "emoji": "🔄",
+                "title": "Movable joints",
+                "text": "Bones meet at joints, held by tough ligaments. Cartilage stops bones grinding. Ball-and-socket joints in shoulders rotate all around, while hinge joints at knees move back and forth like a door.",
+                "examples": [
+                      "Ball-and-socket: Shoulder & hip",
+                      "Hinge: Knee & elbow",
+                      "Pivot: Neck",
+                      "Gliding: Wrist & ankle"
+                ]
+          },
+          {
+                "emoji": "💪",
+                "title": "Muscles only pull!",
+                "text": "Over 600 muscles join bones using white cords called tendons. Muscles can only pull, never push! They work in pairs: when your biceps contracts to bend your arm, your triceps relaxes.",
+                "examples": [
+                      "Biceps contracts → arm bends",
+                      "Triceps contracts → arm straightens",
+                      "Tendon joins muscle to bone",
+                      "Ligament joins bone to bone"
+                ]
+          },
+          {
+                "emoji": "❤️",
+                "title": "Voluntary vs involuntary muscles",
+                "text": "Voluntary muscles move when you decide to run, jump, or smile. Involuntary muscles work automatically without you thinking, like your heart pumping blood or your stomach churning dinner.",
+                "examples": [
+                      "Voluntary: Leg and arm muscles",
+                      "Involuntary: Heart (cardiac muscle)",
+                      "Involuntary: Stomach walls"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which is the longest and strongest bone in the human body?",
+                "answer": "Femur (thigh bone)",
+                "wrong": [
+                      "Humerus (upper arm)",
+                      "Tibia (shin bone)",
+                      "Sternum (breastbone)"
+                ],
+                "explain": "The femur in your thigh bears body weight and is the longest, strongest bone."
+          },
+          {
+                "kind": "check",
+                "question": "What connects a bone to another bone at a joint?",
+                "answer": "Ligament",
+                "wrong": [
+                      "Tendon",
+                      "Cartilage",
+                      "Marrow"
+                ],
+                "explain": "Ligaments connect bones to bones. Tendons connect muscles to bones."
+          }
+    ],
     content: `### 🦴 The Human Skeleton
 
 The human skeleton is a strong internal framework of **206 bones** in an adult. A newborn baby has about **300 soft bones**, but many fuse together as the baby grows.
@@ -239,6 +483,73 @@ Bones cannot move by themselves. Over **600 muscles** in the human body are atta
   "sq-food-study": {
     name: "Digestion, Teeth and Food",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🦷",
+                "title": "Four types of teeth",
+                "text": "Adults have 32 permanent teeth: 8 incisors for cutting, 4 sharp canines for tearing, 8 premolars for crushing, and 12 wide molars for grinding food finely.",
+                "examples": [
+                      "Incisors = bite and cut",
+                      "Canines = tear tough food",
+                      "Premolars = crush food",
+                      "Molars = grind food"
+                ]
+          },
+          {
+                "emoji": "✨",
+                "title": "Tooth layers & enamel",
+                "text": "The shiny crown has an outer white layer called enamel—the hardest material in your entire body! Underneath lies yellow dentine, protecting the soft inner pulp filled with nerves and blood vessels.",
+                "examples": [
+                      "Enamel: Hardest substance in body",
+                      "Dentine: Middle bone-like layer",
+                      "Pulp: Contains nerves and blood"
+                ]
+          },
+          {
+                "emoji": "🥣",
+                "title": "The digestive journey",
+                "text": "Saliva in your mouth turns starch into sugar. The stomach churns food with acid and breaks down proteins. The small intestine absorbs nutrients into blood using bile from the liver.",
+                "examples": [
+                      "Mouth: Saliva digests starch",
+                      "Stomach: Acid churns proteins",
+                      "Liver: Makes bile for fats",
+                      "Small intestine: Villi absorb food"
+                ]
+          },
+          {
+                "emoji": "🥗",
+                "title": "Nutrient deficiency diseases",
+                "text": "A balanced diet provides all nutrients. Lacking Vitamin A causes night blindness, lacking Vitamin C causes bleeding gums (scurvy), lacking Vitamin D causes soft bones (rickets), and lacking iron causes anaemia.",
+                "examples": [
+                      "Vitamin A ↔ Night blindness",
+                      "Vitamin C ↔ Scurvy",
+                      "Vitamin D ↔ Rickets",
+                      "Iron ↔ Anaemia"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "What is the hardest substance in the human body?",
+                "answer": "Tooth enamel",
+                "wrong": [
+                      "Thigh bone (femur)",
+                      "Skull bone",
+                      "Rib cartilage"
+                ],
+                "explain": "Tooth enamel protects the crown of your teeth and is harder than any bone!"
+          },
+          {
+                "kind": "check",
+                "question": "Which disease is caused by a lack of Vitamin C in the diet?",
+                "answer": "Scurvy",
+                "wrong": [
+                      "Rickets",
+                      "Beriberi",
+                      "Night blindness"
+                ],
+                "explain": "A lack of Vitamin C causes scurvy, leading to bleeding gums and swollen joints. Citrus fruits help prevent it!"
+          }
+    ],
     content: `### 🦷 Our Teeth and Their Care
 
 Teeth help us bite, chew, and break down food so our body can digest it easily.
@@ -294,6 +605,72 @@ When a diet consistently lacks a specific nutrient over a long period, it causes
   "sq-nervous-study": {
     name: "The Nervous System, Sense Organs and Health",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🧠",
+                "title": "The three parts of your brain",
+                "text": "The cerebrum handles thinking, memory, and senses. Below it, the cerebellum keeps your balance when you cycle. The medulla at the base controls your heartbeat and breathing 24 hours a day!",
+                "examples": [
+                      "Cerebrum = thinking and memory",
+                      "Cerebellum = balance and movement",
+                      "Medulla = breathing and heartbeat"
+                ]
+          },
+          {
+                "emoji": "⚡",
+                "title": "Instant reflex actions",
+                "text": "When you touch something boiling hot, your hand jerks back before you even feel the heat! This emergency reflex goes through your spinal cord, not waiting for the brain to think.",
+                "examples": [
+                      "Touching a hot pan",
+                      "Stepping on a sharp thorn",
+                      "Blinking when dust flies in"
+                ]
+          },
+          {
+                "emoji": "👁️",
+                "title": "Eyes and seeing",
+                "text": "Light enters through the clear cornea and pupil. The colourful iris adjusts pupil size, while the lens focuses light on the retina at the back. The optic nerve carries pictures to your brain.",
+                "examples": [
+                      "Cornea = clear front window",
+                      "Iris = coloured ring",
+                      "Retina = image screen",
+                      "Optic nerve = sends picture to brain"
+                ]
+          },
+          {
+                "emoji": "🦠",
+                "title": "Communicable diseases & germs",
+                "text": "Infectious diseases spread through microscopic pathogens. Bacteria cause typhoid and cholera, viruses cause the common cold and dengue, protozoa cause malaria via mosquitoes, and fungi cause ringworm.",
+                "examples": [
+                      "Bacteria: Typhoid and cholera",
+                      "Virus: Common cold and dengue",
+                      "Protozoa: Malaria (mosquito)",
+                      "Fungi: Ringworm"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which part of the brain controls body balance when you ride a bicycle?",
+                "answer": "Cerebellum",
+                "wrong": [
+                      "Cerebrum",
+                      "Medulla oblongata",
+                      "Spinal cord"
+                ],
+                "explain": "The cerebellum coordinates muscle movement and posture so you do not fall over!"
+          },
+          {
+                "kind": "check",
+                "question": "Malaria is caused by a protozoan carried by which insect?",
+                "answer": "Female Anopheles mosquito",
+                "wrong": [
+                      "Housefly",
+                      "Honeybee",
+                      "Aedes mosquito"
+                ],
+                "explain": "The female Anopheles mosquito transmits the malaria parasite when it bites."
+          }
+    ],
     content: `### 🧠 The Control Centre: The Nervous System
 
 The **nervous system** controls and coordinates all activities of the human body, from thinking and breathing to running and feeling pain. It consists of the **brain**, the **spinal cord**, and a vast network of **nerves**.
@@ -360,6 +737,73 @@ Diseases can be classified into two categories:
   "sq-matter-study": {
     name: "States of Matter, Changes & Separation",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🧊",
+                "title": "Three states of matter",
+                "text": "Solids have tightly packed molecules with a fixed shape and volume. Liquids flow and take the container's shape with fixed volume. Gases have free-floating molecules that spread out to fill any space.",
+                "examples": [
+                      "Solid: Ice and iron",
+                      "Liquid: Water and milk",
+                      "Gas: Oxygen and steam"
+                ]
+          },
+          {
+                "emoji": "💨",
+                "title": "Sublimation: skipping liquid!",
+                "text": "Heating usually melts a solid into liquid. But in sublimation, a solid turns directly into vapour without melting! Camphor tablets, mothballs (naphthalene), and dry ice all sublime into the air.",
+                "examples": [
+                      "Camphor (kapoor)",
+                      "Naphthalene balls",
+                      "Dry ice (solid carbon dioxide)",
+                      "Iodine crystals"
+                ]
+          },
+          {
+                "emoji": "🧪",
+                "title": "Physical vs chemical changes",
+                "text": "Physical changes are reversible and make no new substances, like melting butter or freezing water. Chemical changes create brand new substances and cannot be undone, like rusting iron or baking bread.",
+                "examples": [
+                      "Physical: Melting ice (reversible)",
+                      "Physical: Dissolving sugar in tea",
+                      "Chemical: Rusting nail (irreversible)",
+                      "Chemical: Burning wood into ash"
+                ]
+          },
+          {
+                "emoji": "💧",
+                "title": "Separating mixtures",
+                "text": "Heavy sand settles in water by sedimentation, and clear water pours off by decantation. Fine tea leaves are caught by filtration. Dissolved salt is recovered by evaporating all the water away.",
+                "examples": [
+                      "Sedimentation: Sand sinks in water",
+                      "Decantation: Pouring clean water off",
+                      "Filtration: Tea strainer",
+                      "Evaporation: Salt from seawater"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which of these is a chemical change?",
+                "answer": "Rusting of an iron nail",
+                "wrong": [
+                      "Melting of butter",
+                      "Freezing water into ice",
+                      "Tearing a sheet of paper"
+                ],
+                "explain": "Rusting forms a new substance (iron oxide) that cannot turn back into shiny iron!"
+          },
+          {
+                "kind": "check",
+                "question": "What is it called when camphor turns directly from a solid into gas?",
+                "answer": "Sublimation",
+                "wrong": [
+                      "Evaporation",
+                      "Condensation",
+                      "Melting"
+                ],
+                "explain": "Sublimation is when a solid turns directly into vapour without becoming liquid first."
+          }
+    ],
     content: `### 🧊 States of Matter
 
 Everything around us that has mass and occupies space is **matter**. Matter is made of tiny particles called molecules.
@@ -405,6 +849,73 @@ Common methods to separate mixtures include:
   "sq-forces-study": {
     name: "Forces, Energy & Simple Machines",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🚀",
+                "title": "What forces can do",
+                "text": "A force is a push or pull. It can speed up or stop a moving ball, change its direction, or squeeze dough into shape. Gravity pulls everything down toward Earth's centre.",
+                "examples": [
+                      "Pushing a shopping cart",
+                      "Brakes stopping a bicycle",
+                      "Gravity dropping an apple",
+                      "Squeezing clay"
+                ]
+          },
+          {
+                "emoji": "🛹",
+                "title": "Friction: helper and obstacle",
+                "text": "Friction resists sliding between two surfaces. It gives your shoes grip to walk and stops car tyres on roads. Too much friction causes wear and heat, so machines use oil or ball bearings.",
+                "examples": [
+                      "Tyres gripping the road",
+                      "Writing with a pencil",
+                      "Oil reduces friction in motors",
+                      "Smooth ice has very low friction"
+                ]
+          },
+          {
+                "emoji": "⚖️",
+                "title": "The three classes of levers",
+                "text": "A lever pivots around a fulcrum. Class 1 has the fulcrum in the middle (scissors, seesaw). Class 2 puts the load in the middle (wheelbarrow, nutcracker). Class 3 puts effort in the middle (tweezers, tongs).",
+                "examples": [
+                      "Class 1 (Fulcrum in middle): Scissors & seesaw",
+                      "Class 2 (Load in middle): Nutcracker & wheelbarrow",
+                      "Class 3 (Effort in middle): Tweezers & tongs"
+                ]
+          },
+          {
+                "emoji": "🛠️",
+                "title": "Simple machines make work easy",
+                "text": "An inclined plane is a ramp for rolling heavy boxes. A wedge uses two back-to-back ramps to cut wood (axe). A screw is an inclined plane wrapped in a spiral around a cylinder.",
+                "examples": [
+                      "Inclined plane: Wheelchair ramp",
+                      "Wedge: Knife and axe",
+                      "Screw: Spiral jar lid and screw",
+                      "Pulley: Flagpole rope"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which class of lever has the fulcrum in the middle between load and effort?",
+                "answer": "Class 1 lever (e.g. scissors, seesaw)",
+                "wrong": [
+                      "Class 2 lever (e.g. nutcracker)",
+                      "Class 3 lever (e.g. tweezers)",
+                      "Class 4 lever (e.g. ramp)"
+                ],
+                "explain": "Class 1 levers have the pivot (fulcrum) right in the middle, like a seesaw or scissors."
+          },
+          {
+                "kind": "check",
+                "question": "Scientifically, when is work considered to be done on an object?",
+                "answer": "When applied force moves the object through a distance",
+                "wrong": [
+                      "When you push hard against a wall that does not move",
+                      "When you hold a heavy box without walking",
+                      "When you think about lifting a weight"
+                ],
+                "explain": "Science requires movement! If the object does not move in the direction of the force, no work is done."
+          }
+    ],
     content: `### 🚀 Forces All Around Us
 
 A **force** is a push or pull acting upon an object. A force can:
@@ -458,6 +969,72 @@ Simple machines have few or no moving parts. They make work easier by multiplyin
   "sq-earth-study": {
     name: "Earth, Rocks, Atmosphere and the Moon",
     author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🌍",
+                "title": "Layers of our Earth",
+                "text": "Earth has three main layers: a thin outer crust where we live, a hot mantle of molten rock, and a super-hot iron-nickel core with a liquid outer core and a solid inner core.",
+                "examples": [
+                      "Crust: Thin solid outer shell",
+                      "Mantle: Molten rock (magma)",
+                      "Outer Core: Liquid iron and nickel",
+                      "Inner Core: Solid iron sphere"
+                ]
+          },
+          {
+                "emoji": "🪨",
+                "title": "Three families of rocks",
+                "text": "Igneous rocks form when molten magma cools, like floating pumice and hard granite. Sedimentary rocks form in layers containing fossils, like sandstone. Metamorphic rocks transform under heat, turning limestone into shiny marble!",
+                "examples": [
+                      "Igneous: Granite and pumice (floats!)",
+                      "Sedimentary: Sandstone and limestone",
+                      "Metamorphic: Marble (Taj Mahal) and slate"
+                ]
+          },
+          {
+                "emoji": "☁️",
+                "title": "Layers of the atmosphere",
+                "text": "Our air is 78% nitrogen and 21% oxygen. Weather happens in the lowest troposphere. Planes fly in the stratosphere, where the ozone layer blocks harmful UV rays. Meteors burn up in the cold mesosphere.",
+                "examples": [
+                      "Troposphere: Clouds and rain",
+                      "Stratosphere: Ozone layer and jets",
+                      "Mesosphere: Meteors burn up",
+                      "Exosphere: Satellites orbit"
+                ]
+          },
+          {
+                "emoji": "🌕",
+                "title": "The Moon and eclipses",
+                "text": "The Moon has one-sixth Earth's gravity: a 60 kg person weighs only 10 kg there! A solar eclipse happens when the Moon blocks the Sun. A lunar eclipse happens when Earth's shadow covers the Moon.",
+                "examples": [
+                      "Moon gravity: 1/6th of Earth",
+                      "Solar eclipse: Sun — Moon — Earth",
+                      "Lunar eclipse: Sun — Earth — Moon"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which igneous rock is full of gas bubbles and can float on water?",
+                "answer": "Pumice",
+                "wrong": [
+                      "Granite",
+                      "Basalt",
+                      "Sandstone"
+                ],
+                "explain": "Pumice forms from frothy volcanic lava. It is porous and so light that it floats on water!"
+          },
+          {
+                "kind": "check",
+                "question": "In which atmospheric layer is the protective ozone layer located?",
+                "answer": "Stratosphere",
+                "wrong": [
+                      "Troposphere",
+                      "Mesosphere",
+                      "Exosphere"
+                ],
+                "explain": "The ozone layer is in the stratosphere, where it absorbs harmful ultraviolet rays from the Sun."
+          }
+    ],
     content: `### 🌍 Inside Our Earth
 
 Our planet Earth is layered like an onion:
