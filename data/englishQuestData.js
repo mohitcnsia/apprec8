@@ -13,14 +13,15 @@ import { extraUnits, nextUnitTeaser } from "./englishQuest/units/index.js";
 
 export const QUEST_ID = "english-quest";
 
-const IEO_TILE_IMAGE =
-  "https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/category_images%2Fieo.webp?alt=media&token=074a3b20-eb1d-4fb6-9e36-312c9587a698";
+// No picture (owner 2026-11-07: the old IEO tile image showed an exam name on the quest page). Same as the other
+// quests; Gemini's brand subject icons can replace it later.
+const QUEST_IMAGE = null;
 
 export const quest = {
   title: "English Quest",
   description:
     "Climb the English tree, from your very first sentence all the way to champion level. Practise in the branches, pass each unit test, and collect stars!",
-  image: IEO_TILE_IMAGE,
+  image: QUEST_IMAGE,
   version: 1,
 };
 
@@ -30,7 +31,7 @@ export const tile = {
   type: "QUEST",
   carouselGroup: "quest",
   order: 1,
-  image: IEO_TILE_IMAGE,
+  image: QUEST_IMAGE,
   questId: QUEST_ID,
   description: "Grammar and reading, from your first sentence to champion level",
 };
