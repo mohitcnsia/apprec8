@@ -380,7 +380,10 @@ options: Chamak, Chamku, Jugnu, Sitara, Dhruv), 🐢 wise old tortoise (mentor, 
 in the app, and 2 outfits (specs for reading, lab coat for Science). Consistent style, works on the dark theme,
 calm colours. **Owner 2026-11-07: the star is "Chamku"** (Pratha confirms by vote); **characters replace small
 emojis** in the app, so also deliver each character as small PNG icons (64, 128, 256 px; transparent) in 4 moods
-(happy, thinking, cheering, oops) for guide cards, empty screens, celebrations and help.
+(happy, thinking, cheering, oops) for guide cards, empty screens, celebrations and help. **Pratha (via owner):
+Duolingo's mascot is far more fun to look at**, so make ours **expressive**: big eyes, clear emotions, simple shapes
+that can animate (wave, jump, slump, dance). Also sketch an **avatar builder** for children (face, skin, hair, clothes,
+glasses, hats; Indian children should see themselves) whose items are won from the treasure chest.
 `docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
 
 ### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
