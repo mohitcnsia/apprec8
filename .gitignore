@@ -39,6 +39,7 @@ yarn-error.*
 *.tsbuildinfo
 firestore.rules
 .firebaserc
+docs/agents/private/
 
 android/app/build
 android/.gradle
