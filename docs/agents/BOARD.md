@@ -362,6 +362,24 @@ embarrass a teacher in front of colleagues: `docs/agents/reports/G56.md` with sc
 with a suggested fix. Don't change code. Delete the throwaway accounts afterwards (Me → Delete my account).
 `gemini(G56): done — N stumbles`.
 
+### G57 · [todo] · gemini · ⭐ Mockup first: the teacher's class screen (owner tested it as demo.teacher, 2026-11-07)
+Owner: "Reteach one thing asks to assign from below, several topics listed, very difficult to find; a direct action
+button right there would be easy. Turning on the weekly summary is way below and not easy to see; colour difference
+and bringing it up would be better. In a class of 32 the list is very long, teachers will have a hard time finding
+kids. Need thinking before building." **Draw, don't build:** static HTML mockups, 390 px, plum app style, thumb zone,
+in `docs/mockups/teacher-class/` (+ PNGs), 3 screens:
+1. **Class screen:** header "10-B · English · 32 students" + SHARE CODE + a clear coloured switch "🔔 Monday summary:
+   Off · Turn on". **Action cards at the top:** "3 waiting to join → Approve" (only if any); "Teach again: Reported
+   questions (52% right) → ASSIGN PRACTICE ▶" (one tap, due in 3 days, changeable); "8 didn't practise this week ›".
+   Summary line: "This week: 24 of 32 practised · Assigned: Reported speech, due Fri".
+2. **Students list:** filter chips "Needs help (5) · Didn't practise (8) · Doing well (19) · All (32)" + search by name;
+   one short row per student (name, one coloured status chip) → tap = that student's week.
+3. **Assign a topic:** "Suggested" first (next in order, weakest for this class), each with ASSIGN; "All topics ›"
+   folded, grouped by unit, with search; due-date chips (3 days / 1 week / pick).
+Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Also: **Demo School gets 2 students
+waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
+Google's reviewer can try approving.
+
 ### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
