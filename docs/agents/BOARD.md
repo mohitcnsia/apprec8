@@ -253,8 +253,8 @@ Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Dec
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
 Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
-screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G54 one-pager DO IT buttons, 6) G58 Listen button, 7) G55 PIN safety
-(plan first), 8) G53 ∞ redo, 9) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
+screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G60 old content inventory (read-only), 6) G54 one-pager DO IT buttons, 7) G58 Listen button, 8) G55 PIN safety
+(plan first), 9) G53 ∞ redo, 10) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
@@ -305,6 +305,21 @@ cards under new ids, and point the nodes' study steps to them (keep the old docs
 **Order:** Class 9–10 pages first (Seema's pilot), then Science, then the rest. `npm test` (learnCards + content tests)
 passes. Commit per quest; report `docs/agents/reports/G59.md` (pages converted, any facts you were unsure of).
 `gemini(G59): done — N pages`. Claude spot-checks; then the owner re-seeds (content only, no app update).
+
+### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
+Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
+Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agents/reports/G60-inventory.md`:
+- **Firestore:** every old collection / category group (Space `quest_nodes`, `categories` groups popular_quiz,
+  classroom, story, book_summary, popular_read, olympiad tiles, old `quizQuestions`, `studyContent` IEO pages, games
+  `gameVocabCategories`, `gameSpellingBee`, …): doc counts, approximate size, and **who still uses each** (grep the
+  app + quest data: e.g. English Unit 1 reuses IEO study pages and quizzes; G59 moves the study pages, the quizzes need
+  moving too). Mark each: delete / keep (still used) / keep (owner: dogs + animals become exploration quests later).
+- **Cloud Functions:** deployed list (`firebase functions:list`) vs `functions/index.js`; for each: still called by
+  the app? last used? Flag risky ones (HTTP admin endpoints in `functions/api/`). Also Storage folders and Firestore
+  indexes no longer needed, and Artifact Registry / Cloud Scheduler leftovers. Rough monthly cost of each.
+- A proposed **deletion plan in stages** (functions first, then content once nothing points to it) and a **backup
+  plan** (export every doc to delete as JSON into a local folder outside git before deleting).
+Commit `gemini(G60): inventory — review please`. **Deletes only after Claude reviews and the owner says OK** (DR).
 
 ### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
 Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
