@@ -252,9 +252,18 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5b) G62 Chamak asks mockup, 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
+
+### G64 · [todo] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
+Owner: "I can't see Pratha's progress for today." `components/parent/ParentWeekCard.js` loads the child's
+questProgress only once per mount (useEffect on child.uid), so an open Progress screen never refreshes; and it
+counts only quests for the child's class (practice papers are left out). Fix: reload on screen focus
+(useFocusEffect) + pull-to-refresh on the family view (same reads, no extra cost beyond the reload); count practice
+paper attempts in the week if they are stored per user (check `screens/paper/` storage; if they're only on the phone,
+say so in the report). Also check the teacher's class view (TeacherClasses) refreshes on focus. Tests for any pure
+change. `gemini(G64): done`.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
