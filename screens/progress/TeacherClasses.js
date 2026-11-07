@@ -3,8 +3,9 @@
 // teacher's subjects only (English teacher → English Quest + Word Power; Science teacher → Science Quest).
 // Reads: classes (teacherIds contains me), members, and each member's questProgress (rules: DR-9). One-time reads.
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { useTheme } from "../../context/ThemeContext";
@@ -115,7 +116,7 @@ function weekOf(cls, rows, assignments) {
   return teacherWeek({ kids, assignments, namer, gateTitle: (id) => titles[id] || "challenge" });
 }
 
-export default function TeacherClasses() {
+export default function TeacherClasses({ refreshTrigger = 0 }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const styles = useMemo(() => makeStyles(P), [P]);
@@ -133,9 +134,29 @@ export default function TeacherClasses() {
       .then(() => setReloadKey((k) => k + 1))
       .catch((e) => showAlert("Couldn't do that", e.message));
 
-  useEffect(() => {
-    myTeachingClasses().then(setClasses).catch((e) => setError(e.message));
+  const reloadClasses = useCallback(() => {
+    return myTeachingClasses()
+      .then(setClasses)
+      .catch((e) => setError(e.message));
   }, []);
+
+  useEffect(() => {
+    reloadClasses();
+  }, [reloadClasses]);
+
+  useFocusEffect(
+    useCallback(() => {
+      reloadClasses();
+      setReloadKey((k) => k + 1);
+    }, [reloadClasses])
+  );
+
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      reloadClasses();
+      setReloadKey((k) => k + 1);
+    }
+  }, [refreshTrigger, reloadClasses]);
 
   useEffect(() => {
     if (!open) return;

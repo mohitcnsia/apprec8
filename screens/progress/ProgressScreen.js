@@ -5,8 +5,9 @@
 // English Quest numbers come from the kid's progress doc; topic names and topic counts come from
 // the quest content bundled in the app (no extra Firestore reads).
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 
@@ -126,10 +127,39 @@ export default function ProgressScreen({ navigation, route }) {
   const childKey = (userData?.childUids || []).join(",");
   const [children, setChildren] = useState([]);
   const [lang, setLang] = useParentLang();
-  useEffect(() => {
-    if (!childKey) return setChildren([]);
-    myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const reloadChildren = useCallback(() => {
+    if (!childKey) {
+      setChildren([]);
+      return Promise.resolve();
+    }
+    return myChildren(childKey.split(","))
+      .then(setChildren)
+      .catch(() => setChildren([]));
   }, [childKey]);
+
+  useEffect(() => {
+    reloadChildren();
+  }, [reloadChildren]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshKey((k) => k + 1);
+      reloadChildren();
+    }, [reloadChildren])
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRefreshKey((k) => k + 1);
+    try {
+      await reloadChildren();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [reloadChildren]);
   // The guide (and later the weekly notification) can open a view directly.
   useEffect(() => {
     if (route?.params?.view) setView(route.params.view);
@@ -167,11 +197,17 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "family" && children.length) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[P.primary]} tintColor={P.primary} />
+        }
+      >
         {segment}
         <LangSwitch lang={lang} onChange={setLang} P={P} />
         {children.map((c) => (
-          <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} />
+          <ParentWeekCard key={`${c.uid}-${refreshKey}`} child={c} lang={lang} P={P} refreshTrigger={refreshKey} />
         ))}
         <WeeklyPushCard role="parent" on={!!userData?.pushOptIn?.parent} lang={lang} P={P} />
       </ScrollView>
@@ -180,9 +216,15 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "classes" && isTeacher) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[P.primary]} tintColor={P.primary} />
+        }
+      >
         {segment}
-        <TeacherClasses />
+        <TeacherClasses refreshTrigger={refreshKey} />
         <WeeklyPushCard role="teacher" on={!!userData?.pushOptIn?.teacher} P={P} />
       </ScrollView>
     );
