@@ -2,29 +2,36 @@
 // also see it or share it"). Same words as https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5. Plain words, no jargon.
 // Shown in Me → Guides → "For teachers: start here" (screens/guides/TeacherStartScreen.js); SHARE sends TEACHER_START_SHARE.
 
-export const TEACHER_START_MD = `# You only need 4 things
+export const TEACHER_JOBS = [
+  {
+    stepId: "join",
+    title: "1. Join as a teacher (once)",
+    body: "The school admin sends you a code. Type it in, and they let you in.\n→ *Me → Join as a teacher*",
+  },
+  {
+    stepId: "share",
+    title: "2. Share your class code",
+    body: "One tap sends it on WhatsApp. Parents type it in the app with their child.\n→ *Progress → your class → SHARE CODE*",
+  },
+  {
+    stepId: "approve",
+    title: "3. Let your students in",
+    body: "Each student waits for you. Approve only children you know.\n→ *Progress → your class → Waiting for you → Approve*",
+  },
+  {
+    stepId: "assign",
+    title: "4. Give one topic a week",
+    body: "Pick a Grammar Pro topic (tenses, modals, reported speech…) and a due date. Later the same screen shows who practised, how well, and the weakest topic: teach that one again in class.\n→ *Progress → your class → Assign a topic → ASSIGN*",
+  },
+];
+
+export const TEACHER_START_INTRO_MD = `# You only need 4 things
 
 Your students practise English grammar at home. You see who practised and which topic to teach again. Everything else in the app is for other people.
 
-## Your 4 jobs
+## Your 4 jobs`;
 
-**1. Join as a teacher (once)**
-The school admin sends you a code. Type it in, and they let you in.
-→ *Me → Join as a teacher*
-
-**2. Share your class code**
-One tap sends it on WhatsApp. Parents type it in the app with their child.
-→ *Progress → your class → SHARE CODE*
-
-**3. Let your students in**
-Each student waits for you. Approve only children you know.
-→ *Progress → your class → Waiting for you → Approve*
-
-**4. Give one topic a week**
-Pick a Grammar Pro topic (tenses, modals, reported speech…) and a due date. Later the same screen shows who practised, how well, and the weakest topic: teach that one again in class.
-→ *Progress → your class → Assign a topic → ASSIGN*
-
-The app can do these with you: **Me → Guides → Start your class**. Each step opens the real screen and shows what to tap.
+export const TEACHER_START_REST_MD = `The app can do these with you: **Me → Guides → Start your class**. Each step opens the real screen and shows what to tap.
 
 ## The legal part: the app handles it
 
@@ -51,6 +58,12 @@ The Demo School is a made-up school with made-up students and 6 weeks of practic
 - **Day 7:** assign the next topic.
 
 Something confusing? Tell us in your own words: anything that confuses you will confuse other teachers too, so it gets fixed.`;
+
+export const TEACHER_START_MD = `${TEACHER_START_INTRO_MD}
+
+${TEACHER_JOBS.map((j) => `**${j.title}**\n${j.body}`).join("\n\n")}
+
+${TEACHER_START_REST_MD}`;
 
 /** WhatsApp-friendly text for the SHARE button (*bold* works in WhatsApp). */
 export const TEACHER_START_SHARE = [
