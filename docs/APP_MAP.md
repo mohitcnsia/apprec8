@@ -36,3 +36,16 @@ For you and Seema: what each part is, who sees it, and where it is. To try it ha
 
 ### 🛡️ Safety and privacy, everywhere
 No ads, no chat, children tap only (no typing to others). A parent or guardian says yes before a child's progress is saved (shipping with row X). Delete an account from Me any time.
+
+### 📊 What the Progress tab shows today (checked in code, 2026-11-07; redesign under discussion)
+- **Child (Progress → Me):** streak + this week's 7 days (✓ on days practised); 3 tiles: total stars, questions this
+  week, % right; **Quests**: each quest with % of topics done; **Work on these**: weak topics with a Practise button;
+  the leaderboard (first names + class only).
+- **Parent (Progress → My children):** one card per child: **this week** (time, days, up or down vs last week),
+  **strong** topics, topics to **practise**, what's **next**, questions they got wrong, **one thing to do at home**
+  (Seema's tip); English / हिंदी switch; the **Sunday summary** switch. (Known gap: you pick a subject first; fix G64.)
+- **Teacher (Progress → My classes):** each class: **SHARE CODE**, **Waiting for you** (approve / reject),
+  **Assign a topic** (+ due date) and the assigned list, each student's week, accuracy and weak topics; the
+  **Monday summary** switch. (Redesign mockup: G57.)
+- **Owner (Progress → Kids · Reported):** the admin dashboard: every child's progress per quest + questions children
+  reported with 🚩. (Messy today; part of the Progress discussion.)
