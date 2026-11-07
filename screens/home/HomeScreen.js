@@ -30,6 +30,7 @@ import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig"
 import { useOwnerExtras } from "../../services/ownerView";
 import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
+import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -405,6 +406,8 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
+
+      <HomeIdeaPromptCard userGrade={userGrade} />
 
       {teacherTask ? (
         <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`From your teacher: ${(teacherTask.nodeTitles || []).join(", ")}`}>

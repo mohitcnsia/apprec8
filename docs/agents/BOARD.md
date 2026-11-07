@@ -278,7 +278,7 @@ uses and reuse it) with contentId + card index / section, and tap-only reasons f
 `gemini(G65): done`. Also bump **G59 Science pages up**: do Science right after Class 9–10 (owner: "old reading sheet,
 no images, nothing fun, a dumpyard of text"), with a picture idea per card.
 
-### G66 · [review] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
+### G66 · [done] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
 Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
 that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
 1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another

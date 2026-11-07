@@ -26,6 +26,7 @@ import { classLabel, MAX_CLASSES } from "../../utils/classes";
 import { listenDecisions } from "../../services/decisionsApi";
 import { useOwnerExtras, setOwnerExtras } from "../../services/ownerView";
 import { inbox } from "../../utils/decisions";
+import IdeaModal from "../../components/feedback/IdeaModal";
 
 const THEMES = [
   ["system", "Phone setting"],
@@ -92,6 +93,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
     if (!pendingKey) return setPendingClasses([]);
     getClasses(pendingKey.split(",")).then(setPendingClasses).catch(() => setPendingClasses([]));
   }, [pendingKey]);
+  const [ideaModalOpen, setIdeaModalOpen] = useState(false);
 
   useEffect(() => {
     if (!uid) return undefined;
@@ -275,6 +277,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <View style={styles.divider} />
         <Row icon="help-circle-outline" label="Help" onPress={openHelp} styles={styles} P={P} />
         <View style={styles.divider} />
+        <Row icon="bulb-outline" label="💡 I have an idea for Apprec8!" onPress={() => setIdeaModalOpen(true)} styles={styles} P={P} />
+        <View style={styles.divider} />
         <Row icon="chatbubble-ellipses-outline" label="Tell us what you think" onPress={() => navigation.navigate("cntct")} styles={styles} P={P} />
       </View>
 
@@ -343,6 +347,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
         }}
       />
       <HelpSheet visible={helpOpen} onClose={() => setHelpOpen(false)} P={P} />
+      <IdeaModal visible={ideaModalOpen} onClose={() => setIdeaModalOpen(false)} entryPoint="me_idea" userGrade={userData?.grade} />
     </ScrollView>
   );
 }

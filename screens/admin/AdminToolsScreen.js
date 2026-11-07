@@ -54,6 +54,11 @@ export default function AdminToolsScreen({ navigation }) {
         <Text style={styles.rowText}>My notes (launch checklist, testing)</Text>
         <Ionicons name="chevron-forward" size={20} color={P.dimText} />
       </Pressable>
+      <Pressable onPress={() => navigation.navigate("IdeasReports")} style={styles.row} accessibilityRole="button">
+        <Ionicons name="bulb-outline" size={20} color={P.selectedText} />
+        <Text style={styles.rowText}>Ideas & reports (feedback, 🚩, polls)</Text>
+        <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+      </Pressable>
       <Pressable onPress={() => navigation.navigate("TeacherStart")} style={styles.row} accessibilityRole="button">
         <Ionicons name="school-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>Teachers' one-pager (Seema's start; share it)</Text>
