@@ -759,6 +759,1152 @@ A **determiner** comes **before a noun**. It tells us **which one** or **how man
 - choose some or any
 - choose many or much, few or little`,
   },
+
+  "eq-u1-noun-intro": {
+  "name": "Introduction to Nouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "📘",
+      "title": "What is a noun?",
+      "text": "Nouns are naming words. They give names to people, places, animals, things, and ideas! If you can touch it, see it, or think about it, there is a noun.",
+      "examples": [
+        "Person: teacher, Priya",
+        "Place: school, Delhi",
+        "Animal: tiger, dolphin",
+        "Thing: book, bicycle"
+      ]
+    },
+    {
+      "emoji": "🧩",
+      "title": "Different noun families",
+      "text": "Nouns belong to different families: common and proper names, collective groups, abstract thoughts, and materials things are made of. You will master them all!",
+      "examples": [
+        "Common: city, boy",
+        "Proper: Mumbai, Rohan",
+        "Collective: team, flock",
+        "Abstract: kindness, courage"
+      ]
+    },
+    {
+      "emoji": "🔢",
+      "title": "Countable and uncountable",
+      "text": "Some nouns can be counted with numbers like one, two, or three books. Others are liquids or grains you cannot count directly, like milk or sand.",
+      "examples": [
+        "Countable: apple, pencil",
+        "Countable: chair, dog",
+        "Uncountable: water, milk",
+        "Uncountable: sugar, rice"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which of these words is a noun naming a person or thing?",
+      "answer": "telescope",
+      "wrong": [
+        "curious",
+        "quickly",
+        "discover"
+      ],
+      "explain": "A telescope is a physical object (thing), which makes it a noun."
+    },
+    {
+      "kind": "check",
+      "question": "What do all nouns do in a sentence?",
+      "answer": "Name a person, place, animal, thing, or idea",
+      "wrong": [
+        "Show an action or movement",
+        "Describe how an action was done",
+        "Join two sentences together"
+      ],
+      "explain": "Nouns are naming words for people, places, animals, things, and concepts."
+    }
+  ],
+  "content": "### 📘 What is a Noun?\n\nNouns are **naming words**. They give names to **people**, **places**, **animals**, **things**, and even **ideas**!\n\n> If you can touch it, see it, hear it, or think about it — there's a noun hiding in there somewhere!\n\n---\n\n### 🧩 What You'll Discover in This Chapter\n\n- 🧍 Common & Proper Nouns\n- 🧑‍🤝‍🧑 Collective Nouns\n- ✨ Abstract & Concrete Nouns\n- 🧱 Material Nouns\n- 🔢 Countable & Uncountable Nouns\n- 🧒 Singular & Plural\n- 🚻 Gender of Nouns\n\n---\n\n### 🎯 What You’ll Learn to Do\n\n- Spot nouns in sentences 🕵️‍♀️\n- Sort different types of nouns into buckets 🪣\n- Change between one and many 🔁\n- Understand tricky nouns you can’t touch or see 🌈"
+},
+
+  "eq-u1-noun-basic": {
+  "name": "Common & Proper Nouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🧍",
+      "title": "Common nouns: general names",
+      "text": "Common nouns are everyday general names for any person, place, animal, or thing. They do not need capital letters unless they start a sentence.",
+      "examples": [
+        "boy, girl, student",
+        "city, village, school",
+        "dog, elephant, bird",
+        "book, chair, pencil"
+      ]
+    },
+    {
+      "emoji": "👑",
+      "title": "Proper nouns: VIP names",
+      "text": "Proper nouns name a specific person, place, festival, or monument. Because they are special, they always begin with a proud capital letter!",
+      "examples": [
+        "Rohan, Dr Kalam",
+        "India, Mumbai",
+        "Taj Mahal, Red Fort",
+        "Diwali, Eid, Christmas"
+      ]
+    },
+    {
+      "emoji": "🧑‍🤝‍🧑",
+      "title": "Collective nouns: group words",
+      "text": "A collective noun names a whole group of people, animals, or things spoken of as one single team or unit.",
+      "examples": [
+        "a team of players",
+        "a flock of birds",
+        "a pride of lions",
+        "a bunch of keys"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which word in this sentence is a PROPER noun: 'Kabir visited the Red Fort in Delhi.'?",
+      "answer": "Kabir",
+      "wrong": [
+        "visited",
+        "fort",
+        "the"
+      ],
+      "explain": "Kabir, Red Fort, and Delhi are all proper nouns naming a specific person, monument, and city."
+    },
+    {
+      "kind": "check",
+      "question": "What is the collective noun for a group of lions?",
+      "answer": "pride",
+      "wrong": [
+        "flock",
+        "pack",
+        "school"
+      ],
+      "explain": "A group of lions is called a 'pride of lions'."
+    }
+  ],
+  "content": "### 🧍‍♂️ Common Nouns\n\nThese are **general names** for people, animals, places, or things.\n- Examples: *girl*, *city*, *teacher*, *book*, *dog*\n\n📌 **Tip:** If you can put **\"a\" or \"the\"** before it and it's not specific, it’s probably common.\n\n---\n\n### 🧑‍🏫 Proper Nouns\n\nThese are **specific names** of people, places, or things. They **always start with a capital letter**.\n- Examples: *Ravi*, *London*, *Taj Mahal*, *Diwali*\n\n📌 **Tip:** Proper nouns are VIPs – they get a capital letter because they’re important!\n\n---\n\n### 🧑‍🤝‍🧑 Collective Nouns\n\nThese describe a **group of people, animals, or things**.\n- A *team* of players\n- A *flock* of birds\n- A *bunch* of bananas\n- A *class* of students"
+},
+
+  "eq-u1-noun-plurals": {
+  "name": "Singular & Plural Nouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🎈",
+      "title": "One vs More than one",
+      "text": "Singular means exactly one person or thing. Plural means two or more. Most English words become plural simply by adding the letter -s!",
+      "examples": [
+        "bag → bags",
+        "lion → lions",
+        "tree → trees",
+        "pencil → pencils"
+      ]
+    },
+    {
+      "emoji": "📦",
+      "title": "Adding -ES for hissing sounds",
+      "text": "When a word ends with a hissing or buzzing sound (s, sh, ch, x, z), add -es so it is easy to say aloud!",
+      "examples": [
+        "box → boxes",
+        "dish → dishes",
+        "watch → watches",
+        "bus → buses"
+      ]
+    },
+    {
+      "emoji": "👶",
+      "title": "The Y rules and F to VES",
+      "text": "Consonant + y changes to -ies: baby becomes babies. But vowel + y just adds -s: toy becomes toys! Many words ending in f or fe change to -ves.",
+      "examples": [
+        "baby → babies (consonant + y)",
+        "toy → toys (vowel + y)",
+        "leaf → leaves (f → ves)",
+        "knife → knives (fe → ves)"
+      ]
+    },
+    {
+      "emoji": "🦶",
+      "title": "Irregular plurals & no change",
+      "text": "Some words change their vowels or whole spelling! A few words stay exactly the same whether there is one or one hundred.",
+      "examples": [
+        "child → children",
+        "foot → feet",
+        "man → men, tooth → teeth",
+        "one sheep → ten sheep (no change!)"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "What is the plural of 'knife'?",
+      "answer": "knives",
+      "wrong": [
+        "knifes",
+        "knifees",
+        "knivs"
+      ],
+      "explain": "Words ending in -fe like knife drop -fe and take -ves: knives."
+    },
+    {
+      "kind": "check",
+      "question": "Which noun stays exactly the same in both singular and plural?",
+      "answer": "sheep",
+      "wrong": [
+        "puppy",
+        "box",
+        "child"
+      ],
+      "explain": "'Sheep' does not change: one sheep, five sheep!"
+    }
+  ],
+  "content": "### 📘 Singular & Plural Rules\n\n👉 One = **Singular**\n👉 More than one = **Plural**\n\n| Rule | Description | Example |\n| --- | --- | --- |\n| Add **s** | Most words | bag → bags, lion → lions |\n| Add **es** | Ends with s, x, z, sh, ch | box → boxes, dish → dishes |\n| Drop -y, add -ies | Consonant + y | baby → babies |\n| Just add s | Vowel + y | toy → toys |\n| f or fe → ves | Most f/fe endings | wolf → wolves, knife → knives |\n| Irregular | Vowel changes | child → children, foot → feet |\n| No change | Same singular/plural | sheep → sheep, deer → deer |"
+},
+
+  "eq-u1-noun-gender": {
+  "name": "Gender of Nouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🚻",
+      "title": "Four genders in English",
+      "text": "Nouns can be masculine (males), feminine (females), common (either male or female), or neuter (non-living things with no gender).",
+      "examples": [
+        "Masculine: king, brother, bull",
+        "Feminine: queen, sister, cow",
+        "Common: teacher, cousin",
+        "Neuter: table, stone"
+      ]
+    },
+    {
+      "emoji": "🧑‍🏫",
+      "title": "Common gender nouns",
+      "text": "Common gender words refer to living people or animals that can be either male or female without changing the word.",
+      "examples": [
+        "teacher (male or female)",
+        "doctor (male or female)",
+        "friend (male or female)",
+        "student, baby, cousin"
+      ]
+    },
+    {
+      "emoji": "🪑",
+      "title": "Neuter gender for objects",
+      "text": "Non-living objects have no biological sex, so they are neuter gender. We refer to them with the pronoun 'it'.",
+      "examples": [
+        "desk, pencil, school",
+        "car, telephone, clock",
+        "water, cloud, mountain"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which of these words is a COMMON gender noun?",
+      "answer": "doctor",
+      "wrong": [
+        "king",
+        "queen",
+        "notebook"
+      ],
+      "explain": "'Doctor' can refer to a male or female doctor, so it is of common gender."
+    },
+    {
+      "kind": "check",
+      "question": "What is the feminine counterpart of 'nephew'?",
+      "answer": "niece",
+      "wrong": [
+        "aunt",
+        "sister",
+        "cousin"
+      ],
+      "explain": "A brother or sister's daughter is a niece (feminine); their son is a nephew (masculine)."
+    }
+  ],
+  "content": "### 🚻 Four Types of Gender\n\n1. **Masculine**: Refers to male beings (boy, king, father, bull).\n2. **Feminine**: Refers to female beings (girl, queen, mother, cow).\n3. **Common**: Can be either male or female (teacher, friend, doctor, student).\n4. **Neuter**: Refers to non-living objects with no gender (book, table, chair, pen)."
+},
+
+  "eq-u1-noun-advanced": {
+  "name": "Advanced Noun Types",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🧠",
+      "title": "Abstract vs Concrete nouns",
+      "text": "Concrete nouns are things you can touch, see, or smell (bell, flower). Abstract nouns are thoughts, emotions, and qualities you feel in your heart but cannot hold in your hand (honesty, courage).",
+      "examples": [
+        "Concrete: desk, puppy, apple",
+        "Abstract: bravery, kindness, truth",
+        "Abstract: happiness, friendship"
+      ]
+    },
+    {
+      "emoji": "🧱",
+      "title": "Material nouns: building blocks",
+      "text": "Material nouns name the raw matter or substances used to make things. They are natural materials like wood, gold, cotton, wool, and clay.",
+      "examples": [
+        "wood (makes tables)",
+        "gold (makes rings)",
+        "cotton (makes shirts)",
+        "clay, iron, silk"
+      ]
+    },
+    {
+      "emoji": "💧",
+      "title": "Countable vs Uncountable",
+      "text": "Countable nouns can be counted as one, two, or three items. Uncountable nouns are liquids, grains, or powders you measure rather than count.",
+      "examples": [
+        "Countable: three pencils, two books",
+        "Uncountable: water, milk, rice",
+        "Uncountable: sugar, information"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which of these words is an ABSTRACT noun?",
+      "answer": "bravery",
+      "wrong": [
+        "shield",
+        "soldier",
+        "sword"
+      ],
+      "explain": "'Bravery' is a quality you cannot touch or see, making it an abstract noun."
+    },
+    {
+      "kind": "check",
+      "question": "Which noun is UNCOUNTABLE and cannot be pluralized with -s?",
+      "answer": "milk",
+      "wrong": [
+        "apple",
+        "bottle",
+        "coin"
+      ],
+      "explain": "Liquids like milk are uncountable; we say 'a glass of milk', not 'milks'."
+    }
+  ],
+  "content": "### 🧠 Advanced Nouns\n\n- **Abstract Nouns:** Feelings, qualities, and ideas you cannot touch or see (honesty, bravery, love).\n- **Concrete Nouns:** Physical objects detected with your senses (apple, bell, flower).\n- **Material Nouns:** Raw substances things are built from (wood, gold, cotton, clay).\n- **Countable Nouns:** Things you can count individually (pencil, book, cat).\n- **Uncountable Nouns:** Substances measured or poured (milk, sugar, water, rice)."
+},
+
+  "eq-u1-pronoun-intro": {
+  "name": "Introduction to Pronouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🎈",
+      "title": "Sentence substitutes!",
+      "text": "Pronouns are words that replace nouns so you don't repeat the same names again and again. Instead of 'Ria loves Ria's cat', we say 'Ria loves her cat'!",
+      "examples": [
+        "Ria → she / her",
+        "The boys → they / them",
+        "The dog → it",
+        "You and I → we / us"
+      ]
+    },
+    {
+      "emoji": "🎭",
+      "title": "The pronoun squad",
+      "text": "Different pronouns do different tasks: personal pronouns name people, possessives show who owns what, and demonstratives point to things near and far.",
+      "examples": [
+        "Personal: I, you, he, she, they",
+        "Possessive: mine, yours, theirs",
+        "Demonstrative: this, that, these",
+        "Interrogative: who, what, which"
+      ]
+    },
+    {
+      "emoji": "🌈",
+      "title": "Indefinite pronouns",
+      "text": "When we talk about people or things generally without naming exactly who, we use indefinite pronouns like everyone, somebody, anything, or nobody.",
+      "examples": [
+        "Everyone was cheering.",
+        "Somebody knocked on the door.",
+        "Is anything missing?",
+        "Nobody knows the secret."
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which pronoun replaces the words 'the girls': 'The girls danced well because the girls had practised.'?",
+      "answer": "they",
+      "wrong": [
+        "them",
+        "she",
+        "her"
+      ],
+      "explain": "'They' is the subject pronoun that replaces 'the girls'."
+    },
+    {
+      "kind": "check",
+      "question": "What is the main purpose of using pronouns in writing?",
+      "answer": "To avoid repeating the same noun over and over",
+      "wrong": [
+        "To make sentences as long as possible",
+        "To remove all verbs from the sentence",
+        "To change statements into questions"
+      ],
+      "explain": "Pronouns replace nouns so our sentences sound smooth and natural."
+    }
+  ],
+  "content": "### 🎈 What are Pronouns?\n\nPronouns are **substitute words** that take the place of **nouns** so we don't repeat names over and over.\n\n### 🎭 Main Types:\n- **Personal:** I, you, he, she, it, we, they\n- **Possessive:** mine, yours, his, hers, ours, theirs\n- **Reflexive:** myself, yourself, himself, herself, themselves\n- **Demonstrative:** this, that, these, those\n- **Interrogative:** who, whom, whose, which, what\n- **Indefinite:** everyone, someone, nobody, anything"
+},
+
+  "eq-u1-pronoun-basic": {
+  "name": "Personal & Possessive Pronouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "👤",
+      "title": "First, second and third person",
+      "text": "First person is the speaker (I, we). Second person is the person you speak to (you). Third person is the person or thing you talk about (he, she, it, they).",
+      "examples": [
+        "First person: I, me, we, us",
+        "Second person: you",
+        "Third person: he, she, it, they"
+      ]
+    },
+    {
+      "emoji": "⚖️",
+      "title": "Subject vs Object pronouns",
+      "text": "Subject pronouns do the action (I, he, she, we, they). Object pronouns receive the action (me, him, her, us, them).",
+      "examples": [
+        "She called me. (She = subject, me = object)",
+        "We invited them. (We = subject, them = object)",
+        "He helped us."
+      ]
+    },
+    {
+      "emoji": "👜",
+      "title": "Possessive pronouns stand alone",
+      "text": "Possessive adjectives come before a noun: 'This is my pen.' Possessive pronouns stand proudly by themselves without a noun: 'This pen is mine!'",
+      "examples": [
+        "my pen → mine",
+        "your book → yours",
+        "her bag → hers",
+        "our school → ours"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which word correctly completes: 'That blue bicycle belongs to me; it is ___.'?",
+      "answer": "mine",
+      "wrong": [
+        "my",
+        "me",
+        "mines"
+      ],
+      "explain": "'Mine' is the possessive pronoun that stands alone at the end."
+    },
+    {
+      "kind": "check",
+      "question": "Choose the correct pronoun: 'The teacher praised ___ for our honest work.'",
+      "answer": "us",
+      "wrong": [
+        "we",
+        "our",
+        "ours"
+      ],
+      "explain": "The teacher praised who? 'Us' is the object pronoun receiving the praise."
+    }
+  ],
+  "content": "### 👤 Personal Pronouns\n\n| Person | Subject | Object |\n| --- | --- | --- |\n| 1st Person | I, we | me, us |\n| 2nd Person | you | you |\n| 3rd Person | he, she, it, they | him, her, it, them |\n\n---\n\n### 👜 Possessive Pronouns vs Adjectives\n\n- **Possessive Adjectives:** my, your, his, her, its, our, their *(used before nouns: my desk)*\n- **Possessive Pronouns:** mine, yours, his, hers, ours, theirs *(stand alone: the desk is mine)*"
+},
+
+  "eq-u1-pronoun-adv1": {
+  "name": "Demonstrative, Reflexive & Indefinite Pronouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "👉",
+      "title": "Pointing with demonstratives",
+      "text": "Demonstrative pronouns point out objects based on distance and number: this (one near), these (many near), that (one far), and those (many far).",
+      "examples": [
+        "This is my sketchbook.",
+        "These are fresh cherries.",
+        "That is an aeroplane.",
+        "Those are distant hills."
+      ]
+    },
+    {
+      "emoji": "🪞",
+      "title": "Reflexive: reflecting back",
+      "text": "Use reflexive pronouns when the person doing the action is also the one receiving it! They end in -self (singular) or -selves (plural).",
+      "examples": [
+        "I taught myself chess.",
+        "She looked at herself in the mirror.",
+        "They organised the party themselves.",
+        "He hurt himself."
+      ]
+    },
+    {
+      "emoji": "❓",
+      "title": "Indefinite pronouns",
+      "text": "Indefinite pronouns refer to people or things in a general way without telling us exactly who. Most indefinite pronouns take a singular verb!",
+      "examples": [
+        "Someone left their coat.",
+        "Everything is ready for lunch.",
+        "Nobody knew the password.",
+        "Everyone has arrived."
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which reflexive pronoun completes: 'The little cat cleaned ___ with its paws.'?",
+      "answer": "itself",
+      "wrong": [
+        "himself",
+        "herself",
+        "themselves"
+      ],
+      "explain": "Animals without specific names take 'itself'."
+    },
+    {
+      "kind": "check",
+      "question": "Which word is a DEMONSTRATIVE pronoun pointing to objects nearby?",
+      "answer": "These",
+      "wrong": [
+        "They",
+        "Those",
+        "Theirs"
+      ],
+      "explain": "'These' points to plural items close to the speaker."
+    }
+  ],
+  "content": "### 👉 Demonstrative Pronouns\n- **Near:** this (singular), these (plural)\n- **Far:** that (singular), those (plural)\n\n### 🪞 Reflexive Pronouns\nUsed when the subject and object are the same person (ends in -self or -selves):\n- myself, yourself, himself, herself, itself, ourselves, yourselves, themselves\n\n### ❓ Indefinite Pronouns\nRefer to general people or things without naming who: someone, everyone, nobody, anything, few, all."
+},
+
+  "eq-u1-pronoun-adv2": {
+  "name": "Emphatic, Interrogative & Relative Pronouns",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "💥",
+      "title": "Emphatic: adding extra punch!",
+      "text": "Emphatic pronouns look like reflexive pronouns, but they are added purely for emphasis. If you remove the word, the sentence still makes complete sense!",
+      "examples": [
+        "I myself baked this loaf.",
+        "The Principal himself gave the award.",
+        "She solved the problem herself.",
+        "They themselves admitted the mistake."
+      ]
+    },
+    {
+      "emoji": "🕵️",
+      "title": "Interrogative: question words",
+      "text": "Interrogative pronouns ask questions about unknown people or things: Who is coming? Whose coat is this? Which colour do you prefer?",
+      "examples": [
+        "Who = asks about people (subject)",
+        "Whose = asks about ownership",
+        "Which = choice from a set",
+        "What = asks about things"
+      ]
+    },
+    {
+      "emoji": "🧃",
+      "title": "Relative: sentence glue",
+      "text": "Relative pronouns connect extra clauses to nouns. Use 'who' for people, 'whose' for ownership, and 'which' or 'that' for animals and objects.",
+      "examples": [
+        "The girl who won the race is my sister.",
+        "The book which I read was exciting.",
+        "The boy whose kite broke was sad."
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "In 'The Queen herself planted the tree', what kind of pronoun is 'herself'?",
+      "answer": "Emphatic pronoun",
+      "wrong": [
+        "Reflexive pronoun",
+        "Relative pronoun",
+        "Interrogative pronoun"
+      ],
+      "explain": "Removing 'herself' leaves 'The Queen planted the tree' intact, showing it was used for emphasis."
+    },
+    {
+      "kind": "check",
+      "question": "Choose the correct relative pronoun: 'This is the young author ___ wrote the novel.'",
+      "answer": "who",
+      "wrong": [
+        "which",
+        "what",
+        "whose"
+      ],
+      "explain": "Use 'who' when referring to people in relative clauses."
+    }
+  ],
+  "content": "### 💥 Emphatic Pronouns\nUsed to emphasize the subject (I *myself* did it!). If removed, the sentence still makes complete sense.\n\n### 🕵️ Interrogative Pronouns\nUsed to ask questions:\n- **Who / Whom:** people\n- **Whose:** possession\n- **What / Which:** things and choices\n\n### 🧃 Relative Pronouns\nJoin clauses and add extra information:\n- **Who:** people (subject)\n- **Whose:** possession\n- **Which / That:** objects and animals"
+},
+
+  "eq-u1-verb-intro": {
+  "name": "Introduction to Verbs",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "📚",
+      "title": "The sentence engine!",
+      "text": "A verb is the beating heart of every sentence. It tells what someone does (action), what someone is (being), or what someone possesses (having)!",
+      "examples": [
+        "Action: Priya runs fast.",
+        "Being: The soup is warm.",
+        "Having: Rohan has a new puppy.",
+        "Every sentence needs a verb!"
+      ]
+    },
+    {
+      "emoji": "🏃",
+      "title": "Action verbs: doing things",
+      "text": "Action verbs describe physical or mental movements: jumping, building, swimming, thinking, and laughing. If a person or machine can do it, it's an action verb!",
+      "examples": [
+        "kick the ball",
+        "read a story",
+        "paint a picture",
+        "listen carefully"
+      ]
+    },
+    {
+      "emoji": "🔗",
+      "title": "Being and helping verbs",
+      "text": "Verbs like am, is, are, was, and were describe a state of being. Helping verbs like can, will, and has assist the main verb to show tense.",
+      "examples": [
+        "She is cheerful. (Being)",
+        "We have finished our tea. (Helping)",
+        "He can swim across the river. (Modal helper)"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which word in this sentence is the action verb: 'The swallow flies south for winter.'?",
+      "answer": "flies",
+      "wrong": [
+        "swallow",
+        "south",
+        "winter"
+      ],
+      "explain": "'Flies' describes the physical action that the bird swallow does."
+    },
+    {
+      "kind": "check",
+      "question": "What is the function of the verb in: 'Tara has two pet rabbits.'?",
+      "answer": "It shows possession (having)",
+      "wrong": [
+        "It shows physical running action",
+        "It asks a question",
+        "It connects two sentences"
+      ],
+      "explain": "'Has' is a verb expressing ownership or possession."
+    }
+  ],
+  "content": "### 📚 What is a Verb?\n\nA **verb** tells what someone **does** (action), **is** (being), or **has** (possession).\n\n### 🏃 Verb Squad:\n- **Action Verbs:** run, eat, jump, build\n- **Linking Verbs:** am, is, are, feel, seem\n- **Helping Verbs:** has, have, will, can\n- **Transitive Verbs:** take an object (kicks the ball)\n- **Intransitive Verbs:** no object needed (runs fast)\n- **Finite Verbs:** change with tense and subject"
+},
+
+  "eq-u1-verb-linking": {
+  "name": "Action & Linking Verbs",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "⚡",
+      "title": "Action verbs = doing",
+      "text": "Action verbs describe physical or mental activity. You can see, hear, or picture the action happening: run, laugh, speak, build, write.",
+      "examples": [
+        "She kicks the ball.",
+        "He solves the maths puzzle.",
+        "The birds chirp at sunrise."
+      ]
+    },
+    {
+      "emoji": "🔗",
+      "title": "Linking verbs = connecting",
+      "text": "Linking verbs do not express actions. Instead, they act like an equal sign (=), linking the subject to words that describe it!",
+      "examples": [
+        "He is happy. (He = happy)",
+        "The milk smells fresh. (Milk = fresh)",
+        "They seemed tired. (They = tired)"
+      ]
+    },
+    {
+      "emoji": "🎭",
+      "title": "The double-agent test!",
+      "text": "Some verbs can be linking OR action verbs! Test with 'is' or 'are': if you can replace the verb with 'is' and it makes sense, it is linking!",
+      "examples": [
+        "The soup smells delicious. → Soup IS delicious. (Linking!)",
+        "She smelled the flower. (Action!)",
+        "He looked angry. → He IS angry. (Linking!)",
+        "He looked through binoculars. (Action!)"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "In 'The little puppy seems sleepy', what type of verb is 'seems'?",
+      "answer": "Linking verb",
+      "wrong": [
+        "Action verb",
+        "Transitive verb",
+        "Helping verb"
+      ],
+      "explain": "'Seems' links the puppy to the adjective 'sleepy'; it does not show a physical action."
+    },
+    {
+      "kind": "check",
+      "question": "In which sentence is 'tastes' used as a LINKING verb?",
+      "answer": "This fresh mango tastes sweet.",
+      "wrong": [
+        "The chef tastes the curry carefully.",
+        "The boy tasted the hot sauce with a spoon.",
+        "She tastes every sample."
+      ],
+      "explain": "'Tastes sweet' links the mango to 'sweet'. You can say 'The mango is sweet'."
+    }
+  ],
+  "content": "### ⚡ Action Verbs (Doing Verbs)\nShow movement or activity: *run, jump, write, shout*.\n- *She jumps high.*\n- *They play football.*\n\n---\n\n### 🔗 Linking Verbs (Being Verbs)\nConnect the subject to an adjective or noun that describes it: *am, is, are, was, were, feel, seem, look, smell*.\n- *He is happy.*\n- *The soup smells great.*\n\n> 💡 **Quick Test:** If you can swap the verb for **is/are** and it still makes sense, it's a linking verb!"
+},
+
+  "eq-u1-verb-transitive": {
+  "name": "Transitive & Intransitive Verbs",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🎯",
+      "title": "Transitive verbs need an object",
+      "text": "A transitive verb transfers its action to a receiver called the object. Ask 'What?' or 'Whom?' after the verb to find the object!",
+      "examples": [
+        "She kicked the ball. (Kicked what? → the ball)",
+        "Aman baked a cake. (Baked what? → a cake)",
+        "They met the teacher. (Met whom? → teacher)"
+      ]
+    },
+    {
+      "emoji": "🪁",
+      "title": "Intransitive verbs fly solo",
+      "text": "An intransitive verb makes complete sense all by itself. It does not pass its action onto any object.",
+      "examples": [
+        "The baby smiled sweetly.",
+        "The dog barked loudly.",
+        "He runs every morning.",
+        "The birds sang."
+      ]
+    },
+    {
+      "emoji": "🧪",
+      "title": "The 'What / Whom' test",
+      "text": "To test any verb, ask 'What?' or 'Whom?' directly after it. If the sentence answers with an object, it is transitive. If it answers 'How?' or 'Where?', it is intransitive!",
+      "examples": [
+        "She bought a watch. (Bought what? → a watch = Transitive)",
+        "She walked quickly. (Walked how? → quickly = Intransitive!)"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "In 'Rohan scored a magnificent goal', what kind of verb is 'scored'?",
+      "answer": "Transitive verb",
+      "wrong": [
+        "Intransitive verb",
+        "Linking verb",
+        "Helping verb"
+      ],
+      "explain": "'Scored what? → a goal'. Because it takes the object 'a goal', it is transitive."
+    },
+    {
+      "kind": "check",
+      "question": "Which sentence has an INTRANSITIVE verb that takes no object?",
+      "answer": "The weary traveller slept soundly.",
+      "wrong": [
+        "The girl wrote a letter.",
+        "Father painted the wooden fence.",
+        "The boy caught the red ball."
+      ],
+      "explain": "'Slept soundly' has no object; 'soundly' is an adverb telling how he slept."
+    }
+  ],
+  "content": "### 🎯 Transitive Verbs\nNeed an object to complete their meaning. Ask **\"Who?\"** or **\"What?\"** after the verb:\n- *She kicked the ball.* (Kicked what? → *the ball*)\n- *They built a treehouse.* (Built what? → *a treehouse*)\n\n### 🏃‍♂️ Intransitive Verbs\nMake complete sense on their own without an object:\n- *He runs fast.*\n- *The baby cried loudly.*"
+},
+
+  "eq-u1-verb-finite": {
+  "name": "Finite & Non-Finite Verbs",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "💼",
+      "title": "Finite verbs: the sentence boss",
+      "text": "A finite verb changes its form according to the subject and the tense. It tells who is acting and when! Every complete sentence must have a finite verb.",
+      "examples": [
+        "She dances. (Present, singular)",
+        "They dance. (Present, plural)",
+        "She danced. (Past)",
+        "I write / He writes"
+      ]
+    },
+    {
+      "emoji": "🌴",
+      "title": "Non-finite verbs: never change",
+      "text": "Non-finite verbs never change their form for tense or subject! They act as nouns, adjectives, or helpers, but cannot be the main engine alone.",
+      "examples": [
+        "Infinitive: to swim, to read",
+        "Gerund (-ing noun): Swimming is fun.",
+        "Participle: a broken toy, barking dogs"
+      ]
+    },
+    {
+      "emoji": "🎯",
+      "title": "The test: change the time!",
+      "text": "To spot which verb is finite, change the sentence into the past tense. The verb that changes is finite; the verb that stays identical is non-finite!",
+      "examples": [
+        "She wants to dance. → She wanted to dance.",
+        "'Wants' changed to 'wanted' (Finite!)",
+        "'to dance' stayed identical (Non-finite!)"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "In 'Kavita loves to paint landscapes', which verb is the FINITE verb?",
+      "answer": "loves",
+      "wrong": [
+        "to paint",
+        "paint",
+        "landscapes"
+      ],
+      "explain": "'Loves' changes with subject and tense (she loves / they love / she loved), making it finite."
+    },
+    {
+      "kind": "check",
+      "question": "What type of non-finite verb is 'singing' in: 'Singing brings her great joy.'?",
+      "answer": "A gerund (verb-ing acting as a noun)",
+      "wrong": [
+        "A finite verb",
+        "An infinitive",
+        "A past participle"
+      ],
+      "explain": "A verb ending in -ing that acts as the subject noun of a sentence is a gerund."
+    }
+  ],
+  "content": "### 💼 Finite Verbs\nChange form with the subject and tense. They are the main action heroes:\n- *She dances* (Present) → *She danced* (Past)\n\n### 🧘‍♂️ Non-Finite Verbs\nDo not change form with tense or subject:\n- **Infinitives:** *to eat, to play, to swim*\n- **Gerunds:** *swimming is fun, reading books*\n- **Participles:** *a broken vase, smiling faces*"
+},
+
+  "eq-u1-adj-intro": {
+  "name": "Adjectives: Kinds & Uses",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🎨",
+      "title": "What is an adjective?",
+      "text": "An adjective adds colour and detail to a noun or pronoun. It answers: What kind? How much? How many? Which one? or Whose?",
+      "examples": [
+        "a playful puppy (What kind?)",
+        "three apples (How many?)",
+        "some water (How much?)",
+        "that kite (Which one?)"
+      ]
+    },
+    {
+      "emoji": "🍎",
+      "title": "Quality vs Quantity vs Number",
+      "text": "Adjectives of quality tell nature (sweet mango, brave girl). Quantity tells how much uncountable substance (much milk). Number tells exact counts or order (four chairs, first prize).",
+      "examples": [
+        "Quality: tall tree, honest boy",
+        "Quantity: little sugar, enough time",
+        "Number: two pencils, third place"
+      ]
+    },
+    {
+      "emoji": "☝️",
+      "title": "Demonstrative & Possessive",
+      "text": "Demonstrative adjectives point directly to nouns (this book, those trees). Possessive adjectives show who owns the noun (my desk, her pencil, our classroom).",
+      "examples": [
+        "this book / that cloud",
+        "these grapes / those stars",
+        "my bicycle / your notebook",
+        "his dog / our home"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "What kind of adjective is 'brave' in: 'The brave firefighter rescued the cat.'?",
+      "answer": "Adjective of quality",
+      "wrong": [
+        "Adjective of quantity",
+        "Adjective of number",
+        "Demonstrative adjective"
+      ],
+      "explain": "'Brave' describes what kind of person the firefighter is, so it is an adjective of quality."
+    },
+    {
+      "kind": "check",
+      "question": "Which word in 'There are twelve students in the art room' is an adjective of number?",
+      "answer": "twelve",
+      "wrong": [
+        "students",
+        "art",
+        "room"
+      ],
+      "explain": "'Twelve' tells the exact countable number of students."
+    }
+  ],
+  "content": "### 📘 Kinds of Adjectives\n\n- **Quality:** Describing kind or nature (*beautiful, strong, brave*)\n- **Quantity:** How much uncountable thing (*some, enough, little*)\n- **Number:** How many or order (*two, first, several*)\n- **Demonstrative:** Pointing out which one (*this, that, these, those*)\n- **Possessive:** Showing ownership (*my, your, our, their*)\n- **Interrogative:** Asking questions (*which, what, whose*)"
+},
+
+  "eq-u1-adj-degrees": {
+  "name": "Degrees of Adjectives",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "😊",
+      "title": "Three degrees of comparison",
+      "text": "Adjectives have three degrees: Positive describes one thing alone. Comparative compares two things. Superlative crowns the champion among three or more!",
+      "examples": [
+        "Positive: tall",
+        "Comparative: taller",
+        "Superlative: tallest",
+        "fast → faster → fastest"
+      ]
+    },
+    {
+      "emoji": "📏",
+      "title": "Short words: -ER and -EST",
+      "text": "For short one-syllable adjectives, add -er for comparative and -est for superlative. If it ends in y, change y to i before adding!",
+      "examples": [
+        "small → smaller → smallest",
+        "big → bigger → biggest",
+        "happy → happier → happiest",
+        "easy → easier → easiest"
+      ]
+    },
+    {
+      "emoji": "🌟",
+      "title": "Long words: MORE and MOST",
+      "text": "For long adjectives of two or more syllables, do not add -er! Place 'more' before the word for two things, and 'most' for three or more.",
+      "examples": [
+        "beautiful → more beautiful → most beautiful",
+        "difficult → more difficult → most difficult",
+        "careful → more careful → most careful"
+      ]
+    },
+    {
+      "emoji": "⚡",
+      "title": "Irregular adjectives: special forms",
+      "text": "Some everyday adjectives follow their own special rules. You must learn their three unique forms by heart!",
+      "examples": [
+        "good → better → best",
+        "bad → worse → worst",
+        "little → less → least",
+        "much / many → more → most"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which sentence uses the comparative degree correctly to compare two boys?",
+      "answer": "Arjun is taller than his brother.",
+      "wrong": [
+        "Arjun is tallest than his brother.",
+        "Arjun is more tall than his brother.",
+        "Arjun is most tall than his brother."
+      ],
+      "explain": "When comparing two people with a short adjective, add -er: 'taller than'."
+    },
+    {
+      "kind": "check",
+      "question": "What is the superlative form of the irregular adjective 'bad'?",
+      "answer": "worst",
+      "wrong": [
+        "baddest",
+        "worse",
+        "most bad"
+      ],
+      "explain": "The three forms are bad → worse (comparative) → worst (superlative)."
+    }
+  ],
+  "content": "### 🏆 Degrees of Comparison\n\n- **Positive Degree:** Describes one thing with no comparison (*tall, kind*).\n- **Comparative Degree:** Compares two things; uses **-er** or **more** (*taller, more beautiful*).\n- **Superlative Degree:** Compares three or more; uses **-est** or **most** (*tallest, most beautiful*).\n\n### ⚡ Irregular Comparisons:\n- *good → better → best*\n- *bad → worse → worst*\n- *far → farther/further → farthest/furthest*\n- *little → less → least*\n- *many/much → more → most*"
+},
+
+  "eq-u1-prep-intro": {
+  "name": "Prepositions: Place, Time & Direction",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "📍",
+      "title": "What is a preposition?",
+      "text": "A preposition links a noun to other words, showing location, time, or direction: where, when, or in what direction something happens!",
+      "examples": [
+        "The cat is under the table. (Place)",
+        "We met after lunch. (Time)",
+        "She walked towards the park. (Direction)"
+      ]
+    },
+    {
+      "emoji": "⏰",
+      "title": "Time: IN, ON and AT",
+      "text": "Use AT for exact clock times (at 5 PM, at noon). Use ON for specific days and dates (on Monday, on 15th August). Use IN for months, seasons, and years!",
+      "examples": [
+        "at 4 o'clock / at sunset",
+        "on Sunday / on my birthday",
+        "in July / in winter / in 2024"
+      ]
+    },
+    {
+      "emoji": "🏠",
+      "title": "Place: IN, ON and AT",
+      "text": "Use AT for a specific pinpoint spot (at the bus stop). Use ON for a surface (on the table). Use IN for an enclosed space or container!",
+      "examples": [
+        "at the front door",
+        "on the classroom wall",
+        "in the pencil box / in the room"
+      ]
+    },
+    {
+      "emoji": "🏊",
+      "title": "Movement: INTO vs IN",
+      "text": "'In' shows an object already resting inside. 'Into' shows movement from the outside going in: 'She jumped into the cool swimming pool!'",
+      "examples": [
+        "The frog is in the pond. (Resting inside)",
+        "The frog jumped into the pond! (Moving in)",
+        "Walk into the classroom."
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which preposition correctly fills the time blank: 'The school bell rings ___ 8:00 AM.'?",
+      "answer": "at",
+      "wrong": [
+        "on",
+        "in",
+        "to"
+      ],
+      "explain": "Use 'at' with specific clock times: 'at 8:00 AM'."
+    },
+    {
+      "kind": "check",
+      "question": "Choose the correct preposition: 'The diver plunged deep ___ the ocean.'",
+      "answer": "into",
+      "wrong": [
+        "in",
+        "on",
+        "at"
+      ],
+      "explain": "When action shows movement from outside to inside, use 'into'."
+    }
+  ],
+  "content": "### 📍 Prepositions\n\nA **preposition** shows the relationship of place, time, or direction between a noun and other words.\n\n- **Place:** in, on, under, above, behind, between\n- **Time:** at 5 PM, on Monday, in July, since morning, until sunset\n- **Direction:** into, towards, through, over, out of\n\n> 💡 **Trick:** \"Anywhere a mouse can go, a preposition can show!\""
+},
+
+  "eq-u1-prep-fixed": {
+  "name": "Fixed Prepositions",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🤝",
+      "title": "Best friend partnerships!",
+      "text": "A fixed preposition always follows a particular word. They are fixed teams that native speakers use together—you cannot swap them for other words!",
+      "examples": [
+        "good AT drawing (NOT good in)",
+        "afraid OF spiders (NOT afraid with)",
+        "interested IN astronomy (NOT interested for)"
+      ]
+    },
+    {
+      "emoji": "👂",
+      "title": "Common verb + preposition teams",
+      "text": "Listen always pairs with TO. Depend pairs with ON. Apologise pairs with FOR. Laugh pairs with AT. Practice speaking them in complete sentences!",
+      "examples": [
+        "listen TO your teacher",
+        "depend ON your parents",
+        "apologise FOR the mistake",
+        "laugh AT a funny joke"
+      ]
+    },
+    {
+      "emoji": "🎯",
+      "title": "Feelings and skills",
+      "text": "When describing skills, say 'good at' or 'clever at'. For feelings towards people, say 'angry with' or 'pleased with' someone.",
+      "examples": [
+        "good at cricket",
+        "interested in painting",
+        "angry with someone",
+        "proud of your sister"
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which preposition correctly completes: 'Meera is exceptionally good ___ playing the violin.'?",
+      "answer": "at",
+      "wrong": [
+        "in",
+        "with",
+        "on"
+      ],
+      "explain": "In English, we say 'good at' an activity or skill: 'good at playing'."
+    },
+    {
+      "kind": "check",
+      "question": "Which sentence uses the correct fixed preposition partnership?",
+      "answer": "The kitten is afraid of barking dogs.",
+      "wrong": [
+        "The kitten is afraid with barking dogs.",
+        "The kitten is afraid from barking dogs.",
+        "The kitten is afraid to barking dogs."
+      ],
+      "explain": "'Afraid' always pairs with 'of': 'afraid of'."
+    }
+  ],
+  "content": "### 🤝 Fixed Prepositions\nA fixed preposition always pairs with a specific verb, adjective, or noun. They are like best friends:\n\n- **interested in** painting\n- **good at** drawing\n- **afraid of** spiders\n- **angry with** someone\n- **listen to** the teacher\n- **depend on** parents\n- **apologise for** a mistake"
+},
+
+  "eq-u1-conj-intro": {
+  "name": "Conjunctions: Joining Words",
+  "author": "Apprec8",
+  "cards": [
+    {
+      "emoji": "🔤",
+      "title": "What is a conjunction?",
+      "text": "A conjunction is a sentence bridge that links words, phrases, or full thoughts together smoothly, turning short choppy sentences into rich flowing language.",
+      "examples": [
+        "apples AND oranges (Words)",
+        "in the morning OR in the evening (Phrases)",
+        "I was tired, BUT I finished reading. (Clauses)"
+      ]
+    },
+    {
+      "emoji": "⛵",
+      "title": "Coordinating: FANBOYS",
+      "text": "Coordinating conjunctions connect parts of equal importance: For, And, Nor, But, Or, Yet, So. Use 'and' for additions, 'but' for contrasts, and 'or' for choices.",
+      "examples": [
+        "I like tea and biscuits.",
+        "The bag was small but heavy.",
+        "Do you want juice or water?",
+        "It was hot, so we swam."
+      ]
+    },
+    {
+      "emoji": "🔗",
+      "title": "Subordinating & Correlative",
+      "text": "Subordinating words show reasons and time: because, although, when, while. Correlative conjunctions work in matched pairs: either…or, neither…nor, both…and.",
+      "examples": [
+        "We stayed inside because it rained.",
+        "Call me when you reach.",
+        "Either tea or coffee is fine.",
+        "Both Sam and Joe came."
+      ]
+    },
+    {
+      "kind": "check",
+      "question": "Which conjunction connects contrasting ideas in: 'She was exhausted, ___ she finished her drawing.'?",
+      "answer": "but",
+      "wrong": [
+        "and",
+        "so",
+        "or"
+      ],
+      "explain": "'But' shows a contrast between being exhausted and still finishing the task."
+    },
+    {
+      "kind": "check",
+      "question": "Which conjunction correctly gives a reason: 'He wore a raincoat ___ it was pouring.'?",
+      "answer": "because",
+      "wrong": [
+        "or",
+        "so",
+        "but"
+      ],
+      "explain": "'Because' explains the reason why he wore a raincoat."
+    }
+  ],
+  "content": "### 🔤 Conjunctions\n\nConjunctions are words used to join words, phrases, or clauses.\n\n- **Coordinating (FANBOYS):** for, and, nor, but, or, yet, so\n- **Subordinating:** because, although, if, when, since, while\n- **Correlative Pairs:** either…or, neither…nor, both…and, not only…but also\n\n> 💡 **Comma Rule:** Use a comma before a conjunction if it connects two complete independent sentences!"
+},
+
 };
 
 // ---------- Quizzes (new, V2 format) ----------
@@ -1261,13 +2407,13 @@ const u0b = main("eq-u0-kinds", "eq-u0", 1, "Kinds of sentences", [study("eq-u0-
 const u0r = main("eq-u0-reading", "eq-u0", 2, "Reading: Tara's paper boat", [reading("eq-read-paper-boat")]);
 
 // --- Unit 1: Parts of Speech (reuses IEO content) ---
-const nouns = main("eq-u1-nouns", "eq-u1", 0, "Nouns", [study("noun-intro-study"), quiz("noun-intro-quiz")]);
-const pronouns = main("eq-u1-pronouns", "eq-u1", 1, "Pronouns", [study("ieo-pronouns-intro-study"), quiz("ieo-pronouns-intro-quiz")]);
-const verbs = main("eq-u1-verbs", "eq-u1", 2, "Verbs", [study("verbs-intro-study"), quiz("verbs-intro-quiz")]);
-const adjectives = main("eq-u1-adjectives", "eq-u1", 3, "Adjectives", [study("4ieo8-study"), quiz("4ieo8-quiz")]);
+const nouns = main("eq-u1-nouns", "eq-u1", 0, "Nouns", [study("eq-u1-noun-intro"), quiz("noun-intro-quiz")]);
+const pronouns = main("eq-u1-pronouns", "eq-u1", 1, "Pronouns", [study("eq-u1-pronoun-intro"), quiz("ieo-pronouns-intro-quiz")]);
+const verbs = main("eq-u1-verbs", "eq-u1", 2, "Verbs", [study("eq-u1-verb-intro"), quiz("verbs-intro-quiz")]);
+const adjectives = main("eq-u1-adjectives", "eq-u1", 3, "Adjectives", [study("eq-u1-adj-intro"), quiz("4ieo8-quiz")]);
 const adverbs = main("eq-u1-adverbs", "eq-u1", 4, "Adverbs", [study("eq-u1-adverbs"), quiz("eq-u1-adverbs-quiz")]);
-const prepositions = main("eq-u1-prepositions", "eq-u1", 5, "Prepositions", [study("4ieo6-study"), quiz("4ieo6-quiz")]);
-const conjunctions = main("eq-u1-conjunctions", "eq-u1", 6, "Conjunctions", [study("4ieo7-study"), quiz("4ieo7-quiz")]);
+const prepositions = main("eq-u1-prepositions", "eq-u1", 5, "Prepositions", [study("eq-u1-prep-intro"), quiz("4ieo6-quiz")]);
+const conjunctions = main("eq-u1-conjunctions", "eq-u1", 6, "Conjunctions", [study("eq-u1-conj-intro"), quiz("4ieo7-quiz")]);
 const u1r = main("eq-u1-reading", "eq-u1", 7, "Reading: The seed library", [study("eq-read-tips"), reading("eq-read-seed-library")]);
 
 // --- Unit 2: Articles & Determiners (new content) ---
@@ -1295,11 +2441,11 @@ export const nodes = [
 
   unit("eq-u1", 1, "Parts of Speech"),
   nouns,
-  withSubtopic(practice("eq-u1-nouns-p1", nouns, 1, "Common & proper", "easy", [study("noun-basic-study"), quiz("noun-basic-quiz")]), "common-proper"),
-  withSubtopic(practice("eq-u1-nouns-p2", nouns, 2, "Singular & plural", "easy", [study("noun-sing-plu-study"), quiz("noun-sing-plu-quiz")]), "singular-plural"),
-  withSubtopic(practice("eq-u1-nouns-p3", nouns, 3, "Gender", "medium", [study("noun-gender-study"), quiz("noun-gender-quiz")]), "gender"),
+  withSubtopic(practice("eq-u1-nouns-p1", nouns, 1, "Common & proper", "easy", [study("eq-u1-noun-basic"), quiz("noun-basic-quiz")]), "common-proper"),
+  withSubtopic(practice("eq-u1-nouns-p2", nouns, 2, "Singular & plural", "easy", [study("eq-u1-noun-plurals"), quiz("noun-sing-plu-quiz")]), "singular-plural"),
+  withSubtopic(practice("eq-u1-nouns-p3", nouns, 3, "Gender", "medium", [study("eq-u1-noun-gender"), quiz("noun-gender-quiz")]), "gender"),
   withSubtopic(practice("eq-u1-nouns-p4", nouns, 4, "Gender 2", "medium", [quiz("noun-gender-quiz-l2")]), "gender"),
-  withSubtopic(practice("eq-u1-nouns-p5", nouns, 5, "Advanced nouns", "hard", [study("noun-adv-study"), quiz("noun-adv-quiz")]), "advanced"),
+  withSubtopic(practice("eq-u1-nouns-p5", nouns, 5, "Advanced nouns", "hard", [study("eq-u1-noun-advanced"), quiz("noun-adv-quiz")]), "advanced"),
   gate("eq-u1-nouns-gate", nouns, "Noun Challenge", "eq-u1-nouns-gate-pool", {
     "common-proper": "Common & proper",
     "singular-plural": "Singular & plural",
@@ -1312,9 +2458,9 @@ export const nodes = [
   ]),
 
   pronouns,
-  withSubtopic(practice("eq-u1-pronouns-p1", pronouns, 1, "Personal & possessive", "easy", [study("ieo-pronouns-basic-study"), quiz("ieo-pronouns-basic-quiz")]), "personal-possessive"),
-  withSubtopic(practice("eq-u1-pronouns-p2", pronouns, 2, "Reflexive & more", "medium", [study("ieo-pronouns-adv-1-study"), quiz("ieo-pronouns-adv-1-quiz")]), "reflexive-demonstrative"),
-  withSubtopic(practice("eq-u1-pronouns-p3", pronouns, 3, "Relative & more", "hard", [study("ieo-pronouns-adv-2-study"), quiz("ieo-pronouns-adv-2-quiz")]), "relative-interrogative"),
+  withSubtopic(practice("eq-u1-pronouns-p1", pronouns, 1, "Personal & possessive", "easy", [study("eq-u1-pronoun-basic"), quiz("ieo-pronouns-basic-quiz")]), "personal-possessive"),
+  withSubtopic(practice("eq-u1-pronouns-p2", pronouns, 2, "Reflexive & more", "medium", [study("eq-u1-pronoun-adv1"), quiz("ieo-pronouns-adv-1-quiz")]), "reflexive-demonstrative"),
+  withSubtopic(practice("eq-u1-pronouns-p3", pronouns, 3, "Relative & more", "hard", [study("eq-u1-pronoun-adv2"), quiz("ieo-pronouns-adv-2-quiz")]), "relative-interrogative"),
   gate("eq-u1-pronouns-gate", pronouns, "Pronoun Challenge", "eq-u1-pronouns-gate-pool", {
     "personal-possessive": "Personal & possessive",
     "reflexive-demonstrative": "Reflexive, demonstrative & indefinite",
@@ -1323,9 +2469,9 @@ export const nodes = [
   endless(pronouns),
 
   verbs,
-  withSubtopic(practice("eq-u1-verbs-p1", verbs, 1, "Action & linking", "easy", [study("verbs-link-study"), quiz("verbs-link-quiz")]), "action-linking"),
-  withSubtopic(practice("eq-u1-verbs-p2", verbs, 2, "Transitive", "medium", [study("verbs-trans-study"), quiz("verbs-trans-quiz")]), "transitive"),
-  withSubtopic(practice("eq-u1-verbs-p3", verbs, 3, "Finite & non-finite", "hard", [study("verbs-finite-study"), quiz("verbs-finite-quiz")]), "finite"),
+  withSubtopic(practice("eq-u1-verbs-p1", verbs, 1, "Action & linking", "easy", [study("eq-u1-verb-linking"), quiz("verbs-link-quiz")]), "action-linking"),
+  withSubtopic(practice("eq-u1-verbs-p2", verbs, 2, "Transitive", "medium", [study("eq-u1-verb-transitive"), quiz("verbs-trans-quiz")]), "transitive"),
+  withSubtopic(practice("eq-u1-verbs-p3", verbs, 3, "Finite & non-finite", "hard", [study("eq-u1-verb-finite"), quiz("verbs-finite-quiz")]), "finite"),
   practice("eq-u1-verbs-p4", verbs, 4, "Verb boss", "hard", [quiz("verbs-boss-1")]),
   gate("eq-u1-verbs-gate", verbs, "Verb Challenge", "eq-u1-verbs-gate-pool", {
     "action-linking": "Action & linking",
@@ -1336,7 +2482,7 @@ export const nodes = [
 
   adjectives,
   withSubtopic(practice("eq-u1-adjectives-p1", adjectives, 1, "More adjectives", "easy", [quiz("4ieo8-quiz-2")]), "kinds"),
-  withSubtopic(practice("eq-u1-adjectives-p2", adjectives, 2, "Degrees", "medium", [study("4ieo8-adj-degrees"), quiz("4ieo8-adj-degrees-q1")]), "degrees"),
+  withSubtopic(practice("eq-u1-adjectives-p2", adjectives, 2, "Degrees", "medium", [study("eq-u1-adj-degrees"), quiz("4ieo8-adj-degrees-q1")]), "degrees"),
   gate("eq-u1-adjectives-gate", adjectives, "Adjective Challenge", "eq-u1-adjectives-gate-pool", {
     identify: "Finding adjectives",
     kinds: "Kinds of adjectives",
@@ -1353,7 +2499,7 @@ export const nodes = [
   endless(adverbs),
 
   prepositions,
-  withSubtopic(practice("eq-u1-prepositions-p1", prepositions, 1, "Fixed prepositions", "medium", [study("4ieo6-fixed-prep"), quiz("4ieo6-fixed-prep-quiz")]), "fixed"),
+  withSubtopic(practice("eq-u1-prepositions-p1", prepositions, 1, "Fixed prepositions", "medium", [study("eq-u1-prep-fixed"), quiz("4ieo6-fixed-prep-quiz")]), "fixed"),
   gate("eq-u1-prepositions-gate", prepositions, "Preposition Challenge", "eq-u1-prepositions-gate-pool", {
     place: "Place",
     time: "Time",
