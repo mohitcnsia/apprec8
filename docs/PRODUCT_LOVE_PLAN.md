@@ -56,8 +56,10 @@ AI: students may "know more", so teachers build walls to avoid looking lesser.
 **Promise: the app does the checking and the sorting; the teacher does the human part: connecting and encouraging.**
 1. **Marking done for them.** Daily practice moves from copies into the app and is marked instantly and fairly, the
    same way for every child, with the reason shown. Fewer copies to check, and no "careless marking" complaints.
-   Later (Phase 4, needs care): photo of a notebook page → AI suggests marks + one comment, **the teacher approves**
-   (costs money per page, accuracy and children's-photo privacy to solve first).
+   **Class tests in the app:** the teacher assigns a timed test (Exam mode exists in the quiz engine), every child
+   gets it marked at once, the teacher gets the results sheet. This is the real relief: quizzes and app-based tests.
+   Notebooks are still checked by the teacher; **AI help with notebook photos is a premium extra** schools pay for
+   (Phase 4: AI suggests marks + one comment, the teacher approves; cost per page, accuracy and photo privacy first).
 2. **The 1 minute, well spent.** Home tells the teacher **who** needs help and **exactly what** they got wrong, and
    each child automatically gets practice on their own weak spots. The teacher's minute becomes encouragement:
    one tap sends "👏 well done" to the 12 who improved, or "let's try again together" to the 5 who are stuck.
@@ -79,11 +81,11 @@ for Classes 1–5, celebrations polish. Seema's class pilot + Pratha.
 **Phase 2: the hook (weeks 3–6).** Daily quest, stickers / collection, 3 new question types (tap picture, match,
 build the sentence), class team goal, **story mode with read-aloud**, **challenge a friend**, **beat your best**,
 spelling bee in quests; **creator mode** pilot with one child.
-**Phase 3: teachers' reason to choose us (weeks 6–10).** One-tap praise / nudges, teacher cards per topic, class
+**Phase 3: teachers' reason to choose us (weeks 6–10).** Class tests in the app (assign, auto-mark, results sheet), one-tap praise / nudges, teacher cards per topic, class
 team goal ("no one left behind"), NEP-aligned own chapters mapped by topic, PDF / print worksheets with answer keys,
 monthly class report, certificates.
-**Phase 4: careful, costs money.** Notebook photo → AI-suggested marks, teacher approves (cost per page, accuracy,
-children's-photo privacy first).
+**Phase 4: premium for schools (costs money per use).** Notebook photo → AI-suggested marks, teacher approves
+(cost per page, accuracy, children's-photo privacy first). Learning itself stays free (mission-first pricing).
 
 ## How we'll know it works (from the pilot)
 - Children: do they come back the next day (day-1 return) and after a week (day-7)? Minutes per session, topics
