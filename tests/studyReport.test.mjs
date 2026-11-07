@@ -90,3 +90,4 @@ assert.equal(p3.feedbackText.length, 300);
 assert.equal(p3.issueCategory, "confusing");
 
 console.log("studyReport tests passed");
+

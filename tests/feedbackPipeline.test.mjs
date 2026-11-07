@@ -105,3 +105,4 @@ assert.equal(redacted.userId, undefined, "userId must be stripped");
 assert.equal(redacted.userEmail, undefined, "userEmail must be stripped");
 
 console.log("feedbackPipeline tests passed");
+

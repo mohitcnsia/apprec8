@@ -20,7 +20,8 @@ assert.equal(en.days.length, 7);
 assert.equal(en.days[6].key, "2026-11-09", "ends today");
 assert.equal(en.days[6].label, "M", "9 Nov 2026 is a Monday");
 assert.ok(en.daysOn >= 3, `Riya practised most days (${en.daysOn})`);
-assert.match(en.timeText, /^Practised \d of 7 days · /);
+assert.match(en.timeText, /^This week: \d days? · /);
+assert.ok(en.timeText.includes("English Quest") && en.timeText.includes("Science Quest"), "timeText includes combined subject breakdown");
 assert.equal(en.subjects.length, 2, "English and Science");
 en.subjects.forEach((s) => {
   assert.ok(s.total > 0 && s.done <= s.total);
@@ -29,17 +30,32 @@ en.subjects.forEach((s) => {
 assert.ok(en.subjects.some((s) => s.strong), "something she is strong in");
 assert.ok(en.home.length > 20);
 
+// With an unpractised subject: folded into unpractisedText
+const withUnpractised = parentWeek({
+  name: "Riya",
+  grade: 5,
+  quests: [
+    ...quests,
+    { questId: "word-power", title: "Word Power", stats: {}, nodes: {}, questNodes: [{ kind: "main", grades: [5] }] },
+  ],
+  now,
+  lang: "en",
+});
+assert.ok(withUnpractised.unpractisedText?.includes("Word Power"), "unpractised folded into one line");
+
 const hi = parentWeek({ name: "Riya", grade: 5, quests, now, lang: "hi" });
 assert.equal(hi.title, "Riya का हफ़्ता");
-assert.match(hi.timeText, /^7 में से \d दिन अभ्यास/);
+assert.match(hi.timeText, /^इस हफ़्ते: \d दिन · /);
+assert.ok(hi.timeText.includes("English Quest") && hi.timeText.includes("Science Quest"), "Hindi includes subject breakdown");
 assert.equal(TIPS.en.length, TIPS.hi.length, "every tip has a Hindi version");
 assert.deepEqual(Object.keys(WORDS.en).sort(), Object.keys(WORDS.hi).sort(), "every word has a Hindi version");
 
 // A child with no practice: calm message, no crash
-const none = parentWeek({ name: "Om", grade: 5, quests: [{ questId: "x", title: "English", stats: {}, nodes: {}, questNodes: [] }], now });
+const none = parentWeek({ name: "Om", grade: 5, quests: [{ questId: "x", title: "English", stats: {}, nodes: {}, questNodes: [{ kind: "main", grades: [5] }] }], now });
 assert.equal(none.daysOn, 0);
 assert.ok(none.nothingText);
 assert.equal(none.subjects.length, 0);
+assert.ok(none.unpractisedText?.includes("English"), "shows unpractised subject");
 assert.ok(Number.isInteger(weekIndexOf(now)));
 console.log(`parentWeek tests passed (${en.timeText}; ${en.subjects.map((s) => `${s.title}: strong ${s.strong}, practise ${s.practise}, next ${s.next}`).join(" / ")})`);
 

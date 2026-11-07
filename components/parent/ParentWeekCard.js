@@ -2,8 +2,9 @@
 // A parent's week at a glance for one child (mockups V2/V3, approved 2026-11-05). English / हिंदी switch (saved on
 // this phone). Logic: utils/parentWeek.js. Reads: the child's progress docs, once (rules: DR-10, parents only).
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
@@ -27,12 +28,12 @@ export function useParentLang() {
   return [lang, choose];
 }
 
-export default function ParentWeekCard({ child, lang, P }) {
+export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
   const s = useMemo(() => makeStyles(P), [P]);
   const [quests, setQuests] = useState(null);
   const [showMissed, setShowMissed] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     let alive = true;
     (async () => {
       const mine = QUESTS.filter((m) => !m.quest?.draft && nodesForGrade(m.nodes, child.grade).some((n) => n.kind === "main"));
@@ -52,6 +53,12 @@ export default function ParentWeekCard({ child, lang, P }) {
       alive = false;
     };
   }, [child.uid, child.grade]);
+
+  useFocusEffect(load);
+
+  useEffect(() => {
+    load();
+  }, [load, refreshTrigger]);
 
   if (quests === null) return <ActivityIndicator color={P.label} />;
   const w = parentWeek({ name: child.firstName || "Your child", grade: child.grade, quests, lang, weekIndex: weekIndexOf() });
@@ -91,6 +98,12 @@ export default function ParentWeekCard({ child, lang, P }) {
           ))}
         </View>
       )}
+
+      {w.unpractisedText ? (
+        <View style={[s.card, { paddingVertical: 10 }]}>
+          <Text style={s.small}>{w.unpractisedText}</Text>
+        </View>
+      ) : null}
 
       <View style={[s.card, { backgroundColor: P.selectedBg, borderColor: P.selectedBg }]}>
         <Text style={s.label}>{t.home}</Text>

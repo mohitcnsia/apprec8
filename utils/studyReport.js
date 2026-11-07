@@ -77,3 +77,4 @@ export function buildStudyReportPayload({
     appVersion: appVersion || null,
   };
 }
+

@@ -200,3 +200,4 @@ const makeStyles = (theme) =>
     },
     sendText: { fontSize: 16, fontFamily: "nunitoBold", color: theme.textOnPrimary || "#FFFFFF" },
   });
+
