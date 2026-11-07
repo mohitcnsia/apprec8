@@ -8,7 +8,10 @@ export function needsFirstRun(doc, { grownUp = false } = {}) {
   if (doc.isChild) return false; // a parent set the child's name and class
   const hasName = typeof doc.firstName === "string" && doc.firstName.trim().length > 0;
   const hasClass = Number.isInteger(doc.grade);
-  return !hasName || (!hasClass && !grownUp);
+  // Already a grown-up by its data (children, classes taught, or a Demo School login): never ask "parent or teacher?"
+  // again on a new phone (owner 2026-11-07: the demo parent got the first-run sheet and couldn't save it).
+  const knownGrownUp = doc.isDemo || doc.isParent || (doc.childUids || []).length > 0 || (doc.teachesClassIds || []).length > 0;
+  return !hasName || (!hasClass && !grownUp && !knownGrownUp);
 }
 
 export const cleanName = (name = "") =>

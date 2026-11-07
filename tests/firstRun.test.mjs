@@ -28,4 +28,9 @@ assert.equal(bubbleText({ name: "" }), "Hi! What's your name?");
 assert.equal(bubbleText({ name: "pratha" }), "Hi pratha! 👋");
 assert.equal(bubbleText({ name: "Pratha", grade: 5 }), "Class 5! Let's go, Pratha! 🚀");
 assert.equal(bubbleText({ name: "Seema", role: "teacher" }), "Hello, Seema! 🍎");
+// A grown-up by its data never sees the sheet again (new phone, Demo School logins)
+assert.equal(needsFirstRun({ firstName: "Demo", isDemo: true }), false, "demo logins");
+assert.equal(needsFirstRun({ firstName: "Mohit", childUids: ["k"] }), false, "parent on a new phone");
+assert.equal(needsFirstRun({ firstName: "Seema", teachesClassIds: ["c"] }), false, "teacher on a new phone");
+assert.equal(needsFirstRun({ firstName: "Asha" }), true, "unknown grown-up still asked once");
 console.log("firstRun tests passed");
