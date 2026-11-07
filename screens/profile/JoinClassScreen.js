@@ -10,6 +10,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { findClassByCode, joinClass } from "../../services/classesApi";
 import { CONSENT_TEXT, canJoin, classLabel } from "../../utils/classes";
+import ConsentListenButton from "../../components/common/ConsentListenButton";
 import { showAlert } from "../../services/dialog";
 
 const RELATIONS = [
@@ -106,7 +107,10 @@ export default function JoinClassScreen({ navigation }) {
             </View>
 
             <View style={styles.consentCard}>
-              <Text style={styles.consentTitle}>{t.title}</Text>
+              <View style={styles.consentHeader}>
+                <Text style={styles.consentTitle}>{t.title}</Text>
+                <ConsentListenButton text={t} lang={lang} P={P} />
+              </View>
               <Text style={styles.consentBody}>{t.body}</Text>
             </View>
 
@@ -162,7 +166,8 @@ const makeStyles = (P, insets) =>
     segmentOn: { backgroundColor: P.card },
     segmentText: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
     consentCard: { padding: 16, borderRadius: 18, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, gap: 8 },
-    consentTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    consentHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
+    consentTitle: { flex: 1, fontSize: 17, fontFamily: "nunitoBold", color: P.text },
     consentBody: { fontSize: 15, lineHeight: 23, fontFamily: "nunito", color: P.text },
     input: { height: 54, borderRadius: 14, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, color: P.text, fontSize: 16, paddingHorizontal: 14, fontFamily: "nunitoBold" },
     chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
