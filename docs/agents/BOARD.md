@@ -252,7 +252,7 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 0d) G62 Chamku asks (mockup, then build), 1) G56 rehearse Seema's path, 2) G57 teacher class
+Goal: Seema's pilot without embarrassment, then closed testing. 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, 0c) G66 feedback pipeline (plan first), 0d) G62 Chamku asks (mockup, then build), 0e) G67 Progress facts (no code), 1) G56 rehearse Seema's path, 2) G57 teacher class
 screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
 (plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
 
@@ -310,6 +310,18 @@ update because a child's voice is sensitive data. First 3 questions: "What's the
 is happy to answer**: after each answer, Chamku offers "One more?" (big YES) or "That's all for today" (easy exit,
 still thanked with ⭐). Questions are a small tree in the config (`next` per answer), max ~5 in a row, never pushy.
 After the owner approves the mockup in the inbox, build it (JS only, OTA). `gemini(G62): done — mockup`.
+
+### G67 · [todo] · gemini · ⭐ Facts for the Progress redesign discussion (no code changes)
+Owner 2026-11-07: "The Progress tab also needs a review. Pratha played but the weekly summary is blank, and the
+Kids · Reported section is quite messy. A fresh discussion (not a rushed build) is required." Collect, don't fix:
+1. **Screenshots** of every Progress view on the emulator: child (tester account, after playing 2 topics in 2
+   subjects), parent (demo.parent), teacher (demo.teacher), and the owner's "Kids · Reported" view if you can reach
+   it (else describe it from the code). Into `docs/agents/reports/G67/`.
+2. **Why the weekly summary is blank:** play with the tester account (one Science topic, one English topic), then
+   trace in code which fields the week reads (`stats` in questProgress? attempts? papers?) and whether they were
+   written for that play (read only the TESTER's own docs; no real children's data). Say exactly what is missing.
+3. **What each view shows today:** a short list per view (sections, order, what's empty, what repeats), and anything
+   confusing or broken. Report `docs/agents/reports/G67.md`. `gemini(G67): done — facts for the Progress review`.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her

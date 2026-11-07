@@ -266,13 +266,23 @@
     "title": "Task: re-seed English and Science (2 min)",
     "ask": "Me → Admin tools → update English Quest, then Science Quest. Tap YES when done.",
     "details": "**English:** removes the old IEO picture from the quest page.\n**Science:** fixes the teeth fact Pratha found (20 milk teeth are replaced; extra molars make 32).\n\nContent only: no app update needed. Close and reopen the app afterwards to see it.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T09:05:24.125Z"
   },
   {
     "id": "task-play-publish",
     "title": "Task: when Google approves → Publish",
     "ask": "When Google's email says the changes are approved: Play Console → Publishing overview → Publish. Tap YES when done, LATER to keep the reminder.",
     "details": "**Managed publishing is on**, so nothing goes live by itself. One click publishes: closed testing 20.0.30, the new store listing, target audience, Data safety.\n\nAfter that, testers who join get 20.0.30, and Seema's WhatsApp message can go out (once her class exists).",
+    "from": "claude"
+  },
+  {
+    "id": "meet-progress-review",
+    "title": "Tomorrow 7 pm: Progress tab design discussion",
+    "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
+    "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.",
     "from": "claude"
   }
 ]
