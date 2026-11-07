@@ -80,7 +80,10 @@ fun names for English units and topics (Gemini proposes, Seema checks, Pratha vo
 for Classes 1–5, celebrations polish. Seema's class pilot + Pratha.
 **Phase 2: the hook (weeks 3–6).** A **cast of characters** (star host, wise tortoise, monkey, bee, ant, owl; each with a job; children pick a buddy), daily quest, stickers / collection, 3 new question types (tap picture, match,
 build the sentence), class team goal, **story mode with read-aloud**, **challenge a friend**, **beat your best**,
-spelling bee in quests; **creator mode** pilot with one child.
+spelling bee in quests; **creator mode** pilot with one child. **From Pratha (loves Duolingo's owl, "10 minutes to keep your streak", the evening chest):** a **daily / evening
+treasure chest** after practice (sticker, buddy outfit, fun fact); a **streak saver** once a week (excitement without
+fear); "your streak ends tonight" **inside the app**, and as a phone notification **only if a parent turns it on and
+picks the time**, in kind words, never guilt (Seema checks the wording).
 **Phase 3: teachers' reason to choose us (weeks 6–10).** Class tests in the app (assign, auto-mark, results sheet), one-tap praise / nudges, teacher cards per topic, class
 team goal ("no one left behind"), NEP-aligned own chapters mapped by topic, PDF / print worksheets with answer keys,
 monthly class report, certificates.
