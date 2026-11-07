@@ -74,6 +74,16 @@ AI: students may "know more", so teachers build walls to avoid looking lesser.
    **PDF export + print** of worksheets (with answer key) for classes with few phones, and parents who prefer paper.
 6. **Something to show:** monthly class report for the principal and parents; certificates for children.
 
+## Idea to discuss (owner 2026-11-07): "Apprec8 Scholarships" (school fees as rewards)
+Owner: a strong reward motivates parents: the app pays 1 month / 3 months / 6 months / 1 year of school fee.
+Claude's cautions: **cost** (fees ₹500–₹10,000+/month; a year can be ₹20k–₹1.5L: budget or sponsors first);
+**law** (chance-based prizes = lottery, restricted in India; skill/effort-based scholarships are fine; Google Play
+needs official rules, no purchase required, eligibility, "Google is not a sponsor"); **fairness** (reward most
+improved + most consistent, not only top scores, so unsupported children can win); **cheating** (base it on real
+learning evidence from the mastery model, human check, pay the school directly, never cash); **keep feedback rewards
+separate** (stars/stickers), or feedback gets biased. Shape: monthly scholarships, start small after the pilot shows
+real learning data, grow with sponsors; legal + Play check first. Not to build yet.
+
 ## What to do, in order
 **Phase 1: pilot-ready (next 2 weeks).** Row Z + learn first (built, in review), Learn cards everywhere (G59),
 fun names for English units and topics (Gemini proposes, Seema checks, Pratha votes), pictures on Learn cards
