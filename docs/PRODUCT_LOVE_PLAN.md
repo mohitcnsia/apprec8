@@ -91,6 +91,13 @@ questions, daily cap so binge sessions don't win), not raw stars; only students 
 (one child, one account); fair across ages (5 across class groups, or 3 most consistent + 2 most improved); principal
 agrees; published rules; winners by first name + class with parent consent; announced by the school, the app only
 measures (avoids an in-app contest under Play rules). Needs the effort score from the mastery model first.
+**Two stages (owner):** the app's effort score picks the **top 20** (spread across class groups, e.g. 4 per group) →
+a **supervised exam in the school** (the app's Exam mode on school devices with the teacher watching, or paper) →
+**top 5** win. Beats cheating at home, proves learning in person, clearly not a draw.
+**Same first names (owner: 3 children share a first name in one class):** leaderboard today shows "first name ·
+Class". Proposal: the child's **avatar** next to the name + **section** ("Riya · 5-B") everywhere; **last-name
+initial** ("Riya S.") only on the class / school leaderboard where children know each other (owner decides: it bends
+the "never the last name" rule); teachers see full names; scholarship selection uses full names offline via the school.
 
 ## What to do, in order
 **Phase 1: pilot-ready (next 2 weeks).** Row Z + learn first (built, in review), Learn cards everywhere (G59),
