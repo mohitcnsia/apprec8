@@ -278,7 +278,7 @@ uses and reuse it) with contentId + card index / section, and tap-only reasons f
 `gemini(G65): done`. Also bump **G59 Science pages up**: do Science right after Class 9–10 (owner: "old reading sheet,
 no images, nothing fun, a dumpyard of text"), with a picture idea per card.
 
-### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
+### G66 · [review] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
 Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
 that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
 1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another
@@ -292,7 +292,7 @@ that you and I can review and plan." Plan first (`gemini(G66): plan — review p
    go to the public repo. First name + class only, no emails or uids.
 Costs: one small read per owner visit; the export reads only new docs since the last run.
 
-### G62 · [todo] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
+### G62 · [done] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
 Owner: "instead of me asking Pratha 3 questions: a sticky note on her Home, the mascot asks, she answers the app in
 her own time, fun acknowledgements, a poll." **Draw, don't build:** HTML mockups (390 px, plum style, thumb zone) in
 `docs/mockups/chamak-asks/` + PNGs: 1) Home with a sticky-note card "Chamak asks: Quick question!" (low on the
