@@ -343,6 +343,9 @@ export function listenToQuizQuestions(parentId, onDataChange, onError) {
   return unsubscribe; // Return cleanup function
 }
 
+let lastSeenUserDoc = null;
+export const getCachedUserDoc = () => lastSeenUserDoc;
+
 /**
  * Listens to the main document for the current authenticated user.
  * This document should contain the `perfectQuizCompletions` map and other user data.
@@ -388,11 +391,13 @@ export const listenToUserDocument = (onResult, onError) => {
         console.log(
           `LISTENER: Snapshot for user document ${userId}. Perfect completions map exists: ${!!userData.perfectQuizCompletions}`
         );
+        lastSeenUserDoc = userData;
         if (typeof onResult === "function") {
           onResult(userData);
         }
       } else {
         console.warn(`LISTENER: User document ${userId} does not exist.`);
+        lastSeenUserDoc = null;
         if (typeof onResult === "function") {
           onResult(null); // User document not found
         }

@@ -28,6 +28,18 @@ import { authInstance } from "../config/firebaseConfig";
 import { scoreAnswers } from "../utils/questTree";
 import { mistakeUpdates, paperMistakeUpdates } from "../utils/mistakes";
 import { updateStats } from "../utils/kidStats";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  loadLocalProgress,
+  saveLocalNodeProgress,
+  saveLocalAttempt,
+  getLocalStars,
+  prepareLocalProgressUpload,
+  clearLocalProgress,
+} from "../utils/localProgress";
+import { getCachedUserDoc } from "./firestoreContentApi";
+import { needsParentConsent } from "../utils/consent";
+import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../config/appConfig";
 
 const db = getFirestore(getApp());
 
@@ -56,6 +68,28 @@ export function listenToQuestTreeNodes(questId, onData, onError) {
 const latestProgress = new Map(); // `${uid}/${questId}` -> nodes map
 const latestMistakes = new Map(); // `${uid}/${questId}` -> mistakes map ("My mistakes")
 const latestStats = new Map(); // `${uid}/${questId}` -> stats summary (admin dashboard)
+const localSubscribers = new Map(); // `${uid}/${questId}` -> Set of callbacks
+
+function notifyLocalSubscribers(uid, questId, nodes, docData) {
+  const set = localSubscribers.get(`${uid}/${questId}`);
+  if (set) {
+    for (const cb of set) {
+      try {
+        cb(nodes, docData);
+      } catch (e) {
+        console.warn("local subscriber error:", e);
+      }
+    }
+  }
+}
+
+function isUserUnconsented(user) {
+  if (!user) return false;
+  const udoc = getCachedUserDoc();
+  if (!udoc) return false;
+  const exempt = isTesterUser(user) || user.uid === APPREC8_TEAM_REVIEWER_UID;
+  return needsParentConsent(udoc, { exempt });
+}
 
 /** Listens to the signed-in kid's progress in a quest. Returns {} for new kids. */
 export function listenToQuestProgress(questId, onData, onError) {
@@ -64,18 +98,43 @@ export function listenToQuestProgress(questId, onData, onError) {
     onData({});
     return () => {};
   }
-  return onSnapshot(
+  const key = `${user.uid}/${questId}`;
+  if (!localSubscribers.has(key)) {
+    localSubscribers.set(key, new Set());
+  }
+  localSubscribers.get(key).add(onData);
+
+  // Deliver local device progress if available
+  loadLocalProgress(AsyncStorage, user.uid, questId)
+    .then((local) => {
+      if (local && Object.keys(local.nodes || {}).length > 0) {
+        latestProgress.set(key, local.nodes);
+        latestMistakes.set(key, local.mistakes || {});
+        latestStats.set(key, local.stats || {});
+        onData(local.nodes, local);
+      }
+    })
+    .catch(() => {});
+
+  const unsubFirestore = onSnapshot(
     doc(db, "users", user.uid, "questProgress", questId),
     (snap) => {
-      const data = snap.exists() ? snap.data() || {} : {};
-      const nodes = data.nodes || {};
-      latestProgress.set(`${user.uid}/${questId}`, nodes);
-      latestMistakes.set(`${user.uid}/${questId}`, data.mistakes || {});
-      latestStats.set(`${user.uid}/${questId}`, data.stats || {});
-      onData(nodes, data); // 2nd arg: whole doc (e.g. data.mistakes for "My mistakes")
+      if (snap.exists()) {
+        const data = snap.data() || {};
+        const nodes = data.nodes || {};
+        latestProgress.set(key, nodes);
+        latestMistakes.set(key, data.mistakes || {});
+        latestStats.set(key, data.stats || {});
+        onData(nodes, data); // 2nd arg: whole doc (e.g. data.mistakes for "My mistakes")
+      }
     },
     (error) => onError?.(error)
   );
+
+  return () => {
+    localSubscribers.get(key)?.delete(onData);
+    unsubFirestore();
+  };
 }
 
 /**
@@ -86,6 +145,15 @@ export function listenToQuestProgress(questId, onData, onError) {
 async function updateNodeProgress(questId, nodeId, { percent, passed, gate = null, resetGateId = null }) {
   const user = currentUser();
   if (!user) return;
+
+  // Always update local storage for learn-first & offline resilience
+  await saveLocalNodeProgress(AsyncStorage, user.uid, questId, nodeId, { percent, passed, gate, resetGateId });
+  const localDoc = await loadLocalProgress(AsyncStorage, user.uid, questId);
+  notifyLocalSubscribers(user.uid, questId, localDoc.nodes, localDoc);
+
+  // Unconsented kids stay on device only
+  if (isUserUnconsented(user)) return;
+
   const progressRef = doc(db, "users", user.uid, "questProgress", questId);
   let known = latestProgress.get(`${user.uid}/${questId}`);
   if (!known) {
@@ -156,6 +224,17 @@ export async function saveQuestAttempt(p) {
   const user = currentUser();
   if (!user) return null;
   try {
+    // 1. Always record locally for learn-first & offline resilience
+    const localRes = await saveLocalAttempt(AsyncStorage, user.uid, p);
+    const localDoc = await loadLocalProgress(AsyncStorage, user.uid, p.questId);
+    notifyLocalSubscribers(user.uid, p.questId, localDoc.nodes, localDoc);
+
+    // 2. Unconsented kids stay on device only (DPDP Act)
+    if (isUserUnconsented(user)) {
+      return { percent: localRes?.percent || 0, passed: !!localRes?.passed };
+    }
+
+    // 3. Consented: save to Firestore
     const scored = scoreAnswers(p.answers, p.totalQuestions);
     const gate = p.gateResult || null;
     // Gates use their own rule (score + every sub-topic). Out of hearts never passes.
@@ -331,4 +410,37 @@ async function saveStats(p, endedAt) {
   } catch (e) {
     console.warn("saveStats failed:", e);
   }
+}
+
+/**
+ * Uploads local progress and attempts to Firestore once parent gives consent (mockup X9).
+ * Merges into questProgress docs and appends to questAttempts.
+ */
+export async function uploadLocalProgressToServer(uid) {
+  if (!uid) return null;
+  const { progressDocs, attempts } = await prepareLocalProgressUpload(AsyncStorage, uid);
+  const localStars = await getLocalStars(AsyncStorage, uid);
+
+  // 1. Upload progress documents
+  for (const { questId, data } of progressDocs) {
+    const ref = doc(db, "users", uid, "questProgress", questId);
+    await setDoc(ref, { ...data, updatedAt: serverTimestamp() }, { merge: true });
+    latestProgress.set(`${uid}/${questId}`, data.nodes || {});
+    latestMistakes.set(`${uid}/${questId}`, data.mistakes || {});
+    latestStats.set(`${uid}/${questId}`, data.stats || {});
+  }
+
+  // 2. Upload attempts
+  for (const att of attempts) {
+    const { id, ...attData } = att;
+    await addDoc(collection(db, "questAttempts"), {
+      ...attData,
+      createdAt: serverTimestamp(),
+    });
+  }
+
+  // 3. Clear local device progress
+  await clearLocalProgress(AsyncStorage, uid);
+
+  return { stars: localStars, count: progressDocs.length + attempts.length };
 }

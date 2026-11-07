@@ -35,6 +35,10 @@ import { classLabel, SUBJECT_NAMES } from "../../utils/classes";
 import { parentWeek, weekIndexOf } from "../../utils/parentWeek";
 import { teacherWeek } from "../../utils/weeklySummary";
 import PlayAsChildSheet from "../profile/PlayAsChildSheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getLocalStars } from "../../utils/localProgress";
+import { needsParentConsent } from "../../utils/consent";
+import AskParentSheet from "../../components/consent/AskParentSheet";
 
 const FlameIcon = () => (
   <Svg width={20} height={20} viewBox="0 0 24 24">
@@ -105,6 +109,16 @@ export default function HomeScreen({ navigation }) {
   const extras = useOwnerExtras();
   const isTester = isTesterUser(authInstance.currentUser) && extras;
   const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
+
+  // Learn first (mockup row X6-X9): children without parent consent keep stars on phone
+  const isLearnFirst = needsParentConsent(userData, { exempt: isTester || ownerView });
+  const [localStars, setLocalStars] = useState(0);
+  const [showAskParent, setShowAskParent] = useState(false);
+
+  useEffect(() => {
+    if (!uid) return;
+    getLocalStars(AsyncStorage, uid).then(setLocalStars).catch(() => {});
+  }, [uid, progressById]);
 
   // Listen to categories & user doc
   useEffect(() => {
@@ -221,7 +235,7 @@ export default function HomeScreen({ navigation }) {
   // Header stats
   const firstName =
     devRole === "parent" ? "Mohit" : devRole === "teacher" ? "Seema" : (userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null);
-  const stars = userData?.stats?.totalStars || 0;
+  const stars = isLearnFirst ? localStars : (userData?.stats?.totalStars || 0);
   const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const streak = devRole === "parent" || devRole === "teacher" ? 2 : dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
 
@@ -539,6 +553,31 @@ export default function HomeScreen({ navigation }) {
       {/* ============================================================== */}
       {!isAdultView ? (
         <>
+          {/* Learn first: calm card (mockup X6) */}
+          {isLearnFirst ? (
+            <View style={styles.sectionWrap}>
+              <Pressable
+                style={styles.learnFirstCard}
+                onPress={() => setShowAskParent(true)}
+                accessibilityRole="button"
+                accessibilityLabel={`${localStars} stars, on this phone only. Ask a parent to save them.`}
+              >
+                <View style={styles.learnFirstLeft}>
+                  <Text style={styles.learnFirstStar}>⭐</Text>
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Text style={[styles.learnFirstTitle, { color: P.text }]}>
+                      {localStars} stars, on this phone only
+                    </Text>
+                    <Text style={[styles.learnFirstSub, { color: P.textSoft }]}>
+                      Ask a parent to save them forever ›
+                    </Text>
+                  </View>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={P.primary} />
+              </Pressable>
+            </View>
+          ) : null}
+
           {/* FROM YOUR TEACHER (assigned topics) */}
           {teacherTasks.length > 0 ? (
             <View style={styles.sectionWrap}>
@@ -677,6 +716,14 @@ export default function HomeScreen({ navigation }) {
           navigation.navigate("AddChild", { kid: k });
         }}
       />
+
+      <AskParentSheet
+        visible={showAskParent}
+        onClose={() => setShowAskParent(false)}
+        firstName={firstName}
+        navigation={navigation}
+        P={P}
+      />
     </ScrollView>
   );
 }
@@ -723,6 +770,35 @@ const makeStyles = (P, insets) =>
 
     sectionWrap: { gap: 10 },
     sectionLabel: { fontSize: 13, fontFamily: "nunitoBold", color: P.label, letterSpacing: 1 },
+
+    // Learn first calm card (mockup X6)
+    learnFirstCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: 14,
+      borderRadius: 18,
+      backgroundColor: P.card,
+      borderWidth: 1.5,
+      borderColor: P.primary,
+    },
+    learnFirstLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      flex: 1,
+    },
+    learnFirstStar: {
+      fontSize: 24,
+    },
+    learnFirstTitle: {
+      fontSize: 14.5,
+      fontFamily: "nunitoBold",
+    },
+    learnFirstSub: {
+      fontSize: 12,
+      fontFamily: "nunito",
+    },
 
     // Z1: Child Home components
     teacherTaskCard: {

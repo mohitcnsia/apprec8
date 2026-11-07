@@ -27,6 +27,9 @@ import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
 import { listenForSummaryTaps } from "./services/push";
 import { navigateTo } from "./navigation/navRef";
+import { showAlert } from "./services/dialog";
+import { uploadLocalProgressToServer } from "./services/englishQuestApi";
+import { needsParentConsent } from "./utils/consent";
 
 const MIN_LOADER_DISPLAY_TIME = 3000;
 
@@ -143,6 +146,27 @@ const AppContent = () => {
       ),
     []
   );
+
+  // Learn first (mockup X9): parent said yes → upload local progress to Firestore once
+  const wasUnconsentedRef = React.useRef(false);
+  useEffect(() => {
+    if (!uid || !userDoc) return;
+    const isUnconsented = needsParentConsent(userDoc, { exempt: isTesterUser(user) || uid === APPREC8_TEAM_REVIEWER_UID });
+    if (isUnconsented) {
+      wasUnconsentedRef.current = true;
+    } else if (wasUnconsentedRef.current) {
+      wasUnconsentedRef.current = false;
+      uploadLocalProgressToServer(uid)
+        .then((res) => {
+          const starMsg = res?.stars ? `Your ${res.stars} stars are saved now! 🎉 ` : "";
+          showAlert(
+            "Your parent said yes! 🎉",
+            `${starMsg}From now on your stars and progress are safely saved. Leaderboard and class are open! 🚀`
+          );
+        })
+        .catch((e) => console.warn("Upload local progress failed:", e));
+    }
+  }, [uid, userDoc, user]);
 
   useEffect(() => {
     if (fontError) console.error("Font Loading Error:", fontError);

@@ -27,6 +27,11 @@ import TeacherClasses from "./TeacherClasses";
 import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/parent/ParentWeekCard";
 import { myChildren } from "../../services/familyApi";
 import WeeklyPushCard from "../../components/push/WeeklyPushCard";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getLocalStars } from "../../utils/localProgress";
+import { needsParentConsent } from "../../utils/consent";
+import { showAlert } from "../../services/dialog";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -79,6 +84,13 @@ export default function ProgressScreen({ navigation, route }) {
     };
   }, [uid, quests]);
 
+  const isLearnFirst = needsParentConsent(userData, { exempt: isTesterUser(authInstance.currentUser) || uid === APPREC8_TEAM_REVIEWER_UID });
+  const [localStars, setLocalStars] = useState(0);
+  useEffect(() => {
+    if (!uid) return;
+    getLocalStars(AsyncStorage, uid).then(setLocalStars).catch(() => {});
+  }, [uid]);
+
   const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const statsOf = (id) => progressById[id]?.doc?.stats || {};
   // All quests together for streak / week / totals.
@@ -91,7 +103,7 @@ export default function ProgressScreen({ navigation, route }) {
   const week = weekStrip(daily);
   const thisWeek = summarize(stats, "week");
   const right = accuracy({ answered: stats.answered || 0, correct: stats.correct || 0 });
-  const stars = userData?.stats?.totalStars || 0;
+  const stars = isLearnFirst ? localStars : (userData?.stats?.totalStars || 0);
   // Per quest: where the kid is (only topics for their class), weak and strong topics with names.
   const perQuest = useMemo(
     () =>
@@ -311,17 +323,34 @@ export default function ProgressScreen({ navigation, route }) {
         </View>
       ) : null}
 
-      {/* Leaderboard: My class (this week + claps) and Everyone, in one screen (mockup M1) */}
-      <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
-        <View style={[styles.card, styles.row]}>
-          <TrophyIcon color={P.label} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>Leaderboard</Text>
-            <Text style={styles.soft}>{(userData?.classIds || [])[0] ? "My class this week, claps and everyone" : "See how you rank"}</Text>
+      {/* Leaderboard: My class (this week + claps) and Everyone, in one screen (mockup M1 / X8) */}
+      {isLearnFirst ? (
+        <Pressable
+          onPress={() => showAlert("Leaderboard", "The leaderboard opens when a parent or guardian says yes, so your stars can be safely counted.")}
+          accessibilityRole="button"
+          accessibilityLabel="Leaderboard locked. Opens when a parent says yes."
+        >
+          <View style={[styles.card, styles.row, { opacity: 0.85 }]}>
+            <TrophyIcon color={P.textSoft} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Leaderboard 🔒</Text>
+              <Text style={styles.soft}>Opens when a parent says yes</Text>
+            </View>
+            <Ionicons name="lock-closed-outline" size={18} color={P.textSoft} />
           </View>
-          <Text style={styles.link}>See ›</Text>
-        </View>
-      </Pressable>
+        </Pressable>
+      ) : (
+        <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
+          <View style={[styles.card, styles.row]}>
+            <TrophyIcon color={P.label} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Leaderboard</Text>
+              <Text style={styles.soft}>{(userData?.classIds || [])[0] ? "My class this week, claps and everyone" : "See how you rank"}</Text>
+            </View>
+            <Text style={styles.link}>See ›</Text>
+          </View>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }

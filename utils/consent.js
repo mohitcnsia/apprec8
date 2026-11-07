@@ -8,6 +8,7 @@
  */
 export function needsParentConsent(doc, { exempt = false } = {}) {
   if (exempt || !doc) return false;
+  if (doc.adultLearner) return false;
   if (!Number.isInteger(doc.grade)) return false; // grown-ups have no class
   if (doc.isChild) return false; // a profile a parent made (consent recorded then)
   if (doc.isDemo || String(doc.uid || "").startsWith("demo_")) return false;
