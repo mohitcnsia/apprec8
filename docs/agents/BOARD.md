@@ -281,6 +281,10 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    parent → type this code"), **"I'm a teacher"** (→ Join as a teacher). Each choice opens the existing screen. Plain
    words, no jargon. A parent with children but no class sees a small "+ Add another child" under the child cards.
    A teacher with no class yet sees "Type your school's code" (→ Join as a teacher).
+   **Owner 2026-11-07:** after "Add a child" the app shows a login code even for a child who will use the parent's
+   phone, which confused him ("test is a dummy child, how do I share this?"). After saving the child, ask first:
+   "Will <name> use **this phone** or **their own phone**?" → this phone: go straight to Play as (no code);
+   their own phone: show the code + SHARE CODE.
 7. **Guide card on Home (owner 2026-11-06, mockups docs/mockups/rowY/Y1–Y3):** after sign-up, everyone sees their own
    guide as one calm card on Home (child: "Your first day · 1 of 4", parent: "For parents", teacher: "Start your
    class", grown-up with nobody yet: the tour), with progress, › to open it and ✕ to close. It shows on **every open
