@@ -262,8 +262,12 @@ questProgress only once per mount (useEffect on child.uid), so an open Progress 
 counts only quests for the child's class (practice papers are left out). Fix: reload on screen focus
 (useFocusEffect) + pull-to-refresh on the family view (same reads, no extra cost beyond the reload); count practice
 paper attempts in the week if they are stored per user (check `screens/paper/` storage; if they're only on the phone,
-say so in the report). Also check the teacher's class view (TeacherClasses) refreshes on focus. Tests for any pure
-change. `gemini(G64): done`.
+say so in the report). Also check the teacher's class view (TeacherClasses) refreshes on focus. **And (owner: "I had to select Science
+because she only did Science; with 10 subjects I'd click every subject. Not intuitive"):** the week opens on **all
+subjects combined** ("This week: 3 days · 42 min · Science 30 min, English 12 min"), then each subject practised
+this week, most recent first, already expanded; subjects not practised this week fold into one line ("Not practised
+this week: English, Word Power"). No subject picker as the first step. Same rule for the Sunday summary text if it is
+per subject. Tests for the pure parts (utils/parentWeek.js). `gemini(G64): done`.
 
 ### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
