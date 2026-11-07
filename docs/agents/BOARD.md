@@ -285,6 +285,16 @@ don't delete), no new Firestore reads beyond what Home/Progress already read (do
    phone, which confused him ("test is a dummy child, how do I share this?"). After saving the child, ask first:
    "Will <name> use **this phone** or **their own phone**?" → this phone: go straight to Play as (no code);
    their own phone: show the code + SHARE CODE.
+   **Every code screen explains itself (owner 2026-11-07: "this can confuse parents and teachers; add explanations for
+   edge cases").** At the top, in plain words: who the code is for, when it's needed, and what to do if it isn't.
+   - Child login code: "Only if <name> has their own phone or tablet. Uses your phone? You don't need this: tap
+     **Play as** instead." + "Works once, for N hours. Lost it? Make a new one here."
+   - Link my child's own account: "For a child who already has Apprec8 on their own phone. They type this code in
+     Me → Link to my parent." + "No phone of their own? Use **Add a child** instead."
+   - Class code (teacher / admin SHARE CODE): "Send it to parents. A parent types it with the child in Me → Join a
+     class, agrees, and the child waits for you to approve." + "A child without a phone? The parent adds them on the
+     parent's phone first (Add a child), then joins the class from Play as."
+   - Teacher invite code (admin): "For the teacher only. They type it in Me → Join as a teacher; you approve them."
 7. **Guide card on Home (owner 2026-11-06, mockups docs/mockups/rowY/Y1–Y3):** after sign-up, everyone sees their own
    guide as one calm card on Home (child: "Your first day · 1 of 4", parent: "For parents", teacher: "Start your
    class", grown-up with nobody yet: the tour), with progress, › to open it and ✕ to close. It shows on **every open
