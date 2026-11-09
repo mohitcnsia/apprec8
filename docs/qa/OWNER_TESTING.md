@@ -41,6 +41,28 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐⭐ PILOT PATH on your phone (after the next "publish"), ~15 min — Claude runs it on the emulator first
+Accounts: you (admin), **+teacher** (Seema's role), **+parent**, **+student** (the kid). Each step: what to tap → what you
+should see. ✅ = Claude passed it on the emulator (date). Tell Claude the step number that fails (chat or Me → Tell us).
+
+**A. Already merged (G81, G84, G82, G79)**
+1. As **+teacher**: Home shows **"Needs you"** at the top when a kid is waiting, then your class card (kids active, weakest
+   topic). Tap the waiting row → approve screen.
+2. As **+student** in Seema's Class 10 class: Home shows the tile **"Seema Ma'am · Class 10 English"**. As a kid NOT in that
+   class: no such tile.
+3. As **+student**, Class 10: Home and Progress show only quests with Class 10 topics (no empty Science / Word Power, no 0/0).
+4. In any Grammar Pro quiz: answer wrong → the "why not this option?" panel opens (explanations are empty for now; G83 redo).
+5. Me → Delete my account: the screen looks like the rest of the app (cards, same font). Don't confirm.
+6. After G94 (deploy): a kid asks to join → **+teacher**'s phone buzzes "Student waiting · Approve" (max 1 per 10 min).
+
+**B. Coming next (Claude adds the exact steps when each is merged)**
+7. G89 two-way cards: you post a card to +teacher → she answers Yes/No + a line → you reply → she sees it; "Tell us" on Home.
+8. G90 sign-up: **+parent** adds a child (consent) → the child signs in with the parent's code → joins the class with NO
+   second consent → +teacher approves → assigned work is first on Home → locked-looking nodes are open.
+   A kid with no parent: "Ask your parent to add you" (cannot join).
+9. G91 check-up: the kid takes a paper → result shows Accuracy per topic, weakest first, "Practise this" opens that topic.
+   Airplane mode mid-paper → "No internet. Your answers are safe…", nothing lost.
+
 ### ⭐ Teachers' page + Owner extras (after the next "publish"), ~3 min
 - [ ] Me → Guides: first card **For teachers: start here** → the one-pager → **SHARE WITH A TEACHER** opens WhatsApp. Also in Admin tools.
 - [ ] Me → ADMIN → **Owner extras** → Off: Home loses Explore / More practice / old classrooms, Progress loses "Kids",
