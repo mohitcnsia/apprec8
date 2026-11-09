@@ -5,6 +5,7 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
 const { cachedResult } = require("../utils/serverCache");
+const { teacherWaitingMessage, studentWaitingMessage, canSendPush, TEN_MINUTES_MS } = require("../utils/pendingPush");
 
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
@@ -19,6 +20,47 @@ async function isSchoolAdmin(uid, schoolId) {
   if (!schoolId) return false;
   const s = await db.collection("schools").doc(schoolId).get();
   return s.exists && Array.isArray(s.data().admins) && s.data().admins.includes(uid);
+}
+
+/** Sends throttled push notification (max 1 push per person per 10 minutes) */
+async function sendThrottledPushToUser(uid, message, view) {
+  if (!uid) return;
+  const now = Date.now();
+  const rateLimitRef = db.collection("pushRateLimits").doc(uid);
+  const rateDoc = await rateLimitRef.get();
+  const rateData = rateDoc.exists ? rateDoc.data() : {};
+  const throttle = canSendPush(rateData.lastPushedAt, now, TEN_MINUTES_MS);
+
+  if (!throttle.allowed) {
+    await rateLimitRef.set({ pendingCount: (rateData.pendingCount || 1) + 1 }, { merge: true });
+    return;
+  }
+
+  let tokens = [];
+  const userDoc = await db.collection("users").doc(uid).get();
+  if (userDoc.exists && Array.isArray(userDoc.data().pushTokens)) {
+    tokens.push(...userDoc.data().pushTokens);
+  }
+  if (uid === OWNER_UID) {
+    const ownerDev = await db.collection("ownerConfig").doc("device").get();
+    if (ownerDev.exists && Array.isArray(ownerDev.data().tokens)) {
+      tokens.push(...ownerDev.data().tokens);
+    }
+  }
+  tokens = Array.from(new Set(tokens.filter(Boolean)));
+  if (!tokens.length) return;
+
+  try {
+    await admin.messaging().sendEachForMulticast({
+      tokens,
+      notification: { title: message.title, body: message.body },
+      data: { view: view || "home" },
+      android: { priority: "normal" },
+    });
+    await rateLimitRef.set({ lastPushedAt: now, pendingCount: 0 }, { merge: true });
+  } catch (err) {
+    console.warn("FCM multicast failed:", err);
+  }
 }
 
 /** { email, schoolId? } → { uid, firstName } for an existing account (the teacher signs in once first). */
@@ -256,9 +298,43 @@ exports.redeemTeacherInvite = functions
       t.set(clsRef.collection("teacherRequests").doc(uid), { firstName, subjects: v.subjects, code, requestedAt: FieldValue.serverTimestamp() });
       // So "Delete my account" finds a request that was never approved (G42 finding 3).
       t.set(db.collection("users").doc(uid), { pendingTeachClassIds: FieldValue.arrayUnion(clsRef.id) }, { merge: true });
-      return { className: cls.data().name, schoolName: cls.data().schoolName || "", subjects: v.subjects };
+      return { className: cls.data().name, schoolName: cls.data().schoolName || "", subjects: v.subjects, classId: cls.id, schoolId: v.schoolId || cls.data().schoolId, teacherName: firstName };
     });
-    return result;
+
+    // Notify school creator, school admins and the owner (G84 DR-25)
+    try {
+      const schoolDoc = result.schoolId ? await db.collection("schools").doc(result.schoolId).get() : null;
+      const schoolCreator = schoolDoc && schoolDoc.exists ? schoolDoc.data().createdBy : null;
+      const schoolAdmins = (schoolDoc && schoolDoc.exists && schoolDoc.data().admins) || [];
+      const recipients = Array.from(new Set([schoolCreator, ...schoolAdmins, OWNER_UID].filter(Boolean)));
+      const msg = teacherWaitingMessage({ teacherName: result.teacherName, className: result.className });
+      for (const rUid of recipients) {
+        await sendThrottledPushToUser(rUid, msg, "schools");
+      }
+    } catch (err) {
+      console.warn("redeemTeacherInvite push warning:", err);
+    }
+
+    return { className: result.className, schoolName: result.schoolName, subjects: result.subjects };
+  });
+
+/** When a student asks to join a class, notify that class's teachers (G84 DR-25). */
+exports.onStudentJoinRequest = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .firestore.document("classes/{classId}/members/{kidUid}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    if (data?.status !== "pending") return null;
+    const classId = context.params.classId;
+    const clsDoc = await db.collection("classes").doc(classId).get();
+    if (!clsDoc.exists) return null;
+    const teacherIds = clsDoc.data().teacherIds || [];
+    const msg = studentWaitingMessage({ studentName: data.firstName, className: clsDoc.data().name });
+    for (const tUid of teacherIds) {
+      await sendThrottledPushToUser(tUid, msg, "classes");
+    }
+    return null;
   });
 
 /** { classId } → { teachers: [{ uid, firstName, subjects }], requests: [{ uid, firstName, subjects }] } */

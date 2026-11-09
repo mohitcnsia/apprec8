@@ -2394,3 +2394,11 @@ only `status`/`doneAt`). Without it the owner's Ideas & reports screen stays emp
 b4 questions-gate-pool-11 (prompt shortened to "the next train" so the key fits 14 words), b5 test-8 (key no longer adds
 "yesterday"), modals-gate-pool-14, agent-board-7, test-12 (distractors match the sentence). `npm test` passes. Owner re-seeds
 English (inbox card). Gemini G73 does the other 24. Also: OTA published (feedback G64–G66); G77 (DR-24) + G78 (offline) on the board.
+
+## 2026-11-09 (night) — G84 Deploy Request DR-25: Push notifications for pending approvals (Gemini)
+Push notification triggers for pending actions (G84 item 2):
+1. **Teacher requests:** `redeemTeacherInvite` sends throttled FCM pushes to the school's creator, school admins, and the owner when a teacher redeems an invite code.
+2. **Student requests:** `onStudentJoinRequest` (Firestore `classes/{classId}/members/{kidUid}` onCreate trigger) pushes to that class's teachers when a student asks to join with `status: "pending"`.
+3. **Throttling:** Enforces maximum 1 push per user per 10 minutes (`pushRateLimits/{uid}`) with count ("N new") to prevent notification spam.
+**DR-25 (functions):** Deploy:
+`firebase deploy --only functions:redeemTeacherInvite,functions:onStudentJoinRequest --project apprec8-ca229` (after the owner's OK; do not deploy now).

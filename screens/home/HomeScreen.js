@@ -4,9 +4,10 @@
 // Replaces the old Home (now the Fun tab) and the Study tab. Tiles open screens in the Home stack.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image, Share } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
@@ -33,6 +34,11 @@ import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
+import { computeNeedsYou } from "../../utils/needsYou";
+import { listenDecisions } from "../../services/decisionsApi";
+import { inbox } from "../../utils/decisions";
+import { loadTeacherClassesOverview, loadAdminTeacherRequests } from "../../services/classesApi";
+import { classLabel, classCodeMessage } from "../../utils/classes";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -248,6 +254,66 @@ export default function HomeScreen({ navigation }) {
   const extras = useOwnerExtras(); // owner's "Owner extras" switch (services/ownerView.js)
   const isTester = isTesterUser(authInstance.currentUser) && extras;
   const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
+
+  const [decisions, setDecisions] = useState([]);
+  const [teacherRequests, setTeacherRequests] = useState([]);
+  const [studentRequests, setStudentRequests] = useState([]);
+  const [teacherClasses, setTeacherClasses] = useState([]);
+
+  useEffect(() => {
+    if (!isAdmin) {
+      setDecisions([]);
+      return undefined;
+    }
+    return listenDecisions((docs) => {
+      setDecisions(inbox(docs).waiting);
+    });
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadAdminTeacherRequests(uid, true).then(setTeacherRequests).catch(() => setTeacherRequests([]));
+    } else {
+      setTeacherRequests([]);
+    }
+  }, [isAdmin, uid]);
+
+  const teachesKey = (userData?.teachesClassIds || []).join(",");
+  useEffect(() => {
+    if (!teachesKey || !uid) {
+      setTeacherClasses([]);
+      setStudentRequests([]);
+      return;
+    }
+    loadTeacherClassesOverview(uid)
+      .then(({ classes, pendingStudents }) => {
+        setTeacherClasses(classes);
+        setStudentRequests(pendingStudents);
+      })
+      .catch(() => {
+        setTeacherClasses([]);
+        setStudentRequests([]);
+      });
+  }, [teachesKey, uid]);
+
+  const needsYouRows = useMemo(() => {
+    return computeNeedsYou({
+      decisions,
+      teacherRequests,
+      studentRequests,
+    });
+  }, [decisions, teacherRequests, studentRequests]);
+
+  const onNeedsYouPress = (row) => {
+    if (row.screen === "Decisions") {
+      navigation.navigate("Decisions");
+    } else if (row.screen === "ClassDetail") {
+      navigation.navigate("ClassDetail", row.params);
+    } else if (row.screen === "Progress") {
+      navigation.navigate("Stats", { screen: "Progress", params: row.params });
+    }
+  };
 
   useEffect(() => {
     const warn = (what) => (e) => console.warn(`HomeScreen: ${what} failed to load`, e);
@@ -409,6 +475,91 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
+      {/* 1. Needs you card = the FIRST card on Home for anyone with pending items */}
+      {needsYouRows.length > 0 ? (
+        <View style={styles.needsYouCard} accessibilityLabel="Needs you">
+          <View style={styles.needsYouHeader}>
+            <Ionicons name="notifications" size={16} color={P.gold} />
+            <Text style={styles.needsYouTitle}>NEEDS YOU</Text>
+          </View>
+          <View style={styles.needsYouList}>
+            {needsYouRows.map((row, idx) => (
+              <Pressable
+                key={row.id}
+                onPress={() => onNeedsYouPress(row)}
+                style={[styles.needsYouRow, idx > 0 && styles.needsYouDivider]}
+                accessibilityRole="button"
+                accessibilityLabel={row.label}
+              >
+                <Text style={styles.needsYouLabel} numberOfLines={2}>
+                  {row.label}
+                </Text>
+                <Ionicons name="chevron-forward" size={16} color={P.textSoft} />
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      ) : null}
+
+      {/* 2. Teacher Home: Your classes */}
+      {teacherClasses.length > 0 ? (
+        <View style={styles.teacherSection} accessibilityLabel="Your classes">
+          <Text style={styles.label}>YOUR CLASSES</Text>
+          {teacherClasses.map((c) => (
+            <Pressable
+              key={c.id}
+              style={styles.classCard}
+              onPress={() => navigation.navigate("Stats", { screen: "Progress", params: { view: "classes", classId: c.id } })}
+              accessibilityRole="button"
+              accessibilityLabel={`${classLabel(c)}, ${c.totalStudents} students`}
+            >
+              <View style={styles.classCardHeader}>
+                <View style={{ flex: 1, marginRight: 8 }}>
+                  <Text style={styles.classCardTitle} numberOfLines={1}>
+                    {classLabel(c)}
+                  </Text>
+                  <Text style={styles.classCardSub}>
+                    {c.totalStudents} {c.totalStudents === 1 ? "student" : "students"}
+                  </Text>
+                </View>
+                {c.joinCode ? (
+                  <Pressable
+                    onPress={() => {
+                      Share.share({
+                        message: classCodeMessage({ className: c.name, schoolName: c.schoolName, code: c.joinCode }),
+                      }).catch(() => {});
+                    }}
+                    style={styles.shareCodeButton}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Share code ${c.joinCode}`}
+                  >
+                    <Text style={styles.shareCodeText}>SHARE CODE</Text>
+                  </Pressable>
+                ) : null}
+              </View>
+
+              <Text style={styles.classStatsText}>
+                This week: {c.activeStudents} of {c.totalStudents} practised
+              </Text>
+
+              <View style={styles.classActionRow}>
+                <Text style={styles.classWeakText} numberOfLines={1}>
+                  {c.weakestTopic ? `Teach again: ${c.weakestTopic}` : "All topics on track 👍"}
+                </Text>
+                <Pressable
+                  onPress={() => navigation.navigate("Stats", { screen: "Progress", params: { view: "classes", classId: c.id } })}
+                  style={styles.assignButton}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Assign practice for ${c.name}`}
+                >
+                  <Text style={styles.assignButtonText}>ASSIGN</Text>
+                </Pressable>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      ) : null}
+
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 
       <HomeIdeaPromptCard userGrade={userGrade} />
@@ -445,7 +596,7 @@ export default function HomeScreen({ navigation }) {
         </Pressable>
       ) : null}
 
-      <Text style={styles.section}>Your quests</Text>
+      <Text style={styles.section}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
       <View style={styles.grid}>
         {allQuests.map((q) => {
           const st = questStats(q);
@@ -644,4 +795,120 @@ const makeStyles = (P, insets) =>
     },
     practiceImage: { width: "100%", height: 84, backgroundColor: P.track },
     practiceTitle: { fontSize: 15, fontFamily: "nunitoBold", color: P.text, padding: 10, minHeight: 58 },
+    needsYouCard: {
+      padding: 14,
+      borderRadius: 20,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.gold,
+      gap: 10,
+    },
+    needsYouHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+    },
+    needsYouTitle: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      letterSpacing: 1,
+      color: P.gold,
+    },
+    needsYouList: {
+      borderRadius: 14,
+      backgroundColor: P.track,
+      overflow: "hidden",
+    },
+    needsYouRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      gap: 10,
+    },
+    needsYouDivider: {
+      borderTopWidth: 1,
+      borderTopColor: P.border,
+    },
+    needsYouLabel: {
+      flex: 1,
+      fontSize: 15,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    teacherSection: {
+      gap: 10,
+      marginTop: 4,
+    },
+    classCard: {
+      padding: 16,
+      borderRadius: 20,
+      backgroundColor: P.card,
+      borderWidth: 2,
+      borderColor: P.border,
+      gap: 10,
+    },
+    classCardHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    classCardTitle: {
+      fontSize: 18,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    classCardSub: {
+      fontSize: 13,
+      fontFamily: "nunitoBold",
+      color: P.textSoft,
+      marginTop: 2,
+    },
+    shareCodeButton: {
+      paddingVertical: 6,
+      paddingHorizontal: 10,
+      borderRadius: 12,
+      backgroundColor: P.selectedBg,
+      borderWidth: 1,
+      borderColor: P.selectedBorder,
+    },
+    shareCodeText: {
+      fontSize: 11,
+      fontFamily: "nunitoBold",
+      letterSpacing: 0.5,
+      color: P.selectedText,
+    },
+    classStatsText: {
+      fontSize: 14,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    classActionRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingTop: 8,
+      borderTopWidth: 1,
+      borderTopColor: P.border,
+      gap: 10,
+    },
+    classWeakText: {
+      flex: 1,
+      fontSize: 13,
+      fontFamily: "nunitoBold",
+      color: P.textSoft,
+    },
+    assignButton: {
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      backgroundColor: P.primary,
+    },
+    assignButtonText: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      letterSpacing: 0.5,
+      color: P.onPrimary,
+    },
   });

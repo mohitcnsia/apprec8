@@ -18,7 +18,7 @@ import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
-import { getClasses } from "../../services/classesApi";
+import { getClasses, mySchoolAdminSchools } from "../../services/classesApi";
 import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
@@ -94,6 +94,14 @@ export default function MeScreen({ navigation, signoutHandler }) {
     getClasses(pendingKey.split(",")).then(setPendingClasses).catch(() => setPendingClasses([]));
   }, [pendingKey]);
   const [ideaModalOpen, setIdeaModalOpen] = useState(false);
+  const [isSchoolAdmin, setIsSchoolAdmin] = useState(false);
+
+  useEffect(() => {
+    if (isAdmin || !uid) return;
+    mySchoolAdminSchools()
+      .then((s) => setIsSchoolAdmin(s.length > 0))
+      .catch(() => setIsSchoolAdmin(false));
+  }, [isAdmin, uid]);
 
   useEffect(() => {
     if (!uid) return undefined;
@@ -299,6 +307,15 @@ export default function MeScreen({ navigation, signoutHandler }) {
             />
             <View style={styles.divider} />
             <Row icon="construct-outline" label="Admin tools" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
+          </View>
+        </>
+      ) : null}
+
+      {!isAdmin && isSchoolAdmin ? (
+        <>
+          <Text style={styles.section}>SCHOOL ADMIN</Text>
+          <View style={styles.group}>
+            <Row icon="construct-outline" label="Admin tools (schools & classes)" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
           </View>
         </>
       ) : null}

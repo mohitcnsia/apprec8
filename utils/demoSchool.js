@@ -253,9 +253,10 @@ export function buildDemoSchool({ quests, now = Date.now(), seed = 7 }) {
         stats: { currentStreak: persona === "away" ? 0 : 1 + Math.floor(r() * 6) },
         demoStars: stars,
       });
+      const isPending = cls.id === "demo_class_10b" && i >= cls.size - 2;
       put(`classes/${cls.id}/members/${uid}`, {
-        firstName, grade: cls.grade, code: null, consentId: null, status: "approved",
-        parentName: "Demo parent", relation: "parent", joinedAt: now - DEMO_WEEKS * 7 * DAY,
+        firstName, grade: cls.grade, code: null, consentId: null, status: isPending ? "pending" : "approved",
+        parentName: "Demo parent", relation: "parent", joinedAt: now - (isPending ? DAY : DEMO_WEEKS * 7 * DAY),
       }, ["joinedAt"]);
     }
     if (cls.assignment) {
@@ -270,6 +271,21 @@ export function buildDemoSchool({ quests, now = Date.now(), seed = 7 }) {
     }
     summary.classes[cls.id] = cls.size;
   });
+
+  // A teacher request waiting for admin approval (G57 / G84 clean test)
+  put("classes/demo_class_10b/teacherRequests/demo_teacher_pending", {
+    firstName: "Kavita",
+    subjects: ["english"],
+    code: "DEMO10",
+    requestedAt: now - 2 * DAY,
+  }, ["requestedAt"]);
+  put("users/demo_teacher_pending", {
+    firstName: "Kavita",
+    lastName: "S.",
+    pendingTeachClassIds: ["demo_class_10b"],
+    isDemo: true,
+  });
+
   put("demo/meta", { anchorMs: now, seed, version: 1 });
   return { ops, logins: DEMO_LOGINS, summary: { ...summary, writes: ops.length } };
 }

@@ -15,6 +15,8 @@ import { makeSchoolStyles, Chip, MainButton, Field } from "./schoolUi";
 import { createSchool, listSchools, listClassesOfSchool, createClass, classMembers, findUserByEmail, addSchoolAdmin } from "../../services/classesApi";
 import { SUBJECTS, SUBJECT_NAMES, classSubjects } from "../../utils/classes";
 import { showAlert } from "../../services/dialog";
+import { authInstance } from "../../config/firebaseConfig";
+import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 
 const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -23,6 +25,8 @@ export default function SchoolsScreen({ navigation }) {
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeSchoolStyles(P, insets), [P, insets]);
+  const uid = authInstance.currentUser?.uid;
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
 
   const [schools, setSchools] = useState(null); // [{ ...school, classes: [{ ...cls, waiting }] }]
   const [sheet, setSheet] = useState(null); // { type: "school" } | { type: "class", school } | { type: "settings", school }
@@ -37,7 +41,10 @@ export default function SchoolsScreen({ navigation }) {
 
   const load = useCallback(async () => {
     try {
-      const list = await listSchools();
+      const rawList = await listSchools();
+      const list = isAdmin
+        ? rawList
+        : rawList.filter((s) => (Array.isArray(s.admins) && s.admins.includes(uid)) || s.createdBy === uid);
       const full = await Promise.all(
         list.map(async (s) => {
           const classes = await listClassesOfSchool(s.id);
@@ -155,11 +162,14 @@ export default function SchoolsScreen({ navigation }) {
         ))}
 
         {schools && schools.length ? <Text style={styles.dim}>Tap a class to share its code, approve parents and invite teachers.</Text> : null}
+        {schools && schools.length === 0 ? <Text style={styles.soft}>No schools found for your account.</Text> : null}
       </ScrollView>
 
-      <View style={styles.footer}>
-        <MainButton label="+ NEW SCHOOL" onPress={() => open({ type: "school" })} styles={styles} P={P} />
-      </View>
+      {isAdmin ? (
+        <View style={styles.footer}>
+          <MainButton label="+ NEW SCHOOL" onPress={() => open({ type: "school" })} styles={styles} P={P} />
+        </View>
+      ) : null}
 
       {/* New school */}
       <Sheet visible={sheet?.type === "school"} onClose={() => setSheet(null)} title="New school" P={P}>

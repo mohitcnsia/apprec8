@@ -2,8 +2,8 @@
 // Admin tools (admin only, opened from Me): the Dashboard and the content seed buttons that used to
 // sit on the Profile screen. Firestore rules still block writes for everyone else.
 
-import React, { useMemo } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,6 +20,7 @@ import { QUESTS } from "../../data/quests";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
 import FixIeoQuestionsButton from "../../components/quiz/FixIeoQuestionsButton";
 import DemoSchoolButton from "../../components/admin/DemoSchoolButton";
+import { mySchoolAdminSchools } from "../../services/classesApi";
 
 export default function AdminToolsScreen({ navigation }) {
   const { isDark } = useTheme();
@@ -27,12 +28,49 @@ export default function AdminToolsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
   const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+  const [schoolAdminSchools, setSchoolAdminSchools] = useState(null);
 
-  if (!isAdmin) {
+  useEffect(() => {
+    if (!isAdmin) {
+      mySchoolAdminSchools()
+        .then(setSchoolAdminSchools)
+        .catch(() => setSchoolAdminSchools([]));
+    }
+  }, [isAdmin]);
+
+  if (!isAdmin && schoolAdminSchools === null) {
+    return (
+      <View style={[styles.screen, styles.content]}>
+        <ActivityIndicator color={P.label} />
+      </View>
+    );
+  }
+
+  if (!isAdmin && (!schoolAdminSchools || schoolAdminSchools.length === 0)) {
     return (
       <View style={[styles.screen, styles.content]}>
         <Text style={styles.soft}>Admin only.</Text>
       </View>
+    );
+  }
+
+  if (!isAdmin && schoolAdminSchools && schoolAdminSchools.length > 0) {
+    return (
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+        <Text style={styles.h1}>School admin</Text>
+        <Text style={styles.soft}>{schoolAdminSchools.map((s) => s.name).join(", ")}</Text>
+
+        <Pressable onPress={() => navigation.navigate("Schools")} style={styles.row} accessibilityRole="button">
+          <Ionicons name="school-outline" size={20} color={P.selectedText} />
+          <Text style={styles.rowText}>Schools & classes (codes, teachers)</Text>
+          <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate("TeacherStart")} style={styles.row} accessibilityRole="button">
+          <Ionicons name="document-text-outline" size={20} color={P.selectedText} />
+          <Text style={styles.rowText}>Teachers' one-pager (Seema's start; share it)</Text>
+          <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+        </Pressable>
+      </ScrollView>
     );
   }
 

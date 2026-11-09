@@ -46,6 +46,18 @@ export async function listSchools() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
+/** Schools where the current user is an admin or creator. */
+export async function mySchoolAdminSchools() {
+  const uid = me();
+  if (!uid) return [];
+  try {
+    const all = await listSchools();
+    return all.filter((s) => (Array.isArray(s.admins) && s.admins.includes(uid)) || s.createdBy === uid);
+  } catch {
+    return [];
+  }
+}
+
 export async function listClassesOfSchool(schoolId) {
   const snap = await getDocs(query(collection(db, "classes"), where("schoolId", "==", schoolId)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -194,4 +206,115 @@ export async function classTeam(classId) {
 }
 export async function decideTeacherRequest({ classId, uid, approve }) {
   await functions().httpsCallable("decideTeacherRequest")({ classId, uid, approve: !!approve });
+}
+
+/** Teacher: loads overview of classes taught by this teacher (stats + pending count + weakest topic) */
+export async function loadTeacherClassesOverview(uid) {
+  if (!uid) return { classes: [], pendingStudents: [] };
+  const snap = await getDocs(query(collection(db, "classes"), where("teacherIds", "array-contains", uid)));
+  const classesList = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const classesOverview = [];
+  const pendingStudents = [];
+
+  for (const cls of classesList) {
+    try {
+      const allMembers = await classMembers(cls.id);
+      const pending = allMembers.filter((m) => m.status === "pending");
+      const approved = allMembers.filter((m) => m.status === "approved");
+
+      if (pending.length > 0) {
+        pendingStudents.push({
+          classId: cls.id,
+          className: cls.name,
+          count: pending.length,
+        });
+      }
+
+      let activeCount = 0;
+      const now = Date.now();
+      const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+      const subtopicCounts = {};
+
+      for (const m of approved) {
+        const qId = (cls.subjects || []).includes("science") ? "science-quest" : "english-quest";
+        try {
+          const progSnap = await getDoc(doc(db, "users", m.uid, "questProgress", qId));
+          if (progSnap.exists()) {
+            const stats = progSnap.data()?.stats || {};
+            if (stats.lastActiveAt && now - stats.lastActiveAt <= SEVEN_DAYS) {
+              activeCount++;
+            }
+            Object.entries(stats.bySubtopic || {}).forEach(([sub, v]) => {
+              if (v && v.total >= 3 && v.correct / v.total < 0.6) {
+                subtopicCounts[sub] = (subtopicCounts[sub] || 0) + 1;
+              }
+            });
+          }
+        } catch {
+          // ignore individual progress errors
+        }
+      }
+
+      const weakestEntry = Object.entries(subtopicCounts).sort((a, b) => b[1] - a[1])[0];
+      let weakestTopic = null;
+      if (weakestEntry && weakestEntry[1] >= 2) {
+        weakestTopic = weakestEntry[0].replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      }
+
+      classesOverview.push({
+        ...cls,
+        totalStudents: approved.length,
+        activeStudents: activeCount,
+        weakestTopic,
+        pendingCount: pending.length,
+      });
+    } catch (e) {
+      classesOverview.push({
+        ...cls,
+        totalStudents: 0,
+        activeStudents: 0,
+        weakestTopic: null,
+        pendingCount: 0,
+      });
+    }
+  }
+
+  return { classes: classesOverview, pendingStudents };
+}
+
+/** Admin: loads pending teacher requests across schools/classes */
+export async function loadAdminTeacherRequests(uid, isAdmin) {
+  if (!uid) return [];
+  const teacherRequests = [];
+  try {
+    let classesList = [];
+    if (isAdmin) {
+      const snap = await getDocs(collection(db, "classes"));
+      classesList = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    } else {
+      const mySchools = await mySchoolAdminSchools();
+      for (const s of mySchools) {
+        const clsSnap = await getDocs(query(collection(db, "classes"), where("schoolId", "==", s.id)));
+        classesList.push(...clsSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      }
+    }
+
+    for (const cls of classesList) {
+      try {
+        const reqSnap = await getDocs(collection(db, "classes", cls.id, "teacherRequests"));
+        if (reqSnap.size > 0) {
+          teacherRequests.push({
+            classId: cls.id,
+            className: cls.name,
+            count: reqSnap.size,
+          });
+        }
+      } catch {
+        // subcollection may be empty or unreadable
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+  return teacherRequests;
 }
