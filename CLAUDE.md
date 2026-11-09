@@ -93,4 +93,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - A keystore (`*.jks`) and `.aab` build outputs sit in the repo root — never commit or move them.
 - `gemini.md` must stay **under 24 KB**: Antigravity (Gemini) reads only the first 24 KB. Move old sessions to `docs/history/`.
   Assign Gemini work through its **inbox at the top of `gemini.md`**; verify from git (`gemini:` commits) + `npm test`.
+- **Firestore rules: never read an optional field directly** (`resource.data.x == null` errors → deny when the field is
+  missing). Use `resource.data.get('x', null)`. DR-22 (2026-11-09): 142 of 145 accounts lacked `profileLastSavedAt`, so
+  new users couldn't save the first-run sheet.
 - `expo-image` must match the Expo SDK (use `npx expo install`); a mismatch crashes Android with a Kotlin `AnyTypeCache` error.
