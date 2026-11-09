@@ -23,6 +23,14 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-09/10: pilot reset around Seema's decisions (Claude)
+- **Goal:** stop going in circles; freeze the pilot (free tuition at home, Class 10 English + Class 5) and build only what was agreed.
+- **Done:** published leave-quiz popup, report reasons, card formatting, Progress → Practise; pilot plan doc rewritten from the
+  owner's 17 comments; Seema's 6 decisions → board G89 two-way cards (mockup https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4),
+  G90 pilot ready, G91 check-up by topic, G92 weekly report (mockup https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj; parents see
+  only their own child), G93 challenge track (waits for the owner's olympiad books).
+- **How to test:** after each G task, Claude reviews; the owner tests on his phone (OWNER_TESTING.md).
+
 ## 2026-11-06 (day): closed-testing push (Claude)
 - **Goal:** owner: "make app ready for closed testing soon"; plan = docs/LAUNCH_CHECKLIST.md "Road to closed testing" (C1–C11).
 - **Done:** published 3× (20.0.29 once, then 20.0.30): old content owner-only (dogs too), My notes (Admin tools: checklist,
