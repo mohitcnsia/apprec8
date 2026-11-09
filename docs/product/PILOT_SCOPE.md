@@ -36,7 +36,11 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
 12. **Internet drops during the child's turn** → today: "Time's up" can't close until the internet is back.
 
 ### Parents
-13. **Consent** → today: in the app, English or हिंदी, with Listen; no paper.
+13. **Consent** → today: in the app, English or हिंदी, with Listen; no paper. **But (owner test, 2026-11-09): on a child's
+    own phone the child can say "yes" for the parent** — not real consent. Options: (a) the parent says yes on their own
+    phone via a WhatsApp link to a simple page, no app (design already approved: "the parent's yes page", never built);
+    (b) the teacher approves only when she knows a parent agreed; (c) a text-message code (costs per message).
+    Claude suggests a + b for the pilot.
 14. **A parent wants to see the child's progress** → today: only if the child is on their account (profile) or linked.
 
 ### Seema
@@ -53,3 +57,6 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
 
 ## Step 3 — pilot now vs later
 (to fill in together after step 2 is agreed)
+
+Candidate first item (owner, 2026-11-09): **test vs real** — a separate test Firebase project, a preview update channel
+for the team, real users get tested updates on a schedule (e.g. twice a week, evenings), urgent fixes only in between.
