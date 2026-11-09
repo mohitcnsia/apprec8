@@ -10,6 +10,7 @@ import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
+import { isTileVisible } from "../../utils/courseVisibility";
 import { topicNamer } from "../../utils/progressView";
 import { parentWeek, weekIndexOf, missedQuestions } from "../../utils/parentWeek";
 
@@ -36,7 +37,7 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
   const load = useCallback(() => {
     let alive = true;
     (async () => {
-      const mine = QUESTS.filter((m) => !m.quest?.draft && nodesForGrade(m.nodes, child.grade).some((n) => n.kind === "main"));
+      const mine = QUESTS.filter((m) => !m.quest?.draft && isTileVisible(m.quest, child) && nodesForGrade(m.nodes, child.grade).some((n) => n.kind === "main"));
       const out = [];
       for (const m of mine) {
         try {

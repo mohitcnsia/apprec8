@@ -22,6 +22,7 @@ import { nodesForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
+import { isTileVisible } from "../../utils/courseVisibility";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
 import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/parent/ParentWeekCard";
@@ -60,8 +61,16 @@ export default function ProgressScreen({ navigation, route }) {
   const [view, setView] = useState("me");
   const [userData, setUserData] = useState(null);
   const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
-  // Bundled quests (topic names + counts without extra reads). Drafts only for testers.
-  const quests = useMemo(() => QUESTS.filter((m) => !m.quest.draft || (isTesterUser(user) && extras)), [uid, extras]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Bundled quests (topic names + counts without extra reads). Drafts only for testers. Restricted courses only if visible.
+  const quests = useMemo(
+    () =>
+      QUESTS.filter(
+        (m) =>
+          (!m.quest.draft || (isTesterUser(user) && extras)) &&
+          isTileVisible(m.quest, userData, { isAdmin })
+      ),
+    [uid, extras, userData, isAdmin] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   useEffect(() => {
     if (!uid) return undefined;

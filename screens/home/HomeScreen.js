@@ -32,6 +32,7 @@ import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import { assignedTopics } from "../../utils/assignedTopics";
+import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -50,6 +51,7 @@ const tileOf = (c) => ({
   description: c.description || "",
   type: c.type || "COURSE",
   questId: c.questId || null,
+  forClassIds: c.forClassIds || null,
 });
 
 // ---- small drawings (no image downloads) ----
@@ -270,13 +272,13 @@ export default function HomeScreen({ navigation }) {
   }, [uid, isTester, ownerView]);
 
   // Every tile quest (English, Science, ...), each with its own progress doc.
-  const allQuests = useMemo(
-    () =>
-      [...quests, ...draftQuests]
-        .map((q) => ({ ...q, questId: q.questId || q.id }))
-        .filter((q, i, arr) => arr.findIndex((x) => x.questId === q.questId) === i),
-    [quests, draftQuests]
-  );
+  const allQuests = useMemo(() => {
+    const raw = [...quests, ...draftQuests]
+      .map((q) => ({ ...q, questId: q.questId || q.id }))
+      .filter((q, i, arr) => arr.findIndex((x) => x.questId === q.questId) === i);
+    const visible = filterVisibleTiles(raw, userData, { isAdmin: isTester || ownerView });
+    return orderQuestsForHome(visible, userData);
+  }, [quests, draftQuests, userData, isTester, ownerView]);
   const questKey = allQuests.map((q) => q.questId).join(",");
 
   useEffect(() => {

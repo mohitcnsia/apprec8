@@ -26,6 +26,17 @@ assert.deepEqual(questsForTeacher(cls, "tS"), ["science-quest"]);
 assert.deepEqual(questsForTeacher(cls, "nobody"), []);
 assert.equal(classLabel(cls), "5-B · English, Word Power, Science, cooking");
 
+// teachers see class courses for their class (G81)
+const cls10 = { id: "demo_class_10b", name: "10-B", teacherSubjects: { tE: ["english"] } };
+const quests10 = questsForTeacher(cls10, "tE");
+assert.ok(quests10.includes("course-seema-c10-english"), "class 10-b teacher can assign from course-seema-c10-english");
+assert.ok(quests10.includes("english-quest"), "class 10-b teacher can also assign from english-quest");
+
+// outside class does not see class-specific course
+const cls5 = { id: "demo_class_5a", name: "5-A", teacherSubjects: { tE: ["english"] } };
+const quests5 = questsForTeacher(cls5, "tE");
+assert.ok(!quests5.includes("course-seema-c10-english"), "class 5-a teacher cannot assign from course-seema-c10-english");
+
 // consent: both languages, a record with version
 assert.ok(CONSENT_TEXT.en.body.includes("first name") && CONSENT_TEXT.hi.body.length > 50);
 const rec = consentRecord({ kidUid: "k", classId: "c", parentName: " Seema ", relation: "mother", language: "hi", now: 5 });
