@@ -16,6 +16,12 @@ import { canSave, firstRunUpdate, bubbleText, needsProfileSave } from "../../uti
 
 const DEFAULT_AVATAR =
   "https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/avatars%2Fbee3.webp?alt=media&token=e4b96cb2-7180-4a9b-900d-14c34dbaa6ba";
+// True if the account's profile was saved in the last 10 minutes (the rule that limits profile changes).
+const recentlySaved = (doc) => {
+  const t = doc?.profileLastSavedAt;
+  const ms = t?.toMillis ? t.toMillis() : typeof t === "number" ? t : 0;
+  return ms > 0 && Date.now() - ms < 10 * 60 * 1000;
+};
 export const grownUpKey = (uid) => `grownUp:${uid}:v1`;
 
 export default function FirstRunScreen({ uid, userDoc, onDone }) {
@@ -49,7 +55,9 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
       console.warn("First run save failed:", e?.code || e);
       setError(
         e?.code === "firestore/permission-denied"
-          ? "You changed your profile a moment ago. Please try again in 10 minutes."
+          ? recentlySaved(userDoc)
+            ? "You changed your profile a moment ago. Please try again in 10 minutes."
+            : "Couldn't save your profile (not allowed). Please tell us: Me → Tell us what you think."
           : "Couldn't save. Check the internet and try again."
       );
     }

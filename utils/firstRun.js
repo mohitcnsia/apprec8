@@ -43,9 +43,12 @@ export function firstRunUpdate(doc = {}, { name, grade, role }, { stamp, default
  * (owner 2026-11-09: Seema was blocked by "you changed your profile a moment ago" with nothing new to save).
  */
 export function needsProfileSave(doc = {}, { name, grade, role }) {
-  const sameName = typeof doc.firstName === "string" && doc.firstName.trim() === cleanName(name);
+  const hasName = typeof doc.firstName === "string" && doc.firstName.trim().length > 0;
+  const sameName = hasName && doc.firstName.trim() === cleanName(name);
   const hasPhoto = typeof doc.photoURL === "string" && doc.photoURL.length > 0;
-  if (role && sameName && hasPhoto) return false;
+  // A grown-up who already has a name: never write here (names change in Edit profile). Seema stayed blocked when the
+  // typed name differed from her account's name (2026-11-09).
+  if (role && hasName) return false;
   if (!role && sameName && hasPhoto && Number.isInteger(doc.grade)) return false;
   return true;
 }

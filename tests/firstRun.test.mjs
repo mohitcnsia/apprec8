@@ -37,7 +37,8 @@ assert.equal(needsFirstRun({ firstName: "Asha" }), true, "unknown grown-up still
 {
   const { needsProfileSave } = await import("../utils/firstRun.js");
   assert.equal(needsProfileSave({ firstName: "Seema", photoURL: "x" }, { name: "Seema", role: "teacher" }), false, "same grown-up: no write");
-  assert.equal(needsProfileSave({ firstName: "Seema", photoURL: "x" }, { name: "Seema J", role: "teacher" }), true, "new name: write");
+  assert.equal(needsProfileSave({ firstName: "Seema", photoURL: "x" }, { name: "Seema J", role: "teacher" }), false, "grown-up with a name: never write here");
+  assert.equal(needsProfileSave({ firstName: "Seema" }, { name: "Seema", role: "parent" }), false, "no photo either: still no write");
   assert.equal(needsProfileSave({ firstName: "Ria", photoURL: "x" }, { name: "Ria", grade: 5 }), true, "child without a class yet: write");
   assert.equal(needsProfileSave({ firstName: "Ria", photoURL: "x", grade: 5 }, { name: "Ria", grade: 5 }), false);
   assert.equal(needsProfileSave({}, { name: "Asha", role: "learner" }), true, "new account: write");
