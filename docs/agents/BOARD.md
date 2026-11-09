@@ -261,6 +261,12 @@ Neutral wording ("their week", not "her week"). Grep your diff for mockup number
 screen a person can get stuck on (sign-up sheets, gates, errors) has a way back or out ("Not you? Use a different
 account", Sign out, Back).
 
+### ⛔ HOLD (owner, 2026-11-09 afternoon): NO NEW FEATURE BUILDS until the owner and Claude agree the pilot scope
+Owner: "you are jumping into building without thinking things through … understand what we need to provide in the pilot
+phase, then pick up based on feedback." **Do only:** G77 (DR-24, owner YES), G80 (testing only, no fixes), G73 (content
+fixes already agreed). **On hold, don't start:** G84, G81, G82, G83, G79, G78, G69, G70, G55, G68, G49-R and everything
+else. Claude will update this board with the agreed pilot list.
+
 ### RULE (owner, 2026-11-09): CLEAN TEST BEFORE "done"
 Your build's last step: run it on the emulator in production mode (`npx expo start --no-dev --minify`), walk launch → new
 account → first-run → Home → every tab → your screens, and paste `adb logcat | grep -E "SoftException|FATAL|Invalid"` (must be
