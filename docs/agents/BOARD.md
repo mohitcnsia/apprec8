@@ -486,7 +486,7 @@ the shape (content-quality remit):
 **Claude's review 2026-11-10: REJECTED and reverted.** About 1,100 of 1,998 whys explain a DIFFERENT question (copied by mistake
 tag): the courier question's why talks about "how much this camera cost"; "explained → asked" gets a why about "whether he had
 seen"; "Meera said that I would visit…" says "'I' refers to the listener" (wrong). A wrong why is worse than none (content
-accuracy rule 5). Fix 1, ONE UNIT AT A TIME, b4 first (Seema's weakest topic), then b3, b1, b2, b5, b6:
+accuracy rule 5). Start a new branch from `feat/quiz-redesign` (G83 is reverted there; your g87 branch still has the old whys). Fix 1, ONE UNIT AT A TIME, b4 first (Seema's weakest topic), then b3, b1, b2, b5, b6:
 - Write each why for THAT question and THAT option: name the words in the option that are wrong and say the rule in ≤ 20 words.
   Never reuse a why across questions; quoted words must appear in the question or the option.
 - Gate: `node scripts/checkWhyMatch.mjs .` must report bad = 0 for the unit (it flags quoted words not in the question/option),
