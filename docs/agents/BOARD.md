@@ -292,6 +292,21 @@ Apply your suggested fixes from docs/agents/reports/G52.md to `data/englishQuest
 id in `docs/agents/reports/G73.md`. **Claude checks every High + Medium and a sample of Low before the owner re-seeds
 English.** `gemini(G73): done — review please`.
 
+### G75 · [todo] · gemini · Fixes from your G56 rehearsal (Claude triaged, 2026-11-09)
+#1 fixed by DR-22. #3 is covered by G70 (teacher class screen). Fix the rest, small, on a branch from the latest
+`feat/quiz-redesign` (NOT from feat/simple-home):
+- **#2 never trapped on "Switch to parent":** if the signed-in account isn't a child session, ParentPinScreen says in
+  plain words "You're already in your own account; this is for switching back from a child's profile" + a Back
+  button. Every exit visible (board rule: never a dead end).
+- **#4 Demo School teacher code:** Admin tools → Demo School card shows a teacher invite code for the demo class
+  (create one at reset, reusable), so teachers can practise "Join as a teacher".
+- **#5 explain the demo wall:** when a real account types a Demo School class code: "The Demo School is only for
+  looking around with the demo logins. To try with real children, create your own class (Me → Guides → Set up a
+  school)."
+- **#6:** no trailing "code " when a class has no join code.
+Also: list in G75.md which real classes / accounts the G56 rehearsal created (e.g. "Glorious Academy 5-A",
+"Kabir", "Pooja") and delete the throwaway accounts if any remain. `gemini(G75): done`.
+
 ### G49-R · [todo] · gemini · ⭐ REWORK row Z (Claude's review, 2026-11-09): real data only
 Branch feat/simple-home. **Rebase on the latest `feat/quiz-redesign` first** (it changed HomeScreen, MeScreen,
 ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
@@ -412,7 +427,7 @@ old Olympiad vocabulary quizzes had **real good words, high difficulty** and fun
 3. **G60 cleanup must keep** the old vocab quizzes and their explanations until this is live.
 Report `docs/agents/reports/G68.md`; Claude spot-checks; owner re-seeds Word Power. `gemini(G68): done`.
 
-### G56 · [review] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
+### G56 · [done] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
 trust." On the emulator, latest published code (feat/quiz-redesign), **fresh throwaway accounts** (never real
 people): 1) a new teacher signs up (first-run sheet → "I'm a teacher" → year of birth if shown), 2) Me → Join as a
