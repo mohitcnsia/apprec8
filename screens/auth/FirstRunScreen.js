@@ -12,7 +12,7 @@ import { db } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import HeroScene from "../../components/auth/HeroScene";
-import { canSave, firstRunUpdate, bubbleText } from "../../utils/firstRun";
+import { canSave, firstRunUpdate, bubbleText, needsProfileSave } from "../../utils/firstRun";
 
 const DEFAULT_AVATAR =
   "https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/avatars%2Fbee3.webp?alt=media&token=e4b96cb2-7180-4a9b-900d-14c34dbaa6ba";
@@ -37,10 +37,12 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
     setBusy(true);
     setError("");
     try {
-      await db
-        .collection("users")
-        .doc(uid)
-        .update(firstRunUpdate(userDoc, { name, grade, role }, { stamp: firestore.FieldValue.serverTimestamp(), defaultAvatar: DEFAULT_AVATAR }));
+      // Nothing new to save (a grown-up with the same name): skip the write, so the 10-minute profile rule can't block.
+      if (needsProfileSave(userDoc, { name, grade, role }))
+        await db
+          .collection("users")
+          .doc(uid)
+          .update(firstRunUpdate(userDoc, { name, grade, role }, { stamp: firestore.FieldValue.serverTimestamp(), defaultAvatar: DEFAULT_AVATAR }));
       if (role) await AsyncStorage.setItem(grownUpKey(uid), "1").catch(() => {});
       onDone?.({ grownUp: !!role });
     } catch (e) {

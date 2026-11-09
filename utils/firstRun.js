@@ -38,6 +38,18 @@ export function firstRunUpdate(doc = {}, { name, grade, role }, { stamp, default
   return out;
 }
 
+/**
+ * Does the first-run sheet need to write to the account? Not for a grown-up whose name and picture are already there
+ * (owner 2026-11-09: Seema was blocked by "you changed your profile a moment ago" with nothing new to save).
+ */
+export function needsProfileSave(doc = {}, { name, grade, role }) {
+  const sameName = typeof doc.firstName === "string" && doc.firstName.trim() === cleanName(name);
+  const hasPhoto = typeof doc.photoURL === "string" && doc.photoURL.length > 0;
+  if (role && sameName && hasPhoto) return false;
+  if (!role && sameName && hasPhoto && Number.isInteger(doc.grade)) return false;
+  return true;
+}
+
 /** What Chamak says in the speech bubble while the child fills it in (mockup T4). */
 export function bubbleText({ name, grade, role }) {
   const n = cleanName(name).split(" ")[0];

@@ -33,4 +33,13 @@ assert.equal(needsFirstRun({ firstName: "Demo", isDemo: true }), false, "demo lo
 assert.equal(needsFirstRun({ firstName: "Mohit", childUids: ["k"] }), false, "parent on a new phone");
 assert.equal(needsFirstRun({ firstName: "Seema", teachesClassIds: ["c"] }), false, "teacher on a new phone");
 assert.equal(needsFirstRun({ firstName: "Asha" }), true, "unknown grown-up still asked once");
+// No write when nothing changed (owner 2026-11-09)
+{
+  const { needsProfileSave } = await import("../utils/firstRun.js");
+  assert.equal(needsProfileSave({ firstName: "Seema", photoURL: "x" }, { name: "Seema", role: "teacher" }), false, "same grown-up: no write");
+  assert.equal(needsProfileSave({ firstName: "Seema", photoURL: "x" }, { name: "Seema J", role: "teacher" }), true, "new name: write");
+  assert.equal(needsProfileSave({ firstName: "Ria", photoURL: "x" }, { name: "Ria", grade: 5 }), true, "child without a class yet: write");
+  assert.equal(needsProfileSave({ firstName: "Ria", photoURL: "x", grade: 5 }, { name: "Ria", grade: 5 }), false);
+  assert.equal(needsProfileSave({}, { name: "Asha", role: "learner" }), true, "new account: write");
+}
 console.log("firstRun tests passed");
