@@ -46,6 +46,10 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
     only the parent's own account gives consent, once, when adding or linking the child; the child plays via Play as or
     "Code from my parent"; joining a class = class code + teacher approval, no consent screen; a child who signed up
     alone can practise but can't join a class until a parent is linked. (Waiting for the owner's OK.)
+    **Sign-up flow (owner idea, Claude's draft, needs a mockup):** "Who's setting up?" grown-up | student → student:
+    "Whose phone?" parent's → "hand the phone to your parent" (parent signs in, Add a child, Play as); own → name + class,
+    practise now, card "to join your class a parent needs to say yes" + SEND TO MY PARENT (WhatsApp: install, sign in,
+    type code = linked = consent). No parent details typed by the child (unverifiable, extra data).
 14. **A parent wants to see the child's progress** → today: only if the child is on their account (profile) or linked.
 
 ### Seema
