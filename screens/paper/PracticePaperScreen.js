@@ -15,6 +15,7 @@ import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES } fro
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
+import { getWhyNotFeedback } from "../../utils/whyNot";
 import { SvgXml } from "react-native-svg";
 import { themeFigure } from "../../utils/figures";
 import { loadPaperSession, savePaperSession, loadPaperHistory, savePaperResult } from "../../services/paperApi";
@@ -464,6 +465,36 @@ export default function PracticePaperScreen({ navigation, route }) {
                 </>
               )}
               {q.explanation?.text ? <Text style={[s.soft, { marginTop: 6 }]}>{q.explanation.text}</Text> : null}
+              {(() => {
+                const fb = getWhyNotFeedback({
+                  question: q,
+                  chosen: r.chosen,
+                  isCorrect: r.correct,
+                });
+                if (!r.correct && fb.wrongWhy) {
+                  return (
+                    <View style={{ marginTop: 6, gap: 2 }}>
+                      <Text style={[s.soft, { color: P.wrongText, fontFamily: "nunitoBold", textDecorationLine: "underline" }]}>
+                        {fb.wrongWhy.heading}
+                      </Text>
+                      <Text style={[s.soft, { color: P.wrongText }]}>{fb.wrongWhy.why}</Text>
+                    </View>
+                  );
+                }
+                if (r.correct && fb.otherWhys.length > 0) {
+                  return (
+                    <View style={{ marginTop: 6, gap: 4 }}>
+                      <Text style={[s.soft, { color: P.label, fontFamily: "nunitoBold" }]}>Why not the others?</Text>
+                      {fb.otherWhys.map((w, idx) => (
+                        <Text key={idx} style={[s.soft, { fontSize: 13, lineHeight: 18 }]}>
+                          • <Text style={{ fontFamily: "nunitoBold" }}>'{w.option}'</Text>: {w.why}
+                        </Text>
+                      ))}
+                    </View>
+                  );
+                }
+                return null;
+              })()}
             </View>
           );
         })}

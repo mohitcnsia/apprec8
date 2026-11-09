@@ -287,6 +287,12 @@ export const useQuizEngine = (quiz, mode) => {
       });
     };
 
+    // Pre-provided questions (e.g. offline testing or practice tests): load immediately.
+    if (Array.isArray(quiz.questions) && quiz.questions.length > 0) {
+      handleQuestions(quiz.questions);
+      return;
+    }
+
     // English Quest passes contentVersion: load once from the local cache (Spec v2 Step 3).
     // Everything else (Space, V1) keeps the live listener as before.
     if (quiz.config?.contentVersion != null) {

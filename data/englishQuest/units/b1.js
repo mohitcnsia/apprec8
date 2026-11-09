@@ -37,9 +37,39 @@ export default {
   },
   quizzes: {
     "eq-b1-perfect-quiz": [
-    t("present-perfect", "Complete Riya's message to her coach: 'I ___ my practice for today, so I can join the team meeting now.'", "have finished", [["had finished", "tense-mixup"], ["will finish", "tense-mixup"], ["finishing", "tense-mixup"]], "Done just now and it matters now: present perfect (have finished)."),
-    t("present-perfect", "She ___ in Pune since 2019.", "has lived", [["lives", "tense-mixup"], ["lived", "tense-mixup"], ["is living", "tense-mixup"]], "SINCE + a point in time that reaches up to now \u2192 present perfect: has lived."),
-    t("past-perfect", "When we reached the cinema, the film ___.", "had already started", [["has already started", "tense-mixup"], ["already starts", "tense-mixup"], ["will have started", "tense-mixup"]], "Two past actions: the earlier one (the film starting) takes HAD."),
+    t(
+      "present-perfect",
+      "Complete Riya's message to her coach: 'I ___ my practice for today, so I can join the team meeting now.'",
+      "have finished",
+      [
+        ["had finished", "tense-mixup", "Past perfect needs an earlier past action, but this happened just now."],
+        ["will finish", "tense-mixup", "Future tense means not yet finished, but she says she can join now."],
+        ["finishing", "tense-mixup", "-ing cannot be the main verb without a helping verb like 'am'."],
+      ],
+      "Done just now and it matters now: present perfect (have finished)."
+    ),
+    t(
+      "present-perfect",
+      "She ___ in Pune since 2019.",
+      "has lived",
+      [
+        ["lives", "tense-mixup", "Simple present is for habits or general facts, not for an action continuing from 2019."],
+        ["lived", "tense-mixup", "Simple past means she no longer lives there, but 'since' shows it reaches now."],
+        ["is living", "tense-mixup", "Present continuous doesn't pair with 'since' for duration; use present perfect."],
+      ],
+      "SINCE + a point in time that reaches up to now → present perfect: has lived."
+    ),
+    t(
+      "past-perfect",
+      "When we reached the cinema, the film ___.",
+      "had already started",
+      [
+        ["has already started", "tense-mixup", "'Has started' is present perfect, but both events are in the past."],
+        ["already starts", "tense-mixup", "Simple present doesn't fit a story set in the past."],
+        ["will have started", "tense-mixup", "Future perfect is for future times, not past cinema visits."],
+      ],
+      "Two past actions: the earlier one (the film starting) takes HAD."
+    ),
     t("past-perfect", "Which action happened FIRST? 'The farmer had sown the seeds before the rain came.'", "The farmer sowed the seeds.", [["The rain came.", "sequence-mixup"], ["Both happened together.", "sequence-mixup"], ["The sentence does not say.", "sequence-mixup"]], "HAD + past participle marks the earlier action: the sowing."),
     t("future-perfect", "By the time you arrive, I ___ dinner.", "will have cooked", [["had cooked", "tense-mixup"], ["have cooked", "tense-mixup"], ["was cooking", "tense-mixup"]], "BY + a future moment \u2192 future perfect: will have cooked."),
     t("future-perfect", "By next March, the workers ___ the new bridge.", "will have completed", [["have completed", "tense-mixup"], ["had completed", "tense-mixup"], ["completed", "tense-mixup"]], "Finished before a future time: will have completed."),

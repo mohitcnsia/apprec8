@@ -105,7 +105,13 @@ export function paperMistakeUpdates(mistakes = {}, wrongs = [], { paperId, now =
       branchId: w.branchId || null,
       inline: {
         question: q.question,
-        options: q.options.map(({ type = "text", content, isCorrect, mistakeTag }) => ({ type, content, isCorrect: !!isCorrect, ...(mistakeTag ? { mistakeTag } : {}) })),
+        options: q.options.map(({ type = "text", content, isCorrect, mistakeTag, why }) => ({
+          type,
+          content,
+          isCorrect: !!isCorrect,
+          ...(mistakeTag ? { mistakeTag } : {}),
+          ...(why ? { why } : {}),
+        })),
         answer: q.answer,
         explanation: q.explanation || null,
       },

@@ -336,7 +336,7 @@ screenshots before anyone sees it.
 5. Clean test (RULE) with the Demo School: teacher with waiting students, admin with a waiting teacher, a parent with
    nothing pending. Screenshots in G84.md. `gemini(G84): done — review please`.
 
-### G82 · [todo] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
+### G82 · [done] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
 Owner: "add why other options are incorrect; extremely useful where more than one option seems correct." Claude decided
 the shape (content-quality remit):
 1. Data: a wrong option may carry `why` (one short kid-friendly sentence). Helper `q()` in `data/englishQuest/helpers.js`
