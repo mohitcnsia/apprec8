@@ -2355,3 +2355,13 @@ Gemini builds after G49 (budget: Claude reviews only). Mockups: docs/mockups/row
   the child. Needs: page mockup (owner OK), DR for the function + rules, cost check (free tier).
 - Replaces the blocking gate on `feat/consent-gate` (keep its College / grown-up, "parent or guardian" wording and
   "say it appreciate" parts).
+
+## 2026-11-09 — DR-22: profile rule fails for accounts without `profileLastSavedAt` (URGENT, Claude)
+Found via G72 (Seema blocked): the users-update rule read `resource.data.profileLastSavedAt` directly; a missing field
+makes Firestore rules error → deny. 142 of 145 accounts lack the field, so almost every new user (children picking
+their class on the first-run sheet, Seema's students, closed testers) can't save their profile; the old app message
+blamed "the 10-minute rule" (the demo parent hit the same thing on 7 Nov). Fix (local firestore.rules line 61):
+`resource.data.get('profileLastSavedAt', null) == null || request.time - resource.data.get('profileLastSavedAt', request.time) > 10m`.
+Nothing else changes; every other field the rule reads is guarded already. **DR-22: Gemini deploys
+`firebase deploy --only firestore:rules` from Claude's folder after the owner's OK, then tests the first-run sheet
+with a brand-new throwaway account (child, Class 5) and deletes it.**

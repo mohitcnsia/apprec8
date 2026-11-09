@@ -262,12 +262,18 @@ screen a person can get stuck on (sign-up sheets, gates, errors) has a way back 
 account", Sign out, Back).
 
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
-**00) G72 URGENT Seema's account**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
+**00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
-### G72 · [todo] · gemini · 🚨 URGENT: Seema can't get past the first-run sheet ("Couldn't save your profile (not allowed)")
+### G74 · [todo] · gemini · 🚨 Deploy DR-22 (profile rule, missing field) — owner-approved: not yet
+CODE_REVIEW.md "DR-22". Wait until Claude changes "not yet" to "yes". Then: check the local `firestore.rules` diff vs
+live is only the DR-22 line (+ the DR-21 block already live), deploy rules from Claude's folder, test with a NEW
+throwaway account: sign up → first name → Class 5 → LET'S GO must save; delete the account afterwards. Report in
+G74.md. `gemini(G74): done — deployed + tested`.
+
+### G72 · [done] · gemini · 🚨 URGENT: Seema can't get past the first-run sheet ("Couldn't save your profile (not allowed)")
 The owner gives you Seema's sign-in email **in Antigravity** (never write it in the repo). Her account is from 2025
 (old app). Every first-run save is refused by the users-update rule even though it isn't the 10-minute limit.
 1. **Read only her `users/{uid}` doc** and report in `docs/agents/reports/G72.md` the **field names and types**
