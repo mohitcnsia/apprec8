@@ -262,7 +262,7 @@ screen a person can get stuck on (sign-up sheets, gates, errors) has a way back 
 account", Sign out, Back).
 
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
-**00) G72 URGENT Seema's account**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
+**00) G72 URGENT Seema's account**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
@@ -279,6 +279,13 @@ The owner gives you Seema's sign-in email **in Antigravity** (never write it in 
 3. Check how many other user docs have the same old-type field (count only, no names) and say so.
 4. Ask her to reopen the app: it should go straight through. `gemini(G72): done — fixed`.
 Claude then makes the rule robust to old types (a DR for the owner).
+
+### G73 · [todo] · gemini · Fix the 29 Grammar Pro issues from your G52 report (Claude reviewed it, 2026-11-09)
+Apply your suggested fixes from docs/agents/reports/G52.md to `data/englishQuest/units/b1.js`–`b6.js`: all 5 High,
+11 Medium, 13 Low. Also bring the **"right answer is the longest option"** rate in b1 (56%) and b4 (52%) below 40%
+(lengthen distractors or shorten keys; don't change what's right). Keep ids. `npm test` passes. Report what changed per
+id in `docs/agents/reports/G73.md`. **Claude checks every High + Medium and a sample of Low before the owner re-seeds
+English.** `gemini(G73): done — review please`.
 
 ### G49-R · [todo] · gemini · ⭐ REWORK row Z (Claude's review, 2026-11-09): real data only
 Branch feat/simple-home. **Rebase on the latest `feat/quiz-redesign` first** (it changed HomeScreen, MeScreen,
@@ -430,7 +437,7 @@ Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Als
 waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
 Google's reviewer can try approving.
 
-### G52 · [review] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
+### G52 · [done] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
 check: exactly one correct option, the answer key matches, the explanation says why, Indian English spelling, CBSE
