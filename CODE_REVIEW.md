@@ -2410,6 +2410,6 @@ Push notification triggers for pending actions (G84 item 2):
   not sent later; picks science OR english progress for a class with both subjects. Cheap enough for the pilot.
 - **G83 rejected + reverted:** ~1,100 of 1,998 whys explain another question. Back to Gemini, one unit at a time, gate `scripts/checkWhyMatch.mjs`.
 - **G85 not merged:** product flavors break `:app:bundleRelease` / `expo run:android`. Back to Gemini with the exact fixes (BOARD G85).
-- **DR-25 Deploy request (owner OK needed):** deploy functions `redeemTeacherInvite` (push to school admins + owner when a teacher
+- **DR-25 Deploy request (owner YES on the phone, 2026-11-10 → G94):** deploy functions `redeemTeacherInvite` (push to school admins + owner when a teacher
   waits) and new trigger `onStudentJoinRequest` (push to the class teachers when a student waits), max 1 push per person per 10 min.
   `firebase deploy --only functions:redeemTeacherInvite,functions:onStudentJoinRequest`. No rules change.

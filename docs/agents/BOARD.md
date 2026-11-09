@@ -281,6 +281,12 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
+### G94 · [todo] · gemini · Deploy DR-25 (owner YES on the phone, 2026-11-10) — quick, before G89
+Deploy the two G84 push functions from `feat/quiz-redesign` (merged): `firebase deploy --only
+functions:redeemTeacherInvite,functions:onStudentJoinRequest` (project default = real). Then test once: a test teacher redeems
+an invite → the owner's phone gets "Teacher waiting · Approve"; a test kid asks to join a test class → that teacher gets
+"Student waiting". Delete the throwaway accounts. Note the result under DR-25 in CODE_REVIEW.md. `gemini(G94): done — review please`.
+
 ### G89 · [todo] · gemini · FIRST: Two-way cards on Home: we ask, they answer, we reply (owner + Seema, 2026-11-10)
 Why (owner): "Users have no way of connecting with you or me." Seema must see what we decided and push back; kids, parents and
 teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4 (5 screens; follow it).

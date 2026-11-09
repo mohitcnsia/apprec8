@@ -97,7 +97,10 @@
     "title": "Task: Seema's pilot prep",
     "ask": "3 things before students join: Seema checks Grammar Pro questions, a 30-minute dry run with her, the school's consent form. Tap YES when done, LATER for a reminder.",
     "details": "**Dry run (owner + Seema):** you: Me → Guides → Set up a school (school, class 10-B, invite Seema). Seema: Join as a teacher → you approve → Me → Guides → Start your class with 2 test students → **assign a Grammar Pro topic** (Class 10 students otherwise start at the basics).\n\n**Students:** they join the testers' Google Group too, so they also count for Google's 12 testers (C10).\n\nThe WhatsApp message for students and parents is ready: My notes → Seema's pilot (after the next publish).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-09T20:07:31.130Z"
   },
   {
     "id": "consent-listen-button",
@@ -228,7 +231,10 @@
     "title": "Task: send Seema's WhatsApp message (when 3 things are done)",
     "ask": "Send it when: 1) Google approved and you pressed Publish, 2) Seema's class exists (you have the code), 3) Seema tried it with 2 test students. Tap YES when sent.",
     "details": "**Message (fill in the class code):**\n\n📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this **with a parent**, on the phone the student will use:\n\n1️⃣ Join the testers' group (use the Google account on that phone): https://groups.google.com/g/apprec8-testers → Join group\n\n2️⃣ Become a tester: https://play.google.com/apps/testing/com.mohitchilkoti.apprec8 → Become a tester\n\n3️⃣ Install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\n4️⃣ Open Apprec8 → Continue with Google → first name → Class 10.\n\n5️⃣ Me → Join a class → code ______ → the parent reads the short note (English or हिंदी), types their name, agrees.\n\nPlease stay in the group for at least 2 weeks. 🙏",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-09T20:07:34.642Z"
   },
   {
     "id": "task-owner-practice",
@@ -394,7 +400,10 @@
     "title": "To do: re-seed English (5 serious Grammar Pro mistakes fixed)",
     "ask": "Close and reopen the app (so it gets the fix), then Me → Admin tools → re-seed English. Tap YES when done.",
     "details": "**Fixed (Claude):** a marked-correct answer that added \"yesterday\" from nowhere (passive voice); 4 questions whose options didn't match the sentence (reported questions, passive questions, \"was lent\" ×2). Two explanations rewritten for children.\n\n**Steps:** close the app fully, reopen (it downloads the update), then **Me → Admin tools → re-seed English**. Phones fetch the new questions once.\n\nThe other 24 smaller issues: Gemini (G73), then one more re-seed.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T20:07:48.381Z"
   },
   {
     "id": "seema-class-setup",
@@ -411,7 +420,10 @@
     "title": "Decide: tutors and teachers without a school (\"Start my own class\")",
     "ask": "Let a teacher with no school start her own class, but only after you approve her (a card in this inbox, with her name and why). Then Claude makes a mockup. OK?",
     "details": "**Who:** tuition teachers, coaching owners, independent teachers, Seema if her school never joins.\n\n**How it would work:** Me → \"Start my own class\" → name + subject + a line about her students → **you approve** (here, one tap) → she gets her own small space (like a one-teacher school), makes classes and shares codes.\n\n**Why you approve:** any adult can claim to be a teacher. Parents still say yes in the app for each child, there is no chat, others see first names only, but checking who runs a class is the safety step while we're small.\n\n**YES** = Claude makes the mockup first (no building before you approve it).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-09T20:07:44.295Z"
   },
   {
     "id": "grownup-feedback",
@@ -479,7 +491,10 @@
     "ask": "Open the document, change any dropdown or comment. Tap YES when you agree with step 3.",
     "details": "The document is on claude.ai (works in the phone browser or the Claude app). Step 3 lists six pieces of pilot work; everything else already works, disappears with school codes, or waits for feedback.",
     "link": "https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-09T20:07:39.918Z"
   },
   {
     "id": "assignment-fix-test",
@@ -509,8 +524,8 @@
     "ask": "Gemini's work is reviewed. One thing needs your OK: turn on two notifications on the server. YES = Gemini deploys them. LATER = they wait.",
     "details": "**The 2 notifications:** (1) a teacher asks to join a school → the school admin and you get 'Teacher waiting · Approve'. (2) a student asks to join a class → that class's teachers get 'Student waiting · Approve'. Max 1 per person per 10 minutes. Adults only; kids never get these.\n\n**Review result:** merged Seema's Class 10 course tile (G81), 'Needs you' + teacher Home (G84), 'why not this option' panel (G82), pilot fixes (G79). All tests pass.\n\n**Sent back:** G83 'why' explanations: about half explained a different question (e.g. the courier question talked about a camera), so they are removed; Gemini redoes them one unit at a time and I check each. G85 test app: it would break the next real build; Gemini fixes it first.\n\n**Not on your phone yet:** these reach phones only in the next publish, after the clean test.",
     "from": "claude",
-    "answer": null,
+    "answer": "yes",
     "note": null,
-    "answeredAt": null
+    "answeredAt": "2026-11-09T20:06:53.830Z"
   }
 ]
