@@ -267,7 +267,7 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**0) G84 Needs you + teacher Home (owner + Seema: TOP)**, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
@@ -290,6 +290,27 @@ students see it." No new questions, no new screens.
    (class 10-A of Appreciate International School; never write it in the repo). Until then use the Demo School class to test.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
+
+### G84 · [todo] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
+Owner: "Approvals kept hidden in the classes and I had to search for them … the responsible person will never know
+something is pending." Seema: "overly complicated, not usable." Claude decided the shape (partner remit); Claude reviews
+screenshots before anyone sees it.
+1. **"Needs you" card = the FIRST card on Home** for anyone with pending items, one line each, tap = the exact screen:
+   - owner/admin: teachers waiting (users.pendingTeachClassIds / the class's teacher requests), Decisions waiting;
+   - teacher: students waiting per class ("10-A: 3 students waiting · Approve");
+   - parent: nothing new in v1 (leave the hook). No pending → no card (never an empty box).
+   Pure `utils/needsYou.js` (inputs → rows) + tests.
+2. **Push when something new waits** (server, `functions/`): a teacher redeems an invite → push to the school's creator,
+   its admins and the owner; a student asks to join → push to that class's teachers. Max 1 push per person per 10 minutes
+   ("3 new"). Reuse the existing FCM token + send code (weekly summary / decisions). File Deploy request DR-25 in
+   CODE_REVIEW.md; don't deploy.
+3. **Teacher Home** (anyone with `teachesClassIds`): under "Needs you", "Your classes": one card per class: name ·
+   SHARE CODE · this week N practised of M · weakest topic + ASSIGN. This is approved mockup G57 (G70) placed on Home;
+   fold G70 into this task. Quest tiles move below ("Practise yourself").
+4. **School admins** (schools.admins) get Me → Admin tools → Schools with ONLY their school(s): classes, invite a teacher,
+   approve teachers. Today a school admin sees nothing at all.
+5. Clean test (RULE) with the Demo School: teacher with waiting students, admin with a waiting teacher, a parent with
+   nothing pending. Screenshots in G84.md. `gemini(G84): done — review please`.
 
 ### G82 · [todo] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
 Owner: "add why other options are incorrect; extremely useful where more than one option seems correct." Claude decided
