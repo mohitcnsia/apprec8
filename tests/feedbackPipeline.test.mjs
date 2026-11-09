@@ -32,13 +32,26 @@ assert.equal(p2.id, "whats_boring");
 const p3 = pickWeeklyPrompt({ index: 3 });
 assert.equal(p3.id, "other_apps", "rotates cleanly");
 
-// 3. Frequency Guard
+// 3. Frequency Guard & Account Age Guard (G79)
 const now = 1700000000000;
-assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, now }), true, "never shown before -> show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, now }), true, "never shown before (unknown age) -> show");
 assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: now - 1000, now }), false, "1 sec ago -> do not show");
 assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: now - SEVEN_DAYS_MS + 1000, now }), false, "just under 7 days -> do not show");
 assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: now - SEVEN_DAYS_MS, now }), true, "7 days elapsed -> show");
 assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: now - SEVEN_DAYS_MS * 2, now }), true, "14 days elapsed -> show");
+
+// Account age: never show in first 7 days of account creation
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: now - ONE_DAY_MS, now }), false, "day 1 account -> do not show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: now - 6 * ONE_DAY_MS, now }), false, "day 6 account -> do not show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: now - SEVEN_DAYS_MS, now }), true, "day 7 account -> show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: now - 10 * ONE_DAY_MS, now }), true, "mature account -> show");
+
+// Accepts Firestore timestamp / ISO string / Date / seconds
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: { toMillis: () => now - ONE_DAY_MS }, now }), false, "Timestamp toMillis -> do not show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: { toDate: () => new Date(now - ONE_DAY_MS) }, now }), false, "Timestamp toDate -> do not show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: new Date(now - ONE_DAY_MS).toISOString(), now }), false, "ISO string -> do not show");
+assert.equal(shouldShowWeeklyPrompt({ lastPromptAt: 0, userCreatedAt: { seconds: Math.floor((now - 10 * ONE_DAY_MS) / 1000) }, now }), true, "seconds timestamp mature -> show");
 
 // 4. Payload Builder
 assert.throws(() => buildIdeaPayload(), /userId is required/);

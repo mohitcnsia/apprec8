@@ -18,7 +18,7 @@ import { useOwnerExtras } from "../../services/ownerView";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS, bundledQuest } from "../../data/quests";
-import { nodesForGrade } from "../../utils/gradeFilter";
+import { nodesForGrade, questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
@@ -105,7 +105,9 @@ export default function ProgressScreen({ navigation, route }) {
   // Per quest: where the kid is (only topics for their class), weak and strong topics with names.
   const perQuest = useMemo(
     () =>
-      quests.map((m) => {
+      quests
+        .filter((m) => questHasTopicsForGrade(m.nodes, grade))
+        .map((m) => {
         const p = progressById[m.QUEST_ID] || { nodes: {}, doc: {} };
         const namer = topicNamer(m.nodes);
         let summary = null;

@@ -4,8 +4,9 @@ import { View, StyleSheet, Text, Modal, Pressable, Dimensions } from "react-nati
 import { Image } from "expo-image";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../context/ThemeContext";
+import { quizPalette } from "./quizPalette";
+import Mascot from "./Mascot";
 import MarkdownDisplay from "react-native-markdown-display";
-import LottieView from "lottie-react-native";
 import YoutubeIframe from 'react-native-youtube-iframe';
 import { Video, ResizeMode } from 'expo-av';
 
@@ -19,13 +20,8 @@ import { Video, ResizeMode } from 'expo-av';
  * @returns {React.ReactElement}
  */
 const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
-  const { theme } = useTheme();
-  const C = theme.appColors || theme;
-  const animationRef = useRef(null);
-
-  useEffect(() => {
-    animationRef.current?.play();
-  }, [isCorrect]);
+  const { isDark } = useTheme();
+  const P = quizPalette(isDark);
 
   const [mediaError, setMediaError] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -48,39 +44,33 @@ const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
   const markdownStyles = useMemo(
     () =>
       StyleSheet.create({
-        body: { fontSize: 17, color: C.textPrimary, fontFamily: "nunito", lineHeight: 24 },
+        body: { fontSize: 20, color: P.text, fontFamily: "nunitoBold", lineHeight: 28 },
         heading1: {
-          fontSize: 22,
-          color: C.textPrimary,
+          fontSize: 24,
+          color: P.text,
           fontFamily: "nunitoBold",
           marginTop: 10,
           borderBottomWidth: 2,
-          borderColor: C.borderLight,
+          borderColor: P.cardBorder,
           paddingBottom: 5,
         },
         strong: {
           fontFamily: "nunitoBold",
-          color: C.textPrimary,
-        }
+          color: P.text,
+        },
       }),
-    [C]
+    [P]
   );
 
   return (
     <View style={styles.outerWrapper}>
       
-      {/* The Mascot Peeking Out */}
+      {/* Chamak the star mascot peeking out (G79: replaced old emoji animation) */}
       <View style={styles.mascotContainer}>
-        <LottieView
-          ref={animationRef}
-          source={require("../../assets/animations/mascot.json")}
-          autoPlay={false}
-          loop={false}
-          style={styles.lottie}
-        />
+        <Mascot mood={isCorrect ? "cheer" : "thinking"} size={76} />
       </View>
 
-      <View style={[styles.card, { backgroundColor: C.cardBackground, borderColor: C.borderLight, borderBottomColor: C.border }]}>
+      <View style={[styles.card, { backgroundColor: P.card, borderColor: P.cardBorder, borderBottomColor: P.cardBorder }]}>
         
         {/* Main Text */}
         <View style={styles.textContainer}>
@@ -89,9 +79,9 @@ const Apprec8ReaderV2 = ({ explanation, isCorrect }) => {
 
         {/* Trivia Bubble */}
         {expData.trivia && (
-          <View style={styles.triviaContainer}>
-            <Text style={styles.triviaTitle}>✨ FUN FACT ✨</Text>
-            <Text style={styles.triviaText}>{expData.trivia}</Text>
+          <View style={[styles.triviaContainer, { backgroundColor: isDark ? "#3A2E12" : "#FFF4D6", borderColor: P.gold, borderBottomColor: P.gold }]}>
+            <Text style={[styles.triviaTitle, { color: P.gold }]}>✨ FUN FACT ✨</Text>
+            <Text style={[styles.triviaText, { color: P.text }]}>{expData.trivia}</Text>
           </View>
         )}
 

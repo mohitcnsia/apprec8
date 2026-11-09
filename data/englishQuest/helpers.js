@@ -7,7 +7,13 @@ export const q = (content, correct, wrongs, explanation) => ({
   question: { type: "text", content },
   options: [
     { type: "text", content: correct, isCorrect: true },
-    ...wrongs.map(([text, mistakeTag]) => ({ type: "text", content: text, isCorrect: false, mistakeTag })),
+    ...wrongs.map(([text, mistakeTag, why]) => ({
+      type: "text",
+      content: text,
+      isCorrect: false,
+      mistakeTag,
+      ...(why ? { why } : {}),
+    })),
   ],
   answer: correct,
   explanation: { text: explanation },

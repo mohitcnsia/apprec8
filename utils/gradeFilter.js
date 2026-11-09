@@ -12,6 +12,7 @@
 const fits = (n, grade) => !Array.isArray(n.grades) || n.grades.length === 0 || n.grades.includes(grade);
 
 export function nodesForGrade(nodes = [], grade) {
+  if (!Array.isArray(nodes) || nodes.length === 0) return [];
   if (!Number.isInteger(grade)) return nodes;
   const hiddenUnits = new Set(nodes.filter((n) => n.kind === "unit" && !fits(n, grade)).map((n) => n.id));
   const hiddenBranches = new Set(
@@ -33,6 +34,16 @@ export function nodesForGrade(nodes = [], grade) {
   );
   if (emptyUnits.size) kept = kept.filter((n) => !emptyUnits.has(n.id) && !emptyUnits.has(n.unitId));
   return kept;
+}
+
+/**
+ * Returns true if the quest has at least one main topic for the given class.
+ * When grade is not set (null/undefined), returns true if the quest has any main topics.
+ * Quests with 0 main topics for a child's class should not show a Home tile or Progress row.
+ */
+export function questHasTopicsForGrade(nodes = [], grade) {
+  const visible = nodesForGrade(nodes, grade);
+  return visible.some((n) => n.kind === "main");
 }
 
 /** "Class 3–5" label for a topic, or null when it's for everyone. */

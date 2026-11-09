@@ -429,9 +429,11 @@ export const convertV1QuestionToV2 = (id, quizId, data) => {
   // Compare loosely: old data sometimes has extra or trailing spaces.
   const normalize = (value) => String(value ?? "").trim().replace(/\s+/g, " ");
   const answer = normalize(data.answer);
-  const explanationText = Array.isArray(data.explanation)
+  let explanationText = Array.isArray(data.explanation)
     ? data.explanation.join("\n\n")
     : data.explanation || "";
+  // Strip trailing decorative status emojis from V1 explanations (e.g. ✅, ✔, ❌).
+  explanationText = String(explanationText).replace(/\s*[✅✔❌]\s*$/, "").trim();
 
   return {
     id,
@@ -443,11 +445,17 @@ export const convertV1QuestionToV2 = (id, quizId, data) => {
       content: typeof data.question === "string" ? data.question : String(data.question ?? ""),
       ...(data.image ? { mediaUrl: data.image } : {}),
     },
-    options: options.map((opt) => ({
-      type: "text",
-      content: String(opt),
-      isCorrect: answer !== "" && normalize(opt) === answer,
-    })),
+    options: options.map((opt) => {
+      const isObj = typeof opt === "object" && opt !== null;
+      const content = isObj ? String(opt.content ?? "") : String(opt);
+      const why = isObj && opt.why ? opt.why : (data.whys && data.whys[content]) || undefined;
+      return {
+        type: "text",
+        content,
+        isCorrect: answer !== "" && normalize(content) === answer,
+        ...(why ? { why } : {}),
+      };
+    }),
     explanation: explanationText ? { text: explanationText } : null,
     sourceFormat: "v1",
   };

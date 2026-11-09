@@ -1,8 +1,10 @@
 // Tests for utils/gradeFilter.js (class-tagged quests). Run: npm test
 import assert from "node:assert/strict";
-import { nodesForGrade, gradesLabel } from "../utils/gradeFilter.js";
+import { nodesForGrade, gradesLabel, questHasTopicsForGrade } from "../utils/gradeFilter.js";
 import { buildQuestPath } from "../utils/questTree.js";
 import * as English from "../data/englishQuestData.js";
+import * as Science from "../data/scienceQuestData.js";
+import * as WordPower from "../data/wordPowerQuestData.js";
 
 const N = [
   { id: "u1", kind: "unit", unitOrder: 1, title: "Living things" },
@@ -57,5 +59,27 @@ assert.equal(gradesLabel([5, 3, 4]), "Class 3–5");
 assert.equal(gradesLabel([6]), "Class 6");
 assert.equal(gradesLabel([3, 5]), "Class 3, 5");
 assert.equal(gradesLabel(undefined), null);
+
+// questHasTopicsForGrade
+assert.equal(questHasTopicsForGrade(N, 4), true, "N has topics for Class 4");
+assert.equal(questHasTopicsForGrade(N, 8), true, "N has topics for Class 8");
+assert.equal(questHasTopicsForGrade([], 4), false, "empty quest has no topics");
+assert.equal(questHasTopicsForGrade(null, 4), false, "null quest has no topics");
+
+const taggedOnlyTree = [
+  { id: "u1", kind: "unit" },
+  { id: "t1", kind: "main", unitId: "u1", grades: [3, 4, 5] },
+  { id: "t2", kind: "main", unitId: "u1", grades: [7, 8] },
+];
+assert.equal(questHasTopicsForGrade(taggedOnlyTree, 4), true, "has topics for Class 4");
+assert.equal(questHasTopicsForGrade(taggedOnlyTree, 10), false, "no topics for Class 10");
+
+// Real quests for Class 10 (G79 bug report: Class 10 must hide Science and Word Power)
+assert.equal(questHasTopicsForGrade(English.nodes, 10), true, "English Quest has topics for Class 10");
+assert.equal(questHasTopicsForGrade(English.nodes, 4), true, "English Quest has topics for Class 4");
+assert.equal(questHasTopicsForGrade(Science.nodes, 4), true, "Science Quest has topics for Class 4");
+assert.equal(questHasTopicsForGrade(Science.nodes, 10), false, "Science Quest has 0 topics for Class 10 (only teaser unit)");
+assert.equal(questHasTopicsForGrade(WordPower.nodes, 4), true, "Word Power has topics for Class 4");
+assert.equal(questHasTopicsForGrade(WordPower.nodes, 10), false, "Word Power has 0 topics for Class 10 (only teaser unit)");
 
 console.log("gradeFilter tests passed");

@@ -27,6 +27,7 @@ import FeedbackSheet from "../../components/quiz/FeedbackSheet";
 import Mascot from "../../components/quiz/Mascot";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { fitsTiles, sheetExplanation } from "../../utils/quizText";
+import { getWhyNotFeedback } from "../../utils/whyNot";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 import { shouldConfirmLeave, leaveMessage } from "../../utils/quizLeave";
@@ -525,6 +526,12 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 correct={wasCorrect}
                 title={wasCorrect ? "Brilliant!" : "Not quite"}
                 text={explanation.text || answerFallback}
+                whyNot={getWhyNotFeedback({
+                  question: currentQuestion,
+                  chosen: chosenText,
+                  isCorrect: wasCorrect,
+                  explanationText: explanation.text || answerFallback,
+                })}
                 buttonLabel={explanation.rich ? "SEE WHY" : wasCorrect ? "CONTINUE" : "GOT IT"}
                 onPress={handleContinue}
                 bottomInset={insets.bottom}

@@ -460,7 +460,7 @@ screenshots before anyone sees it.
 5. Clean test (RULE) with the Demo School: teacher with waiting students, admin with a waiting teacher, a parent with
    nothing pending. Screenshots in G84.md. `gemini(G84): done — review please`.
 
-### G82 · [todo] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
+### G82 · [done] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
 Owner: "add why other options are incorrect; extremely useful where more than one option seems correct." Claude decided
 the shape (content-quality remit):
 1. Data: a wrong option may carry `why` (one short kid-friendly sentence). Helper `q()` in `data/englishQuest/helpers.js`
@@ -474,14 +474,14 @@ the shape (content-quality remit):
    and a right answer on a question that has `why`s (Claude adds them to 3 Grammar Pro questions for the test).
 `gemini(G82): done — review please`.
 
-### G83 · [todo] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
+### G83 · [done] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
 For each of the ~666 questions: write `why` for each wrong option (≤ 20 words, kid-friendly, says what rule it breaks). Also
 check each question has **at least one near miss** (looks right, isn't) and **exactly one defensible answer**; list any
 question where a near miss could be argued right (that is a High issue, like today's 5). Don't change correct answers or
 ids. Report G83.md: counts, every question you changed beyond adding `why`, and every "could be argued" case. Claude
 reviews all of those + a sample; Seema checks a sample before the re-seed.
 
-### G79 · [todo] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
+### G79 · [done] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
 Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):
 1. **Home + Progress hide a quest with no topics for the child's class.** Class 10 sees a Science tile that opens to only
    "Coming soon" and Progress shows "Word Power · Unit 3 · 0/0 topics", "Science · Unit 7 · 0/0 topics". Use

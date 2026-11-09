@@ -1,11 +1,10 @@
+// screens/quiz/ExplanationScreen.js
 import React, { useMemo } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { Button as PaperButton } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
+import { quizPalette } from "../../components/quiz/quizPalette";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Import your custom components
 import Apprec8ReaderV2 from "../../components/quiz/Apprec8ReaderV2";
 import FeedbackFAB from "../../components/common/FeedbackFAB";
 
@@ -19,7 +18,8 @@ import FeedbackFAB from "../../components/common/FeedbackFAB";
  */
 const ExplanationScreen = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { isDark, theme } = useTheme();
+  const P = quizPalette(isDark);
   const C = theme.appColors || theme;
 
   // Get the data passed from the QuizScreenV2
@@ -42,26 +42,44 @@ const ExplanationScreen = ({ route, navigation }) => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: { flex: 1 },
+        container: {
+          flex: 1,
+          backgroundColor: P.background,
+        },
         scrollContainer: {
           flexGrow: 1,
-          padding: 15,
-          paddingTop: Math.max(insets.top, 20) + 50, // Added 50 to clear the top FAB
-          paddingBottom: Math.max(15, insets.bottom),
+          padding: 20,
+          paddingTop: Math.max(insets.top, 20) + 50, // Clears the top FAB
+          paddingBottom: Math.max(20, insets.bottom + 14),
           justifyContent: "space-between",
         },
-        button: { borderRadius: 25, paddingVertical: 8, marginTop: 20 },
+        button: {
+          height: 58,
+          borderRadius: 18,
+          borderBottomWidth: 5,
+          backgroundColor: P.primary,
+          borderBottomColor: P.primaryShadow,
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 20,
+        },
+        buttonText: {
+          color: P.onPrimary || "#FFFFFF",
+          fontSize: 18,
+          fontFamily: "nunitoBold",
+          letterSpacing: 1,
+        },
       }),
-    [C, insets.bottom],
+    [P, insets.top, insets.bottom]
   );
 
   const fabExtraActions = useMemo(() => [
     {
       icon: "close",
       label: "Exit Quiz",
-      onPress: () => navigation.navigate("QuestMap"),
+      onPress: () => navigation.navigate("EnglishQuestMap"),
       color: "white",
-      style: { backgroundColor: "#FF4B4B" },
+      style: { backgroundColor: P.wrongBorder },
       small: false,
     },
     {
@@ -69,19 +87,16 @@ const ExplanationScreen = ({ route, navigation }) => {
       label: "Home",
       onPress: () => navigation.navigate("Apprec8"),
       color: "white",
-      style: { backgroundColor: C.accent || "#1CB0F6" },
+      style: { backgroundColor: P.primary },
       small: false,
     },
-  ], [navigation, C.accent]);
+  ], [navigation, P]);
 
   return (
-    <LinearGradient
-      colors={[C.gradientStart, C.gradientEnd]}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <FeedbackFAB 
         contentContext={contentContext} 
-        style={{ position: 'absolute', top: Math.max(insets.top, 20) + 5, right: 10, bottom: undefined, zIndex: 10 }} 
+        style={{ position: 'absolute', top: Math.max(insets.top, 20) + 5, right: 16, bottom: undefined, zIndex: 10 }} 
         customIcon="menu"
         extraActions={fabExtraActions}
         customFabStyle={{ 
@@ -90,11 +105,11 @@ const ExplanationScreen = ({ route, navigation }) => {
           borderRadius: 22, 
           justifyContent: 'center', 
           alignItems: 'center',
-          backgroundColor: "#FF9600" // Fun orange background
+          backgroundColor: P.gold,
         }}
       />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         {/* Main content area for the explanation */}
         <View>
           <Apprec8ReaderV2 explanation={explanation} isCorrect={isCorrect} />
@@ -102,16 +117,19 @@ const ExplanationScreen = ({ route, navigation }) => {
 
         {/* Button at the bottom */}
         <View>
-          <PaperButton
-            mode="contained"
+          <TouchableOpacity
             style={styles.button}
             onPress={handlePress}
+            activeOpacity={0.85}
+            accessibilityRole="button"
           >
-            {isLastQuestion ? "Finish Quiz" : "Next Question"}
-          </PaperButton>
+            <Text style={styles.buttonText}>
+              {isLastQuestion ? "Finish Quiz" : "Next Question"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 };
 

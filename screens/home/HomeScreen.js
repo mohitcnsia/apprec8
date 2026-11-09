@@ -23,7 +23,7 @@ import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
 import { bundledQuest } from "../../data/quests";
-import { nodesForGrade } from "../../utils/gradeFilter";
+import { nodesForGrade, questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
@@ -367,24 +367,34 @@ export default function HomeScreen({ navigation }) {
     myAssignments(myClassKey.split(",")).then(setAssignments).catch(() => setAssignments([]));
   }, [myClassKey]);
 
-  // Continue = the quest played most recently. Mistakes = all quests; the tile opens the one with most.
-  const mainQuest = pickContinue(allQuests, progressById);
+  const firstName =
+    userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
+  const stars = userData?.stats?.totalStars || 0;
+  const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
+
+  // Filter out quests that have no topics for the child's class (G79).
+  const visibleQuests = useMemo(() => {
+    return allQuests.filter((q) => {
+      const data = bundledQuest(q.questId);
+      if (!data) return true;
+      return questHasTopicsForGrade(data.nodes, userGrade);
+    });
+  }, [allQuests, userGrade]);
+
+  // Continue = the quest played most recently. Mistakes = all visible quests; the tile opens the one with most.
+  const mainQuest = pickContinue(visibleQuests, progressById);
   const mainQuestId = mainQuest?.questId || null;
   const progress = progressById[mainQuestId] || { nodes: {}, doc: {} };
   const mistakesOf = (id) => Object.keys(progressById[id]?.doc?.mistakes || {}).length;
-  const mistakeQuest = [...allQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
+  const mistakeQuest = [...visibleQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
 
   // Every unfinished topic a teacher assigned, soonest first (2026-11-09: only the first showed, and it opened "Sentences").
   const todayIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   const teacherTopics = assignedTopics(assignments, (q) => bundledQuest(q)?.nodes || [], (q) => progressById[q]?.nodes || {}, todayIso);
   const openTopic = (t) => navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
 
-  const firstName =
-    userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
-  const stars = userData?.stats?.totalStars || 0;
-  const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
-  const mistakeCount = allQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
+  const mistakeCount = visibleQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
   const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
   const started = Object.keys(progress.nodes || {}).length > 0;
 
@@ -562,7 +572,7 @@ export default function HomeScreen({ navigation }) {
 
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 
-      <HomeIdeaPromptCard userGrade={userGrade} />
+      <HomeIdeaPromptCard userGrade={userGrade} userCreatedAt={userData?.createdAt} />
 
       {teacherTopics.length ? (
         <View style={styles.teacherCard}>
@@ -598,7 +608,7 @@ export default function HomeScreen({ navigation }) {
 
       <Text style={styles.section}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
       <View style={styles.grid}>
-        {allQuests.map((q) => {
+        {visibleQuests.map((q) => {
           const st = questStats(q);
           const isDraft = draftQuests.some((d) => d.id === q.id);
           const sub = isDraft
@@ -618,7 +628,9 @@ export default function HomeScreen({ navigation }) {
             { stats: st }
           );
         })}
-        {allQuests.some((q) => /science/i.test(q.questId)) ? null : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
+        {allQuests.some((q) => /science/i.test(q.questId)) || !questHasTopicsForGrade(bundledQuest("science-quest")?.nodes, userGrade)
+          ? null
+          : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
         {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
       </View>
 
