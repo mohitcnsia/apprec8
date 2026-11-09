@@ -336,11 +336,22 @@ already has `topic.quest` / `topic.node`). No new paper, no start code or timer 
    phone; we'll send them when you're back online"), never a spinner or a lost paper. Answers already save on the phone.
 4. Clean test (RULE) incl. airplane mode mid-paper. `gemini(G91): done — review please`.
 
-### G92 · [waiting: Claude's mockup → owner] · gemini · Weekly report on WhatsApp (Seema's decision 4; 2026-11-10)
-Per child: quizzes attempted, streak, Accuracy, assigned-work status, whether weak topics were practised. **Each parent gets
-their own child's report privately** (share sheet → WhatsApp, a well-designed image card). **The class WhatsApp group gets
-one summary with no names** (owner agreed 2026-11-09). Reuse `utils/weeklySummary.js`, `utils/parentWeek.js`. Claude makes the
-mockup first; this task opens as [todo] after the owner approves it.
+### G92 · [todo] · gemini · Weekly report: private for parents, no names for the class group (Seema's decision 4; 2026-11-10)
+**Approved mockup:** https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj (4 screens; follow it). Do after G91 (it reads G91's results).
+1. **Per child, week Mon–Sun:** quizzes attempted, streak, Accuracy (+ change vs last week), assigned-work status (Done ✓ /
+   N mistakes to fix / not finished, G87's rule), weak topics (G91, < 60%) practised yes/no, one "Next week" line.
+   Pure `utils/weeklyReport.js` + tests, reusing `utils/weeklySummary.js` / `utils/parentWeek.js`. Real data only; under one
+   week: "Not enough practice yet".
+2. **Parent (private):** Sunday evening a card on the parent's Home "Aarav's week is ready" → full report → "Save as picture" /
+   "Send on WhatsApp" (share sheet, image card as screen 1). **One push a week** (owner: yes). **English or Hindi**, the parent
+   picks (owner: yes; same switch as the consent screen; Seema checks the Hindi).
+3. **Class group (no names):** on the teacher's class screen (Progress → class) a "Class summary, ready to share" card +
+   bottom button "Share to class group" → image card as screen 2: kids practised / total, quizzes, class Accuracy + change,
+   this week's assigned work (done / fixing mistakes / not finished), the topic the class found hardest. NEVER a child's name
+   or score.
+4. Costs: computed from what the class/parent screens already load, or one small doc per child per week written by a bounded
+   scheduled function (ask Claude before adding a function; file a Deploy request). Clean test (RULE) incl. Hindi + dark mode.
+   `gemini(G92): done — review please`.
 
 ### G93 · [waiting: content from the owner] · gemini · Challenge track for kids at 80%+ (pilot piece 4; 2026-11-10)
 Kids at 80% or more on a topic get harder questions: achiever's sections from the owner's olympiad books (Class 5, Class 9)
