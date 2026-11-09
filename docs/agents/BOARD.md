@@ -330,7 +330,7 @@ ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
 6. Screenshots with the Demo School logins (parent, teacher) and the tester account (child) in G49-R.md.
 Then G50 (learn first) is rebased on the fixed branch. `gemini(G49-R): done — review please`.
 
-### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
+### G66 · [done] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
 Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
 that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
 1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another
@@ -351,7 +351,7 @@ from Remote Config / a Firestore doc (new polls without an app update); rollout 
 `chamku_asks_all`. Tap answers for all, text only for supervised accounts; voice = v2. Rename the star to **Chamku**
 in the app strings. **Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.** Plan first if it needs rules (DR). `gemini(G69): done`.
 
-### G64 · [todo] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
+### G64 · [done] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
 Owner: "I can't see Pratha's progress for today." `components/parent/ParentWeekCard.js` loads the child's
 questProgress only once per mount (useEffect on child.uid), so an open Progress screen never refreshes; and it
 counts only quests for the child's class (practice papers are left out). Fix: reload on screen focus
@@ -364,7 +364,7 @@ this week, most recent first, already expanded; subjects not practised this week
 this week: English, Word Power"). No subject picker as the first step. Same rule for the Sunday summary text if it is
 per subject. Tests for the pure parts (utils/parentWeek.js). `gemini(G64): done`.
 
-### G65 · [todo] · gemini · ⭐ 🚩 Report a mistake on reading pages too (owner 2026-11-07: Pratha found a mistake, no way to report it)
+### G65 · [done] · gemini · ⭐ 🚩 Report a mistake on reading pages too (owner 2026-11-07: Pratha found a mistake, no way to report it)
 Quiz questions have 🚩; study pages (old reader `components/common/reader/Apprec8Reader.js` and Learn cards
 `components/learn/LearnCards.js`) don't. Add the same 🚩 "Something's wrong here" button (top corner, small) that
 creates the same kind of report the quiz 🚩 creates (userFeedback / onQuestionReported path; check what the quiz
