@@ -257,7 +257,9 @@ Claude's review of G49 found the mockup's numbers hard-coded in the real screens
 fallbacks; a hidden `devRole` that injects a fake class and a fake Pratha). Shown to a real parent or teacher this is
 false information about their own children. **Always real data or an honest empty / loading state** ("No practice
 yet this week", "—"). Demo data only through the Demo School logins. No test switches in shipped screens.
-Neutral wording ("their week", not "her week"). Grep your diff for mockup numbers before "done".
+Neutral wording ("their week", not "her week"). Grep your diff for mockup numbers before "done". **Also never a dead end:** every
+screen a person can get stuck on (sign-up sheets, gates, errors) has a way back or out ("Not you? Use a different
+account", Sign out, Back).
 
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
