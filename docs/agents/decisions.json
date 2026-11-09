@@ -472,5 +472,13 @@
     "answer": "yes",
     "via": "chat",
     "note": "Owner's idea in chat; Claude brings the mockup."
+  },
+  {
+    "id": "pilot-scope-doc",
+    "title": "Pilot scope: your 22 cases, now or later",
+    "ask": "Open the document, change any dropdown or comment. Tap YES when you agree with step 3.",
+    "details": "The document is on claude.ai (works in the phone browser or the Claude app). Step 3 lists six pieces of pilot work; everything else already works, disappears with school codes, or waits for feedback.",
+    "link": "https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU",
+    "from": "claude"
   }
 ]
