@@ -2,15 +2,16 @@
 import React, { useState, useCallback, useMemo } from "react";
 import {
   Text,
+  View,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { TextInput, Button as PaperButton } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
+import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { CommonActions } from "@react-navigation/native";
 import { showAlert } from "../../services/dialog";
@@ -18,7 +19,8 @@ import { showAlert } from "../../services/dialog";
 const CONFIRMATION_PHRASE = "DELETE MY ACCOUNT"; // User must type this exactly
 
 const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
-  const { theme } = useTheme();
+  const { isDark } = useTheme();
+  const P = quizPalette(isDark);
   const { userEmail } = route.params || {}; // Email for display purposes
 
   const [inputText, setInputText] = useState("");
@@ -56,12 +58,10 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
       await authInstance.signOut(); // Ensure this doesn't throw unhandled errors
 
       // Reset navigation stack to the initial authentication route
-      // This depends on your navigator setup.
-      // Replace 'AuthLoading' with your initial route in the Auth stack or main navigator.
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: "AuthLoading" }], // Or your primary App entry point that decides Auth vs Main
+          routes: [{ name: "AuthLoading" }],
         })
       );
     } catch (err) {
@@ -72,14 +72,17 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
         err.message ||
         "Could not delete your account. Please try again or contact support.";
       showAlert("Deletion Error", displayError);
-      setError(displayError); // Optionally display this in your UI as well
+      setError(displayError);
     }
   }, [inputText, navigation]);
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        gradientContainer: { flex: 1 },
+        screen: {
+          flex: 1,
+          backgroundColor: P.background,
+        },
         keyboardAvoidingView: { flex: 1 },
         scrollViewContent: {
           flexGrow: 1,
@@ -89,60 +92,101 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
         },
         title: {
           fontSize: 24,
-          fontWeight: "bold",
-          color: theme.textPrimaryOnGradient || theme.textPrimary,
+          fontFamily: "nunitoBold",
+          color: P.text,
           textAlign: "center",
-          marginBottom: 15,
-          fontFamily: "deliusBold",
+          marginBottom: 12,
         },
         warningText: {
           fontSize: 16,
-          color: theme.textSecondaryOnGradient || theme.textSecondary,
+          color: P.textSoft,
           textAlign: "center",
-          marginBottom: 25,
+          marginBottom: 20,
           lineHeight: 24,
-          fontFamily: "delius",
+          fontFamily: "nunito",
+        },
+        boldEmail: {
+          fontFamily: "nunitoBold",
+          color: P.text,
+        },
+        infoCard: {
+          backgroundColor: P.card,
+          borderRadius: 18,
+          borderWidth: 2,
+          borderColor: P.cardBorder,
+          padding: 16,
+          marginBottom: 20,
+          gap: 10,
         },
         infoText: {
-          fontSize: 15,
-          color: theme.textPrimaryOnGradient || theme.textPrimary,
-          marginBottom: 5,
+          fontSize: 14,
+          color: P.textSoft,
           textAlign: "left",
-          width: "100%",
-          fontFamily: "delius",
+          lineHeight: 22,
+          fontFamily: "nunito",
+        },
+        phrasePrompt: {
+          fontSize: 15,
+          fontFamily: "nunitoBold",
+          color: P.text,
+          textAlign: "center",
+          marginTop: 4,
+        },
+        phraseBadge: {
+          backgroundColor: isDark ? "#2A1818" : "#FEEBEB",
+          borderRadius: 12,
+          borderWidth: 1.5,
+          borderColor: P.wrongBorder,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          alignItems: "center",
+          alignSelf: "center",
+          marginVertical: 4,
         },
         confirmationPhrase: {
-          fontWeight: "bold",
-          color: theme.accent || theme.primary,
+          fontFamily: "nunitoBold",
+          fontSize: 18,
+          color: P.wrongBorder,
+          letterSpacing: 1.5,
         },
         input: {
-          marginBottom: 25,
-          backgroundColor: theme.inputBackground || "transparent",
+          marginBottom: 20,
+          backgroundColor: P.card,
+          fontFamily: "nunitoBold",
         },
-        button: {
+        deleteButton: {
           marginTop: 10,
-          paddingVertical: 6,
-          borderRadius: theme.roundness || 8,
+          borderRadius: 16,
+          backgroundColor: P.wrongBorder,
+        },
+        cancelButton: {
+          marginTop: 8,
+          borderRadius: 16,
+        },
+        buttonLabel: {
+          fontSize: 17,
+          fontFamily: "nunitoBold",
+          letterSpacing: 0.5,
+          paddingVertical: 4,
+        },
+        cancelButtonLabel: {
+          fontSize: 16,
+          fontFamily: "nunitoBold",
+          color: P.text,
+          paddingVertical: 4,
         },
         errorTextUI: {
-          color: theme.error || theme.warning || "red",
+          color: P.wrongBorder,
           textAlign: "center",
           marginVertical: 10,
-          fontFamily: "delius",
+          fontFamily: "nunitoBold",
         },
       }),
-    [theme]
+    [P, isDark]
   );
 
   return (
-    <LinearGradient
-      colors={
-        theme.gradientStart && theme.gradientEnd
-          ? [theme.gradientStart, theme.gradientEnd]
-          : ["#8B0000", "#D3D3D3"]
-      }
-      style={styles.gradientContainer}
-    >
+    <View style={styles.screen}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
@@ -157,29 +201,27 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             This action is permanent and cannot be undone. All your data
             associated with
             {userEmail ? (
-              <Text style={{ fontWeight: "bold" }}> {userEmail} </Text>
+              <Text style={styles.boldEmail}> {userEmail} </Text>
             ) : (
               " your account "
             )}
             will be deleted, and your access will be revoked.
           </Text>
-          <Text style={styles.infoText}>
-            Deleted: your progress, answers, stars, class memberships and sign-in. Child profiles you made are deleted
-            too; children with their own login keep their account. We keep only a record that consent was given
-            (without names).
-          </Text>
-          <Text style={styles.infoText}>
-            To confirm, please type the exact phrase below:
-          </Text>
-          <Text
-            style={[
-              styles.infoText,
-              styles.confirmationPhrase,
-              { textAlign: "center", fontSize: 17, marginVertical: 10 },
-            ]}
-          >
-            {CONFIRMATION_PHRASE}
-          </Text>
+
+          <View style={styles.infoCard}>
+            <Text style={styles.infoText}>
+              Deleted: your progress, answers, stars, class memberships and sign-in. Child profiles you made are deleted
+              too; children with their own login keep their account. We keep only a record that consent was given
+              (without names).
+            </Text>
+            <Text style={styles.phrasePrompt}>
+              To confirm, please type the exact phrase below:
+            </Text>
+            <View style={styles.phraseBadge}>
+              <Text style={styles.confirmationPhrase}>{CONFIRMATION_PHRASE}</Text>
+            </View>
+          </View>
+
           <TextInput
             mode="outlined"
             placeholder="Type the phrase here"
@@ -189,16 +231,16 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             disabled={isLoading}
             autoCapitalize="none"
             autoCorrect={false}
-            textColor={theme.textPrimaryOnGradient || theme.textPrimary}
+            textColor={P.text}
+            outlineColor={P.cardBorder}
+            activeOutlineColor={P.wrongBorder}
             theme={{
               colors: {
-                primary: theme.accent || theme.primary,
-                text: theme.textPrimaryOnGradient || theme.textPrimary,
-                placeholder:
-                  theme.textSecondaryOnGradient || theme.textSecondary,
-                background: "transparent",
-                onSurfaceVariant:
-                  theme.textSecondaryOnGradient || theme.textSecondary,
+                primary: P.wrongBorder,
+                text: P.text,
+                placeholder: P.textSoft,
+                background: P.card,
+                onSurfaceVariant: P.textSoft,
               },
             }}
           />
@@ -210,14 +252,10 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             onPress={handleDeleteAccount}
             disabled={isLoading || inputText.trim() !== CONFIRMATION_PHRASE}
             loading={isLoading}
-            style={styles.button}
-            buttonColor={theme.error || theme.warning || "#D32F2F"} // Destructive action color
-            textColor={theme.textOnError || theme.textOnWarning || "#FFFFFF"}
-            labelStyle={{
-              fontSize: 17,
-              fontWeight: "bold",
-              fontFamily: "deliusBold",
-            }}
+            style={styles.deleteButton}
+            buttonColor={P.wrongBorder}
+            textColor="#FFFFFF"
+            labelStyle={styles.buttonLabel}
           >
             {isLoading ? "Deleting Account..." : "Confirm & Delete Account"}
           </PaperButton>
@@ -225,15 +263,15 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
             mode="text"
             onPress={() => navigation.goBack()}
             disabled={isLoading}
-            style={styles.button}
-            textColor={theme.textPrimaryOnGradient || theme.textPrimary}
-            labelStyle={{ fontFamily: "delius" }}
+            style={styles.cancelButton}
+            textColor={P.text}
+            labelStyle={styles.cancelButtonLabel}
           >
             Cancel
           </PaperButton>
         </ScrollView>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </View>
   );
 };
 

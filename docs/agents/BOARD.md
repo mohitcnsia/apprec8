@@ -357,7 +357,7 @@ question where a near miss could be argued right (that is a High issue, like tod
 ids. Report G83.md: counts, every question you changed beyond adding `why`, and every "could be argued" case. Claude
 reviews all of those + a sample; Seema checks a sample before the re-seed.
 
-### G79 · [todo] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
+### G79 · [done] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
 Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):
 1. **Home + Progress hide a quest with no topics for the child's class.** Class 10 sees a Science tile that opens to only
    "Coming soon" and Progress shows "Word Power · Unit 3 · 0/0 topics", "Science · Unit 7 · 0/0 topics". Use

@@ -48,11 +48,38 @@ export function pickWeeklyPrompt({ now = Date.now(), index = null } = {}) {
   return IDEA_PROMPTS[Math.abs(weekNum) % IDEA_PROMPTS.length];
 }
 
+function toEpochMs(val) {
+  if (!val) return null;
+  if (typeof val === "number") return val;
+  if (typeof val.toMillis === "function") return val.toMillis();
+  if (typeof val.toDate === "function") return val.toDate().getTime();
+  if (val instanceof Date) return val.getTime();
+  if (typeof val === "string") {
+    const parsed = Date.parse(val);
+    return isNaN(parsed) ? null : parsed;
+  }
+  if (typeof val.seconds === "number") return val.seconds * 1000;
+  return null;
+}
+
 /**
  * Determines whether the weekly Home prompt should be displayed.
  * Frequency guard: once every 7 days.
+ * Account age guard: never in the account's first 7 days (G79).
  */
-export function shouldShowWeeklyPrompt({ lastPromptAt = 0, now = Date.now(), minIntervalMs = SEVEN_DAYS_MS } = {}) {
+export function shouldShowWeeklyPrompt({
+  lastPromptAt = 0,
+  userCreatedAt = null,
+  now = Date.now(),
+  minIntervalMs = SEVEN_DAYS_MS,
+  minAccountAgeMs = SEVEN_DAYS_MS,
+} = {}) {
+  if (userCreatedAt) {
+    const createdMs = toEpochMs(userCreatedAt);
+    if (createdMs !== null && now - createdMs < minAccountAgeMs) {
+      return false;
+    }
+  }
   if (!lastPromptAt) return true;
   return now - Number(lastPromptAt) >= minIntervalMs;
 }

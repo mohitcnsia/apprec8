@@ -5,11 +5,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
+import { authInstance } from "../../config/firebaseConfig";
 import { pickWeeklyPrompt, shouldShowWeeklyPrompt } from "../../utils/feedbackPipeline";
 import { getLastIdeaPromptTime, dismissIdeaPrompt } from "../../services/ideaApi";
 import IdeaModal from "./IdeaModal";
 
-export default function HomeIdeaPromptCard({ userGrade = null }) {
+export default function HomeIdeaPromptCard({ userGrade = null, userCreatedAt = null }) {
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [visible, setVisible] = useState(false);
@@ -18,16 +19,17 @@ export default function HomeIdeaPromptCard({ userGrade = null }) {
   useEffect(() => {
     let alive = true;
     getLastIdeaPromptTime().then((lastTime) => {
-      if (alive && shouldShowWeeklyPrompt({ lastPromptAt: lastTime })) {
+      if (alive && shouldShowWeeklyPrompt({ lastPromptAt: lastTime, userCreatedAt })) {
         setVisible(true);
       }
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [userCreatedAt]);
 
-  if (!visible) return null;
+  const user = authInstance.currentUser;
+  if (!user || !visible) return null;
 
   const prompt = pickWeeklyPrompt();
 

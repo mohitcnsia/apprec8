@@ -429,9 +429,11 @@ export const convertV1QuestionToV2 = (id, quizId, data) => {
   // Compare loosely: old data sometimes has extra or trailing spaces.
   const normalize = (value) => String(value ?? "").trim().replace(/\s+/g, " ");
   const answer = normalize(data.answer);
-  const explanationText = Array.isArray(data.explanation)
+  let explanationText = Array.isArray(data.explanation)
     ? data.explanation.join("\n\n")
     : data.explanation || "";
+  // Strip trailing decorative status emojis from V1 explanations (e.g. ✅, ✔, ❌).
+  explanationText = String(explanationText).replace(/\s*[✅✔❌]\s*$/, "").trim();
 
   return {
     id,

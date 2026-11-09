@@ -23,6 +23,8 @@ import {
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
 import { buildQuestPath } from "../../utils/questTree";
+import { nodesForGrade } from "../../utils/gradeFilter";
+import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { getQuest, getQuestNodes } from "../../services/contentCache";
 import { isTesterView } from "../../services/ownerView";
 import { useTesterMode, setTesterMode } from "../../services/testerMode";
@@ -51,7 +53,15 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
   const [quest, setQuest] = useState(null);
   const [nodes, setNodes] = useState(null);
   const [progress, setProgress] = useState({});
+  const [grade, setGrade] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    return listenToUserDocument(
+      (d) => setGrade(Number.isInteger(d?.grade) ? d.grade : null),
+      () => {}
+    );
+  }, []);
 
   useEffect(() => {
     if (!questId) {
@@ -84,9 +94,15 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
     };
   }, [questId]);
 
+  const unlockAll = !!(isTester && tester?.unlockAll);
+  const visibleNodes = useMemo(
+    () => (nodes ? (unlockAll ? nodes : nodesForGrade(nodes, grade)) : null),
+    [nodes, grade, unlockAll]
+  );
+
   const tree = useMemo(
-    () => (nodes ? buildQuestPath(nodes, progress) : null),
-    [nodes, progress]
+    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll }) : null),
+    [visibleNodes, progress, unlockAll]
   );
 
   const hasStarted = Object.keys(progress || {}).length > 0;
