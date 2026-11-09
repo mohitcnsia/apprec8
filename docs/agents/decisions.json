@@ -291,7 +291,10 @@
     "ask": "The sticky note on Home, one question, the thank-you, and your results screen. Build it like this (Pratha first, then everyone)?",
     "details": "**1. Sticky note on Home**\n\n![1. Sticky note on Home](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg)\n\n**2. One question**\n\n![2. One question](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca2.jpg)\n\n**3. Thank you**\n\n![3. Thank you](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca3.jpg)\n\n**4. Your results (Admin tools)**\n\n![4. Your results (Admin tools)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca4.jpg)\n\n**Claude's notes:** good; the answer emojis become our characters later (design rule). Voice comes in v2 (consent + privacy).\n\n**YES** = Gemini builds it (no app build needed). **MORE DETAILS** = tell me what to change.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): great.",
+    "via": "chat"
   },
   {
     "id": "mock-teacher-class",
@@ -299,7 +302,10 @@
     "ask": "Actions on top (approve, reteach one thing with one tap, who hasn't practised), filters for 32 students, suggested topics. Build it like this?",
     "details": "**1. Class screen**\n\n![1. Class screen](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg)\n\n**2. Students (filters + search)**\n\n![2. Students (filters + search)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-2-students-list.jpg)\n\n**3. Assign a topic**\n\n![3. Assign a topic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-3-assign-topic.jpg)\n\n**Claude's notes:** this answers your notes from the demo teacher. Two fixes before building: \"Remind all\" goes to the **parents**, never children; the bright green button gets the calm style.\n\n**YES** = Gemini builds it with those two fixes.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): looks good; with Claude's two fixes.",
+    "via": "chat"
   },
   {
     "id": "mock-parent-link",
@@ -307,7 +313,10 @@
     "ask": "A parent opens a WhatsApp link: Hindi or English, read aloud, 3 things we keep, name, relation, \"हाँ, मैं सहमत हूँ\". Build it like this?",
     "details": "**The page (Hindi)**\n\n![The page (Hindi)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg)\n\n**After yes**\n\n![After yes](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl-done.jpg)\n\n**Claude's notes:** clear and kind. It needs a small server part (a deploy request for your OK) and a privacy-policy line.\n\n**YES** = Gemini builds it; the server part comes to you as a deploy request.",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): great.",
+    "via": "chat"
   },
   {
     "id": "vote-cast",

@@ -110,7 +110,7 @@ build the sentence), class team goal, **story mode with read-aloud**, **challeng
 spelling bee in quests; **creator mode** pilot with one child. **From Pratha (loves Duolingo's owl, "10 minutes to keep your streak", the evening chest):** a **daily / evening
 treasure chest** after practice (sticker, buddy outfit, fun fact); a **streak saver** once a week (excitement without
 fear); "your streak ends tonight" **inside the app**, and as a phone notification **only if a parent turns it on and
-picks the time**, in kind words, never guilt (Seema checks the wording). **Expressive characters** (fun to look at, animated) and an **avatar builder** (items won from the chest; children see themselves, no photos). **Reward nodes (owner):** after a unit / Boss the quest opens a treat
+picks the time**, in kind words, never guilt (Seema checks the wording). **Expressive characters** (fun to look at, animated) and an **avatar builder** (items won from the chest; children see themselves, no photos). Owner idea (not day 1, discuss pros/cons): items **cost stars**, shown up front; the child confirms once, stars are deducted, the avatar is saved, so children don't spend the whole day fiddling. **Reward nodes (owner):** after a unit / Boss the quest opens a treat
 and the child **picks the kind**: next chapter of a **serial story** with read-aloud (two age tracks: funny adventure
 for younger, mystery / fantasy for Classes 6–12), a **comic page** with our own cast, a **chess puzzle** (openly
 licensed puzzle set) / sudoku / brain teaser, a **draw-this** prompt or colouring page (on paper, nothing uploaded),

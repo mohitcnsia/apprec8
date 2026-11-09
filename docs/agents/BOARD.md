@@ -252,9 +252,9 @@ report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). D
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
-**1) G66 feedback pipeline (plan first) — owner: highest priority**, 2) G64 parent's week fix, 3) G65 🚩 on reading
-pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 5) G67 Progress facts (no
-code), 6) G53 ∞ alone. [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
+**1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
+pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
+code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
 ### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
@@ -270,6 +270,13 @@ that you and I can review and plan." Plan first (`gemini(G66): plan — review p
    `docs/agents/private/feedback.json`, which is **git-ignored** (add the folder to `.gitignore`): children's words never
    go to the public repo. First name + class only, no emails or uids.
 Costs: one small read per owner visit; the export reads only new docs since the last run.
+
+### G69 · [todo] · gemini · ⭐ Build "Chamku asks" (owner approved the G62 mockup, 2026-11-09)
+Build the G62 mockups (docs/mockups/chamak-asks/) together with G66's pipeline: sticky on Home, one question at a
+time, chains ("One more?" / "That's all for today", max ~5), thank-you with ⭐, owner results in Admin tools. Questions
+from Remote Config / a Firestore doc (new polls without an app update); rollout `chamku_asks_uids` (Pratha first) →
+`chamku_asks_all`. Tap answers for all, text only for supervised accounts; voice = v2. Rename the star to **Chamku**
+in the app strings. **Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.** Plan first if it needs rules (DR). `gemini(G69): done`.
 
 ### G64 · [todo] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
 Owner: "I can't see Pratha's progress for today." `components/parent/ParentWeekCard.js` loads the child's
@@ -311,6 +318,18 @@ update because a child's voice is sensitive data. First 3 questions: "What's the
 is happy to answer**: after each answer, Chamku offers "One more?" (big YES) or "That's all for today" (easy exit,
 still thanked with ⭐). Questions are a small tree in the config (`next` per answer), max ~5 in a row, never pushy.
 After the owner approves the mockup in the inbox, build it (JS only, OTA). `gemini(G62): done — mockup`.
+
+### G70 · [todo] · gemini · Build the teacher's class screen (owner approved G57, 2026-11-09)
+Build docs/mockups/teacher-class/ 1–3 in `screens/progress/TeacherClasses.js` (and the teacher Home card from G49
+links here). Claude's two fixes: **"Remind all" goes to the parents** (never children); the "Turn on" summary button
+uses the calm style. Demo School already has 2 pending students (G57). Same reads as today (no extra cost). **Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.**
+`gemini(G70): done`.
+
+### G71 · [todo] · gemini · Build the parent's "yes" web page (owner approved G51, 2026-11-09) — after Claude reviews G50
+Build docs/mockups/parent-link/ on GitHub Pages (FailedCommit/app-policies or a /yes page) + the one-time link
+(expires 7 days) + a small HTTP function that records the consent like the in-app one and links the child. Plan first
+(`gemini(G71): plan — review please`): rules + function = a deploy request for the owner. Privacy policy line.
+**Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.** (the web page follows the same palette and font).
 
 ### G67 · [todo] · gemini · ⭐ Facts for the Progress redesign discussion (no code changes)
 Owner 2026-11-07: "The Progress tab also needs a review. Pratha played but the weekly summary is blank, and the
