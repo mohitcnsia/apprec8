@@ -450,7 +450,7 @@ level, kid-friendly wording, no copied board-paper text. **Don't edit content.**
 `docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
 of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
 
-### G59 · [review] · gemini · ⭐ Learn cards for every study page (owner 2026-11-07: "lots of study pages are still the old reader")
+### G59 · [done] · gemini · ⭐ Learn cards for every study page (owner 2026-11-07: "lots of study pages are still the old reader")
 66 study pages still open as the old long page (Claude's count): English 44 (26 bundled in data/englishQuestData.js
 `studyPages` without `cards`, 18 old IEO pages that live only in Firestore `studyContent`), Science 18, Word Power 4.
 Treasure Words is done (17/17). Give every one `cards` in the format of `utils/learnCards.js` (spec R), like the 21
