@@ -71,3 +71,5 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
 
 Candidate first item (owner, 2026-11-09): **test vs real** — a separate test Firebase project, a preview update channel
 for the team, real users get tested updates on a schedule (e.g. twice a week, evenings), urgent fixes only in between.
+
+**Agreed 2026-11-09 (owner): school codes.** For school classes the teacher/admin enters first names → one parent code per child (printable) → the parent types it on their own phone, says yes once → child linked + in the class. No child-sent links (a friend could answer). Families outside a school: the parent adds the child, as today. Details in the live doc.
