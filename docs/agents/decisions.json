@@ -429,14 +429,20 @@
     "title": "Decide: one place for every grown-up note (Broken · Confusing · Not useful · Idea), speak or type",
     "ask": "A \"Tell us\" button on every screen: tap a kind, then speak (keyboard 🎤, Hindi too) or type. Everything lands in one place, and Claude sends you one weekly summary instead of 20 WhatsApp chats. Mockup first?",
     "details": "**Your problem:** 20 people messaging you separately = weeks of unread notes.\n\n**The fix:** every note goes to one place (Admin tools → Ideas & reports). The app adds the screen, the class and the app version by itself.\n\n**Voice:** the keyboard's 🎤 turns speech into text in any language the phone knows (Hindi too): free, no recordings stored, no extra permission. Real voice recordings later, grown-ups only (storage cost + privacy check).\n\n**Processing:** Claude reads all notes, groups the same problem from different people, and puts **one weekly summary card** in your inbox: \"23 notes → 4 problems (fix planned), 3 ideas (your decision), 2 thank-yous\". You answer the card, not 23 messages.\n\n**No WhatsApp button:** it would scatter notes again. Tell people \"use Tell us in the app\".\n\n**Already fixed today:** Me → \"Tell us what you think\" really sends now (it was a placeholder).\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner asked for it in chat; Claude brings the mockup."
   },
   {
     "id": "class10-english-start-v2",
     "title": "Decide (with Seema): every topic gets its classes, Class 9–10 start at Grammar Pro",
     "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
     "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Claude decided (partner remit, reversible): tag old English units for younger classes; Seema told."
   },
   {
     "id": "teacher-courses-v1",
@@ -453,6 +459,9 @@
     "title": "Decide: \"Apprec8 Academy\", a quest for owners and admins to master the app",
     "ask": "A team-only quest (you, Seema, future partners): Admin, Teacher, Parent, Student, Safety units; each step is a real task in the Demo School that ticks itself, plus short quizzes on the rules. Its tasks are also the core-path test Gemini runs before every update. Mockup first?",
     "details": "**Steps like:** create a class · invite a teacher · approve a student · assign a topic · read Ideas & reports · answer a Decision · re-seed safely · delete a test account. **Rules quizzes:** who sees a child's name, what parents agree to, what we never collect.\n\n**Why it pays twice:** finishing it means you know every feature, and the same steps are the checklist that proves the main screens work before each publish.\n\n**YES** = Claude makes the mockup (team-only, uses the Demo School, never real children).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner's idea in chat; Claude brings the mockup."
   }
 ]
