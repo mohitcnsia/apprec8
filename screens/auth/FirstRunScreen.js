@@ -24,7 +24,7 @@ const recentlySaved = (doc) => {
 };
 export const grownUpKey = (uid) => `grownUp:${uid}:v1`;
 
-export default function FirstRunScreen({ uid, userDoc, onDone }) {
+export default function FirstRunScreen({ uid, userDoc, onDone, onSignOut }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -122,6 +122,12 @@ export default function FirstRunScreen({ uid, userDoc, onDone }) {
               {!ready ? "Getting your account ready…" : busy ? "Saving…" : "LET'S GO ▶"}
             </Text>
           </Pressable>
+          {/* Never a dead end (owner 2026-11-09): go back and use another account. */}
+          {typeof onSignOut === "function" ? (
+            <Pressable onPress={onSignOut} disabled={busy} accessibilityRole="button" style={{ alignItems: "center", minHeight: 44, justifyContent: "center" }}>
+              <Text style={[s.small, { textDecorationLine: "underline" }]}>Not you? Use a different account</Text>
+            </Pressable>
+          ) : null}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

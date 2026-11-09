@@ -197,7 +197,7 @@ const AppContent = () => {
       <ThemedStatusBar />
       <View style={styles.container}>
         {showFirstRun ? (
-          <FirstRunScreen uid={uid} userDoc={userDoc} onDone={({ grownUp: g }) => g && setGrownUp(true)} />
+          <FirstRunScreen uid={uid} userDoc={userDoc} onDone={({ grownUp: g }) => g && setGrownUp(true)} onSignOut={signoutHandler} />
         ) : user || isGuest ? (
           // --- RESTORED: All props are now correctly passed ---
           <BottomTabNavigator
