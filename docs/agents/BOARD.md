@@ -267,7 +267,7 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
-### G74 · [todo] · gemini · Verify DR-22 (the OWNER deployed the rules himself, 2026-11-09 09:10) — test only
+### G74 · [done] · gemini · Verify DR-22 (the OWNER deployed the rules himself, 2026-11-09 09:10) — test only
 Don't deploy. Test with a NEW throwaway account on the emulator: sign up → first name → Class 5 → LET'S GO must save;
 also a grown-up: "I'm a parent" with a new account. Delete both accounts afterwards (Me → Delete my account).
 Report G74.md. `gemini(G74): done — verified`.
@@ -531,30 +531,21 @@ For parents who read little. On the consent notes (Join a class, Add a child, Li
 expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
 `gemini(G58): done`.
 
-### G55 · [review] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
-Owner: "forgot PIN alone is not enough; avoid abuse when a child tries to get into the parent's phone." Today: app
-PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. **Design (Claude):**
-1. **"Switch to parent" asks the phone's own lock first** (fingerprint / face / phone PIN or pattern) via
-   `expo-local-authentication` (install with `npx expo install`; native → ships in the next build, so guard with a
-   capability check like services/push.js does, and fall back to the app PIN on builds or phones without it).
-2. The app PIN stays only as the fallback (phones with no screen lock). Keep the 5-tries / 15-min lock.
-3. **"Forgot PIN?"** = unlock with the phone's own lock → choose a new PIN twice. Phones with no screen lock: sign in
-   again with the parent's account **and** wait 1 hour before the new PIN works (so a child can't do it in one go).
-4. **Every PIN change notifies the parent** (push to the parent's tokens if they have the weekly summary on, and a
-   line in Me): "Your Apprec8 parent PIN was changed. Not you? Tap to reset."
-5. Never "sign in again → new PIN at once" (Google often signs in silently on the parent's own phone).
-6. **Never lock a parent out (owner: "make sure our app doesn't lock parents out of their phone or earn a bad
-   reputation; worst case there must be a way to delete the app and unlock with admin help").** Every PIN screen has a
-   **"Locked out?"** link: "Use your fingerprint or phone lock" → "Or remove Apprec8 (Settings → Apps → Apprec8 →
-   Uninstall), install it again and sign in: your children's stars are saved" → "Or write to us at the support email
-   from your account's email address; we reset it." The app lock is Android app pinning: the phone's own PIN/pattern
-   or a restart always ends it; say so on the lock screen too.
-7. **Admin reset:** Admin tools → "Reset a parent's PIN" (owner only: callable `adminResetParentPin`, deletes
-   `parentPins/{uid}` by the parent's email, logs who/when), plus `scripts/admin/resetPin.cjs <email>` for Gemini.
-   Used only after the parent writes from their account's email.
-Server: `resetParentPin` callable (caller must be the parent account, not a child session). Write the plan first
-(`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
-next build.
+### G55 · [todo] · gemini · PIN safety: plan approved WITH A REQUIRED CHANGE (Claude review 2026-11-09), build after owner OK
+Your plan (docs/agents/reports/G55.md) is right on the UX (phone lock first, 1-hour delay without a lock, alert on
+every change, Locked-out help, admin reset). **Security hole:** `switchToParentWithDeviceLock` trusts the client's
+claim that a biometric check passed, so any child session (or a modified app) could get the parent's token. Replace
+it with a **device-bound return ticket**:
+1. `startPlaySession` (called by the **parent** session when starting Play as) creates a random one-time ticket, stores
+   only its hash in `parentPins/{parentUid}.tickets` with expiry (12 h) and the child uid; returns the raw ticket.
+2. The app stores it with **expo-secure-store `requireAuthentication: true`** (Android Keystore: opens only after the
+   phone's fingerprint / face / device PIN).
+3. `switchToParentWithTicket({ ticket })` (child session): server checks hash, unused, unexpired, child matches,
+   then marks it used and issues the parent custom token. No ticket / no phone lock → the app PIN path as today.
+4. `resetParentPin` only from the **parent** session; "delayed" (1 h) when the phone has no screen lock.
+**Base on `feat/quiz-redesign`, not feat/simple-home.** Native libs (expo-local-authentication, expo-secure-store via
+`npx expo install`) → ships with the next build; guard so OTA on 20.0.30 falls back to the PIN. Server parts = DR for
+the owner. Write the revised plan section first (`gemini(G55): plan v2 — review please`).
 
 ### G53 · [todo] · gemini · ∞ redo, attempt 3: THE INFINITY ALONE (Claude's review of attempt 2)
 Attempt 2 made the wordmark again; the owner asked to see **only the ∞ symbol**, and in the wordmark the ∞ still
