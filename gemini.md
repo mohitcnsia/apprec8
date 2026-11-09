@@ -87,6 +87,7 @@ the owner; G14/G11 parked).
 - **How to test:** `npm test`; `docs/qa/OWNER_TESTING.md` newest sections (OTA update, Treasure Words); 20.0.29 on the phone: Me → Play as Pratha → Lock & play (Android asks "Pin this app?").
 
 ## Future TODOs
+- After G89 ships: move the owner's Decisions inbox (`scripts/admin/decisions.mjs`) onto the same two-way cards, so owner, teachers and parents use one channel (owner, 2026-11-10).
 - **Before Seema's pilot / public release (owner 2026-11-05):** safety screens (mockup row P: "Need help?" + parent
   privacy / delete; waits for Seema's wording) · privacy policy page + "delete my account" web page for Play · crash
   reporting (none today). Tracked in docs/LAUNCH_CHECKLIST.md.
