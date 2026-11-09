@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -22,6 +22,7 @@ import { useTheme } from "./context/ThemeContext";
 import { useInAppMessaging } from "./hooks/useInAppMessaging";
 import InAppMessageModal from "./components/common/InAppMessageModal";
 import useStartupUpdate from "./hooks/useStartupUpdate";
+import UpdateReadyBanner from "./components/common/UpdateReadyBanner";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
@@ -51,7 +52,7 @@ const AppContent = () => {
     useState(false);
 
   // Over-the-air update: load it behind the loading screen, so one restart is enough.
-  const { checkingForUpdate } = useStartupUpdate();
+  const { checkingForUpdate, downloadingUpdate, updateReady, reloadNow } = useStartupUpdate();
 
   const {
     isLoading: isMessageLoading,
@@ -173,6 +174,11 @@ const AppContent = () => {
     return (
       <View style={styles.loaderContainer}>
         <CalmLoader />
+        {downloadingUpdate ? (
+          <Text style={{ marginTop: 18, fontSize: 15, fontFamily: fontsLoaded ? "nunitoBold" : undefined, color: isDark ? "#E9DDEB" : "#3b0940", textAlign: "center" }}>
+            Getting the latest Apprec8…
+          </Text>
+        ) : null}
       </View>
     );
   }
@@ -224,6 +230,7 @@ const AppContent = () => {
       {user ? <TimeUpOverlay uid={user.uid} /> : null}
       {/* The app's own popups (showAlert in services/dialog.js), mockup T5 */}
       <GuideStrip />
+      {updateReady ? <UpdateReadyBanner onPress={reloadNow} /> : null}
       <AppDialogHost />
      </FreeTextContext.Provider>
     </PaperProvider>
