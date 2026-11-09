@@ -281,6 +281,22 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
+### G86 · [todo, after the pilot starts] · gemini · ♡ Like on learn cards and reading pages (owner approved mockup + save rule, 2026-11-09)
+Owner: "Some pages I like the formatting and colouring. If kids could tell us, we'd know what they like." Today we only hear 🚩.
+1. **Where:** a ♡ right next to the 🚩 (`ReportStudyButton`) in `components/learn/LearnCards.js` and
+   `components/common/reader/Apprec8Reader.js`. Not on quiz explanations yet. Same size and spacing as 🚩, thumb-friendly.
+2. **Tap:** ♡ → ♥ (tap again = undo). Then an optional one-tap row under the card: "What did you like?" Colours · Pictures ·
+   Easy to read · Fun · Examples (multi-select, no typing). Ignored → it folds away. Kids never see counts.
+3. **Save rule (owner):** NO write per tap. Keep the like in state; write **one** `userFeedback` doc when the child leaves the
+   card/page (swipe to next card, close, back, app to background) and only if it ends liked: `{ userId, feedbackType: "like",
+   entryPoint: "like_heart", contentId, cardIndex|section, questId, nodeId, titlePreview, liked: ["colours", ...],
+   clientTimestamp, createdAt, status: "new", appVersion }`. Offline is fine (Firestore queues). A local key `liked_<targetId>`
+   shows ♥ again on return and stops a second doc for the same card on this phone.
+4. **Pure + tests:** `utils/likes.js` (`LIKE_REASONS`, `buildLikePayload`, `shouldSendLike({ liked, alreadySent })`) and
+   `tests/likes.test.mjs` (added to `npm test`). The server trigger ignores it (`entryPoint` isn't `report_flag`); check that.
+5. **Our side:** `redactFeedbackForExport` keeps `liked`; Admin tools → Ideas & reports shows likes as "♥ Colours, Fun".
+6. Clean test (RULE). Report G86.md. `gemini(G86): done — review please`.
+
 ### G81 · [todo] · gemini · Seema's course tile: "Seema Ma'am · Class 10 English" (owner decided in chat, 2026-11-09)
 Owner: "We already created and reviewed all the questions. Create a new tile, put the quest behind it, only Seema and her
 students see it." No new questions, no new screens.
