@@ -284,5 +284,44 @@
     "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
     "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.\n\n**Also on the table:** ChatGPT's four-dashboard brief + concept image (docs/product/PROGRESS_REVIEW_TODO.md). Central question: activity vs real learning (mastery).",
     "from": "claude"
+  },
+  {
+    "id": "mock-chamku-asks",
+    "title": "Mockup: Chamku asks (stickies + feedback)",
+    "ask": "The sticky note on Home, one question, the thank-you, and your results screen. Build it like this (Pratha first, then everyone)?",
+    "details": "**1. Sticky note on Home**\n\n![1. Sticky note on Home](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg)\n\n**2. One question**\n\n![2. One question](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca2.jpg)\n\n**3. Thank you**\n\n![3. Thank you](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca3.jpg)\n\n**4. Your results (Admin tools)**\n\n![4. Your results (Admin tools)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca4.jpg)\n\n**Claude's notes:** good; the answer emojis become our characters later (design rule). Voice comes in v2 (consent + privacy).\n\n**YES** = Gemini builds it (no app build needed). **MORE DETAILS** = tell me what to change.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg",
+    "from": "claude"
+  },
+  {
+    "id": "mock-teacher-class",
+    "title": "Mockup: the teacher's class screen",
+    "ask": "Actions on top (approve, reteach one thing with one tap, who hasn't practised), filters for 32 students, suggested topics. Build it like this?",
+    "details": "**1. Class screen**\n\n![1. Class screen](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg)\n\n**2. Students (filters + search)**\n\n![2. Students (filters + search)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-2-students-list.jpg)\n\n**3. Assign a topic**\n\n![3. Assign a topic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-3-assign-topic.jpg)\n\n**Claude's notes:** this answers your notes from the demo teacher. Two fixes before building: \"Remind all\" goes to the **parents**, never children; the bright green button gets the calm style.\n\n**YES** = Gemini builds it with those two fixes.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg",
+    "from": "claude"
+  },
+  {
+    "id": "mock-parent-link",
+    "title": "Mockup: the parent's \"yes\" page (no app needed)",
+    "ask": "A parent opens a WhatsApp link: Hindi or English, read aloud, 3 things we keep, name, relation, \"हाँ, मैं सहमत हूँ\". Build it like this?",
+    "details": "**The page (Hindi)**\n\n![The page (Hindi)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg)\n\n**After yes**\n\n![After yes](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl-done.jpg)\n\n**Claude's notes:** clear and kind. It needs a small server part (a deploy request for your OK) and a privacy-policy line.\n\n**YES** = Gemini builds it; the server part comes to you as a deploy request.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg",
+    "from": "claude"
+  },
+  {
+    "id": "vote-cast",
+    "title": "Vote: the character cast (with Pratha!)",
+    "ask": "Chamku the star, Kurma the tortoise, Chiku the monkey, Madhu the bee, Cheenu the ant, Veda the owl. Keep these? Type any name changes in the note.",
+    "details": "**The cast**\n\n![The cast](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg)\n\n**The avatar builder (items won from the chest)**\n\n![The avatar builder (items won from the chest)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-avatar.jpg)\n\n**Claude's notes:** much more fun than our current star. Let **Pratha vote** on the names. One to think about: **Kurma** is the tortoise avatar of Vishnu, so some families may see it as religious; a neutral option is **\"Kachhu\"** or **\"Dadu Kachhua\"**.\n\n**YES** = keep the cast (with your note's changes).",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg",
+    "from": "claude"
+  },
+  {
+    "id": "vote-fun-names",
+    "title": "Vote: fun names for English units (with Pratha + Seema)",
+    "ask": "Pick A or B per unit, or type your own in the note. Seema checks the English, Pratha votes.",
+    "details": "| Unit | Today | A | B |\n|---|---|---|---|\n| 0 | Sentences | Sentence Safari | The Thought Express |\n| 1 | Parts of Speech | The Great Word Bazaar | Wordopolis |\n| 2 | Articles | The Ticket Gate | The Spotlight Booth |\n| 3 | Subject–Verb Agreement | The Rhythm Duo | The Perfect Match |\n| 4 | Spot the Error | Detective Desk | The Clue Hunter Agency |\n| 5 | Tenses | The Tense Time Machine | Chronos Island |\n| 6 | Modals & Tags | The Power Keys | Rules & Riddles |\n| 7 | Reported Speech & Passive | The Newsroom Studio | The Press Gallery |\n| 8 | Linking Words | The Connector Junction | The Bridge Builders |\n| 9 | Punctuation | Signpost Valley | Traffic Signals of Speech |\n| 10 | Word Building | The Word Factory | The Inventor's Forge |\n| Pro 1 | Tenses (9–10) | Timeline Architecture | Chronos Lab |\n| Pro 2 | Modals (9–10) | The Nuance Engine | Degrees of Certainty |\n| Pro 3 | Agreement (9–10) | Syntax Equilibrium | The Harmony Matrix |\n| Pro 4 | Reported Speech (9–10) | The Dialogue Decoder | The Discourse Studio |\n| Pro 5 | Active & Passive (9–10) | The Voice Inversion | Perspective & Focus |\n| Pro 6 | Editing (9–10) | The Editorial Suite | Precision Proofreading |\n\nThe grammar term always stays visible underneath (e.g. \"Noun Town · Nouns\"), so teachers find their topic. Topic names: 285-line list in docs/agents/reports/G61-names.md.\n\n**YES** = use all the A names (note any changes).",
+    "from": "claude"
   }
 ]
