@@ -47,7 +47,7 @@ export default function HomeIdeaPromptCard({ userGrade = null }) {
 
   return (
     <>
-      <View style={styles.card} accessibilityRole="region" accessibilityLabel="Weekly idea prompt from Chamku">
+      <View style={styles.card} accessibilityLabel="Weekly idea prompt from Chamku">
         <View style={styles.tape} />
         <View style={styles.topRow}>
           <View style={styles.badge}>

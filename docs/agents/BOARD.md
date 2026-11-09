@@ -357,6 +357,13 @@ ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
    waiting; approved count; active this week; current assignment; weakest topic). Missing → hide the line or "—",
    never a number from the mockup.
 4. Grep the whole diff for 52, 86, 38, 24, "Reported", "Tenses (had done)", "10-B", "Pratha" before finishing.
+5a. **Owner (2026-11-09): not just Seema: every new user, and every NEW guide or guide step.** Each guide in
+   `data/guides*` gets a `version` (bump it when steps are added). Home shows, as the FIRST card, the newest guide for this
+   person's role whose version they haven't finished or dismissed (one card at a time, never a stack). ✕ → card goes away
+   with a one-time line "You'll find it in Me → Guides" (with a tap to go there). Remember finished/dismissed per account
+   as `users.guidesSeen: { [guideId]: version }` (one small write on ✕ / finish, no reads beyond the user doc already
+   loaded; check the rules allow this field). New guide or bumped version → it comes back on Home once. Pure logic in
+   `utils/homeGuide.js` + tests (new user, finished, dismissed, version bump, role filter, two-role person).
 5. **Seema (2026-11-09): "the first guide should appear on Home before all else."** For a new user the guide card is the **first card on Home**, above subjects / children / classes, until finished or ✕ (then the one-time "guides are in Me → Guides" note). Teachers: the first card is "For teachers: start here" (the one-pager with DO IT buttons), then "Start your class"; parents: "For parents"; children: "Your first day". Add the other later spec items if not done yet: the Home guide card (Y1–Y3), "this phone or their own phone?" after Add a
    child, explanations on code screens, short Progress "Me" view, and the two-role (teacher + parent) layout.
 6. Screenshots with the Demo School logins (parent, teacher) and the tester account (child) in G49-R.md.
