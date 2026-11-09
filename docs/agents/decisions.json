@@ -347,7 +347,10 @@
     "title": "Ready: the feedback system + 2 fixes. Go live?",
     "ask": "Children can send ideas (Me → 💡 idea, a weekly Chamku prompt on Home), 🚩 works on reading pages too, and the parent's week shows all subjects first. Publish it, and let Gemini switch on your Ideas & reports screen (DR-24)?",
     "details": "**What children see:** Me → \"💡 I have an idea\" and once a week a small Chamku card on Home: tap answers; supervised accounts (Pratha) can also type. A thank-you from Chamku (no stars yet: stars for answering will come from the server, with a daily limit, in Chamku's stickies).\n\n**🚩 on reading pages:** tap-only reasons (wrong fact, confusing, spelling, picture missing).\n\n**Parent's week:** all subjects together first; no subject picker.\n\n**You:** Admin tools → **Ideas & reports**: every idea and report, newest first, with a done tick. It needs a small rules change (DR-24) so only you can read them.\n\n**Claude's review:** merged and tested; fixed one honesty problem (children were promised +5 ⭐ the phone can't give).\n\n**YES** = Claude publishes + Gemini deploys DR-24. **LATER** = wait until you're back.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T06:52:05.064Z"
   },
   {
     "id": "link-pratha",
@@ -361,7 +364,10 @@
     "title": "Fix: \"Play as\" and the lock need internet, and fail without a clear message",
     "ask": "Make every switch say \"No internet: turn on mobile data or Wi-Fi\", and let your PIN end the child's turn even offline (so you're never stuck). Gemini builds, Claude reviews, no new build needed. OK?",
     "details": "**What happened (demo to a parent):** the internet was off, so \"Play as\" failed with a confusing message.\n\n**Why it needs internet:** \"Play as\" really switches who is signed in, so the stars go to the child, not to you. Only our server can do that switch, and it checks your PIN there so a child can't find it on the phone. The lock itself (Android pinning) works offline.\n\n**A bigger gap found while checking:** going back to you also needs the internet. If the internet drops during the child's turn, the \"Time's up\" screen can't be closed until it comes back (the phone's own PIN still unpins it, but the app stays paused).\n\n**The fix (Gemini, small, update over the air):**\n1. One clear message for every server action when offline: \"No internet. Turn on mobile data or Wi-Fi, then try again.\" Checked *before* the phone is pinned. Also covers adding a child, link codes, class codes, feedback.\n2. Your PIN also works offline: the phone keeps a scrambled copy of your PIN (set when you start Play as). Offline, the right PIN ends the turn (unpins, stops the timer, closes Time's up) and the app switches back to you as soon as the internet returns.\n\n**Later, with the next app build:** a small \"You're offline\" strip at the top of the app (needs a new library, so not over the air).\n\n**YES** = Claude writes the task, Gemini builds, Claude reviews before you see it.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T06:50:58.555Z"
   },
   {
     "id": "phone-to-claude",
@@ -375,6 +381,13 @@
     "title": "Build: \"Tell Claude\" from inside the app (notes, not just Yes/No)",
     "ask": "A \"Tell Claude\" button on this Decisions screen: type or speak a note, it reaches Claude in seconds with the app version, online/offline and the last error attached. Claude replies on the card. Build it?",
     "details": "**For:** \"this broke during a demo\": one tap, you keep talking to the parent, Claude fixes it and asks \"Ready. Publish?\".\n\n**What gets built (Gemini builds, Claude reviews):**\n1. **Tell Claude** button at the bottom of Decisions (owner only); type or use the keyboard mic.\n2. The note adds by itself: app version, online/offline, the last error message shown.\n3. Notes reach the Mac in seconds (live listener instead of every 10 minutes; fewer reads too).\n4. Claude replies on the same card → a notification on your phone.\n5. Small rules change **DR-25**: your account may create cards, not only answer them.\n\n**Limit:** Claude acts only while a Claude session is open on the Mac. Otherwise the note waits and Claude reads it first thing next session.\n\n**YES** = Claude writes the task + DR-25.",
+    "from": "claude"
+  },
+  {
+    "id": "reseed-english-5-fixes",
+    "title": "To do: re-seed English (5 serious Grammar Pro mistakes fixed)",
+    "ask": "Close and reopen the app (so it gets the fix), then Me → Admin tools → re-seed English. Tap YES when done.",
+    "details": "**Fixed (Claude):** a marked-correct answer that added \"yesterday\" from nowhere (passive voice); 4 questions whose options didn't match the sentence (reported questions, passive questions, \"was lent\" ×2). Two explanations rewritten for children.\n\n**Steps:** close the app fully, reopen (it downloads the update), then **Me → Admin tools → re-seed English**. Phones fetch the new questions once.\n\nThe other 24 smaller issues: Gemini (G73), then one more re-seed.",
     "from": "claude"
   }
 ]

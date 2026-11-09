@@ -261,11 +261,41 @@ Neutral wording ("their week", not "her week"). Grep your diff for mockup number
 screen a person can get stuck on (sign-up sheets, gates, errors) has a way back or out ("Not you? Use a different
 account", Sign out, Back).
 
-### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
+### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
+**1) G77 DR-24 deploy + test (owner YES)**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+
+### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
+
+### G77 · [todo] · gemini · Deploy DR-24 (owner YES, 2026-11-09) + test Ideas & reports
+The feedback update is live (OTA 2026-11-09, update group 08480483). Deploy the local rules from CLAUDE's folder (firestore.rules is
+git-ignored; take it from /Users/mohitchilkoti/Documents/projects/apprec8): `firebase deploy --only firestore:rules --project apprec8-ca229`.
+Then test on the emulator with a throwaway child account: Me → 💡 I have an idea → send; a 🚩 on a reading page. As an admin:
+Admin tools → Ideas & reports shows both; the done tick saves. A child account must NOT be able to read userFeedback (try it).
+Delete the throwaway account. Report G77.md. `gemini(G77): done — deployed + verified`.
+
+### G78 · [todo] · gemini · No internet = a clear message, and the parent PIN works offline (owner YES, 2026-11-09)
+**Why:** demo to a parent with the internet off: "Play as" failed with a confusing message. Going back to the parent also needs the
+server, so a dropped connection mid-session leaves Time's up unclosable (never-lock-out rule). JS only (ships over the air): no new
+native library (NetInfo needs a build: later).
+1. `utils/netError.js` (pure, tested): `friendlyError(e)` → "No internet. Turn on mobile data or Wi-Fi, then try again." for
+   network failures (callable codes `unavailable`, `deadline-exceeded`, `functions/unavailable`, auth `network-request-failed`,
+   messages with "network"/"offline"), else the existing message. Use it in every alert that shows a server error
+   (grep `e?.message || String(e)`: 14 places, plus familyApi/ideaApi/class join callers).
+2. **Play as:** get the token from `switchToChild` FIRST; only if that works, pin + start the timer + sign in. Offline = the
+   message, the phone is never pinned.
+3. **Offline PIN** (`services/parentPinLocal.js`, expo-secure-store + expo-crypto, both installed): when the parent sets the PIN,
+   or switches back successfully online, store a salted SHA-256 of the PIN on the phone. In a child session, if `switchToParent`
+   fails with a network error and the typed PIN matches the local copy: `endSession()` (unpin, stop timer, close Time's up) and say
+   "Lock off. You'll be back in your account as soon as the internet is on." Retry the switch when the app comes to the foreground
+   and every 30 s while that note shows; never more than that. No local copy yet → "Turn on the internet to switch back. Your
+   phone's own PIN or pattern also unpins the phone." Wrong PIN offline counts toward the same 5-try / 15-min wait (store it locally).
+4. Tests for friendlyError and the local PIN check (match / no copy / wrong / lockout). Mention in docs/qa/OWNER_TESTING.md:
+   airplane mode → Play as → message, no pin; Play as online → airplane mode → Time's up → PIN → lock off → internet on → back.
+Branch from the latest `feat/quiz-redesign`. Report G78.md. `gemini(G78): done — review please`.
 
 ### G74 · [done] · gemini · Verify DR-22 (the OWNER deployed the rules himself, 2026-11-09 09:10) — test only
 Don't deploy. Test with a NEW throwaway account on the emulator: sign up → first name → Class 5 → LET'S GO must save;
@@ -286,6 +316,8 @@ The owner gives you Seema's sign-in email **in Antigravity** (never write it in 
 Claude then makes the rule robust to old types (a DR for the owner).
 
 ### G73 · [todo] · gemini · Fix the 29 Grammar Pro issues from your G52 report (Claude reviewed it, 2026-11-09)
+**Update 2026-11-09 evening: Claude already fixed the 5 High** (b4 questions-gate-pool-11, b5 test-8, modals-gate-pool-14,
+agent-board-7, test-12): pull first, skip those 5, do the 11 Medium + 13 Low.
 Apply your suggested fixes from docs/agents/reports/G52.md to `data/englishQuest/units/b1.js`–`b6.js`: all 5 High,
 11 Medium, 13 Low. Also bring the **"right answer is the longest option"** rate in b1 (56%) and b4 (52%) below 40%
 (lengthen distractors or shorten keys; don't change what's right). Keep ids. `npm test` passes. Report what changed per

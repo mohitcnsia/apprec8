@@ -2389,3 +2389,8 @@ for answering come from the server with a daily cap in G69); first name only in 
 **DR-24 (rules):** `userFeedback`: owner may read and tick status (`allow read: isAdmin()`, `allow update: isAdmin()`
 only `status`/`doneAt`). Without it the owner's Ideas & reports screen stays empty. Deploy:
 `firebase deploy --only firestore:rules --project apprec8-ca229` after the owner's OK.
+
+## 2026-11-09 evening (Claude) — Grammar Pro: 5 High issues from G52 fixed by Claude
+b4 questions-gate-pool-11 (prompt shortened to "the next train" so the key fits 14 words), b5 test-8 (key no longer adds
+"yesterday"), modals-gate-pool-14, agent-board-7, test-12 (distractors match the sentence). `npm test` passes. Owner re-seeds
+English (inbox card). Gemini G73 does the other 24. Also: OTA published (feedback G64–G66); G77 (DR-24) + G78 (offline) on the board.
