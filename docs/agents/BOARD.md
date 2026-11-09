@@ -267,11 +267,10 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
-### G74 · [todo] · gemini · 🚨 Deploy DR-22 NOW (profile rule, missing field) — owner-approved: yes, 2026-11-09 "ok for DR-22"
-CODE_REVIEW.md "DR-22". Approved. Check the local `firestore.rules` diff vs
-live is only the DR-22 line (+ the DR-21 block already live), deploy rules from Claude's folder, test with a NEW
-throwaway account: sign up → first name → Class 5 → LET'S GO must save; delete the account afterwards. Report in
-G74.md. `gemini(G74): done — deployed + tested`.
+### G74 · [todo] · gemini · Verify DR-22 (the OWNER deployed the rules himself, 2026-11-09 09:10) — test only
+Don't deploy. Test with a NEW throwaway account on the emulator: sign up → first name → Class 5 → LET'S GO must save;
+also a grown-up: "I'm a parent" with a new account. Delete both accounts afterwards (Me → Delete my account).
+Report G74.md. `gemini(G74): done — verified`.
 
 ### G72 · [done] · gemini · 🚨 URGENT: Seema can't get past the first-run sheet ("Couldn't save your profile (not allowed)")
 The owner gives you Seema's sign-in email **in Antigravity** (never write it in the repo). Her account is from 2025
