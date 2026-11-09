@@ -245,7 +245,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
           </View>
         ))}
         {myClasses.length + pendingClasses.length < MAX_CLASSES ? (
-          <Row icon="add-circle-outline" label="Join a class (with a parent)" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+          <Row icon="add-circle-outline" label="Join a class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
         ) : null}
         {/* Teachers enter the school's invite code (mockup L4). Not on child profiles. */}
         {!userData?.isChild ? (

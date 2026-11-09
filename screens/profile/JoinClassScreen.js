@@ -9,7 +9,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { findClassByCode, joinClass } from "../../services/classesApi";
-import { CONSENT_TEXT, canJoin, classLabel } from "../../utils/classes";
+import { CONSENT_TEXT, canJoin, classLabel, joinGate } from "../../utils/classes";
 import ConsentListenButton from "../../components/common/ConsentListenButton";
 import { showAlert } from "../../services/dialog";
 
@@ -37,6 +37,9 @@ export default function JoinClassScreen({ navigation }) {
   useEffect(() => listenToUserDocument(setUser, () => {}), []);
   const myClassIds = [...(user?.classIds || []), ...(user?.pendingClassIds || [])]; // waiting ones count too
   const t = CONSENT_TEXT[lang];
+  // G90 (Seema, 2026-11-10): no parent consent = no class. A linked parent already said yes on their own phone.
+  const gate = user ? joinGate(user) : null;
+  const parentOnFile = gate === "parent";
 
   const lookUp = async () => {
     setBusy(true);
@@ -57,7 +60,7 @@ export default function JoinClassScreen({ navigation }) {
   const join = async () => {
     setBusy(true);
     try {
-      await joinClass({ found, myClassIds, firstName: user?.firstName, grade: user?.grade, parentName, relation, language: lang });
+      await joinClass({ found, myClassIds, firstName: user?.firstName, grade: user?.grade, parentName, relation, language: lang, parentOnFile });
       showAlert("Request sent ✉️", `Your teacher will check and approve ${classLabel(found.class)}. You'll see it in Me → My classes.`, [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
@@ -67,7 +70,34 @@ export default function JoinClassScreen({ navigation }) {
     setBusy(false);
   };
 
-  const canSubmit = found && parentName.trim().length >= 2 && relation && agreed && !busy;
+  const canSubmit = found && !busy && (parentOnFile || (parentName.trim().length >= 2 && relation && agreed));
+
+  if (gate === "blocked") {
+    return (
+      <View style={styles.screen}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.label}>JOIN A CLASS</Text>
+          <View style={styles.classCard}>
+            <Text style={styles.classTitle}>Ask your parent to add you</Text>
+            <Text style={styles.soft}>A parent says yes on their own phone first. Then you can join your class.</Text>
+            <Text style={styles.soft}>माता-पिता पहले अपने फ़ोन पर हाँ कहें, फिर आप क्लास में जुड़ सकते हैं।</Text>
+          </View>
+          <View style={styles.consentCard}>
+            <Text style={styles.consentTitle}>For your parent</Text>
+            <Text style={styles.consentBody}>
+              1. Install Apprec8 on your phone and sign in.{"\n"}2. Me → Link my child's own account → write your name and agree.
+              {"\n"}3. Type the code on your child's phone: Me → Link to my parent.
+            </Text>
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <Pressable onPress={() => navigation.goBack()} style={styles.button} accessibilityRole="button">
+            <Text style={styles.buttonText}>OK</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -95,6 +125,10 @@ export default function JoinClassScreen({ navigation }) {
               <Text style={styles.soft}>{found.class.schoolName || "School"} · Class {found.class.grade}</Text>
             </View>
 
+            {parentOnFile ? (
+              <Text style={styles.soft}>Your parent already said yes on their phone ✓. Your teacher will check and approve.</Text>
+            ) : (
+            <>
             <View style={styles.segment}>
               {[
                 ["en", "English"],
@@ -133,6 +167,8 @@ export default function JoinClassScreen({ navigation }) {
               <View style={[styles.box, agreed && styles.boxOn]}>{agreed ? <Text style={styles.tick}>✓</Text> : null}</View>
               <Text style={styles.agreeText}>{t.confirm}</Text>
             </Pressable>
+            </>
+            )}
           </>
         )}
       </ScrollView>
@@ -145,7 +181,7 @@ export default function JoinClassScreen({ navigation }) {
           style={[styles.button, (found ? !canSubmit : code.trim().length < 6 || busy) && styles.buttonOff]}
           accessibilityRole="button"
         >
-          {busy ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>{found ? (lang === "hi" ? "सहमत हूँ · JOIN" : "AGREE AND JOIN") : "FIND MY CLASS"}</Text>}
+          {busy ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>{found ? (parentOnFile ? "JOIN" : lang === "hi" ? "सहमत हूँ · JOIN" : "AGREE AND JOIN") : "FIND MY CLASS"}</Text>}
         </Pressable>
       </View>
     </View>

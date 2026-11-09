@@ -1,6 +1,6 @@
 // Tests for utils/classes.js (RB-2 phase A). Run: npm test
 import assert from "node:assert/strict";
-import { makeClassCode, normalizeCode, canJoin, MAX_CLASSES, questsForTeacher, teacherSubjectsIn, classLabel, consentRecord, CONSENT_TEXT, CODE_LENGTH, classCodeMessage, teacherInviteMessage, classSubjects } from "../utils/classes.js";
+import { makeClassCode, normalizeCode, canJoin, MAX_CLASSES, questsForTeacher, teacherSubjectsIn, classLabel, consentRecord, CONSENT_TEXT, CODE_LENGTH, classCodeMessage, teacherInviteMessage, classSubjects, joinGate } from "../utils/classes.js";
 
 // codes: 6 characters, no look-alikes, typed input is tidied
 let i = 0; const seq = [0, 0.99, 0.5, 0.25, 0.75, 0.1];
@@ -52,4 +52,9 @@ assert.ok(teacherInviteMessage({ className: "5-A", subjects: [], code: "TX" }).i
 assert.deepEqual(classSubjects({ subjects: ["science"], teacherSubjects: { t: ["english"] } }), ["science"]);
 assert.deepEqual(classSubjects({ teacherSubjects: { t: ["english", "wordpower"], u: ["english"] } }), ["english", "wordpower"]);
 assert.deepEqual(classSubjects({}), []);
+// G90: no parent consent = no class (Seema's decision 3)
+assert.equal(joinGate({ parentUids: ["p1"] }), "parent");
+assert.equal(joinGate({ parentUids: [] }), "blocked");
+assert.equal(joinGate({}), "blocked");
+assert.equal(joinGate(null), "blocked");
 console.log("classes tests passed");

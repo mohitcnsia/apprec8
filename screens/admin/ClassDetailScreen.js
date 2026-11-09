@@ -11,7 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "./schoolUi";
-import { getClasses, classMembers, approveMember, classTeam, decideTeacherRequest } from "../../services/classesApi";
+import { getClasses, classMembers, approveMember, classTeam, decideTeacherRequest, setPilotOpen } from "../../services/classesApi";
 import { SUBJECT_NAMES, classCodeMessage, classSubjects } from "../../utils/classes";
 import { showAlert } from "../../services/dialog";
 
@@ -95,6 +95,23 @@ export default function ClassDetailScreen({ route, navigation }) {
           <Text style={styles.h1}>{cls.name}</Text>
           <Text style={styles.soft}>{[cls.schoolName, `Class ${cls.grade}`, names(classSubjects(cls))].filter(Boolean).join(" · ")}</Text>
         </View>
+
+        {/* G90 (Seema's decision 6): one switch, no teacher UI. */}
+        <Pressable
+          onPress={() =>
+            setPilotOpen(classId, !cls.pilotUnlockAll)
+              .then(() => setCls({ ...cls, pilotUnlockAll: !cls.pilotUnlockAll }))
+              .catch((e) => showAlert("Couldn't change it", e.message))
+          }
+          accessibilityRole="switch"
+          accessibilityState={{ checked: !!cls.pilotUnlockAll }}
+          style={{ flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 8 }}
+        >
+          <Ionicons name={cls.pilotUnlockAll ? "lock-open" : "lock-closed-outline"} size={20} color={P.label} />
+          <Text style={[styles.soft, { flex: 1 }]}>
+            {cls.pilotUnlockAll ? "Pilot: all levels open for these kids (tap to turn off)" : "Pilot: open all levels for these kids"}
+          </Text>
+        </Pressable>
 
         <View style={styles.codeCard} accessible accessibilityLabel={`Class code ${String(cls.joinCode).split("").join(" ")}`}>
           <View style={{ flex: 1 }}>

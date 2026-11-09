@@ -127,30 +127,37 @@ export async function findClassByCode(input) {
 }
 
 /** Joins a class after the parent's consent. myClassIds: the kid's current classes (from the user doc). */
-export async function joinClass({ found, myClassIds = [], firstName, grade, parentName, relation, language }) {
+export async function joinClass({ found, myClassIds = [], firstName, grade, parentName, relation, language, parentOnFile = false }) {
   const uid = me();
   if (!uid) throw new Error("Sign in first");
   const check = canJoin(myClassIds, found?.classId);
   if (!check.ok) throw new Error(check.reason);
   if (String(uid).startsWith("demo_") !== String(found?.classId || "").startsWith("demo_")) throw new Error("Demo accounts can only join the Demo School."); // G38
-  const record = consentRecord({ kidUid: uid, classId: found.classId, parentName, relation, language });
-  const consentRef = doc(collection(db, "consents"));
   const batch = writeBatch(db);
-  batch.set(consentRef, { ...record, acceptedAt: serverTimestamp(), acceptedAtClient: record.acceptedAt });
+  // G90: a linked parent already gave consent on their own phone (consents doc written by the server), so no second form.
+  const record = parentOnFile ? null : consentRecord({ kidUid: uid, classId: found.classId, parentName, relation, language });
+  const consentRef = record ? doc(collection(db, "consents")) : null;
+  if (record) batch.set(consentRef, { ...record, acceptedAt: serverTimestamp(), acceptedAtClient: record.acceptedAt });
   // A join is a REQUEST: the teacher (who knows the family) approves it (owner 2026-11-04, child safety).
   // Only the server (approveMember) adds the class to users.classIds.
   batch.set(doc(db, "classes", found.classId, "members", uid), {
     firstName: String(firstName || "").trim().split(/\s+/)[0] || null,
     grade: Number.isInteger(grade) ? grade : null,
     code: found.code,
-    consentId: consentRef.id,
+    consentId: consentRef ? consentRef.id : null,
+    consentBy: record ? "join-form" : "parent-account",
     status: "pending",
-    parentName: record.parentName,
-    relation: record.relation,
+    parentName: record ? record.parentName : null,
+    relation: record ? record.relation : null,
     joinedAt: serverTimestamp(),
   });
   batch.set(doc(db, "users", uid), { pendingClassIds: arrayUnion(found.classId) }, { merge: true });
   await batch.commit();
+}
+
+/** G90 (Seema's decision 6): admin opens every level for a pilot class's kids. Rules: app or school admin only. */
+export async function setPilotOpen(classId, on) {
+  await setDoc(doc(db, "classes", classId), { pilotUnlockAll: !!on }, { merge: true });
 }
 
 export async function leaveClass(classId) {

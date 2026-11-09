@@ -39,6 +39,14 @@ export function canJoin(myClassIds = [], classId) {
   return { ok: true, reason: null };
 }
 
+/**
+ * G90 (Seema's decision 3, 2026-11-10): no parent consent = no class. A kid can ask to join only when a parent account is
+ * linked (the parent gave consent on THEIR phone: Add a child / Link my child). → "parent" | "blocked".
+ */
+export function joinGate(user) {
+  return Array.isArray(user?.parentUids) && user.parentUids.length > 0 ? "parent" : "blocked";
+}
+
 /** What a class learns: its own subjects (set when created), else its teachers' subjects (older classes). */
 export function classSubjects(cls) {
   const own = Array.isArray(cls?.subjects) && cls.subjects.length ? cls.subjects : null;

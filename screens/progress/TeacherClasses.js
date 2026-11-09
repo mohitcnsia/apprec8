@@ -226,7 +226,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           {pending.map((k) => (
             <View key={k.uid} style={styles.rowBetween}>
               <Text style={[styles.line, { flex: 1 }]} numberOfLines={2}>
-                {k.firstName || "Child"} · Class {k.grade || "?"} · parent: {k.parentName || "?"} ({k.relation || "?"})
+                {k.firstName || "Child"} · Class {k.grade || "?"} · {k.parentName ? `parent: ${k.parentName}${k.relation ? ` (${k.relation})` : ""}` : "parent: linked account ✓"}
               </Text>
               <Pressable onPress={() => decide(k, true)} hitSlop={6} style={styles.chip}>
                 <Text style={[styles.line, { color: P.correctText }]}>Approve</Text>

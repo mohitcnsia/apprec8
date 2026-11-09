@@ -312,7 +312,7 @@ teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifa
    request in CODE_REVIEW.md; don't deploy. Clean test (RULE) incl. dark mode; screenshots in G89.md.
    `gemini(G89): done — review please`.
 
-### G90 · [doing] · claude (Gemini idle, owner asleep, 2026-11-10 01:50) · Pilot ready: sign-up check + assigned work first + all levels open (Seema's decisions 2, 3, 5, 6; 2026-11-10)
+### G90 · [done] · claude (built 2026-11-10 night; DR-26 rules deploy waits for owner OK) · Pilot ready: sign-up check + assigned work first + all levels open (Seema's decisions 2, 3, 5, 6; 2026-11-10)
 Seema's final decisions. Mostly existing code: verify, then close the gaps. No new screens.
 1. **Sign-up (decision 2 + 3).** The flow is: parent on their OWN phone → Me → add child (`AddChildScreen`, consent in English /
    Hindi, `createChildProfile`) → the child signs in with the parent's code → Me → Join a class (code) → Seema approves.

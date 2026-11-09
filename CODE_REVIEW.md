@@ -2413,3 +2413,14 @@ Push notification triggers for pending actions (G84 item 2):
 - **DR-25 Deploy request (owner YES on the phone, 2026-11-10 → G94):** deploy functions `redeemTeacherInvite` (push to school admins + owner when a teacher
   waits) and new trigger `onStudentJoinRequest` (push to the class teachers when a student waits), max 1 push per person per 10 min.
   `firebase deploy --only functions:redeemTeacherInvite,functions:onStudentJoinRequest`. No rules change.
+
+## 2026-11-10 — G90 built by Claude (Gemini idle overnight) + DR-26
+- **No parent consent = no class (Seema 3):** Join a class needs a linked parent (`users.parentUids`, set only by the server when a
+  parent adds/links the child). Without one: "Ask your parent to add you" + the 3 steps for the parent. With one: no second
+  consent form; the member doc says `consentBy: "parent-account"`; the teacher sees "parent: linked account ✓".
+- **Assigned work first (Seema 5):** "From your teacher" moved above Coming up / idea prompt on a kid's Home.
+- **All levels open (Seema 6):** Admin tools → the class → "Pilot: open all levels" sets `classes/{id}.pilotUnlockAll`. Kids in
+  that class: every topic of their class open (grade filter kept, calm folded map kept). Class docs read once per app session.
+- **DR-26 Deploy request (owner OK needed):** firestore.rules `classes/{id}/members` create also requires
+  `users/{kid}.parentUids` non-empty (the server-side half of "no consent = no class"). `firebase deploy --only firestore:rules`.
+  Until it is deployed, only the app screen enforces it.

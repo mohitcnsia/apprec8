@@ -33,6 +33,16 @@ import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { myAssignments, assignedNodeIds } from "../../services/assignmentsApi";
+import { getClasses } from "../../services/classesApi";
+import { isPilotOpen } from "../../utils/pilotOpen";
+
+// G90: the kid's class docs, read once per app session (cost: ≤ 3 reads, not one per map visit).
+const classDocCache = new Map();
+async function cachedClasses(ids) {
+  const missing = ids.filter((id) => !classDocCache.has(id));
+  if (missing.length) (await getClasses(missing)).forEach((c) => classDocCache.set(c.id, c));
+  return ids.map((id) => classDocCache.get(id)).filter(Boolean);
+}
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 import {
@@ -189,14 +199,21 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (!classKey) return setAssigned([]);
     myAssignments(classKey.split(",")).then((list) => setAssigned(assignedNodeIds(list, questId))).catch(() => {});
   }, [classKey, questId]);
+  // G90 (Seema's decision 6): a pilot class opens every topic of the kid's class.
+  const [pilotOpen, setPilotOpen] = useState(false);
+  useEffect(() => {
+    if (!classKey) return setPilotOpen(false);
+    cachedClasses(classKey.split(",")).then((list) => setPilotOpen(isPilotOpen(list))).catch(() => {});
+  }, [classKey]);
+  const openAll = unlockAll || pilotOpen;
   const visibleNodes = useMemo(
     () => (nodes ? (unlockAll ? nodes : nodesForGrade(nodes, grade)) : null),
     [nodes, grade, unlockAll]
   );
 
   const tree = useMemo(
-    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll, extraUnlocked: assigned }) : null),
-    [visibleNodes, progress, unlockAll, assigned]
+    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll: openAll, extraUnlocked: assigned }) : null),
+    [visibleNodes, progress, openAll, assigned]
   );
   const count = tree?.path.length || 0;
 
@@ -228,7 +245,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
             units: visibleNodes.filter((n) => n.kind === "unit"),
             currentPathId: tree.currentPathId,
             expanded: expandedUnits,
-            unlockAll,
+            unlockAll, // tester only: pilot kids keep the calm folded map (their topics are open, not all expanded)
             assigned,
           })
         : { rows: [], currentUnitId: null },

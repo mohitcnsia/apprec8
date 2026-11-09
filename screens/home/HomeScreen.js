@@ -570,10 +570,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
-      <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
-
-      <HomeIdeaPromptCard userGrade={userGrade} userCreatedAt={userData?.createdAt} />
-
+      {/* G90 (Seema's decision 5): assigned work is the first thing a kid sees, top priority. */}
       {teacherTopics.length ? (
         <View style={styles.teacherCard}>
           <Text style={styles.label}>FROM YOUR TEACHER</Text>
@@ -588,6 +585,11 @@ export default function HomeScreen({ navigation }) {
           {teacherTopics.length > 3 ? <Text style={styles.questSub}>and {teacherTopics.length - 3} more</Text> : null}
         </View>
       ) : null}
+
+      <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
+
+      <HomeIdeaPromptCard userGrade={userGrade} userCreatedAt={userData?.createdAt} />
+
 
       {mistakeCount > 0 ? (
         <Pressable onPress={openMistakes} accessibilityRole="button" accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}>
