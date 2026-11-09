@@ -41,6 +41,11 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
     phone via a WhatsApp link to a simple page, no app (design already approved: "the parent's yes page", never built);
     (b) the teacher approves only when she knows a parent agreed; (c) a text-message code (costs per message).
     Claude suggests a + b for the pilot.
+    **Owner (2026-11-09):** parent must be onboarded and the child linked to them; the teacher approves. Asked: make the app
+    grown-up only? **Claude: no (the learners are children; their data still needs a parent's yes), but "parent-first":**
+    only the parent's own account gives consent, once, when adding or linking the child; the child plays via Play as or
+    "Code from my parent"; joining a class = class code + teacher approval, no consent screen; a child who signed up
+    alone can practise but can't join a class until a parent is linked. (Waiting for the owner's OK.)
 14. **A parent wants to see the child's progress** → today: only if the child is on their account (profile) or linked.
 
 ### Seema
