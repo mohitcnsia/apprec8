@@ -263,7 +263,7 @@ account", Sign out, Back).
 
 ### ⛔ HOLD (owner, 2026-11-09 afternoon): NO NEW FEATURE BUILDS until the owner and Claude agree the pilot scope
 Owner: "you are jumping into building without thinking things through … understand what we need to provide in the pilot
-phase, then pick up based on feedback." **Do only:** G77 (DR-24, owner YES), G80 (testing only, no fixes), G73 (content
+phase, then pick up based on feedback." **Do only:** G85 (test vs real, owner agreed), G77 (DR-24, owner YES), G80 (testing only, no fixes), G73 (content
 fixes already agreed). **On hold, don't start:** G84, G81, G82, G83, G79, G78, G69, G70, G55, G68, G49-R and everything
 else. Claude will update this board with the agreed pilot list.
 
@@ -296,6 +296,24 @@ students see it." No new questions, no new screens.
    (class 10-A of Appreciate International School; never write it in the repo). Until then use the Demo School class to test.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
+
+### G85 · [todo] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
+Spec = the live doc, section "Setting up the test Firebase project": https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU
+Owner already did the console part: project **apprec8-test**, Auth (Email/Password + Google), Firestore nam5, Android app
+`com.mohitchilkoti.apprec8.test` with the debug SHA-1. Config file: Claude's git-ignored
+`docs/agents/private/google-services.test.json` (never commit it to the public repo).
+1. Two Android flavors **real** (default, unchanged package, unchanged release build + `scripts/release/check-aab.sh`) and
+   **test** (`applicationIdSuffix ".test"`, app name "Apprec8 TEST", a differently coloured icon, its own google-services.json,
+   OTA channel `preview`). The real release build must produce a byte-identical config to today's: show the diff.
+2. JS: one `appVariant` value (from `Constants.expoConfig.extra`, set by `APP_VARIANT=test` in app.config.js) for what differs:
+   Google web client id (from the test file), admin UID (owner's UID in apprec8-test: ask the owner after his first test sign-in).
+3. `.firebaserc` alias `test` → apprec8-test; deploy Firestore rules + indexes there (test project only).
+4. `scripts/admin/copyContentToTest.mjs`: copies CONTENT only (quests, nodes, categories, studyContent, questions, quizzes)
+   from real to test; never users, children, classes, progress, feedback. Dry run first, then counts.
+5. **Cloud Functions:** the real app calls ~30 functions; the test project is on the free Spark plan, which can't run them.
+   Don't deploy functions until the owner decides (Claude asked him). List which screens break without them.
+6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
+   that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
 ### G84 · [todo] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
 Owner: "Approvals kept hidden in the classes and I had to search for them … the responsible person will never know
