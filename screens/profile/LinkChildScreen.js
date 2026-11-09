@@ -11,6 +11,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton, Chip, Field } from "../admin/schoolUi";
 import { createParentLinkCode } from "../../services/familyApi";
 import { LINK_CONSENT_TEXT, LINK_CONSENT_VERSION } from "../../utils/family";
+import ConsentListenButton from "../../components/common/ConsentListenButton";
 import { showAlert } from "../../services/dialog";
 
 const RELATIONS = [
@@ -74,6 +75,10 @@ export default function LinkChildScreen({ navigation }) {
               ))}
             </View>
             <View style={styles.card}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+                <Text style={styles.label}>{lang === "hi" ? "अभिभावक के लिए" : "FOR PARENTS"}</Text>
+                <ConsentListenButton text={t} lang={lang} P={P} />
+              </View>
               <Text style={styles.soft}>{t.body}</Text>
             </View>
             <Field label="YOUR NAME" value={parentName} onChangeText={setParentName} placeholder="e.g. Mohit" styles={styles} P={P} />

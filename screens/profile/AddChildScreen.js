@@ -10,6 +10,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { addChild, newChildCode } from "../../services/familyApi";
 import { CHILD_CONSENT_TEXT } from "../../utils/family";
+import ConsentListenButton from "../../components/common/ConsentListenButton";
 import { showAlert } from "../../services/dialog";
 
 const RELATIONS = [
@@ -97,7 +98,10 @@ export default function AddChildScreen({ route }) {
               ))}
             </View>
             <View style={styles.consentCard}>
-              <Text style={styles.consentTitle}>{t.title}</Text>
+              <View style={styles.consentHeader}>
+                <Text style={styles.consentTitle}>{t.title}</Text>
+                <ConsentListenButton text={t} lang={lang} P={P} />
+              </View>
               <Text style={styles.consentBody}>{t.body}</Text>
             </View>
             <TextInput value={parentName} onChangeText={setParentName} placeholder={lang === "hi" ? "आपका नाम" : "Your name"} placeholderTextColor={P.dimText} style={styles.input} />
@@ -141,7 +145,8 @@ const makeStyles = (P, insets) =>
     segmentItem: { flex: 1, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
     segmentOn: { backgroundColor: P.card },
     consentCard: { padding: 16, borderRadius: 18, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, gap: 8 },
-    consentTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    consentHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
+    consentTitle: { flex: 1, fontSize: 17, fontFamily: "nunitoBold", color: P.text },
     consentBody: { fontSize: 15, lineHeight: 23, fontFamily: "nunito", color: P.text },
     agreeRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 6 },
     box: { width: 28, height: 28, borderRadius: 8, borderWidth: 2, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
