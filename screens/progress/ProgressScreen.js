@@ -17,9 +17,10 @@ import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig"
 import { useOwnerExtras } from "../../services/ownerView";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
-import { QUESTS } from "../../data/quests";
+import { QUESTS, bundledQuest } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
+import { subtopicPractice } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
@@ -120,6 +121,15 @@ export default function ProgressScreen({ navigation, route }) {
   const great = perQuest.flatMap((q) => q.great).sort((a, b) => b.percent - a.percent).slice(0, 3);
 
   const openQuestMap = (questId) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId } });
+  // "Work on these" → Practise: straight into practice on that topic (owner: the map alone didn't say what to do).
+  const practiseTopic = (t) => {
+    const p = subtopicPractice(bundledQuest(t.questId), t.subtopic);
+    if (!p) return openQuestMap(t.questId);
+    navigation.navigate("Apprec8", {
+      screen: "EndlessPractice",
+      params: { questId: t.questId, title: `Practise: ${t.name}`, ...p, onlySubtopic: t.subtopic, generators: [], returnTo: "EnglishQuestMap" },
+    });
+  };
 
   // Teachers (RB-2) get "My classes"; the admin also gets "Kids · Reported" (the Dashboard).
   const isTeacher = (userData?.teachesClassIds || []).length > 0;
@@ -273,7 +283,7 @@ export default function ProgressScreen({ navigation, route }) {
                 <Bar percent={t.percent} P={P} color={P.wrongBorder} />
                 <Text style={styles.soft}>{t.percent}% right · {t.total} answers</Text>
               </View>
-              <Pressable onPress={() => openQuestMap(t.questId)} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${t.name}`}>
+              <Pressable onPress={() => practiseTopic(t)} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${t.name}`}>
                 <Text style={styles.smallButtonText}>Practise</Text>
               </Pressable>
             </View>

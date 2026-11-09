@@ -22,6 +22,7 @@ import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQues
 import { GENERATORS, nextEndlessQuestion } from "../../utils/generators";
 import { shuffle } from "../../utils/gateRules";
 import { buildMistakeItems, similarQuestions, RIGHT_TO_CLEAR } from "../../utils/mistakes";
+import { onlyTopic } from "../../utils/subtopicPractice";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const CHUNK_SIZE = 10;
@@ -39,6 +40,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
     knownIssues = {},
     returnTo = "EnglishQuestMap",
     branchId = null,
+    onlySubtopic = null, // Progress → "Work on these" → Practise: just this topic's questions
     // "My mistakes" mode (owner priority): same screen, questions come from the kid's mistakes.
     mode = "endless", // "endless" | "mistakes"
     mistakes = {}, // the progress doc's mistakes map
@@ -80,7 +82,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
           await loadMistakes(hidden);
           return;
         }
-        const pool = [];
+        let pool = [];
         for (const quizId of poolQuizIds) {
           const qs = (await getQuizQuestions(quizId, contentVersion).catch(() => [])) || [];
           qs.forEach((q) => {
@@ -89,8 +91,9 @@ export default function EndlessPracticeScreen({ route, navigation }) {
             }
           });
         }
+        pool = onlyTopic(pool, onlySubtopic);
         const generated = [];
-        for (const g of generators) {
+        for (const g of onlySubtopic ? [] : generators) {
           const table = await getStudyDoc(g.table, contentVersion).catch(() => null);
           const make = GENERATORS[g.type];
           if (table?.entries && make) {
