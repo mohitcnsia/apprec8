@@ -29,6 +29,8 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { fitsTiles, sheetExplanation } from "../../utils/quizText";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
 import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
+import { shouldConfirmLeave, leaveMessage } from "../../utils/quizLeave";
+import { showAlert } from "../../services/dialog";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
 const QuizScreenV2 = ({ route, navigation }) => {
@@ -51,6 +53,19 @@ const QuizScreenV2 = ({ route, navigation }) => {
   useEffect(() => {
     if (route.params?.autoStart && status === "ready") dispatch({ type: "START_QUIZ" });
   }, [status, route.params?.autoStart, dispatch]);
+
+  // A back swipe mid-quiz asks first (owner lost a quiz by mistake, 2026-11-09). Declared before the "finished"
+  // effect, so the listener already knows the quiz is over when that effect moves on to the results.
+  useEffect(() => {
+    if (!shouldConfirmLeave({ status, currentIndex })) return undefined;
+    return navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+      showAlert("Leave this quiz?", leaveMessage({ currentIndex, total: questions.length, status }), [
+        { text: "Keep playing", style: "cancel" },
+        { text: "Leave", style: "destructive", onPress: () => navigation.dispatch(e.data.action) },
+      ]);
+    });
+  }, [navigation, status, currentIndex, questions.length]);
 
   // --- Answer recording for quests (who answered what, and how fast) ---
   const answerLogRef = useRef({}); // questionId -> answer entry
