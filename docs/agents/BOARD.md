@@ -349,6 +349,10 @@ already has `topic.quest` / `topic.node`). No new paper, no start code or timer 
    bottom button "Share to class group" → image card as screen 2: kids practised / total, quizzes, class Accuracy + change,
    this week's assigned work (done / fixing mistakes / not finished), the topic the class found hardest. NEVER a child's name
    or score.
+   **Privacy (owner, 2026-11-10: "it may cause unnecessary politics"):** a parent sees ONLY their own child's report, never
+   another child's name, score or report, and never results by name. Results by name: the class teacher, admin, and later
+   school management (G88). Enforce in Firestore rules too, not only in the UI (test: a parent account cannot read another
+   child's report doc).
 4. Costs: computed from what the class/parent screens already load, or one small doc per child per week written by a bounded
    scheduled function (ask Claude before adding a function; file a Deploy request). Clean test (RULE) incl. Hindi + dark mode.
    `gemini(G92): done — review please`.
