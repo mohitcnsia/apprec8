@@ -267,13 +267,29 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
+
+### G81 · [todo] · gemini · Seema's course tile: "Seema Ma'am · Class 10 English" (owner decided in chat, 2026-11-09)
+Owner: "We already created and reviewed all the questions. Create a new tile, put the quest behind it, only Seema and her
+students see it." No new questions, no new screens.
+1. `data/teacherCourses/seemaClass10.js` (same shape as the other quest modules; add to `data/quests/index.js`): QUEST_ID
+   `course-seema-c10-english`, title "Seema Ma'am · Class 10 English", nodes = Grammar Pro units b1–b6 in their current order
+   (Seema chose it), new node ids (prefix `sc10-`) but the SAME `quizId`s / study ids: reuse, never copy questions. `quizzes` and
+   `studyPages` empty (already seeded with English). Tile: `carouselGroup: "quest"`, `forClassIds: [<Seema's class id>]`.
+2. Visibility (pure `utils/courseVisibility.js` + tests): a tile with `forClassIds` shows only if the user's `classIds` or
+   `teachesClassIds` include one of them, or the user is an admin/owner. Everyone else never sees it (Home, Progress, parent week).
+3. For students in that class the course tile comes **first** on Home. Keep the general English tile (decide later whether to fold it).
+4. Seema's "Assign a topic" lists this course (`questsForTeacher` must include courses for her class).
+5. Seed with SeedTileQuestButton (admin). Seema's class id comes from the owner after he creates her class (inbox card
+   "set up Seema's school and class"): ask in Antigravity, never guess. Until then use the Demo School class to test.
+6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
+   from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
 
 ### G79 · [todo] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
 Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):

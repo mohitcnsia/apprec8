@@ -443,7 +443,10 @@
     "title": "Decide: teacher courses (Seema's Class 10 order first)",
     "ask": "A teacher's own path through the shared question bank: Seema's Class 10 CBSE English topics in her order become her class's main path on Home. v1 = we build it with her as content. Mockup first?",
     "details": "**Idea (owner):** each teacher teaches her own syllabus (CBSE English, ICSE, psychology, tuition). A **course** = an ordered list of topics from the shared bank; questions are reused wherever they fit; new ones only for gaps, and they go into the bank for everyone.\n\n**Stages:** v1 Seema's course as content (fast, no new screens beyond \"From your teacher\" on Home) → v2 teachers arrange a course in the app → v3 teachers add their own questions, reviewed before students see them (quality risk, so last).\n\n**YES** = Claude makes the mockup and asks Seema for her topic order.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner in chat: a new tile over the reviewed Grammar Pro questions, only Seema + her students see it."
   },
   {
     "id": "apprec8-academy",
