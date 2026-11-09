@@ -1,6 +1,6 @@
 // components/feedback/IdeaModal.js
 // Kid-friendly modal for sharing ideas with the Apprec8 team (G66).
-// Tap-only choices for all children; supervised accounts may add a note. Awards +5 ⭐.
+// Tap-only choices for all children; supervised accounts may add a note. (Stars for ideas come later from the server.)
 
 import React, { useMemo, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, ScrollView } from "react-native";
@@ -43,7 +43,7 @@ export default function IdeaModal({
     });
 
     setSubmitted(true);
-    showAlert("Awesome! 🎉", "+5 ⭐ stars added to your treasure chest! Thank you for helping make Apprec8 better.");
+    showAlert("Thank you! 🎉", "Chamku loved your idea! You're helping make Apprec8 better for every child.");
     setTimeout(() => {
       setSubmitted(false);
       setSelectedChoice(null);
@@ -136,7 +136,7 @@ export default function IdeaModal({
               style={[styles.sendBtn, (!selectedChoice || submitted) && { opacity: 0.45 }]}
               accessibilityRole="button"
             >
-              <Text style={styles.sendText}>Send Idea (+5 ⭐)</Text>
+              <Text style={styles.sendText}>Send my idea</Text>
             </TouchableOpacity>
           </View>
         </Pressable>

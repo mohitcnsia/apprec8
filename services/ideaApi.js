@@ -2,7 +2,7 @@
 // Client API for submitting children's ideas to userFeedback (G66).
 // Offline-safe via Firestore queue; handles stars and 7-day frequency tracking.
 
-import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "@react-native-firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
@@ -30,7 +30,7 @@ export async function dismissIdeaPrompt() {
 }
 
 /**
- * Submits an idea from a child. Offline-safe, awards +5 ⭐.
+ * Submits an idea from a child. Offline-safe. (No stars from the phone.)
  * @param {object} p
  * @param {string} [p.promptId]
  * @param {string} p.promptQuestion
@@ -56,7 +56,7 @@ export async function submitChildIdea({
 
   const payload = buildIdeaPayload({
     userId: user.uid,
-    userName: user.displayName || null,
+    userName: String(user.displayName || "").trim().split(/\s+/)[0] || null, // first name only
     userGrade,
     promptId,
     promptQuestion,
@@ -74,10 +74,8 @@ export async function submitChildIdea({
       createdAt: serverTimestamp(),
     }).catch((e) => console.error("submitChildIdea write failed:", e));
 
-    // Award +5 ⭐ to the child's stats (matching Chamak asks poll reward)
-    updateDoc(doc(db, "users", user.uid), {
-      "stats.totalStars": increment(5),
-    }).catch(() => {});
+    // No stars from the phone: the rules forbid it (children could award themselves). Stars for answering come later
+    // from the server with a daily cap (G69 Chamku asks). Claude review of G66, 2026-11-09.
 
     await AsyncStorage.setItem(LAST_PROMPT_KEY, String(Date.now()));
     return true;

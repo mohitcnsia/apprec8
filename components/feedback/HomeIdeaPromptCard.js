@@ -1,6 +1,6 @@
 // components/feedback/HomeIdeaPromptCard.js
 // Sticky note card appearing once a week on HomeScreen (G66).
-// Tapping opens the IdeaModal to answer in Chamku's poll; awards +5 ⭐.
+// Tapping opens the IdeaModal to answer in Chamku's poll.
 
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
@@ -52,7 +52,7 @@ export default function HomeIdeaPromptCard({ userGrade = null }) {
         <View style={styles.topRow}>
           <View style={styles.badge}>
             <Text style={{ fontSize: 18 }}>⭐</Text>
-            <Text style={styles.badgeText}>Chamku asks · +5 ⭐</Text>
+            <Text style={styles.badgeText}>Chamku asks</Text>
           </View>
           <TouchableOpacity onPress={handleDismiss} hitSlop={10} style={styles.dismissBtn} accessibilityRole="button">
             <Text style={styles.dismissText}>✕</Text>
