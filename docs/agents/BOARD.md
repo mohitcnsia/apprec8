@@ -502,7 +502,7 @@ Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agen
   plan** (export every doc to delete as JSON into a local folder outside git before deleting).
 Commit `gemini(G60): inventory — review please`. **Deletes only after Claude reviews and the owner says OK** (DR).
 
-### G54 · [review] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
+### G54 · [done] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
 Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
 In `screens/guides/TeacherStartScreen.js` (+ `data/teacherStart.js`): under each of the 4 jobs put a small
 **DO IT ▶** button that starts the matching step of the "teacher-class" guide in `utils/guides.js` exactly like
@@ -510,7 +510,7 @@ GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide st
 job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
 Small change; branch from your G49 branch. `gemini(G54): done`.
 
-### G58 · [review] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
+### G58 · [done] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
 For parents who read little. On the consent notes (Join a class, Add a child, Link my child's own account): a
 "🔊 Listen" button that reads the note aloud in the chosen language (Hindi `hi-IN`, English `en-IN`) with
 expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
