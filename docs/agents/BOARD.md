@@ -260,10 +260,23 @@ yet this week", "—"). Demo data only through the Demo School logins. No test s
 Neutral wording ("their week", not "her week"). Grep your diff for mockup numbers before "done".
 
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
-**0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
+**00) G72 URGENT Seema's account**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
+
+### G72 · [todo] · gemini · 🚨 URGENT: Seema can't get past the first-run sheet ("Couldn't save your profile (not allowed)")
+The owner gives you Seema's sign-in email **in Antigravity** (never write it in the repo). Her account is from 2025
+(old app). Every first-run save is refused by the users-update rule even though it isn't the 10-minute limit.
+1. **Read only her `users/{uid}` doc** and report in `docs/agents/reports/G72.md` the **field names and types**
+   (no values except: is firstName set? type of `profileLastSavedAt`, `lastUpdatedAt`, `photoURL`, `lastName`, `grade`,
+   `isChild`). Claude's guess: `profileLastSavedAt` (or another field the rule reads) has an old type (number / string),
+   so `request.time - resource.data.profileLastSavedAt` errors and the rule denies.
+2. **Fix her doc** with a one-off admin write (owner asked for it, 2026-11-09): set `firstName` to "Seema" if missing,
+   and fix the bad-type field (e.g. delete `profileLastSavedAt`). Nothing else.
+3. Check how many other user docs have the same old-type field (count only, no names) and say so.
+4. Ask her to reopen the app: it should go straight through. `gemini(G72): done — fixed`.
+Claude then makes the rule robust to old types (a DR for the owner).
 
 ### G49-R · [todo] · gemini · ⭐ REWORK row Z (Claude's review, 2026-11-09): real data only
 Branch feat/simple-home. **Rebase on the latest `feat/quiz-redesign` first** (it changed HomeScreen, MeScreen,
