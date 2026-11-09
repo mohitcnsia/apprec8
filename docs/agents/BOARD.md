@@ -251,10 +251,11 @@ foreground (1024×1024, logo inside the central 66%), a one-colour notification 
 report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). Don't change any app files.
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
-### PRIORITY · 2026-11-07 (Claude) · do the [todo] tasks in this order
-Goal: Seema's pilot without embarrassment, then closed testing. **Owner 2026-11-07: the feedback mechanism is a must (we need to know what clicks with users): G66 + G62 first. No stopgaps; think before building.** 0) G64 parent's week refresh (small), 0b) G65 🚩 on reading pages, **FIRST: G66 feedback pipeline (plan first) + G62 Chamku asks (mockup, then build)**, 0e) G67 Progress facts (no code), 0f) G68 Challenge words (Pratha), 1) G56 rehearse Seema's path, 2) G57 teacher class
-screen mockup, 3) G52 Grammar Pro accuracy, 4) G59 Learn cards for every study page, 5) G61 fun names (proposals only), 5c) G63 character cast sheet, 6) G60 old content inventory (read-only), 7) G54 one-pager DO IT buttons, 8) G58 Listen button, 9) G55 PIN safety
-(plan first), 10) G53 ∞ redo, 11) G51 parent web page mockup. [review] = wait for Claude, don't stack new work on it.
+### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
+**1) G66 feedback pipeline (plan first) — owner: highest priority**, 2) G64 parent's week fix, 3) G65 🚩 on reading
+pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 5) G67 Progress facts (no
+code), 6) G53 ∞ alone. [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
+back as new build tasks.
 
 ### G64 · [todo] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
 Owner: "I can't see Pratha's progress for today." `components/parent/ParentWeekCard.js` loads the child's
@@ -292,7 +293,7 @@ that you and I can review and plan." Plan first (`gemini(G66): plan — review p
    go to the public repo. First name + class only, no emails or uids.
 Costs: one small read per owner visit; the export reads only new docs since the last run.
 
-### G62 · [todo] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
+### G62 · [review] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
 Owner: "instead of me asking Pratha 3 questions: a sticky note on her Home, the mascot asks, she answers the app in
 her own time, fun acknowledgements, a poll." **Draw, don't build:** HTML mockups (390 px, plum style, thumb zone) in
 `docs/mockups/chamak-asks/` + PNGs: 1) Home with a sticky-note card "Chamak asks: Quick question!" (low on the
@@ -337,7 +338,7 @@ old Olympiad vocabulary quizzes had **real good words, high difficulty** and fun
 3. **G60 cleanup must keep** the old vocab quizzes and their explanations until this is live.
 Report `docs/agents/reports/G68.md`; Claude spot-checks; owner re-seeds Word Power. `gemini(G68): done`.
 
-### G56 · [todo] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
+### G56 · [review] · gemini · ⭐ Rehearse Seema's path with fresh accounts (find every stumble before she does)
 Owner (2026-11-07): "I'm trying everything privately; an app that embarrasses her in front of her peers loses her
 trust." On the emulator, latest published code (feat/quiz-redesign), **fresh throwaway accounts** (never real
 people): 1) a new teacher signs up (first-run sheet → "I'm a teacher" → year of birth if shown), 2) Me → Join as a
@@ -349,7 +350,7 @@ embarrass a teacher in front of colleagues: `docs/agents/reports/G56.md` with sc
 with a suggested fix. Don't change code. Delete the throwaway accounts afterwards (Me → Delete my account).
 `gemini(G56): done — N stumbles`.
 
-### G57 · [todo] · gemini · ⭐ Mockup first: the teacher's class screen (owner tested it as demo.teacher, 2026-11-07)
+### G57 · [review] · gemini · ⭐ Mockup first: the teacher's class screen (owner tested it as demo.teacher, 2026-11-07)
 Owner: "Reteach one thing asks to assign from below, several topics listed, very difficult to find; a direct action
 button right there would be easy. Turning on the weekly summary is way below and not easy to see; colour difference
 and bringing it up would be better. In a class of 32 the list is very long, teachers will have a hard time finding
@@ -367,7 +368,7 @@ Commit `gemini(G57): done — mockup`; Claude sends it to the owner's inbox. Als
 waiting** to be approved (utils/demoSchool.js: two members with status "pending"; keep tests green) so teachers and
 Google's reviewer can try approving.
 
-### G52 · [todo] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
+### G52 · [review] · gemini · ⭐ Accuracy pass: Grammar Pro 1–6 (Class 9–10) before Seema and the owner check
 Owner: accuracy first; Seema + owner check the questions while Google reviews, so find problems first. Read every
 question in the Grammar Pro units (data/englishQuest/units: unitOrder 10+, grades 9–10; ~666 questions). For each one
 check: exactly one correct option, the answer key matches, the explanation says why, Indian English spelling, CBSE
@@ -375,7 +376,7 @@ level, kid-friendly wording, no copied board-paper text. **Don't edit content.**
 `docs/agents/reports/G52.md`: a table (question id, problem, suggested fix), sorted most serious first, plus the count
 of questions checked. Commit `gemini(G52): done — N issues`. Claude fixes them.
 
-### G59 · [todo] · gemini · ⭐ Learn cards for every study page (owner 2026-11-07: "lots of study pages are still the old reader")
+### G59 · [review] · gemini · ⭐ Learn cards for every study page (owner 2026-11-07: "lots of study pages are still the old reader")
 66 study pages still open as the old long page (Claude's count): English 44 (26 bundled in data/englishQuestData.js
 `studyPages` without `cards`, 18 old IEO pages that live only in Firestore `studyContent`), Science 18, Word Power 4.
 Treasure Words is done (17/17). Give every one `cards` in the format of `utils/learnCards.js` (spec R), like the 21
@@ -387,7 +388,7 @@ cards under new ids, and point the nodes' study steps to them (keep the old docs
 passes. Commit per quest; report `docs/agents/reports/G59.md` (pages converted, any facts you were unsure of).
 `gemini(G59): done — N pages`. Claude spot-checks; then the owner re-seeds (content only, no app update).
 
-### G61 · [todo] · gemini · Fun names for English units and topics (plan: docs/PRODUCT_LOVE_PLAN.md, Phase 1)
+### G61 · [review] · gemini · Fun names for English units and topics (plan: docs/PRODUCT_LOVE_PLAN.md, Phase 1)
 Owner: "I liked the chapter names, it was fun for kids, but things got very boring in text only." Propose a fun,
 story-like name for every English Quest **unit** ("Noun Town", "Verb Volcano", "The Tense Time Machine"…) and a
 playful subtitle for each **main topic**, keeping the grammar term visible (e.g. "Noun Town · Nouns"). Classes 1–5
@@ -396,7 +397,7 @@ Also list the old chapter names you find (G60) that are worth reusing. Output a 
 `docs/agents/reports/G61-names.md` (current name → proposed name → why). **Don't change the app**: Seema checks the
 English, Pratha votes, then Claude applies the chosen ones. `gemini(G61): done — names to review`.
 
-### G63 · [todo] · gemini · Character cast: concept sheet for the owner and Pratha to vote (owner 2026-11-07)
+### G63 · [review] · gemini · Character cast: concept sheet for the owner and Pratha to vote (owner 2026-11-07)
 Owner: "why just one mascot? Many fun creatures: a Yoda-like (wise mentor), a tortoise, a monkey, a bee, an ant,
 sometimes wearing specs, sometimes a lab coat." Make ONE concept sheet (image) in the app's style, original designs
 (nothing that looks like Yoda or other film/game characters): ⭐ the star host (now "Chamak"; also show 4 name
@@ -412,7 +413,7 @@ that can animate (wave, jump, slump, dance). Also sketch an **avatar builder** f
 glasses, hats; Indian children should see themselves) whose items are won from the treasure chest.
 `docs/release/brand/cast/` + `gemini(G63): done — cast sheet`. Claude sends it to the inbox to vote.
 
-### G60 · [todo] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
+### G60 · [review] · gemini · ⭐ Old content + cloud functions: inventory first (read-only), then cleanup after owner OK
 Owner 2026-11-07: "get rid of older content and cloud functions; they waste space and might cost money or cause bugs.
 Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agents/reports/G60-inventory.md`:
 - **Firestore:** every old collection / category group (Space `quest_nodes`, `categories` groups popular_quiz,
@@ -427,7 +428,7 @@ Pratha is comfortable with the new stuff." **Step 1 now, read-only:** `docs/agen
   plan** (export every doc to delete as JSON into a local folder outside git before deleting).
 Commit `gemini(G60): inventory — review please`. **Deletes only after Claude reviews and the owner says OK** (DR).
 
-### G54 · [todo] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
+### G54 · [review] · gemini · Teachers' one-pager → interactive (owner 2026-11-07)
 Owner: "the teachers' guide is a one-pager; make it like the other guides, interactive, step by step."
 In `screens/guides/TeacherStartScreen.js` (+ `data/teacherStart.js`): under each of the 4 jobs put a small
 **DO IT ▶** button that starts the matching step of the "teacher-class" guide in `utils/guides.js` exactly like
@@ -435,13 +436,13 @@ GuideScreen.doStep does (setActiveGuide + markGuide + navigate), so the guide st
 job 1 → step "join", job 2 → "share", job 3 → "approve", job 4 → "assign". Keep the page text and SHARE button.
 Small change; branch from your G49 branch. `gemini(G54): done`.
 
-### G58 · [todo] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
+### G58 · [review] · gemini · 🔊 Listen on the parent's consent note (owner: yes, 2026-11-07)
 For parents who read little. On the consent notes (Join a class, Add a child, Link my child's own account): a
 "🔊 Listen" button that reads the note aloud in the chosen language (Hindi `hi-IN`, English `en-IN`) with
 expo-speech (already in the app, see components/quiz/ListenButtons.js); tap again = stop. JS only (ships by OTA).
 `gemini(G58): done`.
 
-### G55 · [todo] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
+### G55 · [review] · gemini · ⭐ Parent PIN safety: phone lock first, "Forgot PIN?" that a child can't abuse (owner 2026-11-07)
 Owner: "forgot PIN alone is not enough; avoid abuse when a child tries to get into the parent's phone." Today: app
 PIN, 5 wrong tries → 15 min wait (verifyParentPin, server). No "forgot" path. **Design (Claude):**
 1. **"Switch to parent" asks the phone's own lock first** (fingerprint / face / phone PIN or pattern) via
@@ -466,15 +467,15 @@ Server: `resetParentPin` callable (caller must be the parent account, not a chil
 (`gemini(G55): plan — review please`); the callable goes out as a DR after the owner's OK; the native part with the
 next build.
 
-### G53 · [todo] · gemini · ∞ redo: show the owner the infinity alone first
-Owner (inbox, 2026-11-07): "The infinity symbol looks like a **worm** rather than an inspiring eight and infinity.
-Rest is good. Fix the infinity symbol; you can just show me the infinity." So: **the ∞ mark alone**, no wordmark yet.
-A clean, symmetric, bold infinity (a proper lemniscate, even stroke like a figure 8 lying down, not a ribbon or a
-twisted tube), the right loop breaking into small square pixels that drift up-right. 4 variants on one sheet
-(e.g. solid gold, plum, white-on-plum, gradient gold→plum), each also at 48 px to check it still reads small.
-`docs/release/brand/infinity-v2/` + sheet PNG. `gemini(G53): done — 4 infinity variants`.
+### G53 · [todo] · gemini · ∞ redo, attempt 3: THE INFINITY ALONE (Claude's review of attempt 2)
+Attempt 2 made the wordmark again; the owner asked to see **only the ∞ symbol**, and in the wordmark the ∞ still
+reads like a fish / "∝", not an 8 lying down. Do exactly this: **no letters at all.** One sheet with 4 variants of
+the ∞ alone, each large (400 px) and small (48 px): a perfectly **symmetric figure-8 on its side** (both loops the same
+size, even stroke, like the maths symbol ∞), the **right loop's outer edge** breaking into small square pixels that
+drift up-right; variants: solid gold, plum, white on plum, gold→plum gradient. Judge by: does a child instantly see
+"8 lying down" / infinity? `docs/release/brand/infinity-v3/sheet.png`. `gemini(G53): done — infinity alone`.
 
-### G51 · [todo] · gemini · Mockup: the parent's "yes" web page (no app needed)
+### G51 · [review] · gemini · Mockup: the parent's "yes" web page (no app needed)
 Spec: CODE_REVIEW.md "learn first + parent web link". Make a static HTML mockup (no backend), 390 px wide, in
 `docs/mockups/parent-link/index.html` + a PNG screenshot: Apprec8 header, "<Child> wants to learn on Apprec8",
 3 lines on what is kept (first name, class, answers; no ads, no chat; delete any time), a Hindi / English switch,
