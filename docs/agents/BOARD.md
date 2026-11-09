@@ -267,7 +267,7 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
@@ -290,6 +290,27 @@ students see it." No new questions, no new screens.
    (class 10-A of Appreciate International School; never write it in the repo). Until then use the Demo School class to test.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
+
+### G82 · [todo] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
+Owner: "add why other options are incorrect; extremely useful where more than one option seems correct." Claude decided
+the shape (content-quality remit):
+1. Data: a wrong option may carry `why` (one short kid-friendly sentence). Helper `q()` in `data/englishQuest/helpers.js`
+   accepts `[text, mistakeTag, why]` (third item optional, old data keeps working). Seeding writes `why` on the option;
+   `utils/mistakes.js` and the V1 converter keep it.
+2. QuizScreenV2 feedback panel (Training mode): after a WRONG answer show **"Why not '<chosen>'?"** + its `why` first, then the
+   main explanation. After a RIGHT answer, a folded **"Why not the others?"** (tap to open) lists each wrong option with its
+   `why`. Options without `why` are simply not listed. Exam mode: the same on the review screen at the end.
+3. Same text size and theme as the main explanation (Pratha: "explanation text is super small"). Read-aloud reads it too.
+4. Pure helper `utils/whyNot.js` (which lines to show for right/wrong/no-why) + tests. Clean test with screenshots of a wrong
+   and a right answer on a question that has `why`s (Claude adds them to 3 Grammar Pro questions for the test).
+`gemini(G82): done — review please`.
+
+### G83 · [todo] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
+For each of the ~666 questions: write `why` for each wrong option (≤ 20 words, kid-friendly, says what rule it breaks). Also
+check each question has **at least one near miss** (looks right, isn't) and **exactly one defensible answer**; list any
+question where a near miss could be argued right (that is a High issue, like today's 5). Don't change correct answers or
+ids. Report G83.md: counts, every question you changed beyond adding `why`, and every "could be argued" case. Claude
+reviews all of those + a sample; Seema checks a sample before the re-seed.
 
 ### G79 · [todo] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
 Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):
