@@ -44,8 +44,8 @@ Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
 14. **A parent wants to see the child's progress** → today: only if the child is on their account (profile) or linked.
 
 ### Seema
-15. **Two accounts** → today: her classes are on the account she doesn't use (fix: move to her main account).
-16. **5-A doesn't exist** (7-A was made) → an admin makes 5-A and sends her the invite.
+15. **Two accounts** → fixed 2026-11-09: her daily account now teaches 10-A and 5-A (the morning account still does too; remove later). The cause (a second login by mistake) stays an edge case.
+16. **Class setup** → done 2026-11-09: 7-A removed, 5-A created (renamed from "A": class names can't be edited in the app).
 17. **Doesn't notice students waiting** → today: no signal anywhere.
 18. **Assigning a topic** → today: works per class; the list is the whole English quest (all levels).
 19. **Telling us what's wrong** → today: "Tell us what you think" sent nothing (fixed, not yet published).
