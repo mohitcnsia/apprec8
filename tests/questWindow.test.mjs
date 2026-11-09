@@ -57,3 +57,14 @@ assert.deepEqual(w.rows.filter((r) => r.type !== "node").map((r) => [r.type, r.u
 // 6. Empty input never crashes.
 assert.deepEqual(buildWindow({}).rows, []);
 console.log("questWindow: all tests passed");
+
+// Assigned topics (2026-11-09): a teacher's topic in a later unit is drawn so the kid can tap it.
+{
+  const tA = buildQuestPath(nodes, {}, { extraUnlocked: ["u3-m1"] });
+  const wA = buildWindow({ path: tA.path, units, currentPathId: tA.currentPathId, assigned: ["u3-m1"] });
+  assert.deepEqual(shape(wA), ["u0-m0", "u0-m1", "u0-boss", "teaser:u1", "u3-m1", "more:3"]);
+  assert.equal(wA.rows.find((r) => r.type === "node" && r.item.id === "u3-m1").item.status, "unlocked");
+  // Nothing assigned → unchanged.
+  assert.deepEqual(shape(buildWindow({ path: tA.path, units, currentPathId: tA.currentPathId })), ["u0-m0", "u0-m1", "u0-boss", "teaser:u1", "more:3"]);
+  console.log("questWindow assigned-topic tests passed");
+}

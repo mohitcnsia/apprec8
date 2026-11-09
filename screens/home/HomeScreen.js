@@ -31,6 +31,7 @@ import { useOwnerExtras } from "../../services/ownerView";
 import { papersFor, MIX_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
+import { assignedTopics } from "../../utils/assignedTopics";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -297,10 +298,6 @@ export default function HomeScreen({ navigation }) {
     if (!myClassKey) return setAssignments([]);
     myAssignments(myClassKey.split(",")).then(setAssignments).catch(() => setAssignments([]));
   }, [myClassKey]);
-  const teacherTask =
-    assignments
-      .filter((a) => !a.dueDate || daysUntil(a.dueDate) >= 0)
-      .sort((a, b) => String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999")))[0] || null;
 
   // Continue = the quest played most recently. Mistakes = all quests; the tile opens the one with most.
   const mainQuest = pickContinue(allQuests, progressById);
@@ -308,6 +305,11 @@ export default function HomeScreen({ navigation }) {
   const progress = progressById[mainQuestId] || { nodes: {}, doc: {} };
   const mistakesOf = (id) => Object.keys(progressById[id]?.doc?.mistakes || {}).length;
   const mistakeQuest = [...allQuests].sort((a, b) => mistakesOf(b.questId) - mistakesOf(a.questId))[0] || null;
+
+  // Every unfinished topic a teacher assigned, soonest first (2026-11-09: only the first showed, and it opened "Sentences").
+  const todayIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const teacherTopics = assignedTopics(assignments, (q) => bundledQuest(q)?.nodes || [], (q) => progressById[q]?.nodes || {}, todayIso);
+  const openTopic = (t) => navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
 
   const firstName =
     userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
@@ -322,7 +324,7 @@ export default function HomeScreen({ navigation }) {
   const coming = upcomingItems(EXAMS, myTasks);
 
   const openMainQuest = () => {
-    if (teacherTask) return navigation.navigate("EnglishQuestMap", { questId: teacherTask.questId });
+    if (teacherTopics.length) return openTopic(teacherTopics[0]);
     if (!mainQuestId) return;
     if (started) navigation.navigate("EnglishQuestMap", { questId: mainQuestId });
     else navigation.navigate("EnglishQuestIntro", { questId: mainQuestId });
@@ -409,17 +411,19 @@ export default function HomeScreen({ navigation }) {
 
       <HomeIdeaPromptCard userGrade={userGrade} />
 
-      {teacherTask ? (
-        <Pressable onPress={openMainQuest} accessibilityRole="button" accessibilityLabel={`From your teacher: ${(teacherTask.nodeTitles || []).join(", ")}`}>
-          <View style={styles.teacherCard}>
-            <Text style={styles.label}>FROM YOUR TEACHER</Text>
-            <Text style={styles.teacherTitle} numberOfLines={2}>{(teacherTask.nodeTitles || []).join(", ") || "A new topic"}</Text>
-            <Text style={styles.questSub} numberOfLines={2}>
-              {teacherTask.dueDate ? `Due in ${daysUntil(teacherTask.dueDate)} days` : "Open now"}
-              {teacherTask.note ? ` · ${teacherTask.note}` : ""}
-            </Text>
-          </View>
-        </Pressable>
+      {teacherTopics.length ? (
+        <View style={styles.teacherCard}>
+          <Text style={styles.label}>FROM YOUR TEACHER</Text>
+          {teacherTopics.slice(0, 3).map((t) => (
+            <Pressable key={t.key} onPress={() => openTopic(t)} accessibilityRole="button" accessibilityLabel={`From your teacher: ${t.title}`} style={{ paddingVertical: 6 }}>
+              <Text style={styles.teacherTitle} numberOfLines={1}>{t.title} ›</Text>
+              <Text style={styles.questSub} numberOfLines={1}>
+                {!t.dueDate ? "Open now" : t.overdue ? "Was due, still open" : daysUntil(t.dueDate) === 0 ? "Due today" : `Due in ${daysUntil(t.dueDate)} days`}
+              </Text>
+            </Pressable>
+          ))}
+          {teacherTopics.length > 3 ? <Text style={styles.questSub}>and {teacherTopics.length - 3} more</Text> : null}
+        </View>
       ) : null}
 
       {mistakeCount > 0 ? (

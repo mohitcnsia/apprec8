@@ -15,7 +15,9 @@
 
 const byOrder = (a, b) => (a.unitOrder ?? 0) - (b.unitOrder ?? 0);
 
-export function buildWindow({ path = [], units = [], currentPathId = null, expanded = [], unlockAll = false }) {
+export function buildWindow({ path = [], units = [], currentPathId = null, expanded = [], unlockAll = false, assigned = [] }) {
+  // Topics a teacher assigned (2026-11-09): shown even in units the kid hasn't reached, or they can't be tapped.
+  const assignedSet = new Set(assigned);
   const orderedUnits = [...units].filter((u) => u.kind === "unit").sort(byOrder);
   const expandedSet = new Set(expanded);
   const itemsByUnit = new Map();
@@ -55,7 +57,8 @@ export function buildWindow({ path = [], units = [], currentPathId = null, expan
       if (isExpanded) rows.push(...nodeRows);
       return;
     }
-    // After the current unit
+    // After the current unit: a teacher's assigned topics are drawn so they can be opened.
+    rows.push(...nodeRows.filter((r) => assignedSet.has(r.item.id)));
     if (!teaserShown) {
       teaserShown = true;
       const current = orderedUnits[currentIndex];

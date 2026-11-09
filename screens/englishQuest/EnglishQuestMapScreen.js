@@ -229,9 +229,10 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
             currentPathId: tree.currentPathId,
             expanded: expandedUnits,
             unlockAll,
+            assigned,
           })
         : { rows: [], currentUnitId: null },
-    [tree, visibleNodes, expandedUnits, unlockAll]
+    [tree, visibleNodes, expandedUnits, unlockAll, assigned]
   );
   const rows = win.rows;
 
@@ -513,6 +514,26 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.openAfter, tree]);
+
+  // Home's "From your teacher" row opens the map with openTopic: that topic's next step opens straight away, and the map
+  // scrolls to it instead of the kid's current spot (2026-11-09: assigned topics landed on "Sentences").
+  useEffect(() => {
+    const target = route.params?.openTopic;
+    if (!target || !tree || !viewportHeight) return;
+    const item = tree.path.find((p) => p.id === target);
+    if (!item) return; // not loaded yet, or not for this class: stay on the map
+    if (item.status === "locked" && !assigned.includes(target)) return; // the class's assignments are still loading
+    navigation.setParams({ openTopic: undefined });
+    const j = rows.findIndex((r) => r.type === "node" && r.item.id === target);
+    if (j >= 0) {
+      lastScrolledTo.current = tree.currentPathId; // don't jump back to the current spot
+      const y = Math.max(0, anchorOf(j).y - viewportHeight * THUMB_ZONE);
+      pendingScrollY.current = y;
+      setTimeout(() => scrollRef.current?.scrollTo({ y, animated: true }), 300);
+    }
+    if (item.status !== "completed" && item.status !== "locked" && item.nextStep) onMainPress(item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params?.openTopic, tree, rows, viewportHeight, assigned]);
 
   // Home's "mistakes to fix" tile opens the map with openMistakes: true → go straight to practice once.
   const autoMistakesDone = useRef(false);
