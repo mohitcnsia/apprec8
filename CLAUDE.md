@@ -73,6 +73,11 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
   An update reaches only builds with the same version (runtime version). Native changes (new libraries, android/) still need a build.
   Before every update: `node scripts/genOwnerNotes.mjs` (refreshes Admin tools → My notes from LAUNCH_CHECKLIST + OWNER_TESTING)
   and `npm install` (a missing optional library, e.g. messaging, is silently left out of the bundle).
+- **Clean test before every publish (owner, 2026-11-09, after a publish blanked Home / crashed Seema's phone):** `npm test`, then run
+  the app on the emulator in production mode and walk: launch → new email account → first-run → Home → every tab → the changed
+  screens; `adb logcat` must show no `SoftException|FATAL|Invalid`. Gemini's code is never published without this pass.
+  Throwaway accounts are deleted afterwards (Me → Delete my account). The owner says when he meets users: no publish in the
+  2 hours before unless it passed this test. Next step: a `preview` channel build, so the exact update is tested before production.
 - **Release builds don't include `.env`** (gitignored, so EAS skips it): anything read from `@env` is `undefined` there.
   Values the app needs at runtime go in code (`config/appConfig.js`); `tests/releaseConfig.test.mjs` guards this.
 - Before every upload: `scripts/release/check-aab.sh <file.aab> <version>` must say PASS (version, admin ID, signature).

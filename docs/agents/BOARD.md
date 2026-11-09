@@ -261,6 +261,11 @@ Neutral wording ("their week", not "her week"). Grep your diff for mockup number
 screen a person can get stuck on (sign-up sheets, gates, errors) has a way back or out ("Not you? Use a different
 account", Sign out, Back).
 
+### RULE (owner, 2026-11-09): CLEAN TEST BEFORE "done"
+Your build's last step: run it on the emulator in production mode (`npx expo start --no-dev --minify`), walk launch → new
+account → first-run → Home → every tab → your screens, and paste `adb logcat | grep -E "SoftException|FATAL|Invalid"` (must be
+empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
+
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
 **1) G77 DR-24 deploy + test (owner YES)**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
