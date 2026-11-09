@@ -437,5 +437,19 @@
     "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
     "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
     "from": "claude"
+  },
+  {
+    "id": "teacher-courses-v1",
+    "title": "Decide: teacher courses (Seema's Class 10 order first)",
+    "ask": "A teacher's own path through the shared question bank: Seema's Class 10 CBSE English topics in her order become her class's main path on Home. v1 = we build it with her as content. Mockup first?",
+    "details": "**Idea (owner):** each teacher teaches her own syllabus (CBSE English, ICSE, psychology, tuition). A **course** = an ordered list of topics from the shared bank; questions are reused wherever they fit; new ones only for gaps, and they go into the bank for everyone.\n\n**Stages:** v1 Seema's course as content (fast, no new screens beyond \"From your teacher\" on Home) → v2 teachers arrange a course in the app → v3 teachers add their own questions, reviewed before students see them (quality risk, so last).\n\n**YES** = Claude makes the mockup and asks Seema for her topic order.",
+    "from": "claude"
+  },
+  {
+    "id": "apprec8-academy",
+    "title": "Decide: \"Apprec8 Academy\", a quest for owners and admins to master the app",
+    "ask": "A team-only quest (you, Seema, future partners): Admin, Teacher, Parent, Student, Safety units; each step is a real task in the Demo School that ticks itself, plus short quizzes on the rules. Its tasks are also the core-path test Gemini runs before every update. Mockup first?",
+    "details": "**Steps like:** create a class · invite a teacher · approve a student · assign a topic · read Ideas & reports · answer a Decision · re-seed safely · delete a test account. **Rules quizzes:** who sees a child's name, what parents agree to, what we never collect.\n\n**Why it pays twice:** finishing it means you know every feature, and the same steps are the checklist that proves the main screens work before each publish.\n\n**YES** = Claude makes the mockup (team-only, uses the Demo School, never real children).",
+    "from": "claude"
   }
 ]
