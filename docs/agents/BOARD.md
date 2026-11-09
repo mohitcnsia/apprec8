@@ -257,6 +257,20 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone. [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
+### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
+Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
+that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
+1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another
+   app?", "What should we add?", "What's boring here?"; tap answers for everyone, a text box only for supervised
+   accounts (free-text list; Remote Config `free_text_emails`), voice later (needs consent, see G62). Reuse the G62
+   "Chamak asks" data shape if it exists by then.
+2. **Owner:** Admin tools → "Ideas & reports": userFeedback + 🚩 reports + poll answers, newest first, filter by type,
+   a "done" tick (owner-only rules: DR).
+3. **Claude:** `scripts/admin/feedback.mjs` (like decisions.mjs, `--watch` optional) exports to
+   `docs/agents/private/feedback.json`, which is **git-ignored** (add the folder to `.gitignore`): children's words never
+   go to the public repo. First name + class only, no emails or uids.
+Costs: one small read per owner visit; the export reads only new docs since the last run.
+
 ### G64 · [todo] · gemini · ⭐ Parent's week misses today's practice (owner 2026-11-07, small fix)
 Owner: "I can't see Pratha's progress for today." `components/parent/ParentWeekCard.js` loads the child's
 questProgress only once per mount (useEffect on child.uid), so an open Progress screen never refreshes; and it
@@ -278,20 +292,6 @@ uses and reuse it) with contentId + card index / section, and tap-only reasons f
 "spelling", "picture missing"). Children tap only (no free text, except supervised accounts). Tests for pure parts.
 `gemini(G65): done`. Also bump **G59 Science pages up**: do Science right after Class 9–10 (owner: "old reading sheet,
 no images, nothing fun, a dumpyard of text"), with a picture idea per card.
-
-### G66 · [todo] · gemini · ⭐ Feedback pipeline: children's ideas reach the owner and Claude (owner 2026-11-07)
-Owner: "Pratha loves Duolingo and says lots of good things, but the app has no way to capture her feedback in a way
-that you and I can review and plan." Plan first (`gemini(G66): plan — review please`), then build:
-1. **Children:** Me → "💡 I have an idea for Apprec8!" + Home prompt once a week: prompts "What do you love in another
-   app?", "What should we add?", "What's boring here?"; tap answers for everyone, a text box only for supervised
-   accounts (free-text list; Remote Config `free_text_emails`), voice later (needs consent, see G62). Reuse the G62
-   "Chamak asks" data shape if it exists by then.
-2. **Owner:** Admin tools → "Ideas & reports": userFeedback + 🚩 reports + poll answers, newest first, filter by type,
-   a "done" tick (owner-only rules: DR).
-3. **Claude:** `scripts/admin/feedback.mjs` (like decisions.mjs, `--watch` optional) exports to
-   `docs/agents/private/feedback.json`, which is **git-ignored** (add the folder to `.gitignore`): children's words never
-   go to the public repo. First name + class only, no emails or uids.
-Costs: one small read per owner visit; the export reads only new docs since the last run.
 
 ### G62 · [review] · gemini · Mockup first: "Chamak asks" (polls for children on Home; owner 2026-11-07)
 Owner: "instead of me asking Pratha 3 questions: a sticky note on her Home, the mascot asks, she answers the app in
