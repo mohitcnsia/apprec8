@@ -283,7 +283,10 @@
     "title": "Tomorrow 7 pm: Progress tab design discussion",
     "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
     "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.\n\n**Also on the table:** ChatGPT's four-dashboard brief + concept image (docs/product/PROGRESS_REVIEW_TODO.md). Central question: activity vs real learning (mastery).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T03:52:36.643Z"
   },
   {
     "id": "mock-chamku-asks",
@@ -334,6 +337,16 @@
     "title": "Vote: fun names for English units (with Pratha + Seema)",
     "ask": "Pick A or B per unit, or type your own in the note. Seema checks the English, Pratha votes.",
     "details": "| Unit | Today | A | B |\n|---|---|---|---|\n| 0 | Sentences | Sentence Safari | The Thought Express |\n| 1 | Parts of Speech | The Great Word Bazaar | Wordopolis |\n| 2 | Articles | The Ticket Gate | The Spotlight Booth |\n| 3 | Subject–Verb Agreement | The Rhythm Duo | The Perfect Match |\n| 4 | Spot the Error | Detective Desk | The Clue Hunter Agency |\n| 5 | Tenses | The Tense Time Machine | Chronos Island |\n| 6 | Modals & Tags | The Power Keys | Rules & Riddles |\n| 7 | Reported Speech & Passive | The Newsroom Studio | The Press Gallery |\n| 8 | Linking Words | The Connector Junction | The Bridge Builders |\n| 9 | Punctuation | Signpost Valley | Traffic Signals of Speech |\n| 10 | Word Building | The Word Factory | The Inventor's Forge |\n| Pro 1 | Tenses (9–10) | Timeline Architecture | Chronos Lab |\n| Pro 2 | Modals (9–10) | The Nuance Engine | Degrees of Certainty |\n| Pro 3 | Agreement (9–10) | Syntax Equilibrium | The Harmony Matrix |\n| Pro 4 | Reported Speech (9–10) | The Dialogue Decoder | The Discourse Studio |\n| Pro 5 | Active & Passive (9–10) | The Voice Inversion | Perspective & Focus |\n| Pro 6 | Editing (9–10) | The Editorial Suite | Precision Proofreading |\n\nThe grammar term always stays visible underneath (e.g. \"Noun Town · Nouns\"), so teachers find their topic. Topic names: 285-line list in docs/agents/reports/G61-names.md.\n\n**YES** = use all the A names (note any changes).",
+    "from": "claude",
+    "answer": "yes",
+    "note": "This should also land on pratha and seemas phones as polls and fun feedback activity. They should approve there. I can review with you as I have final say.",
+    "answeredAt": "2026-11-09T03:54:02.253Z"
+  },
+  {
+    "id": "go-live-feedback",
+    "title": "Ready: the feedback system + 2 fixes. Go live?",
+    "ask": "Children can send ideas (Me → 💡 idea, a weekly Chamku prompt on Home), 🚩 works on reading pages too, and the parent's week shows all subjects first. Publish it, and let Gemini switch on your Ideas & reports screen (DR-24)?",
+    "details": "**What children see:** Me → \"💡 I have an idea\" and once a week a small Chamku card on Home: tap answers; supervised accounts (Pratha) can also type. A thank-you from Chamku (no stars yet: stars for answering will come from the server, with a daily limit, in Chamku's stickies).\n\n**🚩 on reading pages:** tap-only reasons (wrong fact, confusing, spelling, picture missing).\n\n**Parent's week:** all subjects together first; no subject picker.\n\n**You:** Admin tools → **Ideas & reports**: every idea and report, newest first, with a done tick. It needs a small rules change (DR-24) so only you can read them.\n\n**Claude's review:** merged and tested; fixed one honesty problem (children were promised +5 ⭐ the phone can't give).\n\n**YES** = Claude publishes + Gemini deploys DR-24. **LATER** = wait until you're back.",
     "from": "claude"
   }
 ]
