@@ -73,3 +73,10 @@ Candidate first item (owner, 2026-11-09): **test vs real** — a separate test F
 for the team, real users get tested updates on a schedule (e.g. twice a week, evenings), urgent fixes only in between.
 
 **Agreed 2026-11-09 (owner): school codes.** For school classes the teacher/admin enters first names → one parent code per child (printable) → the parent types it on their own phone, says yes once → child linked + in the class. No child-sent links (a friend could answer). Families outside a school: the parent adds the child, as today. Details in the live doc.
+
+**Agreed 2026-11-09 (owner, after testing as a 10-A student):**
+- An assignment is **done only when its mistakes are fixed**; Home says "Fix N mistakes to finish" (G87). The app nudges, not the teacher.
+- The teacher sees each assignment's results **by name**: Done / Fixing mistakes / Halfway / Not started, with **Accuracy** (G87).
+- **Remind** one child or all not done: push + Home card (G84b).
+- **Class report for school management** in pilot week 2: active kids, Accuracy start vs now per topic, mistakes fixed (G88).
+- ♡ **Like** on cards and pages, one save when leaving the page (G86, after the pilot starts).

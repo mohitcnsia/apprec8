@@ -50,6 +50,8 @@ Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owne
 | A7 | **Privacy policy page + "delete my account" web page** (public URLs; Play asks for both) | owner | **exists** (owner 2026-11-05); Claude to check it mentions classes, teachers, parent consent, attempts |
 | A8 | Remote Config `update_url_android` → the Play link the students use (today: internal-testing link) | Owner | pending |
 | A10 | **Demo School** (fake class for Seema to try the teacher screens + Play reviewer login): generator done; server function, filters, Admin button after Gemini's review; deploy by Gemini/owner | Claude → Gemini | in progress |
+| A11 | **Assignment done = mistakes fixed**; teacher sees results **by name** with **Accuracy**; **Remind** a child (owner 2026-11-09) | Gemini (G87, G84b) → Claude review | todo |
+| A12 | ⭐ **Class report for school management, pilot week 2 (owner: don't forget)**: active kids, Accuracy start vs now per topic, mistakes fixed, printable | Mockup → owner → Gemini (G88) | todo, week 2 |
 | A9 | Cost check: 50 students ≈ 15,000 reads/day at most (free tier 50,000), writes far below 20,000. Budget alert in place | done | ok |
 
 ## B. Public release (after the pilot)

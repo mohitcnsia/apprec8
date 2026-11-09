@@ -273,13 +273,40 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**0) G84 Needs you + teacher Home (owner + Seema: TOP)**, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**00) G87 assignment done = mistakes fixed + results by name (owner: pilot)**, **0) G84 Needs you + teacher Home (owner + Seema: TOP)** → G84b Remind, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
+
+### G87 · [todo] · gemini · ⭐ PILOT: an assignment is done only when its mistakes are fixed + the teacher sees results by name (owner, 2026-11-09)
+Owner (as a 10-A student): finished every assigned topic, 6 mistakes left, nobody nudged him: "Without this nudge kids will just
+mark without reading … Seema would need the results to impress school management." Owner: "why should a teacher waste time on
+something the app can do, but she should know what happened as quickly and cleanly as possible." Use the word **Accuracy**
+(owner), never "% right".
+1. **Done = steps completed AND no open mistakes for that topic** (mistake entries whose `branchId` is the assigned node id;
+   question and topic mistakes both). Extend `utils/assignedTopics.js` (+ tests): a row gets `mistakesLeft`; a topic with all
+   steps done but mistakes left stays on Home as "Fix N mistakes to finish" and its tap opens My mistakes for that quest
+   (`EnglishQuestMap` with `openMistakes: true`). Same rule in `utils/weeklySummary.js` `assignmentStatus`.
+2. **Teacher: results by name, per assignment** (Progress → the class → the assignment, and the week card's assignment line):
+   one row per child, sorted Not started → Halfway → Fixing mistakes (N) → Done ✓, each with **Accuracy on the first try** for
+   those topics (first answer per question from `questAttempts`/stats: no extra reads beyond what the class screen loads; if
+   it needs more, stop and ask Claude). The top line: "8 of 30 done · 12 fixing mistakes · 6 halfway · 4 not started".
+   No new collection. Pure `utils/assignmentResults.js` + tests.
+3. Clean test (RULE) with the Demo School: a kid with mistakes left (Home row + teacher row both say so), a kid fully done.
+   Screenshots in G87.md. `gemini(G87): done — review please`.
+
+### G84b · [todo, after G84 review] · gemini · "Remind" a child (owner agreed 2026-11-09)
+On G87's results list: **Remind** next to each child not done, and **Remind all not done**. It sends a push ("Seema Ma'am:
+finish Determiners — 6 mistakes to fix") and puts a card on the child's Home. Max 1 reminder per child per assignment per day.
+Server callable (teacher of that class only), reuse G84's push code. File a Deploy request; don't deploy. Clean test (RULE).
+
+### G88 · [todo, PILOT WEEK 2 — DON'T FORGET (owner)] · gemini · One-page class report for school management (owner agreed 2026-11-09)
+For Seema to show the school after 2–3 weeks. Per class: kids active / total, questions answered, **Accuracy at the start vs
+now per topic**, mistakes fixed, assignments done on time, the weakest topic. Real data only (never made up; "not enough data
+yet" when < 1 week). Printable / share as PDF from the teacher's class screen. Mockup to the owner first (rule), then build.
 
 ### G86 · [todo, after the pilot starts] · gemini · ♡ Like on learn cards and reading pages (owner approved mockup + save rule, 2026-11-09)
 Owner: "Some pages I like the formatting and colouring. If kids could tell us, we'd know what they like." Today we only hear 🚩.
