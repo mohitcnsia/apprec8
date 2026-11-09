@@ -312,7 +312,7 @@ teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifa
    request in CODE_REVIEW.md; don't deploy. Clean test (RULE) incl. dark mode; screenshots in G89.md.
    `gemini(G89): done — review please`.
 
-### G90 · [todo] · gemini · Pilot ready: sign-up check + assigned work first + all levels open (Seema's decisions 2, 3, 5, 6; 2026-11-10)
+### G90 · [doing] · claude (Gemini idle, owner asleep, 2026-11-10 01:50) · Pilot ready: sign-up check + assigned work first + all levels open (Seema's decisions 2, 3, 5, 6; 2026-11-10)
 Seema's final decisions. Mostly existing code: verify, then close the gaps. No new screens.
 1. **Sign-up (decision 2 + 3).** The flow is: parent on their OWN phone → Me → add child (`AddChildScreen`, consent in English /
    Hindi, `createChildProfile`) → the child signs in with the parent's code → Me → Join a class (code) → Seema approves.
@@ -330,7 +330,7 @@ Seema's final decisions. Mostly existing code: verify, then close the gaps. No n
 4. Clean test (RULE): new parent → add child → child joins Seema's test class → approve → Home shows the assignment first →
    locked-looking nodes are open. Plus a kid without a parent: blocked with the message. `gemini(G90): done — review please`.
 
-### G91 · [todo] · gemini · Check-up: any paper gives a score by topic + a clear "No internet" (pilot piece 1; 2026-11-10)
+### G91 · [doing] · claude (Gemini idle, owner asleep, 2026-11-10 01:50) · Check-up: any paper gives a score by topic + a clear "No internet" (pilot piece 1; 2026-11-10)
 The week-1 check-up uses the EXISTING papers (`screens/paper/PracticePaperScreen.js`, `utils/paperSession.js`; each question
 already has `topic.quest` / `topic.node`). No new paper, no start code or timer lock (those wait for the scholarship exam).
 1. Results: per topic, "Accuracy" (owner's word) + right/total, sorted weakest first; topics under 60% marked "Practise this"
