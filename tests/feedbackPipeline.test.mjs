@@ -117,5 +117,7 @@ assert.equal(redacted.status, "new");
 assert.equal(redacted.userId, undefined, "userId must be stripped");
 assert.equal(redacted.userEmail, undefined, "userEmail must be stripped");
 
+// 2026-11-10 clean test: a sign-in creation time string (Firebase metadata) counts as account age.
+assert.equal(shouldShowWeeklyPrompt({ userCreatedAt: new Date(Date.now() - 3600e3).toUTCString() }), false);
 console.log("feedbackPipeline tests passed");
 

@@ -12,6 +12,8 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { isTesterView } from "../../services/ownerView";
 import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES, nextCheckupId } from "../../data/papers";
+import { bundledQuest } from "../../data/quests";
+import { topicPractice } from "../../utils/subtopicPractice";
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
@@ -65,6 +67,15 @@ export default function PracticePaperScreen({ navigation, route }) {
   useEffect(() => {
     loadPaperHistory().then(setHistory);
   }, []);
+
+  // G91: the list changes once history loads (Check-up 1 done → Check-up 2; same for Mix papers). On the start screen,
+  // never keep a paper that is no longer in the list, or a child re-sits the paper she just finished.
+  useEffect(() => {
+    if (state.phase !== "start" || !papers.length || papers.some((p) => p.id === state.paperId)) return;
+    const cur = paperById(state.paperId);
+    const same = papers.find((p) => p.subject === cur?.subject) || papers[0];
+    dispatch({ type: "select", paperId: same.id });
+  }, [papers, state.phase, state.paperId]);
 
   // On the start screen: is this paper already in progress?
   useEffect(() => {
@@ -170,7 +181,7 @@ export default function PracticePaperScreen({ navigation, route }) {
                   <Text style={s.cardTitle}>{p.title}{p.draft ? "  ·  Draft (testers)" : ""}{done(p.id) ? "  ✓" : ""}</Text>
                   <Text style={s.soft}>
                     {count} questions · {p.minutes} min
-                    {p.mix ? " · a new mix of quest questions every time" : ""}
+                    {p.checkup ? " · shows your Accuracy in every topic" : p.mix ? " · a new mix of quest questions every time" : ""}
                   </Text>
                   {on ? (
                     <View style={{ marginTop: 10, gap: 6 }}>
@@ -396,6 +407,7 @@ export default function PracticePaperScreen({ navigation, route }) {
               {mistakesAdded > 0 ? <Text style={s.soft}>{mistakesAdded} questions added to My mistakes 🔧</Text> : null}
             </View>
           </View>
+          {paper.checkup ? null : (
           <View style={[s.card, { gap: 12 }]}>
             {outcome.parts.map((p) => (
               <View key={p.id}>
@@ -409,6 +421,7 @@ export default function PracticePaperScreen({ navigation, route }) {
               </View>
             ))}
           </View>
+          )}
           {/* G91: Accuracy per topic, weakest first; under 60% = "Practise this" (opens that topic). */}
           {topics.length ? (
             <View style={[s.card, { gap: 10 }]}>
@@ -416,7 +429,12 @@ export default function PracticePaperScreen({ navigation, route }) {
               {topics.map((t) => (
                 <Pressable
                   key={`${t.quest}/${t.node}`}
-                  onPress={() => navigation.navigate("EnglishQuestMap", { questId: t.quest, openTopic: t.node })}
+                  onPress={() => {
+                    // G91: practise THIS topic now, even if the path hasn't reached it (falls back to the map).
+                    const tp = topicPractice(bundledQuest(t.quest), t.node);
+                    if (!tp) return navigation.navigate("EnglishQuestMap", { questId: t.quest, openTopic: t.node });
+                    navigation.navigate("EndlessPractice", { questId: t.quest, title: `Practise: ${topicTitle(t)}`, ...tp, generators: [], returnTo: "PracticePaper" });
+                  }}
                   accessibilityRole="button"
                   accessibilityLabel={`${topicTitle(t)}: Accuracy ${t.accuracy}%, ${t.right} of ${t.total} right${t.weak ? ". Practise this" : ""}`}
                 >

@@ -641,7 +641,7 @@ export default function HomeScreen({ navigation }) {
         {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
         {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
         {hasPaper
-          ? questTile("paper", "Practice paper", "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
+          ? questTile("paper", CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper", CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
               navigation.navigate("PracticePaper", { grade: userGrade })
             )
           : null}

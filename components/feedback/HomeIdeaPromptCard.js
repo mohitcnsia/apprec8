@@ -19,7 +19,10 @@ export default function HomeIdeaPromptCard({ userGrade = null, userCreatedAt = n
   useEffect(() => {
     let alive = true;
     getLastIdeaPromptTime().then((lastTime) => {
-      if (alive && shouldShowWeeklyPrompt({ lastPromptAt: lastTime, userCreatedAt })) {
+      // The profile's createdAt can be missing (new or older accounts): fall back to the sign-in creation time, so a
+      // brand-new child never gets "Chamku asks" on day one (G79 rule, seen in the 2026-11-10 clean test).
+      const created = userCreatedAt || authInstance.currentUser?.metadata?.creationTime || null;
+      if (alive && shouldShowWeeklyPrompt({ lastPromptAt: lastTime, userCreatedAt: created })) {
         setVisible(true);
       }
     });

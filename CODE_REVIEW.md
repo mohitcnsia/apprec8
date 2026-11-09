@@ -2437,3 +2437,14 @@ Push notification triggers for pending actions (G84 item 2):
 - **No internet:** saving never waits for the server any more (writes stay on the phone and go when online); if the server
   can't be reached: "No internet. Your answers are safe on this phone. We'll send them when you're back online."
   Stars need the internet (the stars call is not retried).
+
+## 2026-11-10 night — Clean test on the emulator (production mode, Metro --no-dev) — PASSED with 4 fixes
+Walk: launch → your account (G90 join block ✅, pilot switch shows on 10-A, not tapped) → sign out → new email account
+(+ct1110, Class 10) → first run → Home → Check-up 1 → submit → results → Practise this → Fun / Progress / Me → deleted the
+account. No FATAL; the only SoftException is "onWindowFocusChange while context is not ready" at dev-app launch (not app code).
+Fixed during the walk: (1) "Practise this" opened the map at Unit 0 (topic locked) → now opens practice on that topic
+(`topicPractice`); (2) after finishing Check-up 1 the screen still started Check-up 1 again (old bug, Mix papers too: the
+chosen paper didn't follow the list once history loaded) → fixed, verified it opens Check-up 2; (3) Home card said "50
+questions · 60 min" for Class 10 → "Check-up · Your Accuracy in every topic · 49 min"; (4) "Chamku asks" showed on day one
+(profile `createdAt` missing) → falls back to the sign-in creation time. Not tested on the emulator: the parent-link flow
+(needs two phones) and airplane mode; both in OWNER_TESTING.md.

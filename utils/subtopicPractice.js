@@ -31,3 +31,20 @@ export function onlyTopic(pool = [], subtopic = null) {
   const some = pool.filter((q) => q.subtopic === subtopic);
   return some.length ? some : pool;
 }
+
+/**
+ * G91: a check-up's "Practise this" opens practice on one TOPIC (a main node and its practice nodes), even when the path
+ * hasn't reached it yet. Same quiz-only rule: no gate/boss questions. @returns {{ poolQuizIds, branchId, nodeId } | null}
+ */
+export function topicPractice(quest, topicId) {
+  const nodes = quest?.nodes || [];
+  const poolQuizIds = [];
+  for (const n of nodes) {
+    if (n.kind !== "main" && n.kind !== "practice") continue;
+    if (n.id !== topicId && n.branchId !== topicId) continue;
+    for (const s of n.steps || []) if (s.type === "quiz" && s.quizId && !poolQuizIds.includes(s.quizId)) poolQuizIds.push(s.quizId);
+  }
+  if (!poolQuizIds.length) return null;
+  const endless = nodes.find((n) => n.kind === "endless" && n.branchId === topicId);
+  return { poolQuizIds, branchId: topicId, nodeId: endless?.id || topicId };
+}

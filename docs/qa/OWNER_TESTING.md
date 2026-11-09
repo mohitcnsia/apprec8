@@ -55,13 +55,21 @@ should see. ✅ = Claude passed it on the emulator (date). Tell Claude the step 
 5. Me → Delete my account: the screen looks like the rest of the app (cards, same font). Don't confirm.
 6. After G94 (deploy): a kid asks to join → **+teacher**'s phone buzzes "Student waiting · Approve" (max 1 per 10 min).
 
-**B. Coming next (Claude adds the exact steps when each is merged)**
-7. G89 two-way cards: you post a card to +teacher → she answers Yes/No + a line → you reply → she sees it; "Tell us" on Home.
-8. G90 sign-up: **+parent** adds a child (consent) → the child signs in with the parent's code → joins the class with NO
-   second consent → +teacher approves → assigned work is first on Home → locked-looking nodes are open.
-   A kid with no parent: "Ask your parent to add you" (cannot join).
-9. G91 check-up: the kid takes a paper → result shows Accuracy per topic, weakest first, "Practise this" opens that topic.
-   Airplane mode mid-paper → "No internet. Your answers are safe…", nothing lost.
+**B. Built tonight (G90, G91) — ✅ = Claude passed it on the emulator, 2026-11-10 night**
+7. ✅ As a kid with NO parent linked (your own account works): Me → Join a class → "Ask your parent to add you" + 3 steps for
+   the parent, button OK. No consent form.
+8. As **+parent**: Me → Link my child's own account → name + agree → code. On **+student**: Me → Link to my parent → code.
+   Then +student: Me → Join a class → code VF244M → **no second consent form**, just JOIN → "Your parent already said yes".
+   As **+teacher** (Seema's role): approve → the kid's row says "parent: linked account ✓".
+9. ✅ Admin tools → Schools & classes → 10-A: a quiet line "Pilot: open all levels for these kids". Tap it ONLY when you
+   start the pilot (it changes Seema's real class). Then +student (in 10-A): every Class 10 topic is open.
+10. As +student: assigned work ("From your teacher") is the first card on Home.
+11. ✅ As a Class 10 kid: Home → Explore → **Check-up** ("Your Accuracy in every topic · 49 min") → 54 questions in 6 parts.
+    Submit → "Accuracy by topic", weakest first → "Practise this ›" opens practice on that topic. The next time it is
+    **Check-up 2** (different questions).
+12. As +teacher: Progress → 10-A → "Check-up by topic": class Accuracy per topic, names under 60%.
+13. Airplane mode, then submit a check-up → "No internet. Your answers are safe on this phone…". Airplane mode off.
+14. G89 two-way cards and G92 weekly report: not built yet (Gemini).
 
 ### ⭐ Teachers' page + Owner extras (after the next "publish"), ~3 min
 - [ ] Me → Guides: first card **For teachers: start here** → the one-pager → **SHARE WITH A TEACHER** opens WhatsApp. Also in Admin tools.
