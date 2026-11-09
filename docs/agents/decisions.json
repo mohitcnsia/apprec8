@@ -480,5 +480,12 @@
     "details": "The document is on claude.ai (works in the phone browser or the Claude app). Step 3 lists six pieces of pilot work; everything else already works, disappears with school codes, or waits for feedback.",
     "link": "https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU",
     "from": "claude"
+  },
+  {
+    "id": "assignment-fix-test",
+    "title": "Assignment fix is ready; I need your phone to test it",
+    "ask": "Fixed: Home lists every topic Seema assigned, and tapping one opens that topic (not 'Sentences'). The emulator on the Mac keeps freezing, so I couldn't run it on a device. When you're back, plug your Android phone into the Mac with a USB cable and I'll test it there before publishing. YES = I'll guide you.",
+    "details": "**What was wrong:** the map only draws the unit you're in, so Seema's topics (Grammar Pro, Unit 5) were unlocked but never drawn, and Home showed only the first assignment.\n\n**Fixed (not live):** Home's \"From your teacher\" card lists every unfinished assigned topic, soonest first; tapping opens that topic's next step directly; the map also draws assigned topics from later units. Automatic tests pass.\n\n**Why not published:** our rule is a device test first. The emulator on this Intel Mac freezes (Android itself stops responding). Your phone over USB is faster and real.\n\n**Waiting with it (also not live):** 'Tell us what you think' really sends, students no longer see 'Switch to parent', clearer explanations, Apprec8 Academy.",
+    "from": "claude"
   }
 ]
