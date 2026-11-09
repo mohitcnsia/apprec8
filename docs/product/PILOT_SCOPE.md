@@ -1,5 +1,7 @@
 # Pilot scope (owner + Claude, step by step, from 2026-11-09)
 
+**Live version (the owner reads and comments there):** https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU — this file is a copy for Gemini.
+
 Steps: 1 who + jobs → 2 edge cases → 3 pilot-now vs later → 4 tasks. Each step agreed before the next.
 Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
 
