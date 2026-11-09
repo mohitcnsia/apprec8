@@ -330,7 +330,7 @@ Seema's final decisions. Mostly existing code: verify, then close the gaps. No n
 4. Clean test (RULE): new parent → add child → child joins Seema's test class → approve → Home shows the assignment first →
    locked-looking nodes are open. Plus a kid without a parent: blocked with the message. `gemini(G90): done — review please`.
 
-### G91 · [doing] · claude (Gemini idle, owner asleep, 2026-11-10 01:50) · Check-up: any paper gives a score by topic + a clear "No internet" (pilot piece 1; 2026-11-10)
+### G91 · [done] · claude (built 2026-11-10 night; Class 10 check-up papers added) · Check-up: any paper gives a score by topic + a clear "No internet" (pilot piece 1; 2026-11-10)
 The week-1 check-up uses the EXISTING papers (`screens/paper/PracticePaperScreen.js`, `utils/paperSession.js`; each question
 already has `topic.quest` / `topic.node`). No new paper, no start code or timer lock (those wait for the scholarship exam).
 1. Results: per topic, "Accuracy" (owner's word) + right/total, sorted weakest first; topics under 60% marked "Practise this"

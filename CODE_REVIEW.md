@@ -2424,3 +2424,16 @@ Push notification triggers for pending actions (G84 item 2):
 - **DR-26 Deploy request (owner OK needed):** firestore.rules `classes/{id}/members` create also requires
   `users/{kid}.parentUids` non-empty (the server-side half of "no consent = no class"). `firebase deploy --only firestore:rules`.
   Until it is deployed, only the app screen enforces it.
+
+## 2026-11-10 — G91 built by Claude: the week-1 check-up
+- **Gap found:** every practice paper was Class 5 only; Seema's Class 10 kids had nothing to sit. New **Check-up** papers for
+  Classes 9–10 (`data/papers/mix.js` `buildCheckupPaper`): the 18 Grammar Pro topics × 3 reviewed questions = 54 questions,
+  one part per unit, 49 minutes. Never Challenge/Boss questions. Check-up 2 shares no question with Check-up 1 (week-2 re-test).
+  It is the first paper in the list for Classes 9–10 (Home → Practice paper).
+- **Result screen:** "Accuracy by topic", weakest first; under 60% says "Practise this ›" and opens that topic. Same scoring for
+  every paper (`utils/paperTopics.js`, tests).
+- **Seema sees the class by topic:** the kid's progress doc gets `checkups.{paperId}` (Accuracy per topic); Progress → the
+  class → "Check-up by topic": class Accuracy per topic, weakest first, and the names under 60% (teacher only). No new reads.
+- **No internet:** saving never waits for the server any more (writes stay on the phone and go when online); if the server
+  can't be reached: "No internet. Your answers are safe on this phone. We'll send them when you're back online."
+  Stars need the internet (the stars call is not retried).

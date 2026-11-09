@@ -29,7 +29,7 @@ import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
-import { papersFor, MIX_GRADES } from "../../data/papers";
+import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import { assignedTopics } from "../../utils/assignedTopics";
@@ -423,7 +423,7 @@ export default function HomeScreen({ navigation }) {
   const oldAdmin = ownerView;
   const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
   const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
-  const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade);
+  const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade) || CHECKUP_GRADES.includes(userGrade); // G91
 
   // Each quest tile is its own "continue" (owner 2026-11-04: a kid runs several quests; no single big Continue card).
   const questStats = (q) => {

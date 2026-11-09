@@ -4,12 +4,15 @@
 // - One Firestore write per finished paper: a `questAttempts` doc with activity "paper" (existing rules: own doc, create only).
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore, collection, addDoc, serverTimestamp } from "@react-native-firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import Constants from "expo-constants";
 import functions from "@react-native-firebase/functions";
 import { authInstance } from "../config/firebaseConfig";
 import { addPaperMistakes } from "./englishQuestApi";
+import { looksOffline, checkupRecord } from "../utils/paperTopics";
+
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("timeout")), ms))]);
 
 const db = getFirestore(getApp());
 const who = () => authInstance.currentUser?.uid || "guest";
@@ -60,10 +63,20 @@ export async function savePaperResult(paper, outcome, { startedAt, submittedAt, 
   await addHistory({ paperId: paper.id, score: outcome.score, max: outcome.max, usedMs: outcome.usedMs, at: submittedAt || Date.now() });
   const user = authInstance.currentUser;
   if (!user) return { stars: 0 };
-  await Promise.all(Object.entries(wrongsByQuest).map(([questId, wrongs]) => addPaperMistakes(questId, wrongs, paper.id)));
+  // G91: Firestore keeps these writes on the phone and sends them when the internet is back, so never wait for them
+  // (offline, an await here would hang the result screen).
+  Promise.all(Object.entries(wrongsByQuest).map(([questId, wrongs]) => addPaperMistakes(questId, wrongs, paper.id))).catch((e) => console.warn("paper mistakes:", e?.message || e));
+  // G91: a check-up's Accuracy per topic also goes on the kid's progress doc, which their teacher can already read
+  // (Progress → the class → "Check-up by topic"). One small write, kept on the phone while offline.
+  if (paper.checkup && outcome.topics?.length) {
+    setDoc(doc(db, "users", user.uid, "questProgress", "english-quest"), { checkups: { [paper.id]: checkupRecord(outcome.topics) } }, { merge: true }).catch((e) =>
+      console.warn("checkup save:", e?.message || e)
+    );
+  }
   let stars = 0;
+  let offline = false;
   try {
-    const res = await functions().httpsCallable("recordQuizResult")({
+    const res = await withTimeout(functions().httpsCallable("recordQuizResult")({
       quizId: paper.id,
       kind: "paper",
       mode: "exam",
@@ -72,15 +85,16 @@ export async function savePaperResult(paper, outcome, { startedAt, submittedAt, 
       passingScore: 0,
       answeredCount: outcome.rows.filter((r) => r.chosen != null).length,
       totalQuestions: outcome.rows.length,
-    });
+    }), 12000);
     stars = res?.data?.starsAwarded || 0;
   } catch (e) {
+    offline = looksOffline(e);
     console.warn("paper stars failed:", e?.message || e);
   }
   try {
     const answered = outcome.rows.filter((r) => r.chosen != null).length;
     const correctCount = outcome.rows.filter((r) => r.correct).length;
-    await addDoc(collection(db, "questAttempts"), {
+    addDoc(collection(db, "questAttempts"), {
       userId: user.uid,
       userName: user.displayName || null,
       questId: "practice-papers",
@@ -102,12 +116,15 @@ export async function savePaperResult(paper, outcome, { startedAt, submittedAt, 
         max: outcome.max,
         parts: outcome.parts.map(({ id, right, wrong, blank, score, max }) => ({ id, right, wrong, blank, score, max })),
         practise: outcome.practise.map(({ quest, node, wrong }) => ({ quest, node, wrong })),
+        // G91: Accuracy per topic, read later by the teacher's class view and the weekly report (no extra reads).
+        topics: (outcome.topics || []).map(({ quest, node, right, total }) => ({ quest, node, right, total })),
+        checkup: !!paper.checkup,
       },
       appVersion: Constants.expoConfig?.version || null,
       createdAt: serverTimestamp(),
-    });
+    }).catch((error) => console.error("savePaperResult failed:", error));
   } catch (error) {
     console.error("savePaperResult failed:", error);
   }
-  return { stars };
+  return { stars, offline };
 }

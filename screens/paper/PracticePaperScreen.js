@@ -11,7 +11,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { isTesterView } from "../../services/ownerView";
-import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES } from "../../data/papers";
+import { SUBJECTS, papersFor, paperById, topicTitle, nextMixId, MIX_GRADES, nextCheckupId } from "../../data/papers";
 import { paperQuestions, timeLeftMs, clockLabel, checkSummary } from "../../utils/paperScore";
 import { optionOrder, fitsTwoByTwo, initialPaperState, paperReducer, resumable, paperOutcome, paperMedal, paperWrongsByQuest } from "../../utils/paperSession";
 import { splitInstruction } from "../../utils/quizText";
@@ -44,7 +44,8 @@ export default function PracticePaperScreen({ navigation, route }) {
   const mixGrade = MIX_GRADES.includes(grade) ? grade : isTester ? 5 : null;
   const papers = useMemo(() => {
     const mix = mixGrade ? SUBJECTS.map((sub) => paperById(nextMixId(sub.id, mixGrade, history))).filter(Boolean) : [];
-    return [...fixedPapers, ...mix];
+    const checkup = nextCheckupId(grade, history); // G91: Classes 9–10, the check-up comes first
+    return [...(checkup ? [paperById(checkup)].filter(Boolean) : []), ...fixedPapers, ...mix];
   }, [fixedPapers, mixGrade, history]);
   const subjects = SUBJECTS.filter((sub) => papers.some((p) => p.subject === sub.id));
 
@@ -57,6 +58,7 @@ export default function PracticePaperScreen({ navigation, route }) {
   const [showClockChoice, setShowClockChoice] = useState(true);
   const [onlyMistakes, setOnlyMistakes] = useState(true);
   const [stars, setStars] = useState(null); // stars from the server (null = still asking)
+  const [offline, setOffline] = useState(false); // G91: the result was saved on the phone only (no internet)
   const resultSaved = useRef(false);
   const previous = useRef(null); // last result of this paper before today's
 
@@ -106,6 +108,7 @@ export default function PracticePaperScreen({ navigation, route }) {
     setStars(null);
     savePaperResult(paper, outcome, { startedAt: state.startedAt, submittedAt: state.submittedAt, wrongsByQuest: paperWrongsByQuest(paper, state) }).then((r) => {
       setStars(r?.stars || 0);
+      setOffline(!!r?.offline);
       loadPaperHistory().then(setHistory);
     });
   }, [outcome]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -360,6 +363,7 @@ export default function PracticePaperScreen({ navigation, route }) {
   if (state.phase === "result") {
     const prev = previous.current;
     const medal = paperMedal(outcome.score, outcome.max);
+    const topics = outcome.topics || [];
     const mistakesAdded = Object.values(paperWrongsByQuest(paper, state)).flat().filter((w) => !w.question.passage).length;
     const diff = prev ? outcome.score - prev.score : null;
     const line = [
@@ -376,12 +380,18 @@ export default function PracticePaperScreen({ navigation, route }) {
             {outcome.score} <Text style={s.scoreMax}>/ {outcome.max}</Text>
           </Text>
           <Text style={s.soft}>{line}</Text>
+          {offline ? (
+            <View style={[s.card, { borderColor: P.gold }]} accessibilityLiveRegion="polite">
+              <Text style={s.cardTitle}>No internet</Text>
+              <Text style={s.soft}>Your answers are safe on this phone. We'll send them when you're back online.</Text>
+            </View>
+          ) : null}
           <View style={s.medal}>
             <Text style={{ fontSize: 44 }}>{medal.emoji}</Text>
             <View style={{ flex: 1 }}>
               <Text style={s.cardTitle}>{medal.title}</Text>
               <Text style={s.soft}>
-                {stars == null ? "Adding up your stars…" : stars > 0 ? `+${stars} ⭐ for a whole paper` : "Stars for this paper: once a week"}
+                {stars == null ? "Adding up your stars…" : stars > 0 ? `+${stars} ⭐ for a whole paper` : offline ? "Stars need the internet" : "Stars for this paper: once a week"}
               </Text>
               {mistakesAdded > 0 ? <Text style={s.soft}>{mistakesAdded} questions added to My mistakes 🔧</Text> : null}
             </View>
@@ -399,24 +409,30 @@ export default function PracticePaperScreen({ navigation, route }) {
               </View>
             ))}
           </View>
-          {outcome.practise.length ? (
-            <View style={[s.card, { gap: 4 }]}>
-              <Text style={s.cardTitle}>Practise these next</Text>
-              {outcome.practise.map((t) => (
+          {/* G91: Accuracy per topic, weakest first; under 60% = "Practise this" (opens that topic). */}
+          {topics.length ? (
+            <View style={[s.card, { gap: 10 }]}>
+              <Text style={s.cardTitle}>Accuracy by topic</Text>
+              {topics.map((t) => (
                 <Pressable
                   key={`${t.quest}/${t.node}`}
-                  style={s.practiseRow}
-                  onPress={() => navigation.navigate("EnglishQuestMap", { questId: t.quest })}
+                  onPress={() => navigation.navigate("EnglishQuestMap", { questId: t.quest, openTopic: t.node })}
                   accessibilityRole="button"
+                  accessibilityLabel={`${topicTitle(t)}: Accuracy ${t.accuracy}%, ${t.right} of ${t.total} right${t.weak ? ". Practise this" : ""}`}
                 >
-                  <Text style={[s.partText, { flex: 1 }]} numberOfLines={1}>{topicTitle(t)}</Text>
-                  <Text style={s.soft}>{t.wrong} to fix ›</Text>
+                  <View style={s.partRow}>
+                    <Text style={[s.partText, { flex: 1 }]} numberOfLines={1}>{topicTitle(t)}</Text>
+                    <Text style={s.partCount}>{t.right}/{t.total} · {t.accuracy}%</Text>
+                  </View>
+                  <View style={[s.track, { marginHorizontal: 0, marginTop: 6 }]}>
+                    <View style={[s.fill, { width: `${t.accuracy}%` }]} />
+                  </View>
+                  {t.weak ? <Text style={[s.soft, { marginTop: 4 }]}>Practise this ›</Text> : null}
                 </Pressable>
               ))}
             </View>
-          ) : (
-            <Text style={s.note}>Every answer right. Brilliant! 🌟</Text>
-          )}
+          ) : null}
+          {outcome.score === outcome.max ? <Text style={s.note}>Every answer right. Brilliant! 🌟</Text> : null}
         </ScrollView>
         <View style={s.footer}>
           <Pressable style={s.primary} onPress={() => dispatch({ type: "showAnswers" })} accessibilityRole="button">

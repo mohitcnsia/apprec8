@@ -3,6 +3,7 @@
 // on the phone after every change, so a closed app resumes where it was. The clock keeps running while away, like a real test.
 
 import { paperQuestions, scorePaper, timeLeftMs } from "./paperScore.js";
+import { topicAccuracy } from "./paperTopics.js";
 import { seededRandom } from "./readingFlow.js";
 
 /** Options in a fixed shuffled order per question (the data lists the right answer first). Same order on every resume. */
@@ -106,7 +107,7 @@ export function paperOutcome(paper, state) {
       topicNode: question.topic?.node || null,
     };
   });
-  return { ...result, usedMs, rows, timedOut: !!state.timedOut };
+  return { ...result, usedMs, rows, timedOut: !!state.timedOut, topics: topicAccuracy(paper, state.answers) };
 }
 
 /** Medal for finishing a paper (shown at once, no server needed): 🥇 90%+, 🥈 70%+, 🥉 for finishing. */

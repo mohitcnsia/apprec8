@@ -18,6 +18,8 @@ import { teacherWeek } from "../../utils/weeklySummary";
 import TeacherWeekCard from "../../components/teacher/TeacherWeekCard";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
+import { topicTitle } from "../../data/papers";
+import { classCheckup } from "../../utils/paperTopics";
 import { topicNamer } from "../../utils/progressView";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { createAssignment, listAssignments, deleteAssignment } from "../../services/assignmentsApi";
@@ -178,7 +180,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
             const week = summarize(stats, "week");
             const weak = weakTopics(stats)[0];
             const nodes = snap.exists() ? snap.data()?.nodes || {} : {};
-            perQuest.push({ q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes });
+            perQuest.push({ q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes, checkups: snap.exists() ? snap.data()?.checkups || null : null });
           }
           out.push({ ...m, perQuest, last: Math.max(0, ...perQuest.map((p) => p.last)) });
         }
@@ -206,6 +208,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       ))}
       {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
       {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} P={P} /> : null}
+      {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
+      {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
       {/* Guide step 2: share the class code (phone share menu, like the admin's SHARE CODE). */}
       {open?.joinCode ? (
         <Pressable
@@ -279,3 +283,28 @@ const makeStyles = (P) =>
     button: { height: 48, borderRadius: 14, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
     buttonText: { color: P.onPrimary, fontSize: 15, fontFamily: "nunitoBold", letterSpacing: 0.5 },
   });
+
+function CheckupCard({ rows, P, styles }) {
+  const kids = rows.map((r) => ({ firstName: r.firstName, checkups: r.perQuest.find((p) => p.q === "english-quest")?.checkups || null }));
+  const { took, topics } = classCheckup(kids);
+  if (!took) return null;
+  const namer = (node) => topicTitle({ quest: "english-quest", node });
+  return (
+    <View style={[styles.card, { gap: 8 }]}>
+      <Text style={styles.title}>Check-up by topic</Text>
+      <Text style={styles.soft}>{took} of {rows.length} children took it · weakest first · Accuracy</Text>
+      {topics.map((t) => (
+        <View key={t.node}>
+          <Text style={styles.title}>
+            {namer(t.node)} · {t.accuracy}%
+          </Text>
+          {t.weakKids.length ? (
+            <Text style={styles.soft} numberOfLines={2}>
+              Under 60%: {t.weakKids.join(", ")}
+            </Text>
+          ) : null}
+        </View>
+      ))}
+    </View>
+  );
+}

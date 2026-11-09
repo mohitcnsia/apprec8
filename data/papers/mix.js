@@ -158,3 +158,46 @@ export function buildMixPaper(id) {
     ].filter((p) => p.questions.length),
   };
 }
+
+// ---------- G91 Check-up (pilot week 1, 2026-11-10) ----------
+// For Classes 9–10 (Seema's Class 10 pilot): every Grammar Pro topic of the class, 3 questions each, one part per unit,
+// so each child gets an Accuracy per topic (utils/paperTopics.js). Same rules as Mix papers: reviewed quest questions
+// only, never Challenge or Boss questions. Check-up 2 uses different questions where the pool allows (seeded by id).
+export const CHECKUP_GRADES = [9, 10];
+const PER_TOPIC = 3;
+export const checkupPaperId = (grade, n) => `checkup-en-g${grade}-${n}`;
+export function parseCheckupId(id = "") {
+  const m = /^checkup-en-g(\d+)-(\d+)$/.exec(String(id));
+  return m && CHECKUP_GRADES.includes(Number(m[1])) ? { subject: "english", grade: Number(m[1]), n: Number(m[2]) } : null;
+}
+
+export function buildCheckupPaper(id) {
+  const info = parseCheckupId(id);
+  if (!info) return null;
+  const { grade, n } = info;
+  const m = byId("english-quest");
+  if (!m) return null;
+  // The class's own level: topics only for Classes 9–10 (not the younger units they can also open).
+  const own = nodesForGrade(m.nodes, grade).filter((x) => x.kind === "main" && (x.grades || []).length && Math.min(...x.grades) >= 9);
+  const ownIds = new Set(own.map((x) => x.id));
+  const pool = questPool("english-quest", grade).filter((x) => ownIds.has(x.topic.node));
+  const rng = seededRandom(id);
+  const used = new Set();
+  // Check-up n skips the questions the earlier check-ups used, while each topic still has enough left.
+  for (let k = 1; k < n; k++) {
+    const earlier = buildCheckupPaper(checkupPaperId(grade, k));
+    const texts = new Set((earlier?.parts || []).flatMap((p) => p.questions.map((q) => q.question.content)));
+    for (const t of own) {
+      const left = pool.filter((x) => x.topic.node === t.id && !texts.has(x.question.question.content) && !used.has(x.question.question.content));
+      if (left.length >= PER_TOPIC) pool.filter((x) => x.topic.node === t.id && texts.has(x.question.question.content)).forEach((x) => used.add(x.question.question.content));
+    }
+  }
+  const units = m.nodes.filter((u) => u.kind === "unit" && own.some((t) => t.unitId === u.id));
+  const parts = units.map((u) => {
+    const qs = own.filter((t) => t.unitId === u.id).flatMap((t) => take(pool.filter((x) => x.topic.node === t.id), PER_TOPIC, rng, used));
+    return { id: u.id, title: String(u.title || "").replace(/^Grammar Pro:\s*/, ""), marks: 1, questions: qs.map(asPaperQuestion) };
+  }).filter((p) => p.questions.length);
+  if (!parts.length) return null;
+  const count = parts.reduce((s, p) => s + p.questions.length, 0);
+  return { id, subject: "english", title: `Check-up ${n}`, minutes: Math.max(20, Math.round(count * 0.9)), grades: [grade], mix: true, checkup: true, passages: {}, parts };
+}

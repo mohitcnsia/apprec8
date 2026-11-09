@@ -10,7 +10,8 @@ import sciencePaper2 from "./sciencePaper2.js";
 import sciencePaper3 from "./sciencePaper3.js";
 import sciencePaper4 from "./sciencePaper4.js";
 import { bundledQuest } from "../quests/index.js";
-import { buildMixPaper, mixPaperId, parseMixId } from "./mix.js";
+import { buildMixPaper, mixPaperId, parseMixId, buildCheckupPaper, checkupPaperId, parseCheckupId, CHECKUP_GRADES } from "./mix.js";
+export { CHECKUP_GRADES } from "./mix.js";
 
 export const PAPERS = [englishPaper1, englishPaper2, englishPaper3, sciencePaper1, sciencePaper2, sciencePaper3, sciencePaper4];
 
@@ -29,9 +30,17 @@ const mixCache = new Map();
 export function paperById(id) {
   const fixed = PAPERS.find((p) => p.id === id);
   if (fixed) return fixed;
-  if (!parseMixId(id)) return null;
-  if (!mixCache.has(id)) mixCache.set(id, buildMixPaper(id));
+  const build = parseMixId(id) ? buildMixPaper : parseCheckupId(id) ? buildCheckupPaper : null;
+  if (!build) return null;
+  if (!mixCache.has(id)) mixCache.set(id, build(id));
   return mixCache.get(id);
+}
+
+/** G91: the next Check-up for a Class 9–10 child (one after the highest finished; an unfinished one resumes). */
+export function nextCheckupId(grade, history = []) {
+  if (!CHECKUP_GRADES.includes(grade)) return null;
+  const done = history.map((h) => parseCheckupId(h.paperId)).filter((x) => x && x.grade === grade).map((x) => x.n);
+  return checkupPaperId(grade, (done.length ? Math.max(...done) : 0) + 1);
 }
 
 /** Classes that get Mix papers (owner 2026-11-05: "no dearth of practice material"). */
