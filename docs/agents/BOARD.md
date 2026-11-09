@@ -267,13 +267,38 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**1) G77 DR-24 deploy + test (owner YES)**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
+
+### G79 · [todo] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
+Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):
+1. **Home + Progress hide a quest with no topics for the child's class.** Class 10 sees a Science tile that opens to only
+   "Coming soon" and Progress shows "Word Power · Unit 3 · 0/0 topics", "Science · Unit 7 · 0/0 topics". Use
+   `nodesForGrade` (utils/gradeFilter.js): no `kind: "main"` node left → no tile, no Progress row. Pure helper + test.
+2. **"Chamku asks" never in an account's first 7 days** (`users.createdAt`; a new user saw "What's boring here?" on day 1).
+   Pure check in utils/feedbackPipeline.js + test.
+3. Intro says "Units passed: 0 of 17", the map says "0/16" for the same Class 10 child: one number, from the same helper.
+4. Me → Delete my account screen uses old fonts (Delius/Roboto) and red/grey: app theme (quizPalette, Nunito), same words.
+Claude already fixed: "Switch to parent (PIN)" showed to students with their own login (only child profiles now), and
+"Tell us what you think" (it sent nothing; now writes userFeedback entryPoint "cntct"). Both wait for the next tested publish.
+Report G79.md with screenshots. `gemini(G79): done — review please`.
+
+### G80 · [todo] · gemini · Clean pass: parent + teacher paths (Claude's emulator froze mid-pass, 2026-11-09)
+On the emulator in production mode, new throwaway accounts (delete them after), screenshots of every screen in G80.md,
+and `adb logcat | grep -E "SoftException|FATAL|Invalid"` per path:
+- **Parent:** sign up → "I'm a parent" → Home → Me → Add a child (name, class) → set PIN → Play as (lock + 15 min) → play one
+  quiz as the child → Switch to parent (PIN) → Progress → the child's week → Link my child's own account (code shows).
+- **Teacher (Demo School teacher login from the owner, never in the repo):** Progress → class → SHARE CODE → Waiting for you →
+  Assign a topic → Guides → Start your class (DO IT buttons open the right screens).
+- **Student joining a class:** Me → Join a class (with a parent) with the Demo School class code → consent → waiting.
+List every bug, dead end, confusing word, wrong theme and fake/placeholder you see (rule: never made-up data, never a dead
+end). Also delete Claude's leftover test account uid `rBeI3t1zXrd32GgCbSLHXd3SY0P2` (claude.parenttest…, no profile) with
+`scripts/admin/eraseAccount.cjs`. `gemini(G80): done — review please`.
 
 ### G77 · [todo] · gemini · Deploy DR-24 (owner YES, 2026-11-09) + test Ideas & reports
 The feedback update is live (OTA 2026-11-09, update group 08480483). Deploy the local rules from CLAUDE's folder (firestore.rules is

@@ -208,11 +208,12 @@ export default function MeScreen({ navigation, signoutHandler }) {
             <Row icon="keypad-outline" label={userData?.hasParentPin ? "Change parent PIN" : "Set parent PIN"} onPress={() => navigation.navigate("ParentPin", { mode: "set" })} styles={styles} P={P} />
           </View>
         </>
-      ) : (
+      ) : userData?.isChild ? (
+        // Only a child profile played on a parent's phone can switch back (a student with their own login has no parent PIN).
         <View style={styles.group}>
           <Row icon="swap-horizontal-outline" label="Switch to parent (PIN)" onPress={() => navigation.navigate("ParentPin", { mode: "unlock" })} styles={styles} P={P} />
         </View>
-      )}
+      ) : null}
 
       {/* A student with their own login links to a parent (decision 9). */}
       {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length ? (

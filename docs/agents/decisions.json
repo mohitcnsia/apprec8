@@ -410,5 +410,12 @@
     "ask": "Testers and grown-ups get a small button on every screen: Broken · Confusing · Not useful · Idea, plus a line of text. The app adds the screen name and version by itself. Mockup first?",
     "details": "**Found today:** Me → \"Tell us what you think\" **sent nothing** (a placeholder from long ago: it waited 1.5 s and closed). Fixed: it now sends to your Ideas & reports (Contact); it goes out with the next tested update.\n\n**The bigger fix:** Seema should report right where the problem is, in 2 taps, without describing which screen. Children keep 🚩 and Chamku; this button is for grown-ups and testers.\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
     "from": "claude"
+  },
+  {
+    "id": "class10-english-start",
+    "title": "Decide (with Seema): Class 9–10 start straight at Grammar Pro",
+    "ask": "Today a Class 10 student starts at \"What is a sentence?\" and Grammar Pro is locked behind ~60 easy topics. Hide English Units 0–9 for Classes 9–10 so they start at Grammar Pro: Tenses?",
+    "details": "**Found in today's clean test** (new Class 10 account): English → Unit 0 \"What is a sentence?\", \"The baby ___\"; Grammar Pro opens only after Units 0–9 and their Bosses. A topic Seema assigns does open directly, but everything else looks childish.\n\n**Proposal:** tag English Units 0–9 for Classes 1–8 only. Grammar Pro 1–6 already covers tenses, modals, agreement, reported speech and passive at the Class 9–10 level. Nothing is deleted; younger classes see no change.\n\n**How it ships:** Claude changes the class tags, tests on the emulator, publishes, you re-seed English.\n\n**YES** = do it. **NO** = keep Units 0–9 (tell Claude which ones Class 9–10 should keep).",
+    "from": "claude"
   }
 ]
