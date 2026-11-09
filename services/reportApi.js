@@ -9,6 +9,9 @@ import { getApp } from "@react-native-firebase/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { authInstance } from "../config/firebaseConfig";
+import { STUDY_REPORT_REASONS, studyReportId, buildStudyReportPayload } from "../utils/studyReport";
+
+export { STUDY_REPORT_REASONS, studyReportId };
 
 const db = getFirestore(getApp());
 
@@ -80,5 +83,38 @@ export function submitQuestionReport(r) {
   }).catch((e) => console.error("submitQuestionReport failed:", e));
 
   AsyncStorage.setItem(reportedKey(r.questionId), "1").catch(() => {});
+  return true;
+}
+
+/**
+ * Sends a study page or learn card report. Offline-safe, never throws.
+ * @param {object} r
+ * @param {string} r.contentId - e.g. "science-earth"
+ * @param {number|string|null} [r.cardIndex] - card number or "summary"
+ * @param {string|null} [r.section] - section name/id if long page
+ * @param {string} [r.title] - card or study page title
+ * @param {string} [r.text] - card text or summary
+ * @param {string} r.reason - "wrong_fact" | "confusing" | "spelling" | "picture_missing"
+ * @param {string} [r.note] - optional note, max 300 chars
+ * @param {object} [r.questContext] - { questId, nodeId }
+ */
+export function submitStudyReport(r) {
+  const user = authInstance.currentUser;
+  if (!user || !r?.contentId) return false;
+
+  const targetId = studyReportId({ contentId: r.contentId, cardIndex: r.cardIndex, section: r.section });
+  const payload = buildStudyReportPayload({
+    ...r,
+    userId: user.uid,
+    userName: user.displayName || null,
+    appVersion: Constants.expoConfig?.version || null,
+  });
+
+  addDoc(collection(db, "userFeedback"), {
+    ...payload,
+    createdAt: serverTimestamp(),
+  }).catch((e) => console.error("submitStudyReport failed:", e));
+
+  AsyncStorage.setItem(reportedKey(targetId), "1").catch(() => {});
   return true;
 }

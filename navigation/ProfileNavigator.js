@@ -14,6 +14,7 @@ import JoinAsTeacherScreen from "../screens/profile/JoinAsTeacherScreen";
 import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import GuidesScreen from "../screens/guides/GuidesScreen";
 import OwnerNotesScreen from "../screens/admin/OwnerNotesScreen";
+import IdeasReportsScreen from "../screens/admin/IdeasReportsScreen";
 import DecisionsScreen from "../screens/admin/DecisionsScreen";
 import LinkChildScreen from "../screens/profile/LinkChildScreen";
 import LinkParentScreen from "../screens/profile/LinkParentScreen";
@@ -100,6 +101,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           {/* Admin dashboard v0 (admin only; button on Profile). No header: Android back. */}
           <Stack.Screen name="AdminTools" component={AdminToolsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OwnerNotes" component={OwnerNotesScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="IdeasReports" component={IdeasReportsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Decisions" component={DecisionsScreen} options={{ headerShown: false }} />
           <Stack.Screen name="TeacherStart" component={TeacherStartScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Schools" component={SchoolsScreen} options={{ headerShown: false }} />

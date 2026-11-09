@@ -12,7 +12,8 @@ export const WORDS = {
   en: {
     title: (n) => `${n}'s week`,
     thisWeek: "THIS WEEK",
-    practised: (d, t) => `Practised ${d} of 7 days · ${t}`,
+    practised: (d, t) => `This week: ${d} ${d === 1 ? "day" : "days"} · ${t}`,
+    notPractised: (list) => `Not practised this week: ${list}`,
     more: (t) => `↑ ${t} more than last week`,
     less: (t) => `${t} less than last week`,
     strong: "Strong",
@@ -32,7 +33,8 @@ export const WORDS = {
   hi: {
     title: (n) => `${n} का हफ़्ता`,
     thisWeek: "इस हफ़्ते",
-    practised: (d, t) => `7 में से ${d} दिन अभ्यास · ${t}`,
+    practised: (d, t) => `इस हफ़्ते: ${d} दिन · ${t}`,
+    notPractised: (list) => `इस हफ़्ते अभ्यास नहीं किया: ${list}`,
     more: (t) => `↑ पिछले हफ़्ते से ${t} ज़्यादा`,
     less: (t) => `पिछले हफ़्ते से ${t} कम`,
     strong: "मज़बूत",
@@ -94,6 +96,15 @@ function strongest(stats, namer) {
   return best ? namer(best[0]) : null;
 }
 
+function lastActiveMs(stats) {
+  if (stats?.lastActiveAt) return stats.lastActiveAt;
+  const days = Object.entries(stats?.daily || {})
+    .filter(([, v]) => (v?.answered || 0) > 0)
+    .map(([k]) => new Date(k).getTime())
+    .sort((a, b) => b - a);
+  return days[0] || 0;
+}
+
 /**
  * @param {{ name: string, grade: number|null, quests: Array<{questId, title, stats, nodes, questNodes, namer}>, now?: number, lang?: "en"|"hi", weekIndex?: number }} p
  */
@@ -107,7 +118,7 @@ export function parentWeek({ name, grade = null, quests = [], now = Date.now(), 
   const min = Math.round(timeMs / 60000);
   const delta = Math.round((timeMs - prevMs) / 60000);
 
-  const subjects = quests
+  const allSubjects = quests
     .map((q) => {
       const namer = q.namer || ((x) => x);
       const weak = weakTopics(q.stats || {})[0];
@@ -115,19 +126,43 @@ export function parentWeek({ name, grade = null, quests = [], now = Date.now(), 
       const done = mains.filter((n) => q.nodes?.[n.id]?.status === "completed").length;
       const next = mains.find((n) => q.nodes?.[n.id]?.status !== "completed");
       const week = summarize(q.stats || {}, "week", now);
+      const subMin = Math.round((week.timeMs || 0) / 60000);
+      const lastActive = lastActiveMs(q.stats);
       return {
         questId: q.questId,
         title: q.title,
         answered: week.answered,
+        timeMs: week.timeMs || 0,
+        min: subMin,
         accuracy: accuracy(week),
         strong: strongest(q.stats, namer),
         practise: weak ? namer(weak.subtopic) : null,
         done,
         total: mains.length,
         next: next ? next.title : null,
+        lastActiveAt: lastActive,
       };
-    })
-    .filter((s) => s.answered > 0 || s.done > 0);
+    });
+
+  // Practised subjects: most recent first, already expanded
+  const subjects = allSubjects
+    .filter((s) => s.answered > 0 || s.timeMs > 0)
+    .sort((a, b) => (b.lastActiveAt || 0) - (a.lastActiveAt || 0) || b.timeMs - a.timeMs);
+
+  // Unpractised subjects for this grade: fold into one line
+  const unpractised = allSubjects.filter((s) => s.answered === 0 && s.timeMs === 0 && s.total > 0);
+  const unpractisedTitles = unpractised.map((s) => s.title);
+  const unpractisedText = unpractisedTitles.length ? w.notPractised(unpractisedTitles.join(", ")) : null;
+
+  // Breakdown for timeText: "Science 30 min, English 12 min"
+  const breakdown = subjects
+    .filter((s) => s.timeMs > 0 || s.answered > 0)
+    .map((s) => `${s.title} ${s.min > 0 ? w.min(s.min) : (lang === "hi" ? "<1 मिनट" : "<1 min")}`)
+    .join(", ");
+
+  const combinedTime = daysOn === 0 && min === 0
+    ? w.practised(0, w.min(0))
+    : `${w.practised(daysOn, w.min(min))}${breakdown ? ` · ${breakdown}` : ""}`;
 
   const weakest = subjects.find((s) => s.practise)?.practise || null;
   const tips = TIPS[lang] || TIPS.en;
@@ -135,10 +170,12 @@ export function parentWeek({ name, grade = null, quests = [], now = Date.now(), 
     title: w.title(name),
     days,
     daysOn,
-    timeText: w.practised(daysOn, w.min(min)),
+    timeText: combinedTime,
     deltaText: delta >= 5 ? w.more(w.min(delta)) : delta <= -5 ? w.less(w.min(-delta)) : null,
     deltaUp: delta >= 5,
     subjects,
+    unpractised,
+    unpractisedText,
     home: weakest ? w.homeTip(weakest) : w.homeNone,
     tip: tips[((weekIndex % tips.length) + tips.length) % tips.length],
     nothingText: daysOn === 0 ? w.nothing(name) : null,

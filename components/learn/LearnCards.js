@@ -10,6 +10,7 @@ import * as Speech from "expo-speech";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { quizPalette } from "../quiz/quizPalette";
 import { checkOptions, cardSpeech, allSeen } from "../../utils/learnCards";
+import ReportStudyButton from "../quiz/ReportStudyButton";
 
 const TINTS = {
   dark: { idea: ["#3A3322", "#21332A", "#2B2640", "#33262B"], check: "#3A2631", word: "#21332A", done: "#2B2640", ink: "#F4EDF5", soft: "#CFC3D1" },
@@ -27,7 +28,7 @@ const TINTS = {
  * @param {boolean} [props.canSkip] - show "Skip to quiz" (a quest step with a quiz after it)
  * @param {() => void} props.onShowPage - "See all on one page" (the old long page)
  */
-export default function LearnCards({ cards, title, cardKey = "", isDark, finishLabel, onFinish, canSkip = false, onShowPage }) {
+export default function LearnCards({ cards, title, cardKey = "", questContext = null, isDark, finishLabel, onFinish, canSkip = false, onShowPage }) {
   const P = quizPalette(isDark);
   const T = isDark ? TINTS.dark : TINTS.light;
   const insets = useSafeAreaInsets();
@@ -153,6 +154,14 @@ export default function LearnCards({ cards, title, cardKey = "", isDark, finishL
     <View style={s.screen}>
       <View style={s.top}>
         <Text style={s.topTitle} numberOfLines={1}>{title}</Text>
+        <ReportStudyButton
+          contentId={cardKey}
+          cardIndex={onSummary ? "summary" : index}
+          cardTitle={onSummary ? "Summary" : card?.title || card?.word || card?.question || `Card ${index + 1}`}
+          cardText={onSummary ? summary.join(". ") : card?.text || card?.meaning || card?.question || ""}
+          questContext={questContext}
+          color={P.textSoft}
+        />
         {canSkip && !last ? (
           <Pressable onPress={finish} hitSlop={10} accessibilityRole="button">
             <Text style={s.skip}>Skip to quiz ›</Text>
