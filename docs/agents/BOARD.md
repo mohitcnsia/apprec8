@@ -286,8 +286,8 @@ students see it." No new questions, no new screens.
    `teachesClassIds` include one of them, or the user is an admin/owner. Everyone else never sees it (Home, Progress, parent week).
 3. For students in that class the course tile comes **first** on Home. Keep the general English tile (decide later whether to fold it).
 4. Seema's "Assign a topic" lists this course (`questsForTeacher` must include courses for her class).
-5. Seed with SeedTileQuestButton (admin). Seema's class id comes from the owner after he creates her class (inbox card
-   "set up Seema's school and class"): ask in Antigravity, never guess. Until then use the Demo School class to test.
+5. Seed with SeedTileQuestButton (admin). Seema's class id: in Claude's git-ignored `docs/agents/private/seema-class.txt`
+   (class 10-A of Appreciate International School; never write it in the repo). Until then use the Demo School class to test.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
 

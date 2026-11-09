@@ -374,14 +374,20 @@
     "title": "To do: reach Claude from your phone (for live fixes during demos)",
     "ask": "In the Claude chat on your Mac, type /remote-control, then open the Claude app on your phone → Code. Keep the Mac awake. Tap YES once a message from your phone reaches Claude.",
     "details": "**Why:** during a demo you tell Claude what broke, from your phone, while you keep talking to the parent. Claude fixes it on your Mac and publishes when you say \"publish\".\n\n**Set up once:**\n1. Claude chat on the Mac (VS Code): type **/remote-control**. If it isn't offered there, open Terminal, `cd` into the apprec8 folder, run `claude`, then type **/remote-control**.\n2. Phone: open the **Claude** app (signed in with the same account) → **Code** → the apprec8 session.\n3. Mac: System Settings → Battery → Options → **Prevent automatic sleeping when the display is off** (when plugged in).\n\n**Backup when the Mac is off:** start a new session in the Claude app → Code. It can write the fix, but it can't publish to phones (that needs the Mac).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner: send notes in the app like everyone else; no Remote Control."
   },
   {
     "id": "tell-claude-in-app",
     "title": "Build: \"Tell Claude\" from inside the app (notes, not just Yes/No)",
     "ask": "A \"Tell Claude\" button on this Decisions screen: type or speak a note, it reaches Claude in seconds with the app version, online/offline and the last error attached. Claude replies on the card. Build it?",
     "details": "**For:** \"this broke during a demo\": one tap, you keep talking to the parent, Claude fixes it and asks \"Ready. Publish?\".\n\n**What gets built (Gemini builds, Claude reviews):**\n1. **Tell Claude** button at the bottom of Decisions (owner only); type or use the keyboard mic.\n2. The note adds by itself: app version, online/offline, the last error message shown.\n3. Notes reach the Mac in seconds (live listener instead of every 10 minutes; fewer reads too).\n4. Claude replies on the same card → a notification on your phone.\n5. Small rules change **DR-25**: your account may create cards, not only answer them.\n\n**Limit:** Claude acts only while a Claude session is open on the Mac. Otherwise the note waits and Claude reads it first thing next session.\n\n**YES** = Claude writes the task + DR-25.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Merged into the grown-up notes button (owner notes go to the same place, Claude reads them every session)."
   },
   {
     "id": "reseed-english-5-fixes",
@@ -395,7 +401,10 @@
     "title": "To do (5 min): set up Seema's school and class so she can add students",
     "ask": "Me → Admin tools → Schools → + New school (her school's name) → Add a class (Class 10) → open the class → Invite a teacher → send Seema the code. She types it in Me → Join as a teacher; you approve. Tap YES when done.",
     "details": "**Why:** teachers join a class through a school; nobody had made Seema's school yet, so she had nothing to share.\n\n**After:** Seema opens Progress → her class → **SHARE CODE** (WhatsApp) → parents join with their child → she approves each one.\n\n**Test it once with Pratha's account first** (join, approve, assign a topic) before her class gets the message.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Done by the owner: Appreciate International School, 10-A + 7-A, invites made. Seema types her 10-A code."
   },
   {
     "id": "independent-teachers",
