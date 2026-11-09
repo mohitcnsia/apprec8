@@ -474,7 +474,7 @@ the shape (content-quality remit):
    and a right answer on a question that has `why`s (Claude adds them to 3 Grammar Pro questions for the test).
 `gemini(G82): done — review please`.
 
-### G83 · [done] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
+### G83 · [todo] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
 For each of the ~666 questions: write `why` for each wrong option (≤ 20 words, kid-friendly, says what rule it breaks). Also
 check each question has **at least one near miss** (looks right, isn't) and **exactly one defensible answer**; list any
 question where a near miss could be argued right (that is a High issue, like today's 5). Don't change correct answers or
