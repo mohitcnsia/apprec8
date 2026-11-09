@@ -273,7 +273,7 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
-**000) G89 two-way cards on Home (owner + Seema: FIRST; then Claude writes: assigned work first + all levels unlocked → check-up with score by topic + "No internet" → weekly report → challenge track)**, **00) G87 assignment done = mistakes fixed + results by name (owner: pilot)**, **0) G84 Needs you + teacher Home (owner + Seema: TOP)** → G84b Remind, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
+**000) G89 two-way cards on Home → G90 pilot ready (sign-up, assigned first, all open) → G91 check-up by topic + No internet → G92 weekly report (mockup first) → G93 challenge track (content first)** (Seema's decisions, 2026-11-10), **00) G87 assignment done = mistakes fixed + results by name (owner: pilot)**, **0) G84 Needs you + teacher Home (owner + Seema: TOP)** → G84b Remind, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
 **00) G72 URGENT Seema's account (done)**, **000) G74 deploy DR-22 after owner OK**, **0a) G73 Grammar Pro fixes (Seema's pilot content)**, **0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
@@ -305,6 +305,47 @@ teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifa
 7. Pure logic in `utils/cards.js` + tests (who sees which card, open/closed/past, kid vs adult answer). Rules change = a Deploy
    request in CODE_REVIEW.md; don't deploy. Clean test (RULE) incl. dark mode; screenshots in G89.md.
    `gemini(G89): done — review please`.
+
+### G90 · [todo] · gemini · Pilot ready: sign-up check + assigned work first + all levels open (Seema's decisions 2, 3, 5, 6; 2026-11-10)
+Seema's final decisions. Mostly existing code: verify, then close the gaps. No new screens.
+1. **Sign-up (decision 2 + 3).** The flow is: parent on their OWN phone → Me → add child (`AddChildScreen`, consent in English /
+   Hindi, `createChildProfile`) → the child signs in with the parent's code → Me → Join a class (code) → Seema approves.
+   Existing kid accounts (e.g. Pratha): the parent links them with the existing one-time link code (familyActions, line ~197).
+   Gaps to close: (a) `JoinClassScreen` asks for consent AGAIN on the child's phone; when a parent consent record exists, skip it.
+   (b) **No parent consent = no class**: a kid with no parent consent sees "Ask your parent to add you in their Apprec8" (+ how,
+   in one line) instead of the on-screen consent form. Teachers/adults unaffected. Server side too: the join callable refuses
+   without a consent record. Deploy request if functions/rules change.
+2. **Assigned work first on Home (decision 5)**: "From your teacher" is the first section on a kid's Home (only G89's open
+   cards above it); a tap opens that topic directly, never blocked by path locks (`questTree.js` already opens assigned mains:
+   check boss/gates/side nodes of an assigned topic too).
+3. **All levels open for pilot kids (decision 6)**: one admin-set flag on the class doc (`pilotUnlockAll: true`, set from Admin
+   tools' class list or the console; no teacher UI). Kids in such a class get `buildQuestPath(..., { unlockAll: true })`,
+   same as tester mode. Pure helper + test.
+4. Clean test (RULE): new parent → add child → child joins Seema's test class → approve → Home shows the assignment first →
+   locked-looking nodes are open. Plus a kid without a parent: blocked with the message. `gemini(G90): done — review please`.
+
+### G91 · [todo] · gemini · Check-up: any paper gives a score by topic + a clear "No internet" (pilot piece 1; 2026-11-10)
+The week-1 check-up uses the EXISTING papers (`screens/paper/PracticePaperScreen.js`, `utils/paperSession.js`; each question
+already has `topic.quest` / `topic.node`). No new paper, no start code or timer lock (those wait for the scholarship exam).
+1. Results: per topic, "Accuracy" (owner's word) + right/total, sorted weakest first; topics under 60% marked "Practise this"
+   (tap → practice on that topic, reuse `utils/subtopicPractice.js` / `EndlessPractice` with `onlySubtopic`).
+2. Save one result per finished paper (by topic) where the teacher's class screen and the weekly report can read it cheaply
+   (reuse `questAttempts`/stats if they already hold it; else one small doc per attempt; check docs/COSTS.md; ask Claude if
+   unsure). Every time, same scoring: pure `utils/paperTopics.js` + tests.
+3. **No internet** (G78's message for papers): when offline, say so plainly ("No internet. Your answers are safe on this
+   phone; we'll send them when you're back online"), never a spinner or a lost paper. Answers already save on the phone.
+4. Clean test (RULE) incl. airplane mode mid-paper. `gemini(G91): done — review please`.
+
+### G92 · [waiting: Claude's mockup → owner] · gemini · Weekly report on WhatsApp (Seema's decision 4; 2026-11-10)
+Per child: quizzes attempted, streak, Accuracy, assigned-work status, whether weak topics were practised. **Each parent gets
+their own child's report privately** (share sheet → WhatsApp, a well-designed image card). **The class WhatsApp group gets
+one summary with no names** (owner agreed 2026-11-09). Reuse `utils/weeklySummary.js`, `utils/parentWeek.js`. Claude makes the
+mockup first; this task opens as [todo] after the owner approves it.
+
+### G93 · [waiting: content from the owner] · gemini · Challenge track for kids at 80%+ (pilot piece 4; 2026-11-10)
+Kids at 80% or more on a topic get harder questions: achiever's sections from the owner's olympiad books (Class 5, Class 9)
+and real Class 10 board papers. Questions stay original (rule: papers as a guide). Opens when the owner shares the books and
+Claude has written + checked the questions.
 
 ### G87 · [todo] · gemini · ⭐ PILOT: an assignment is done only when its mistakes are fixed + the teacher sees results by name (owner, 2026-11-09)
 Owner (as a 10-A student): finished every assigned topic, 6 mistakes left, nobody nudged him: "Without this nudge kids will just
