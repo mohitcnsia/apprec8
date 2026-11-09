@@ -304,7 +304,7 @@ ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
    waiting; approved count; active this week; current assignment; weakest topic). Missing → hide the line or "—",
    never a number from the mockup.
 4. Grep the whole diff for 52, 86, 38, 24, "Reported", "Tenses (had done)", "10-B", "Pratha" before finishing.
-5. Add the later spec items if not done yet: the Home guide card (Y1–Y3), "this phone or their own phone?" after Add a
+5. **Seema (2026-11-09): "the first guide should appear on Home before all else."** For a new user the guide card is the **first card on Home**, above subjects / children / classes, until finished or ✕ (then the one-time "guides are in Me → Guides" note). Teachers: the first card is "For teachers: start here" (the one-pager with DO IT buttons), then "Start your class"; parents: "For parents"; children: "Your first day". Add the other later spec items if not done yet: the Home guide card (Y1–Y3), "this phone or their own phone?" after Add a
    child, explanations on code screens, short Progress "Me" view, and the two-role (teacher + parent) layout.
 6. Screenshots with the Demo School logins (parent, teacher) and the tester account (child) in G49-R.md.
 Then G50 (learn first) is rebased on the fixed branch. `gemini(G49-R): done — review please`.
