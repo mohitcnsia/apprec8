@@ -2366,7 +2366,9 @@ Nothing else changes; every other field the rule reads is guarded already. **DR-
 `firebase deploy --only firestore:rules` from Claude's folder after the owner's OK, then tests the first-run sheet
 with a brand-new throwaway account (child, Class 5) and deletes it.**
 
-## 2026-11-09 — DR-23 (CRITICAL security): delete the 2025 HTTP content endpoints (Claude, from Gemini's G60)
+## 2026-11-09 — DR-23 (tidy-up, owner OK): delete the 2025 HTTP content endpoints (Claude, from Gemini's G60)
+**Correction (owner was right):** the endpoints are IAM-private: a request without a token gets HTTP 403 from Google
+before the function runs (tested 2026-11-09). Not publicly exploitable; deleting is defence in depth + dead code.
 `functions/api/*.js` (2025 content scripts) are still deployed as public HTTP functions **with no auth check**;
 `deleteAllDocuments` deletes documents in any collection by field match (e.g. `users`), and the repo is public. None
 are called by the app (checked). Code: no longer exported from `functions/index.js` (31 functions remain).

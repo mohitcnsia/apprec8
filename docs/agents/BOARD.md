@@ -307,6 +307,12 @@ English.** `gemini(G73): done — review please`.
 Also: list in G75.md which real classes / accounts the G56 rehearsal created (e.g. "Glorious Academy 5-A",
 "Kabir", "Pooja") and delete the throwaway accounts if any remain. `gemini(G75): done`.
 
+### G76 · [todo] · gemini · Deploy DR-23: delete the 26 old HTTP content functions (owner-approved: yes, 2026-11-09 "OK (DR-23)")
+CODE_REVIEW.md "DR-23". They're IAM-private (403 without a token) and unused by the app; no longer exported from
+functions/index.js. Run the `firebase functions:delete … --region us-central1 --project apprec8-ca229 --force` command
+from CODE_REVIEW.md (drop any name the CLI says doesn't exist), then `firebase functions:list` and report the remaining
+count in G76.md. Don't delete anything else from G60 yet. `gemini(G76): done`.
+
 ### G49-R · [todo] · gemini · ⭐ REWORK row Z (Claude's review, 2026-11-09): real data only
 Branch feat/simple-home. **Rebase on the latest `feat/quiz-redesign` first** (it changed HomeScreen, MeScreen,
 ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
