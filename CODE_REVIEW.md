@@ -2379,3 +2379,13 @@ getGameContent getDocumentsById addCategory addTopic createQuiz addQuizQuestion 
 updateTopic updateQuizDetails updateQuestions updateFirestoreDocuments --region us-central1 --project apprec8-ca229
 --force` (owner or Gemini, after the owner's OK). The rest of G60 (content cleanup, buckets, indexes) waits for its
 own review and the Unit 1 quiz migration.
+
+## 2026-11-09 — Review of G64 + G65 + G66 (merged) and DR-24 (Claude)
+Merged Gemini's branch: parent's week shows all subjects first (G64), 🚩 on reading pages and Learn cards (G65), the
+children's feedback pipeline (G66: Me → idea, weekly Home prompt, Admin tools → Ideas & reports, private export
+`scripts/admin/feedback.mjs` → git-ignored `docs/agents/private/`). Claude's fixes: removed the "+5 ⭐" promise (the
+phone can't write stars, rules forbid it; it failed silently, so children were promised stars they never got; stars
+for answering come from the server with a daily cap in G69); first name only in feedback records.
+**DR-24 (rules):** `userFeedback`: owner may read and tick status (`allow read: isAdmin()`, `allow update: isAdmin()`
+only `status`/`doneAt`). Without it the owner's Ideas & reports screen stays empty. Deploy:
+`firebase deploy --only firestore:rules --project apprec8-ca229` after the owner's OK.
