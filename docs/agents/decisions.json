@@ -1,505 +1,516 @@
 [
- {
-  "id": "push-test-1",
-  "title": "Test: did the notification work?",
-  "ask": "Did a notification arrive on your phone, and did tapping it open this screen?",
-  "details": "This checks the whole loop: Claude writes a question → Gemini's script sends it → your phone buzzes → you tap an answer → Claude reads it.\n\n**YES** = all worked. **NO** = something didn't (add a note: no buzz, or the tap opened the wrong screen).",
-  "from": "claude",
-  "answer": "no",
-  "note": null,
-  "answeredAt": "2026-11-06T06:06:21.448Z"
- },
- {
-  "id": "row-x-ship",
-  "title": "Ship the parent-consent screens (row X)?",
-  "ask": "Students who signed up alone see \"Ask a parent or guardian\" until a parent links them or they join a class. Plus College / grown-up and \"say it appreciate\". Ship it?",
-  "details": "**What changes for kids:** a student with no parent linked and no class sees only the \"Ask a parent or guardian\" screen: send a WhatsApp message to the parent, type the parent's code, or join a class with a code. Nothing is saved before a parent says yes (India's DPDP Act and Google Play's family rules).\n\n**Your 3 yeses are in:** College / grown-up (year of birth, 18+ skips the gate), \"parent or guardian\" wording, sign-in says \"appreciate\" out loud once.\n\n**Before it ships:** link Pratha to your account (Me → Link my child's own account), or she sees the gate too. Gemini's test account Sam also gets the gate (good: it tests it).\n\n**YES** = Claude merges and publishes to everyone on 20.0.30. Mockup: rows X1–X5 on the canvas (link above).",
-  "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-  "from": "claude",
-  "answer": "no",
-  "note": "Replaced by learn first (X6–X9), approved in chat.",
-  "via": "chat"
- },
- {
-  "id": "unconsented-erase",
-  "title": "The one old student with no parent",
-  "ask": "One account (Class 5, signed up April 2025) has no parent linked. Delete it only if no parent says yes within 14 days after the gate ships?",
-  "details": "Found by Gemini (G45). After the gate ships, this child sees \"Ask a parent or guardian\" on their next open. If nobody says yes in 14 days, the account and its data are deleted (same deletion as \"Delete my account\").\n\n**YES** = wait 14 days, then delete. **NO** = keep it (say why in the note).",
-  "from": "claude",
-  "answer": "no",
-  "note": "Don't delete: restrict to learning only; the rest unlocks when a parent approves (= learn first).",
-  "via": "chat"
- },
- {
-  "id": "store-listing-1",
-  "title": "Store name and text",
-  "ask": "Use \"Apprec8: Learn & Grow\", the short description \"Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.\" and feature graphic draft 2?",
-  "details": "The full description is in My notes → Store listing. It starts \"Apprec8 (say it \"appreciate\") helps children learn a little every day…\" and lists subjects as \"English and Science today, with Maths and reasoning coming next\".\n\n![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)\n\n**YES** = paste it into Play Console (Store listing). **MORE DETAILS** = Claude explains or changes it.",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Approved on the review page (chat 6 Nov evening). Graphic: draft 2 without green checks until Gemini's logos.",
-  "via": "chat"
- },
- {
-  "id": "home-first-day-card",
-  "title": "\"Your first day\" card on Home for new children?",
-  "ask": "New children see a small card on Home, \"⭐ Your first day · 0 of 4\", until they finish the 4 guide steps. Add it?",
-  "details": "Today the guides sit in Me → Guides, where a new child won't look. The card would sit under the quests, calm (one line + a small progress bar), and disappear for good after the 4th step or after 7 days. Tapping it opens the guide.\n\n**YES** = Claude draws a mockup first, then builds it. **NO** = guides stay in Me only.",
-  "from": "claude",
-  "answer": "yes",
-  "note": "This should be everyone. Every time app is opened and if they deliberately close it. Then on we don't show but tell them once where it can be found",
-  "answeredAt": "2026-11-06T06:07:33.653Z"
- },
- {
-  "id": "whats-new-card",
-  "title": "A \"What's new\" card after each update?",
-  "ask": "After an update, grown-ups see one card on Me: \"What's new: 3 things\", each with a DO IT button that opens the screen. Add it?",
-  "details": "Helps you, Seema, parents and teachers keep up as features arrive (you said you can't follow them all anymore). Children don't see it. One card per update, dismissed with one tap.\n\n**YES** = mockup first, then build. **NO** = the App map in My notes is enough.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-06T06:06:01.293Z"
- },
- {
-  "id": "row-y-guide-cards",
-  "title": "Mockup: guide card on Home + What's new",
-  "ask": "Your 2 yeses as screens (canvas row Y, 4 screens). Build it like this?",
-  "details": "**Y1/Y2 Home:** a calm card above the quests: children see \"Your first day · 1 of 4\", grown-ups \"Tour of Apprec8\". It shows on every open until all steps are done or ✕ is tapped (your note).\n\n**Y3 after ✕:** one green note, \"The guides are always in Me → Guides\", then never again.\n\n**Y4 Me:** \"What's new · 3 things\" for grown-ups after each update, each with DO IT (opens that screen). ✕ hides it until the next update. Children never see it.\n\n**YES** = Claude builds it and asks you before publishing.",
-  "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-  "from": "claude",
-  "answer": "later",
-  "note": "Folded into the simplicity pass (row Z).",
-  "via": "chat"
- },
- {
-  "id": "task-c10-testers",
-  "title": "Task for tomorrow: 12+ testers (C10)",
-  "ask": "Set up the testers' Google Group and send the WhatsApp message. Tap YES when done, LATER to be reminded in 24 hours, MORE DETAILS if you're stuck.",
-  "details": "**1. Google Group (laptop, 5 min):** groups.google.com → Create group → name \"Apprec8 testers\", email `apprec8-testers`. Who can join: anyone on the web. Who can see members / post / view conversations: **group managers only**.\n\n**2. Play Console (5 min):** Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups → `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link.\n\n**3. WhatsApp to 15–16 grown-ups** (parents, family, friends, Seema and colleagues):\n1) Join: https://groups.google.com/g/apprec8-testers → Join group\n2) Become a tester: (the Join on the web link)\n3) Install after Sunday: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\"Please stay in the group for 2 weeks.\"\n\nGoogle's 14-day clock starts once 12 have opted in. Full steps: My notes → Play forms.",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Done in chat 6 Nov: Google Group apprec8-testers created (managers-only privacy), set on the closed track, early members invited.",
-  "via": "chat"
- },
- {
-  "id": "english-reseeded",
-  "title": "Did you re-seed English?",
-  "ask": "Admin tools → Update English Quest, after 5 Nov. Without it, Grammar Pro (Class 9–10) isn't on phones. Done?",
-  "details": "**YES** = done. **NO** = not yet: do it now (2 minutes; close and reopen the app first). **LATER** = remind me tomorrow.",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Already seeded (chat).",
-  "via": "chat"
- },
- {
-  "id": "task-seema-pilot-prep",
-  "title": "Task: Seema's pilot prep",
-  "ask": "3 things before students join: Seema checks Grammar Pro questions, a 30-minute dry run with her, the school's consent form. Tap YES when done, LATER for a reminder.",
-  "details": "**Dry run (owner + Seema):** you: Me → Guides → Set up a school (school, class 10-B, invite Seema). Seema: Join as a teacher → you approve → Me → Guides → Start your class with 2 test students → **assign a Grammar Pro topic** (Class 10 students otherwise start at the basics).\n\n**Students:** they join the testers' Google Group too, so they also count for Google's 12 testers (C10).\n\nThe WhatsApp message for students and parents is ready: My notes → Seema's pilot (after the next publish).",
-  "from": "claude"
- },
- {
-  "id": "consent-listen-button",
-  "title": "🔊 Listen button on the parent's consent note?",
-  "ask": "Many parents can't read well. Add a 🔊 Listen button that reads the consent note aloud (हिंदी or English), on Join a class and Link my child?",
-  "details": "Uses the phone's voice, the same as the quiz read-aloud. No new data, no cost. One small button next to the note; the parent still types their name and ticks agree.\n\n**YES** = Claude builds it (small change) and asks before publishing. **NO** = leave as is.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-07T02:36:19.996Z"
- },
- {
-  "id": "seema-confusions",
-  "title": "What confuses Seema most?",
-  "ask": "Ask Seema for her 3 biggest confusions in the app, in her own words. Type them in the note, then tap YES.",
-  "details": "Before we build anything else, we fix what confuses her: if she finds it hard, every teacher will.\n\nHer one-page start (4 jobs, what to ignore, the legal part in plain words) is here; share it with her from the page's Share menu:\nhttps://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5\n\nThen 20 minutes together on the Demo School teacher login (made-up class, nothing reaches real children).",
-  "link": "https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Send this to seems too. Maybe on her homepage. She will start the exploration of app today.",
-  "answeredAt": "2026-11-07T02:40:41.579Z"
- },
- {
-  "id": "simplicity-pass",
-  "title": "Simplicity first: pause new features?",
-  "ask": "Pause new features (Dog Squad, What's new, Home guide card) until the 5 most common jobs take 2 taps or fewer. Pilot, fixes and content go on.",
-  "details": "**The 5 jobs:** a child continues learning (one big ▶ Continue at the bottom of Home), a child fixes mistakes, a parent sees their child's week (on Home), a teacher sees their class (on Home), anyone finds help.\n\nEverything else folds under **More** on Me (nothing deleted). Claude counts today's taps for each job, draws a mockup (row Z) and asks you here before building.\n\n**YES** = pause + simplicity pass now. **NO** = keep building features.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-06T07:34:58.539Z"
- },
- {
-  "id": "owner-view-as",
-  "title": "A \"View as\" switch for you?",
-  "ask": "Your account sees about twice what a child sees. Add an owner-only switch: View as child · parent · teacher, to see exactly what they see?",
-  "details": "Your Home also shows Explore, More practice, old classrooms, the Fun tab, every unit open and admin. That makes the app feel more complex to you (and to Seema on your phone) than it is for a child.\n\nThe switch changes only what your phone shows; nothing is saved to anyone.\n\n**YES** = build it with the simplicity pass.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-06T07:30:20.992Z"
- },
- {
-  "id": "row-x-learn-first",
-  "title": "Row X change: children learn right away?",
-  "ask": "Instead of blocking, children learn right away on the phone with nothing saved to their name. A parent's yes is needed only to save stars, join a class or appear on leaderboards. OK?",
-  "details": "Today's row X stops a child who signed up alone at \"Ask a parent\". That ends \"log in and learn right away\", which is what you liked.\n\n**New idea:** the child learns at once; progress stays on the phone and nothing identifies them. A small card says \"Ask a parent to save your stars ⭐\" (the same 2 ways: parent's code or a class code).\n\nLegally sound in our reading (nothing about the child is stored under their name before the yes), but a lawyer checks before the public release.\n\n**YES** = Claude redraws row X like this (mockup first). **NO** = keep the gate as designed.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-06T07:32:58.739Z"
- },
- {
-  "id": "owner-confusions",
-  "title": "What confused you most?",
-  "ask": "Type the 2–3 moments in the app that confused you or took too many taps (e.g. \"finding my mistakes\", \"where is Pratha's progress\"). Then tap YES.",
-  "details": "These go first in the simplicity pass, together with Seema's.",
-  "from": "claude",
-  "answer": "yes",
-  "note": "How to use the app; how to add a child like Pratha (can see her in My children but not sure how she got there); a few dummy kids would have helped; how would parents or teachers figure it out? (chat)",
-  "via": "chat"
- },
- {
-  "id": "publish-teacher-page",
-  "title": "Publish the teachers' page to phones now?",
-  "ask": "Ready: \"For teachers: start here\" (Me → Guides, and Admin tools) with a SHARE button for WhatsApp, the show/hide eye on the Demo password, and new My notes tabs (Play forms, Seema's pilot). Publish to everyone on 20.0.30?",
-  "details": "Nothing changes for children. Grown-ups see one more card at the top of Me → Guides. You see it in Admin tools too, to share it with Seema.\n\n**YES** = Claude publishes (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat). **LATER** = ask again tomorrow.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-06T07:34:39.055Z"
- },
- {
-  "id": "row-x-learn-first-mockup",
-  "title": "Mockup: children learn first (row X, 4 new screens)",
-  "ask": "Your yes, drawn: a child learns right after name + class; a calm card says \"12 stars, on this phone only. Ask a parent to save them\". Only the leaderboard and class wait. Build it like this?",
-  "details": "**X6 Home:** learning starts at once; the card never blocks.\n\n**X7 Tap the card:** ask a parent or guardian (send on WhatsApp, the parent's 6-number code, or a class code), or **Not now**.\n\n**X8 Progress:** stars and streak work; the leaderboard says \"Opens when a parent says yes\".\n\n**X9 Parent said yes:** \"Your 23 stars are saved now\", leaderboard and class open.\n\n**What it means for the build:** until the yes, answers and stars stay on the phone (not on our servers); on the yes they move to the child's account. About 1–2 days of work; replaces the blocking gate. College / grown-up, the message to the parent and \"say it appreciate\" stay.\n\nCanvas, scroll to the newest row X (X6–X9).",
-  "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Build it (chat 6 Nov evening).",
-  "via": "chat"
- },
- {
-  "id": "owner-extras-built",
-  "title": "Built: Owner extras switch (your \"View as\")",
-  "ask": "Me → ADMIN → Owner extras: Off shows what other grown-ups see. For a child's view: My children → add a test child (e.g. \"Test\", Class 10) → Play as. Publish it with the teachers' page?",
-  "details": "**Off hides:** old quizzes and classrooms on Home, Fun extras, tester mode (unlock-all, drafts), admin-only guides, the Kids view in Progress. **Stays:** Me → ADMIN (to switch back), Decisions, Admin tools.\n\nOnly your phone changes; nothing is saved to anyone.\n\n**YES** = publish it together with the teachers' page (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat).",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Published 6 Nov 13:04 with the teachers page.",
-  "via": "chat"
- },
- {
-  "id": "row-z-simple-home",
-  "title": "Mockup: a simpler Home and Me (row Z)",
-  "ask": "Home shows what each person came for: a child gets ▶ CONTINUE (1 tap to the next step), a parent sees their child's week, a teacher sees their class. Me shows help + 3 rows, the rest under More. Build it like this?",
-  "details": "**Taps today → after:**\n- Child continues learning: 3–4 → **1**\n- Child fixes mistakes: 2–3 → **1–2**\n- Parent sees child's week: 3 → **0**\n- Teacher sees class: 3 → **0**\n- Help: 2 → 2\n\n**Z1 child:** \"Up next: Kinds of sentences\" + big ▶ CONTINUE at the bottom; mistakes card; other quests small below.\n**Z2 parent:** \"Pratha's week\" card (days, minutes, % right, one topic to practise together) + ▶ LET PRATHA PLAY.\n**Z3 teacher:** class card (waiting, who practised, what to reteach) + ASSIGN NEXT TOPIC.\n**Z4 Me:** Need help, My class, My children, Guides, More (reminders, messages, edit profile, delete account).\n\nSomeone who is parent and teacher sees both cards. Nothing is deleted. With this, the Home guide card (row Y) may not be needed.\n\nCanvas: scroll to row Z.",
-  "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Approved after the review page, with owner's fixes: a ▶ per subject (no single Continue), parent/teacher cards low in thumb reach (chat 6 Nov evening).",
-  "via": "chat"
- },
- {
-  "id": "name-appreci8",
-  "title": "Later: rename to Appreci8?",
-  "ask": "With the \"i\", the name reads \"appreciate\" by itself. Decide once Gemini's logos (both spellings) are in. Rename?",
-  "details": "**What changes:** the name on the Play Store, the app's home screen label, the logo, the store text and the policy pages. **What can't change:** the internal app ID (com.mohitchilkoti.apprec8); nobody sees it. Existing users just see the new name after an update.\n\nCheapest before the public launch. Tap **LATER** until you've seen the logos.",
-  "from": "claude",
-  "answer": "yes",
-  "note": "I am open to ideas here. I need something that looks good and is punchy. I really like the sound of appreciate and the idea behind it",
-  "answeredAt": "2026-11-07T02:39:40.617Z"
- },
- {
-  "id": "task-store-listing",
-  "title": "Task: paste the store listing into Play Console (10 min)",
-  "ask": "Play Console → Grow users → Store presence → Main store listing: paste the name, short and full description, upload the feature graphic. Tap YES when done, MORE DETAILS if stuck.",
-  "details": "Everything to paste is in **My notes → Store listing**:\n- App name: **Apprec8: Learn & Grow**\n- Short description: **Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.**\n- Full description: copy from My notes.\n- Feature graphic (1024×500): https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png (save it on the laptop, then upload).\n- Phone screenshots: Gemini's in docs/release/screenshots (light), 4–8 of them.\n\nThen Save → it goes with the next review. Gemini's logos can replace the graphic later.",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Done in chat 6 Nov (submitted with 9 changes).",
-  "via": "chat"
- },
- {
-  "id": "task-seema-whatsapp",
-  "title": "Task: send Seema's WhatsApp message (when 3 things are done)",
-  "ask": "Send it when: 1) Google approved and you pressed Publish, 2) Seema's class exists (you have the code), 3) Seema tried it with 2 test students. Tap YES when sent.",
-  "details": "**Message (fill in the class code):**\n\n📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this **with a parent**, on the phone the student will use:\n\n1️⃣ Join the testers' group (use the Google account on that phone): https://groups.google.com/g/apprec8-testers → Join group\n\n2️⃣ Become a tester: https://play.google.com/apps/testing/com.mohitchilkoti.apprec8 → Become a tester\n\n3️⃣ Install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\n4️⃣ Open Apprec8 → Continue with Google → first name → Class 10.\n\n5️⃣ Me → Join a class → code ______ → the parent reads the short note (English or हिंदी), types their name, agrees.\n\nPlease stay in the group for at least 2 weeks. 🙏",
-  "from": "claude"
- },
- {
-  "id": "task-owner-practice",
-  "title": "Task: master the app first (45 min, private)",
-  "ask": "Before the dry run with Seema: practise alone with the Demo School (nothing reaches real people). Tap YES when done, LATER for a reminder.",
-  "details": "5 short parts: 1) see it as everyone else (Owner extras Off + the Tour guide), 2) be a child (Play as a test child), 3) be a parent (demo.parent login), 4) be a teacher (demo.teacher login), 5) back to you.\n\nStep by step: **My notes → Master the app** (after the next update), or ask Claude to send the steps.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-07T05:30:11.884Z"
- },
- {
-  "id": "brand-pick-1",
-  "title": "Gemini's logos: which direction?",
-  "ask": "3 sheets below. YES = go with Direction 1 (Cosmic Star: Chamak above a gold ∞ that breaks into pixels). NO = none yet. Type in the note which one you like, or what to change.",
-  "details": "**Claude's view:** the 7 subject icons are good (same in all 3). The app icon works. The 3 directions are very similar, and in the wordmark the ∞ floats beside the word instead of being its last letter; Gemini fixes that next.\n\n**1. Cosmic Star**\n\n![1](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg)\n\n**2. Infinite Bloom**\n\n![2](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-infinite-bloom.jpg)\n\n**3. Playful Geometric**\n\n![3](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-playful-geometric.jpg)",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg",
-  "from": "claude",
-  "answer": "no",
-  "note": "The infinity symbol looks like a worm rather then inspiring eight and infinity. Rest is good. Fis the infinity symbol please..you can just show me the infinity symbol and then use it to save effort",
-  "answeredAt": "2026-11-06T20:01:27.037Z"
- },
- {
-  "id": "task-ask-pratha",
-  "title": "Task: ask Pratha 3 questions (before we build the hook)",
-  "ask": "5 relaxed minutes, no pressure. Type her answers in the note, then tap YES. LATER = remind me tomorrow.",
-  "details": "**Ask her:**\n1. \"What's the most fun thing you'd want in a learning app?\"\n2. \"Would you like to make a quest or questions for other kids?\"\n3. \"What would you do if a friend sent you a challenge in the app?\"\n\n**And tell her:** she's the official tester of the fun names for the English units (Gemini's list comes soon); her vote decides.\n\nHer answers tell us which hook to build first: stories with read-aloud, creator mode, or challenge a friend (plan: My notes → Why they'll love it).",
-  "from": "claude",
-  "answer": "no",
-  "note": "No we will make an autonomous activity for her to answer these to the app. Why should I ask, the app is her buddy. It is between them.",
-  "answeredAt": "2026-11-07T08:47:51.724Z"
- },
- {
-  "id": "task-reseed-eng-sci",
-  "title": "Task: re-seed English and Science (2 min)",
-  "ask": "Me → Admin tools → update English Quest, then Science Quest. Tap YES when done.",
-  "details": "**English:** removes the old IEO picture from the quest page.\n**Science:** fixes the teeth fact Pratha found (20 milk teeth are replaced; extra molars make 32).\n\nContent only: no app update needed. Close and reopen the app afterwards to see it.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-07T09:05:24.125Z"
- },
- {
-  "id": "task-play-publish",
-  "title": "Task: when Google approves → Publish",
-  "ask": "When Google's email says the changes are approved: Play Console → Publishing overview → Publish. Tap YES when done, LATER to keep the reminder.",
-  "details": "**Managed publishing is on**, so nothing goes live by itself. One click publishes: closed testing 20.0.30, the new store listing, target audience, Data safety.\n\nAfter that, testers who join get 20.0.30, and Seema's WhatsApp message can go out (once her class exists).",
-  "from": "claude"
- },
- {
-  "id": "meet-progress-review",
-  "title": "Tomorrow 7 pm: Progress tab design discussion",
-  "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
-  "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.\n\n**Also on the table:** ChatGPT's four-dashboard brief + concept image (docs/product/PROGRESS_REVIEW_TODO.md). Central question: activity vs real learning (mastery).",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-09T03:52:36.643Z"
- },
- {
-  "id": "mock-chamku-asks",
-  "title": "Mockup: Chamku asks (stickies + feedback)",
-  "ask": "The sticky note on Home, one question, the thank-you, and your results screen. Build it like this (Pratha first, then everyone)?",
-  "details": "**1. Sticky note on Home**\n\n![1. Sticky note on Home](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg)\n\n**2. One question**\n\n![2. One question](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca2.jpg)\n\n**3. Thank you**\n\n![3. Thank you](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca3.jpg)\n\n**4. Your results (Admin tools)**\n\n![4. Your results (Admin tools)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca4.jpg)\n\n**Claude's notes:** good; the answer emojis become our characters later (design rule). Voice comes in v2 (consent + privacy).\n\n**YES** = Gemini builds it (no app build needed). **MORE DETAILS** = tell me what to change.",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Approved (chat 9 Nov): great.",
-  "via": "chat"
- },
- {
-  "id": "mock-teacher-class",
-  "title": "Mockup: the teacher's class screen",
-  "ask": "Actions on top (approve, reteach one thing with one tap, who hasn't practised), filters for 32 students, suggested topics. Build it like this?",
-  "details": "**1. Class screen**\n\n![1. Class screen](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg)\n\n**2. Students (filters + search)**\n\n![2. Students (filters + search)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-2-students-list.jpg)\n\n**3. Assign a topic**\n\n![3. Assign a topic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-3-assign-topic.jpg)\n\n**Claude's notes:** this answers your notes from the demo teacher. Two fixes before building: \"Remind all\" goes to the **parents**, never children; the bright green button gets the calm style.\n\n**YES** = Gemini builds it with those two fixes.",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Approved (chat 9 Nov): looks good; with Claude's two fixes.",
-  "via": "chat"
- },
- {
-  "id": "mock-parent-link",
-  "title": "Mockup: the parent's \"yes\" page (no app needed)",
-  "ask": "A parent opens a WhatsApp link: Hindi or English, read aloud, 3 things we keep, name, relation, \"हाँ, मैं सहमत हूँ\". Build it like this?",
-  "details": "**The page (Hindi)**\n\n![The page (Hindi)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg)\n\n**After yes**\n\n![After yes](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl-done.jpg)\n\n**Claude's notes:** clear and kind. It needs a small server part (a deploy request for your OK) and a privacy-policy line.\n\n**YES** = Gemini builds it; the server part comes to you as a deploy request.",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Approved (chat 9 Nov): great.",
-  "via": "chat"
- },
- {
-  "id": "vote-cast",
-  "title": "Vote: the character cast (with Pratha!)",
-  "ask": "Chamku the star, Kurma the tortoise, Chiku the monkey, Madhu the bee, Cheenu the ant, Veda the owl. Keep these? Type any name changes in the note.",
-  "details": "**The cast**\n\n![The cast](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg)\n\n**The avatar builder (items won from the chest)**\n\n![The avatar builder (items won from the chest)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-avatar.jpg)\n\n**Claude's notes:** much more fun than our current star. Let **Pratha vote** on the names. One to think about: **Kurma** is the tortoise avatar of Vishnu, so some families may see it as religious; a neutral option is **\"Kachhu\"** or **\"Dadu Kachhua\"**.\n\n**YES** = keep the cast (with your note's changes).",
-  "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg",
-  "from": "claude",
-  "answer": "yes",
-  "note": "Kurma is fine (owner, chat 9 Nov). Pratha can still suggest names.",
-  "via": "chat"
- },
- {
-  "id": "vote-fun-names",
-  "title": "Vote: fun names for English units (with Pratha + Seema)",
-  "ask": "Pick A or B per unit, or type your own in the note. Seema checks the English, Pratha votes.",
-  "details": "| Unit | Today | A | B |\n|---|---|---|---|\n| 0 | Sentences | Sentence Safari | The Thought Express |\n| 1 | Parts of Speech | The Great Word Bazaar | Wordopolis |\n| 2 | Articles | The Ticket Gate | The Spotlight Booth |\n| 3 | Subject–Verb Agreement | The Rhythm Duo | The Perfect Match |\n| 4 | Spot the Error | Detective Desk | The Clue Hunter Agency |\n| 5 | Tenses | The Tense Time Machine | Chronos Island |\n| 6 | Modals & Tags | The Power Keys | Rules & Riddles |\n| 7 | Reported Speech & Passive | The Newsroom Studio | The Press Gallery |\n| 8 | Linking Words | The Connector Junction | The Bridge Builders |\n| 9 | Punctuation | Signpost Valley | Traffic Signals of Speech |\n| 10 | Word Building | The Word Factory | The Inventor's Forge |\n| Pro 1 | Tenses (9–10) | Timeline Architecture | Chronos Lab |\n| Pro 2 | Modals (9–10) | The Nuance Engine | Degrees of Certainty |\n| Pro 3 | Agreement (9–10) | Syntax Equilibrium | The Harmony Matrix |\n| Pro 4 | Reported Speech (9–10) | The Dialogue Decoder | The Discourse Studio |\n| Pro 5 | Active & Passive (9–10) | The Voice Inversion | Perspective & Focus |\n| Pro 6 | Editing (9–10) | The Editorial Suite | Precision Proofreading |\n\nThe grammar term always stays visible underneath (e.g. \"Noun Town · Nouns\"), so teachers find their topic. Topic names: 285-line list in docs/agents/reports/G61-names.md.\n\n**YES** = use all the A names (note any changes).",
-  "from": "claude",
-  "answer": "yes",
-  "note": "This should also land on pratha and seemas phones as polls and fun feedback activity. They should approve there. I can review with you as I have final say.",
-  "answeredAt": "2026-11-09T03:54:02.253Z"
- },
- {
-  "id": "go-live-feedback",
-  "title": "Ready: the feedback system + 2 fixes. Go live?",
-  "ask": "Children can send ideas (Me → 💡 idea, a weekly Chamku prompt on Home), 🚩 works on reading pages too, and the parent's week shows all subjects first. Publish it, and let Gemini switch on your Ideas & reports screen (DR-24)?",
-  "details": "**What children see:** Me → \"💡 I have an idea\" and once a week a small Chamku card on Home: tap answers; supervised accounts (Pratha) can also type. A thank-you from Chamku (no stars yet: stars for answering will come from the server, with a daily limit, in Chamku's stickies).\n\n**🚩 on reading pages:** tap-only reasons (wrong fact, confusing, spelling, picture missing).\n\n**Parent's week:** all subjects together first; no subject picker.\n\n**You:** Admin tools → **Ideas & reports**: every idea and report, newest first, with a done tick. It needs a small rules change (DR-24) so only you can read them.\n\n**Claude's review:** merged and tested; fixed one honesty problem (children were promised +5 ⭐ the phone can't give).\n\n**YES** = Claude publishes + Gemini deploys DR-24. **LATER** = wait until you're back.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-09T06:52:05.064Z"
- },
- {
-  "id": "link-pratha",
-  "title": "To do: link Pratha's own account to yours (keeps her progress)",
-  "ask": "Your phone: Me → My children → \"Link my child's own account\" → get a 6-letter code. Pratha's phone: Me → \"Link to my parent\" → type it. Tap YES when done (or MORE DETAILS if a step is missing).",
-  "details": "**Don't use \"Add a child\"** for Pratha: that makes a new, empty profile.\n\n**Your phone (signed in as you):** Me → My children → **Link my child's own account** → your name, Father, tick that you agree (हिंदी is there too) → a **6-letter code** (works once, for 24 hours; you can share it on WhatsApp).\n\n**Pratha's phone (signed in as her):** Me → **Link to my parent** → type the code → **Linked ✓**.\n\nAfter that: My children shows \"Pratha's week\" and Progress → My children shows her progress. She keeps her own login, stars and progress. No \"Play as\" for her (she has her own login).\n\n**If \"Link to my parent\" isn't on her Me screen:** her account has no class saved. Tap MORE DETAILS and Claude checks her account.",
-  "from": "claude"
- },
- {
-  "id": "offline-play-as",
-  "title": "Fix: \"Play as\" and the lock need internet, and fail without a clear message",
-  "ask": "Make every switch say \"No internet: turn on mobile data or Wi-Fi\", and let your PIN end the child's turn even offline (so you're never stuck). Gemini builds, Claude reviews, no new build needed. OK?",
-  "details": "**What happened (demo to a parent):** the internet was off, so \"Play as\" failed with a confusing message.\n\n**Why it needs internet:** \"Play as\" really switches who is signed in, so the stars go to the child, not to you. Only our server can do that switch, and it checks your PIN there so a child can't find it on the phone. The lock itself (Android pinning) works offline.\n\n**A bigger gap found while checking:** going back to you also needs the internet. If the internet drops during the child's turn, the \"Time's up\" screen can't be closed until it comes back (the phone's own PIN still unpins it, but the app stays paused).\n\n**The fix (Gemini, small, update over the air):**\n1. One clear message for every server action when offline: \"No internet. Turn on mobile data or Wi-Fi, then try again.\" Checked *before* the phone is pinned. Also covers adding a child, link codes, class codes, feedback.\n2. Your PIN also works offline: the phone keeps a scrambled copy of your PIN (set when you start Play as). Offline, the right PIN ends the turn (unpins, stops the timer, closes Time's up) and the app switches back to you as soon as the internet returns.\n\n**Later, with the next app build:** a small \"You're offline\" strip at the top of the app (needs a new library, so not over the air).\n\n**YES** = Claude writes the task, Gemini builds, Claude reviews before you see it.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-09T06:50:58.555Z"
- },
- {
-  "id": "phone-to-claude",
-  "title": "To do: reach Claude from your phone (for live fixes during demos)",
-  "ask": "In the Claude chat on your Mac, type /remote-control, then open the Claude app on your phone → Code. Keep the Mac awake. Tap YES once a message from your phone reaches Claude.",
-  "details": "**Why:** during a demo you tell Claude what broke, from your phone, while you keep talking to the parent. Claude fixes it on your Mac and publishes when you say \"publish\".\n\n**Set up once:**\n1. Claude chat on the Mac (VS Code): type **/remote-control**. If it isn't offered there, open Terminal, `cd` into the apprec8 folder, run `claude`, then type **/remote-control**.\n2. Phone: open the **Claude** app (signed in with the same account) → **Code** → the apprec8 session.\n3. Mac: System Settings → Battery → Options → **Prevent automatic sleeping when the display is off** (when plugged in).\n\n**Backup when the Mac is off:** start a new session in the Claude app → Code. It can write the fix, but it can't publish to phones (that needs the Mac).",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Owner: send notes in the app like everyone else; no Remote Control."
- },
- {
-  "id": "tell-claude-in-app",
-  "title": "Build: \"Tell Claude\" from inside the app (notes, not just Yes/No)",
-  "ask": "A \"Tell Claude\" button on this Decisions screen: type or speak a note, it reaches Claude in seconds with the app version, online/offline and the last error attached. Claude replies on the card. Build it?",
-  "details": "**For:** \"this broke during a demo\": one tap, you keep talking to the parent, Claude fixes it and asks \"Ready. Publish?\".\n\n**What gets built (Gemini builds, Claude reviews):**\n1. **Tell Claude** button at the bottom of Decisions (owner only); type or use the keyboard mic.\n2. The note adds by itself: app version, online/offline, the last error message shown.\n3. Notes reach the Mac in seconds (live listener instead of every 10 minutes; fewer reads too).\n4. Claude replies on the same card → a notification on your phone.\n5. Small rules change **DR-25**: your account may create cards, not only answer them.\n\n**Limit:** Claude acts only while a Claude session is open on the Mac. Otherwise the note waits and Claude reads it first thing next session.\n\n**YES** = Claude writes the task + DR-25.",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Merged into the grown-up notes button (owner notes go to the same place, Claude reads them every session)."
- },
- {
-  "id": "reseed-english-5-fixes",
-  "title": "To do: re-seed English (5 serious Grammar Pro mistakes fixed)",
-  "ask": "Close and reopen the app (so it gets the fix), then Me → Admin tools → re-seed English. Tap YES when done.",
-  "details": "**Fixed (Claude):** a marked-correct answer that added \"yesterday\" from nowhere (passive voice); 4 questions whose options didn't match the sentence (reported questions, passive questions, \"was lent\" ×2). Two explanations rewritten for children.\n\n**Steps:** close the app fully, reopen (it downloads the update), then **Me → Admin tools → re-seed English**. Phones fetch the new questions once.\n\nThe other 24 smaller issues: Gemini (G73), then one more re-seed.",
-  "from": "claude"
- },
- {
-  "id": "seema-class-setup",
-  "title": "To do (5 min): set up Seema's school and class so she can add students",
-  "ask": "Me → Admin tools → Schools → + New school (her school's name) → Add a class (Class 10) → open the class → Invite a teacher → send Seema the code. She types it in Me → Join as a teacher; you approve. Tap YES when done.",
-  "details": "**Why:** teachers join a class through a school; nobody had made Seema's school yet, so she had nothing to share.\n\n**After:** Seema opens Progress → her class → **SHARE CODE** (WhatsApp) → parents join with their child → she approves each one.\n\n**Test it once with Pratha's account first** (join, approve, assign a topic) before her class gets the message.",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Done by the owner: Appreciate International School, 10-A + 7-A, invites made. Seema types her 10-A code."
- },
- {
-  "id": "independent-teachers",
-  "title": "Decide: tutors and teachers without a school (\"Start my own class\")",
-  "ask": "Let a teacher with no school start her own class, but only after you approve her (a card in this inbox, with her name and why). Then Claude makes a mockup. OK?",
-  "details": "**Who:** tuition teachers, coaching owners, independent teachers, Seema if her school never joins.\n\n**How it would work:** Me → \"Start my own class\" → name + subject + a line about her students → **you approve** (here, one tap) → she gets her own small space (like a one-teacher school), makes classes and shares codes.\n\n**Why you approve:** any adult can claim to be a teacher. Parents still say yes in the app for each child, there is no chat, others see first names only, but checking who runs a class is the safety step while we're small.\n\n**YES** = Claude makes the mockup first (no building before you approve it).",
-  "from": "claude"
- },
- {
-  "id": "grownup-feedback",
-  "title": "Decide: one place for every grown-up note (Broken · Confusing · Not useful · Idea), speak or type",
-  "ask": "A \"Tell us\" button on every screen: tap a kind, then speak (keyboard 🎤, Hindi too) or type. Everything lands in one place, and Claude sends you one weekly summary instead of 20 WhatsApp chats. Mockup first?",
-  "details": "**Your problem:** 20 people messaging you separately = weeks of unread notes.\n\n**The fix:** every note goes to one place (Admin tools → Ideas & reports). The app adds the screen, the class and the app version by itself.\n\n**Voice:** the keyboard's 🎤 turns speech into text in any language the phone knows (Hindi too): free, no recordings stored, no extra permission. Real voice recordings later, grown-ups only (storage cost + privacy check).\n\n**Processing:** Claude reads all notes, groups the same problem from different people, and puts **one weekly summary card** in your inbox: \"23 notes → 4 problems (fix planned), 3 ideas (your decision), 2 thank-yous\". You answer the card, not 23 messages.\n\n**No WhatsApp button:** it would scatter notes again. Tell people \"use Tell us in the app\".\n\n**Already fixed today:** Me → \"Tell us what you think\" really sends now (it was a placeholder).\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
-  "from": "claude",
-  "answer": "no",
-  "via": "chat",
-  "note": "Replaced by a newer card (same title, more detail). Not your answer."
- },
- {
-  "id": "class10-english-start",
-  "title": "Decide (with Seema): every topic gets its classes, Class 9–10 start at Grammar Pro",
-  "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
-  "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
-  "from": "claude",
-  "answer": "no",
-  "via": "chat",
-  "note": "Replaced by a newer card (same title, more detail). Not your answer."
- },
- {
-  "id": "grownup-feedback-v2",
-  "title": "Decide: one place for every grown-up note (Broken · Confusing · Not useful · Idea), speak or type",
-  "ask": "A \"Tell us\" button on every screen: tap a kind, then speak (keyboard 🎤, Hindi too) or type. Everything lands in one place, and Claude sends you one weekly summary instead of 20 WhatsApp chats. Mockup first?",
-  "details": "**Your problem:** 20 people messaging you separately = weeks of unread notes.\n\n**The fix:** every note goes to one place (Admin tools → Ideas & reports). The app adds the screen, the class and the app version by itself.\n\n**Voice:** the keyboard's 🎤 turns speech into text in any language the phone knows (Hindi too): free, no recordings stored, no extra permission. Real voice recordings later, grown-ups only (storage cost + privacy check).\n\n**Processing:** Claude reads all notes, groups the same problem from different people, and puts **one weekly summary card** in your inbox: \"23 notes → 4 problems (fix planned), 3 ideas (your decision), 2 thank-yous\". You answer the card, not 23 messages.\n\n**No WhatsApp button:** it would scatter notes again. Tell people \"use Tell us in the app\".\n\n**Already fixed today:** Me → \"Tell us what you think\" really sends now (it was a placeholder).\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Owner asked for it in chat; Claude brings the mockup."
- },
- {
-  "id": "class10-english-start-v2",
-  "title": "Decide (with Seema): every topic gets its classes, Class 9–10 start at Grammar Pro",
-  "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
-  "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Claude decided (partner remit, reversible): tag old English units for younger classes; Seema told."
- },
- {
-  "id": "teacher-courses-v1",
-  "title": "Decide: teacher courses (Seema's Class 10 order first)",
-  "ask": "A teacher's own path through the shared question bank: Seema's Class 10 CBSE English topics in her order become her class's main path on Home. v1 = we build it with her as content. Mockup first?",
-  "details": "**Idea (owner):** each teacher teaches her own syllabus (CBSE English, ICSE, psychology, tuition). A **course** = an ordered list of topics from the shared bank; questions are reused wherever they fit; new ones only for gaps, and they go into the bank for everyone.\n\n**Stages:** v1 Seema's course as content (fast, no new screens beyond \"From your teacher\" on Home) → v2 teachers arrange a course in the app → v3 teachers add their own questions, reviewed before students see them (quality risk, so last).\n\n**YES** = Claude makes the mockup and asks Seema for her topic order.",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Owner in chat: a new tile over the reviewed Grammar Pro questions, only Seema + her students see it."
- },
- {
-  "id": "apprec8-academy",
-  "title": "Decide: \"Apprec8 Academy\", a quest for owners and admins to master the app",
-  "ask": "A team-only quest (you, Seema, future partners): Admin, Teacher, Parent, Student, Safety units; each step is a real task in the Demo School that ticks itself, plus short quizzes on the rules. Its tasks are also the core-path test Gemini runs before every update. Mockup first?",
-  "details": "**Steps like:** create a class · invite a teacher · approve a student · assign a topic · read Ideas & reports · answer a Decision · re-seed safely · delete a test account. **Rules quizzes:** who sees a child's name, what parents agree to, what we never collect.\n\n**Why it pays twice:** finishing it means you know every feature, and the same steps are the checklist that proves the main screens work before each publish.\n\n**YES** = Claude makes the mockup (team-only, uses the Demo School, never real children).",
-  "from": "claude",
-  "answer": "yes",
-  "via": "chat",
-  "note": "Owner's idea in chat; Claude brings the mockup."
- },
- {
-  "id": "pilot-scope-doc",
-  "title": "Pilot scope: your 22 cases, now or later",
-  "ask": "Open the document, change any dropdown or comment. Tap YES when you agree with step 3.",
-  "details": "The document is on claude.ai (works in the phone browser or the Claude app). Step 3 lists six pieces of pilot work; everything else already works, disappears with school codes, or waits for feedback.",
-  "link": "https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU",
-  "from": "claude"
- },
- {
-  "id": "assignment-fix-test",
-  "title": "Assignment fix is ready; I need your phone to test it",
-  "ask": "Fixed: Home lists every topic Seema assigned, and tapping one opens that topic (not 'Sentences'). The emulator on the Mac keeps freezing, so I couldn't run it on a device. When you're back, plug your Android phone into the Mac with a USB cable and I'll test it there before publishing. YES = I'll guide you.",
-  "details": "**What was wrong:** the map only draws the unit you're in, so Seema's topics (Grammar Pro, Unit 5) were unlocked but never drawn, and Home showed only the first assignment.\n\n**Fixed (not live):** Home's \"From your teacher\" card lists every unfinished assigned topic, soonest first; tapping opens that topic's next step directly; the map also draws assigned topics from later units. Automatic tests pass.\n\n**Why not published:** our rule is a device test first. The emulator on this Intel Mac freezes (Android itself stops responding). Your phone over USB is faster and real.\n\n**Waiting with it (also not live):** 'Tell us what you think' really sends, students no longer see 'Switch to parent', clearer explanations, Apprec8 Academy.",
-  "from": "claude",
-  "answer": "yes",
-  "note": null,
-  "answeredAt": "2026-11-09T12:57:27.724Z"
- },
- {
-  "id": "pilot-small-safe",
-  "title": "Pilot plan: small and safe (read when rested)",
-  "ask": "One class (10-A), Seema, Grammar Pro, two weeks. Three flows that must work every time, everything else hidden. Five yes/no lines at the end. YES = all five as written; MORE DETAILS = comment in the doc.",
-  "details": "**Inside:** the three core flows with what works today, the school-codes drawing (parent says yes on their own phone), what each role sees in the simple app, every broken or confusing item with its plan, who tests what (you: 15 minutes, not every role), publishing twice a week.\n\n**Next after your yes:** Gemini builds in this order: G84 review, school codes, G87, simple Home and Me, G84b. Then the vision walkthrough for schools.",
-  "link": "https://claude.ai/artifact/WxxaW9ZzsGHKc3MUSjBPYr",
-  "from": "claude",
-  "answer": null,
-  "note": null,
-  "answeredAt": null
- }
+  {
+    "id": "push-test-1",
+    "title": "Test: did the notification work?",
+    "ask": "Did a notification arrive on your phone, and did tapping it open this screen?",
+    "details": "This checks the whole loop: Claude writes a question → Gemini's script sends it → your phone buzzes → you tap an answer → Claude reads it.\n\n**YES** = all worked. **NO** = something didn't (add a note: no buzz, or the tap opened the wrong screen).",
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-06T06:06:21.448Z"
+  },
+  {
+    "id": "row-x-ship",
+    "title": "Ship the parent-consent screens (row X)?",
+    "ask": "Students who signed up alone see \"Ask a parent or guardian\" until a parent links them or they join a class. Plus College / grown-up and \"say it appreciate\". Ship it?",
+    "details": "**What changes for kids:** a student with no parent linked and no class sees only the \"Ask a parent or guardian\" screen: send a WhatsApp message to the parent, type the parent's code, or join a class with a code. Nothing is saved before a parent says yes (India's DPDP Act and Google Play's family rules).\n\n**Your 3 yeses are in:** College / grown-up (year of birth, 18+ skips the gate), \"parent or guardian\" wording, sign-in says \"appreciate\" out loud once.\n\n**Before it ships:** link Pratha to your account (Me → Link my child's own account), or she sees the gate too. Gemini's test account Sam also gets the gate (good: it tests it).\n\n**YES** = Claude merges and publishes to everyone on 20.0.30. Mockup: rows X1–X5 on the canvas (link above).",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude",
+    "answer": "no",
+    "note": "Replaced by learn first (X6–X9), approved in chat.",
+    "via": "chat"
+  },
+  {
+    "id": "unconsented-erase",
+    "title": "The one old student with no parent",
+    "ask": "One account (Class 5, signed up April 2025) has no parent linked. Delete it only if no parent says yes within 14 days after the gate ships?",
+    "details": "Found by Gemini (G45). After the gate ships, this child sees \"Ask a parent or guardian\" on their next open. If nobody says yes in 14 days, the account and its data are deleted (same deletion as \"Delete my account\").\n\n**YES** = wait 14 days, then delete. **NO** = keep it (say why in the note).",
+    "from": "claude",
+    "answer": "no",
+    "note": "Don't delete: restrict to learning only; the rest unlocks when a parent approves (= learn first).",
+    "via": "chat"
+  },
+  {
+    "id": "store-listing-1",
+    "title": "Store name and text",
+    "ask": "Use \"Apprec8: Learn & Grow\", the short description \"Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.\" and feature graphic draft 2?",
+    "details": "The full description is in My notes → Store listing. It starts \"Apprec8 (say it \"appreciate\") helps children learn a little every day…\" and lists subjects as \"English and Science today, with Maths and reasoning coming next\".\n\n![Feature graphic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png)\n\n**YES** = paste it into Play Console (Store listing). **MORE DETAILS** = Claude explains or changes it.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft2.png",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved on the review page (chat 6 Nov evening). Graphic: draft 2 without green checks until Gemini's logos.",
+    "via": "chat"
+  },
+  {
+    "id": "home-first-day-card",
+    "title": "\"Your first day\" card on Home for new children?",
+    "ask": "New children see a small card on Home, \"⭐ Your first day · 0 of 4\", until they finish the 4 guide steps. Add it?",
+    "details": "Today the guides sit in Me → Guides, where a new child won't look. The card would sit under the quests, calm (one line + a small progress bar), and disappear for good after the 4th step or after 7 days. Tapping it opens the guide.\n\n**YES** = Claude draws a mockup first, then builds it. **NO** = guides stay in Me only.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "This should be everyone. Every time app is opened and if they deliberately close it. Then on we don't show but tell them once where it can be found",
+    "answeredAt": "2026-11-06T06:07:33.653Z"
+  },
+  {
+    "id": "whats-new-card",
+    "title": "A \"What's new\" card after each update?",
+    "ask": "After an update, grown-ups see one card on Me: \"What's new: 3 things\", each with a DO IT button that opens the screen. Add it?",
+    "details": "Helps you, Seema, parents and teachers keep up as features arrive (you said you can't follow them all anymore). Children don't see it. One card per update, dismissed with one tap.\n\n**YES** = mockup first, then build. **NO** = the App map in My notes is enough.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T06:06:01.293Z"
+  },
+  {
+    "id": "row-y-guide-cards",
+    "title": "Mockup: guide card on Home + What's new",
+    "ask": "Your 2 yeses as screens (canvas row Y, 4 screens). Build it like this?",
+    "details": "**Y1/Y2 Home:** a calm card above the quests: children see \"Your first day · 1 of 4\", grown-ups \"Tour of Apprec8\". It shows on every open until all steps are done or ✕ is tapped (your note).\n\n**Y3 after ✕:** one green note, \"The guides are always in Me → Guides\", then never again.\n\n**Y4 Me:** \"What's new · 3 things\" for grown-ups after each update, each with DO IT (opens that screen). ✕ hides it until the next update. Children never see it.\n\n**YES** = Claude builds it and asks you before publishing.",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude",
+    "answer": "later",
+    "note": "Folded into the simplicity pass (row Z).",
+    "via": "chat"
+  },
+  {
+    "id": "task-c10-testers",
+    "title": "Task for tomorrow: 12+ testers (C10)",
+    "ask": "Set up the testers' Google Group and send the WhatsApp message. Tap YES when done, LATER to be reminded in 24 hours, MORE DETAILS if you're stuck.",
+    "details": "**1. Google Group (laptop, 5 min):** groups.google.com → Create group → name \"Apprec8 testers\", email `apprec8-testers`. Who can join: anyone on the web. Who can see members / post / view conversations: **group managers only**.\n\n**2. Play Console (5 min):** Test and release → Testing → Closed testing → Apprec8 → **Testers** → Google Groups → `apprec8-testers@googlegroups.com` → Save. Copy the **Join on the web** link.\n\n**3. WhatsApp to 15–16 grown-ups** (parents, family, friends, Seema and colleagues):\n1) Join: https://groups.google.com/g/apprec8-testers → Join group\n2) Become a tester: (the Join on the web link)\n3) Install after Sunday: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\"Please stay in the group for 2 weeks.\"\n\nGoogle's 14-day clock starts once 12 have opted in. Full steps: My notes → Play forms.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Done in chat 6 Nov: Google Group apprec8-testers created (managers-only privacy), set on the closed track, early members invited.",
+    "via": "chat"
+  },
+  {
+    "id": "english-reseeded",
+    "title": "Did you re-seed English?",
+    "ask": "Admin tools → Update English Quest, after 5 Nov. Without it, Grammar Pro (Class 9–10) isn't on phones. Done?",
+    "details": "**YES** = done. **NO** = not yet: do it now (2 minutes; close and reopen the app first). **LATER** = remind me tomorrow.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Already seeded (chat).",
+    "via": "chat"
+  },
+  {
+    "id": "task-seema-pilot-prep",
+    "title": "Task: Seema's pilot prep",
+    "ask": "3 things before students join: Seema checks Grammar Pro questions, a 30-minute dry run with her, the school's consent form. Tap YES when done, LATER for a reminder.",
+    "details": "**Dry run (owner + Seema):** you: Me → Guides → Set up a school (school, class 10-B, invite Seema). Seema: Join as a teacher → you approve → Me → Guides → Start your class with 2 test students → **assign a Grammar Pro topic** (Class 10 students otherwise start at the basics).\n\n**Students:** they join the testers' Google Group too, so they also count for Google's 12 testers (C10).\n\nThe WhatsApp message for students and parents is ready: My notes → Seema's pilot (after the next publish).",
+    "from": "claude"
+  },
+  {
+    "id": "consent-listen-button",
+    "title": "🔊 Listen button on the parent's consent note?",
+    "ask": "Many parents can't read well. Add a 🔊 Listen button that reads the consent note aloud (हिंदी or English), on Join a class and Link my child?",
+    "details": "Uses the phone's voice, the same as the quiz read-aloud. No new data, no cost. One small button next to the note; the parent still types their name and ticks agree.\n\n**YES** = Claude builds it (small change) and asks before publishing. **NO** = leave as is.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T02:36:19.996Z"
+  },
+  {
+    "id": "seema-confusions",
+    "title": "What confuses Seema most?",
+    "ask": "Ask Seema for her 3 biggest confusions in the app, in her own words. Type them in the note, then tap YES.",
+    "details": "Before we build anything else, we fix what confuses her: if she finds it hard, every teacher will.\n\nHer one-page start (4 jobs, what to ignore, the legal part in plain words) is here; share it with her from the page's Share menu:\nhttps://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5\n\nThen 20 minutes together on the Demo School teacher login (made-up class, nothing reaches real children).",
+    "link": "https://claude.ai/artifact/PCE2qk5THfuR22SKXehBr5",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Send this to seems too. Maybe on her homepage. She will start the exploration of app today.",
+    "answeredAt": "2026-11-07T02:40:41.579Z"
+  },
+  {
+    "id": "simplicity-pass",
+    "title": "Simplicity first: pause new features?",
+    "ask": "Pause new features (Dog Squad, What's new, Home guide card) until the 5 most common jobs take 2 taps or fewer. Pilot, fixes and content go on.",
+    "details": "**The 5 jobs:** a child continues learning (one big ▶ Continue at the bottom of Home), a child fixes mistakes, a parent sees their child's week (on Home), a teacher sees their class (on Home), anyone finds help.\n\nEverything else folds under **More** on Me (nothing deleted). Claude counts today's taps for each job, draws a mockup (row Z) and asks you here before building.\n\n**YES** = pause + simplicity pass now. **NO** = keep building features.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:34:58.539Z"
+  },
+  {
+    "id": "owner-view-as",
+    "title": "A \"View as\" switch for you?",
+    "ask": "Your account sees about twice what a child sees. Add an owner-only switch: View as child · parent · teacher, to see exactly what they see?",
+    "details": "Your Home also shows Explore, More practice, old classrooms, the Fun tab, every unit open and admin. That makes the app feel more complex to you (and to Seema on your phone) than it is for a child.\n\nThe switch changes only what your phone shows; nothing is saved to anyone.\n\n**YES** = build it with the simplicity pass.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:30:20.992Z"
+  },
+  {
+    "id": "row-x-learn-first",
+    "title": "Row X change: children learn right away?",
+    "ask": "Instead of blocking, children learn right away on the phone with nothing saved to their name. A parent's yes is needed only to save stars, join a class or appear on leaderboards. OK?",
+    "details": "Today's row X stops a child who signed up alone at \"Ask a parent\". That ends \"log in and learn right away\", which is what you liked.\n\n**New idea:** the child learns at once; progress stays on the phone and nothing identifies them. A small card says \"Ask a parent to save your stars ⭐\" (the same 2 ways: parent's code or a class code).\n\nLegally sound in our reading (nothing about the child is stored under their name before the yes), but a lawyer checks before the public release.\n\n**YES** = Claude redraws row X like this (mockup first). **NO** = keep the gate as designed.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:32:58.739Z"
+  },
+  {
+    "id": "owner-confusions",
+    "title": "What confused you most?",
+    "ask": "Type the 2–3 moments in the app that confused you or took too many taps (e.g. \"finding my mistakes\", \"where is Pratha's progress\"). Then tap YES.",
+    "details": "These go first in the simplicity pass, together with Seema's.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "How to use the app; how to add a child like Pratha (can see her in My children but not sure how she got there); a few dummy kids would have helped; how would parents or teachers figure it out? (chat)",
+    "via": "chat"
+  },
+  {
+    "id": "publish-teacher-page",
+    "title": "Publish the teachers' page to phones now?",
+    "ask": "Ready: \"For teachers: start here\" (Me → Guides, and Admin tools) with a SHARE button for WhatsApp, the show/hide eye on the Demo password, and new My notes tabs (Play forms, Seema's pilot). Publish to everyone on 20.0.30?",
+    "details": "Nothing changes for children. Grown-ups see one more card at the top of Me → Guides. You see it in Admin tools too, to share it with Seema.\n\n**YES** = Claude publishes (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat). **LATER** = ask again tomorrow.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-06T07:34:39.055Z"
+  },
+  {
+    "id": "row-x-learn-first-mockup",
+    "title": "Mockup: children learn first (row X, 4 new screens)",
+    "ask": "Your yes, drawn: a child learns right after name + class; a calm card says \"12 stars, on this phone only. Ask a parent to save them\". Only the leaderboard and class wait. Build it like this?",
+    "details": "**X6 Home:** learning starts at once; the card never blocks.\n\n**X7 Tap the card:** ask a parent or guardian (send on WhatsApp, the parent's 6-number code, or a class code), or **Not now**.\n\n**X8 Progress:** stars and streak work; the leaderboard says \"Opens when a parent says yes\".\n\n**X9 Parent said yes:** \"Your 23 stars are saved now\", leaderboard and class open.\n\n**What it means for the build:** until the yes, answers and stars stay on the phone (not on our servers); on the yes they move to the child's account. About 1–2 days of work; replaces the blocking gate. College / grown-up, the message to the parent and \"say it appreciate\" stay.\n\nCanvas, scroll to the newest row X (X6–X9).",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Build it (chat 6 Nov evening).",
+    "via": "chat"
+  },
+  {
+    "id": "owner-extras-built",
+    "title": "Built: Owner extras switch (your \"View as\")",
+    "ask": "Me → ADMIN → Owner extras: Off shows what other grown-ups see. For a child's view: My children → add a test child (e.g. \"Test\", Class 10) → Play as. Publish it with the teachers' page?",
+    "details": "**Off hides:** old quizzes and classrooms on Home, Fun extras, tester mode (unlock-all, drafts), admin-only guides, the Kids view in Progress. **Stays:** Me → ADMIN (to switch back), Decisions, Admin tools.\n\nOnly your phone changes; nothing is saved to anyone.\n\n**YES** = publish it together with the teachers' page (if the safety check accepts a YES from here; otherwise it waits for \"publish\" in the chat).",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Published 6 Nov 13:04 with the teachers page.",
+    "via": "chat"
+  },
+  {
+    "id": "row-z-simple-home",
+    "title": "Mockup: a simpler Home and Me (row Z)",
+    "ask": "Home shows what each person came for: a child gets ▶ CONTINUE (1 tap to the next step), a parent sees their child's week, a teacher sees their class. Me shows help + 3 rows, the rest under More. Build it like this?",
+    "details": "**Taps today → after:**\n- Child continues learning: 3–4 → **1**\n- Child fixes mistakes: 2–3 → **1–2**\n- Parent sees child's week: 3 → **0**\n- Teacher sees class: 3 → **0**\n- Help: 2 → 2\n\n**Z1 child:** \"Up next: Kinds of sentences\" + big ▶ CONTINUE at the bottom; mistakes card; other quests small below.\n**Z2 parent:** \"Pratha's week\" card (days, minutes, % right, one topic to practise together) + ▶ LET PRATHA PLAY.\n**Z3 teacher:** class card (waiting, who practised, what to reteach) + ASSIGN NEXT TOPIC.\n**Z4 Me:** Need help, My class, My children, Guides, More (reminders, messages, edit profile, delete account).\n\nSomeone who is parent and teacher sees both cards. Nothing is deleted. With this, the Home guide card (row Y) may not be needed.\n\nCanvas: scroll to row Z.",
+    "link": "https://claude.ai/artifact/DtBmVc472p7WgANEc12YvL",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved after the review page, with owner's fixes: a ▶ per subject (no single Continue), parent/teacher cards low in thumb reach (chat 6 Nov evening).",
+    "via": "chat"
+  },
+  {
+    "id": "name-appreci8",
+    "title": "Later: rename to Appreci8?",
+    "ask": "With the \"i\", the name reads \"appreciate\" by itself. Decide once Gemini's logos (both spellings) are in. Rename?",
+    "details": "**What changes:** the name on the Play Store, the app's home screen label, the logo, the store text and the policy pages. **What can't change:** the internal app ID (com.mohitchilkoti.apprec8); nobody sees it. Existing users just see the new name after an update.\n\nCheapest before the public launch. Tap **LATER** until you've seen the logos.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "I am open to ideas here. I need something that looks good and is punchy. I really like the sound of appreciate and the idea behind it",
+    "answeredAt": "2026-11-07T02:39:40.617Z"
+  },
+  {
+    "id": "task-store-listing",
+    "title": "Task: paste the store listing into Play Console (10 min)",
+    "ask": "Play Console → Grow users → Store presence → Main store listing: paste the name, short and full description, upload the feature graphic. Tap YES when done, MORE DETAILS if stuck.",
+    "details": "Everything to paste is in **My notes → Store listing**:\n- App name: **Apprec8: Learn & Grow**\n- Short description: **Fun, calm daily learning for Classes 1–12: English, Science and more. No ads.**\n- Full description: copy from My notes.\n- Feature graphic (1024×500): https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png (save it on the laptop, then upload).\n- Phone screenshots: Gemini's in docs/release/screenshots (light), 4–8 of them.\n\nThen Save → it goes with the next review. Gemini's logos can replace the graphic later.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-feature-graphic-draft3.png",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Done in chat 6 Nov (submitted with 9 changes).",
+    "via": "chat"
+  },
+  {
+    "id": "task-seema-whatsapp",
+    "title": "Task: send Seema's WhatsApp message (when 3 things are done)",
+    "ask": "Send it when: 1) Google approved and you pressed Publish, 2) Seema's class exists (you have the code), 3) Seema tried it with 2 test students. Tap YES when sent.",
+    "details": "**Message (fill in the class code):**\n\n📚 Our class is trying **Apprec8**, a free English practice app (no ads, no chat). Please do this **with a parent**, on the phone the student will use:\n\n1️⃣ Join the testers' group (use the Google account on that phone): https://groups.google.com/g/apprec8-testers → Join group\n\n2️⃣ Become a tester: https://play.google.com/apps/testing/com.mohitchilkoti.apprec8 → Become a tester\n\n3️⃣ Install: https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8\n\n4️⃣ Open Apprec8 → Continue with Google → first name → Class 10.\n\n5️⃣ Me → Join a class → code ______ → the parent reads the short note (English or हिंदी), types their name, agrees.\n\nPlease stay in the group for at least 2 weeks. 🙏",
+    "from": "claude"
+  },
+  {
+    "id": "task-owner-practice",
+    "title": "Task: master the app first (45 min, private)",
+    "ask": "Before the dry run with Seema: practise alone with the Demo School (nothing reaches real people). Tap YES when done, LATER for a reminder.",
+    "details": "5 short parts: 1) see it as everyone else (Owner extras Off + the Tour guide), 2) be a child (Play as a test child), 3) be a parent (demo.parent login), 4) be a teacher (demo.teacher login), 5) back to you.\n\nStep by step: **My notes → Master the app** (after the next update), or ask Claude to send the steps.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T05:30:11.884Z"
+  },
+  {
+    "id": "brand-pick-1",
+    "title": "Gemini's logos: which direction?",
+    "ask": "3 sheets below. YES = go with Direction 1 (Cosmic Star: Chamak above a gold ∞ that breaks into pixels). NO = none yet. Type in the note which one you like, or what to change.",
+    "details": "**Claude's view:** the 7 subject icons are good (same in all 3). The app icon works. The 3 directions are very similar, and in the wordmark the ∞ floats beside the word instead of being its last letter; Gemini fixes that next.\n\n**1. Cosmic Star**\n\n![1](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg)\n\n**2. Infinite Bloom**\n\n![2](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-infinite-bloom.jpg)\n\n**3. Playful Geometric**\n\n![3](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-playful-geometric.jpg)",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-brand-cosmic-star.jpg",
+    "from": "claude",
+    "answer": "no",
+    "note": "The infinity symbol looks like a worm rather then inspiring eight and infinity. Rest is good. Fis the infinity symbol please..you can just show me the infinity symbol and then use it to save effort",
+    "answeredAt": "2026-11-06T20:01:27.037Z"
+  },
+  {
+    "id": "task-ask-pratha",
+    "title": "Task: ask Pratha 3 questions (before we build the hook)",
+    "ask": "5 relaxed minutes, no pressure. Type her answers in the note, then tap YES. LATER = remind me tomorrow.",
+    "details": "**Ask her:**\n1. \"What's the most fun thing you'd want in a learning app?\"\n2. \"Would you like to make a quest or questions for other kids?\"\n3. \"What would you do if a friend sent you a challenge in the app?\"\n\n**And tell her:** she's the official tester of the fun names for the English units (Gemini's list comes soon); her vote decides.\n\nHer answers tell us which hook to build first: stories with read-aloud, creator mode, or challenge a friend (plan: My notes → Why they'll love it).",
+    "from": "claude",
+    "answer": "no",
+    "note": "No we will make an autonomous activity for her to answer these to the app. Why should I ask, the app is her buddy. It is between them.",
+    "answeredAt": "2026-11-07T08:47:51.724Z"
+  },
+  {
+    "id": "task-reseed-eng-sci",
+    "title": "Task: re-seed English and Science (2 min)",
+    "ask": "Me → Admin tools → update English Quest, then Science Quest. Tap YES when done.",
+    "details": "**English:** removes the old IEO picture from the quest page.\n**Science:** fixes the teeth fact Pratha found (20 milk teeth are replaced; extra molars make 32).\n\nContent only: no app update needed. Close and reopen the app afterwards to see it.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-07T09:05:24.125Z"
+  },
+  {
+    "id": "task-play-publish",
+    "title": "Task: when Google approves → Publish",
+    "ask": "When Google's email says the changes are approved: Play Console → Publishing overview → Publish. Tap YES when done, LATER to keep the reminder.",
+    "details": "**Managed publishing is on**, so nothing goes live by itself. One click publishes: closed testing 20.0.30, the new store listing, target audience, Data safety.\n\nAfter that, testers who join get 20.0.30, and Seema's WhatsApp message can go out (once her class exists).",
+    "from": "claude"
+  },
+  {
+    "id": "meet-progress-review",
+    "title": "Tomorrow 7 pm: Progress tab design discussion",
+    "ask": "A fresh discussion with Claude, no rushed build: what should children, parents, teachers and you see first in Progress? Tap YES when we've done it.",
+    "details": "**Your notes so far:** Pratha played but the weekly summary was blank; Kids · Reported is messy; with many subjects a parent shouldn't have to pick a subject (fix queued: G64).\n\n**Gemini prepares tonight (G67):** screenshots of every Progress view + why the summary was blank.\n\n**Then:** we agree what each person needs first → Claude draws a mockup → you approve in the inbox → build.\n\n**Also on the table:** ChatGPT's four-dashboard brief + concept image (docs/product/PROGRESS_REVIEW_TODO.md). Central question: activity vs real learning (mastery).",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T03:52:36.643Z"
+  },
+  {
+    "id": "mock-chamku-asks",
+    "title": "Mockup: Chamku asks (stickies + feedback)",
+    "ask": "The sticky note on Home, one question, the thank-you, and your results screen. Build it like this (Pratha first, then everyone)?",
+    "details": "**1. Sticky note on Home**\n\n![1. Sticky note on Home](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg)\n\n**2. One question**\n\n![2. One question](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca2.jpg)\n\n**3. Thank you**\n\n![3. Thank you](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca3.jpg)\n\n**4. Your results (Admin tools)**\n\n![4. Your results (Admin tools)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca4.jpg)\n\n**Claude's notes:** good; the answer emojis become our characters later (design rule). Voice comes in v2 (consent + privacy).\n\n**YES** = Gemini builds it (no app build needed). **MORE DETAILS** = tell me what to change.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-ca1.jpg",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): great.",
+    "via": "chat"
+  },
+  {
+    "id": "mock-teacher-class",
+    "title": "Mockup: the teacher's class screen",
+    "ask": "Actions on top (approve, reteach one thing with one tap, who hasn't practised), filters for 32 students, suggested topics. Build it like this?",
+    "details": "**1. Class screen**\n\n![1. Class screen](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg)\n\n**2. Students (filters + search)**\n\n![2. Students (filters + search)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-2-students-list.jpg)\n\n**3. Assign a topic**\n\n![3. Assign a topic](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-3-assign-topic.jpg)\n\n**Claude's notes:** this answers your notes from the demo teacher. Two fixes before building: \"Remind all\" goes to the **parents**, never children; the bright green button gets the calm style.\n\n**YES** = Gemini builds it with those two fixes.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-tc-1-class-screen.jpg",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): looks good; with Claude's two fixes.",
+    "via": "chat"
+  },
+  {
+    "id": "mock-parent-link",
+    "title": "Mockup: the parent's \"yes\" page (no app needed)",
+    "ask": "A parent opens a WhatsApp link: Hindi or English, read aloud, 3 things we keep, name, relation, \"हाँ, मैं सहमत हूँ\". Build it like this?",
+    "details": "**The page (Hindi)**\n\n![The page (Hindi)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg)\n\n**After yes**\n\n![After yes](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl-done.jpg)\n\n**Claude's notes:** clear and kind. It needs a small server part (a deploy request for your OK) and a privacy-policy line.\n\n**YES** = Gemini builds it; the server part comes to you as a deploy request.",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-pl.jpg",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Approved (chat 9 Nov): great.",
+    "via": "chat"
+  },
+  {
+    "id": "vote-cast",
+    "title": "Vote: the character cast (with Pratha!)",
+    "ask": "Chamku the star, Kurma the tortoise, Chiku the monkey, Madhu the bee, Cheenu the ant, Veda the owl. Keep these? Type any name changes in the note.",
+    "details": "**The cast**\n\n![The cast](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg)\n\n**The avatar builder (items won from the chest)**\n\n![The avatar builder (items won from the chest)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-avatar.jpg)\n\n**Claude's notes:** much more fun than our current star. Let **Pratha vote** on the names. One to think about: **Kurma** is the tortoise avatar of Vishnu, so some families may see it as religious; a neutral option is **\"Kachhu\"** or **\"Dadu Kachhua\"**.\n\n**YES** = keep the cast (with your note's changes).",
+    "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Kurma is fine (owner, chat 9 Nov). Pratha can still suggest names.",
+    "via": "chat"
+  },
+  {
+    "id": "vote-fun-names",
+    "title": "Vote: fun names for English units (with Pratha + Seema)",
+    "ask": "Pick A or B per unit, or type your own in the note. Seema checks the English, Pratha votes.",
+    "details": "| Unit | Today | A | B |\n|---|---|---|---|\n| 0 | Sentences | Sentence Safari | The Thought Express |\n| 1 | Parts of Speech | The Great Word Bazaar | Wordopolis |\n| 2 | Articles | The Ticket Gate | The Spotlight Booth |\n| 3 | Subject–Verb Agreement | The Rhythm Duo | The Perfect Match |\n| 4 | Spot the Error | Detective Desk | The Clue Hunter Agency |\n| 5 | Tenses | The Tense Time Machine | Chronos Island |\n| 6 | Modals & Tags | The Power Keys | Rules & Riddles |\n| 7 | Reported Speech & Passive | The Newsroom Studio | The Press Gallery |\n| 8 | Linking Words | The Connector Junction | The Bridge Builders |\n| 9 | Punctuation | Signpost Valley | Traffic Signals of Speech |\n| 10 | Word Building | The Word Factory | The Inventor's Forge |\n| Pro 1 | Tenses (9–10) | Timeline Architecture | Chronos Lab |\n| Pro 2 | Modals (9–10) | The Nuance Engine | Degrees of Certainty |\n| Pro 3 | Agreement (9–10) | Syntax Equilibrium | The Harmony Matrix |\n| Pro 4 | Reported Speech (9–10) | The Dialogue Decoder | The Discourse Studio |\n| Pro 5 | Active & Passive (9–10) | The Voice Inversion | Perspective & Focus |\n| Pro 6 | Editing (9–10) | The Editorial Suite | Precision Proofreading |\n\nThe grammar term always stays visible underneath (e.g. \"Noun Town · Nouns\"), so teachers find their topic. Topic names: 285-line list in docs/agents/reports/G61-names.md.\n\n**YES** = use all the A names (note any changes).",
+    "from": "claude",
+    "answer": "yes",
+    "note": "This should also land on pratha and seemas phones as polls and fun feedback activity. They should approve there. I can review with you as I have final say.",
+    "answeredAt": "2026-11-09T03:54:02.253Z"
+  },
+  {
+    "id": "go-live-feedback",
+    "title": "Ready: the feedback system + 2 fixes. Go live?",
+    "ask": "Children can send ideas (Me → 💡 idea, a weekly Chamku prompt on Home), 🚩 works on reading pages too, and the parent's week shows all subjects first. Publish it, and let Gemini switch on your Ideas & reports screen (DR-24)?",
+    "details": "**What children see:** Me → \"💡 I have an idea\" and once a week a small Chamku card on Home: tap answers; supervised accounts (Pratha) can also type. A thank-you from Chamku (no stars yet: stars for answering will come from the server, with a daily limit, in Chamku's stickies).\n\n**🚩 on reading pages:** tap-only reasons (wrong fact, confusing, spelling, picture missing).\n\n**Parent's week:** all subjects together first; no subject picker.\n\n**You:** Admin tools → **Ideas & reports**: every idea and report, newest first, with a done tick. It needs a small rules change (DR-24) so only you can read them.\n\n**Claude's review:** merged and tested; fixed one honesty problem (children were promised +5 ⭐ the phone can't give).\n\n**YES** = Claude publishes + Gemini deploys DR-24. **LATER** = wait until you're back.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T06:52:05.064Z"
+  },
+  {
+    "id": "link-pratha",
+    "title": "To do: link Pratha's own account to yours (keeps her progress)",
+    "ask": "Your phone: Me → My children → \"Link my child's own account\" → get a 6-letter code. Pratha's phone: Me → \"Link to my parent\" → type it. Tap YES when done (or MORE DETAILS if a step is missing).",
+    "details": "**Don't use \"Add a child\"** for Pratha: that makes a new, empty profile.\n\n**Your phone (signed in as you):** Me → My children → **Link my child's own account** → your name, Father, tick that you agree (हिंदी is there too) → a **6-letter code** (works once, for 24 hours; you can share it on WhatsApp).\n\n**Pratha's phone (signed in as her):** Me → **Link to my parent** → type the code → **Linked ✓**.\n\nAfter that: My children shows \"Pratha's week\" and Progress → My children shows her progress. She keeps her own login, stars and progress. No \"Play as\" for her (she has her own login).\n\n**If \"Link to my parent\" isn't on her Me screen:** her account has no class saved. Tap MORE DETAILS and Claude checks her account.",
+    "from": "claude"
+  },
+  {
+    "id": "offline-play-as",
+    "title": "Fix: \"Play as\" and the lock need internet, and fail without a clear message",
+    "ask": "Make every switch say \"No internet: turn on mobile data or Wi-Fi\", and let your PIN end the child's turn even offline (so you're never stuck). Gemini builds, Claude reviews, no new build needed. OK?",
+    "details": "**What happened (demo to a parent):** the internet was off, so \"Play as\" failed with a confusing message.\n\n**Why it needs internet:** \"Play as\" really switches who is signed in, so the stars go to the child, not to you. Only our server can do that switch, and it checks your PIN there so a child can't find it on the phone. The lock itself (Android pinning) works offline.\n\n**A bigger gap found while checking:** going back to you also needs the internet. If the internet drops during the child's turn, the \"Time's up\" screen can't be closed until it comes back (the phone's own PIN still unpins it, but the app stays paused).\n\n**The fix (Gemini, small, update over the air):**\n1. One clear message for every server action when offline: \"No internet. Turn on mobile data or Wi-Fi, then try again.\" Checked *before* the phone is pinned. Also covers adding a child, link codes, class codes, feedback.\n2. Your PIN also works offline: the phone keeps a scrambled copy of your PIN (set when you start Play as). Offline, the right PIN ends the turn (unpins, stops the timer, closes Time's up) and the app switches back to you as soon as the internet returns.\n\n**Later, with the next app build:** a small \"You're offline\" strip at the top of the app (needs a new library, so not over the air).\n\n**YES** = Claude writes the task, Gemini builds, Claude reviews before you see it.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T06:50:58.555Z"
+  },
+  {
+    "id": "phone-to-claude",
+    "title": "To do: reach Claude from your phone (for live fixes during demos)",
+    "ask": "In the Claude chat on your Mac, type /remote-control, then open the Claude app on your phone → Code. Keep the Mac awake. Tap YES once a message from your phone reaches Claude.",
+    "details": "**Why:** during a demo you tell Claude what broke, from your phone, while you keep talking to the parent. Claude fixes it on your Mac and publishes when you say \"publish\".\n\n**Set up once:**\n1. Claude chat on the Mac (VS Code): type **/remote-control**. If it isn't offered there, open Terminal, `cd` into the apprec8 folder, run `claude`, then type **/remote-control**.\n2. Phone: open the **Claude** app (signed in with the same account) → **Code** → the apprec8 session.\n3. Mac: System Settings → Battery → Options → **Prevent automatic sleeping when the display is off** (when plugged in).\n\n**Backup when the Mac is off:** start a new session in the Claude app → Code. It can write the fix, but it can't publish to phones (that needs the Mac).",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner: send notes in the app like everyone else; no Remote Control."
+  },
+  {
+    "id": "tell-claude-in-app",
+    "title": "Build: \"Tell Claude\" from inside the app (notes, not just Yes/No)",
+    "ask": "A \"Tell Claude\" button on this Decisions screen: type or speak a note, it reaches Claude in seconds with the app version, online/offline and the last error attached. Claude replies on the card. Build it?",
+    "details": "**For:** \"this broke during a demo\": one tap, you keep talking to the parent, Claude fixes it and asks \"Ready. Publish?\".\n\n**What gets built (Gemini builds, Claude reviews):**\n1. **Tell Claude** button at the bottom of Decisions (owner only); type or use the keyboard mic.\n2. The note adds by itself: app version, online/offline, the last error message shown.\n3. Notes reach the Mac in seconds (live listener instead of every 10 minutes; fewer reads too).\n4. Claude replies on the same card → a notification on your phone.\n5. Small rules change **DR-25**: your account may create cards, not only answer them.\n\n**Limit:** Claude acts only while a Claude session is open on the Mac. Otherwise the note waits and Claude reads it first thing next session.\n\n**YES** = Claude writes the task + DR-25.",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Merged into the grown-up notes button (owner notes go to the same place, Claude reads them every session)."
+  },
+  {
+    "id": "reseed-english-5-fixes",
+    "title": "To do: re-seed English (5 serious Grammar Pro mistakes fixed)",
+    "ask": "Close and reopen the app (so it gets the fix), then Me → Admin tools → re-seed English. Tap YES when done.",
+    "details": "**Fixed (Claude):** a marked-correct answer that added \"yesterday\" from nowhere (passive voice); 4 questions whose options didn't match the sentence (reported questions, passive questions, \"was lent\" ×2). Two explanations rewritten for children.\n\n**Steps:** close the app fully, reopen (it downloads the update), then **Me → Admin tools → re-seed English**. Phones fetch the new questions once.\n\nThe other 24 smaller issues: Gemini (G73), then one more re-seed.",
+    "from": "claude"
+  },
+  {
+    "id": "seema-class-setup",
+    "title": "To do (5 min): set up Seema's school and class so she can add students",
+    "ask": "Me → Admin tools → Schools → + New school (her school's name) → Add a class (Class 10) → open the class → Invite a teacher → send Seema the code. She types it in Me → Join as a teacher; you approve. Tap YES when done.",
+    "details": "**Why:** teachers join a class through a school; nobody had made Seema's school yet, so she had nothing to share.\n\n**After:** Seema opens Progress → her class → **SHARE CODE** (WhatsApp) → parents join with their child → she approves each one.\n\n**Test it once with Pratha's account first** (join, approve, assign a topic) before her class gets the message.",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Done by the owner: Appreciate International School, 10-A + 7-A, invites made. Seema types her 10-A code."
+  },
+  {
+    "id": "independent-teachers",
+    "title": "Decide: tutors and teachers without a school (\"Start my own class\")",
+    "ask": "Let a teacher with no school start her own class, but only after you approve her (a card in this inbox, with her name and why). Then Claude makes a mockup. OK?",
+    "details": "**Who:** tuition teachers, coaching owners, independent teachers, Seema if her school never joins.\n\n**How it would work:** Me → \"Start my own class\" → name + subject + a line about her students → **you approve** (here, one tap) → she gets her own small space (like a one-teacher school), makes classes and shares codes.\n\n**Why you approve:** any adult can claim to be a teacher. Parents still say yes in the app for each child, there is no chat, others see first names only, but checking who runs a class is the safety step while we're small.\n\n**YES** = Claude makes the mockup first (no building before you approve it).",
+    "from": "claude"
+  },
+  {
+    "id": "grownup-feedback",
+    "title": "Decide: one place for every grown-up note (Broken · Confusing · Not useful · Idea), speak or type",
+    "ask": "A \"Tell us\" button on every screen: tap a kind, then speak (keyboard 🎤, Hindi too) or type. Everything lands in one place, and Claude sends you one weekly summary instead of 20 WhatsApp chats. Mockup first?",
+    "details": "**Your problem:** 20 people messaging you separately = weeks of unread notes.\n\n**The fix:** every note goes to one place (Admin tools → Ideas & reports). The app adds the screen, the class and the app version by itself.\n\n**Voice:** the keyboard's 🎤 turns speech into text in any language the phone knows (Hindi too): free, no recordings stored, no extra permission. Real voice recordings later, grown-ups only (storage cost + privacy check).\n\n**Processing:** Claude reads all notes, groups the same problem from different people, and puts **one weekly summary card** in your inbox: \"23 notes → 4 problems (fix planned), 3 ideas (your decision), 2 thank-yous\". You answer the card, not 23 messages.\n\n**No WhatsApp button:** it would scatter notes again. Tell people \"use Tell us in the app\".\n\n**Already fixed today:** Me → \"Tell us what you think\" really sends now (it was a placeholder).\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
+    "from": "claude",
+    "answer": "no",
+    "via": "chat",
+    "note": "Replaced by a newer card (same title, more detail). Not your answer."
+  },
+  {
+    "id": "class10-english-start",
+    "title": "Decide (with Seema): every topic gets its classes, Class 9–10 start at Grammar Pro",
+    "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
+    "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
+    "from": "claude",
+    "answer": "no",
+    "via": "chat",
+    "note": "Replaced by a newer card (same title, more detail). Not your answer."
+  },
+  {
+    "id": "grownup-feedback-v2",
+    "title": "Decide: one place for every grown-up note (Broken · Confusing · Not useful · Idea), speak or type",
+    "ask": "A \"Tell us\" button on every screen: tap a kind, then speak (keyboard 🎤, Hindi too) or type. Everything lands in one place, and Claude sends you one weekly summary instead of 20 WhatsApp chats. Mockup first?",
+    "details": "**Your problem:** 20 people messaging you separately = weeks of unread notes.\n\n**The fix:** every note goes to one place (Admin tools → Ideas & reports). The app adds the screen, the class and the app version by itself.\n\n**Voice:** the keyboard's 🎤 turns speech into text in any language the phone knows (Hindi too): free, no recordings stored, no extra permission. Real voice recordings later, grown-ups only (storage cost + privacy check).\n\n**Processing:** Claude reads all notes, groups the same problem from different people, and puts **one weekly summary card** in your inbox: \"23 notes → 4 problems (fix planned), 3 ideas (your decision), 2 thank-yous\". You answer the card, not 23 messages.\n\n**No WhatsApp button:** it would scatter notes again. Tell people \"use Tell us in the app\".\n\n**Already fixed today:** Me → \"Tell us what you think\" really sends now (it was a placeholder).\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner asked for it in chat; Claude brings the mockup."
+  },
+  {
+    "id": "class10-english-start-v2",
+    "title": "Decide (with Seema): every topic gets its classes, Class 9–10 start at Grammar Pro",
+    "ask": "Make \"which classes\" required on every topic (today 37 English topics are shown to every class), tag them with Seema, and show older children only their level, with easier topics folded under \"Revise earlier topics\". OK?",
+    "details": "**Topics per class today** (English · Word Power · Science · Treasure Words):\n- Class 1–2: 37 · 0–1 · 0 · 4\n- Class 3–6: 41–44 · 6–8 · 8–18 · 4–13 ✓\n- Class 7–8: 44 · 0 · 0 · 13 (English is mostly primary level)\n- Class 9–10: 58 (21 Grammar Pro + 37 primary) · 0 · 0 · 13\n- Class 11–12: 40 (mostly primary) · 0 · 0 · 0\n\n**Why:** English Units 0–9 have no class tags, and \"no tag\" means \"everyone\". A Class 10 child starts at \"What is a sentence?\".\n\n**Proposal:**\n1. Every topic must say its classes (a test fails otherwise). Seema and Claude tag Units 0–9 (e.g. Units 0–2 → Class 1–4).\n2. A child sees their level first; easier topics fold under \"Revise earlier topics\" (never forced, never deleted).\n3. A subject with nothing for the class has no tile (Gemini G79).\n4. The gaps (Class 7–8, 11–12, Science above Class 5) go on a content plan by class; the pilot (Class 10) is covered by Grammar Pro + Treasure Words.\n\n**YES** = Claude drafts the tags for Seema to check, tests, publishes; you re-seed English.",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Claude decided (partner remit, reversible): tag old English units for younger classes; Seema told."
+  },
+  {
+    "id": "teacher-courses-v1",
+    "title": "Decide: teacher courses (Seema's Class 10 order first)",
+    "ask": "A teacher's own path through the shared question bank: Seema's Class 10 CBSE English topics in her order become her class's main path on Home. v1 = we build it with her as content. Mockup first?",
+    "details": "**Idea (owner):** each teacher teaches her own syllabus (CBSE English, ICSE, psychology, tuition). A **course** = an ordered list of topics from the shared bank; questions are reused wherever they fit; new ones only for gaps, and they go into the bank for everyone.\n\n**Stages:** v1 Seema's course as content (fast, no new screens beyond \"From your teacher\" on Home) → v2 teachers arrange a course in the app → v3 teachers add their own questions, reviewed before students see them (quality risk, so last).\n\n**YES** = Claude makes the mockup and asks Seema for her topic order.",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner in chat: a new tile over the reviewed Grammar Pro questions, only Seema + her students see it."
+  },
+  {
+    "id": "apprec8-academy",
+    "title": "Decide: \"Apprec8 Academy\", a quest for owners and admins to master the app",
+    "ask": "A team-only quest (you, Seema, future partners): Admin, Teacher, Parent, Student, Safety units; each step is a real task in the Demo School that ticks itself, plus short quizzes on the rules. Its tasks are also the core-path test Gemini runs before every update. Mockup first?",
+    "details": "**Steps like:** create a class · invite a teacher · approve a student · assign a topic · read Ideas & reports · answer a Decision · re-seed safely · delete a test account. **Rules quizzes:** who sees a child's name, what parents agree to, what we never collect.\n\n**Why it pays twice:** finishing it means you know every feature, and the same steps are the checklist that proves the main screens work before each publish.\n\n**YES** = Claude makes the mockup (team-only, uses the Demo School, never real children).",
+    "from": "claude",
+    "answer": "yes",
+    "via": "chat",
+    "note": "Owner's idea in chat; Claude brings the mockup."
+  },
+  {
+    "id": "pilot-scope-doc",
+    "title": "Pilot scope: your 22 cases, now or later",
+    "ask": "Open the document, change any dropdown or comment. Tap YES when you agree with step 3.",
+    "details": "The document is on claude.ai (works in the phone browser or the Claude app). Step 3 lists six pieces of pilot work; everything else already works, disappears with school codes, or waits for feedback.",
+    "link": "https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU",
+    "from": "claude"
+  },
+  {
+    "id": "assignment-fix-test",
+    "title": "Assignment fix is ready; I need your phone to test it",
+    "ask": "Fixed: Home lists every topic Seema assigned, and tapping one opens that topic (not 'Sentences'). The emulator on the Mac keeps freezing, so I couldn't run it on a device. When you're back, plug your Android phone into the Mac with a USB cable and I'll test it there before publishing. YES = I'll guide you.",
+    "details": "**What was wrong:** the map only draws the unit you're in, so Seema's topics (Grammar Pro, Unit 5) were unlocked but never drawn, and Home showed only the first assignment.\n\n**Fixed (not live):** Home's \"From your teacher\" card lists every unfinished assigned topic, soonest first; tapping opens that topic's next step directly; the map also draws assigned topics from later units. Automatic tests pass.\n\n**Why not published:** our rule is a device test first. The emulator on this Intel Mac freezes (Android itself stops responding). Your phone over USB is faster and real.\n\n**Waiting with it (also not live):** 'Tell us what you think' really sends, students no longer see 'Switch to parent', clearer explanations, Apprec8 Academy.",
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-09T12:57:27.724Z"
+  },
+  {
+    "id": "pilot-small-safe",
+    "title": "Pilot plan: small and safe (read when rested)",
+    "ask": "One class (10-A), Seema, Grammar Pro, two weeks. Three flows that must work every time, everything else hidden. Five yes/no lines at the end. YES = all five as written; MORE DETAILS = comment in the doc.",
+    "details": "**Inside:** the three core flows with what works today, the school-codes drawing (parent says yes on their own phone), what each role sees in the simple app, every broken or confusing item with its plan, who tests what (you: 15 minutes, not every role), publishing twice a week.\n\n**Next after your yes:** Gemini builds in this order: G84 review, school codes, G87, simple Home and Me, G84b. Then the vision walkthrough for schools.",
+    "link": "https://claude.ai/artifact/WxxaW9ZzsGHKc3MUSjBPYr",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Replaced: the plan was rewritten from your comments and Seema decided the rest (10 Nov).",
+    "answeredAt": null,
+    "via": "chat"
+  },
+  {
+    "id": "dr25-approval-pushes",
+    "title": "Review done + 1 OK needed: approval notifications (DR-25)",
+    "ask": "Gemini's work is reviewed. One thing needs your OK: turn on two notifications on the server. YES = Gemini deploys them. LATER = they wait.",
+    "details": "**The 2 notifications:** (1) a teacher asks to join a school → the school admin and you get 'Teacher waiting · Approve'. (2) a student asks to join a class → that class's teachers get 'Student waiting · Approve'. Max 1 per person per 10 minutes. Adults only; kids never get these.\n\n**Review result:** merged Seema's Class 10 course tile (G81), 'Needs you' + teacher Home (G84), 'why not this option' panel (G82), pilot fixes (G79). All tests pass.\n\n**Sent back:** G83 'why' explanations: about half explained a different question (e.g. the courier question talked about a camera), so they are removed; Gemini redoes them one unit at a time and I check each. G85 test app: it would break the next real build; Gemini fixes it first.\n\n**Not on your phone yet:** these reach phones only in the next publish, after the clean test.",
+    "from": "claude",
+    "answer": null,
+    "note": null,
+    "answeredAt": null
+  }
 ]
