@@ -13,6 +13,7 @@ const ALLOWED = [
   /^classes\/demo_[\w-]+$/,
   /^classes\/demo_[\w-]+\/members\/demo_[\w-]+$/,
   /^classes\/demo_[\w-]+\/assignments\/demo_[\w-]+$/,
+  /^classes\/demo_[\w-]+\/teacherRequests\/demo_[\w-]+$/,
   /^questAttempts\/demo_[\w-]+$/,
   /^demo\/meta$/,
 ];

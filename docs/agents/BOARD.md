@@ -315,7 +315,7 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
 6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
-### G84 · [todo] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
+### G84 · [done] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
 Owner: "Approvals kept hidden in the classes and I had to search for them … the responsible person will never know
 something is pending." Seema: "overly complicated, not usable." Claude decided the shape (partner remit); Claude reviews
 screenshots before anyone sees it.
