@@ -297,7 +297,7 @@ students see it." No new questions, no new screens.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
 
-### G85 · [todo] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
+### G85 · [done] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
 Spec = the live doc, section "Setting up the test Firebase project": https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU
 Owner already did the console part: project **apprec8-test**, Auth (Email/Password + Google), Firestore nam5, Android app
 `com.mohitchilkoti.apprec8.test` with the debug SHA-1. Config file: Claude's git-ignored

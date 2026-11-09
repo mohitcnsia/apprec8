@@ -1,5 +1,9 @@
 // src/config/appConfig.js
+import Constants from "expo-constants";
 import { APPREC8_TEAM_REVIEWER_UID as UID_FROM_ENV } from "@env";
+
+export const APP_VARIANT = Constants?.expoConfig?.extra?.appVariant || "real";
+export const IS_TEST_VARIANT = APP_VARIANT === "test";
 
 /**
  * The owner's (admin) user ID. Shows the Dashboard, seed buttons and team-review features.

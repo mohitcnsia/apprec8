@@ -1,5 +1,7 @@
 // app.config.js
 import "dotenv/config";
+import fs from "fs";
+import path from "path";
 
 // Helper function to safely merge CFBundleURLTypes
 const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
@@ -22,6 +24,21 @@ const mergeCFBundleURLTypes = (existingTypes = [], newScheme) => {
 };
 
 export default ({ config }) => {
+  const isTest = process.env.APP_VARIANT === "test";
+
+  let testWebClientId = "309935610388-vu2pcircoj953jcfjd8aelbmtj5pfua5.apps.googleusercontent.com";
+  try {
+    const testFile = path.resolve(__dirname, "docs/agents/private/google-services.test.json");
+    if (fs.existsSync(testFile)) {
+      const parsed = JSON.parse(fs.readFileSync(testFile, "utf8"));
+      const client = parsed?.client?.[0];
+      const oauth = client?.oauth_client?.find((c) => c.client_type === 3);
+      if (oauth?.client_id) testWebClientId = oauth.client_id;
+    }
+  } catch {
+    // fallback to known client id
+  }
+
   const existingCFBundleURLTypes = config.ios?.infoPlist?.CFBundleURLTypes;
   const reversedClientIdScheme = process.env.IOS_REVERSED_CLIENT_ID;
 
@@ -44,7 +61,7 @@ export default ({ config }) => {
 
   return {
     expo: {
-      name: "apprec8",
+      name: isTest ? "Apprec8 TEST" : "apprec8",
       slug: "apprec8",
       scheme: "apprec8",
       version: `${majorVersion}.${minorVersion}.${patchVersion}`,
@@ -65,6 +82,7 @@ export default ({ config }) => {
         url: "https://u.expo.dev/ce048455-06a3-4e7e-aebb-ae82b867c72a",
         fallbackToCacheTimeout: 0,
         checkAutomatically: "ON_LOAD",
+        ...(isTest ? { channel: "preview" } : {}),
       },
       assetBundlePatterns: ["**/*"],
       ios: {
@@ -88,12 +106,12 @@ export default ({ config }) => {
           foregroundImage: "./assets/adaptive-icon.png",
           // TODO: Replace #YourAppBackgroundColor with the actual hex color for your adaptive icon's background.
           // This could be a color from IconKitchen or your app's branding.
-          backgroundColor: "#3d1141", // Example: using your app's main background, CHOOSE WISELY
+          backgroundColor: isTest ? "#D97706" : "#3d1141", // Amber for test, purple for real
           // Optional: If you have a monochrome icon for Android 13+ themed icons (e.g., 1024x1024px)
           monochromeImage: "./assets/monochrome-icon.png",
         },
-        package: "com.mohitchilkoti.apprec8",
-        googleServicesFile: "./google-services.json",
+        package: isTest ? "com.mohitchilkoti.apprec8.test" : "com.mohitchilkoti.apprec8",
+        googleServicesFile: isTest ? "./docs/agents/private/google-services.test.json" : "./google-services.json",
         intentFilters: [
           {
             action: "VIEW",
@@ -131,11 +149,12 @@ export default ({ config }) => {
       extra: {
         firebaseApiKey: process.env.FIREBASE_API_KEY,
         firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+        firebaseProjectId: isTest ? "apprec8-test" : process.env.FIREBASE_PROJECT_ID,
         firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
         firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         firebaseAppId: process.env.FIREBASE_APP_ID,
-        googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+        googleWebClientId: isTest ? testWebClientId : process.env.GOOGLE_WEB_CLIENT_ID,
+        ...(isTest ? { appVariant: "test" } : {}),
         eas: {
           projectId: "ce048455-06a3-4e7e-aebb-ae82b867c72a",
         },
