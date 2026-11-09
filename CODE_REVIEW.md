@@ -2365,3 +2365,15 @@ blamed "the 10-minute rule" (the demo parent hit the same thing on 7 Nov). Fix (
 Nothing else changes; every other field the rule reads is guarded already. **DR-22: Gemini deploys
 `firebase deploy --only firestore:rules` from Claude's folder after the owner's OK, then tests the first-run sheet
 with a brand-new throwaway account (child, Class 5) and deletes it.**
+
+## 2026-11-09 — DR-23 (CRITICAL security): delete the 2025 HTTP content endpoints (Claude, from Gemini's G60)
+`functions/api/*.js` (2025 content scripts) are still deployed as public HTTP functions **with no auth check**;
+`deleteAllDocuments` deletes documents in any collection by field match (e.g. `users`), and the repo is public. None
+are called by the app (checked). Code: no longer exported from `functions/index.js` (31 functions remain).
+**DR-23:** `firebase functions:delete deleteAllDocuments bulkDeleteGameDocs deleteQuiz deleteQuestions
+deleteVocabCategory bulkAddCategories bulkAddTopics bulkAddQuizQuestions bulkAddStudyContent bulkAddVocabCategories
+bulkAddWordsToCategory bulkAddSpellingBeePuzzles bulkAddWordInspectorQuizzes bulkGetWordInspectorQuizzes
+getGameContent getDocumentsById addCategory addTopic createQuiz addQuizQuestion addStudyContent addQuestions
+updateTopic updateQuizDetails updateQuestions updateFirestoreDocuments --region us-central1 --project apprec8-ca229
+--force` (owner or Gemini, after the owner's OK). The rest of G60 (content cleanup, buckets, indexes) waits for its
+own review and the Unit 1 quiz migration.
