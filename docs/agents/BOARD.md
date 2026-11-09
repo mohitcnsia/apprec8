@@ -267,8 +267,8 @@ pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
 
-### G74 · [todo] · gemini · 🚨 Deploy DR-22 (profile rule, missing field) — owner-approved: not yet
-CODE_REVIEW.md "DR-22". Wait until Claude changes "not yet" to "yes". Then: check the local `firestore.rules` diff vs
+### G74 · [todo] · gemini · 🚨 Deploy DR-22 NOW (profile rule, missing field) — owner-approved: yes, 2026-11-09 "ok for DR-22"
+CODE_REVIEW.md "DR-22". Approved. Check the local `firestore.rules` diff vs
 live is only the DR-22 line (+ the DR-21 block already live), deploy rules from Claude's folder, test with a NEW
 throwaway account: sign up → first name → Class 5 → LET'S GO must save; delete the account afterwards. Report in
 G74.md. `gemini(G74): done — deployed + tested`.
