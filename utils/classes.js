@@ -4,6 +4,8 @@
 //   ("5-B": English teacher + Science teacher). A kid is in at most MAX_CLASSES classes (school + tuitions).
 // - Kids join with a class code, and only after a parent accepts the consent text (English + Hindi).
 
+import { QUESTS } from "../data/quests/index.js";
+
 export const MAX_CLASSES = 3;
 export const SUBJECTS = ["english", "science", "maths", "wordpower"];
 export const SUBJECT_NAMES = { english: "English", science: "Science", maths: "Maths", wordpower: "Word Power" };
@@ -49,9 +51,23 @@ export const teacherSubjectsIn = (cls, uid) => (cls?.teacherSubjects?.[uid] || [
 /** Which quests a teacher may see for a class. */
 export function questsForTeacher(cls, uid) {
   const subjects = teacherSubjectsIn(cls, uid);
-  return Object.entries(QUEST_SUBJECT)
+  const base = Object.entries(QUEST_SUBJECT)
     .filter(([, subject]) => subjects.includes(subject))
     .map(([questId]) => questId);
+
+  const classId = cls?.id || null;
+  if (!classId) return base;
+
+  const extraCourses = (QUESTS || [])
+    .filter((m) => {
+      const q = m.quest || {};
+      if (!Array.isArray(q.forClassIds) || !q.forClassIds.includes(classId)) return false;
+      const subject = q.subject || "english";
+      return subjects.includes(subject);
+    })
+    .map((m) => m.QUEST_ID);
+
+  return [...new Set([...extraCourses, ...base])];
 }
 
 /** "5-B · English, Science" */

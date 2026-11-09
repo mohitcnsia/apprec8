@@ -27,13 +27,29 @@ function checkQuest(D) {
   const KINDS = ["unit", "main", "practice", "gate", "endless", "boss"];
   const unitIds = new Set(nodes.filter(n => n.kind === "unit").map(n => n.id));
   const mainIds = new Set(nodes.filter(n => n.kind === "main").map(n => n.id));
-  // Only English Quest reuses old IEO quizzes/pages; other quests must bring all their content.
-    const reusesIeo = D.QUEST_ID === "english-quest";
-    const quizExists = (id) => !!D.quizzes[id] || (reusesIeo && (!old || !!old[id]?.length));
+  // Only English Quest reuses old IEO quizzes/pages; course quests can reuse English Quest content.
+  const reusesEnglish = D.QUEST_ID === "course-seema-c10-english";
+  const englishQuest = reusesEnglish ? QUESTS.find(q => q.QUEST_ID === "english-quest") : null;
+  const reusesIeo = D.QUEST_ID === "english-quest";
+  const quizExists = (id) =>
+    !!D.quizzes[id] ||
+    (reusesIeo && (!old || !!old[id]?.length)) ||
+    (reusesEnglish && !!englishQuest?.quizzes[id]);
   const stepOk = (s, where) => {
     if (s.type === "quiz") assert.ok(quizExists(s.quizId), `${where}: missing quiz ${s.quizId}`);
-    else if (s.type === "study") assert.ok(D.studyPages[s.contentId] || (reusesIeo && existingStudy.includes(s.contentId)), `${where}: missing study ${s.contentId}`);
-    else if (s.type === "reading") assert.ok(D.readings[s.contentId], `${where}: missing reading ${s.contentId}`);
+    else if (s.type === "study")
+      assert.ok(
+        D.studyPages[s.contentId] ||
+          (reusesIeo && existingStudy.includes(s.contentId)) ||
+          (reusesEnglish && !!englishQuest?.studyPages[s.contentId]),
+        `${where}: missing study ${s.contentId}`
+      );
+    else if (s.type === "reading")
+      assert.ok(
+        D.readings[s.contentId] ||
+          (reusesEnglish && !!englishQuest?.readings[s.contentId]),
+        `${where}: missing reading ${s.contentId}`
+      );
     else assert.fail(`${where}: unknown step type ${s.type}`);
   };
   for (const n of nodes) {
@@ -63,7 +79,7 @@ function checkQuest(D) {
   // Gate pools (Spec v2 Step 2): every question tagged with a known sub-topic, enough questions to draw
   // a fresh balanced test, and every practice sub-topic of the branch named on the gate.
   for (const g of nodes.filter(n => n.kind === "gate")) {
-    const pool = D.quizzes[g.quizId];
+    const pool = D.quizzes[g.quizId] || (reusesEnglish ? englishQuest?.quizzes[g.quizId] : null);
     if (!pool) continue; // reused old quiz (no sub-topics yet)
     const titles = g.subtopicTitles || {};
     assert.ok(Object.keys(titles).length > 0, `${g.id}: subtopicTitles missing`);
@@ -79,8 +95,9 @@ function checkQuest(D) {
     // back to any branch question, and older builds can't clear the mistake at all).
     const practiceSteps = [nodes.find(n => n.id === g.branchId), ...nodes.filter(n => n.kind === "practice" && n.branchId === g.branchId)]
       .flatMap(n => (n.steps || []).filter(s => s.type === "quiz").map(s => ({ quizId: s.quizId, node: n })));
-    if (practiceSteps.every(s => D.quizzes[s.quizId])) {
-      const tagged = new Set(practiceSteps.flatMap(s => D.quizzes[s.quizId].map(q => q.subtopic || s.node.subtopic)));
+    const getQuiz = (qid) => D.quizzes[qid] || (reusesEnglish ? englishQuest?.quizzes[qid] : null);
+    if (practiceSteps.every(s => getQuiz(s.quizId))) {
+      const tagged = new Set(practiceSteps.flatMap(s => getQuiz(s.quizId).map(q => q.subtopic || s.node.subtopic)));
       for (const t of Object.keys(titles)) assert.ok(tagged.has(t), `${g.id}: no practice question for sub-topic '${t}' (My mistakes can't fix it)`);
     }
     console.log(`gate ${g.id}: ${pool.length} questions, sub-topics ${Object.keys(titles).map(t => `${t}=${pool.filter(q => q.subtopic === t).length}`).join(" ")}`);
