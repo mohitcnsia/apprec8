@@ -508,7 +508,7 @@ Bones cannot move by themselves. Over **600 muscles** in the human body are atta
           {
                 "emoji": "🥣",
                 "title": "The digestive journey",
-                "text": "Saliva in your mouth turns starch into sugar. The stomach churns food with acid and breaks down proteins. The small intestine absorbs nutrients into blood using bile from the liver.",
+                "text": "Saliva in your mouth turns starch into sugar. The stomach churns food with acid and breaks down proteins. Bile from the liver helps break down fats, and the small intestine soaks the nutrients into the blood.",
                 "examples": [
                       "Mouth: Saliva digests starch",
                       "Stomach: Acid churns proteins",
