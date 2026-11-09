@@ -310,8 +310,8 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
 3. `.firebaserc` alias `test` → apprec8-test; deploy Firestore rules + indexes there (test project only).
 4. `scripts/admin/copyContentToTest.mjs`: copies CONTENT only (quests, nodes, categories, studyContent, questions, quizzes)
    from real to test; never users, children, classes, progress, feedback. Dry run first, then counts.
-5. **Cloud Functions:** owner decided 9 Nov: apprec8-test goes on Blaze (pay-as-you-go, budget alert). Once the owner says
-   the upgrade is done, deploy ALL functions to the test project only (`firebase deploy --only functions --project test`).
+5. **Cloud Functions:** owner decided 9 Nov: apprec8-test goes on Blaze (pay-as-you-go, budget alert). **Upgrade done (owner, 9 Nov, budget alert ₹200).**
+   Deploy ALL functions to the test project only (`firebase deploy --only functions --project test`).
 6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
