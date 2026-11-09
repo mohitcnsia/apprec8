@@ -17,6 +17,9 @@ import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
 import { showAlert } from "../../services/dialog";
 import { useCanWriteFreeText } from "../../context/FreeTextContext";
+import Constants from "expo-constants";
+import { getApp } from "@react-native-firebase/app";
+import { getFirestore, collection, addDoc, serverTimestamp } from "@react-native-firebase/firestore";
 // Removed unused DateTimePicker/formatDate imports
 
 const ContactUsForm = ({ navigation }) => {
@@ -73,21 +76,33 @@ const ContactUsForm = ({ navigation }) => {
   }
 
   // Update submit handler (no Alert needed here for validation)
+  // Sends to userFeedback (entryPoint "cntct"): the owner reads it in Admin tools → Ideas & reports → Contact.
+  // (2026-11-09: until now this only waited 1.5 s and closed, so messages were lost.)
   function submitHandler() {
-    if (validateFormData() && !isSubmitting) {
-      setIsSubmitting(true);
-      console.log("Form Data:", formData, "User Email:", userEmail);
-      // Replace with actual email sending logic
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Use Alert only for SUCCESS notification now
-        // showAlert("Success", "Email feature is Coming Soon");
-        setFormData({ subject: "", message: "" }); // Clear form on success
-        navigation.goBack();
-      }, 1500);
+    if (!validateFormData() || isSubmitting) return;
+    const user = authInstance.currentUser;
+    if (!user) {
+      showAlert("Please sign in", "Sign in first, so we can reply to you.");
+      return;
     }
+    // Firestore queues the write when offline and sends it later (same as 🚩 reports), so don't wait for the server.
+    addDoc(collection(getFirestore(getApp()), "userFeedback"), {
+      userId: user.uid,
+      userName: null,
+      entryPoint: "cntct",
+      feedbackType: "contact",
+      subject: formData.subject.trim().slice(0, 120),
+      feedbackText: formData.message.trim().slice(0, 2000),
+      appVersion: Constants.expoConfig?.version || null,
+      clientTimestamp: new Date().toISOString(),
+      createdAt: serverTimestamp(),
+      status: "new",
+    }).catch((e) => console.error("ContactUsForm send failed:", e));
+    setFormData({ subject: "", message: "" });
+    showAlert("Sent ✓", "Thank you! We read every message. (No internet? It goes as soon as you're back online.)", [
+      { text: "OK", onPress: () => navigation.goBack() },
+    ]);
   }
-
   // --- Styles (remain the same as previous themed version) ---
   const styles = useMemo(
     () =>
