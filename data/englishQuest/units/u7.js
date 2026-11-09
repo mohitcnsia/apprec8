@@ -19,6 +19,61 @@ export default {
     "eq-u7-passive": {
       name: "Active and Passive",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔄",
+                "title": "Active vs Passive",
+                "text": "In active sentences, the person doing the action comes first. In passive sentences, the object receiving the action takes the spotlight at the front!",
+                "examples": [
+                      "Active: The chef baked the cake.",
+                      "Passive: The cake was baked by the chef.",
+                      "Active: People speak English here.",
+                      "Passive: English is spoken here."
+                ]
+          },
+          {
+                "emoji": "🧩",
+                "title": "Building the passive",
+                "text": "Form the passive with a form of 'be' (is, are, was, were) plus the past participle (third form) of the main verb: was broken, is cleaned.",
+                "examples": [
+                      "The room is cleaned daily. (Present)",
+                      "The letter was posted yesterday. (Past)",
+                      "The books were returned on time."
+                ]
+          },
+          {
+                "emoji": "🙋",
+                "title": "Using BY for the doer",
+                "text": "Add 'by' before the person or thing who performed the action. If the doer is unknown or unimportant, you can leave it out completely.",
+                "examples": [
+                      "The window was smashed by a cricket ball.",
+                      "The thief was arrested. (by the police is obvious!)",
+                      "Tea is grown in Assam."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Change into passive voice: 'Ravi wrote a wonderful poem.'",
+                "answer": "A wonderful poem was written by Ravi.",
+                "wrong": [
+                      "A wonderful poem was wrote by Ravi.",
+                      "A wonderful poem is written by Ravi.",
+                      "A wonderful poem had written by Ravi."
+                ],
+                "explain": "The original sentence is in past tense, so use 'was + written (past participle)'."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is in the passive voice?",
+                "answer": "The bridge was built in 1995.",
+                "wrong": [
+                      "Engineers built the bridge in 1995.",
+                      "The workers are building a bridge.",
+                      "We crossed the wooden bridge."
+                ],
+                "explain": "'Was built' uses a be-verb + past participle, placing the object (bridge) at the front."
+          }
+    ],
       content: `### 🔄 Who did it, or what happened?
 
 | Active (the doer comes first) | Passive (the thing comes first) |
@@ -59,6 +114,62 @@ When the doer is not important, leave it out: *English is spoken here.*
     "eq-u7-reported": {
       name: "Reported Speech",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🗣️",
+                "title": "Reporting words",
+                "text": "Direct speech quotes exact words inside speech marks. Reported speech retells the message without quotes, shifting verbs one step back into the past.",
+                "examples": [
+                      "Direct: Riya said, 'I am tired.'",
+                      "Reported: Riya said that she was tired.",
+                      "Direct: 'I will help,' said Aman.",
+                      "Reported: Aman said that he would help."
+                ]
+          },
+          {
+                "emoji": "⏪",
+                "title": "Verbs step back in time",
+                "text": "When reporting past speech, move present verbs into past forms: am/is becomes was, are becomes were, will becomes would, and can becomes could!",
+                "examples": [
+                      "am / is → was",
+                      "are → were",
+                      "will → would",
+                      "can → could"
+                ]
+          },
+          {
+                "emoji": "💬",
+                "title": "Said vs Told",
+                "text": "Use 'told' when naming the person spoken to: 'She told me the news.' Use 'said' when there is no listener mentioned: 'She said that she was happy.'",
+                "examples": [
+                      "She told me that... (Needs a listener!)",
+                      "She said that... (No listener needed)",
+                      "Never say: She said me... ❌"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Convert to reported speech: Kabir said, 'I can solve this puzzle.'",
+                "answer": "Kabir said that he could solve that puzzle.",
+                "wrong": [
+                      "Kabir said that I can solve this puzzle.",
+                      "Kabir told that he can solve that puzzle.",
+                      "Kabir said that he will solve that puzzle."
+                ],
+                "explain": "In reported speech, 'I' changes to 'he' and 'can' shifts back to 'could'."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence uses 'told' correctly?",
+                "answer": "The teacher told us to open our books.",
+                "wrong": [
+                      "The teacher said us to open our books.",
+                      "The teacher told that to open our books.",
+                      "The teacher told to us to open our books."
+                ],
+                "explain": "'Told' is followed directly by the person being spoken to: 'told us'."
+          }
+    ],
       content: `### 🗣️ Telling someone what another person said
 
 | Direct speech | Reported speech |

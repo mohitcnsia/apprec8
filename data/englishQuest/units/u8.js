@@ -21,6 +21,60 @@ export default {
     "eq-u8-reason": {
       name: "Because, So and Although",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔗",
+                "title": "Reason vs Result",
+                "text": "Use 'because' to explain the reason (answering Why?). Use 'so' to explain the result (what happened as a consequence).",
+                "examples": [
+                      "We stayed home because it was raining. (Reason)",
+                      "It was raining, so we stayed home. (Result)",
+                      "He worked hard, so he succeeded."
+                ]
+          },
+          {
+                "emoji": "🧩",
+                "title": "Because vs Because of",
+                "text": "'Because' is followed by a full subject and verb sentence. 'Because of' is followed by a simple noun or noun phrase.",
+                "examples": [
+                      "The match stopped because it rained. (Full sentence)",
+                      "The match stopped because of the rain. (Noun)",
+                      "Never say 'because of it rained'! ❌"
+                ]
+          },
+          {
+                "emoji": "😮",
+                "title": "Although: a surprise contrast",
+                "text": "'Although' joins two contrasting ideas that seem surprising together. Remember: use 'although' OR 'but'—never use both in one sentence!",
+                "examples": [
+                      "Although it was chilly, Meera went swimming.",
+                      "The box was small, but it was heavy.",
+                      "❌ Although it was chilly, but she swam."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Choose the correct linking word: 'She woke up late, ___ she missed the morning bus.'",
+                "answer": "so",
+                "wrong": [
+                      "because",
+                      "although",
+                      "because of"
+                ],
+                "explain": "Missing the bus was the result of waking up late, so we use 'so'."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence avoids the 'although … but' double conjunction error?",
+                "answer": "Although he was tired, he finished his chores.",
+                "wrong": [
+                      "Although he was tired, but he finished his chores.",
+                      "Because he was tired, so he slept.",
+                      "Although the book was long, but it was exciting."
+                ],
+                "explain": "Never use 'although' and 'but' together in the same sentence; 'although' alone is complete."
+          }
+    ],
       content: `### 🔗 Reason or result?
 
 Linking words join two ideas into one sentence.
@@ -65,6 +119,61 @@ Linking words join two ideas into one sentence.
     "eq-u8-time": {
       name: "Before, After, When, While and Until",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "⏰",
+                "title": "Putting time in order",
+                "text": "Time conjunctions connect events. 'Before' means earlier than; 'after' means later than; 'until' means up to a specific point in time.",
+                "examples": [
+                      "Wash your hands before eating.",
+                      "We ate ice cream after the game.",
+                      "Wait here until the green light appears."
+                ]
+          },
+          {
+                "emoji": "🏃",
+                "title": "When vs While",
+                "text": "Use 'while' with a long, continuous background action (was/were -ing). Use 'when' for the short event that suddenly interrupts it!",
+                "examples": [
+                      "I was sleeping when the phone rang.",
+                      "While I was studying, the lights went out.",
+                      "The bell rang: short event → when",
+                      "I was reading: long event → while"
+                ]
+          },
+          {
+                "emoji": "🔮",
+                "title": "Future after time words",
+                "text": "In time clauses starting with when, before, after, and until, use the simple present to talk about the future—never use 'will'!",
+                "examples": [
+                      "Wait until he arrives. (NOT will arrive)",
+                      "Call me when you reach home. (NOT will reach)",
+                      "Before you leave, check your bag."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence correctly pairs 'when' and 'while'?",
+                "answer": "While we were playing outside, it began to rain.",
+                "wrong": [
+                      "When we were playing outside, while it rained.",
+                      "While the bell rang, I was reading.",
+                      "We were playing outside until it was raining."
+                ],
+                "explain": "'While' pairs with the ongoing continuous action ('were playing')."
+          },
+          {
+                "kind": "check",
+                "question": "Choose the correct verb: 'Please wait in the lobby until the doctor ___.'",
+                "answer": "arrives",
+                "wrong": [
+                      "will arrive",
+                      "arrived",
+                      "is arriving"
+                ],
+                "explain": "After 'until', English uses the simple present ('arrives') to express future time."
+          }
+    ],
       content: `### ⏰ Time words
 
 | Word | Meaning | Example |
@@ -106,6 +215,62 @@ After **when, before, after, until**, use the present for the future:
     "eq-u8-pairs": {
       name: "Both, Either and Neither",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "👯",
+                "title": "Conjunctions that travel in pairs",
+                "text": "Correlative conjunctions work in matched pairs: 'both … and' links two true facts; 'either … or' offers a choice; 'neither … nor' denies both.",
+                "examples": [
+                      "Both Ria and Sam love books. (Both true)",
+                      "You may have either juice or milk. (Choice of one)",
+                      "Neither Rohan nor Dev was late. (Neither one)"
+                ]
+          },
+          {
+                "emoji": "🧷",
+                "title": "Keep the partners matched!",
+                "text": "Never mix up the partners! Remember: the letter 'n' in neither matches the letter 'n' in nor. Either pairs strictly with or!",
+                "examples": [
+                      "both … and ✅",
+                      "either … or ✅",
+                      "neither … nor ✅",
+                      "❌ neither … or (Never mix them!)"
+                ]
+          },
+          {
+                "emoji": "🔄",
+                "title": "Rewriting with pairs",
+                "text": "Use pairs to combine two sentences smoothly into one elegant thought without repeating words.",
+                "examples": [
+                      "Asha sings. Asha dances.",
+                      "→ Asha can both sing and dance.",
+                      "He cannot swim. He cannot skate.",
+                      "→ He can neither swim nor skate."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Fill in the blank: 'You can choose ___ the chocolate cake or the fruit tart.'",
+                "answer": "either",
+                "wrong": [
+                      "neither",
+                      "both",
+                      "whether"
+                ],
+                "explain": "'Or' pairs with 'either' to offer a choice between two options."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is correctly matched?",
+                "answer": "Neither the driver nor the passengers were hurt.",
+                "wrong": [
+                      "Neither the driver or the passengers were hurt.",
+                      "Either the driver nor the passengers were hurt.",
+                      "Both the driver or the passengers were hurt."
+                ],
+                "explain": "'Neither' must always be paired with 'nor'."
+          }
+    ],
       content: `### 👯 Linking words that come in pairs
 
 | Pair | Meaning | Example |

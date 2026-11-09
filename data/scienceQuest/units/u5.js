@@ -19,6 +19,62 @@ export default {
     "sq-light-study": {
       name: "Light and Shadows",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "💡",
+                "title": "Sources of light",
+                "text": "Luminous objects produce their own light, like the Sun, stars, bulbs, and fireflies. The Moon does not make light; it only reflects sunlight bouncing off its dusty surface.",
+                "examples": [
+                      "Sun and stars (luminous)",
+                      "Bulb and candle (luminous)",
+                      "Moon (reflects sunlight)",
+                      "Mirror (reflects light)"
+                ]
+          },
+          {
+                "emoji": "🪟",
+                "title": "Transparent, translucent, opaque",
+                "text": "Light passes completely through transparent glass. Translucent frosted glass lets only some light through, making things blurry. Opaque wood or metal blocks light completely, casting a dark shadow.",
+                "examples": [
+                      "Transparent: Clear glass and clean water",
+                      "Translucent: Butter paper and frosted glass",
+                      "Opaque: Wood, iron, and stone"
+                ]
+          },
+          {
+                "emoji": "👤",
+                "title": "How shadows form",
+                "text": "Light travels in straight lines. When an opaque object blocks light, a dark shadow forms on the opposite side. Shadows are longest in the early morning and shortest at midday noon.",
+                "examples": [
+                      "Morning/evening: Long shadows",
+                      "Noon: Shortest shadow",
+                      "Shadows need: Light, object, surface",
+                      "Shadow is always dark"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Why does the Moon shine brightly in the night sky?",
+                "answer": "It reflects light coming from the Sun",
+                "wrong": [
+                      "It produces its own light from burning gas",
+                      "It has glowing molten rocks inside",
+                      "It absorbs starlight during daytime"
+                ],
+                "explain": "The Moon is non-luminous. It shines because sunlight bounces off its rocky surface into our eyes!"
+          },
+          {
+                "kind": "check",
+                "question": "At what time of day is your outdoor shadow under the sun the shortest?",
+                "answer": "At noon (midday)",
+                "wrong": [
+                      "Early morning at sunrise",
+                      "Late afternoon at 5 PM",
+                      "Just before sunset"
+                ],
+                "explain": "At noon, the sun is directly overhead, casting the shortest shadow straight down."
+          }
+    ],
       content: `### 💡 Where does light come from?
 
 Some things **give out their own light**. They are **sources of light**.
@@ -66,6 +122,63 @@ You need: a **light**, an **opaque object** and a **surface** (wall, ground).
     "sq-sound-study": {
       name: "Sound All Around",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🥁",
+                "title": "Sound comes from vibrations",
+                "text": "Every sound is made by vibrations—rapid back-and-forth movements. A drum vibrates its stretched skin, guitar strings vibrate in air, and your vocal cords vibrate in your throat when you speak.",
+                "examples": [
+                      "Drum: Vibrating skin",
+                      "Guitar: Vibrating strings",
+                      "Flute: Vibrating air column",
+                      "Voice: Vibrating vocal cords"
+                ]
+          },
+          {
+                "emoji": "🌊",
+                "title": "Sound needs a medium",
+                "text": "Sound travels fastest through solids, slower through liquids, and slowest through gases like air. In empty space (a vacuum), there is no matter to vibrate, so sound cannot travel at all!",
+                "examples": [
+                      "Solids: Sound travels fastest",
+                      "Liquids: Whales hear underwater",
+                      "Air: We hear friends talk",
+                      "Vacuum (space): Complete silence"
+                ]
+          },
+          {
+                "emoji": "🔊",
+                "title": "Pitch, volume and echoes",
+                "text": "Harder vibrations make louder sounds. A high pitch sounds sharp like a whistle; a low pitch rumbles like thunder. An echo happens when sound bounces back from a distant wall or cliff.",
+                "examples": [
+                      "Louder: Hit drum harder",
+                      "High pitch: Bird chirp or whistle",
+                      "Low pitch: Lion roar or thunder",
+                      "Echo: Sound bounces off a cave wall"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Why can astronauts not hear each other speaking directly in open space without radios?",
+                "answer": "Space is a vacuum with no air for sound to travel through",
+                "wrong": [
+                      "Their helmets absorb all sound completely",
+                      "Sound travels too fast in space to hear",
+                      "Space has too much gravity for voices"
+                ],
+                "explain": "Sound requires a medium like air or solid to travel. Outer space is an empty vacuum!"
+          },
+          {
+                "kind": "check",
+                "question": "What causes an echo in an empty hall or valley?",
+                "answer": "Sound waves bouncing back from a hard surface",
+                "wrong": [
+                      "Sound waves getting trapped and heated",
+                      "Sound changing into visible light",
+                      "Vocal cords vibrating twice as fast"
+                ],
+                "explain": "An echo is heard when sound waves reflect off a hard barrier like a high wall or rock face."
+          }
+    ],
       content: `### 🥁 Sound comes from vibrations
 
 Sound is made when something **vibrates** (moves back and forth very fast).
@@ -111,6 +224,63 @@ Sound is made when something **vibrates** (moves back and forth very fast).
     "sq-magnets-study": {
       name: "Magnets",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🧲",
+                "title": "Magnetic materials",
+                "text": "Magnets attract iron, nickel, cobalt, and steel. They do not attract copper, aluminium, plastic, or wood. A natural rock magnet is called lodestone or magnetite. Magnetic pull easily acts through paper and water.",
+                "examples": [
+                      "Attracted: Iron nails and steel clips",
+                      "Not attracted: Plastic and wood",
+                      "Not attracted: Copper and gold",
+                      "Lodestone = natural magnetic rock"
+                ]
+          },
+          {
+                "emoji": "⬆️",
+                "title": "Two poles: attract and repel",
+                "text": "Every magnet has a North (N) and a South (S) pole. Magnetic force is strongest at the poles. Like poles push apart (repel: N-N or S-S). Opposite poles pull together (attract: N-S).",
+                "examples": [
+                      "North + South → Attract (pull together)",
+                      "North + North → Repel (push apart)",
+                      "South + South → Repel (push apart)",
+                      "Breaking a magnet creates two new poles"
+                ]
+          },
+          {
+                "emoji": "🧭",
+                "title": "How a compass works",
+                "text": "A freely hanging magnet always swings to point North-South because Earth behaves like a giant bar magnet. A pocket compass uses a tiny pivoting magnetic needle to guide travellers.",
+                "examples": [
+                      "Freely suspended: Points North-South",
+                      "Compass needle points North",
+                      "Dropping or heating damages magnets",
+                      "Store in pairs with opposite poles"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which of these materials will be attracted by a magnet?",
+                "answer": "An iron paper clip",
+                "wrong": [
+                      "An aluminium foil sheet",
+                      "A plastic button",
+                      "A wooden matchstick"
+                ],
+                "explain": "Magnets attract magnetic metals like iron, nickel, and cobalt. Aluminium and plastic are non-magnetic."
+          },
+          {
+                "kind": "check",
+                "question": "What happens when you bring the North poles of two bar magnets close together?",
+                "answer": "They repel and push each other away",
+                "wrong": [
+                      "They attract and snap together",
+                      "They stick with double strength",
+                      "They lose their magnetic poles"
+                ],
+                "explain": "Like poles (North-North or South-South) always repel each other!"
+          }
+    ],
       content: `### 🧲 What do magnets pull?
 
 | Magnetic (attracted) | Non-magnetic (not attracted) |

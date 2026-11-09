@@ -14,6 +14,59 @@ export default {
     "eq-u4-errors": {
       name: "Spotting Sentence Errors",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🔍",
+                "title": "How error spotting works",
+                "text": "A sentence is split into sections: (A), (B), (C), and (D No error). Your job is to inspect each section carefully like a grammar detective to catch mistakes.",
+                "examples": [
+                      "(A) The children / (B) is playing / (C) outside. → Error in B!",
+                      "(D) No error: choose this if everything is perfect!"
+                ]
+          },
+          {
+                "emoji": "👥",
+                "title": "Pronoun and agreement traps",
+                "text": "Always verify that pronouns match their owners (a person is he/she/they, never 'its'). Also check that singular subjects match singular verbs, especially with 'neither' or 'each'.",
+                "examples": [
+                      "❌ Neither of the mangoes were ripe.",
+                      "✅ Neither of the mangoes was ripe.",
+                      "❌ My aunt lost its purse. → lost her purse!"
+                ]
+          },
+          {
+                "emoji": "🛠️",
+                "title": "Word forms and prepositions",
+                "text": "Check whether a word needs to be an adjective or an adverb, and verify preposition partnerships like 'tolerance for' or 'good at'.",
+                "examples": [
+                      "tired (feeling weary) vs tiresome (causing weariness)",
+                      "interested in / good at / listen to",
+                      "exhausted (very tired) vs exhaustive (complete)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Where is the error in: '(A) Neither of the two boys / (B) were ready / (C) for the quiz.'?",
+                "answer": "Part (B) — should be 'was ready'",
+                "wrong": [
+                      "Part (A) — should be 'None of'",
+                      "Part (C) — should be 'to the quiz'",
+                      "Part (D) — No error"
+                ],
+                "explain": "'Neither' is singular, so Part (B) must use 'was ready', not 'were ready'."
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence contains NO error?",
+                "answer": "She is very good at solving maths puzzles.",
+                "wrong": [
+                      "She is very good in solving maths puzzles.",
+                      "The team played brilliant and won the match.",
+                      "Each of the players have received a medal."
+                ],
+                "explain": "The natural collocation is 'good at', and the grammar is completely accurate."
+          }
+    ],
       content: "### 🔍 Spot the Sentence Error\n\nError spotting questions test how well you can read a whole sentence and find the one part that is wrong.\n\n---\n\n### 🧱 Sentence Structure in Four Parts\n\nA sentence is divided into four numbered or lettered parts:\n- **(A)** First part\n- **(B)** Second part\n- **(C)** Third part\n- **(D)** No error (if the sentence is entirely correct!)\n\n---\n\n### ⚠️ The 5 Most Common Errors\n\n1. **Pronoun Reference Errors:**\n   - ❌ *My grandmother told us stories of **its** childhood.*\n   - ✅ *My grandmother told us stories of **her** childhood.* (Grandmother is a person, not a thing!)\n2. **Passive Voice Confusion:**\n   - ❌ *Jatin was **accusing** of theft by his neighbour.*\n   - ✅ *Jatin was **accused** of theft by his neighbour.* (Passive requires past participle!)\n3. **Subject-Verb Agreement Clashes:**\n   - ❌ *Neither of the two mangoes **were** sweet.*\n   - ✅ *Neither of the two mangoes **was** sweet.* ('Neither' is singular!)\n4. **Adjective vs Adverb Mix-ups:**\n   - ❌ *Sheena was **exhaustive** after running the marathon.*\n   - ✅ *Sheena was **exhausted** after running the marathon.* ('Exhaustive' means comprehensive; 'exhausted' means very tired!)\n5. **Preposition and Collocation Errors:**\n   - ❌ *The teacher has no tolerance **on** indiscipline.*\n   - ✅ *The teacher has no tolerance **for** indiscipline.* ('Tolerance for' is the correct preposition!)\n\n> 💡 **Inspection Strategy:** First check the subject and verb agreement. Second, check pronouns. Third, check prepositions and word forms!",
     },
   },

@@ -21,6 +21,61 @@ export default {
     "eq-u9-commas": {
       name: "Commas",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "🧺",
+                "title": "Commas in a list",
+                "text": "Use commas to separate three or more items in a list. Connect the final two items with the word 'and' without bumping them together.",
+                "examples": [
+                      "We bought apples, bananas, grapes and oranges.",
+                      "Ravi can paint, sketch, sculpt and draw.",
+                      "I packed a book, a torch and a water bottle."
+                ]
+          },
+          {
+                "emoji": "🙋",
+                "title": "Yes, No, and spoken names",
+                "text": "Place a comma after 'Yes' or 'No' at the beginning of an answer. When you call someone directly by name, separate their name with a comma!",
+                "examples": [
+                      "Yes, I have finished my homework.",
+                      "No, thank you.",
+                      "Aman, could you please pass the ball?",
+                      "Good morning, Mrs Sharma."
+                ]
+          },
+          {
+                "emoji": "🚫",
+                "title": "Commas that don't belong",
+                "text": "Never place a comma between the subject (who is doing the action) and the verb (what they are doing)!",
+                "examples": [
+                      "✅ My brother plays cricket.",
+                      "❌ My brother, plays cricket.",
+                      "✅ The big grey cat jumped over the fence."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence uses commas correctly in a list?",
+                "answer": "She packed her notebook, ruler, eraser and pencil case.",
+                "wrong": [
+                      "She packed, her notebook ruler eraser and pencil case.",
+                      "She packed her notebook ruler, eraser, and, pencil case.",
+                      "She packed her, notebook, ruler, eraser and, pencil case."
+                ],
+                "explain": "Commas separate the items in the list cleanly, with 'and' before the last item."
+          },
+          {
+                "kind": "check",
+                "question": "Where does the comma belong when answering: 'Yes I would love to join you.'?",
+                "answer": "Directly after 'Yes' (Yes, I would love...)",
+                "wrong": [
+                      "After 'love' (Yes I would love, to join)",
+                      "After 'join' (Yes I would love to join, you)",
+                      "No comma is needed anywhere"
+                ],
+                "explain": "An introductory 'Yes' or 'No' must always be followed by a comma."
+          }
+    ],
       content: `### ✏️ What does a comma do?
 
 A comma **,** is a tiny pause. It keeps words from bumping into each other.
@@ -63,6 +118,63 @@ Don't put a comma between **who** does something and **what they do**.
     "eq-u9-apos": {
       name: "Apostrophes",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "✂️",
+                "title": "Short forms (Contractions)",
+                "text": "An apostrophe replaces missing letters when words are joined together. It sits exactly where the dropped letter used to be!",
+                "examples": [
+                      "do not → don't (o is replaced)",
+                      "I am → I'm (a is replaced)",
+                      "we will → we'll (wi is replaced)",
+                      "will not → won't (special form)"
+                ]
+          },
+          {
+                "emoji": "🎒",
+                "title": "Showing ownership",
+                "text": "Add an apostrophe and s ('s) to show that something belongs to a person or animal: Ravi's bicycle, the lion's roar.",
+                "examples": [
+                      "Ravi's bag (the bag belonging to Ravi)",
+                      "the dog's tail (the tail of the dog)",
+                      "the teacher's desk",
+                      "my sister's room"
+                ]
+          },
+          {
+                "emoji": "🍎",
+                "title": "Plurals NEVER get apostrophes!",
+                "text": "To make a word plural (more than one), simply add -s or -es. An apostrophe is never used just to show more than one!",
+                "examples": [
+                      "✅ Fresh mangoes for sale.",
+                      "❌ Fresh mango's for sale.",
+                      "✅ She bought five apples.",
+                      "❌ She bought five apple's."
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence correctly uses an apostrophe to show ownership?",
+                "answer": "Meera found the puppy's favourite ball.",
+                "wrong": [
+                      "Meera found the puppys ball.",
+                      "Meera found the puppy's ball's.",
+                      "Meera loves all puppy's."
+                ],
+                "explain": "The ball belongs to the puppy, so we write 'puppy's ball'."
+          },
+          {
+                "kind": "check",
+                "question": "Why is 'I bought three book\\'s' incorrect?",
+                "answer": "Plural words do not take an apostrophe",
+                "wrong": [
+                      "'Books' must be spelled with a capital letter",
+                      "'Three' should be written after 'books'",
+                      "The word should be 'booking'"
+                ],
+                "explain": "Never use an apostrophe to make a noun plural; write 'three books'."
+          }
+    ],
       content: `### 🪄 The apostrophe has two jobs
 
 An apostrophe **'** looks like a flying comma.
@@ -111,6 +223,59 @@ A plural just adds **s**. No apostrophe!
     "eq-u9-speech": {
       name: "Speech Marks",
       author: "Apprec8",
+    cards: [
+          {
+                "emoji": "💬",
+                "title": "Hugging the spoken words",
+                "text": "Speech marks ('quotation marks') wrap tightly around the exact spoken words. Everything else, like 'said Veer', stays outside!",
+                "examples": [
+                      "\"I love painting,\" said Veer.",
+                      "Kavita asked, \"Are you ready?\"",
+                      "Keep narrator words outside the quotes!"
+                ]
+          },
+          {
+                "emoji": "🔠",
+                "title": "Three punctuation rules",
+                "text": "1. Capitalise the first word spoken. 2. Put the comma, question mark, or exclamation mark INSIDE the closing quotation mark. 3. Use a comma before speech starts!",
+                "examples": [
+                      "Father said, \"Pack your bag.\"",
+                      "\"Where is my hat?\" asked Rohan.",
+                      "\"Hooray!\" shouted the team."
+                ]
+          },
+          {
+                "emoji": "🔍",
+                "title": "No quotes for reported speech",
+                "text": "When you report what someone said using the word 'that', do not use speech marks at all!",
+                "examples": [
+                      "Direct: Riya said, \"I am hungry.\"",
+                      "Reported: Riya said that she was hungry. (No speech marks!)"
+                ]
+          },
+          {
+                "kind": "check",
+                "question": "Which sentence is punctuated correctly with speech marks?",
+                "answer": "Aman asked, \"Where did you find this book?\"",
+                "wrong": [
+                      "Aman asked, \"where did you find this book\"?",
+                      "Aman asked \"Where did you find this book?,\"",
+                      "Aman asked, where did you find this book?"
+                ],
+                "explain": "The spoken sentence starts with a capital 'W' and the question mark sits inside the closing quote."
+          },
+          {
+                "kind": "check",
+                "question": "Where does the punctuation mark go at the end of spoken words?",
+                "answer": "Inside the closing quotation mark",
+                "wrong": [
+                      "Outside the closing quotation mark",
+                      "Underneath the quotation mark",
+                      "Two spaces after the quotation mark"
+                ],
+                "explain": "In dialogue, the comma, full stop, exclamation mark, or question mark belongs inside the closing quotes."
+          }
+    ],
       content: `### 💬 Speech marks hug the spoken words
 
 Speech marks **" "** go around the **exact words** someone says. Nothing else goes inside.
