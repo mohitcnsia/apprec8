@@ -2402,3 +2402,14 @@ Push notification triggers for pending actions (G84 item 2):
 3. **Throttling:** Enforces maximum 1 push per user per 10 minutes (`pushRateLimits/{uid}`) with count ("N new") to prevent notification spam.
 **DR-25 (functions):** Deploy:
 `firebase deploy --only functions:redeemTeacherInvite,functions:onStudentJoinRequest --project apprec8-ca229` (after the owner's OK; do not deploy now).
+
+## 2026-11-10 — Review of G79, G81, G82, G83, G84, G85 + DR-25 (Claude)
+- **Merged:** G81 (Seema's course tile), G84 (Needs you + teacher Home), G82 (why-not panel), G79 (pilot fixes). All tests pass on the merge.
+- **G84 notes (not blocking, fix later):** `loadAdminTeacherRequests` reads every class + its teacherRequests on each app start
+  (grows with schools); `loadTeacherClassesOverview` reads one progress doc per child, one by one; throttled pushes are dropped,
+  not sent later; picks science OR english progress for a class with both subjects. Cheap enough for the pilot.
+- **G83 rejected + reverted:** ~1,100 of 1,998 whys explain another question. Back to Gemini, one unit at a time, gate `scripts/checkWhyMatch.mjs`.
+- **G85 not merged:** product flavors break `:app:bundleRelease` / `expo run:android`. Back to Gemini with the exact fixes (BOARD G85).
+- **DR-25 Deploy request (owner OK needed):** deploy functions `redeemTeacherInvite` (push to school admins + owner when a teacher
+  waits) and new trigger `onStudentJoinRequest` (push to the class teachers when a student waits), max 1 push per person per 10 min.
+  `firebase deploy --only functions:redeemTeacherInvite,functions:onStudentJoinRequest`. No rules change.

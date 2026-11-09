@@ -379,7 +379,7 @@ something the app can do, but she should know what happened as quickly and clean
 3. Clean test (RULE) with the Demo School: a kid with mistakes left (Home row + teacher row both say so), a kid fully done.
    Screenshots in G87.md. `gemini(G87): done — review please`.
 
-### G84b · [todo, after G84 review] · gemini · "Remind" a child (owner agreed 2026-11-09)
+### G84b · [todo] · gemini · "Remind" a child (owner agreed 2026-11-09)
 On G87's results list: **Remind** next to each child not done, and **Remind all not done**. It sends a push ("Seema Ma'am:
 finish Determiners — 6 mistakes to fix") and puts a card on the child's Home. Max 1 reminder per child per assignment per day.
 Server callable (teacher of that class only), reuse G84's push code. File a Deploy request; don't deploy. Clean test (RULE).
@@ -405,7 +405,7 @@ Owner: "Some pages I like the formatting and colouring. If kids could tell us, w
 5. **Our side:** `redactFeedbackForExport` keeps `liked`; Admin tools → Ideas & reports shows likes as "♥ Colours, Fun".
 6. Clean test (RULE). Report G86.md. `gemini(G86): done — review please`.
 
-### G81 · [todo] · gemini · Seema's course tile: "Seema Ma'am · Class 10 English" (owner decided in chat, 2026-11-09)
+### G81 · [done, merged 2026-11-10] · gemini · Seema's course tile: "Seema Ma'am · Class 10 English" (owner decided in chat, 2026-11-09)
 Owner: "We already created and reviewed all the questions. Create a new tile, put the quest behind it, only Seema and her
 students see it." No new questions, no new screens.
 1. `data/teacherCourses/seemaClass10.js` (same shape as the other quest modules; add to `data/quests/index.js`): QUEST_ID
@@ -421,7 +421,15 @@ students see it." No new questions, no new screens.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
 
-### G85 · [todo] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
+### G85 · [fixes 1] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
+**Claude's review 2026-11-10 (not merged):** the `real`/`preview` product flavors change every Android task name, and nothing
+else was updated, so the next real build breaks: `eas.json` production runs `:app:bundleRelease` (now builds BOTH flavors; the
+preview one needs a gitignored google-services.json → fails on EAS), development runs `:app:assembleDebug`, and `npm run
+android` (`expo run:android`) needs a variant. Fix 1: (a) eas.json production → `:app:bundleRealRelease`, development →
+`:app:assembleRealDebug`, a `preview` profile for the test app (`APP_VARIANT=test`, `:app:assemblePreviewRelease`, apk, channel
+preview); (b) package.json `android` → `expo run:android --variant realDebug`; (c) check `scripts/release/check-aab.sh` and
+OWNER_TESTING paths for the new output folder (`bundle/realRelease/`); (d) PROVE it: `./gradlew :app:bundleRealRelease` locally
+gives an .aab that `check-aab.sh` passes, package `com.mohitchilkoti.apprec8`, version 20.0.30. `gemini(G85): fixed 1`.
 Spec = the live doc, section "Setting up the test Firebase project": https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU
 Owner already did the console part: project **apprec8-test**, Auth (Email/Password + Google), Firestore nam5, Android app
 `com.mohitchilkoti.apprec8.test` with the debug SHA-1. Config file: Claude's git-ignored
@@ -439,7 +447,7 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
 6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
-### G84 · [done] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
+### G84 · [done, merged 2026-11-10; functions = DR-25, needs owner OK] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
 Owner: "Approvals kept hidden in the classes and I had to search for them … the responsible person will never know
 something is pending." Seema: "overly complicated, not usable." Claude decided the shape (partner remit); Claude reviews
 screenshots before anyone sees it.
@@ -460,7 +468,7 @@ screenshots before anyone sees it.
 5. Clean test (RULE) with the Demo School: teacher with waiting students, admin with a waiting teacher, a parent with
    nothing pending. Screenshots in G84.md. `gemini(G84): done — review please`.
 
-### G82 · [done] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
+### G82 · [done, merged 2026-11-10] · gemini · "Why not this option?" for every wrong option (owner, 2026-11-09) — app part
 Owner: "add why other options are incorrect; extremely useful where more than one option seems correct." Claude decided
 the shape (content-quality remit):
 1. Data: a wrong option may carry `why` (one short kid-friendly sentence). Helper `q()` in `data/englishQuest/helpers.js`
@@ -474,14 +482,22 @@ the shape (content-quality remit):
    and a right answer on a question that has `why`s (Claude adds them to 3 Grammar Pro questions for the test).
 `gemini(G82): done — review please`.
 
-### G83 · [todo] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
+### G83 · [fixes 1] · gemini · Content pass: `why` for every wrong option in Grammar Pro b1–b6 (after G82) — Seema's course first
+**Claude's review 2026-11-10: REJECTED and reverted.** About 1,100 of 1,998 whys explain a DIFFERENT question (copied by mistake
+tag): the courier question's why talks about "how much this camera cost"; "explained → asked" gets a why about "whether he had
+seen"; "Meera said that I would visit…" says "'I' refers to the listener" (wrong). A wrong why is worse than none (content
+accuracy rule 5). Fix 1, ONE UNIT AT A TIME, b4 first (Seema's weakest topic), then b3, b1, b2, b5, b6:
+- Write each why for THAT question and THAT option: name the words in the option that are wrong and say the rule in ≤ 20 words.
+  Never reuse a why across questions; quoted words must appear in the question or the option.
+- Gate: `node scripts/checkWhyMatch.mjs .` must report bad = 0 for the unit (it flags quoted words not in the question/option),
+  then read every why of the unit once yourself. Commit per unit: `gemini(G83): fixed 1 — b4` … Claude spot-checks each unit.
 For each of the ~666 questions: write `why` for each wrong option (≤ 20 words, kid-friendly, says what rule it breaks). Also
 check each question has **at least one near miss** (looks right, isn't) and **exactly one defensible answer**; list any
 question where a near miss could be argued right (that is a High issue, like today's 5). Don't change correct answers or
 ids. Report G83.md: counts, every question you changed beyond adding `why`, and every "could be argued" case. Claude
 reviews all of those + a sample; Seema checks a sample before the re-seed.
 
-### G79 · [done] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
+### G79 · [done, merged 2026-11-10] · gemini · Pilot fixes from Claude's clean pass (2026-11-09) — do right after G77
 Claude tested a NEW Class 10 student on the release build (emulator). Fix, then clean-test (RULE above):
 1. **Home + Progress hide a quest with no topics for the child's class.** Class 10 sees a Science tile that opens to only
    "Coming soon" and Progress shows "Word Power · Unit 3 · 0/0 topics", "Science · Unit 7 · 0/0 topics". Use
