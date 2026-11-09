@@ -324,7 +324,10 @@
     "ask": "Chamku the star, Kurma the tortoise, Chiku the monkey, Madhu the bee, Cheenu the ant, Veda the owl. Keep these? Type any name changes in the note.",
     "details": "**The cast**\n\n![The cast](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg)\n\n**The avatar builder (items won from the chest)**\n\n![The avatar builder (items won from the chest)](https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-avatar.jpg)\n\n**Claude's notes:** much more fun than our current star. Let **Pratha vote** on the names. One to think about: **Kurma** is the tortoise avatar of Vishnu, so some families may see it as religious; a neutral option is **\"Kachhu\"** or **\"Dadu Kachhua\"**.\n\n**YES** = keep the cast (with your note's changes).",
     "link": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/apprec8-mock-cast.jpg",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Kurma is fine (owner, chat 9 Nov). Pratha can still suggest names.",
+    "via": "chat"
   },
   {
     "id": "vote-fun-names",

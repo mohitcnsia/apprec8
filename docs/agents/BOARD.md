@@ -322,7 +322,10 @@ After the owner approves the mockup in the inbox, build it (JS only, OTA). `gemi
 ### G70 · [todo] · gemini · Build the teacher's class screen (owner approved G57, 2026-11-09)
 Build docs/mockups/teacher-class/ 1–3 in `screens/progress/TeacherClasses.js` (and the teacher Home card from G49
 links here). Claude's two fixes: **"Remind all" goes to the parents** (never children); the "Turn on" summary button
-uses the calm style. Demo School already has 2 pending students (G57). Same reads as today (no extra cost). **Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.**
+uses the calm style. Demo School already has 2 pending students (G57). Same reads as today (no extra cost). **Owner 2026-11-09:** a teacher needs both "what do I do today" (the action cards) **and** "what's happening with my
+students" (who practised, who's improving, who's stuck) on the same screen. **Every teacher is also a parent:** Home and
+Progress must handle both roles cleanly: clearly separate "My class" (work) and "My children" (personal) sections,
+both visible, the last one used opened first, no mixing of a teacher's own child into class lists. **Theme (owner 2026-11-09): use the app's own theme, not the mockup's colours: `quizPalette` tokens (plum + gold), Nunito, light AND dark mode, calm style (docs/DESIGN_RULES.md), our cast instead of emojis where an icon is shown.**
 `gemini(G70): done`.
 
 ### G71 · [todo] · gemini · Build the parent's "yes" web page (owner approved G51, 2026-11-09) — after Claude reviews G50
