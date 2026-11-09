@@ -251,8 +251,16 @@ foreground (1024×1024, logo inside the central 66%), a one-colour notification 
 report `docs/agents/reports/G48.md` (what each direction means, 3 lines each). Don't change any app files.
 Commit `gemini(G48): done — 3 directions`. Claude puts them in the owner's Decisions inbox to pick one.
 
+### RULE · 2026-11-09 (Claude) · NEVER SHOW MADE-UP DATA
+Claude's review of G49 found the mockup's numbers hard-coded in the real screens ("52 minutes", "86% right",
+"Tenses (had done)" for every child; "3 waiting", "24 of 38 practised", "Reported questions (52% right)" as
+fallbacks; a hidden `devRole` that injects a fake class and a fake Pratha). Shown to a real parent or teacher this is
+false information about their own children. **Always real data or an honest empty / loading state** ("No practice
+yet this week", "—"). Demo data only through the Demo School logins. No test switches in shipped screens.
+Neutral wording ("their week", not "her week"). Grep your diff for mockup numbers before "done".
+
 ### PRIORITY · 2026-11-09 (Claude) · do the [todo] tasks in THIS order (last time G51–G63 were done before G64–G68)
-**1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
+**0) G49-R rework row Z (real data only; blocks the owner's testing)**, **1) G66 feedback pipeline (plan first) — owner: highest priority**, 1b) G69 build Chamku asks (with G66), 2) G64 parent's week fix, 3) G65 🚩 on reading
 pages, 4) G68 Challenge words for strong readers (owner: proper fix within 2–3 days), 4b) G70 teacher class screen, 5) G67 Progress facts (no
 code), 6) G53 ∞ alone, 7) G71 parent web page (after G50 review). [review] = Claude reviews; don't build on top of them yet. Mockups approved by the owner come
 back as new build tasks.
@@ -506,7 +514,24 @@ parent or guardian and I agree", big button "हाँ, मैं सहमत �
 stars are saved now." Calm, plum palette, thumb zone (button at the bottom), plain words for parents who read little.
 Commit `gemini(G51): done — mockup`. Claude puts it in the owner's inbox.
 
-### G49 · [review] · gemini · ⭐ Build row Z: the simpler Home and Me (owner-approved 2026-11-06)
+### G49-R · [todo] · gemini · ⭐ REWORK row Z (Claude's review, 2026-11-09): real data only
+Branch feat/simple-home. **Rebase on the latest `feat/quiz-redesign` first** (it changed HomeScreen, MeScreen,
+ProgressScreen: Owner extras, Decisions, guide/teacher pages). Then:
+1. **Delete `devRole`** and every injected demo object (demo_pratha, demo_class_10b). Test roles with the Demo School
+   logins (demo.parent / demo.teacher / demo.kid) or the tester account instead.
+2. **Parent card:** real numbers from the same logic as `components/parent/ParentWeekCard.js` / `utils/parentWeek.js`
+   (all subjects combined, see G64): days, minutes, % right, the real "to practise together" topic; if no practice
+   this week: "No practice yet this week" + LET <NAME> PLAY. Pronoun-free ("their week"). Real class, no "Class 5" default.
+3. **Teacher card:** real values from the data `screens/progress/TeacherClasses.js` loads (members with status pending =
+   waiting; approved count; active this week; current assignment; weakest topic). Missing → hide the line or "—",
+   never a number from the mockup.
+4. Grep the whole diff for 52, 86, 38, 24, "Reported", "Tenses (had done)", "10-B", "Pratha" before finishing.
+5. Add the later spec items if not done yet: the Home guide card (Y1–Y3), "this phone or their own phone?" after Add a
+   child, explanations on code screens, short Progress "Me" view, and the two-role (teacher + parent) layout.
+6. Screenshots with the Demo School logins (parent, teacher) and the tester account (child) in G49-R.md.
+Then G50 (learn first) is rebased on the fixed branch. `gemini(G49-R): done — review please`.
+
+### G49 · [todo] · gemini · ⭐ Build row Z: the simpler Home and Me (owner-approved 2026-11-06)
 Owner: "earlier anyone could log in and learn right away; now too many taps". Approved mockups (with his fixes):
 `docs/mockups/rowZ/Z1…Z4.png`. Claude is short on budget: **you build, Claude reviews.** Branch `feat/simple-home`
 from `feat/quiz-redesign`, in your worktree. Small commits. Rules: docs/DESIGN_RULES.md (thumb zone, calm, fold
