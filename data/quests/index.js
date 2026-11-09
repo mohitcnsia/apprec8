@@ -7,7 +7,8 @@ import * as english from "../englishQuestData.js";
 import * as wordPower from "../wordPowerQuestData.js";
 import * as science from "../scienceQuestData.js";
 import * as wordBank from "../wordBankQuestData.js";
+import * as academy from "../academyQuestData.js";
 
-export const QUESTS = [english, wordPower, science, wordBank];
+export const QUESTS = [english, wordPower, science, wordBank, academy];
 
 export const bundledQuest = (questId) => QUESTS.find((m) => m.QUEST_ID === questId) || null;
