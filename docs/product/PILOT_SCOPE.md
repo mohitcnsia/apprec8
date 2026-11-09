@@ -1,0 +1,55 @@
+# Pilot scope (owner + Claude, step by step, from 2026-11-09)
+
+Steps: 1 who + jobs → 2 edge cases → 3 pilot-now vs later → 4 tasks. Each step agreed before the next.
+Nothing is built until step 3 is agreed (Gemini's board is on HOLD).
+
+## Step 1 — agreed 2026-11-09
+- **Classes:** Seema's **10-A** and **5-A** (not 7-A). Admin: Mohit.
+- **Phones:** mixed. Some students have their own phone (own login); some use a parent's phone (a child profile the parent
+  makes, played with "Play as").
+- **One person = one login.** Roles (teacher, parent, admin) live on that account inside the app; no email linking.
+
+| Who | Must be able to |
+|---|---|
+| Students (10-A, 5-A) | sign in, practise at their class level, see mistakes come back, see progress |
+| Parents | say yes once in the app; on their phone: add the child and hand over the phone safely |
+| Seema | get students in, give a topic a week, see who practised + the weakest topic, tell us what's wrong |
+| Mohit (admin) | set up school + classes, see what waits for him, read all feedback |
+| Pratha | test as a student, tell us what's boring or broken |
+
+## Step 2 — edge cases (draft for the owner; "today" = checked in code or on the emulator 2026-11-09)
+
+### Student on their own phone (mostly 10-A)
+1. **No Google account** → today: email + password sign-up works.
+2. **Signs in with a second email by mistake** → today: a new, empty account, nothing says so (Seema's case).
+3. **Wrong level** → today: a Class 10 child starts at "What is a sentence?"; Grammar Pro is locked behind ~60 topics.
+4. **Joining the class** → today: Me → Join a class; a parent must be next to them to say yes on that phone.
+5. **Waiting for approval** → today: the child waits; Seema gets no signal (she must open the class to see it).
+6. **No internet** → today: unclear errors; most of the app needs internet.
+
+### Student on a parent's phone (mostly 5-A)
+7. **Parent has no account yet** → today: the parent signs up first (Google), then Me → My children → Add a child.
+8. **Child joins Seema's class** → today: from the child profile, Me → Join a class, the parent says yes on the same phone.
+9. **Two children, one phone** → today: add both; "Play as" each.
+10. **Child plays without "Play as"** → today: the stars and progress go to the PARENT's account.
+11. **Parent forgets the PIN** → today: Sign out → parent signs in → change PIN (works).
+12. **Internet drops during the child's turn** → today: "Time's up" can't close until the internet is back.
+
+### Parents
+13. **Consent** → today: in the app, English or हिंदी, with Listen; no paper.
+14. **A parent wants to see the child's progress** → today: only if the child is on their account (profile) or linked.
+
+### Seema
+15. **Two accounts** → today: her classes are on the account she doesn't use (fix: move to her main account).
+16. **5-A doesn't exist** (7-A was made) → an admin makes 5-A and sends her the invite.
+17. **Doesn't notice students waiting** → today: no signal anywhere.
+18. **Assigning a topic** → today: works per class; the list is the whole English quest (all levels).
+19. **Telling us what's wrong** → today: "Tell us what you think" sent nothing (fixed, not yet published).
+20. **App too complicated** → today: a teacher lands on the children's Home; her classes are in Progress → My classes.
+
+### Mohit (admin)
+21. **Teacher approvals hidden** inside each class → no signal.
+22. **Reading feedback** → today: Ideas & reports needs the rules change (G77, running); Claude reads it anyway.
+
+## Step 3 — pilot now vs later
+(to fill in together after step 2 is agreed)
