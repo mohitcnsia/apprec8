@@ -232,7 +232,7 @@ export default function IdeasReportsScreen({ navigation }) {
                           {item.contentContext?.id || item.questId || "Question"}
                         </Text>
                         <Text style={[styles.reasonBadge, { color: P.wrongText }]}>
-                          {item.childReason || item.issueCategory || "Issue"}
+                          {String(item.childReason || item.issueCategory || "Issue").replace(/_/g, " ")}
                         </Text>
                       </View>
                       {item.contentContext?.titlePreview ? (

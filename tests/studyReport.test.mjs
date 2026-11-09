@@ -3,7 +3,7 @@
 
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { STUDY_REPORT_REASONS, studyReportId, buildStudyReportPayload } from "../utils/studyReport.js";
+import { STUDY_REPORT_REASONS, OPINION_REASONS, studyReportId, buildStudyReportPayload } from "../utils/studyReport.js";
 
 const require = createRequire(import.meta.url);
 const R = require("../functions/utils/reportRules.js");
@@ -19,16 +19,20 @@ assert.equal(studyReportId({ contentId: "plants-study", section: "roots" }), "pl
 assert.equal(studyReportId({ contentId: "verbs-study", cardIndex: 2, section: "page" }), "verbs-study#card-2");
 
 // 2. Reason definitions & server compatibility
-const expectedIds = ["wrong_fact", "confusing", "spelling", "picture_missing"];
+const expectedIds = ["wrong_fact", "confusing", "messy", "too_long", "too_easy", "too_hard", "spelling", "picture_missing"];
 const actualIds = STUDY_REPORT_REASONS.map((r) => r.id);
-assert.deepEqual(actualIds, expectedIds, "exact 4 child-facing reasons must be present");
+assert.deepEqual(actualIds, expectedIds, "the child-facing reasons, one tap each");
 
-// Every study report reason must map to a valid server category accepted by the onQuestionReported trigger (R.REASONS)
+// Mistake reasons map to a category the server counts; opinions (messy, too easy...) must never count.
 for (const r of STUDY_REPORT_REASONS) {
-  assert.ok(
-    R.REASONS.includes(r.serverCategory),
-    `Reason ${r.id} maps to '${r.serverCategory}' which must be accepted by onQuestionReported (${R.REASONS.join(", ")})`
-  );
+  if (OPINION_REASONS.includes(r.id)) {
+    assert.ok(!R.REASONS.includes(r.serverCategory), `Opinion ${r.id} must not count on the server`);
+  } else {
+    assert.ok(
+      R.REASONS.includes(r.serverCategory),
+      `Reason ${r.id} maps to '${r.serverCategory}' which must be accepted by onQuestionReported (${R.REASONS.join(", ")})`
+    );
+  }
 }
 
 // 3. Payload builder (buildStudyReportPayload)

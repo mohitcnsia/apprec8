@@ -115,7 +115,7 @@ export function redactFeedbackForExport(doc = {}) {
     class: Number.isInteger(doc.userGrade) ? doc.userGrade : null,
     prompt: doc.promptQuestion || doc.contentContext?.titlePreview || null,
     choice: doc.selectedChoice ? `${doc.choiceEmoji || ""} ${doc.selectedChoice}`.trim() : null,
-    reason: doc.issueCategory || doc.childReason || null,
+    reason: doc.childReason || doc.issueCategory || null,
     note: doc.feedbackText ? String(doc.feedbackText).trim().slice(0, 300) : null,
     status: doc.status || "new",
     entryPoint: doc.entryPoint || null,

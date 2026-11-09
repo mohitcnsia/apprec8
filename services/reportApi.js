@@ -15,10 +15,16 @@ export { STUDY_REPORT_REASONS, studyReportId };
 
 const db = getFirestore(getApp());
 
+// One tap each, kids can't type (owner, 2026-11-09). serverCategory = what the server counts;
+// messy / too easy / too hard are saved for us but never mark a question as broken.
 export const REPORT_REASONS = [
   { id: "wrong_answer", label: "Wrong answer" },
-  { id: "spelling", label: "Spelling / grammar" },
+  { id: "two_right", label: "Two answers look right", serverCategory: "wrong_answer" },
   { id: "confusing", label: "Confusing" },
+  { id: "messy", label: "Looks messy" },
+  { id: "too_easy", label: "Too easy" },
+  { id: "too_hard", label: "Too hard" },
+  { id: "spelling", label: "Spelling / grammar" },
   { id: "media_broken", label: "Image or audio broken" },
   { id: "other", label: "Other" },
 ];
@@ -67,7 +73,8 @@ export function submitQuestionReport(r) {
     entryPoint: "report_flag",
     reaction: null,
     feedbackType: "issue_report",
-    issueCategory: r.reason,
+    issueCategory: REPORT_REASONS.find((x) => x.id === r.reason)?.serverCategory || r.reason,
+    childReason: r.reason,
     feedbackText: note,
     clientTimestamp: new Date().toISOString(),
     createdAt: serverTimestamp(),

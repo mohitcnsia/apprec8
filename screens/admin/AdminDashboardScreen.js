@@ -28,6 +28,10 @@ const REASON_LABELS = {
   confusing: "Confusing",
   media_broken: "Image/audio",
   other: "Other",
+  messy: "Looks messy",
+  too_long: "Too long",
+  too_easy: "Too easy",
+  too_hard: "Too hard",
 };
 const nice = (s) => String(s || "").replace(/-/g, " ");
 
