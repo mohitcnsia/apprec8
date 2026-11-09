@@ -300,6 +300,9 @@ Claude tested a NEW Class 10 student on the release build (emulator). Fix, then 
    Pure check in utils/feedbackPipeline.js + test.
 3. Intro says "Units passed: 0 of 17", the map says "0/16" for the same Class 10 child: one number, from the same helper.
 4. Me → Delete my account screen uses old fonts (Delius/Roboto) and red/grey: app theme (quizPalette, Nunito), same words.
+5. **Pratha's 🚩 (2026-11-04, question `accFsuc0vG49JEudGQny`, verbs-link-quiz, an old converted V1 quiz):** "emoji with a green
+   background, we don't use it in our app; the explanation text is super small". Make converted V1 questions use the same
+   feedback panel, character and text size as Quest questions (QuizScreenV2). Screenshot before/after.
 Claude already fixed: "Switch to parent (PIN)" showed to students with their own login (only child profiles now), and
 "Tell us what you think" (it sent nothing; now writes userFeedback entryPoint "cntct"). Both wait for the next tested publish.
 Report G79.md with screenshots. `gemini(G79): done — review please`.

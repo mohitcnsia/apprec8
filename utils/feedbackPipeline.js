@@ -120,6 +120,16 @@ export function redactFeedbackForExport(doc = {}) {
     status: doc.status || "new",
     entryPoint: doc.entryPoint || null,
     createdAt: dateStr,
+    // What Claude needs to fix a report (no personal data): which question/page, the options, the child's answer.
+    contentId: doc.contentContext?.id || doc.contentId || null,
+    quizId: doc.contentContext?.parentId || null,
+    questId: doc.questId || null,
+    nodeId: doc.nodeId || null,
+    options: Array.isArray(doc.options) ? doc.options.slice(0, 6).map(String) : null,
+    correctAnswer: doc.correctAnswer ?? null,
+    chosen: doc.chosen ?? null,
+    subject: doc.subject ? String(doc.subject).slice(0, 120) : null,
+    appVersion: doc.appVersion || null,
   };
 }
 
