@@ -389,5 +389,26 @@
     "ask": "Close and reopen the app (so it gets the fix), then Me → Admin tools → re-seed English. Tap YES when done.",
     "details": "**Fixed (Claude):** a marked-correct answer that added \"yesterday\" from nowhere (passive voice); 4 questions whose options didn't match the sentence (reported questions, passive questions, \"was lent\" ×2). Two explanations rewritten for children.\n\n**Steps:** close the app fully, reopen (it downloads the update), then **Me → Admin tools → re-seed English**. Phones fetch the new questions once.\n\nThe other 24 smaller issues: Gemini (G73), then one more re-seed.",
     "from": "claude"
+  },
+  {
+    "id": "seema-class-setup",
+    "title": "To do (5 min): set up Seema's school and class so she can add students",
+    "ask": "Me → Admin tools → Schools → + New school (her school's name) → Add a class (Class 10) → open the class → Invite a teacher → send Seema the code. She types it in Me → Join as a teacher; you approve. Tap YES when done.",
+    "details": "**Why:** teachers join a class through a school; nobody had made Seema's school yet, so she had nothing to share.\n\n**After:** Seema opens Progress → her class → **SHARE CODE** (WhatsApp) → parents join with their child → she approves each one.\n\n**Test it once with Pratha's account first** (join, approve, assign a topic) before her class gets the message.",
+    "from": "claude"
+  },
+  {
+    "id": "independent-teachers",
+    "title": "Decide: tutors and teachers without a school (\"Start my own class\")",
+    "ask": "Let a teacher with no school start her own class, but only after you approve her (a card in this inbox, with her name and why). Then Claude makes a mockup. OK?",
+    "details": "**Who:** tuition teachers, coaching owners, independent teachers, Seema if her school never joins.\n\n**How it would work:** Me → \"Start my own class\" → name + subject + a line about her students → **you approve** (here, one tap) → she gets her own small space (like a one-teacher school), makes classes and shares codes.\n\n**Why you approve:** any adult can claim to be a teacher. Parents still say yes in the app for each child, there is no chat, others see first names only, but checking who runs a class is the safety step while we're small.\n\n**YES** = Claude makes the mockup first (no building before you approve it).",
+    "from": "claude"
+  },
+  {
+    "id": "grownup-feedback",
+    "title": "Decide: a \"Tell us\" button for grown-ups on every screen (broken / useless / idea)",
+    "ask": "Testers and grown-ups get a small button on every screen: Broken · Confusing · Not useful · Idea, plus a line of text. The app adds the screen name and version by itself. Mockup first?",
+    "details": "**Found today:** Me → \"Tell us what you think\" **sent nothing** (a placeholder from long ago: it waited 1.5 s and closed). Fixed: it now sends to your Ideas & reports (Contact); it goes out with the next tested update.\n\n**The bigger fix:** Seema should report right where the problem is, in 2 taps, without describing which screen. Children keep 🚩 and Chamku; this button is for grown-ups and testers.\n\n**YES** = Claude makes the mockup; Gemini builds after you approve it.",
+    "from": "claude"
   }
 ]
