@@ -534,9 +534,9 @@
     "ask": "Switching My children ↔ My classes reads every child's progress again (a teacher with 33 kids ≈ 100 reads per switch). My pick: A. YES = A. MORE DETAILS for B and C.",
     "details": "**Cause (checked in code):** each tab is thrown away when you leave it and loads again from scratch when you come back.\n\n**A. Keep what was loaded (recommended).** Tabs remember their data while the app is open; switching is instant and costs nothing. Fresh data: pull down to refresh, and it refreshes by itself if older than 10 minutes. Small app change, no server work.\n\n**B. Live updates (what you suggested: pull only when something changes).** My pushback: a live connection on every child re-reads a child each time they answer, so during practice time a teacher's phone would read MORE, not less, and keep connections open. Good for 1–4 children, bad for a class of 33.\n\n**C. One summary per class, kept by the server.** The teacher reads 1 document instead of 33+. Cheapest at scale (schools), but needs a server function and a deploy. Worth it before more schools join, not for the pilot.\n\nMy recommendation: A now, C before more schools.",
     "from": "claude",
-    "answer": "yes",
-    "note": "Answered in chat 10 Nov: \"yes, we need a cost effective and fast way; loading for several seconds is not ideal\" → A",
-    "answeredAt": "2026-11-10"
+    "answer": "more",
+    "note": "Why do we need to refresh data for 10 minutes only. Why a teacher needs realtime data. What if we refresh dashboard hourly or say twice a day only. We need to understand who need to see what and who is the premium user to get instant updates",
+    "answeredAt": "2026-11-10T09:14:31.376Z"
   },
   {
     "id": "pratha-progress-zero",
@@ -554,9 +554,9 @@
     "ask": "Class 7 kids see English (44 topics) and Treasure Words, but NO Science: every Science topic is written for Classes 3–5. My pick: B. YES = B. MORE DETAILS for A and C.",
     "details": "**A. Open the existing Science to Class 7 as is.** Instant, but it's Class 3–5 level (plants, bones, magnets): bright Class 7 kids will find it childish, and Seema's school sees an easy app.\n\n**B. Class 7 starts with English + a Check-up; Science comes as real Class 7 topics (recommended).** I write Class 7 Science rungs (NCERT Class 7: nutrition in plants and animals, heat, acids and bases, physical and chemical changes, respiration, electric current, light, motion and time) at about 2 topics a day, each checked by Gemini before it goes live. First 4 topics by 17 Nov, so Science opens in pilot week 1.\n\n**C. Open only the harder existing units (Matter, Forces, Earth, Light, Sound, Magnets, Puzzles) to Class 7 as 'revision', and write B in the background.** Something on day 1, but labelled honestly as revision.\n\nAlso for Class 7: a Check-up like Class 10's (built from English Quest topics), so Seema's teachers get Accuracy by topic on day 1. Small, same code as Class 10.",
     "from": "claude",
-    "answer": null,
+    "answer": "later",
     "note": null,
-    "answeredAt": null
+    "answeredAt": "2026-11-10T09:12:01.506Z"
   },
   {
     "id": "pilot-100-play",
@@ -565,7 +565,14 @@
     "details": "**Today's 3 kids:** internal testing works now: add the parent's and the child's Gmail in Play Console → Testing → Internal testing → Testers, send them the link.\n\n**For 100 kids:** we need the closed test approved (no tester limit; the Google Group link). Please check Play Console → Publishing overview: if it says approved, press Publish.\n\nIf Google still hasn't answered by 13 Nov, the fallback is internal testing in two waves (first 50 families).",
     "from": "claude",
     "answer": "later",
-    "note": "Owner 10 Nov: no rush; Seema completely comfortable + test app done before anyone joins",
-    "answeredAt": "2026-11-10"
+    "note": null,
+    "answeredAt": "2026-11-10T09:11:58.575Z"
+  },
+  {
+    "id": "report-pick-answer",
+    "title": "\"Answer is wrong\" report: kid taps which answer they think is right",
+    "ask": "When a kid taps 🚩 → \"The answer is wrong\", show the 4 options: \"Which one do you think is right?\" One tap. The app answers at once with why that option is not right (\"Good thinking! The large intestine only takes back water. Digestion already finished in the small intestine.\"). We see the counts. YES = I write the spec + mockup for your OK first. NO = keep today's report.",
+    "details": "**Why:** Pratha's report today said only \"wrong answer\". She thinks it's the large intestine (it's the small intestine), and we only learnt that because you asked her. With one tap we learn it from every kid, and the kid learns something right away instead of waiting.\n\n**What it needs:**\n1. A \"why not\" line for every wrong option. Quest questions mostly have them. The papers don't yet (only a tag), so this is content work for the 10 papers first.\n2. A small change to the report sheet (app update, no new library).\n\n**My pushback on myself:** if the explanation already covers the kid's choice, the report closes itself as \"we explained\". If 3 or more kids pick the same option, it comes to you as a card: maybe the question really is unclear.\n\n**Digestion question:** the answer stays (small intestine is right). Only its explanation gets the large-intestine line, after you OK this.",
+    "from": "claude"
   }
 ]
