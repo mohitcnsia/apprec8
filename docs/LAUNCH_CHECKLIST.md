@@ -1,12 +1,19 @@
-# Launch checklist (Claude, 2026-11-05)
+# Launch checklist (Claude, 2026-11-05; updated 2026-11-10)
 
 Owner asked: what is pending before a public release, and before Seema can use the app with her 50 Class 10 students?
 Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of work) → **B. public release**.
 
-## What a Class 10 student sees today (checked in code)
-- English Quest: 40 topics, starting at "What is a sentence?", "Nouns" (written for Classes 3–5: too easy, feels childish).
-- Treasure Words: 13 Big Words topics (fits Class 10).
-- Word Power, Science: nothing (tagged Classes 2–6 / 3–5). Practice papers and Mix papers: nothing (Class 5 / Classes 3–6).
+## 📍 Where we are (10 Nov)
+- **Pilot starts 15 Nov** (plan: the **Seema's pilot** tab). Kids start only after the clean test passes and you say "publish".
+- **Published 10 Nov:** no parent = no class, assigned work first, pilot switch, Class 10 Check-up (Accuracy by topic),
+  "No internet" message, Seema's course tile, teacher Home, "Why not this option?".
+- **Gemini next:** G94 approval pushes → G95 DR-26 rule → G96 offline stars → G89 two-way cards → G92 weekly report → G97 remove a kid.
+- **Google Play:** closed test 20.0.30 in review since 6 Nov. Testers: added once our side is ready.
+
+## What a Class 10 student sees today (checked in code, 10 Nov)
+- Home: assigned work first, then Seema's course tile and English Quest starting at **Grammar Pro** (18 topics, Classes 9–10).
+- Home → Explore → **Check-up** (54 questions, Accuracy by topic). Treasure Words: 13 Big Words topics.
+- Quests with no Class 10 topics (Word Power, Science) are hidden.
 
 ## 🚦 Road to closed testing (plan 2026-11-06)
 Goal: send the closed test for Google's review as soon as these are done. Order = what blocks what.
@@ -16,14 +23,14 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 | C1 | Policy pages updated (privacy + deletion): add `mohitcnsia` as collaborator on FailedCommit/app-policies, Claude pushes | Owner 2 min → Claude | done | live 2026-11-06 (both pages load) |
 | C2 | Delete in the app: Me → Delete my account, Delete a child's profile | Claude | done | published 2026-11-06 (20.0.30) |
 | C3 | DR-19 server deletion (everything goes) | Gemini G42/G44 | done | deployed + tested with a throwaway account 2026-11-06 |
-| C4 | **Parent consent (row X)**: approve mockup → Claude builds gate + year of birth → publish; DR-20 cleanup | Owner OK → Claude → Gemini | ~1 day after OK | owner asked 3 questions (adult students, two parents, grandparents): answers in CODE_REVIEW.md "Spec X: owner questions" |
+| C4 | **Parent consent (row X)** | Owner OK → Claude → Gemini | — | for the pilot: Seema's rule "no parent = no class" (published 10 Nov; server rule DR-26 = G95). The full "learn first" gate: before public release |
 | C5 | Demo School logins for Google's reviewer: Admin tools → Reset Demo School | Owner | 5 min | done 2026-11-06 (password only in Play Console) |
 | C6 | Store listing | Owner + Claude | — | done 2026-11-06: name "Apprec8: Learn & Grow", descriptions, 6 new phone screenshots, old tablet shots removed; submitted with 20.0.30 (9 changes) |
 | C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | done | 14 in docs/release/screenshots/ (light + dark). Before public release: redo Home (0 stars, empty card) and Me (shows the test email) |
 | C8 | App icon + feature graphic | Claude drafts, owner picks | — | draft 3 approved for now (no green checks); Gemini G48 makes the brand set (dissolving ∞) |
 | C9 | Play Console → App content forms | Owner + Claude | ~45 min | done 2026-11-06: sign-in details = 3 demo logins; ages 6–18+; Data safety 6 types, nothing shared (2025 form said email was shared: fixed). Sent for review |
-| C10 | 12+ testers | Owner + Seema | — | 2026-11-06: Google Group apprec8-testers on the closed track; early members invited. Seema's class message waits for: Google approval + Publish, her class code, her test run (inbox task) |
-| C11 | Closed testing track → 20.0.30 | Owner + Claude | — | 2026-11-06: 20.0.30 submitted for review on the closed track (was 19 = 1.0.0; an old 20.0.6 draft removed). **Managed publishing is on: after approval, Publishing overview → Publish.** |
+| C10 | 12+ testers | Owner + Seema | — | Google Group apprec8-testers on the closed track (6 Nov). Owner, 10 Nov: add people once the app is ready from our side |
+| C11 | Closed testing track → 20.0.30 | Owner + Claude | — | **in review since 6 Nov** (10 Nov: still in review). **Managed publishing is on: after approval, Publishing overview → Publish.** |
 Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owner: later).
 
 ## ⏰ Owner, 2026-11-06 (reminders)
@@ -50,7 +57,8 @@ Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owne
 | A7 | **Privacy policy page + "delete my account" web page** (public URLs; Play asks for both) | owner | **exists** (owner 2026-11-05); Claude to check it mentions classes, teachers, parent consent, attempts |
 | A8 | Remote Config `update_url_android` → the Play link the students use (today: internal-testing link) | Owner | pending |
 | A10 | **Demo School** (fake class for Seema to try the teacher screens + Play reviewer login): generator done; server function, filters, Admin button after Gemini's review; deploy by Gemini/owner | Claude → Gemini | in progress |
-| A11 | **Assignment done = mistakes fixed**; teacher sees results **by name** with **Accuracy**; **Remind** a child (owner 2026-11-09) | Gemini (G87, G84b) → Claude review | todo |
+| A11 | **Assignment done = mistakes fixed**; teacher sees results **by name** with **Accuracy**; **Remind** a child (owner 2026-11-09) | Gemini (G87, G84b) → Claude review | todo (Check-up by topic with names: done 10 Nov) |
+| A13 | **Seema's 6 decisions** (pilot plan doc): consent rule, assigned work first, pilot switch, check-up | Claude (G90, G91) | **done, published 10 Nov**; weekly report G92 + two-way cards G89: Gemini |
 | A12 | ⭐ **Class report for school management, pilot week 2 (owner: don't forget)**: active kids, Accuracy start vs now per topic, mistakes fixed, printable | Mockup → owner → Gemini (G88) | todo, week 2 |
 | A9 | Cost check: 50 students ≈ 15,000 reads/day at most (free tier 50,000), writes far below 20,000. Budget alert in place | done | ok |
 

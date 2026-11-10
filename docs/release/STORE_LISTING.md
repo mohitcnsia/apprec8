@@ -1,4 +1,15 @@
-# Play Store listing: draft (Claude, 2026-11-06)
+# Play Store listing (Claude, 2026-11-06; status updated 2026-11-10)
+
+**Status (10 Nov):** the text below was submitted with 20.0.30 on 6 Nov and is **in Google's review**. Don't change the
+listing while it's in review: an edit can restart the review.
+
+**For the next listing update (after approval), add these true lines:**
+- PRACTICE THAT STICKS: "A check-up shows your child's Accuracy in every topic, weakest first, and opens practice on it."
+- PRACTICE THAT STICKS: "Every wrong option explains why it is wrong." (once Grammar Pro explanations are filled, G83)
+- SAFE FOR CHILDREN: "A child joins a class only after a parent says yes on their own phone." (true since 10 Nov)
+- FOR TEACHERS: "See your class by topic and who needs help." Weekly report lines only after G92 ships.
+- Screenshots: redo Home and Me before public release (C7).
+
 
 **Feature graphic:** keep the current Play graphic (illustrated children, "Learn. Grow. Shine.") until Gemini's brand set (G48). Claude's draft, not used:
 

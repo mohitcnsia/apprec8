@@ -59,7 +59,7 @@ should see. ✅ = Claude passed it on the emulator (date). Tell Claude the step 
 7. ✅ As a kid with NO parent linked (your own account works): Me → Join a class → "Ask your parent to add you" + 3 steps for
    the parent, button OK. No consent form.
 8. As **+parent**: Me → Link my child's own account → name + agree → code. On **+student**: Me → Link to my parent → code.
-   Then +student: Me → Join a class → code VF244M → **no second consent form**, just JOIN → "Your parent already said yes".
+   Then +student: Me → Join a class → a **test class** code (Admin tools → Schools & classes; not Seema's 10-A) → **no second consent form**, just JOIN → "Your parent already said yes".
    As **+teacher** (Seema's role): approve → the kid's row says "parent: linked account ✓".
 9. ✅ Admin tools → Schools & classes → 10-A: a quiet line "Pilot: open all levels for these kids". Tap it ONLY when you
    start the pilot (it changes Seema's real class). Then +student (in 10-A): every Class 10 topic is open.

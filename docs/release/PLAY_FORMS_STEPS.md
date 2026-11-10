@@ -1,5 +1,10 @@
 # C5 + C9 step by step (Claude, 2026-11-06)
 
+**Status (10 Nov):** C5 done, C9 done (6 Nov). 20.0.30 is **in Google's review** on the closed track (managed
+publishing is on: when approved, Play Console → Publishing overview → **Publish**). C10 testers: you add people once
+the app is ready from our side. The steps below stay for reference (and for the next app).
+
+
 Do C5 first (C9 needs its logins). Use a laptop for C9: Play Console forms are hard on a phone.
 If anything looks different from these steps, stop and ask Claude (a screenshot helps).
 
