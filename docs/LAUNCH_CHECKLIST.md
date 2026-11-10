@@ -36,7 +36,7 @@ Goal: send the closed test for Google's review as soon as these are done. Order 
 | C7 | Store screenshots (4–8 phone screenshots, tester account) | Gemini G43 | done | 14 in docs/release/screenshots/ (light + dark). Before public release: redo Home (0 stars, empty card) and Me (shows the test email) |
 | C8 | App icon + feature graphic | Claude drafts, owner picks | — | draft 3 approved for now (no green checks); Gemini G48 makes the brand set (dissolving ∞) |
 | C9 | Play Console → App content forms | Owner + Claude | ~45 min | done 2026-11-06: sign-in details = 3 demo logins; ages 6–18+; Data safety 6 types, nothing shared (2025 form said email was shared: fixed). Sent for review |
-| C10 | 12+ testers | Owner + Seema | — | Google Group apprec8-testers on the closed track (6 Nov). Owner, 10 Nov: add people once the app is ready from our side |
+| C10 | 12+ testers | Owner + Seema | — | Google Group apprec8-testers on the closed track (6 Nov). **11 Nov: owner opted in ("You are a tester"), added 3 testers, invited 15 family adults (EN + Hindi message); expect ~20 in 2–3 days.** 14 days start at 12 opted in; then Dashboard → Apply for production. Under-13s (Pratha) can't be testers |
 | C11 | Closed testing track → 20.0.30 | Owner + Claude | — | **in review since 6 Nov** (10 Nov: still in review). **Managed publishing is on: after approval, Publishing overview → Publish.** |
 Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owner: later).
 
