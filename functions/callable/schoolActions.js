@@ -147,9 +147,13 @@ exports.getClassLeaderboard = functions
     const days = Array.from({ length: 7 }, (_, i) => dayKeyUtc(now - i * 86400000));
     const week = weekKey(now);
     const classRef = db.collection("classes").doc(classId);
-    // Cost guard (2026-11-05): the points (1 read per kid per quest) are computed at most once per 10 min per class and
+    // Cost guard (2026-11-05): the points (1 read per kid per quest) are computed at most once per hour per class and
     // kept in classes/{id}/cache/board (server-only). Claps are read fresh each time so a clap shows at once.
-    const base = await cachedResult(classRef.collection("cache").doc("board"), { key: week, now }, async () => {
+    // Owner, 2026-11-10 (card "progress-refresh-rules"): the class board is recomputed once per clock hour; the app shows
+    // "Keep practising! Next update at 9:30 pm" from nextAt.
+    const hour = Math.floor(now / 3600000);
+    const nextAt = (hour + 1) * 3600000;
+    const base = await cachedResult(classRef.collection("cache").doc("board"), { key: `${week}|${hour}`, now, maxAgeMs: 3600000 }, async () => {
       const members = await classRef.collection("members").get();
       const approved = members.docs.filter((d) => d.data().status === "approved");
       return Promise.all(
@@ -170,7 +174,7 @@ exports.getClassLeaderboard = functions
     const claps = clapsDoc.exists ? clapsDoc.data().counts || {} : {};
     const rows = base.map((r) => ({ ...r, claps: claps[r.uid] || 0 }));
     rows.sort((a, b) => b.points - a.points || a.firstName.localeCompare(b.firstName));
-    return { className: cls.data().name, week, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
+    return { className: cls.data().name, week, nextAt, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
   });
 
 /** One clap per kid, per classmate, per day. */

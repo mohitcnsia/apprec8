@@ -2468,3 +2468,11 @@ is stale (test push "1/1 delivered", nothing arrived) → owner re-taps Decision
 Fix: new callable `myTeacherRequests` (one collection-group read; app admin = all, school admin = own schools), Home re-reads
 on focus, Schools list adds teacher requests to "waiting"; `sendThrottledPushToUser` → priority high + logs sent/total and
 "no phone saved". **Deploy request (owner OK):** `firebase deploy --only functions:myTeacherRequests,functions:redeemTeacherInvite,functions:onStudentJoinRequest`, then the OTA.
+
+## 2026-11-10 (night) — Progress update times (owner YES on card "progress-refresh-rules")
+Parents + teachers: other kids' progress is read from the server only after 7:30 am / 7:30 pm (`utils/refreshSlots.js`,
+`services/progressCache.js`; the time of each read is kept on the phone, the doc comes from Firestore's own phone copy until the
+next slot, offline = last copy). Screens show "Updated 8:05 pm". Pull down = fresh while Remote Config `progress_pull_refresh`
+is on (unset = on; pilot: everyone; later maybe premium). Kids' own progress unchanged (instant). Class board: recomputed once
+per clock hour, app shows "Keep practising! Next update at 9:30 pm". Replaces the unpublished 10-minute version (0b80c38).
+**DR-29 Deploy request (owner OK):** `firebase deploy --only functions:getClassLeaderboard`, then the OTA (with DR-28's app part).

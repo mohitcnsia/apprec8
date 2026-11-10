@@ -14,6 +14,7 @@ import { authInstance } from "../../config/firebaseConfig";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { leaderboardView, formatPoints } from "../../utils/leaderboardView";
 import { showAlert } from "../../services/dialog";
+import { nextUpdateText } from "../../utils/refreshSlots";
 
 const AVATAR_COLORS = ["#C98ACF", "#F0904A", "#5BA4E6", "#7BC98F", "#E8C43A", "#E58FB0"];
 const CACHE_MS = 5 * 60 * 1000;
@@ -83,9 +84,11 @@ export default function LeaderboardScreen({ route }) {
       try {
         let rows;
         let className = null;
+        let nextAt = null;
         if (which === "class") {
           const r = await functions().httpsCallable("getClassLeaderboard")({ classId });
           className = r.data.className || null;
+          nextAt = Number.isFinite(r.data.nextAt) ? r.data.nextAt : null; // server recomputes the class board hourly
           rows = (r.data.rows || []).map((x) => ({ id: x.uid, name: firstNameOf(x.firstName), points: x.points || 0, rank: x.rank, claps: x.claps || 0 }));
         } else {
           const [top, mine] = await Promise.all([
@@ -98,7 +101,7 @@ export default function LeaderboardScreen({ route }) {
             rows.push({ id: m.id, name: firstNameOf(m.firstName || m.username), grade: userData?.grade, points: m.points || 0, rank: m.rank });
           }
         }
-        const value = { rows, className };
+        const value = { rows, className, nextAt };
         cache[which] = { at: Date.now(), data: value };
         if (active.current) {
           setData((d) => ({ ...d, [which]: value }));
@@ -164,6 +167,7 @@ export default function LeaderboardScreen({ route }) {
         <Text style={styles.h1}>Leaderboard</Text>
       )}
       <Text style={styles.subtitle}>{subtitle}</Text>
+      {tab === "class" && current?.nextAt && current.nextAt > Date.now() ? <Text style={styles.subtitle}>{nextUpdateText(current.nextAt)}</Text> : null}
 
       {view.podium.length ? (
         <View style={styles.podium}>

@@ -1,5 +1,18 @@
 # Testing the app yourself (owner guide)
 
+## ⭐ On your phone: update of 10 Nov night (approval fix + Progress update times)
+Owner, 2026-11-10: you test on your own phone; Claude no longer drives the emulator. Anything odd → 🚩 on that screen
+or **Me → Tell us what you think**. Claude turns each note into a decision card; nothing is built before you agree.
+1. **Close and reopen the app** (it fetches the update; "Getting the latest Apprec8…").
+2. **Teacher waiting:** Home → "Needs you" shows a teacher waiting (if one is), tap → class page → Approve.
+   Me → Admin tools → Schools & classes: that class shows "1 waiting".
+3. **Progress → My Children:** the weekly card says "Updated 8:05 pm" (the time it read). Switch to My Classes and back:
+   it opens at once, no spinner. Close the app, reopen: still the same "Updated" time (no new read until 7:30 am).
+4. **Pull down** on Progress: the "Updated" time becomes now.
+5. **Progress → My Classes → open a class:** "Updated … · pull down for the latest" under the week card.
+6. **Kid view (Pratha's phone), Leaderboard → My class:** "Keep practising! Next update at …" under the title
+   (needs the server part deployed: DR-29).
+
 **No build needed.** The emulator already has the Apprec8 *dev app*. It loads the latest code from your Mac
 (Metro) every time it opens, so you can test any branch in a few minutes. The slow, Mac-freezing part was the
 **build** (`npx expo run:android`, Gradle); you only need that when a review request says

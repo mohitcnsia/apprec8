@@ -6,7 +6,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { loadProgress } from "../../services/progressCache";
+import { loadProgress, progressReadAt, pullRefreshAllowed } from "../../services/progressCache";
+import { updatedText } from "../../utils/refreshSlots";
 import { makeTtlCache } from "../../utils/ttlCache";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
@@ -134,6 +135,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
   const [pending, setPending] = useState([]);
   const [reloadKey, setReloadKey] = useState(0);
   const [assignments, setAssignments] = useState([]);
+  const [readAt, setReadAt] = useState(null); // oldest progress read shown: "Updated 7:35 am"
   const lastForced = useRef(0);
   const forceNext = useRef(false); // after approving / declining: re-read the member list
   const decide = (kid, approve) =>
@@ -171,8 +173,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
   useEffect(() => {
     if (!open) return;
     // Owner, 2026-11-10: fast and cheap. Show what was loaded before at once (no spinner when switching tabs); each
-    // child's progress is read at most once per 10 minutes (services/progressCache.js), all at the same time, and a
-    // pull-down (refreshTrigger) reads fresh.
+    // child's progress is read fresh only after 7:30 am / 7:30 pm (services/progressCache.js), all at the same time,
+    // and a pull-down (refreshTrigger) reads fresh.
     const force = refreshTrigger > lastForced.current;
     lastForced.current = refreshTrigger;
     const forceMembers = force || forceNext.current;
@@ -203,6 +205,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           })
         );
         out.sort((a, b) => b.last - a.last);
+        const reads = members.flatMap((m) => questIds.map((q) => progressReadAt(m.uid, q))).filter(Number.isFinite);
+        setReadAt(reads.length ? Math.min(...reads) : null);
         rowsCache.set(cacheKey, out);
         setAssignments(await listAssignments(open.id).catch(() => []));
         setRows(out);
@@ -227,6 +231,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       ))}
       {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
       {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} P={P} /> : null}
+      {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
       {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
       {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
       {/* Guide step 2: share the class code (phone share menu, like the admin's SHARE CODE). */}

@@ -7,7 +7,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { loadProgress, peekProgress } from "../../services/progressCache";
+import { loadProgress, peekProgress, progressReadAt } from "../../services/progressCache";
+import { updatedText } from "../../utils/refreshSlots";
 import { QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { isTileVisible } from "../../utils/courseVisibility";
@@ -35,7 +36,7 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
     [child]
   );
   const shape = (m, d) => ({ questId: m.QUEST_ID, title: m.quest?.title || m.QUEST_ID, stats: d?.stats || {}, nodes: d?.nodes || {}, mistakes: d?.mistakes || {}, quizzes: m.quizzes, questNodes: m.nodes, namer: topicNamer(m.nodes) });
-  // Draw at once from what was loaded before (switching tabs), then refresh only if older than 10 minutes.
+  // Draw at once from what was loaded before (switching tabs); fresh from the server only after 7:30 am / 7:30 pm.
   const [quests, setQuests] = useState(() => (mine.every((m) => peekProgress(child.uid, m.QUEST_ID) !== undefined) ? mine.map((m) => shape(m, peekProgress(child.uid, m.QUEST_ID))) : null));
   const [showMissed, setShowMissed] = useState(false);
 
@@ -63,12 +64,16 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
   const w = parentWeek({ name: child.firstName || "Your child", grade: child.grade, quests, lang, weekIndex: weekIndexOf() });
   const t = w.words;
   const missed = talkQuestions(quests, 5);
+  // Oldest read among the subjects shown, so "Updated" never claims newer than it is.
+  const readTimes = mine.map((m) => progressReadAt(child.uid, m.QUEST_ID)).filter(Number.isFinite);
+  const updated = readTimes.length ? updatedText(Math.min(...readTimes), Date.now(), lang) : "";
 
   return (
     <View style={s.wrap}>
       <Text style={s.h}>{w.title}</Text>
       <View style={s.card}>
         <Text style={s.label}>{t.thisWeek} · {w.rangeText}</Text>
+        {updated ? <Text style={s.small}>{updated}</Text> : null}
         <Text style={s.big}>{w.timeText}</Text>
         {w.deltaText ? <Text style={[s.small, { color: w.deltaUp ? P.correctText : P.textSoft }]}>{w.deltaText}</Text> : null}
         <View style={s.days}>
