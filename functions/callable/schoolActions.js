@@ -48,15 +48,19 @@ async function sendThrottledPushToUser(uid, message, view) {
     }
   }
   tokens = Array.from(new Set(tokens.filter(Boolean)));
-  if (!tokens.length) return;
+  if (!tokens.length) {
+    console.log(`push ${view}: no phone saved for ${uid.slice(0, 6)}…`);
+    return;
+  }
 
   try {
-    await admin.messaging().sendEachForMulticast({
+    const res = await admin.messaging().sendEachForMulticast({
       tokens,
       notification: { title: message.title, body: message.body },
       data: { view: view || "home" },
-      android: { priority: "normal" },
+      android: { priority: "high" }, // "normal" can sit for hours on an idle phone (owner, 2026-11-10)
     });
+    console.log(`push ${view}: sent ${res.successCount}/${tokens.length} to ${uid.slice(0, 6)}…`);
     await rateLimitRef.set({ lastPushedAt: now, pendingCount: 0 }, { merge: true });
   } catch (err) {
     console.warn("FCM multicast failed:", err);
@@ -335,6 +339,36 @@ exports.onStudentJoinRequest = functions
       await sendThrottledPushToUser(tUid, msg, "classes");
     }
     return null;
+  });
+
+/** → { requests: [{ classId, className, count }] }: teachers waiting in the classes the caller manages (Home "Needs you",
+ * Schools list). One collection-group read; the client can't read teacherRequests itself (owner bug, 2026-11-10). */
+exports.myTeacherRequests = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const uid = context.auth.uid;
+    const appAdmin = await isAppAdmin(uid);
+    let schoolIds = null;
+    if (!appAdmin) {
+      const s = await db.collection("schools").where("admins", "array-contains", uid).limit(20).get();
+      schoolIds = new Set(s.docs.map((d) => d.id));
+      if (!schoolIds.size) return { requests: [] };
+    }
+    const snap = await db.collectionGroup("teacherRequests").limit(200).get();
+    const byClass = {};
+    snap.docs.forEach((d) => {
+      const classId = d.ref.parent.parent.id;
+      byClass[classId] = (byClass[classId] || 0) + 1;
+    });
+    const ids = Object.keys(byClass);
+    if (!ids.length) return { requests: [] };
+    const classes = await db.getAll(...ids.map((id) => db.collection("classes").doc(id)));
+    const requests = classes
+      .filter((c) => c.exists && (appAdmin || schoolIds.has(c.data().schoolId)))
+      .map((c) => ({ classId: c.id, className: c.data().name || "a class", schoolId: c.data().schoolId || null, count: byClass[c.id] }));
+    return { requests };
   });
 
 /** { classId } → { teachers: [{ uid, firstName, subjects }], requests: [{ uid, firstName, subjects }] } */

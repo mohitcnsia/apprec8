@@ -274,12 +274,15 @@ export default function HomeScreen({ navigation }) {
   }, [isAdmin]);
 
   useEffect(() => {
-    if (isAdmin) {
-      loadAdminTeacherRequests(uid, true).then(setTeacherRequests).catch(() => setTeacherRequests([]));
-    } else {
+    if (!isAdmin) {
       setTeacherRequests([]);
+      return undefined;
     }
-  }, [isAdmin, uid]);
+    // Re-read when Home comes back into view, so an approved teacher's row goes away.
+    const load = () => loadAdminTeacherRequests(uid).then(setTeacherRequests).catch(() => setTeacherRequests([]));
+    load();
+    return navigation.addListener("focus", load);
+  }, [isAdmin, uid, navigation]);
 
   const teachesKey = (userData?.teachesClassIds || []).join(",");
   useEffect(() => {

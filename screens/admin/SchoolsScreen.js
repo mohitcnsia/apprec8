@@ -12,7 +12,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import Sheet from "../../components/common/Sheet";
 import { makeSchoolStyles, Chip, MainButton, Field } from "./schoolUi";
-import { createSchool, listSchools, listClassesOfSchool, createClass, classMembers, findUserByEmail, addSchoolAdmin } from "../../services/classesApi";
+import { createSchool, listSchools, listClassesOfSchool, createClass, classMembers, findUserByEmail, addSchoolAdmin, loadAdminTeacherRequests } from "../../services/classesApi";
 import { SUBJECTS, SUBJECT_NAMES, classSubjects } from "../../utils/classes";
 import { showAlert } from "../../services/dialog";
 import { authInstance } from "../../config/firebaseConfig";
@@ -45,6 +45,9 @@ export default function SchoolsScreen({ navigation }) {
       const list = isAdmin
         ? rawList
         : rawList.filter((s) => (Array.isArray(s.admins) && s.admins.includes(uid)) || s.createdBy === uid);
+      // Teachers waiting count too (owner bug, 2026-11-10: only kids were counted, so Seema's request didn't show).
+      const teacherWaiting = {};
+      (await loadAdminTeacherRequests(uid)).forEach((r) => (teacherWaiting[r.classId] = r.count || 0));
       const full = await Promise.all(
         list.map(async (s) => {
           const classes = await listClassesOfSchool(s.id);
@@ -52,9 +55,9 @@ export default function SchoolsScreen({ navigation }) {
             classes.map(async (c) => {
               try {
                 const members = await classMembers(c.id);
-                return { ...c, waiting: members.filter((m) => m.status === "pending").length };
+                return { ...c, waiting: members.filter((m) => m.status === "pending").length + (teacherWaiting[c.id] || 0) };
               } catch {
-                return { ...c, waiting: 0 };
+                return { ...c, waiting: teacherWaiting[c.id] || 0 };
               }
             })
           );

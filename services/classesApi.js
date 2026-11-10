@@ -289,39 +289,14 @@ export async function loadTeacherClassesOverview(uid) {
   return { classes: classesOverview, pendingStudents };
 }
 
-/** Admin: loads pending teacher requests across schools/classes */
-export async function loadAdminTeacherRequests(uid, isAdmin) {
+/** Teachers waiting in the classes I manage (app admin or school admin) → [{ classId, className, schoolId, count }].
+ * Through the server: the client can't read classes/{id}/teacherRequests (owner bug, 2026-11-10: Home showed nothing). */
+export async function loadAdminTeacherRequests(uid) {
   if (!uid) return [];
-  const teacherRequests = [];
   try {
-    let classesList = [];
-    if (isAdmin) {
-      const snap = await getDocs(collection(db, "classes"));
-      classesList = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    } else {
-      const mySchools = await mySchoolAdminSchools();
-      for (const s of mySchools) {
-        const clsSnap = await getDocs(query(collection(db, "classes"), where("schoolId", "==", s.id)));
-        classesList.push(...clsSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      }
-    }
-
-    for (const cls of classesList) {
-      try {
-        const reqSnap = await getDocs(collection(db, "classes", cls.id, "teacherRequests"));
-        if (reqSnap.size > 0) {
-          teacherRequests.push({
-            classId: cls.id,
-            className: cls.name,
-            count: reqSnap.size,
-          });
-        }
-      } catch {
-        // subcollection may be empty or unreadable
-      }
-    }
-  } catch (e) {
-    // ignore
+    const r = await functions().httpsCallable("myTeacherRequests")({});
+    return Array.isArray(r?.data?.requests) ? r.data.requests : [];
+  } catch {
+    return []; // not deployed yet / offline: Home just doesn't show the row
   }
-  return teacherRequests;
 }

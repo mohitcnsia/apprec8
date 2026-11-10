@@ -2459,3 +2459,12 @@ questions · 60 min" for Class 10 → "Check-up · Your Accuracy in every topic 
 - **Known gap (unchanged by this):** a child with their own unlinked login can still add a child profile, as before. The real
   answer is "I'm a grown-up" / year of birth (Spec X, before public release).
 - **Deploy:** `firebase deploy --only functions:createParentLinkCode,functions:createChildProfile` (Gemini G102).
+
+## 2026-11-10 (evening) — DR-28: teachers waiting show on Home + Schools list; alerts high priority (Claude, owner bug)
+Owner: Seema joined 10-T as a teacher at 17:12; no Home row, no Schools tag, no notification for 2 hours. Causes: the Home
+"Needs you" row read `classes/{id}/teacherRequests` from the client (rules: server only → silently empty; G84 was tested with
+demo data only); the Schools list counted kids only; pushes went at Android priority "normal". Also the owner's saved phone
+is stale (test push "1/1 delivered", nothing arrived) → owner re-taps Decisions → "Notify me on this phone".
+Fix: new callable `myTeacherRequests` (one collection-group read; app admin = all, school admin = own schools), Home re-reads
+on focus, Schools list adds teacher requests to "waiting"; `sendThrottledPushToUser` → priority high + logs sent/total and
+"no phone saved". **Deploy request (owner OK):** `firebase deploy --only functions:myTeacherRequests,functions:redeemTeacherInvite,functions:onStudentJoinRequest`, then the OTA.
