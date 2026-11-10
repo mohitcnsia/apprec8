@@ -320,14 +320,16 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
 
-### G104 · [todo] · gemini · ⭐ Right after G85: the test app on Seema's phone + her walk-through set up (owner, 2026-11-10)
-Seema checks the whole app on the TEST app before anyone joins. Walk-through (what she will do):
+### G104 · [todo] · gemini · Right after G85: send the test app (App Distribution) — the test-first route for every change (owner, 2026-11-10)
+**Owner changed the plan (10 Nov):** Seema's walk-through runs NOW on the REAL app in a test class 10-T (pretend accounts deleted
+after); then the pilot starts; from then on EVERY change goes through the test app before production. So this task = the
+route for every future change, not Seema's first check. Walk-through (what she will do):
 https://claude.ai/artifact/VoQCLoAojbQGfCvzhyrKbs
 1. Build the test app APK (G85's `preview` profile) and send it with **Firebase App Distribution** (project apprec8-test):
    `firebase appdistribution:distribute <apk> --app <test app id> --testers "<emails the owner gives>" --release-notes "…"`.
    Emails only from the owner, never in the repo. Write the steps in `docs/release/TEST_VS_REAL.md` ("Send the test app").
-2. In the TEST project only: a test school + class **10-T** (Class 10, English), a teacher invite code for Seema, and
-   "Pilot: open all levels" ON for 10-T. Check that content was copied (G85 step 4): Grammar Pro, Check-up questions.
+2. In the TEST project only: a test school + class **10-T** (Class 10, English) and "Pilot: open all levels" ON, so the
+   same walk-through can be re-run on every change. Check that content was copied (G85 step 4): Grammar Pro, Check-up questions.
 3. Walk the walk-through yourself on the emulator with the test app first (Parts 1–5); fix-or-report anything that doesn't
    match it. Report `docs/agents/reports/G104.md`. `gemini(G104): done — review please`.
 
