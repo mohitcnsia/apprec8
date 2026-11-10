@@ -95,6 +95,16 @@ android {
         versionCode 20003000
         versionName "20.0.30"
     }
+    flavorDimensions "version"
+    productFlavors {
+        real {
+            dimension "version"
+        }
+        preview {
+            dimension "version"
+            applicationIdSuffix ".test"
+        }
+    }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')

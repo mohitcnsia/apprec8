@@ -293,7 +293,7 @@ consent = no class"). Run `firebase deploy --only firestore:rules`. Test once on
 (the app shows "Ask your parent to add you"); a kid linked to a parent joins. Delete throwaway accounts. Note the result under DR-26 in
 CODE_REVIEW.md. `gemini(G95): done — review please`.
 
-### G85 · [fixes 1] · gemini · ⭐ NEXT after G95: Test vs real — the test app (owner 2026-11-10: "Seema must be completely comfortable before we onboard anyone; the test app is not complete")
+### G85 · [done, merged by Claude 2026-11-10: real bundle check-aab PASS] · gemini · Test vs real — the test app (owner 2026-11-10: "Seema must be completely comfortable before we onboard anyone; the test app is not complete")
 **Claude's review 2026-11-10 (not merged):** the `real`/`preview` product flavors change every Android task name, and nothing
 else was updated, so the next real build breaks: `eas.json` production runs `:app:bundleRelease` (now builds BOTH flavors; the
 preview one needs a gitignored google-services.json → fails on EAS), development runs `:app:assembleDebug`, and `npm run
