@@ -41,6 +41,15 @@ replaces the Play Store app (same app id).
 
 Tick items as you go. Details and expected results for each are in the named `CODE_REVIEW.md` entry.
 
+### ⭐ Pratha's prep + weekly report (after the next "publish"), ~5 min — ✅ Claude passed 1–3 on the emulator, 10 Nov
+1. ✅ A Class 5 kid's Home: **TODAY'S PRACTICE** card under the greeting → "English Paper 1 › · 60 minutes · papers done 0 of 9".
+   Tap → the paper screen with that paper picked. After a few days of practice it also shows yesterday's Accuracy and the
+   quick-taps tip (both numbers). Finished papers move it on to the next one.
+2. ✅ Progress → My children → each week says **THIS WEEK · 9–15 Nov** (Monday to Sunday); days still to come are faded.
+3. ✅ **Questions to talk about**: starts with "Strong in “…”. Start with this one:" (a question she can answer), then her
+   misses; a missed Challenge shows a similar question **with the answer**. No more empty “”.
+4. On Pratha's phone: answer a few questions slowly and a few fast; after 10+ quick taps the tip appears on her card.
+
 ### ⭐⭐ PILOT PATH on your phone (after the next "publish"), ~15 min — Claude runs it on the emulator first
 Accounts: you (admin), **+teacher** (Seema's role), **+parent**, **+student** (the kid). Each step: what to tap → what you
 should see. ✅ = Claude passed it on the emulator (date). Tell Claude the step number that fails (chat or Me → Tell us).
