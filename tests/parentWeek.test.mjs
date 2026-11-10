@@ -107,3 +107,22 @@ assert.equal(ch[0].answer, "Reuse");
 assert.equal(ch[0].topic, "The 3Rs");
 assert.match(WORDS.en.topicMiss("The 3Rs"), /“The 3Rs”/);
 console.log("parentWeek missed-questions tests passed");
+
+// Talk starts with a win: a question from a strong sub-topic first, then the misses (owner, 2026-11-10).
+const { talkQuestions } = await import("../utils/parentWeek.js");
+const talk = talkQuestions([
+  {
+    questId: "science-quest",
+    namer: (x) => (x === "muscles" ? "Muscles and movement" : "The 3Rs"),
+    stats: { bySubtopic: { muscles: { correct: 9, total: 10 }, weak: { correct: 1, total: 10 } } },
+    questNodes: [],
+    quizzes: { m: [{ subtopic: "muscles", question: { content: "Which muscle never tires?" }, options: [{ content: "Heart", isCorrect: true }] }] },
+    mistakes: { "m-q1": { kind: "question", quizId: "m", questionId: "m-q1", lastWrongAt: 1 } },
+  },
+]);
+assert.equal(talk[0].kind, "strong");
+assert.equal(talk[0].topic, "Muscles and movement");
+assert.equal(talk[0].answer, "Heart");
+assert.equal(talk[1].kind, "question", "then the misses");
+assert.deepEqual(Object.keys(WORDS.en).sort(), Object.keys(WORDS.hi).sort(), "every word has a Hindi version");
+console.log("parentWeek talk-questions tests passed");

@@ -29,6 +29,7 @@ export const WORDS = {
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`),
     missed: (n) => `Questions to talk about (${n})`,
     topicMiss: (topic) => `Missed a Challenge question on “${topic}”. Ask this similar one:`,
+    strongAsk: (topic) => `Strong in “${topic}”. Start with this one:`,
     months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   },
   hi: {
@@ -51,6 +52,7 @@ export const WORDS = {
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} घंटा ${m % 60} मिनट` : `${m} मिनट`),
     missed: (n) => `बात करने के लिए सवाल (${n})`,
     topicMiss: (topic) => `“${topic}” पर एक चैलेंज सवाल गलत हुआ। यह मिलता-जुलता सवाल पूछें:`,
+    strongAsk: (topic) => `“${topic}” में मज़बूत। इस सवाल से शुरू करें:`,
     months: ["जन", "फ़र", "मार्च", "अप्रै", "मई", "जून", "जुला", "अग", "सितं", "अक्टू", "नवं", "दिसं"],
   },
 };
@@ -272,4 +274,27 @@ export function missedQuestions(quests = [], max = 5) {
     });
   });
   return out.sort((a, b) => b.at - a.at).slice(0, max);
+}
+
+/**
+ * Questions to talk about (owner, 2026-11-10: "anything the kid has solved would do; it gives confidence to both"):
+ * first up to `strong` questions from the child's strongest sub-topics (80%+ with 5+ answers), so the talk starts
+ * with a win, then the latest mistakes. Same item shape as missedQuestions, kind "strong" for the confidence ones.
+ */
+export function talkQuestions(quests = [], max = 5, strong = 2) {
+  const wins = [];
+  quests.forEach((q) => {
+    const namer = q.namer || ((x) => x);
+    Object.entries(q.stats?.bySubtopic || {})
+      .filter(([, v]) => v.total >= 5 && v.correct / v.total >= 0.8)
+      .sort((a, b) => b[1].correct / b[1].total - a[1].correct / a[1].total || b[1].total - a[1].total)
+      .forEach(([sub, v]) => {
+        const x = similarQuestion(q, sub, `strong:${q.questId}:${sub}`);
+        if (!x) return;
+        const right = (x.options || []).find((o) => o.isCorrect);
+        wins.push({ key: `strong:${q.questId}:${sub}`, kind: "strong", text: x.question.content, answer: right ? right.content : null, topic: namer(sub), score: v.correct / v.total });
+      });
+  });
+  const picked = wins.sort((a, b) => b.score - a.score).slice(0, strong);
+  return [...picked, ...missedQuestions(quests, max - picked.length)];
 }

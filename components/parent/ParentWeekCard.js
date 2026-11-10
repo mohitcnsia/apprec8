@@ -12,7 +12,7 @@ import { QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { isTileVisible } from "../../utils/courseVisibility";
 import { topicNamer } from "../../utils/progressView";
-import { parentWeek, weekIndexOf, missedQuestions } from "../../utils/parentWeek";
+import { parentWeek, weekIndexOf, talkQuestions } from "../../utils/parentWeek";
 
 const db = getFirestore(getApp());
 const LANG_KEY = "parentLang:v1";
@@ -64,7 +64,7 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
   if (quests === null) return <ActivityIndicator color={P.label} />;
   const w = parentWeek({ name: child.firstName || "Your child", grade: child.grade, quests, lang, weekIndex: weekIndexOf() });
   const t = w.words;
-  const missed = missedQuestions(quests, 5);
+  const missed = talkQuestions(quests, 5);
 
   return (
     <View style={s.wrap}>
@@ -120,7 +120,13 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
           {showMissed
             ? missed.map((m) => (
                 <View key={m.key} style={{ paddingVertical: 6, borderTopWidth: 1, borderTopColor: P.border, gap: 2 }}>
-                  {m.kind === "question" ? (
+                  {m.kind === "strong" ? (
+                    <>
+                      <Text style={[s.small, { color: P.correctText }]}>{t.strongAsk(m.topic)}</Text>
+                      <Text style={s.line}>{m.text}</Text>
+                      {m.answer ? <Text style={[s.small, { color: P.correctText }]}>✓ {m.answer}</Text> : null}
+                    </>
+                  ) : m.kind === "question" ? (
                     <>
                       <Text style={s.line}>{m.text}</Text>
                       {m.answer ? <Text style={[s.small, { color: P.correctText }]}>✓ {m.answer}</Text> : null}
