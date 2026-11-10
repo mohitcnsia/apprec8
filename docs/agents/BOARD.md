@@ -320,6 +320,14 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
 
+### G103 · [spec: Claude, SOON — owner 2026-11-10: "make sure to do this right soon"] · Progress reads only what changed: one class summary
+Part 1 (A) shipped: Progress tabs keep loaded data 10 min and load in parallel (`services/progressCache.js`). Part 2 (C, the
+owner's idea "pull only when there is a change"): a small server-kept doc `classes/{id}/summary/progress` with, per approved
+kid, `lastPractisedAt` (+ the few numbers the class card shows). Written by a bounded trigger on questProgress writes (only for
+kids in a class; debounce 1/min/kid). Teacher's phone reads that ONE doc, then fetches only kids whose `lastPractisedAt` is newer
+than its cached copy. Parents (1–4 children): same idea via `users/{kid}.progressUpdatedAt`. Cost note for the owner before
+building (function invocations per answer). Needs mockup? No UI change. Needs a Deploy request. Claude writes the spec.
+
 ### G96 · [todo, after G92] · gemini · Offline paper: give the stars later (Claude, 2026-11-10) — small, after G95
 Today a paper submitted offline saves everything (Firestore queue) except the stars: `savePaperResult` calls `recordQuizResult`
 once and gives up. Fix: when `offline` is true, keep the call's input in AsyncStorage (`pendingPaperStars`, max 5) and send it
