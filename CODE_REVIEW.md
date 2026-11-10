@@ -2476,3 +2476,7 @@ next slot, offline = last copy). Screens show "Updated 8:05 pm". Pull down = fre
 is on (unset = on; pilot: everyone; later maybe premium). Kids' own progress unchanged (instant). Class board: recomputed once
 per clock hour, app shows "Keep practising! Next update at 9:30 pm". Replaces the unpublished 10-minute version (0b80c38).
 **DR-29 Deploy request (owner OK):** `firebase deploy --only functions:getClassLeaderboard`, then the OTA (with DR-28's app part).
+
+**Small fix, 10 Nov late (owner note "Pull down for latest doesn't work"):** Progress → My children / My classes had no pull
+gesture (cards were ready, `ProgressScreen` never passed `refreshTrigger`). Added `RefreshControl` (behind `progress_pull_refresh`);
+the counter resets on view switch so opening a view never forces a server read. `npm test` + bundle export pass. Needs an OTA.

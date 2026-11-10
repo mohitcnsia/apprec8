@@ -1,5 +1,12 @@
 # Testing the app yourself (owner guide)
 
+## ⭐ On your phone: pull-down fix (10 Nov, late)
+Your note "Pull down for latest doesn't work": the pull gesture was never connected on My children / My classes. Fixed.
+1. Close and reopen the app (it fetches the update).
+2. **Progress → My classes → open a class.** Pull the screen down: a spinner shows, then "Updated …" becomes the time now.
+3. **Progress → My children:** same, pull down → "Updated …" becomes now.
+4. Switch My children ↔ My classes a few times: no spinner and the "Updated" time does **not** change (no extra reads).
+
 ## ⭐ On your phone: update of 10 Nov night (approval fix + Progress update times)
 Owner, 2026-11-10: you test on your own phone; Claude no longer drives the emulator. Anything odd → 🚩 on that screen
 or **Me → Tell us what you think**. Claude turns each note into a decision card; nothing is built before you agree.

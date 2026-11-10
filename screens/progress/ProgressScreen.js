@@ -5,8 +5,8 @@
 // English Quest numbers come from the kid's progress doc; topic names and topic counts come from
 // the quest content bundled in the app (no extra Firestore reads).
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 
@@ -29,6 +29,7 @@ import TeacherClasses from "./TeacherClasses";
 import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/parent/ParentWeekCard";
 import { myChildren } from "../../services/familyApi";
 import WeeklyPushCard from "../../components/push/WeeklyPushCard";
+import { pullRefreshAllowed } from "../../services/progressCache";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -151,15 +152,33 @@ export default function ProgressScreen({ navigation, route }) {
     if (!childKey) return setChildren([]);
     myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
   }, [childKey]);
+  // Pull down on My children / My classes = read fresh now (Remote Config switch `progress_pull_refresh`).
+  // The cards read fresh when refreshTick goes up; the spinner shows briefly while they reload.
+  const [refreshTick, setRefreshTick] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const spinTimer = useRef(null);
+  useEffect(() => () => clearTimeout(spinTimer.current), []);
+  const onPull = () => {
+    setRefreshing(true);
+    setRefreshTick((t) => t + 1);
+    clearTimeout(spinTimer.current);
+    spinTimer.current = setTimeout(() => setRefreshing(false), 1200);
+  };
+  // A new view starts at 0, so opening it never counts as a pull (no extra server reads).
+  const pickView = (v) => {
+    setRefreshTick(0);
+    setView(v);
+  };
+  const pull = pullRefreshAllowed() ? <RefreshControl refreshing={refreshing} onRefresh={onPull} tintColor={P.label} colors={[P.primary]} /> : undefined;
   // The guide (and later the weekly notification) can open a view directly.
   useEffect(() => {
-    if (route?.params?.view) setView(route.params.view);
+    if (route?.params?.view) pickView(route.params.view);
   }, [route?.params?.view]);
   const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
   const segment = tabs.length > 1 ? (
     <View style={styles.segment} accessibilityRole="tablist">
       {tabs.map(([id, label]) => (
-        <Pressable key={id} onPress={() => setView(id)} style={[styles.segmentItem, view === id && styles.segmentOn]} accessibilityRole="tab" accessibilityState={{ selected: view === id }}>
+        <Pressable key={id} onPress={() => pickView(id)} style={[styles.segmentItem, view === id && styles.segmentOn]} accessibilityRole="tab" accessibilityState={{ selected: view === id }}>
           <Text style={[styles.segmentText, view === id && styles.segmentTextOn]}>{label}</Text>
         </Pressable>
       ))}
@@ -188,11 +207,11 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "family" && children.length) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
         {segment}
         <LangSwitch lang={lang} onChange={setLang} P={P} />
         {children.map((c) => (
-          <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} />
+          <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} refreshTrigger={refreshTick} />
         ))}
         <WeeklyPushCard role="parent" on={!!userData?.pushOptIn?.parent} lang={lang} P={P} />
       </ScrollView>
@@ -201,9 +220,9 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "classes" && isTeacher) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
         {segment}
-        <TeacherClasses />
+        <TeacherClasses refreshTrigger={refreshTick} />
         <WeeklyPushCard role="teacher" on={!!userData?.pushOptIn?.teacher} P={P} />
       </ScrollView>
     );
