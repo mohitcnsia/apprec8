@@ -152,3 +152,38 @@ This isolation was verified via end-to-end programmatic check (`testAuthIsolatio
 2. Verified user registered in `apprec8-test` Auth database.
 3. Verified user does not exist in `apprec8-ca229` Auth database (`auth/user-not-found`).
 4. Cleaned up throwaway user record.
+
+---
+
+## 7. Send the Test App (Firebase App Distribution)
+
+For every future change, test builds are distributed to testers via **Firebase App Distribution** targeting `apprec8-test`.
+
+### App Distribution Identifiers
+- **Firebase Project:** `apprec8-test`
+- **Test App ID:** `1:309935610388:android:aa798f8ae50cdc09972501`
+- **Android Package:** `com.mohitchilkoti.apprec8.test`
+
+### Step 1: Build the Preview Release APK
+```bash
+# Ensure test google-services config is placed for preview flavor:
+cp docs/agents/private/google-services.test.json android/app/src/preview/google-services.json
+
+# Build the preview release APK:
+cd android && APP_VARIANT=test ./gradlew :app:assemblePreviewRelease
+```
+The compiled APK output is located at:
+`android/app/build/outputs/apk/preview/release/app-preview-release.apk`
+
+### Step 2: Distribute to Testers
+> [!IMPORTANT]
+> **Email Privacy Rule:** Tester email addresses are provided only by the project owner and must **never** be committed to the repository or stored in public tracking files.
+
+```bash
+firebase appdistribution:distribute android/app/build/outputs/apk/preview/release/app-preview-release.apk \
+  --app 1:309935610388:android:aa798f8ae50cdc09972501 \
+  --project test \
+  --testers "<comma-separated emails from owner>" \
+  --release-notes "Release notes describing the changes"
+```
+
