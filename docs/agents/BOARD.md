@@ -289,6 +289,9 @@ numbered DR-26 by mistake (taken) → **DR-30**. Order: deploy `approveMember` f
 is "difficult as hell"; everyone lost confidence. Proposal doc (one class code, linking by Gmail):
 https://claude.ai/artifact/Qp9hkoLhrYYbADza2Pur8b — waits for owner + Seema's Yes, then mockup, then build. Seema's
 walk-through paused until then. Parent "Join a class" fix and role labels on Me/Home: owner said not now.
+Owner decisions in that doc (10 Nov): no codes, no text-message codes, no parent↔child sharing; children need a parent's
+yes BEFORE learning, adults never (replaces 6 Nov "learn first": `feat/learn-first` / G50 will not be merged as is);
+old child accounts pause until a parent's yes; parents may say yes on a web page. Open: child links by parent's mobile.
 
 **PILOT START (owner, 2026-11-10): Seema's kids start only after G90 + G91 are merged, the clean test passes and the owner says publish (est. ~2 days). No soft start.** **0000) G94 deploy DR-25** → **000) G89 two-way cards on Home → G90 pilot ready (sign-up, assigned first, all open) → G91 check-up by topic + No internet → G92 weekly report (mockup first) → G93 challenge track (content first)** (Seema's decisions, 2026-11-10), **00) G87 assignment done = mistakes fixed + results by name (owner: pilot)**, **0) G84 Needs you + teacher Home (owner + Seema: TOP)** → G84b Remind, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
