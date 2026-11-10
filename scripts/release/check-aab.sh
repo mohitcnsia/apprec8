@@ -15,6 +15,9 @@ ok()  { echo "  ✅ $1"; }
 bad() { echo "  ❌ $1"; FAIL=1; }
 
 echo "Checking $AAB"
+if grep -a -q -F "com.mohitchilkoti.apprec8" "$TMP/base/manifest/AndroidManifest.xml" 2>/dev/null; then ok "package com.mohitchilkoti.apprec8"
+else bad "package com.mohitchilkoti.apprec8 not found"; fi
+
 if grep -a -q -F "$WANT" "$TMP/base/manifest/AndroidManifest.xml" 2>/dev/null; then ok "versionName $WANT"
 else bad "versionName $WANT not found (bump app.config.js AND android/app/build.gradle)"; fi
 

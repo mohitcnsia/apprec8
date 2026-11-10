@@ -9,23 +9,31 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleRealDebug"
       },
       "ios": {
         "simulator": true
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview",
+      "env": {
+        "APP_VARIANT": "test"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assemblePreviewRelease"
+      }
     },
     "production": {
       "channel": "production",
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease"
+        "gradleCommand": ":app:bundleRealRelease"
       },
-      "developmentClient": false,  // Keep ***false*** for Prod build. no debug tools; real release build
-      "distribution": "store"      // signed and ready for upload to Play Store or install manually
+      "developmentClient": false,
+      "distribution": "store"
     }
   },
   "submit": {
