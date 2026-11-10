@@ -181,7 +181,14 @@ exports.approveMember = functions
       batch.set(userRef, { classIds: FieldValue.arrayUnion(classId), pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     } else {
       batch.delete(memberRef);
-      batch.set(userRef, { pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
+      batch.set(
+        userRef,
+        {
+          classIds: FieldValue.arrayRemove(classId),
+          pendingClassIds: FieldValue.arrayRemove(classId),
+        },
+        { merge: true }
+      );
     }
     batch.delete(classRef.collection("cache").doc("board")); // a new classmate shows on the board straight away
     await batch.commit();

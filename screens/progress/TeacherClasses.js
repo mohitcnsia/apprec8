@@ -134,6 +134,19 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       .then(() => setReloadKey((k) => k + 1))
       .catch((e) => showAlert("Couldn't do that", e.message));
 
+  const confirmRemove = (kid) => {
+    const kidName = kid.firstName || "this child";
+    const className = open?.name || (open ? classLabel(open) : "this class");
+    showAlert(
+      `Remove ${kidName} from ${className}?`,
+      "Their own progress stays.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Remove", style: "destructive", onPress: () => decide(kid, false) },
+      ]
+    );
+  };
+
   const reloadClasses = useCallback(() => {
     return myTeachingClasses()
       .then(setClasses)
@@ -256,6 +269,17 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
                   {p.weak ? ` · weak: ${p.weak}` : ""}
                 </Text>
               ))}
+              <View style={[styles.rowBetween, { marginTop: 4 }]}>
+                <View />
+                <Pressable
+                  onPress={() => confirmRemove(k)}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${k.firstName || "child"} from class`}
+                >
+                  <Text style={styles.quietLink}>Remove from class</Text>
+                </Pressable>
+              </View>
             </View>
           ))
         : null}
@@ -272,6 +296,7 @@ const makeStyles = (P) =>
     title: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
     soft: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
     line: { fontSize: 14, fontFamily: "nunitoBold", color: P.text },
+    quietLink: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
     chips: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
     chip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1, borderColor: P.border },
     chipOn: { borderColor: P.selectedBorder, backgroundColor: P.selectedBg },

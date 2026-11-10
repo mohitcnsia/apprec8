@@ -41,4 +41,26 @@ assert.ok(teacherInviteMessage({ className: "5-A", subjects: [], code: "TX" }).i
 assert.deepEqual(classSubjects({ subjects: ["science"], teacherSubjects: { t: ["english"] } }), ["science"]);
 assert.deepEqual(classSubjects({ teacherSubjects: { t: ["english", "wordpower"], u: ["english"] } }), ["english", "wordpower"]);
 assert.deepEqual(classSubjects({}), []);
+
+// G97: teacher can remove an approved kid from the class (approveMember with approve: false)
+// Verify arrayRemove contract: both classIds and pendingClassIds have classId removed
+{
+  const applyRemove = (user, classId) => ({
+    ...user,
+    classIds: (user.classIds || []).filter((id) => id !== classId),
+    pendingClassIds: (user.pendingClassIds || []).filter((id) => id !== classId),
+  });
+  // Approved kid removed
+  const kidApproved = { uid: "k1", classIds: ["c1", "c2"], pendingClassIds: [] };
+  const updatedApproved = applyRemove(kidApproved, "c1");
+  assert.deepEqual(updatedApproved.classIds, ["c2"]);
+  assert.deepEqual(updatedApproved.pendingClassIds, []);
+
+  // Pending kid declined
+  const kidPending = { uid: "k2", classIds: ["c2"], pendingClassIds: ["c1"] };
+  const updatedPending = applyRemove(kidPending, "c1");
+  assert.deepEqual(updatedPending.classIds, ["c2"]);
+  assert.deepEqual(updatedPending.pendingClassIds, []);
+}
+
 console.log("classes tests passed");

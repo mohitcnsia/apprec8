@@ -2394,3 +2394,12 @@ only `status`/`doneAt`). Without it the owner's Ideas & reports screen stays emp
 b4 questions-gate-pool-11 (prompt shortened to "the next train" so the key fits 14 words), b5 test-8 (key no longer adds
 "yesterday"), modals-gate-pool-14, agent-board-7, test-12 (distractors match the sentence). `npm test` passes. Owner re-seeds
 English (inbox card). Gemini G73 does the other 24. Also: OTA published (feedback G64–G66); G77 (DR-24) + G78 (offline) on the board.
+
+## 2026-11-10 — Review request + Deploy request DR-26: Teacher can remove an approved kid from class (G97, Gemini)
+- **Goal:** Allow teachers to remove an approved student who changed sections or joined by mistake.
+- **Server:** Updated `exports.approveMember` in `functions/callable/schoolActions.js`. When `approve: false` is supplied, it deletes `classes/{classId}/members/{kidUid}`, clears the cached class board, and removes `classId` from both `users/{kidUid}.classIds` and `users/{kidUid}.pendingClassIds` using `FieldValue.arrayRemove(classId)`. The student's quest progress remains untouched.
+- **Client UI:** In `screens/progress/TeacherClasses.js`, each student card in the approved list now features a quiet `"Remove from class"` button. Tapping it displays a confirmation dialog: `"Remove [Name] from [Class]? Their own progress stays."` with Cancel and destructive Remove actions.
+- **Deploy Request DR-26 (functions):**
+  Deploy `approveMember`:
+  `firebase deploy --only functions:approveMember --project apprec8-ca229` (owner OK needed).
+
