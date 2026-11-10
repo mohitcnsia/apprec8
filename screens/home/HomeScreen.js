@@ -30,6 +30,8 @@ import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
 import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
+import { loadPaperHistory } from "../../services/paperApi";
+import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import { assignedTopics } from "../../utils/assignedTopics";
@@ -424,6 +426,24 @@ export default function HomeScreen({ navigation }) {
   const oldAdmin = ownerView;
   const practiceTiles = visibleOldTiles([...olympiad, ...popularQuizzes], { isAdmin: oldAdmin });
   const classroomTiles = visibleOldTiles(classrooms, { isAdmin: oldAdmin });
+  // G101 (owner approved the mockup, 2026-11-10): "Today's practice" = the next unfinished paper, yesterday's Accuracy and
+  // one tip from the child's own answer speed. Paper history lives on this phone; re-read when Home comes back into view.
+  const [paperHistory, setPaperHistory] = useState([]);
+  useEffect(() => {
+    const load = () => loadPaperHistory().then(setPaperHistory).catch(() => {});
+    load();
+    return navigation.addListener("focus", load);
+  }, [navigation]);
+  const today = useMemo(() => {
+    if (!userGrade) return null;
+    const stats = Object.values(progressById).map((p) => p.doc?.stats);
+    return todayPractice({
+      papers: papersFor({ grade: userGrade, isTester: false }),
+      history: paperHistory,
+      daily: mergeDaily(stats.map((x) => x?.daily)),
+      speed: mergeSpeed(stats.map((x) => x?.speed)),
+    });
+  }, [userGrade, progressById, paperHistory]);
   const hasPaper = papersFor({ grade: userGrade, isTester }).length > 0 || MIX_GRADES.includes(userGrade) || CHECKUP_GRADES.includes(userGrade); // G91
 
   // Each quest tile is its own "continue" (owner 2026-11-04: a kid runs several quests; no single big Continue card).
@@ -587,6 +607,23 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
+      {today ? (
+        <Pressable
+          onPress={() => navigation.navigate("PracticePaper", { grade: userGrade, paperId: today.paper.id })}
+          accessibilityRole="button"
+          accessibilityLabel={`Today's practice: ${today.paper.subject === "science" ? "Science" : "English"} ${today.paper.title}`}
+          style={styles.todayCard}
+        >
+          <Text style={styles.label}>TODAY'S PRACTICE</Text>
+          <Text style={styles.teacherTitle}>{today.paper.subject === "science" ? "Science" : "English"} {today.paper.title} ›</Text>
+          <Text style={styles.questSub}>
+            {today.paper.minutes} minutes · papers done {today.done} of {today.total}
+            {today.yesterday != null ? ` · yesterday's Accuracy ${today.yesterday}%` : ""}
+          </Text>
+          {today.tip ? <Text style={styles.todayTip}>{today.tip}</Text> : null}
+        </Pressable>
+      ) : null}
+
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 
       <HomeIdeaPromptCard userGrade={userGrade} userCreatedAt={userData?.createdAt} />
@@ -689,6 +726,8 @@ const makeStyles = (P, insets) =>
     addPill: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: P.border, backgroundColor: P.card },
     teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
     teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
+    todayCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 1, borderColor: P.selectedBorder, gap: 4 },
+    todayTip: { fontSize: 15, fontFamily: "nunitoBold", color: P.text, marginTop: 6, lineHeight: 21 },
     questArtBox: { height: 82, borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 8 },
     tileProgressRow: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 6, marginRight: 34 },
     tileTrack: { flex: 1, height: 7, borderRadius: 4, backgroundColor: P.track, overflow: "hidden" },

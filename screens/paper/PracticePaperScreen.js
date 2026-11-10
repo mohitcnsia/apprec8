@@ -51,7 +51,9 @@ export default function PracticePaperScreen({ navigation, route }) {
   }, [fixedPapers, mixGrade, history]);
   const subjects = SUBJECTS.filter((sub) => papers.some((p) => p.subject === sub.id));
 
-  const [state, dispatch] = useReducer(reducer, papers[0]?.id || null, initialPaperState);
+  // G101: Home's "Today's practice" card opens a given paper.
+  const askedId = route?.params?.paperId;
+  const [state, dispatch] = useReducer(reducer, (askedId && papers.some((p) => p.id === askedId) ? askedId : papers[0]?.id) || null, initialPaperState);
   const paper = paperById(state.paperId);
   const questions = useMemo(() => (paper ? paperQuestions(paper) : []), [paper]);
 

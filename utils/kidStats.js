@@ -5,6 +5,7 @@
 export const DAYS_KEPT = 14;
 export const WEAK_MIN_ANSWERS = 3;
 export const WEAK_BELOW = 0.6;
+export const QUICK_MS = 3000; // G101: an answer faster than this is a "quick tap"
 
 /** Topic key from a map title, e.g. "Kinds of sentences" → "kinds-of-sentences" (Finding 20). */
 export const topicSlug = (title) =>
@@ -46,6 +47,15 @@ export function updateStats(
     bySubtopic[key] = { correct: s.correct + (a.isCorrect ? 1 : 0), total: s.total + 1 };
   });
 
+  // G101: quick taps (under QUICK_MS) vs answers given a few seconds, so the child can see what slowing down does.
+  const speed = { quick: { ...(prev.speed?.quick || { answered: 0, correct: 0 }) }, slow: { ...(prev.speed?.slow || { answered: 0, correct: 0 }) } };
+  answers.forEach((a) => {
+    if (!Number.isFinite(a.timeMs) || a.timeMs <= 0) return;
+    const b = a.timeMs < QUICK_MS ? speed.quick : speed.slow;
+    b.answered += 1;
+    if (a.isCorrect) b.correct += 1;
+  });
+
   const today = dayKey(now);
   const daily = { ...(prev.daily || {}) };
   const d = daily[today] || { answered: 0, correct: 0, timeMs: 0 };
@@ -64,6 +74,7 @@ export function updateStats(
     correct: (prev.correct || 0) + correct,
     bySubtopic,
     daily,
+    speed,
   };
 }
 
