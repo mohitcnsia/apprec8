@@ -574,5 +574,12 @@
     "ask": "When a kid taps 🚩 → \"The answer is wrong\", show the 4 options: \"Which one do you think is right?\" One tap. The app answers at once with why that option is not right (\"Good thinking! The large intestine only takes back water. Digestion already finished in the small intestine.\"). We see the counts. YES = I write the spec + mockup for your OK first. NO = keep today's report.",
     "details": "**Why:** Pratha's report today said only \"wrong answer\". She thinks it's the large intestine (it's the small intestine), and we only learnt that because you asked her. With one tap we learn it from every kid, and the kid learns something right away instead of waiting.\n\n**What it needs:**\n1. A \"why not\" line for every wrong option. Quest questions mostly have them. The papers don't yet (only a tag), so this is content work for the 10 papers first.\n2. A small change to the report sheet (app update, no new library).\n\n**My pushback on myself:** if the explanation already covers the kid's choice, the report closes itself as \"we explained\". If 3 or more kids pick the same option, it comes to you as a card: maybe the question really is unclear.\n\n**Digestion question:** the answer stays (small intestine is right). Only its explanation gets the large-intestine line, after you OK this.",
     "from": "claude"
+  },
+  {
+    "id": "progress-refresh-rules",
+    "title": "Progress: who sees updates when (spec for your yes)",
+    "ask": "Parents + teachers: updated twice a day (7:30 am / 7:30 pm) with \"Updated 7:30 am\" on screen. Kids: own progress instant (free); class rank + class week hourly with \"Keep practising! Next update at 6 pm\" (last minutes: \"Next update in 5 minutes…\"). Pull-down refresh + instant updates = a premium switch, ON for everyone during the pilot. YES = I build it, you test on your phone.",
+    "details": "**Replaces** the unpublished 10-minute cache (0b80c38).\n\n**Kids' own progress stays instant:** it's already on their phone, so it costs nothing, and a missing tick right after finishing feels like a bug.\n\n**Premium switch:** one setting (Remote Config) that says who may pull down to refresh / get instant updates. During the pilot: everyone. You flip it when schools pay.\n\n**Cost:** a parent with 2 kids = at most 2 reads twice a day; a teacher with 50 kids = 1 class summary (G103) instead of 50 reads.",
+    "from": "claude"
   }
 ]
