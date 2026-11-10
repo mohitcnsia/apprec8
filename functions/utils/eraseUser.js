@@ -108,7 +108,7 @@ async function eraseUser(admin, uid, opts = {}) {
     update: { userId: "deleted", userName: null, userEmail: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() },
   });
   for (const field of ["kidUid", "parentUid"]) {
-    await updateAll(db, db.collection("consents").where(field, "==", uid), { parentName: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() });
+    await updateAll(db, db.collection("consents").where(field, "==", uid), { parentName: FieldValue.delete(), parentMobile: FieldValue.delete(), erasedAt: FieldValue.serverTimestamp() });
   }
   for (const [col, field] of [["childLoginCodes", "parentUid"], ["childLoginCodes", "kidUid"], ["parentLinkCodes", "parentUid"]]) {
     await deleteWhere(db, db.collection(col).where(field, "==", uid));

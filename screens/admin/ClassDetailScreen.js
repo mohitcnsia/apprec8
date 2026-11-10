@@ -15,6 +15,7 @@ import { getClasses, classMembers, approveMember, classTeam, decideTeacherReques
 import { SUBJECT_NAMES, classSubjects } from "../../utils/classes";
 import { classLinkMessage } from "../../utils/joinLink";
 import { getClassLink } from "../../services/joinApi";
+import { askParentYes, needsParentYes } from "../../components/teacher/JoinRequestCard";
 import { showAlert } from "../../services/dialog";
 
 const names = (subs = []) => subs.map((s) => SUBJECT_NAMES[s] || s).join(", ");
@@ -152,7 +153,14 @@ export default function ClassDetailScreen({ route, navigation }) {
                   >
                     <Ionicons name="close" size={20} color={P.textSoft} />
                   </Pressable>
-                  <Pressable onPress={() => decide(m.uid, () => approveMember({ classId, kidUid: m.uid, approve: true }))} accessibilityRole="button" style={styles.smallButton}>
+                  <Pressable
+                    onPress={() => {
+                      const go = (how) => decide(m.uid, () => approveMember({ classId, kidUid: m.uid, approve: true, parentSaidYes: how }));
+                      needsParentYes(m) ? askParentYes(m.firstName || "this child", go) : go(null);
+                    }}
+                    accessibilityRole="button"
+                    style={styles.smallButton}
+                  >
                     {busyId === m.uid ? <ActivityIndicator color={P.selectedText} /> : <Text style={styles.smallButtonText}>Approve</Text>}
                   </Pressable>
                 </View>

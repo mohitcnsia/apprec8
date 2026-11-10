@@ -2503,3 +2503,20 @@ stage by stage, pilot path first. Stage 1 needs no new app build (the app alread
   1. `firebase deploy --only functions:classLink,functions:classLinkInfo,functions:joinClassByLink,functions:markNotSure,functions:followUpList,functions:approveMember --project apprec8-ca229`
   2. `firebase deploy --only hosting --project apprec8-ca229`
   3. `node scripts/genOwnerNotes.mjs && npm install && npx eas update --channel production --message "Class link: parents join in one screen"`
+
+## 2026-11-11 — Students join from their own phone; the teacher confirms the parent's yes (Claude). DR-32
+Owner: Seema's Class 10 has exams in 5 days; parents shouldn't have to install anything; the closed test is live
+(students 15–16 can install it themselves). Owner chose: parents reply YES in the class WhatsApp group (or a slip),
+Seema confirms it when approving.
+- **Server:** `studentJoinByLink` (own account; roll no. + parent's mobile; `consentBy: "teacher-confirms"`, or
+  `"parent-account"` when a parent is already linked). `approveMember` refuses such a request without
+  `parentSaidYes` ("whatsapp" | "slip" | "call" | "in-person") and then stores a consent record: method, who confirmed,
+  when, parent's mobile (erased with the child's account).
+- **App:** JoinByLinkScreen picks the student or parent screen from the account (quiet switch "I'm a parent ›" /
+  "I'm the student ›"); the teacher's Approve asks "Did …'s parent say yes?" (class screen + admin class page).
+  Class link page: the 3 tester steps (join group → become a tester → install); on a computer, no Play button.
+- **Checks:** `npm test`, `npm run test:emulator:join` (37 checks, 8 new for this), Android bundle export.
+- **DR-32 Deploy request (owner OK needed):**
+  1. `firebase deploy --only functions:studentJoinByLink,functions:approveMember --project apprec8-ca229`
+  2. `firebase deploy --only hosting --project apprec8-ca229`
+  3. `node scripts/genOwnerNotes.mjs && npm install && npx eas update --channel production --message "Students join a class from their own phone"`

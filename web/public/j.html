@@ -21,16 +21,25 @@
          font-size:17px; font-weight:700; letter-spacing:.5px; text-decoration:none; margin-top:12px; }
   .note { font-size:14px; text-align:center; margin-top:14px; }
   .wrap { max-width:440px; width:100%; margin:0 auto; }
+  .step { display:block; padding:14px 16px; margin:8px 0; border-radius:14px; background:var(--card); color:var(--text);
+          font-size:16px; font-weight:700; text-decoration:none; }
+  .step span { font-weight:400; color:var(--soft); font-size:14px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="star" aria-hidden="true"></div>
   <h1>Your child's class is on Apprec8</h1>
-  <p>Tap the button. Apprec8 opens on the class, and you add your child in one screen.</p>
-  <p class="hi">बटन दबाएँ। Apprec8 कक्षा पर खुलेगा, और आप एक ही स्क्रीन में अपने बच्चे को जोड़ेंगे।</p>
+  <p class="hi">आपके बच्चे की कक्षा Apprec8 पर है।</p>
+  <div id="new">
+    <p><b>New to Apprec8?</b> Do these 3 steps once, then tap the link in WhatsApp again.<br><span class="hi">पहली बार? ये 3 कदम एक बार करें, फिर WhatsApp में लिंक दोबारा दबाएँ।</span></p>
+    <a class="step" href="https://groups.google.com/g/apprec8-testers" target="_blank" rel="noopener">1 · Join the Apprec8 testers <span>(tap "Join group")</span></a>
+    <a class="step" href="https://play.google.com/apps/testing/com.mohitchilkoti.apprec8" target="_blank" rel="noopener">2 · Become a tester <span>(tap "Become a tester")</span></a>
+    <a class="step" href="https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8" target="_blank" rel="noopener">3 · Install Apprec8</a>
+  </div>
+  <p style="margin-top:22px"><b>Have Apprec8?</b> Tap below: it opens on the class, and you add your child in one screen.</p>
   <a id="open" class="btn" href="#">OPEN APPREC8</a>
-  <p class="note" id="note">No Apprec8 yet? The button opens the Play Store. After installing, tap the link in WhatsApp again.</p>
+  <p class="note" id="note">Use the Google account on your phone. No codes to type.</p>
 </div>
 <script>
   (function () {
@@ -40,6 +49,7 @@
     var pkg = test ? "com.mohitchilkoti.apprec8.test" : "com.mohitchilkoti.apprec8";
     var store = "https://play.google.com/store/apps/details?id=" + pkg + "&referrer=" + encodeURIComponent("join=" + token);
     var a = document.getElementById("open");
+    if (test) document.getElementById("new").style.display = "none";
     if (!token) {
       a.style.display = "none";
       document.getElementById("note").textContent = "This link looks broken. Ask the teacher to share it again.";
@@ -50,6 +60,7 @@
     } else {
       // On a computer: never send anyone to Google's pages (owner, 11 Nov: Google's age check blocked a signed-in account).
       a.style.display = "none";
+      document.getElementById("new").style.display = "none";
       document.getElementById("note").textContent = "Apprec8 is an Android app. Open this link in WhatsApp on your Android phone. / यह लिंक अपने Android फ़ोन पर WhatsApp में खोलें।";
     }
   })();

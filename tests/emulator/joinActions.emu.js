@@ -89,7 +89,23 @@ async function call(name, data, who) {
   ok((await call("classLinkInfo", { token: l1.token }, parent)).error === "NOT_FOUND", "the old link stops working");
   ok((await call("classLinkInfo", { token: l2.token }, parent)).className === "10-A", "the new link works");
 
-  // 6) Up to 4 children
+  // 6) A student asks from their own phone (Class 10, exams soon); the teacher confirms the parent's yes
+  const student = await signUp("student@test.dev");
+  await db.doc(`users/${student.uid}`).set({ firstName: "Aarav", grade: 10 });
+  ok((await call("studentJoinByLink", { token: l2.token, rollNo: "31", parentMobile: "12" }, student)).error === "INVALID_ARGUMENT", "student: a wrong parent number is refused");
+  ok((await call("studentJoinByLink", { token: l2.token, rollNo: "31", parentMobile: "91234 56780" }, parent)).error === "FAILED_PRECONDITION", "a parent's account can't ask as a student");
+  const sj = await call("studentJoinByLink", { token: l2.token, rollNo: "31", parentMobile: "91234 56780" }, student);
+  ok(sj.className === "10-A" && sj.teacherConfirms === true, "Aarav asks to join 10-A from his phone");
+  const sm = (await db.doc(`classes/c1/members/${student.uid}`).get()).data();
+  ok(sm.status === "pending" && sm.consentBy === "teacher-confirms" && sm.rollNo === "31" && sm.parentMobile === "+919123456780", "his request: roll, parent's number, consent to confirm");
+  ok((await call("approveMember", { classId: "c1", kidUid: student.uid, approve: true }, teacher)).error === "FAILED_PRECONDITION", "approve without the parent's yes is refused");
+  ok((await call("approveMember", { classId: "c1", kidUid: student.uid, approve: true, parentSaidYes: "whatsapp" }, teacher)).ok, "teacher: parent said YES on WhatsApp → approved");
+  const sm2 = (await db.doc(`classes/c1/members/${student.uid}`).get()).data();
+  const sc = (await db.doc(`consents/${sm2.consentId}`).get()).data();
+  ok(sm2.status === "approved" && sm2.consentBy === "teacher-confirmed" && sc.method === "whatsapp" && sc.confirmedBy === teacher.uid && sc.kidUid === student.uid, "the consent record says who confirmed it and how");
+  ok((await db.doc(`users/${student.uid}`).get()).data().classIds.includes("c1"), "Aarav is in 10-A");
+
+  // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });
   ok((await call("joinClassByLink", { ...form, token: l2.token, firstName: "Fifth" }, stranger)).error === "RESOURCE_EXHAUSTED", "a 5th child: Need more? Tell us");
 

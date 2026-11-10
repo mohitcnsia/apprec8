@@ -186,8 +186,9 @@ export async function myTeachingClasses() {
 }
 
 /** Teacher: approve (or reject) a join request. Server-side: checks the caller teaches this class. */
-export async function approveMember({ classId, kidUid, approve }) {
-  await functions().httpsCallable("approveMember")({ classId, kidUid, approve: !!approve });
+export async function approveMember({ classId, kidUid, approve, parentSaidYes = null }) {
+  // parentSaidYes ("whatsapp" | "slip" | "call" | "in-person"): needed when a student asked from their own phone.
+  await functions().httpsCallable("approveMember")({ classId, kidUid, approve: !!approve, ...(parentSaidYes ? { parentSaidYes } : {}) });
 }
 
 export async function classMembers(classId) {

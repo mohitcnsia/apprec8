@@ -14,6 +14,8 @@ export async function getClassLink(classId, { renew = false } = {}) {
 export const classLinkInfo = (token) => call("classLinkInfo", { token });
 /** The parent's one screen → { kidUid, firstName, className, isNew }. Throws a parent-friendly error first. */
 export const joinClassByLink = (form) => call("joinClassByLink", joinPayload(form));
+/** A student asks to join from their own phone → { className, teacherConfirms }. */
+export const studentJoinByLink = ({ token, rollNo, parentMobile }) => call("studentJoinByLink", { token, rollNo, parentMobile });
 /** Teacher: "Not sure" → the family goes on the follow-up list. */
 export const markNotSure = (classId, kidUid) => call("markNotSure", { classId, kidUid });
 /** Admin: everyone on the follow-up list. */

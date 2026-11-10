@@ -11,10 +11,10 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { myChildren } from "../../services/familyApi";
-import { classLinkInfo, joinClassByLink } from "../../services/joinApi";
+import { classLinkInfo, joinClassByLink, studentJoinByLink } from "../../services/joinApi";
 import { CHILD_CONSENT_TEXT, CHILD_CONSENT_VERSION } from "../../utils/family";
 import { CONSENT_TEXT, CONSENT_VERSION } from "../../utils/classes";
-import { formatMobile, normalizeMobile, joinPayload } from "../../utils/joinLink";
+import { formatMobile, normalizeMobile, normalizeRoll, joinPayload } from "../../utils/joinLink";
 import ConsentListenButton from "../../components/common/ConsentListenButton";
 import { showAlert } from "../../services/dialog";
 
@@ -44,7 +44,8 @@ export default function JoinByLinkScreen({ route, navigation }) {
   const [lang, setLang] = useState("en");
   const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(null); // { firstName, className }
+  const [done, setDone] = useState(null); // { firstName, className, student }
+  const [asStudent, setAsStudent] = useState(null); // null = guess from the account; true / false = the person chose
 
   useEffect(() => listenToUserDocument((d) => setUser(d || null), () => setUser(null)), []);
   useEffect(() => {
@@ -100,6 +101,44 @@ export default function JoinByLinkScreen({ route, navigation }) {
     ]);
   };
 
+  // Who opened the link? A parent's account (has children) gets the parent's screen; a student's own account (a class,
+  // or a linked parent) gets the student's screen (owner, 2026-11-11: Class 10 joins from their own phones).
+  const parentAccount = (user?.childUids || []).length > 0 || !!user?.isParent;
+  const studentGuess = !parentAccount && (!!user?.isChild || (user?.parentUids || []).length > 0 || Number.isInteger(user?.grade));
+  const student = asStudent === null ? studentGuess : asStudent;
+  const studentReady = !!normalizeMobile(mobile) && normalizeRoll(rollNo) !== null;
+  const sendStudent = async () => {
+    setBusy(true);
+    try {
+      const r = await studentJoinByLink({ token, rollNo, parentMobile: mobile });
+      setDone({ firstName: user?.firstName, className: r.className, student: true });
+    } catch (e) {
+      showAlert("Couldn't ask to join", e?.message || "Please try again.");
+    }
+    setBusy(false);
+  };
+  const joinStudent = () =>
+    showAlert("Is this your parent's number?", `${formatMobile(normalizeMobile(mobile))}\n\nYour teacher calls this number to ask your parent.`, [
+      { text: "Change", style: "cancel" },
+      { text: "Yes, it's right", onPress: sendStudent },
+    ]);
+
+  if (done?.student) {
+    return (
+      <View style={[s.screen, s.center]}>
+        <Text style={s.bigTitle}>Request sent ✓</Text>
+        <Text style={s.softCenter}>
+          {teacher ? `${teacher} will` : "Your teacher will"} ask your parent, then let you into {done.className}.
+        </Text>
+        <Text style={s.softCenter}>You can keep practising meanwhile.</Text>
+        <View style={[s.footer, s.footerAbs]}>
+          <Pressable onPress={() => navigation.navigate("ProfileScreen")} style={s.button} accessibilityRole="button">
+            <Text style={s.buttonText}>DONE</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
   if (done) {
     return (
       <View style={[s.screen, s.center]}>
@@ -136,18 +175,36 @@ export default function JoinByLinkScreen({ route, navigation }) {
       </View>
     );
   }
-  // A child's profile (Play as) or a child's own account: the parent joins for them, on the parent's account.
-  if (user?.isChild || (user?.parentUids || []).length) {
+  if (student) {
     return (
-      <View style={[s.screen, s.center]}>
-        <Text style={s.bigTitle}>Ask your parent</Text>
-        <Text style={s.softCenter}>Your parent opens this class link on their own account and adds you. It takes one minute.</Text>
-        <View style={[s.footer, s.footerAbs]}>
-          <Pressable onPress={() => navigation.navigate("ProfileScreen")} style={s.button} accessibilityRole="button">
-            <Text style={s.buttonText}>OK</Text>
+      <KeyboardAvoidingView style={s.screen} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
+          <Text style={s.label}>JOIN A CLASS</Text>
+          <View style={s.classCard}>
+            <Text style={s.classTitle}>{[info.className, info.schoolName].filter(Boolean).join(" · ")}</Text>
+            {teacher ? <Text style={s.soft}>Teacher: {teacher}</Text> : null}
+          </View>
+          <Text style={s.soft}>
+            You're joining as {user?.firstName || "you"}
+            {Number.isInteger(user?.grade) ? `, Class ${user.grade}` : ""}.
+          </Text>
+          <Text style={s.label}>YOUR ROLL NUMBER</Text>
+          <TextInput value={rollNo} onChangeText={setRollNo} placeholder="23" placeholderTextColor={P.dimText} style={s.input} autoCapitalize="characters" autoCorrect={false} maxLength={6} accessibilityLabel="Your roll number" />
+          <Text style={s.label}>YOUR PARENT'S MOBILE NUMBER</Text>
+          <TextInput value={mobile} onChangeText={setMobile} placeholder="98765 43210" placeholderTextColor={P.dimText} style={s.input} keyboardType="phone-pad" maxLength={16} accessibilityLabel="Your parent's mobile number" />
+          <Text style={s.small}>
+            {teacher || "Your teacher"} asks your parent to say yes, then lets you in. Only your teacher and Apprec8 see this number.
+          </Text>
+          <Pressable onPress={() => setAsStudent(false)} hitSlop={8} style={{ alignSelf: "center", minHeight: 44, justifyContent: "center" }} accessibilityRole="button">
+            <Text style={s.small}>I'm a parent ›</Text>
+          </Pressable>
+        </ScrollView>
+        <View style={s.footer}>
+          <Pressable onPress={joinStudent} disabled={!studentReady || busy} style={[s.button, (!studentReady || busy) && s.buttonOff]} accessibilityRole="button">
+            {busy ? <ActivityIndicator color="#FFFFFF" /> : <Text style={s.buttonText}>ASK TO JOIN {String(className).toUpperCase()}</Text>}
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -220,6 +277,11 @@ export default function JoinByLinkScreen({ route, navigation }) {
           <View style={[s.box, agreed && s.boxOn]}>{agreed ? <Text style={s.tick}>✓</Text> : null}</View>
           <Text style={s.agreeText}>{t.confirm}</Text>
         </Pressable>
+        {!parentAccount ? (
+          <Pressable onPress={() => setAsStudent(true)} hitSlop={8} style={{ alignSelf: "center", minHeight: 44, justifyContent: "center" }} accessibilityRole="button">
+            <Text style={s.small}>I'm the student ›</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
 
       {/* Thumb zone (design rule 2) */}

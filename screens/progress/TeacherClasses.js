@@ -141,8 +141,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
   const [readAt, setReadAt] = useState(null); // oldest progress read shown: "Updated 7:35 am"
   const lastForced = useRef(0);
   const forceNext = useRef(false); // after approving / declining: re-read the member list
-  const decide = (kid, approve) =>
-    approveMember({ classId: open.id, kidUid: kid.uid, approve })
+  const decide = (kid, approve, parentSaidYes = null) =>
+    approveMember({ classId: open.id, kidUid: kid.uid, approve, parentSaidYes })
       .then(() => {
         forceNext.current = true;
         setReloadKey((k) => k + 1);
@@ -280,7 +280,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           {pending
             .filter((k) => k.status !== "unsure")
             .map((k) => (
-              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={() => decide(k, true)} onNotSure={() => notSure(k)} onDecline={() => decide(k, false)} />
+              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={(how) => decide(k, true, how)} onNotSure={() => notSure(k)} onDecline={() => decide(k, false)} />
             ))}
         </View>
       ) : null}
@@ -291,7 +291,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           {pending
             .filter((k) => k.status === "unsure")
             .map((k) => (
-              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={() => decide(k, true)} onDecline={() => decide(k, false)} />
+              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={(how) => decide(k, true, how)} onDecline={() => decide(k, false)} />
             ))}
         </View>
       ) : null}

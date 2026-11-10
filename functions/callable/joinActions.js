@@ -193,6 +193,57 @@ exports.joinClassByLink = functions
     return { kidUid, firstName, className: cls.data().name || "", isNew };
   });
 
+/**
+ * A student asks to join from their OWN phone (owner, 2026-11-11: Seema's Class 10 has exams in 5 days; parents
+ * needn't install anything). { token, rollNo, parentMobile } → { className }. The parent's yes is collected the way
+ * schools do (YES in the class WhatsApp group, or a slip) and the teacher confirms it when approving (approveMember
+ * with parentSaidYes). A child who already has a linked parent is covered by that parent's consent.
+ */
+exports.studentJoinByLink = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const kidUid = context.auth.uid;
+    if (kidUid.startsWith("demo_")) throw fail("failed-precondition", "Demo accounts can't join real classes.");
+    const cls = await classFromToken(String(data?.token || ""));
+    const classId = cls.id;
+    const kidRef = db.collection("users").doc(kidUid);
+    const kidDoc = await kidRef.get();
+    const k = kidDoc.exists ? kidDoc.data() : {};
+    if ((k.childUids || []).length) throw fail("failed-precondition", "This is a parent's account. Add your child with the parent's screen.");
+    const firstName = firstWord(k.firstName);
+    if (firstName.length < 2) throw fail("failed-precondition", "Add your first name first: Me → Edit profile.");
+    if ((k.classIds || []).includes(classId)) throw fail("already-exists", "You're already in this class.");
+    if ((k.pendingClassIds || []).includes(classId)) throw fail("already-exists", "You're already waiting for the teacher.");
+    if ([...(k.classIds || []), ...(k.pendingClassIds || [])].length >= MAX_CLASSES) throw fail("resource-exhausted", `You're in ${MAX_CLASSES} classes already.`);
+    const rollNo = normalizeRoll(data?.rollNo);
+    if (rollNo === null) throw fail("invalid-argument", "A roll number has up to 6 letters or numbers.");
+    const parentMobile = normalizeMobile(data?.parentMobile);
+    if (!parentMobile) throw fail("invalid-argument", "Write your parent's 10-digit mobile number.");
+    const linkedParent = (k.parentUids || [])[0] || null;
+    const now = FieldValue.serverTimestamp();
+    const batch = db.batch();
+    batch.set(cls.ref.collection("members").doc(kidUid), {
+      firstName,
+      grade: Number.isInteger(k.grade) ? k.grade : Number.isInteger(cls.data().grade) ? cls.data().grade : null,
+      code: null,
+      via: "link-student",
+      rollNo,
+      parentUid: linkedParent,
+      parentName: null,
+      relation: null,
+      parentMobile, // typed by the child: for the teacher's call, not a verified parent account
+      consentId: null,
+      consentBy: linkedParent ? "parent-account" : "teacher-confirms",
+      status: "pending",
+      joinedAt: now,
+    });
+    batch.set(kidRef, { pendingClassIds: FieldValue.arrayUnion(classId) }, { merge: true });
+    await batch.commit(); // the class's teachers get "waiting" from onStudentJoinRequest
+    return { className: cls.data().name || "", teacherConfirms: !linkedParent };
+  });
+
 /** { classId, kidUid } → the teacher isn't sure who this family is: on the follow-up list (teacher + owner). */
 exports.markNotSure = functions
   .region(region)

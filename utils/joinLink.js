@@ -25,7 +25,7 @@ export function classLinkMessage({ className, schoolName, teacherName, url }) {
   return [
     `Namaste! Our class ${where} is on Apprec8, the learning app.`,
     "",
-    `Tap to add your child: ${url}`,
+    `Tap to join (students on their own phone, or a parent for their child): ${url}`,
     "",
     teacherName ? `${teacherName} approves every child, so only our class can join.` : "The teacher approves every child, so only our class can join.",
   ].join("\n");

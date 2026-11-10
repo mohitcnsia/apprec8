@@ -1,5 +1,16 @@
 # Testing the app yourself (owner guide)
 
+## ⭐ Seema's Class 10 (11 Nov): students join from their own phones; Seema confirms the parent's yes
+After DR-32 (CODE_REVIEW.md) and an app restart. Try it first with one student (or your own second Google account).
+1. **Student, own phone (13+):** groups.google.com/g/apprec8-testers → Join group → play.google.com/apps/testing/com.mohitchilkoti.apprec8
+   → Become a tester → Install → sign in with Google → first name + Class 10.
+2. **Seema:** Progress → My classes → the class → SHARE CLASS LINK → the students' WhatsApp group.
+3. **Student:** taps the link → Apprec8 opens on **Join a class** (student screen) → roll number + parent's mobile →
+   ASK TO JOIN → "Is this your parent's number?" → Yes → Request sent.
+4. **Seema:** posts in the parents' group "Reply YES" (or a slip). The student's card says "parent's yes: ask them",
+   with Call / WhatsApp. **Approve** → "Did …'s parent say yes?" → Yes, on WhatsApp → the student is in.
+5. "Not yet" leaves the card waiting; "Not sure" moves it to the follow-up list.
+
 ## ⭐ On your phone: sign-up without codes, stage 1 (11 Nov) — class link + parent's one screen
 First the deploy (DR-31 in CODE_REVIEW.md), then close and reopen the app. Use a NEW test child; delete it afterwards.
 1. **Seema (teacher):** Progress → My classes → open the test class → **SHARE CLASS LINK** → WhatsApp → send it to you.

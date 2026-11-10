@@ -9,11 +9,28 @@ import { showAlert } from "../../services/dialog";
 
 const RELATION = { mother: "Mother", father: "Father", guardian: "Guardian" };
 
+/** A student who asked from their own phone: the teacher confirms the parent said yes (owner, 2026-11-11). */
+export const needsParentYes = (k) => k?.consentBy === "teacher-confirms";
+export function askParentYes(name, onYes) {
+  showAlert(`Did ${name}'s parent say yes?`, "Ask in your class parents' WhatsApp group (\"Reply YES\"), with a slip, or call them.", [
+    { text: "Not yet", style: "cancel" },
+    { text: "Yes, by phone", onPress: () => onYes("call") },
+    { text: "Yes, on a slip", onPress: () => onYes("slip") },
+    { text: "Yes, on WhatsApp", onPress: () => onYes("whatsapp") },
+  ]);
+}
+
 export default function JoinRequestCard({ k, P, onApprove, onNotSure, onDecline }) {
   const s = makeStyles(P);
   const name = k.firstName || "Child";
   const who = [name, k.rollNo ? `Roll ${k.rollNo}` : `Class ${k.grade || "?"}`].join(" · ");
-  const parent = k.parentName ? [k.parentName, RELATION[k.relation]].filter(Boolean).join(", ") : "Parent: linked account ✓";
+  const parent = k.parentName
+    ? [k.parentName, RELATION[k.relation]].filter(Boolean).join(", ")
+    : needsParentYes(k)
+      ? "Asked from their own phone · parent's yes: ask them"
+      : "Parent: linked account ✓";
+  // onApprove(method): method = how the parent said yes, when the teacher had to ask.
+  const approve = () => (needsParentYes(k) ? askParentYes(name, (method) => onApprove(method)) : onApprove(null));
   const decline = () =>
     showAlert(`Decline ${name}?`, "They can still learn on their own. The parent can ask again.", [
       { text: "Cancel", style: "cancel" },
@@ -34,7 +51,7 @@ export default function JoinRequestCard({ k, P, onApprove, onNotSure, onDecline 
           </Pressable>
         </View>
       ) : null}
-      <Pressable onPress={onApprove} style={s.approve} accessibilityRole="button">
+      <Pressable onPress={approve} style={s.approve} accessibilityRole="button">
         <Text style={s.approveText}>Approve</Text>
       </Pressable>
       <View style={s.row}>

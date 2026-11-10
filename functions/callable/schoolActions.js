@@ -218,7 +218,15 @@ exports.approveMember = functions
     const allowed = (cls.data().teacherIds || []).includes(caller) || (await isAppAdmin(caller)) || (await isSchoolAdmin(caller, cls.data().schoolId));
     if (!allowed) throw new functions.https.HttpsError("permission-denied", "Only this class's teacher can approve.");
     const memberRef = classRef.collection("members").doc(String(kidUid || ""));
-    if (!(await memberRef.get()).exists) throw new functions.https.HttpsError("not-found", "No request from this child.");
+    const memberSnap = await memberRef.get();
+    if (!memberSnap.exists) throw new functions.https.HttpsError("not-found", "No request from this child.");
+    // A student who asked from their own phone (studentJoinByLink): the teacher confirms the parent said yes
+    // (WhatsApp YES, a slip, a call or in person). Stored as the consent record (owner, 2026-11-11).
+    const PARENT_YES = ["whatsapp", "slip", "call", "in-person"];
+    const needsParentYes = approve && memberSnap.data().consentBy === "teacher-confirms";
+    if (needsParentYes && !PARENT_YES.includes(data?.parentSaidYes)) {
+      throw new functions.https.HttpsError("failed-precondition", "First ask the parent: did they say yes (WhatsApp, slip, call)?");
+    }
     // Demo School stays apart: a demo child never joins a real class, a real child never joins a demo class (G38).
     if (approve && String(kidUid).startsWith("demo_") !== String(classId).startsWith("demo_")) {
       throw new functions.https.HttpsError("failed-precondition", "Demo accounts and real classes can't mix.");
@@ -227,7 +235,25 @@ exports.approveMember = functions
     const userRef = db.collection("users").doc(kidUid);
     const batch = db.batch();
     if (approve) {
-      batch.update(memberRef, { status: "approved", approvedBy: caller, approvedAt: FieldValue.serverTimestamp() });
+      const consentRef = needsParentYes ? db.collection("consents").doc() : null;
+      if (needsParentYes) {
+        batch.set(consentRef, {
+          kind: "class-join",
+          via: "teacher-confirmed",
+          method: data.parentSaidYes,
+          kidUid,
+          classId,
+          parentMobile: memberSnap.data().parentMobile || null,
+          confirmedBy: caller,
+          acceptedAt: FieldValue.serverTimestamp(),
+        });
+      }
+      batch.update(memberRef, {
+        status: "approved",
+        approvedBy: caller,
+        approvedAt: FieldValue.serverTimestamp(),
+        ...(needsParentYes ? { consentBy: "teacher-confirmed", consentId: consentRef.id } : {}),
+      });
       batch.set(userRef, { classIds: FieldValue.arrayUnion(classId), pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     } else {
       batch.delete(memberRef);
