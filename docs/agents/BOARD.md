@@ -287,7 +287,7 @@ functions:redeemTeacherInvite,functions:onStudentJoinRequest` (project default =
 an invite → the owner's phone gets "Teacher waiting · Approve"; a test kid asks to join a test class → that teacher gets
 "Student waiting". Delete the throwaway accounts. Note the result under DR-25 in CODE_REVIEW.md. `gemini(G94): done — review please`.
 
-### G95 · [todo] · gemini · Deploy DR-26 rules (owner OK in chat, 2026-11-10) — quick, together with G94
+### G95 · [done, reviewed by Claude 2026-11-10: rules live, both sides tested, test data erased] · gemini · Deploy DR-26 rules (owner OK in chat, 2026-11-10) — quick, together with G94
 Claude copied the new `firestore.rules` into your worktree (only change: a class join needs `parentUids` on the kid, "no parent
 consent = no class"). Run `firebase deploy --only firestore:rules`. Test once on the emulator: a fresh kid with no parent can't join
 (the app shows "Ask your parent to add you"); a kid linked to a parent joins. Delete throwaway accounts. Note the result under DR-26 in
