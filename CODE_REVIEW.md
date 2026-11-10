@@ -2480,3 +2480,26 @@ per clock hour, app shows "Keep practising! Next update at 9:30 pm". Replaces th
 **Small fix, 10 Nov late (owner note "Pull down for latest doesn't work"):** Progress → My children / My classes had no pull
 gesture (cards were ready, `ProgressScreen` never passed `refreshTrigger`). Added `RefreshControl` (behind `progress_pull_refresh`);
 the counter resets on view switch so opening a view never forces a server read. `npm test` + bundle export pass. Needs an OTA.
+
+## 2026-11-11 — Sign-up without codes, stage 1 (Claude): class link + parent's one screen + teacher's card. DR-31
+Owner + parents + teachers approved the doc and mockups ("Simpler sign-up: one WhatsApp link"); owner: Claude builds,
+stage by stage, pilot path first. Stage 1 needs no new app build (the app already opens `apprec8://` links).
+- **Server** `functions/callable/joinActions.js`: `classLink` (teacher/admin; made once, `renew` = new link, old one dead),
+  `classLinkInfo`, `joinClassByLink` (new child profile or an existing one; roll no., parent mobile, relation, consent
+  stored server-side; 4-child limit; member `status: pending`), `markNotSure` (+ `followUps/`), `followUpList` (admins).
+  `approveMember` now also clears the follow-up entry. `eraseUser` removes the parent's number and follow-ups.
+  New server-only collections (no client rules = no client access): `classLinks`, `parentMobiles`, `followUps`.
+- **App:** `hooks/useJoinLink.js` keeps a tapped link through sign-in / first run, then opens `JoinByLinkScreen` (one
+  screen; existing consent texts: new child = child-account text, existing child = class text; a typed number is read
+  back before saving). Teacher: `JoinRequestCard` (roll, parent, mobile + Call/WhatsApp, Approve · Not sure · Decline),
+  follow-up section, SHARE CLASS LINK + "New link" in Progress → My classes, Home and the admin class page. Codes are no
+  longer shown to teachers (old app versions and Me → Join a class still work until stage 4).
+- **Web page** `web/public/j.html` (Firebase Hosting, `/j/<token>`): one button = Android opens the app on the class, or
+  the Play Store. Reads and stores nothing.
+- **Checks:** `npm test` (new `tests/joinLink.test.mjs`: tokens, links, mobiles, app/server copies agree) +
+  `npm run test:emulator:join` (29 checks on the emulator: permissions, join, consent, Not sure, approve, new link,
+  5th child) + Android bundle export. Not phone-tested yet.
+- **DR-31 Deploy request (owner OK needed), in this order:**
+  1. `firebase deploy --only functions:classLink,functions:classLinkInfo,functions:joinClassByLink,functions:markNotSure,functions:followUpList,functions:approveMember --project apprec8-ca229`
+  2. `firebase deploy --only hosting --project apprec8-ca229`
+  3. `node scripts/genOwnerNotes.mjs && npm install && npx eas update --channel production --message "Class link: parents join in one screen"`

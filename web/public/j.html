@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Join your class on Apprec8</title>
+<!-- Sign-up without codes (2026-11-11): the class link a teacher shares on WhatsApp. One button: Android opens Apprec8
+     on this class, or the Play Store if the app isn't installed. No data is read or stored by this page. -->
+<style>
+  :root { --bg:#FFFFFF; --text:#241027; --soft:#6B5A6E; --card:#F7E8F8; --pri:#3b0940; --gold:#dcb51b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141016; --text:#F4EDF5; --soft:#C4B5C6; --card:#3A2340; --pri:#85508a; --gold:#E8C43A; } }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         display:flex; flex-direction:column; justify-content:flex-end; padding:24px 20px 32px; }
+  .star { width:64px; height:64px; border-radius:50%; background:var(--gold); margin:0 auto 28px; }
+  h1 { font-size:26px; margin:0 0 8px; }
+  p { font-size:17px; line-height:1.45; color:var(--soft); margin:0 0 14px; }
+  .hi { font-size:16px; }
+  .btn { display:flex; align-items:center; justify-content:center; height:58px; border-radius:18px; background:var(--pri); color:#fff;
+         font-size:17px; font-weight:700; letter-spacing:.5px; text-decoration:none; margin-top:12px; }
+  .note { font-size:14px; text-align:center; margin-top:14px; }
+  .wrap { max-width:440px; width:100%; margin:0 auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="star" aria-hidden="true"></div>
+  <h1>Your child's class is on Apprec8</h1>
+  <p>Tap the button. Apprec8 opens on the class, and you add your child in one screen.</p>
+  <p class="hi">बटन दबाएँ। Apprec8 कक्षा पर खुलेगा, और आप एक ही स्क्रीन में अपने बच्चे को जोड़ेंगे।</p>
+  <a id="open" class="btn" href="#">OPEN APPREC8</a>
+  <p class="note" id="note">No Apprec8 yet? The button opens the Play Store. After installing, tap the link in WhatsApp again.</p>
+</div>
+<script>
+  (function () {
+    var m = location.pathname.match(/\/j\/([a-z0-9]{10})\/?$/i);
+    var token = m ? m[1].toLowerCase() : "";
+    var test = location.hostname.indexOf("apprec8-test") === 0;
+    var pkg = test ? "com.mohitchilkoti.apprec8.test" : "com.mohitchilkoti.apprec8";
+    var store = "https://play.google.com/store/apps/details?id=" + pkg + "&referrer=" + encodeURIComponent("join=" + token);
+    var a = document.getElementById("open");
+    if (!token) {
+      a.style.display = "none";
+      document.getElementById("note").textContent = "This link looks broken. Ask the teacher to share it again.";
+      return;
+    }
+    if (/android/i.test(navigator.userAgent)) {
+      a.href = "intent://join/" + token + "#Intent;scheme=apprec8;package=" + pkg + ";S.browser_fallback_url=" + encodeURIComponent(store) + ";end";
+    } else {
+      a.href = store;
+      document.getElementById("note").textContent = "Apprec8 is an Android app. Open this link on an Android phone.";
+    }
+  })();
+</script>
+</body>
+</html>

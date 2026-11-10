@@ -22,6 +22,7 @@ import { useTheme } from "./context/ThemeContext";
 import { useInAppMessaging } from "./hooks/useInAppMessaging";
 import InAppMessageModal from "./components/common/InAppMessageModal";
 import useStartupUpdate from "./hooks/useStartupUpdate";
+import useJoinLink from "./hooks/useJoinLink";
 import UpdateReadyBanner from "./components/common/UpdateReadyBanner";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
@@ -117,6 +118,11 @@ const AppContent = () => {
   const freeText = canWriteFreeText({ email: user?.email, doc: userDoc, isTester: isTesterUser(user), allowEmails: freeTextEmails });
   const showFirstRun =
     !!uid && grownUp !== null && (needsFirstRun(userDoc, { grownUp }) || (userDoc === null && brandNew));
+  // A tapped class link (WhatsApp) opens the join screen once the main screens show (sign-up without codes, 2026-11-11).
+  const mainShowing =
+    !!user && !showFirstRun && grownUp !== null && userDoc !== undefined && fontsLoaded && !authLoading && isThemeLoaded &&
+    minimumLoaderTimeElapsed && !isMessageLoading && !checkingForUpdate && !messageToShow;
+  useJoinLink(mainShowing);
 
   const styles = React.useMemo(
     () =>

@@ -117,6 +117,11 @@ async function eraseUser(admin, uid, opts = {}) {
   for (const sc of schools.docs) await sc.ref.update({ admins: FieldValue.arrayRemove(uid) });
   const boards = await db.collection("leaderboardCache").limit(20).get();
   for (const b of boards.docs) await b.ref.delete();
+  // Sign-up by class link (2026-11-11): the parent's number no longer finds them; a child leaves the follow-up list.
+  if (user.parentMobile) {
+    await db.collection("parentMobiles").doc(user.parentMobile).set({ uids: FieldValue.arrayRemove(uid) }, { merge: true }).catch(() => {});
+  }
+  await deleteWhere(db, db.collection("followUps").where("kidUid", "==", uid));
   await db.collection("parentPins").doc(uid).delete().catch(() => {});
   await db.collection("roles").doc(uid).delete().catch(() => {});
 

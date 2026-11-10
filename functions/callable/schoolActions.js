@@ -234,6 +234,7 @@ exports.approveMember = functions
       batch.set(userRef, { pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     }
     batch.delete(classRef.collection("cache").doc("board")); // a new classmate shows on the board straight away
+    batch.delete(db.collection("followUps").doc(`${classRef.id}__${kidUid}`)); // settled: off the follow-up list
     await batch.commit();
     return { ok: true };
   });

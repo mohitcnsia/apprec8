@@ -1,5 +1,18 @@
 # Testing the app yourself (owner guide)
 
+## ⭐ On your phone: sign-up without codes, stage 1 (11 Nov) — class link + parent's one screen
+First the deploy (DR-31 in CODE_REVIEW.md), then close and reopen the app. Use a NEW test child; delete it afterwards.
+1. **Seema (teacher):** Progress → My classes → open the test class → **SHARE CLASS LINK** → WhatsApp → send it to you.
+2. **You (parent), on your phone:** tap the link in WhatsApp → page "Your child's class is on Apprec8" → **OPEN APPREC8**.
+   Apprec8 opens on **Join a class** with the class name and Seema's name. (Not signed in? Sign in; it opens after.)
+3. Fill the one screen: **+ Another child** → "Test Riya", roll 23, your mobile, Mother/Father, tick the form → **JOIN**
+   → "Is this your number?" → Yes → **Request sent ✓**.
+4. **Seema:** the class shows a card: Test Riya · Roll 23, your name, your number with **Call** and **WhatsApp** (try both).
+   Tap **Not sure** → the card moves to **Follow up · not sure**. Then **Approve** → Test Riya is in the class.
+5. **Seema:** "Forwarded too far? New link" → New link. Tap the OLD link again on your phone: "This link didn't work".
+6. Tap the link on a phone **without Apprec8**: the button opens the Play Store (after installing, tap the link again).
+7. Clean up: Me → My children → Test Riya → delete. Anything odd → 🚩 or Me → Tell us what you think.
+
 ## ⭐ On your phone: pull-down fix (10 Nov, late)
 Your note "Pull down for latest doesn't work": the pull gesture was never connected on My children / My classes. Fixed.
 1. Close and reopen the app (it fetches the update).

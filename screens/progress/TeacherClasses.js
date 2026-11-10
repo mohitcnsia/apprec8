@@ -13,7 +13,10 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
-import { questsForTeacher, classLabel, classCodeMessage } from "../../utils/classes";
+import { questsForTeacher, classLabel } from "../../utils/classes";
+import { classLinkMessage } from "../../utils/joinLink";
+import { getClassLink, markNotSure } from "../../services/joinApi";
+import JoinRequestCard from "../../components/teacher/JoinRequestCard";
 import { markGuide } from "../../services/guideFacts";
 import { teacherWeek } from "../../utils/weeklySummary";
 import TeacherWeekCard from "../../components/teacher/TeacherWeekCard";
@@ -145,6 +148,30 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
         setReloadKey((k) => k + 1);
       })
       .catch((e) => showAlert("Couldn't do that", e.message));
+  const notSure = (kid) =>
+    markNotSure(open.id, kid.uid)
+      .then(() => {
+        forceNext.current = true;
+        setReloadKey((k) => k + 1);
+      })
+      .catch((e) => showAlert("Couldn't do that", e.message));
+  // Sign-up without codes (2026-11-11): one class link for the class WhatsApp group. "New link" if it was forwarded
+  // too far: the old link stops working.
+  const teacherName = (authInstance.currentUser?.displayName || "").trim().split(/\s+/)[0] || null;
+  const shareLink = async (renew = false) => {
+    try {
+      const { url } = await getClassLink(open.id, { renew });
+      markGuide("teacher.share");
+      await Share.share({ message: classLinkMessage({ className: open.name, schoolName: open.schoolName, teacherName, url }) });
+    } catch (e) {
+      showAlert("Couldn't share the link", e?.message || "Check the internet and try again.");
+    }
+  };
+  const newLink = () =>
+    showAlert("Make a new link?", "The old link stops working. Families who haven't joined yet need the new one.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "New link", onPress: () => shareLink(true) },
+    ]);
 
   const reloadClasses = useCallback(() => {
     return myTeachingClasses()
@@ -186,7 +213,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
     (async () => {
       try {
         const all = await membersCache.get(cacheKey, () => classMembers(open.id), { force: forceMembers });
-        setPending(all.filter((m) => m.status === "pending"));
+        setPending(all.filter((m) => m.status === "pending" || m.status === "unsure"));
         const members = all.filter((m) => m.status === "approved");
         const out = await Promise.all(
           members.map(async (m) => {
@@ -226,7 +253,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       {classes.map((c) => (
         <Pressable key={c.id} onPress={() => setOpen(open?.id === c.id ? null : c)} style={[styles.card, open?.id === c.id && styles.cardOn]} accessibilityRole="button">
           <Text style={styles.title}>{classLabel(c)}</Text>
-          <Text style={styles.soft}>{c.schoolName} · Class {c.grade} · code {c.joinCode}</Text>
+          <Text style={styles.soft}>{c.schoolName} · Class {c.grade}</Text>
         </Pressable>
       ))}
       {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
@@ -234,42 +261,43 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
       {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
       {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
-      {/* Guide step 2: share the class code (phone share menu, like the admin's SHARE CODE). */}
-      {open?.joinCode ? (
-        <Pressable
-          onPress={() => {
-            markGuide("teacher.share");
-            Share.share({ message: classCodeMessage({ className: open.name, schoolName: open.schoolName, code: open.joinCode }) }).catch(() => {});
-          }}
-          accessibilityRole="button"
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>SHARE CODE {open.joinCode}</Text>
-        </Pressable>
+      {/* Guide step 2: share the class link (WhatsApp); parents tap it, nobody types a code. */}
+      {open && !String(open.id).startsWith("demo_") ? (
+        <>
+          <Pressable onPress={() => shareLink(false)} accessibilityRole="button" style={styles.button}>
+            <Text style={styles.buttonText}>SHARE CLASS LINK</Text>
+          </Pressable>
+          <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
+            <Text style={styles.soft}>Forwarded too far? New link ›</Text>
+          </Pressable>
+        </>
       ) : null}
-      {/* Join requests: only the teacher, who knows the family, lets a child in (child safety). */}
-      {open && pending.length ? (
-        <View style={[styles.kid, { borderColor: P.gold }]}>
-          <Text style={styles.title}>Waiting for you ({pending.length})</Text>
-          {pending.map((k) => (
-            <View key={k.uid} style={styles.rowBetween}>
-              <Text style={[styles.line, { flex: 1 }]} numberOfLines={2}>
-                {k.firstName || "Child"} · Class {k.grade || "?"} · {k.parentName ? `parent: ${k.parentName}${k.relation ? ` (${k.relation})` : ""}` : "parent: linked account ✓"}
-              </Text>
-              <Pressable onPress={() => decide(k, true)} hitSlop={6} style={styles.chip}>
-                <Text style={[styles.line, { color: P.correctText }]}>Approve</Text>
-              </Pressable>
-              <Pressable onPress={() => decide(k, false)} hitSlop={6} style={styles.chip}>
-                <Text style={[styles.line, { color: P.wrongText }]}>Reject</Text>
-              </Pressable>
-            </View>
-          ))}
-          <Text style={styles.soft}>Only approve children you know, with the parent named here.</Text>
+      {/* Join requests: only the teacher, who knows the family, lets a child in (child safety). Not sure → the
+          follow-up list (the teacher and the owner call the parent). */}
+      {open && pending.some((k) => k.status !== "unsure") ? (
+        <View style={{ gap: 8 }}>
+          <Text style={styles.title}>Waiting for you ({pending.filter((k) => k.status !== "unsure").length})</Text>
+          {pending
+            .filter((k) => k.status !== "unsure")
+            .map((k) => (
+              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={() => decide(k, true)} onNotSure={() => notSure(k)} onDecline={() => decide(k, false)} />
+            ))}
+        </View>
+      ) : null}
+      {open && pending.some((k) => k.status === "unsure") ? (
+        <View style={{ gap: 8 }}>
+          <Text style={styles.title}>Follow up · not sure ({pending.filter((k) => k.status === "unsure").length})</Text>
+          <Text style={styles.soft}>Call the parent to check. You and Apprec8 both see this list.</Text>
+          {pending
+            .filter((k) => k.status === "unsure")
+            .map((k) => (
+              <JoinRequestCard key={k.uid} k={k} P={P} onApprove={() => decide(k, true)} onDecline={() => decide(k, false)} />
+            ))}
         </View>
       ) : null}
       {open && rows ? <AssignPanel cls={open} uid={uid} kids={rows} P={P} styles={styles} /> : null}
       {open && rows === null ? <ActivityIndicator color={P.label} /> : null}
-      {open && rows?.length === 0 ? <Text style={styles.soft}>No kids yet. Give parents the code {open.joinCode}.</Text> : null}
+      {open && rows?.length === 0 ? <Text style={styles.soft}>No children yet. Share the class link in your class WhatsApp group.</Text> : null}
       {open && rows
         ? rows.map((k) => (
             <View key={k.uid} style={styles.kid}>

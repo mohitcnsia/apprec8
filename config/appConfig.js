@@ -5,6 +5,10 @@ import { APPREC8_TEAM_REVIEWER_UID as UID_FROM_ENV } from "@env";
 export const APP_VARIANT = Constants?.expoConfig?.extra?.appVariant || "real";
 export const IS_TEST_VARIANT = APP_VARIANT === "test";
 
+// Class links shared on WhatsApp (sign-up without codes, 2026-11-11). The page at this address opens the app on the
+// class (web/public/j.html, Firebase Hosting). The test app has its own project and page.
+export const JOIN_LINK_BASE = IS_TEST_VARIANT ? "https://apprec8-test.web.app/j/" : "https://apprec8-ca229.web.app/j/";
+
 /**
  * The owner's (admin) user ID. Shows the Dashboard, seed buttons and team-review features.
  * Not a secret: Firestore rules decide what the admin can read or write.

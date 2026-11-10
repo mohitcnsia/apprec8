@@ -12,7 +12,9 @@ import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "./schoolUi";
 import { getClasses, classMembers, approveMember, classTeam, decideTeacherRequest, setPilotOpen } from "../../services/classesApi";
-import { SUBJECT_NAMES, classCodeMessage, classSubjects } from "../../utils/classes";
+import { SUBJECT_NAMES, classSubjects } from "../../utils/classes";
+import { classLinkMessage } from "../../utils/joinLink";
+import { getClassLink } from "../../services/joinApi";
 import { showAlert } from "../../services/dialog";
 
 const names = (subs = []) => subs.map((s) => SUBJECT_NAMES[s] || s).join(", ");
@@ -81,12 +83,24 @@ export default function ClassDetailScreen({ route, navigation }) {
     );
   }
 
-  const pendingKids = members.filter((m) => m.status === "pending");
+  const pendingKids = members.filter((m) => m.status === "pending" || m.status === "unsure");
   const kids = members.filter((m) => m.status === "approved");
   const requests = team?.requests || [];
   const waiting = pendingKids.length + requests.length;
-  const shareCode = () =>
-    Share.share({ message: classCodeMessage({ className: cls.name, schoolName: cls.schoolName, code: cls.joinCode }) }).catch(() => {});
+  // Sign-up without codes (2026-11-11): one class link; a new link makes the old one stop working.
+  const shareLink = async (renew = false) => {
+    try {
+      const { url } = await getClassLink(classId, { renew });
+      await Share.share({ message: classLinkMessage({ className: cls.name, schoolName: cls.schoolName, url }) });
+    } catch (e) {
+      showAlert("Couldn't share the link", e?.message || "Check the internet and try again.");
+    }
+  };
+  const newLink = () =>
+    showAlert("Make a new link?", "The old link stops working. Families who haven't joined yet need the new one.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "New link", onPress: () => shareLink(true) },
+    ]);
 
   return (
     <View style={styles.screen}>
@@ -113,18 +127,9 @@ export default function ClassDetailScreen({ route, navigation }) {
           </Text>
         </Pressable>
 
-        <View style={styles.codeCard} accessible accessibilityLabel={`Class code ${String(cls.joinCode).split("").join(" ")}`}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.label}>CLASS CODE</Text>
-            <Text style={styles.code} selectable>
-              {cls.joinCode}
-            </Text>
-          </View>
-        </View>
-
         <Text style={styles.label}>WAITING FOR YOU ({waiting})</Text>
         {waiting === 0 ? (
-          <Text style={styles.dim}>Nobody is waiting. Share the code below with parents.</Text>
+          <Text style={styles.dim}>Nobody is waiting. Share the class link below with parents.</Text>
         ) : (
           <View style={styles.listCard}>
             {pendingKids.map((m, i) => (
@@ -133,7 +138,11 @@ export default function ClassDetailScreen({ route, navigation }) {
                 <View style={styles.row}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.text}>{m.firstName || "Child"}</Text>
-                    <Text style={styles.small}>{m.parentName ? `Added by ${m.parentName}${m.relation ? ` (${m.relation})` : ""}` : "Added by a parent"}</Text>
+                    <Text style={styles.small}>
+                      {[m.rollNo ? `Roll ${m.rollNo}` : null, m.parentName ? `Added by ${m.parentName}${m.relation ? ` (${m.relation})` : ""}` : "Added by a parent", m.status === "unsure" ? "teacher not sure" : null]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </Text>
                   </View>
                   <Pressable
                     onPress={() => confirmDecline(m.firstName || "this child", () => decide(m.uid, () => approveMember({ classId, kidUid: m.uid, approve: false })))}
@@ -214,8 +223,10 @@ export default function ClassDetailScreen({ route, navigation }) {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Text style={[styles.dim, { textAlign: "center" }]}>WhatsApp, SMS, anything. Parents enter the code when they add their child.</Text>
-        <MainButton label="SHARE CODE" onPress={shareCode} styles={styles} P={P} />
+        <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
+          <Text style={styles.dim}>Forwarded too far? New link ›</Text>
+        </Pressable>
+        <MainButton label="SHARE CLASS LINK" onPress={() => shareLink(false)} styles={styles} P={P} />
       </View>
     </View>
   );

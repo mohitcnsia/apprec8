@@ -40,7 +40,9 @@ import { computeNeedsYou } from "../../utils/needsYou";
 import { listenDecisions } from "../../services/decisionsApi";
 import { inbox } from "../../utils/decisions";
 import { loadTeacherClassesOverview, loadAdminTeacherRequests } from "../../services/classesApi";
-import { classLabel, classCodeMessage } from "../../utils/classes";
+import { classLabel } from "../../utils/classes";
+import { classLinkMessage } from "../../utils/joinLink";
+import { getClassLink } from "../../services/joinApi";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -556,18 +558,18 @@ export default function HomeScreen({ navigation }) {
                     {c.totalStudents} {c.totalStudents === 1 ? "student" : "students"}
                   </Text>
                 </View>
-                {c.joinCode ? (
+                {!String(c.id).startsWith("demo_") ? (
                   <Pressable
-                    onPress={() => {
-                      Share.share({
-                        message: classCodeMessage({ className: c.name, schoolName: c.schoolName, code: c.joinCode }),
-                      }).catch(() => {});
-                    }}
+                    onPress={() =>
+                      getClassLink(c.id)
+                        .then(({ url }) => Share.share({ message: classLinkMessage({ className: c.name, schoolName: c.schoolName, url }) }))
+                        .catch(() => {})
+                    }
                     style={styles.shareCodeButton}
                     accessibilityRole="button"
-                    accessibilityLabel={`Share code ${c.joinCode}`}
+                    accessibilityLabel={`Share the link for ${c.name}`}
                   >
-                    <Text style={styles.shareCodeText}>SHARE CODE</Text>
+                    <Text style={styles.shareCodeText}>SHARE LINK</Text>
                   </Pressable>
                 ) : null}
               </View>
