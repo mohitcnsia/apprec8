@@ -372,14 +372,15 @@ export default function HomeScreen({ navigation }) {
   const stars = userData?.stats?.totalStars || 0;
   const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
 
-  // Filter out quests that have no topics for the child's class (G79).
+  // Filter out quests that have no topics for the child's class (G79). The owner and testers (Owner extras on) see every quest.
   const visibleQuests = useMemo(() => {
+    if (isTester || ownerView) return allQuests;
     return allQuests.filter((q) => {
       const data = bundledQuest(q.questId);
       if (!data) return true;
       return questHasTopicsForGrade(data.nodes, userGrade);
     });
-  }, [allQuests, userGrade]);
+  }, [allQuests, userGrade, isTester, ownerView]);
 
   // Continue = the quest played most recently. Mistakes = all visible quests; the tile opens the one with most.
   const mainQuest = pickContinue(visibleQuests, progressById);

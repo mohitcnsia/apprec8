@@ -106,7 +106,7 @@ export default function ProgressScreen({ navigation, route }) {
   const perQuest = useMemo(
     () =>
       quests
-        .filter((m) => questHasTopicsForGrade(m.nodes, grade))
+        .filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade)) // owner/testers see every quest
         .map((m) => {
         const p = progressById[m.QUEST_ID] || { nodes: {}, doc: {} };
         const namer = topicNamer(m.nodes);
@@ -126,7 +126,7 @@ export default function ProgressScreen({ navigation, route }) {
           great: greatTopics(st).map((t) => ({ ...t, questId: m.QUEST_ID, name: namer(t.subtopic) })),
         };
       }),
-    [quests, progressById, grade]
+    [quests, progressById, grade, isAdmin, extras]
   );
   const weak = perQuest.flatMap((q) => q.weak).sort((a, b) => a.percent - b.percent).slice(0, 3);
   const great = perQuest.flatMap((q) => q.great).sort((a, b) => b.percent - a.percent).slice(0, 3);
