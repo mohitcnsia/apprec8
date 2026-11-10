@@ -1,20 +1,19 @@
 // components/parent/ParentWeekCard.js
 // A parent's week at a glance for one child (mockups V2/V3, approved 2026-11-05). English / हिंदी switch (saved on
-// this phone). Logic: utils/parentWeek.js. Reads: the child's progress docs, once (rules: DR-10, parents only).
+// this phone). Logic: utils/parentWeek.js. Reads: the child's progress docs, at most once per 10 minutes
+// (services/progressCache.js; pull down = fresh). Rules: DR-10, parents only.
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
-import { getApp } from "@react-native-firebase/app";
+import { loadProgress, peekProgress } from "../../services/progressCache";
 import { QUESTS } from "../../data/quests";
 import { nodesForGrade } from "../../utils/gradeFilter";
 import { isTileVisible } from "../../utils/courseVisibility";
 import { topicNamer } from "../../utils/progressView";
 import { parentWeek, weekIndexOf, talkQuestions } from "../../utils/parentWeek";
 
-const db = getFirestore(getApp());
 const LANG_KEY = "parentLang:v1";
 
 export function useParentLang() {
@@ -31,34 +30,33 @@ export function useParentLang() {
 
 export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
   const s = useMemo(() => makeStyles(P), [P]);
-  const [quests, setQuests] = useState(null);
+  const mine = useMemo(
+    () => QUESTS.filter((m) => !m.quest?.draft && isTileVisible(m.quest, child) && nodesForGrade(m.nodes, child.grade).some((n) => n.kind === "main")),
+    [child]
+  );
+  const shape = (m, d) => ({ questId: m.QUEST_ID, title: m.quest?.title || m.QUEST_ID, stats: d?.stats || {}, nodes: d?.nodes || {}, mistakes: d?.mistakes || {}, quizzes: m.quizzes, questNodes: m.nodes, namer: topicNamer(m.nodes) });
+  // Draw at once from what was loaded before (switching tabs), then refresh only if older than 10 minutes.
+  const [quests, setQuests] = useState(() => (mine.every((m) => peekProgress(child.uid, m.QUEST_ID) !== undefined) ? mine.map((m) => shape(m, peekProgress(child.uid, m.QUEST_ID))) : null));
   const [showMissed, setShowMissed] = useState(false);
 
-  const load = useCallback(() => {
-    let alive = true;
-    (async () => {
-      const mine = QUESTS.filter((m) => !m.quest?.draft && isTileVisible(m.quest, child) && nodesForGrade(m.nodes, child.grade).some((n) => n.kind === "main"));
-      const out = [];
-      for (const m of mine) {
-        try {
-          const snap = await getDoc(doc(db, "users", child.uid, "questProgress", m.QUEST_ID));
-          const d = snap.exists() ? snap.data() : {};
-          out.push({ questId: m.QUEST_ID, title: m.quest?.title || m.QUEST_ID, stats: d.stats || {}, nodes: d.nodes || {}, mistakes: d.mistakes || {}, quizzes: m.quizzes, questNodes: m.nodes, namer: topicNamer(m.nodes) });
-        } catch (e) {
-          // not allowed or offline: skip this subject
-        }
-      }
-      if (alive) setQuests(out);
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [child.uid, child.grade]);
+  const load = useCallback(
+    (force = false) => {
+      let alive = true;
+      // All subjects at once (not one after another).
+      Promise.all(mine.map((m) => loadProgress(child.uid, m.QUEST_ID, { force }).then((d) => shape(m, d)).catch(() => null))).then((out) => {
+        if (alive) setQuests(out.filter(Boolean)); // not allowed or offline: that subject is skipped
+      });
+      return () => {
+        alive = false;
+      };
+    },
+    [child.uid, mine]
+  );
 
-  useFocusEffect(load);
+  useFocusEffect(useCallback(() => load(false), [load]));
 
   useEffect(() => {
-    load();
+    if (refreshTrigger > 0) return load(true); // pull down = fresh numbers
   }, [load, refreshTrigger]);
 
   if (quests === null) return <ActivityIndicator color={P.label} />;

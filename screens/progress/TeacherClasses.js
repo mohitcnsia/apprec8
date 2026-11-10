@@ -3,11 +3,11 @@
 // teacher's subjects only (English teacher → English Quest + Word Power; Science teacher → Science Quest).
 // Reads: classes (teacherIds contains me), members, and each member's questProgress (rules: DR-9). One-time reads.
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
-import { getApp } from "@react-native-firebase/app";
+import { loadProgress } from "../../services/progressCache";
+import { makeTtlCache } from "../../utils/ttlCache";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
@@ -26,7 +26,10 @@ import { createAssignment, listAssignments, deleteAssignment } from "../../servi
 import { dayKey } from "../../utils/kidStats";
 import { showAlert } from "../../services/dialog";
 
-const db = getFirestore(getApp());
+// Owner, 2026-11-10: switching tabs must be instant and not re-read the class. Rows drawn last time (per teacher and
+// class) show at once; the member list is re-read at most every 2 minutes (join requests stay timely).
+const rowsCache = new Map();
+const membersCache = makeTtlCache({ freshMs: 2 * 60 * 1000 });
 
 function AssignPanel({ cls, uid, kids, P, styles }) {
   const questIds = questsForTeacher(cls, uid);
@@ -131,9 +134,14 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
   const [pending, setPending] = useState([]);
   const [reloadKey, setReloadKey] = useState(0);
   const [assignments, setAssignments] = useState([]);
+  const lastForced = useRef(0);
+  const forceNext = useRef(false); // after approving / declining: re-read the member list
   const decide = (kid, approve) =>
     approveMember({ classId: open.id, kidUid: kid.uid, approve })
-      .then(() => setReloadKey((k) => k + 1))
+      .then(() => {
+        forceNext.current = true;
+        setReloadKey((k) => k + 1);
+      })
       .catch((e) => showAlert("Couldn't do that", e.message));
 
   const reloadClasses = useCallback(() => {
@@ -162,29 +170,40 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
 
   useEffect(() => {
     if (!open) return;
-    setRows(null);
+    // Owner, 2026-11-10: fast and cheap. Show what was loaded before at once (no spinner when switching tabs); each
+    // child's progress is read at most once per 10 minutes (services/progressCache.js), all at the same time, and a
+    // pull-down (refreshTrigger) reads fresh.
+    const force = refreshTrigger > lastForced.current;
+    lastForced.current = refreshTrigger;
+    const forceMembers = force || forceNext.current;
+    forceNext.current = false;
+    const cacheKey = `${uid}|${open.id}`;
+    if (rowsCache.has(cacheKey)) setRows(rowsCache.get(cacheKey));
+    else setRows(null);
     const questIds = questsForTeacher(open, uid);
     (async () => {
       try {
-        const all = await classMembers(open.id);
+        const all = await membersCache.get(cacheKey, () => classMembers(open.id), { force: forceMembers });
         setPending(all.filter((m) => m.status === "pending"));
         const members = all.filter((m) => m.status === "approved");
-        const out = [];
-        for (const m of members) {
-          const perQuest = [];
-          for (const q of questIds) {
-            const snap = await getDoc(doc(db, "users", m.uid, "questProgress", q));
-            const stats = snap.exists() ? snap.data()?.stats || {} : {};
-            const mistakes = snap.exists() ? Object.keys(snap.data()?.mistakes || {}).length : 0;
-            const namer = topicNamer(bundledQuest(q)?.nodes || []);
-            const week = summarize(stats, "week");
-            const weak = weakTopics(stats)[0];
-            const nodes = snap.exists() ? snap.data()?.nodes || {} : {};
-            perQuest.push({ q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes, checkups: snap.exists() ? snap.data()?.checkups || null : null });
-          }
-          out.push({ ...m, perQuest, last: Math.max(0, ...perQuest.map((p) => p.last)) });
-        }
+        const out = await Promise.all(
+          members.map(async (m) => {
+            const perQuest = await Promise.all(
+              questIds.map(async (q) => {
+                const d = await loadProgress(m.uid, q, { force }).catch(() => null);
+                const stats = d?.stats || {};
+                const mistakes = Object.keys(d?.mistakes || {}).length;
+                const namer = topicNamer(bundledQuest(q)?.nodes || []);
+                const week = summarize(stats, "week");
+                const weak = weakTopics(stats)[0];
+                return { q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes: d?.nodes || {}, checkups: d?.checkups || null };
+              })
+            );
+            return { ...m, perQuest, last: Math.max(0, ...perQuest.map((p) => p.last)) };
+          })
+        );
         out.sort((a, b) => b.last - a.last);
+        rowsCache.set(cacheKey, out);
         setAssignments(await listAssignments(open.id).catch(() => []));
         setRows(out);
         if (out.length) markGuide("teacher.progress"); // guide step 5: the teacher has seen students' progress
