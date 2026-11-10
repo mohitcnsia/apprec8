@@ -547,5 +547,25 @@
     "answer": null,
     "note": null,
     "answeredAt": null
+  },
+  {
+    "id": "class7-science",
+    "title": "Class 7 pilot: Science is empty for them today",
+    "ask": "Class 7 kids see English (44 topics) and Treasure Words, but NO Science: every Science topic is written for Classes 3–5. My pick: B. YES = B. MORE DETAILS for A and C.",
+    "details": "**A. Open the existing Science to Class 7 as is.** Instant, but it's Class 3–5 level (plants, bones, magnets): bright Class 7 kids will find it childish, and Seema's school sees an easy app.\n\n**B. Class 7 starts with English + a Check-up; Science comes as real Class 7 topics (recommended).** I write Class 7 Science rungs (NCERT Class 7: nutrition in plants and animals, heat, acids and bases, physical and chemical changes, respiration, electric current, light, motion and time) at about 2 topics a day, each checked by Gemini before it goes live. First 4 topics by 17 Nov, so Science opens in pilot week 1.\n\n**C. Open only the harder existing units (Matter, Forces, Earth, Light, Sound, Magnets, Puzzles) to Class 7 as 'revision', and write B in the background.** Something on day 1, but labelled honestly as revision.\n\nAlso for Class 7: a Check-up like Class 10's (built from English Quest topics), so Seema's teachers get Accuracy by topic on day 1. Small, same code as Class 10.",
+    "from": "claude",
+    "answer": null,
+    "note": null,
+    "answeredAt": null
+  },
+  {
+    "id": "pilot-100-play",
+    "title": "100 pilot kids: how do they install?",
+    "ask": "With ~100 kids and their parents (each family = 2 phones), we pass Play's internal-testing limit of 100 testers. The closed test (no limit) has been in Google's review since 6 Nov. YES = I write the exact steps for both cases. LATER = we start with the 3 kids today on internal testing.",
+    "details": "**Today's 3 kids:** internal testing works now: add the parent's and the child's Gmail in Play Console → Testing → Internal testing → Testers, send them the link.\n\n**For 100 kids:** we need the closed test approved (no tester limit; the Google Group link). Please check Play Console → Publishing overview: if it says approved, press Publish.\n\nIf Google still hasn't answered by 13 Nov, the fallback is internal testing in two waves (first 50 families).",
+    "from": "claude",
+    "answer": null,
+    "note": null,
+    "answeredAt": null
   }
 ]
