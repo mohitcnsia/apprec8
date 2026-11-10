@@ -366,7 +366,11 @@ already has `topic.quest` / `topic.node`). No new paper, no start code or timer 
 3. **Class group (no names):** on the teacher's class screen (Progress → class) a "Class summary, ready to share" card +
    bottom button "Share to class group" → image card as screen 2: kids practised / total, quizzes, class Accuracy + change,
    this week's assigned work (done / fixing mistakes / not finished), the topic the class found hardest. NEVER a child's name
-   or score.
+   or score. **Nothing is posted by itself (owner, 2026-11-10):** the teacher sees the card first and shares with one tap.
+   "Automate" = a Sunday-evening push to the teacher "10-A's week is ready · Share" (off by default, a switch on the class
+   screen); the tap opens the same preview + share sheet. WhatsApp can't post to a group without a person tapping.
+   **Small numbers hide a child:** any count of 1–2 kids (e.g. "1 not finished") shows as "a few"; under 5 kids practised →
+   no Accuracy line, just "Not enough practice yet".
    **Privacy (owner, 2026-11-10: "it may cause unnecessary politics"):** a parent sees ONLY their own child's report, never
    another child's name, score or report, and never results by name. Results by name: the class teacher, admin, and later
    school management (G88). Enforce in Firestore rules too, not only in the UI (test: a parent account cannot read another
