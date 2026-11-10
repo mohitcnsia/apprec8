@@ -293,6 +293,12 @@ consent = no class"). Run `firebase deploy --only firestore:rules`. Test once on
 (the app shows "Ask your parent to add you"); a kid linked to a parent joins. Delete throwaway accounts. Note the result under DR-26 in
 CODE_REVIEW.md. `gemini(G95): done — review please`.
 
+### G96 · [todo] · gemini · Offline paper: give the stars later (Claude, 2026-11-10) — small, after G95
+Today a paper submitted offline saves everything (Firestore queue) except the stars: `savePaperResult` calls `recordQuizResult`
+once and gives up. Fix: when `offline` is true, keep the call's input in AsyncStorage (`pendingPaperStars`, max 5) and send it
+on the next app start / Home focus when online; remove on success. The server already blocks double rewards (7-day rule). Test
+in `tests/` for the queue logic. `gemini(G96): done — review please`.
+
 ### G89 · [todo] · gemini · FIRST: Two-way cards on Home: we ask, they answer, we reply (owner + Seema, 2026-11-10)
 Why (owner): "Users have no way of connecting with you or me." Seema must see what we decided and push back; kids, parents and
 teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4 (5 screens; follow it).
