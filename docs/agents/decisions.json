@@ -534,9 +534,9 @@
     "ask": "Switching My children ↔ My classes reads every child's progress again (a teacher with 33 kids ≈ 100 reads per switch). My pick: A. YES = A. MORE DETAILS for B and C.",
     "details": "**Cause (checked in code):** each tab is thrown away when you leave it and loads again from scratch when you come back.\n\n**A. Keep what was loaded (recommended).** Tabs remember their data while the app is open; switching is instant and costs nothing. Fresh data: pull down to refresh, and it refreshes by itself if older than 10 minutes. Small app change, no server work.\n\n**B. Live updates (what you suggested: pull only when something changes).** My pushback: a live connection on every child re-reads a child each time they answer, so during practice time a teacher's phone would read MORE, not less, and keep connections open. Good for 1–4 children, bad for a class of 33.\n\n**C. One summary per class, kept by the server.** The teacher reads 1 document instead of 33+. Cheapest at scale (schools), but needs a server function and a deploy. Worth it before more schools join, not for the pilot.\n\nMy recommendation: A now, C before more schools.",
     "from": "claude",
-    "answer": null,
-    "note": null,
-    "answeredAt": null
+    "answer": "yes",
+    "note": "Answered in chat 10 Nov: \"yes, we need a cost effective and fast way; loading for several seconds is not ideal\" → A",
+    "answeredAt": "2026-11-10"
   },
   {
     "id": "pratha-progress-zero",
@@ -564,8 +564,8 @@
     "ask": "With ~100 kids and their parents (each family = 2 phones), we pass Play's internal-testing limit of 100 testers. The closed test (no limit) has been in Google's review since 6 Nov. YES = I write the exact steps for both cases. LATER = we start with the 3 kids today on internal testing.",
     "details": "**Today's 3 kids:** internal testing works now: add the parent's and the child's Gmail in Play Console → Testing → Internal testing → Testers, send them the link.\n\n**For 100 kids:** we need the closed test approved (no tester limit; the Google Group link). Please check Play Console → Publishing overview: if it says approved, press Publish.\n\nIf Google still hasn't answered by 13 Nov, the fallback is internal testing in two waves (first 50 families).",
     "from": "claude",
-    "answer": null,
-    "note": null,
-    "answeredAt": null
+    "answer": "later",
+    "note": "Owner 10 Nov: no rush; Seema completely comfortable + test app done before anyone joins",
+    "answeredAt": "2026-11-10"
   }
 ]

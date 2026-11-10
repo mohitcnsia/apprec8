@@ -293,7 +293,34 @@ consent = no class"). Run `firebase deploy --only firestore:rules`. Test once on
 (the app shows "Ask your parent to add you"); a kid linked to a parent joins. Delete throwaway accounts. Note the result under DR-26 in
 CODE_REVIEW.md. `gemini(G95): done — review please`.
 
-### G96 · [todo] · gemini · Offline paper: give the stars later (Claude, 2026-11-10) — small, after G95
+### G85 · [fixes 1] · gemini · ⭐ NEXT after G95: Test vs real — the test app (owner 2026-11-10: "Seema must be completely comfortable before we onboard anyone; the test app is not complete")
+**Claude's review 2026-11-10 (not merged):** the `real`/`preview` product flavors change every Android task name, and nothing
+else was updated, so the next real build breaks: `eas.json` production runs `:app:bundleRelease` (now builds BOTH flavors; the
+preview one needs a gitignored google-services.json → fails on EAS), development runs `:app:assembleDebug`, and `npm run
+android` (`expo run:android`) needs a variant. Fix 1: (a) eas.json production → `:app:bundleRealRelease`, development →
+`:app:assembleRealDebug`, a `preview` profile for the test app (`APP_VARIANT=test`, `:app:assemblePreviewRelease`, apk, channel
+preview); (b) package.json `android` → `expo run:android --variant realDebug`; (c) check `scripts/release/check-aab.sh` and
+OWNER_TESTING paths for the new output folder (`bundle/realRelease/`); (d) PROVE it: `./gradlew :app:bundleRealRelease` locally
+gives an .aab that `check-aab.sh` passes, package `com.mohitchilkoti.apprec8`, version 20.0.30. `gemini(G85): fixed 1`.
+Spec = the live doc, section "Setting up the test Firebase project": https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU
+Owner already did the console part: project **apprec8-test**, Auth (Email/Password + Google), Firestore nam5, Android app
+`com.mohitchilkoti.apprec8.test` with the debug SHA-1. Config file: Claude's git-ignored
+`docs/agents/private/google-services.test.json` (never commit it to the public repo).
+1. Two Android flavors **real** (default, unchanged package, unchanged release build + `scripts/release/check-aab.sh`) and
+   **test** (`applicationIdSuffix ".test"`, app name "Apprec8 TEST", a differently coloured icon, its own google-services.json,
+   OTA channel `preview`). The real release build must produce a byte-identical config to today's: show the diff.
+2. JS: one `appVariant` value (from `Constants.expoConfig.extra`, set by `APP_VARIANT=test` in app.config.js) for what differs:
+   Google web client id (from the test file), admin UID (owner's UID in apprec8-test: ask the owner after his first test sign-in).
+3. `.firebaserc` alias `test` → apprec8-test; deploy Firestore rules + indexes there (test project only).
+4. `scripts/admin/copyContentToTest.mjs`: copies CONTENT only (quests, nodes, categories, studyContent, questions, quizzes)
+   from real to test; never users, children, classes, progress, feedback. Dry run first, then counts.
+5. **Cloud Functions:** owner decided 9 Nov: apprec8-test goes on Blaze (pay-as-you-go, budget alert). **Upgrade done (owner, 9 Nov, budget alert ₹200).**
+   Deploy ALL functions to the test project only (`firebase deploy --only functions --project test`).
+6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
+   that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
+
+
+### G96 · [todo, after G92] · gemini · Offline paper: give the stars later (Claude, 2026-11-10) — small, after G95
 Today a paper submitted offline saves everything (Firestore queue) except the stars: `savePaperResult` calls `recordQuizResult`
 once and gives up. Fix: when `offline` is true, keep the call's input in AsyncStorage (`pendingPaperStars`, max 5) and send it
 on the next app start / Home focus when online; remove on success. The server already blocks double rewards (7-day rule). Test
@@ -485,32 +512,6 @@ students see it." No new questions, no new screens.
    (class 10-A of Appreciate International School; never write it in the repo). Until then use the Demo School class to test.
 6. Clean test (RULE): a Demo School student in the class sees it first; a student outside the class doesn't; the teacher can assign
    from it; progress shows in Progress and the teacher's class view. Report G81.md. `gemini(G81): done — review please`.
-
-### G85 · [fixes 1] · gemini · Test vs real: the code part (owner agreed 9 Nov — pilot work item 1)
-**Claude's review 2026-11-10 (not merged):** the `real`/`preview` product flavors change every Android task name, and nothing
-else was updated, so the next real build breaks: `eas.json` production runs `:app:bundleRelease` (now builds BOTH flavors; the
-preview one needs a gitignored google-services.json → fails on EAS), development runs `:app:assembleDebug`, and `npm run
-android` (`expo run:android`) needs a variant. Fix 1: (a) eas.json production → `:app:bundleRealRelease`, development →
-`:app:assembleRealDebug`, a `preview` profile for the test app (`APP_VARIANT=test`, `:app:assemblePreviewRelease`, apk, channel
-preview); (b) package.json `android` → `expo run:android --variant realDebug`; (c) check `scripts/release/check-aab.sh` and
-OWNER_TESTING paths for the new output folder (`bundle/realRelease/`); (d) PROVE it: `./gradlew :app:bundleRealRelease` locally
-gives an .aab that `check-aab.sh` passes, package `com.mohitchilkoti.apprec8`, version 20.0.30. `gemini(G85): fixed 1`.
-Spec = the live doc, section "Setting up the test Firebase project": https://claude.ai/artifact/5HG1XQA7hznsRWini1L8bU
-Owner already did the console part: project **apprec8-test**, Auth (Email/Password + Google), Firestore nam5, Android app
-`com.mohitchilkoti.apprec8.test` with the debug SHA-1. Config file: Claude's git-ignored
-`docs/agents/private/google-services.test.json` (never commit it to the public repo).
-1. Two Android flavors **real** (default, unchanged package, unchanged release build + `scripts/release/check-aab.sh`) and
-   **test** (`applicationIdSuffix ".test"`, app name "Apprec8 TEST", a differently coloured icon, its own google-services.json,
-   OTA channel `preview`). The real release build must produce a byte-identical config to today's: show the diff.
-2. JS: one `appVariant` value (from `Constants.expoConfig.extra`, set by `APP_VARIANT=test` in app.config.js) for what differs:
-   Google web client id (from the test file), admin UID (owner's UID in apprec8-test: ask the owner after his first test sign-in).
-3. `.firebaserc` alias `test` → apprec8-test; deploy Firestore rules + indexes there (test project only).
-4. `scripts/admin/copyContentToTest.mjs`: copies CONTENT only (quests, nodes, categories, studyContent, questions, quizzes)
-   from real to test; never users, children, classes, progress, feedback. Dry run first, then counts.
-5. **Cloud Functions:** owner decided 9 Nov: apprec8-test goes on Blaze (pay-as-you-go, budget alert). **Upgrade done (owner, 9 Nov, budget alert ₹200).**
-   Deploy ALL functions to the test project only (`firebase deploy --only functions --project test`).
-6. Docs: `docs/release/TEST_VS_REAL.md` (how to build/run/publish each). Clean test (RULE): the test app signs up a user
-   that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
 ### G84 · [done, merged 2026-11-10; functions = DR-25, needs owner OK] · gemini · ⭐ TOP: "Needs you" on Home + push, and a teacher Home (owner + Seema, 2026-11-09)
 Owner: "Approvals kept hidden in the classes and I had to search for them … the responsible person will never know
