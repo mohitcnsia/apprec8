@@ -273,6 +273,13 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
+**🛑 OWNER, 10 Nov night — how we work now:** (1) **No emulator** for Gemini or Claude: the owner tests on his phone
+after each publish (steps at the top of docs/qa/OWNER_TESTING.md) and reports with 🚩 / Me → Tell us what you think.
+(2) In-app feedback → Claude makes a decision card → owner agrees → only then build. (3) The owner may use Gemini to
+brainstorm ideas + todo lists; those also become cards before anything is built. Gemini is out of quota until later on 10 Nov.
+**Published 10 Nov night (DR-28 + DR-29, deployed by the owner):** teachers waiting on Home + Schools list; Progress
+"Updated 8:05 pm" (fresh after 7:30 am / 7:30 pm), class board hourly. G87 must build on `services/progressCache.js`.
+
 **PILOT START (owner, 2026-11-10): Seema's kids start only after G90 + G91 are merged, the clean test passes and the owner says publish (est. ~2 days). No soft start.** **0000) G94 deploy DR-25** → **000) G89 two-way cards on Home → G90 pilot ready (sign-up, assigned first, all open) → G91 check-up by topic + No internet → G92 weekly report (mockup first) → G93 challenge track (content first)** (Seema's decisions, 2026-11-10), **00) G87 assignment done = mistakes fixed + results by name (owner: pilot)**, **0) G84 Needs you + teacher Home (owner + Seema: TOP)** → G84b Remind, **1) G77 DR-24 deploy + test (owner YES)**, **1b) G79 pilot fixes**, **1b2) G81 Seema's course tile**, 1b3) G82 why-not panel → G83 Grammar Pro why-nots, **1c) G80 parent + teacher clean pass**, **2) G73 the other 24 Grammar Pro issues (Claude fixed the 5 High)**, **3) G78 offline messages + offline PIN (owner YES)**, **4) G49-R rework row Z (guide card first on Home: Seema)**, 5) G75 rehearsal fixes, 6) G76 DR-23 deploy, 7) G69 Chamku asks, 8) G70 teacher class screen, 9) G55 plan v2 (PIN safety; share the secure-store PIN module with G78), 10) G68 Challenge words, 11) G67, G53, G71 (after G50 review).
 
 ### PRIORITY · 2026-11-09 (Claude) · (older order, kept for history) (last time G51–G63 were done before G64–G68)
@@ -320,7 +327,7 @@ Owner already did the console part: project **apprec8-test**, Auth (Email/Passwo
    that appears in apprec8-test Authentication, NOT in apprec8-ca229. Report G85.md. `gemini(G85): done — review please`.
 
 
-### G104 · [todo] · gemini · Right after G85: send the test app (App Distribution) — the test-first route for every change (owner, 2026-11-10)
+### G104 · [waiting: owner gives the testers' emails; APK built + steps written in TEST_VS_REAL §7 (uncommitted in Gemini's worktree)] · gemini · Right after G85: send the test app (App Distribution) — the test-first route for every change (owner, 2026-11-10)
 **Owner changed the plan (10 Nov):** Seema's walk-through runs NOW on the REAL app in a test class 10-T (pretend accounts deleted
 after); then the pilot starts; from then on EVERY change goes through the test app before production. So this task = the
 route for every future change, not Seema's first check. Walk-through (what she will do):

@@ -3,12 +3,19 @@
 Owner asked: what is pending before a public release, and before Seema can use the app with her 50 Class 10 students?
 Two steps: **A. Seema's class pilot** (a closed group on Play, ~1–2 weeks of work) → **B. public release**.
 
-## 📍 Where we are (10 Nov)
-- **Pilot starts 15 Nov** (plan: the **Seema's pilot** tab). Kids start only after the clean test passes and you say "publish".
-- **Published 10 Nov:** no parent = no class, assigned work first, pilot switch, Class 10 Check-up (Accuracy by topic),
-  "No internet" message, Seema's course tile, teacher Home, "Why not this option?".
-- **Gemini next:** G94 approval pushes → G95 DR-26 rule → G96 offline stars → G89 two-way cards → G92 weekly report → G97 remove a kid.
-- **Google Play:** closed test 20.0.30 in review since 6 Nov. Testers: added once our side is ready.
+## 📍 Where we are (10 Nov night)
+- **Seema's walk-through on the real app:** she joined test class 10-T as a teacher (17:12). **Next: you approve her**
+  (Home → "Needs you", after tonight's update; or Admin tools → Schools & classes → her school → 10-T), then she walks Parts 1–5:
+  https://claude.ai/artifact/VoQCLoAojbQGfCvzhyrKbs. Nobody else joins until she is comfortable (owner).
+- **Published 10 Nov night:** teachers waiting on Home + Schools list; alerts high priority; Progress "Updated 8:05 pm"
+  (parents + teachers: fresh after 7:30 am / 7:30 pm; pull down = now); class board hourly ("Keep practising! Next update at …").
+- **Your phone gets no alerts yet:** Me → Decisions → "Notify me on this phone" (the saved phone is out of date).
+- **Testing:** you test on your phone (top of the Testing tab); Claude and Gemini no longer use the emulator.
+- **Pilot scope:** ~100 kids (Class 10 + ~50 Class 7 on the existing quests) after Seema is comfortable; Class 7 Science: later.
+- **Google Play:** closed test 20.0.30 approved (green tick). Testers: added once our side is ready.
+- **Test app (G104):** built; Gemini sends it once you give the testers' emails. After the pilot starts, every change goes there first.
+- **Open for the pilot:** G87 assignment done = mistakes fixed + results by name (Gemini) · G89 two-way cards · G92 weekly
+  report · A12 class report for management (week 2) · one-tap "which answer is right?" report (spec + mockup: Claude).
 
 ## What a Class 10 student sees today (checked in code, 10 Nov)
 - Home: assigned work first, then Seema's course tile and English Quest starting at **Grammar Pro** (18 topics, Classes 9–10).
