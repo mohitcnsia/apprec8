@@ -5,7 +5,7 @@ import { buildDemoSchool } from "../utils/demoSchool.js";
 import { parentWeek, TIPS, WORDS, weekIndexOf } from "../utils/parentWeek.js";
 import { topicNamer } from "../utils/progressView.js";
 
-const now = new Date(2026, 10, 9, 19, 0).getTime();
+const now = new Date(2026, 10, 15, 19, 0).getTime(); // a Sunday evening, when the week closes
 const { ops } = buildDemoSchool({ quests: QUESTS, now });
 const doc = (p) => ops.find((o) => o.path === p)?.data;
 const quests = ["english-quest", "science-quest"].map((id) => {
@@ -17,9 +17,19 @@ const quests = ["english-quest", "science-quest"].map((id) => {
 const en = parentWeek({ name: "Riya", grade: 5, quests, now, lang: "en" });
 assert.equal(en.title, "Riya's week");
 assert.equal(en.days.length, 7);
-assert.equal(en.days[6].key, "2026-11-09", "ends today");
-assert.equal(en.days[6].label, "M", "9 Nov 2026 is a Monday");
+// Weeks run Monday to Sunday (owner, 2026-11-10): Sunday 15 Nov closes the week of 9–15 Nov.
+assert.equal(en.days[0].key, "2026-11-09", "starts on Monday");
+assert.equal(en.days[0].label, "M");
+assert.equal(en.days[6].key, "2026-11-15", "ends on Sunday");
+assert.ok(en.days.every((d) => !d.future), "on Sunday no day is still to come");
+assert.equal(en.rangeText, "9–15 Nov");
 assert.ok(en.daysOn >= 3, `Riya practised most days (${en.daysOn})`);
+const monday = parentWeek({ name: "Riya", grade: 5, quests, now: new Date(2026, 10, 9, 19).getTime(), lang: "en" });
+assert.ok(monday.days[6].future && !monday.days[0].future, "on Monday the rest of the week is still to come");
+const { weekRangeText, weekStartOf } = await import("../utils/parentWeek.js");
+assert.equal(weekRangeText(new Date(2026, 10, 1, 9).getTime()), "26 Oct – 1 Nov", "a Sunday ends its week; across months");
+assert.equal(new Date(weekStartOf(new Date(2026, 10, 15, 23).getTime())).getDate(), 9, "Sunday night still belongs to the week from Monday 9");
+assert.equal(weekRangeText(now, "hi"), "9–15 नवं");
 assert.match(en.timeText, /^This week: \d days? · /);
 assert.ok(en.timeText.includes("English Quest") && en.timeText.includes("Science Quest"), "timeText includes combined subject breakdown");
 assert.equal(en.subjects.length, 2, "English and Science");
@@ -75,7 +85,25 @@ const missed = missedQuestions([
     },
   },
 ]);
-assert.deepEqual(missed.map((m) => m.text || m.topic), ["Q two?", "MODALS", "Q one?"], "newest first; generated skipped; gate = topic only");
+assert.deepEqual(missed.map((m) => m.text), ["Q two?", "Q one?"], "newest first; generated skipped; a Challenge miss with no practice question is left out (no empty topic)");
 assert.equal(missed[0].answer, "C");
-assert.equal(missed[1].text, null, "Challenge question text never shown");
+
+// A Challenge miss gets a similar PRACTICE question on the same sub-topic, with its answer; the gate pool stays secret.
+const ch = missedQuestions([
+  {
+    questId: "science-quest",
+    namer: () => "The 3Rs",
+    questNodes: [{ kind: "gate", quizId: "gatepool" }, { kind: "practice", subtopic: "three-rs", steps: [{ type: "quiz", quizId: "pr" }] }],
+    quizzes: {
+      gatepool: [{ subtopic: "three-rs", question: { content: "SECRET?" }, options: [{ content: "S", isCorrect: true }] }],
+      pr: [{ question: { content: "Which R means using a jar again?" }, options: [{ content: "Reuse", isCorrect: true }, { content: "Reduce" }] }],
+    },
+    mistakes: { "topic:x:gate": { kind: "topic", subtopic: "three-rs", lastWrongAt: 5 }, "topic:y:gate": { kind: "topic", subtopic: null, lastWrongAt: 6 } },
+  },
+]);
+assert.equal(ch.length, 1, "no-topic Challenge miss left out");
+assert.equal(ch[0].text, "Which R means using a jar again?");
+assert.equal(ch[0].answer, "Reuse");
+assert.equal(ch[0].topic, "The 3Rs");
+assert.match(WORDS.en.topicMiss("The 3Rs"), /“The 3Rs”/);
 console.log("parentWeek missed-questions tests passed");

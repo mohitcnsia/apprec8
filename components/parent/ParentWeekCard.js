@@ -70,13 +70,13 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
     <View style={s.wrap}>
       <Text style={s.h}>{w.title}</Text>
       <View style={s.card}>
-        <Text style={s.label}>{t.thisWeek}</Text>
+        <Text style={s.label}>{t.thisWeek} · {w.rangeText}</Text>
         <Text style={s.big}>{w.timeText}</Text>
         {w.deltaText ? <Text style={[s.small, { color: w.deltaUp ? P.correctText : P.textSoft }]}>{w.deltaText}</Text> : null}
         <View style={s.days}>
           {w.days.map((d) => (
             <View key={d.key} style={{ flex: 1, alignItems: "center", gap: 3 }}>
-              <View style={[s.dayBox, { backgroundColor: d.on ? P.primary : P.border }]} />
+              <View style={[s.dayBox, { backgroundColor: d.on ? P.primary : P.border, opacity: d.future ? 0.4 : 1 }]} />
               <Text style={s.small}>{d.label}</Text>
             </View>
           ))}
@@ -126,7 +126,11 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
                       {m.answer ? <Text style={[s.small, { color: P.correctText }]}>✓ {m.answer}</Text> : null}
                     </>
                   ) : (
-                    <Text style={s.line}>{t.topicMiss(m.topic || "")}</Text>
+                    <>
+                      <Text style={s.small}>{t.topicMiss(m.topic)}</Text>
+                      <Text style={s.line}>{m.text}</Text>
+                      {m.answer ? <Text style={[s.small, { color: P.correctText }]}>✓ {m.answer}</Text> : null}
+                    </>
                   )}
                 </View>
               ))
