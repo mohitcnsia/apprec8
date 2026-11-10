@@ -593,5 +593,26 @@
     "answer": "yes",
     "note": null,
     "answeredAt": "2026-11-10T14:25:26.281Z"
+  },
+  {
+    "id": "gap-alerts-work",
+    "title": "Gap 1: alerts that work for teachers + admins",
+    "ask": "Today a teacher's phone is saved for alerts only if they turn on the weekly summary, so Seema may never hear \"student waiting\". Fix: save the phone on first open (one permission ask), refresh it on every app start, show \"Alerts: on\" in Me, and tell a kid \"waiting for your teacher\" / \"You're in 10-A!\". YES = spec + mockup for your OK, then build.",
+    "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P1, T7, T1). App update + a small server change (deploy with your OK).",
+    "from": "claude"
+  },
+  {
+    "id": "gap-families-in",
+    "title": "Gap 2: getting 100 families in",
+    "ask": "The closed test installs only for Google Group members (~200 emails by hand). Fix: make the group \"anyone with the link can join\", a WhatsApp message with two links (join group, install), and a dry run with 2 real families before the rest. YES = I write the exact Play Console steps + the message.",
+    "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P2, P3). No code.",
+    "from": "claude"
+  },
+  {
+    "id": "gap-notes-read",
+    "title": "Gap 3: every kid note read within 24 hours",
+    "ask": "Kids' notes (Tell us what you think, report notes, Chamku asks) are read only when you check in with me; a worrying note could sit for days. Fix: one daily list, Seema reads her class, you the rest, within 24 h; Seema shapes the rules. YES = I draft the routine with Seema's input, then a mockup of the daily list.",
+    "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P4). Safeguarding plan B4 moves before the pilot.",
+    "from": "claude"
   }
 ]
