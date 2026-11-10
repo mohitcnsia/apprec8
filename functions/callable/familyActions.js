@@ -38,7 +38,7 @@ exports.createChildProfile = functions
     if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
     const parentUid = context.auth.uid;
     const parentDoc = await db.collection("users").doc(parentUid).get();
-    if (parentDoc.exists && parentDoc.data().isChild) {
+    if (parentDoc.exists && (parentDoc.data().isChild || (parentDoc.data().parentUids || []).length)) {
       throw new functions.https.HttpsError("permission-denied", "A child account can't add children. Ask a parent.");
     }
     const children = (parentDoc.exists && parentDoc.data().childUids) || [];
@@ -206,7 +206,9 @@ exports.createParentLinkCode = functions
     if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
     const parentUid = context.auth.uid;
     const me = await db.collection("users").doc(parentUid).get();
-    if (me.exists && (me.data().isChild || Number.isInteger(me.data().grade))) {
+    // DR-27 (owner, 2026-11-10: "a parent can be a student somewhere"): a class on the account doesn't make it a child.
+    // Blocked: child profiles, and accounts that are themselves linked to a parent (a linked kid can't become a "parent").
+    if (me.exists && (me.data().isChild || (me.data().parentUids || []).length)) {
       throw new functions.https.HttpsError("permission-denied", "Only a parent's own account can link a child.");
     }
     if (((me.exists && me.data().childUids) || []).length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can link up to 6 children.");

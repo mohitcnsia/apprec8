@@ -2448,3 +2448,14 @@ chosen paper didn't follow the list once history loaded) → fixed, verified it 
 questions · 60 min" for Class 10 → "Check-up · Your Accuracy in every topic · 49 min"; (4) "Chamku asks" showed on day one
 (profile `createdAt` missing) → falls back to the sign-in creation time. Not tested on the emulator: the parent-link flow
 (needs two phones) and airplane mode; both in OWNER_TESTING.md.
+
+
+## 2026-11-10 — DR-27 Deploy request: a parent with a class can link a child (owner OK needed)
+- **Why:** the owner (account with a class set) could not make a link code for Pratha: `createParentLinkCode` refused every
+  account with a `grade`. Owner: "a parent can also be a student somewhere".
+- **Change:** `createParentLinkCode` and `createChildProfile` now refuse only child profiles (`isChild`) and accounts that
+  already have a parent (`parentUids`), so a linked kid can't become someone's "parent". The Me screen shows My children to a
+  parent with a class (committed earlier today).
+- **Known gap (unchanged by this):** a child with their own unlinked login can still add a child profile, as before. The real
+  answer is "I'm a grown-up" / year of birth (Spec X, before public release).
+- **Deploy:** `firebase deploy --only functions:createParentLinkCode,functions:createChildProfile` (Gemini G102).

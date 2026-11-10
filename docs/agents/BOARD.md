@@ -306,6 +306,13 @@ changes section, or a test kid joins by mistake. Reuse `approveMember` with `app
 "Remove Aarav from 10-A? Their own progress stays." Functions change → Deploy request (owner OK). Test + clean test.
 `gemini(G97): done — review please`.
 
+### G102 · [todo, waits for owner OK] · gemini · ⭐ URGENT: deploy DR-27 (a parent with a class can link a child) — first
+The owner can't link Pratha: `createParentLinkCode` refused any account with a class. Claude changed it (and `createChildProfile`)
+to block only child profiles and accounts already linked to a parent. Deploy:
+`firebase deploy --only functions:createParentLinkCode,functions:createChildProfile`. Test once: an account WITH a class and no
+parent makes a link code; a kid account linked to a parent gets "Only a parent's own account can link a child". Note the
+result under DR-27 in CODE_REVIEW.md. `gemini(G102): done — review please`.
+
 ### G98 · [todo] · gemini · ⭐ URGENT, before G89: answer-check English Paper 4 + Science Paper 5 (Claude, 2026-11-10)
 Pratha's IEO is 17 Nov and NSO 19 Nov; the owner wants her never waiting for content. Claude wrote two harder Class 5 papers
 from her misses: `data/papers/englishPaper4.js`, `data/papers/sciencePaper5.js` (live after the next publish). Solve all 100
