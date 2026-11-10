@@ -369,8 +369,7 @@ already has `topic.quest` / `topic.node`). No new paper, no start code or timer 
    or score. **Nothing is posted by itself (owner, 2026-11-10):** the teacher sees the card first and shares with one tap.
    "Automate" = a Sunday-evening push to the teacher "10-A's week is ready · Share" (off by default, a switch on the class
    screen); the tap opens the same preview + share sheet. WhatsApp can't post to a group without a person tapping.
-   **Small numbers hide a child:** any count of 1–2 kids (e.g. "1 not finished") shows as "a few"; under 5 kids practised →
-   no Accuracy line, just "Not enough practice yet".
+   Real counts, as they are (owner, 2026-11-10: no "a few" rounding).
    **Privacy (owner, 2026-11-10: "it may cause unnecessary politics"):** a parent sees ONLY their own child's report, never
    another child's name, score or report, and never results by name. Results by name: the class teacher, admin, and later
    school management (G88). Enforce in Firestore rules too, not only in the UI (test: a parent account cannot read another
