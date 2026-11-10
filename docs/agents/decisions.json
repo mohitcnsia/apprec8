@@ -527,5 +527,25 @@
     "answer": "yes",
     "note": null,
     "answeredAt": "2026-11-09T20:06:53.830Z"
+  },
+  {
+    "id": "progress-tab-cache",
+    "title": "Progress tabs reload everything on every switch (your note)",
+    "ask": "Switching My children ↔ My classes reads every child's progress again (a teacher with 33 kids ≈ 100 reads per switch). My pick: A. YES = A. MORE DETAILS for B and C.",
+    "details": "**Cause (checked in code):** each tab is thrown away when you leave it and loads again from scratch when you come back.\n\n**A. Keep what was loaded (recommended).** Tabs remember their data while the app is open; switching is instant and costs nothing. Fresh data: pull down to refresh, and it refreshes by itself if older than 10 minutes. Small app change, no server work.\n\n**B. Live updates (what you suggested: pull only when something changes).** My pushback: a live connection on every child re-reads a child each time they answer, so during practice time a teacher's phone would read MORE, not less, and keep connections open. Good for 1–4 children, bad for a class of 33.\n\n**C. One summary per class, kept by the server.** The teacher reads 1 document instead of 33+. Cheapest at scale (schools), but needs a server function and a deploy. Worth it before more schools join, not for the pilot.\n\nMy recommendation: A now, C before more schools.",
+    "from": "claude",
+    "answer": null,
+    "note": null,
+    "answeredAt": null
+  },
+  {
+    "id": "pratha-progress-zero",
+    "title": "Pratha's report says 0/44 topics done",
+    "ask": "Her report shows 'English 0/44 · Next: What is a sentence?' although she has practised Units 0–1 for a week. YES = I look into why (no building until I tell you what I find).",
+    "details": "Seen on the emulator in your My children view today. Either her topics are not being marked as finished, or the report counts differently from the map. Parents would see a wrong number, so it's worth checking before the weekly report (G92) uses the same numbers.",
+    "from": "claude",
+    "answer": null,
+    "note": null,
+    "answeredAt": null
   }
 ]
