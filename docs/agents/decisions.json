@@ -282,7 +282,10 @@
     "title": "Task: when Google approves → Publish",
     "ask": "When Google's email says the changes are approved: Play Console → Publishing overview → Publish. Tap YES when done, LATER to keep the reminder.",
     "details": "**Managed publishing is on**, so nothing goes live by itself. One click publishes: closed testing 20.0.30, the new store listing, target audience, Data safety.\n\nAfter that, testers who join get 20.0.30, and Seema's WhatsApp message can go out (once her class exists).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-10T14:27:55.052Z"
   },
   {
     "id": "meet-progress-review",
@@ -363,7 +366,10 @@
     "title": "To do: link Pratha's own account to yours (keeps her progress)",
     "ask": "Your phone: Me → My children → \"Link my child's own account\" → get a 6-letter code. Pratha's phone: Me → \"Link to my parent\" → type it. Tap YES when done (or MORE DETAILS if a step is missing).",
     "details": "**Don't use \"Add a child\"** for Pratha: that makes a new, empty profile.\n\n**Your phone (signed in as you):** Me → My children → **Link my child's own account** → your name, Father, tick that you agree (हिंदी is there too) → a **6-letter code** (works once, for 24 hours; you can share it on WhatsApp).\n\n**Pratha's phone (signed in as her):** Me → **Link to my parent** → type the code → **Linked ✓**.\n\nAfter that: My children shows \"Pratha's week\" and Progress → My children shows her progress. She keeps her own login, stars and progress. No \"Play as\" for her (she has her own login).\n\n**If \"Link to my parent\" isn't on her Me screen:** her account has no class saved. Tap MORE DETAILS and Claude checks her account.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-10T14:28:02.468Z"
   },
   {
     "id": "offline-play-as",
@@ -544,9 +550,9 @@
     "ask": "Her report shows 'English 0/44 · Next: What is a sentence?' although she has practised Units 0–1 for a week. YES = I look into why (no building until I tell you what I find).",
     "details": "Seen on the emulator in your My children view today. Either her topics are not being marked as finished, or the report counts differently from the map. Parents would see a wrong number, so it's worth checking before the weekly report (G92) uses the same numbers.",
     "from": "claude",
-    "answer": null,
-    "note": null,
-    "answeredAt": null
+    "answer": "no",
+    "note": "Can I check on my physical phone? Emulator is too slow",
+    "answeredAt": "2026-11-10T14:28:41.792Z"
   },
   {
     "id": "class7-science",
@@ -573,13 +579,19 @@
     "title": "\"Answer is wrong\" report: kid taps which answer they think is right",
     "ask": "When a kid taps 🚩 → \"The answer is wrong\", show the 4 options: \"Which one do you think is right?\" One tap. The app answers at once with why that option is not right (\"Good thinking! The large intestine only takes back water. Digestion already finished in the small intestine.\"). We see the counts. YES = I write the spec + mockup for your OK first. NO = keep today's report.",
     "details": "**Why:** Pratha's report today said only \"wrong answer\". She thinks it's the large intestine (it's the small intestine), and we only learnt that because you asked her. With one tap we learn it from every kid, and the kid learns something right away instead of waiting.\n\n**What it needs:**\n1. A \"why not\" line for every wrong option. Quest questions mostly have them. The papers don't yet (only a tag), so this is content work for the 10 papers first.\n2. A small change to the report sheet (app update, no new library).\n\n**My pushback on myself:** if the explanation already covers the kid's choice, the report closes itself as \"we explained\". If 3 or more kids pick the same option, it comes to you as a card: maybe the question really is unclear.\n\n**Digestion question:** the answer stays (small intestine is right). Only its explanation gets the large-intestine line, after you OK this.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": "Yes, if there are multiple reports then I should check manually myself or a card should go to teacher as a feedback card. We can see what teachers say and I will validate in the books to find a conclusive answer.",
+    "answeredAt": "2026-11-10T14:27:42.326Z"
   },
   {
     "id": "progress-refresh-rules",
     "title": "Progress: who sees updates when (spec for your yes)",
     "ask": "Parents + teachers: updated twice a day (7:30 am / 7:30 pm) with \"Updated 7:30 am\" on screen. Kids: own progress instant (free); class rank + class week hourly with \"Keep practising! Next update at 6 pm\" (last minutes: \"Next update in 5 minutes…\"). Pull-down refresh + instant updates = a premium switch, ON for everyone during the pilot. YES = I build it, you test on your phone.",
     "details": "**Replaces** the unpublished 10-minute cache (0b80c38).\n\n**Kids' own progress stays instant:** it's already on their phone, so it costs nothing, and a missing tick right after finishing feels like a bug.\n\n**Premium switch:** one setting (Remote Config) that says who may pull down to refresh / get instant updates. During the pilot: everyone. You flip it when schools pay.\n\n**Cost:** a parent with 2 kids = at most 2 reads twice a day; a teacher with 50 kids = 1 class summary (G103) instead of 50 reads.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-10T14:25:26.281Z"
   }
 ]
