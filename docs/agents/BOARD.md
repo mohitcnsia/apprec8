@@ -273,6 +273,9 @@ account → first-run → Home → every tab → your screens, and paste `adb lo
 empty) in your report. Today G66's `accessibilityRole="region"` blanked Home and crashed Seema's phone; `npm test` now checks roles.
 
 ### PRIORITY · 2026-11-09 evening (Claude) · REPLACES the order below · Google review takes a few days: owner wants the high-value features built before the pilot starts
+**🛑 OWNER, gap review 10 Nov night:** read docs/agents/HANDOFF.md. One thing at a time. **G92 + G103 stopped** (Progress
+and report: talk first). Go: G87, G89, G96, G97. Testers: owner + Seema only.
+
 **🛑 OWNER, 10 Nov night — how we work now:** (1) **No emulator** for Gemini or Claude: the owner tests on his phone
 after each publish (steps at the top of docs/qa/OWNER_TESTING.md) and reports with 🚩 / Me → Tell us what you think.
 (2) In-app feedback → Claude makes a decision card → owner agrees → only then build. (3) The owner may use Gemini to
