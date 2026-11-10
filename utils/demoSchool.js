@@ -9,6 +9,7 @@
 
 import { nodesForGrade } from "./gradeFilter.js";
 import { updateStats, dayKey } from "./kidStats.js";
+import { stepId } from "./questTree.js";
 
 export const DEMO_PREFIX = "demo_";
 export const DEMO_WEEKS = 6;
@@ -200,6 +201,13 @@ export function simulateKid({ r, uid, name, grade, persona, quest, leaves, weakR
       leaves = leaves.slice(0, Math.max(1, gi));
     }
   }
+  // The app saves topics with steps per step (`${id}__0`, …), not under the topic id: write the demo the same way.
+  leaves.forEach((l) => {
+    const steps = Array.isArray(l.node.steps) ? l.node.steps : [];
+    if (!steps.length || !nodes[l.node.id]) return;
+    steps.forEach((_, i) => (nodes[stepId(l.node.id, i)] = { ...nodes[l.node.id] }));
+    delete nodes[l.node.id];
+  });
   return { progress: { questId: quest, nodes, stats }, attempts, stars };
 }
 

@@ -1,12 +1,7 @@
 // utils/assignedTopics.js
 // Home's "From your teacher" list (2026-11-09: a student saw only the first assignment and landed on "Sentences").
 // Every assigned topic the kid hasn't finished, one row each, soonest due first. Pure, tested.
-import { stepId } from "./questTree.js";
-
-const topicDone = (node, progressNodes = {}) => {
-  const steps = Array.isArray(node?.steps) ? node.steps : [];
-  return steps.length > 0 && steps.every((_, i) => progressNodes?.[stepId(node.id, i)]?.status === "completed");
-};
+import { topicDone } from "./questTree.js";
 
 /**
  * @param assignments  [{ id, questId, nodeIds[], nodeTitles[], dueDate }]

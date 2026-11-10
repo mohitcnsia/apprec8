@@ -126,3 +126,18 @@ assert.equal(talk[0].answer, "Heart");
 assert.equal(talk[1].kind, "question", "then the misses");
 assert.deepEqual(Object.keys(WORDS.en).sort(), Object.keys(WORDS.hi).sort(), "every word has a Hindi version");
 console.log("parentWeek talk-questions tests passed");
+
+// Regression (2026-11-10, Pratha's report said 0/44): progress is saved PER STEP, as the app writes it.
+{
+  const { stepId, topicDone } = await import("../utils/questTree.js");
+  const qn = bundledQuest("english-quest").nodes;
+  const first = qn.find((n) => n.kind === "main" && n.steps?.length);
+  const real = Object.fromEntries(first.steps.map((_, i) => [stepId(first.id, i), { status: "completed" }]));
+  assert.ok(topicDone(first, real), "all steps done = topic done");
+  assert.ok(!topicDone(first, { [stepId(first.id, 0)]: { status: "completed" } }) || first.steps.length === 1, "one step of two is not done");
+  const r = parentWeek({ name: "P", grade: 5, now, quests: [{ questId: "english-quest", title: "English", stats: {}, nodes: real, questNodes: qn }] });
+  const all = parentWeek({ name: "P", grade: 5, now, quests: [{ questId: "english-quest", title: "English", stats: { daily: { "2026-11-15": { answered: 5, correct: 4, timeMs: 60000 } } }, nodes: real, questNodes: qn }] });
+  assert.equal(all.subjects[0].done, 1, "the report counts a topic finished step by step");
+  assert.notEqual(all.subjects[0].next, first.title, "Next moves past the finished topic");
+  console.log("parentWeek per-step regression passed");
+}

@@ -5,6 +5,7 @@
 
 import { accuracy, weakTopics, dayKey } from "./kidStats.js";
 import { nodesForGrade } from "./gradeFilter.js";
+import { topicDone } from "./questTree.js";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -158,8 +159,8 @@ export function parentWeek({ name, grade = null, quests = [], now = Date.now(), 
       const namer = q.namer || ((x) => x);
       const weak = weakTopics(q.stats || {})[0];
       const mains = nodesForGrade(q.questNodes || [], grade).filter((n) => n.kind === "main");
-      const done = mains.filter((n) => q.nodes?.[n.id]?.status === "completed").length;
-      const next = mains.find((n) => q.nodes?.[n.id]?.status !== "completed");
+      const done = mains.filter((n) => topicDone(n, q.nodes)).length;
+      const next = mains.find((n) => !topicDone(n, q.nodes));
       const week = sumWeek(q.stats || {}, now);
       const subMin = Math.round((week.timeMs || 0) / 60000);
       const lastActive = lastActiveMs(q.stats);

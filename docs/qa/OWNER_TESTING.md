@@ -48,6 +48,8 @@ Tick items as you go. Details and expected results for each are in the named `CO
 2. ✅ Progress → My children → each week says **THIS WEEK · 9–15 Nov** (Monday to Sunday); days still to come are faded.
 3. ✅ **Questions to talk about**: starts with "Strong in “…”. Start with this one:" (a question she can answer), then her
    misses; a missed Challenge shows a similar question **with the answer**. No more empty “”.
+5. Progress → My children → Pratha: topics done now count (e.g. **English 8/44 · Next: Prepositions**, Science 12/18),
+   not 0/44. Seema's class card: "did the assigned work" counts kids who finished every step.
 4. On Pratha's phone: answer a few questions slowly and a few fast; after 10+ quick taps the tip appears on her card.
 
 ### ⭐⭐ PILOT PATH on your phone (after the next "publish"), ~15 min — Claude runs it on the emulator first

@@ -39,6 +39,18 @@ export const DEFAULT_UNIT_PASS_PERCENT = DEFAULT_BOSS_PASS_PERCENT;
 
 export const stepId = (nodeId, index) => `${nodeId}__${index}`;
 
+/**
+ * Is this topic finished? Progress is saved per STEP (`${id}__0`, `${id}__1`, …), so a main/practice topic is done when
+ * every step is done; a gate or boss (no steps) when its own record says so. The one rule for the map, Home, the
+ * parent report and the teacher's assignment count (2026-11-10: the report checked the topic id and showed 0/44).
+ */
+export function topicDone(node, progressNodes = {}) {
+  if (!node) return false;
+  const steps = Array.isArray(node.steps) ? node.steps : [];
+  if (steps.length) return steps.every((_, i) => progressNodes?.[stepId(node.id, i)]?.status === "completed");
+  return progressNodes?.[node.id]?.status === "completed";
+}
+
 /** Stars shown on the map for a best score: 0 (not passed) to 3 (perfect). */
 export const starsForPercent = (percent, passPercent = DEFAULT_PRACTICE_PASS_PERCENT) => {
   if (typeof percent !== "number" || percent < passPercent) return 0;

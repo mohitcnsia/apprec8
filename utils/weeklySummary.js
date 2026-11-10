@@ -6,6 +6,8 @@
 // kids: [{ uid, firstName, quests: [{ questId, stats, nodes }] }]
 
 import { summarize, accuracy } from "./kidStats.js";
+import { topicDone } from "./questTree.js";
+import { bundledQuest } from "../data/quests/index.js";
 
 const DAY = 24 * 60 * 60 * 1000;
 export const WEAK_BELOW = 0.6;
@@ -96,7 +98,11 @@ export function assignmentStatus(assignments = [], kids = [], now = Date.now()) 
   let half = 0;
   targets.forEach((k) => {
     const nodes = k.quests.find((q) => q.questId === a.questId)?.nodes || {};
-    const n = (a.nodeIds || []).filter((id) => nodes[id]?.status === "completed").length;
+    const defs = bundledQuest(a.questId)?.nodes || [];
+    const n = (a.nodeIds || []).filter((id) => {
+      const def = defs.find((x) => x.id === id);
+      return def ? topicDone(def, nodes) : nodes[id]?.status === "completed";
+    }).length;
     if (n === (a.nodeIds || []).length && n > 0) done++;
     else if (n > 0 || (a.nodeIds || []).some((id) => nodes[id])) half++;
   });
