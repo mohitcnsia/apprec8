@@ -26,3 +26,33 @@ Moved out of `gemini.md` to keep it under 24 KB (Antigravity reads only the firs
 
 (Older session: 2026-10-31 → 2026-11-04 release work, moved to `docs/history/gemini-log-2026-11.md`.)
 
+## 2026-11-05 (evening): practice paper built, specs R + S, DR-14 → G32 (Claude)
+- **Goal:** act on the owner's evening feedback.
+- **Done:** practice paper (mockup Q approved) built: Home → Explore → Practice paper; bundled papers, resume, clock,
+  check grid, result by part, answers; testers only until the paper questions are approved (`2dfefec`). DR-14 approved →
+  Gemini G32 (index + backfill; backfill again after the next publish). Help sheet: Call opens the dialer only, no call
+  button for 112 (prank-call worry). Draft specs **R Learn cards** (mockup row R) and **S word ladders** in CODE_REVIEW.md.
+- **How to test:** docs/qa/OWNER_TESTING.md → "Practice paper" (after "publish").
+
+## 2026-11-05 (day): costs, Unit 8, Science Unit 5, safety mockup, branch `feat/quiz-redesign` (Claude)
+- **Goal:** owner away 8 h: cost guards (owner: "extremely cautious about costs"), more Class 3–5 content, safety mockup, clean-up.
+- **Completed Steps:**
+  1. OTA `4aeab2e5` (20.0.29) with Units 5–7, Science 4, G28 Word Power mixes (reviewed + fixed by Claude). Owner seeded; IAM step done.
+  2. Cost guards: DR-12 `maxInstances` on every function; DR-13 leaderboards cached 10 min server-side, top-N ≤ 50 (both owner OK → G30);
+     DR-14 dashboard reads one quest (`questId` on progress, index + backfill script; waiting for OK).
+  3. English Unit 8 Linking Words (120 Qs) + Science Unit 5 Light, Sound & Magnets (105 Qs): review page + G31 second review.
+  4. Mockup P (child safety & privacy, draft for owner + Seema). Old unused screens deleted. Owner tests = 7 in-app reminders.
+  5. Later: English Unit 9 Punctuation (128 Qs), Science Unit 6 Patterns & Puzzles (105 Qs, answers recomputed by a test),
+     cost guard 4 (Vocab / Spelling Bee / Space map phone copy, docs/COSTS.md), mockup Q practice paper + draft Papers 1
+     (English + Science, 50 Qs each) + scoring logic, accuracy pass on Science Units 1–3 (3 fixes).
+- **How to test:** `npm test`; docs/qa/OWNER_TESTING.md (new sections at the top).
+
+## 2026-11-05 (night): 20.0.28 → 20.0.29, Word Bank, schools, leaderboard, lock, English Units 5–6, branch `feat/quiz-redesign` (Claude)
+- **Goal:** ship owner feedback over the air (OTA from 20.0.28), redesign Schools + Leaderboard (mockups L, M), keep kids in the app (N1), English content for Class 3–5.
+- **Completed Steps:**
+  1. 20.0.28 built + check PASS; OTA updates published (`eas update`): Treasure Words quest (owner's 370 words, `data/wordBankQuestData.js`), reminder fix (`userId`), one-restart updates (`hooks/useStartupUpdate.js`), leaderboard M1, Schools L1–L4, no status bar in quests, loader text.
+  2. G27 deploy done by Gemini (DR-8/9/10). DR-11 (4 teacher-invite functions) approved → G29 (Gemini).
+  3. N1 lock: native `LockTask` module (screen pinning) + Play-as sheet + time-up overlay → needs build 20.0.29 (built overnight).
+  4. English Unit 5 Tenses + Unit 6 Modals & Question Tags (~250 questions), not seeded; review page for Seema.
+  5. Test guard: no exam labels in kid-facing quest text.
+- **How to test:** `npm test`; `docs/qa/OWNER_TESTING.md` newest sections (OTA update, Treasure Words); 20.0.29 on the phone: Me → Play as Pratha → Lock & play (Android asks "Pin this app?").
