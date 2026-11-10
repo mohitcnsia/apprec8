@@ -184,8 +184,9 @@ export default function MeScreen({ navigation, signoutHandler }) {
         <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
       </View>
 
-      {/* Parents add their children here (RB-6). Child accounts and students (with a class) don't see this. */}
-      {!userData?.isChild && !Number.isInteger(userData?.grade) ? (
+      {/* Parents add their children here (RB-6). Child accounts and students (with a class) don't see this,
+          unless they already have children (a parent who also set a class, e.g. the owner viewing as Class 10). */}
+      {!userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0) ? (
         <>
           <Text style={styles.section}>MY CHILDREN</Text>
           <View style={styles.group}>
@@ -224,7 +225,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
       ) : null}
 
       {/* A student with their own login links to a parent (decision 9). */}
-      {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length ? (
+      {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length && !(userData?.childUids || []).length ? (
         <View style={styles.group}>
           <Row icon="link-outline" label="Link to my parent" detail="with a code from them" onPress={() => navigation.navigate("LinkParent")} styles={styles} P={P} />
         </View>
