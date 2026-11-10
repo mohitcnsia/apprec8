@@ -313,6 +313,12 @@ questions yourself WITHOUT looking at the marked answer first, then compare. Rep
 question where your answer differs, any wrong option that could also be right, any fact you doubt (with a source). Don't
 edit the files; Claude fixes. `gemini(G98): done — review please`.
 
+### G101 · [mockup: waiting for owner OK] · Daily reminder: Home card "Today's practice" + a daily buzz the parent turns on (owner, 2026-11-10)
+Mockup: https://claude.ai/artifact/BmBhPXaq1LWbzRFiX1kuLe (3 screens). Card = next unfinished paper, yesterday's Accuracy,
+days to the exam (parent-typed dates), one tip from the child's own answers (speed vs Accuracy shown as both numbers, owner's
+call). Buzz = one push a day at the parent's time, off by default, none if already practised, never after 9 pm; a bounded
+scheduled function (Deploy request). Card first (OTA), buzz second.
+
 ### G99 · [spec: Claude → owner mockup] · Reasoning quest: a big picture-puzzle bank (owner, 2026-11-10)
 Owner: "a massive bunch of reasoning questions, an entire quest; the bank works for every subject". Build on
 `utils/figures.js` (code-drawn figures, answers right by construction, tests re-check): figure series, mirror/water images,
