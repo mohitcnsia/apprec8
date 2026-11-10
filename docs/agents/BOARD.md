@@ -306,6 +306,25 @@ changes section, or a test kid joins by mistake. Reuse `approveMember` with `app
 "Remove Aarav from 10-A? Their own progress stays." Functions change → Deploy request (owner OK). Test + clean test.
 `gemini(G97): done — review please`.
 
+### G98 · [todo] · gemini · ⭐ URGENT, before G89: answer-check English Paper 4 + Science Paper 5 (Claude, 2026-11-10)
+Pratha's IEO is 17 Nov and NSO 19 Nov; the owner wants her never waiting for content. Claude wrote two harder Class 5 papers
+from her misses: `data/papers/englishPaper4.js`, `data/papers/sciencePaper5.js` (live after the next publish). Solve all 100
+questions yourself WITHOUT looking at the marked answer first, then compare. Report in `docs/agents/reports/G98.md`: any
+question where your answer differs, any wrong option that could also be right, any fact you doubt (with a source). Don't
+edit the files; Claude fixes. `gemini(G98): done — review please`.
+
+### G99 · [spec: Claude → owner mockup] · Reasoning quest: a big picture-puzzle bank (owner, 2026-11-10)
+Owner: "a massive bunch of reasoning questions, an entire quest; the bank works for every subject". Build on
+`utils/figures.js` (code-drawn figures, answers right by construction, tests re-check): figure series, mirror/water images,
+rotation, embedded figures, paper folding/cutting, counting shapes, dice, Venn, plus text types (series, codes, directions,
+ranking, calendar). Generators → unlimited questions per type and level; tagged so Science/Maths papers can draw from it.
+Claude writes the spec + mockup first; no build before the owner's OK.
+
+### G100 · [spec: Claude → owner mockup] · "How you learn" insights for kids: Progress + an occasional Home card (owner, 2026-11-10)
+From the child's own answers: speed vs accuracy (e.g. "When you take a few seconds, you get 86% right"), the topics that trip
+them up, what improved this week. A calm card on Home now and then to reflect on (one at a time, never pressure; Pratha
+rule). Same numbers for the parent report (G92). Mockup first.
+
 ### G89 · [todo] · gemini · FIRST: Two-way cards on Home: we ask, they answer, we reply (owner + Seema, 2026-11-10)
 Why (owner): "Users have no way of connecting with you or me." Seema must see what we decided and push back; kids, parents and
 teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4 (5 screens; follow it).
