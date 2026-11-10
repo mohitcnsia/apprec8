@@ -287,6 +287,12 @@ functions:redeemTeacherInvite,functions:onStudentJoinRequest` (project default =
 an invite → the owner's phone gets "Teacher waiting · Approve"; a test kid asks to join a test class → that teacher gets
 "Student waiting". Delete the throwaway accounts. Note the result under DR-25 in CODE_REVIEW.md. `gemini(G94): done — review please`.
 
+### G95 · [todo] · gemini · Deploy DR-26 rules (owner OK in chat, 2026-11-10) — quick, together with G94
+Claude copied the new `firestore.rules` into your worktree (only change: a class join needs `parentUids` on the kid, "no parent
+consent = no class"). Run `firebase deploy --only firestore:rules`. Test once on the emulator: a fresh kid with no parent can't join
+(the app shows "Ask your parent to add you"); a kid linked to a parent joins. Delete throwaway accounts. Note the result under DR-26 in
+CODE_REVIEW.md. `gemini(G95): done — review please`.
+
 ### G89 · [todo] · gemini · FIRST: Two-way cards on Home: we ask, they answer, we reply (owner + Seema, 2026-11-10)
 Why (owner): "Users have no way of connecting with you or me." Seema must see what we decided and push back; kids, parents and
 teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4 (5 screens; follow it).

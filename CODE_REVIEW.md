@@ -2421,7 +2421,7 @@ Push notification triggers for pending actions (G84 item 2):
 - **Assigned work first (Seema 5):** "From your teacher" moved above Coming up / idea prompt on a kid's Home.
 - **All levels open (Seema 6):** Admin tools → the class → "Pilot: open all levels" sets `classes/{id}.pilotUnlockAll`. Kids in
   that class: every topic of their class open (grade filter kept, calm folded map kept). Class docs read once per app session.
-- **DR-26 Deploy request (owner OK needed):** firestore.rules `classes/{id}/members` create also requires
+- **DR-26 Deploy request — owner OK in chat 2026-11-10 → Gemini G95:** firestore.rules `classes/{id}/members` create also requires
   `users/{kid}.parentUids` non-empty (the server-side half of "no consent = no class"). `firebase deploy --only firestore:rules`.
   Until it is deployed, only the app screen enforces it.
 
