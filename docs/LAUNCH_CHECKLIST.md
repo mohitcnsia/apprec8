@@ -69,6 +69,7 @@ Not blocking: Hindi check, Seema's 4 tips, crash reporting (B7), Dog Squad (owne
 | B2 | Play Console: Data safety form, content rating, target audience (age groups), App access (a demo login for reviewers), store listing (screenshots, short text) | Owner (Claude drafts text) |
 | B3 | **DPDP Act (India)**: verifiable parental consent for under-18s, data minimum, deletion on request, a grievance contact. Our parent-first + consent records follow it; get a short legal check before scale | Owner (+ lawyer once) |
 | B4 | **Safeguarding plan (RB-8)**: who reads reports, how fast, when to call parents / 1098 | Seema leads |
+| B9 | ⭐ **Grown-up check before public release (owner, 2026-11-10: "don't miss this")**: today a child with their own login who isn't linked to a parent can still add a child profile or make a link code, and so pass "no parent = no class". Fix: "Are you a grown-up?" / year of birth (Spec X) and only grown-ups get parent features; server rules too (createChildProfile, createParentLinkCode) | Claude spec → owner → build |
 | B5 | Sign-up policy: today anyone can register (email / Google). Decision from 2026-11-04 was invite-only; keep open for the pilot or switch? | Owner |
 | B6 | Production build from `main` (merge `feat/quiz-redesign` after the pilot), `check-aab.sh` PASS, release notes | Claude builds, owner uploads |
 | B7 | Crash reporting: none today (we only hear from users). Add before public | Claude |

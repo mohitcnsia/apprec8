@@ -2450,7 +2450,7 @@ questions · 60 min" for Class 10 → "Check-up · Your Accuracy in every topic 
 (needs two phones) and airplane mode; both in OWNER_TESTING.md.
 
 
-## 2026-11-10 — DR-27 Deploy request: a parent with a class can link a child (owner OK needed)
+## 2026-11-10 — DR-27: a parent with a class can link a child — DEPLOYED by the owner (2026-11-10, success)
 - **Why:** the owner (account with a class set) could not make a link code for Pratha: `createParentLinkCode` refused every
   account with a `grade`. Owner: "a parent can also be a student somewhere".
 - **Change:** `createParentLinkCode` and `createChildProfile` now refuse only child profiles (`isChild`) and accounts that

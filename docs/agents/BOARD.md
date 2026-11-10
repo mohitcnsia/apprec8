@@ -306,7 +306,7 @@ changes section, or a test kid joins by mistake. Reuse `approveMember` with `app
 "Remove Aarav from 10-A? Their own progress stays." Functions change → Deploy request (owner OK). Test + clean test.
 `gemini(G97): done — review please`.
 
-### G102 · [todo, waits for owner OK] · gemini · ⭐ URGENT: deploy DR-27 (a parent with a class can link a child) — first
+### G102 · [done: the OWNER deployed it himself, 2026-11-10, success] · gemini · deploy DR-27 (a parent with a class can link a child) — first
 The owner can't link Pratha: `createParentLinkCode` refused any account with a class. Claude changed it (and `createChildProfile`)
 to block only child profiles and accounts already linked to a parent. Deploy:
 `firebase deploy --only functions:createParentLinkCode,functions:createChildProfile`. Test once: an account WITH a class and no
