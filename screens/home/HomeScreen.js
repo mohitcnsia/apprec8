@@ -349,9 +349,10 @@ export default function HomeScreen({ navigation }) {
     const raw = [...quests, ...draftQuests]
       .map((q) => ({ ...q, questId: q.questId || q.id }))
       .filter((q, i, arr) => arr.findIndex((x) => x.questId === q.questId) === i);
-    const visible = filterVisibleTiles(raw, userData, { isAdmin: isTester || ownerView });
+    // The owner always sees every quest (Science etc.), even with Owner extras off; extras only adds the old content.
+    const visible = filterVisibleTiles(raw, userData, { isAdmin: isTester || isAdmin });
     return orderQuestsForHome(visible, userData);
-  }, [quests, draftQuests, userData, isTester, ownerView]);
+  }, [quests, draftQuests, userData, isTester, isAdmin]);
   const questKey = allQuests.map((q) => q.questId).join(",");
 
   useEffect(() => {
@@ -381,13 +382,13 @@ export default function HomeScreen({ navigation }) {
 
   // Filter out quests that have no topics for the child's class (G79). The owner and testers (Owner extras on) see every quest.
   const visibleQuests = useMemo(() => {
-    if (isTester || ownerView) return allQuests;
+    if (isTester || isAdmin) return allQuests;
     return allQuests.filter((q) => {
       const data = bundledQuest(q.questId);
       if (!data) return true;
       return questHasTopicsForGrade(data.nodes, userGrade);
     });
-  }, [allQuests, userGrade, isTester, ownerView]);
+  }, [allQuests, userGrade, isTester, isAdmin]);
 
   // Continue = the quest played most recently. Mistakes = all visible quests; the tile opens the one with most.
   const mainQuest = pickContinue(visibleQuests, progressById);

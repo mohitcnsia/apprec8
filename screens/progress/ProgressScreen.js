@@ -59,7 +59,7 @@ export default function ProgressScreen({ navigation, route }) {
   const user = authInstance.currentUser;
   const uid = user?.uid || null;
   const extras = useOwnerExtras();
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID && extras;
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID; // owner: every quest + Kids tab, extras or not
   const [view, setView] = useState("me");
   const [userData, setUserData] = useState(null);
   const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
