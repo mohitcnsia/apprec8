@@ -48,8 +48,9 @@
     if (/android/i.test(navigator.userAgent)) {
       a.href = "intent://join/" + token + "#Intent;scheme=apprec8;package=" + pkg + ";S.browser_fallback_url=" + encodeURIComponent(store) + ";end";
     } else {
-      a.href = store;
-      document.getElementById("note").textContent = "Apprec8 is an Android app. Open this link on an Android phone.";
+      // On a computer: never send anyone to Google's pages (owner, 11 Nov: Google's age check blocked a signed-in account).
+      a.style.display = "none";
+      document.getElementById("note").textContent = "Apprec8 is an Android app. Open this link in WhatsApp on your Android phone. / यह लिंक अपने Android फ़ोन पर WhatsApp में खोलें।";
     }
   })();
 </script>
