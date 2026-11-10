@@ -299,6 +299,13 @@ once and gives up. Fix: when `offline` is true, keep the call's input in AsyncSt
 on the next app start / Home focus when online; remove on success. The server already blocks double rewards (7-day rule). Test
 in `tests/` for the queue logic. `gemini(G96): done — review please`.
 
+### G97 · [todo] · gemini · Teacher can remove an approved kid from the class (Claude, 2026-11-10) — small
+Today a teacher can only decline a waiting kid; an approved kid stays until they delete their account (eraseUser). Real need: a kid
+changes section, or a test kid joins by mistake. Reuse `approveMember` with `approve:false` on an approved member (server: also
+`arrayRemove(classId)` from `classIds`). UI: on the kid's row in Progress → class, a quiet "Remove from class" → confirm sheet
+"Remove Aarav from 10-A? Their own progress stays." Functions change → Deploy request (owner OK). Test + clean test.
+`gemini(G97): done — review please`.
+
 ### G89 · [todo] · gemini · FIRST: Two-way cards on Home: we ask, they answer, we reply (owner + Seema, 2026-11-10)
 Why (owner): "Users have no way of connecting with you or me." Seema must see what we decided and push back; kids, parents and
 teachers must reach us in one tap. **Approved mockup:** https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4 (5 screens; follow it).
