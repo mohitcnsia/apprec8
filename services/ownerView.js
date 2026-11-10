@@ -8,14 +8,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isTesterUser } from "../config/appConfig";
 
 const KEY = "ownerExtras:v1";
-let extrasOn = true;
+// Owner, 11 Nov: starts OFF (old content kept coming back after a reinstall); on only after switching it on in Me.
+let extrasOn = false;
 const subs = new Set();
 
 AsyncStorage.getItem(KEY)
   .then((v) => {
-    if (v === "off" && extrasOn) {
-      extrasOn = false;
-      subs.forEach((f) => f(false));
+    if (v === "on" && !extrasOn) {
+      extrasOn = true;
+      subs.forEach((f) => f(true));
     }
   })
   .catch(() => {});
