@@ -423,6 +423,11 @@ and real Class 10 board papers. Questions stay original (rule: papers as a guide
 Claude has written + checked the questions.
 
 ### G87 · [todo] · gemini · ⭐ PILOT: an assignment is done only when its mistakes are fixed + the teacher sees results by name (owner, 2026-11-09)
+**Claude, 2026-11-10 — before you continue G87:** your WIP (branch `gemini/g87-assignment-mistakes`, 7efe21d) overlaps today's
+fix on `feat/quiz-redesign` (cf8f0a1): progress is saved PER STEP (`${id}__0`…), so "topic done" = `topicDone(node, nodes)` from
+`utils/questTree.js` everywhere (assignedTopics, weeklySummary, parentWeek; demoSchool now writes per-step keys). Rebase on
+`feat/quiz-redesign`, use `topicDone`, never `nodes[id]?.status`. Also new on Home: G101 "Today's practice" card and G90's
+"From your teacher" first — keep both.
 Owner (as a 10-A student): finished every assigned topic, 6 mistakes left, nobody nudged him: "Without this nudge kids will just
 mark without reading … Seema would need the results to impress school management." Owner: "why should a teacher waste time on
 something the app can do, but she should know what happened as quickly and cleanly as possible." Use the word **Accuracy**
