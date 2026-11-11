@@ -43,6 +43,7 @@ import { nextUp } from "../../utils/nextUp";
 import NudgeCard from "../../components/home/NudgeCard";
 import { myChildren } from "../../services/familyApi";
 import { myMoodList } from "../../services/moodApi";
+import { newReportsCount } from "../../services/reportsInbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
@@ -352,18 +353,38 @@ export default function HomeScreen({ navigation }) {
     return navigation.addListener("focus", load);
   }, [uid, teachesKey, isAdmin, navigation]);
 
+  // Owner: new reports from kids (never miss one), checked when Home comes back into view, at most every 10 minutes.
+  const [reportCount, setReportCount] = useState(0);
+  const reportsAt = useRef(0);
+  useEffect(() => {
+    if (!isAdmin) return undefined;
+    const load = () => {
+      if (Date.now() - reportsAt.current < 10 * 60 * 1000) return;
+      reportsAt.current = Date.now();
+      newReportsCount().then(setReportCount).catch(() => {});
+    };
+    load();
+    return navigation.addListener("focus", () => {
+      reportsAt.current = 0; // back from Ideas & reports: recount at once
+      load();
+    });
+  }, [isAdmin, navigation]);
+
   const needsYouRows = useMemo(() => {
     return computeNeedsYou({
       decisions,
       teacherRequests,
       studentRequests,
       wellbeing: wellbeingCount,
+      reports: reportCount,
     });
-  }, [decisions, teacherRequests, studentRequests, wellbeingCount]);
+  }, [decisions, teacherRequests, studentRequests, wellbeingCount, reportCount]);
 
   const onNeedsYouPress = (row) => {
     if (row.screen === "MoodList") {
       navigation.navigate("MoodList");
+    } else if (row.screen === "IdeasReports") {
+      navigation.navigate("Profile", { screen: "IdeasReports" });
     } else if (row.screen === "Decisions") {
       navigation.navigate("Decisions");
     } else if (row.screen === "ClassDetail") {

@@ -2637,3 +2637,11 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
   numbers (talks at home, teachers' monthly tap); cost = link to Firebase usage.
 - Scale note: reads every kid's progress once an hour when opened; fine for the pilot; later read the class summaries instead.
 - **Deploy request (owner):** `firebase deploy --only functions:ownerWeekly --project apprec8-ca229`
+
+## 2026-11-12 — Pilot helpers (Claude; owner: "build 1–3")
+1. `components/teacher/BulkApproveCard.js`: tick students whose parents said YES, one method for all, confirm → `approveMember`
+   per kid (same consent note as one by one). Shown when 2+ are waiting.
+2. `assignmentStatus` returns names per group (`who`); TeacherWeekCard shows them + "Nudge N not started" / "Appreciate N done"
+   (sendSticker; demo classes excluded).
+3. `services/reportsInbox.js`: owner's Home → Needs you "N new reports from kids" = userFeedback since the last visit to Ideas &
+   reports (only the new docs are read; at most every 10 min on Home focus). Opening the list = seen.

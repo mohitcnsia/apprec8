@@ -3,6 +3,15 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Pilot helpers: approve many, assignment names, new reports on your Home (12 Nov)
+After the next publish. Nothing to deploy.
+1. **Seema, 2+ students waiting:** Progress → My classes → the class → "Waiting for you" → **Approve several at once ›** → tick names
+   (or **Tick all**) → the parents said yes on **WhatsApp / Slip / Phone** → **APPROVE 12** → confirm. Each is approved with that note.
+2. **Assignment card** ("3 · ASSIGNMENT"): names under Done / Started / Not started; **Nudge 15 not started** and
+   **Appreciate 12 done** (parents of the appreciated kids get the alert).
+3. **You:** Home → Needs you → **"3 new reports from kids"** (🚩 reports, feedback, ideas since you last opened the list) →
+   opens Admin tools → Ideas & reports. Opening the list clears the row; mark each one done there.
+
 ## ⭐ Your weekly "Is it working?" (12 Nov, DR-37)
 After the deploy (ownerWeekly) + publish. Progress → **This week** (only you).
 1. **KIDS:** "N kids practised, up from M last week", how many came back on 2+ days.

@@ -104,3 +104,12 @@ console.log("needsYou tests passed!");
   console.log("needsYou wellbeing passed");
 }
 
+// New reports for the owner (2026-11-12), after well-being, before decisions.
+{
+  const { computeNeedsYou: cny } = await import("../utils/needsYou.js");
+  const rows = cny({ decisions: 1, reports: 3, wellbeing: 1 });
+  if (rows.map((r) => r.id).join() !== "needs-you-wellbeing,needs-you-reports,needs-you-decisions") throw new Error("order");
+  if (!/3 new reports from kids/.test(rows[1].label)) throw new Error("label");
+  console.log("needsYou reports passed");
+}
+

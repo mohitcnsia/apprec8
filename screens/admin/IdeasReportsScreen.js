@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { getFirestore, collection, query, orderBy, limit, getDocs, doc, updateDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
+import { markReportsSeen } from "../../services/reportsInbox";
 
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
@@ -36,6 +37,9 @@ const FILTERS = [
 ];
 
 export default function IdeasReportsScreen({ navigation }) {
+  useEffect(() => {
+    markReportsSeen(); // the Home "new reports" row counts from this visit
+  }, []);
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();

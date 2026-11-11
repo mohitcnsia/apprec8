@@ -44,6 +44,7 @@ export function computeNeedsYou({
   studentRequests = [],
   parentRequests = [],
   wellbeing = 0,
+  reports = 0,
 } = {}) {
   const rows = [];
 
@@ -56,6 +57,18 @@ export function computeNeedsYou({
       count: wb,
       label: wb === 1 ? "1 kid to see today (well-being)" : `${wb} kids to see today (well-being)`,
       screen: "MoodList",
+    });
+  }
+
+  // 0b. New reports from kids (owner): wrong questions get fixed the same day.
+  const rep = Number(reports) || 0;
+  if (rep > 0) {
+    rows.push({
+      id: "needs-you-reports",
+      type: "reports",
+      count: rep,
+      label: rep === 1 ? "1 new report from a kid" : `${rep} new reports from kids`,
+      screen: "IdeasReports",
     });
   }
 
