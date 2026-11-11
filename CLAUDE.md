@@ -101,4 +101,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 - **Firestore rules: never read an optional field directly** (`resource.data.x == null` errors → deny when the field is
   missing). Use `resource.data.get('x', null)`. DR-22 (2026-11-09): 142 of 145 accounts lacked `profileLastSavedAt`, so
   new users couldn't save the first-run sheet.
+- **No Android app backup** (from 20.0.32): a reinstall restored Firebase Auth's encrypted session without its Keystore key →
+  signed out on every start (`FirebearStorageCryptoHelper: Keystore cannot load the key`). Fix on a phone: Clear storage.
+- **Owner's phone over USB (OnePlus):** `adb` only sees it when run outside the sandbox; `timeout` doesn't exist on macOS (use `perl -e 'sleep N'`).
 - `expo-image` must match the Expo SDK (use `npx expo install`); a mismatch crashes Android with a Kotlin `AnyTypeCache` error.
