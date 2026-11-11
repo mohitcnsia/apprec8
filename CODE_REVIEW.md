@@ -2558,3 +2558,16 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - **Deploy request (owner):** `firebase deploy --only functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor --project apprec8-ca229`
 - **Owner, one-time:** (1) Seema as counsellor: `node scripts/admin/setCounsellor.cjs <her email>` then the same with `--apply`.
   (2) Firebase console → Firestore → Time-to-live → add policy: collection group `moodTaps`, field `expireAt` (deletes after 2 months).
+
+## 2026-11-11 — DR-35: topic levels + one summary per class (Claude; build step 1 of the redesign doc)
+- `utils/topicLevels.js` (+ tests): New → Practising → Learned → Still remembers / Slipping per topic per kid. Learned = ≥80% on
+  the last 8+ answers to questions new to the kid, on 2+ days, with a right answer in a Challenge/Boss/medium-hard step; judged
+  once per attempt. Re-check from 6 days after Learned (3+ answers: ≥80% remembers, <60% slipping). Saved in
+  `questProgress.stats.levels` inside the existing stats write (no extra writes); ≤40 question keys per topic.
+- Server: `functions/triggers/classSummary.js` `onQuestProgressForClass` writes `classSummaries/{classId}.kids.{uid}` (name; per
+  quest: last practice, this week's days/answers/right, one letter per topic level), at most every 5 min per kid unless a level
+  changed; `functions/utils/topicLevels.js` = the server's copy (test checks both agree).
+- Rules: `classSummaries/{classId}` read = teachers of that class + admin; write = nobody (local firestore.rules updated).
+- Not yet: the teacher's topic view and Home/Progress reading the summary (next pieces). Removed kids' entries stay until the
+  view filters by current members.
+- **Deploy request (owner):** `firebase deploy --only functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229`

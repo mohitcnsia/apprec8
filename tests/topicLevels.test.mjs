@@ -55,3 +55,21 @@ assert.ok(big.tenses.seen.length <= 40);
 assert.ok(JSON.stringify(big).length < 1200, "one topic stays under ~1 KB");
 
 console.log("topicLevels tests passed");
+
+// The server's copy (functions/utils/topicLevels.js) gives the same levels, and the class summary entry is small.
+{
+  const { createRequire } = await import("node:module");
+  const require = createRequire(import.meta.url);
+  const server = require("../functions/utils/topicLevels.js");
+  const stats = { bySubtopic: { nouns: { correct: 3, total: 5 }, verbs: { correct: 0, total: 0 } }, levels: { tenses: L.tenses, modals: M.modals, a: R.tenses, b: S.tenses } };
+  assert.deepEqual(server.levelsFromStats(stats), levelsFromStats(stats), "app and server agree");
+  const { _classSummaryForTests: cs } = require("../functions/triggers/classSummary.js");
+  const now = new Date(2026, 10, 11, 12).getTime();
+  const key = (ms) => new Date(ms).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const e = cs.entryOf({ ...stats, lastActiveAt: now, daily: { [key(now)]: { answered: 10, correct: 8 }, [key(now - 2 * DAY)]: { answered: 5, correct: 5 }, [key(now - 9 * DAY)]: { answered: 9, correct: 1 } } }, now);
+  assert.deepEqual(e.week, { days: 2, answered: 15, correct: 13 });
+  assert.deepEqual(e.lv, { nouns: "p", tenses: "l", modals: "p", a: "r", b: "s" });
+  assert.ok(JSON.stringify(e).length < 400, "one kid's entry stays small");
+  assert.ok(cs.sameLevels({ a: "l" }, { a: "l" }) && !cs.sameLevels({ a: "l" }, { a: "p" }));
+  console.log("topicLevels server copy + class summary passed");
+}
