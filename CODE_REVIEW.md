@@ -2609,3 +2609,10 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - Known: a kid could edit their own `stickers` field (rules allow own-doc writes); the class list comes from the server.
 - **Deploy queue (owner), everything not yet deployed today:**
   `firebase deploy --only functions:sendSticker,functions:getClassLeaderboard,functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor,functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229`
+
+## 2026-11-12 — Parents hear when their child is appreciated (Claude; owner: "parents will feel proud")
+- `sendSticker` (Appreciate only): each linked parent of an appreciated kid gets "🌟 <kid> was appreciated · <teacher> appreciated
+  <kid> for great work on <topic>. Tell <kid> you're proud!" (view: family). Nudge / Cheer on stay private. Kids: still no alerts.
+- `sendThrottledPushToUser` moved to `functions/utils/throttledPush.js` (same code; schoolActions.js uses it from there).
+- App: `keepPhoneSaved` now also for parents (accounts with children): asks once, saves the phone via `savePushToken`.
+- **Deploy request (owner):** `firebase deploy --only functions:sendSticker,functions:onStudentJoinRequest,functions:redeemTeacherInvite --project apprec8-ca229`

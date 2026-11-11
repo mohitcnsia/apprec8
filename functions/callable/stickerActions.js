@@ -3,10 +3,12 @@
 //   on the class's "appreciated this week" list (classes/{id}/appreciations/{week}, shown on the class board).
 // - Nudge / Cheer on (private): one kind note on that kid's Home (users/{uid}.nudge); nobody else sees it.
 // Only a teacher of the class (or the app admin) can send, and only to approved kids in that class. No phone alerts
-// (children never get notifications). One appreciation per kid per topic per week; at most 200 kids per teacher per day.
+// (children never get notifications), but on Appreciate each linked parent gets one (owner, 2026-11-12: "parents will feel
+// proud"); nudges stay private. One appreciation per kid per topic per week; at most 200 kids per teacher per day.
 const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
+const { sendThrottledPushToUser } = require("../utils/throttledPush");
 
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
@@ -63,6 +65,7 @@ exports.sendSticker = functions
 
     let sent = 0;
     const names = [];
+    const appreciatedUids = []; // exactly who got a sticker now (for the parents' alert)
     const batch = db.batch();
     const users = kind === "appreciate" && ok.length ? await db.getAll(...ok.map((m) => db.collection("users").doc(m.id))) : [];
     const userData = Object.fromEntries(users.map((u) => [u.id, u.exists ? u.data() : {}]));
@@ -77,6 +80,7 @@ exports.sendSticker = functions
         const list = [...((userData[uid] || {}).stickers || []), sticker].slice(-60); // newest 60 on the kid's doc
         batch.set(userRef, { stickers: list, stickerCount: admin.firestore.FieldValue.increment(1) }, { merge: true });
         names.push(m.data().firstName || "");
+        appreciatedUids.push(uid);
       } else {
         batch.set(userRef, { nudge: { kind, from, topic, classId, at: now, until: now + 3 * DAY } }, { merge: true });
       }
@@ -91,6 +95,25 @@ exports.sendSticker = functions
     }
     if (sent) batch.set(limitRef, { count: limit + sent, at: now }, { merge: true });
     await batch.commit();
+    // Appreciate: the kid's parents hear it, so the praise comes from home too (throttled: one alert per parent per 10 min).
+    if (kind === "appreciate" && sent) {
+      await Promise.all(
+        appreciatedUids.map(async (uid) => {
+          const kid = userData[uid] || {};
+          const kidName = kid.firstName || "Your child";
+          const parents = Array.isArray(kid.parentUids) ? kid.parentUids.slice(0, 4) : [];
+          await Promise.all(
+            parents.map((p) =>
+              sendThrottledPushToUser(
+                p,
+                { title: `🌟 ${kidName} was appreciated`, body: `${from} appreciated ${kidName} for great work${topic ? ` on ${topic}` : ""}. Tell ${kidName} you're proud!` },
+                "family"
+              ).catch(() => {})
+            )
+          );
+        })
+      );
+    }
     return { ok: true, sent, skipped: toUids.length - sent };
   });
 

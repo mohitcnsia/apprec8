@@ -301,8 +301,9 @@ export default function HomeScreen({ navigation }) {
   const profileLoaded = userData != null;
   useEffect(() => {
     if (!uid || !profileLoaded) return undefined;
-    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: isAdmin });
-  }, [uid, profileLoaded, teachesKey, isAdmin]);
+    // Parents too (2026-11-12): they hear when their child is appreciated.
+    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: isAdmin, parent: (userData?.childUids || []).length > 0 && !userData?.isChild });
+  }, [uid, profileLoaded, teachesKey, isAdmin, userData?.childUids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!teachesKey || !uid) {
       setTeacherClasses([]);

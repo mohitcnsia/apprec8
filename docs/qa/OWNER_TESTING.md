@@ -11,6 +11,8 @@ After the deploy + publish. Needs a teacher with kids who have done quizzes sinc
    Only that kid sees it; gone after 3 days or ✕.
 3. **Kid (Appreciate):** Me → MY STICKERS · 1 with a sticker, "From Seema: great work on Tenses!".
 4. **Class board** (Progress → Leaderboard → My class): "🌟 Appreciated this week: Meera, Arjun". One sticker per kid per topic per week.
+5. **Parent:** an alert "🌟 Pratha was appreciated · Seema appreciated Pratha for great work on Tenses. Tell Pratha you're proud!"
+   (the parent opens the app once first, so their phone is saved; Nudge / Cheer on never alert parents).
 
 ## ⭐ Kid's Home: one next thing (11 Nov)
 After the next publish. Accounts with a class that don't teach (a kid; you see it if you don't teach a class).

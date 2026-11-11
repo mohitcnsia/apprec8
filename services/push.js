@@ -62,7 +62,7 @@ export function listenForSummaryTaps(open) {
 }
 
 // ---- Never miss an alert (owner, 2026-11-11) ----
-// 1. Teachers and the owner: this phone's alert address is saved again on every start (written only when it changed,
+// 1. Teachers, parents and the owner: this phone's alert address is saved again on every start (written only when it changed,
 //    or once a week), so a reinstall or a new phone can't silently stop alerts. Children never get alerts.
 // 2. Alerts that arrive while the app is open are shown as a banner (Android shows nothing by itself then).
 
@@ -91,10 +91,10 @@ async function saveToken(uid, token, { owner }) {
   return "saved";
 }
 
-/** Call when Home has the user's profile. `who` = { uid, teacher, owner }. Returns an unsubscribe for token changes. */
+/** Call when Home has the user's profile. `who` = { uid, teacher, owner, parent }. Returns an unsubscribe for token changes. */
 export function keepPhoneSaved(who) {
   const m = messaging();
-  if (!m || !who?.uid || !(who.teacher || who.owner)) return () => {};
+  if (!m || !who?.uid || !(who.teacher || who.owner || who.parent)) return () => {};
   const run = async (token) => {
     try {
       if (!(await allowed(who.uid))) return;
