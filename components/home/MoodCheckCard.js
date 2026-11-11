@@ -11,6 +11,7 @@ import { authInstance } from "../../config/firebaseConfig";
 import { dayNumber } from "../../utils/dailyCard";
 import { MOODS, MESSAGES, HELPLINES, shouldAskMood } from "../../utils/mood";
 import { recordMood } from "../../services/moodApi";
+import Mascot from "../quiz/Mascot";
 
 const key = () => `moodAnswered.v1.${authInstance.currentUser?.uid || "guest"}`;
 
@@ -65,7 +66,7 @@ export default function MoodCheckCard({ createdAt, onCalm }) {
           <View style={styles.faces}>
             {MOODS.map((m) => (
               <Pressable key={m.id} onPress={() => pick(m.id)} accessibilityRole="button" accessibilityLabel={m.label} style={styles.face}>
-                <Text style={styles.emoji}>{m.emoji}</Text>
+                <Mascot mood={m.id} size={40} still />
                 <Text style={styles.faceText}>{m.label}</Text>
               </Pressable>
             ))}

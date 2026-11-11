@@ -6,8 +6,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import functions from "@react-native-firebase/functions";
 import { updatedText } from "../../utils/refreshSlots";
+import Mascot from "../quiz/Mascot";
 
-const MOOD_EMOJI = { happy: "😀", excited: "🤩", okay: "🙂", tired: "😴", sad: "😢" };
 
 export default function OwnerWeekCard({ P, refreshTrigger = 0 }) {
   const s = useMemo(() => makeStyles(P), [P]);
@@ -35,7 +35,6 @@ export default function OwnerWeekCard({ P, refreshTrigger = 0 }) {
 
   const k = d.kids;
   const kidsLine = k.practisedLast ? `${k.practised} kids practised, ${k.practised >= k.practisedLast ? "up" : "down"} from ${k.practisedLast} last week` : `${k.practised} kids practised this week`;
-  const moods = Object.entries(d.mood.counts || {}).map(([m, n]) => `${MOOD_EMOJI[m] || m} ${n}`).join("  ");
 
   return (
     <View style={{ gap: 12 }}>
@@ -87,7 +86,17 @@ export default function OwnerWeekCard({ P, refreshTrigger = 0 }) {
 
       <View style={s.card}>
         <Text style={s.label}>WELL-BEING · TOTALS ONLY</Text>
-        <Text style={s.body}>{d.mood.answered ? `${d.mood.answered} mood taps  ${moods}` : "No mood taps yet this week."}</Text>
+        <Text style={s.body}>{d.mood.answered ? `${d.mood.answered} mood taps` : "No mood taps yet this week."}</Text>
+        {d.mood.answered ? (
+          <View style={s.moods}>
+            {Object.entries(d.mood.counts || {}).map(([m, n]) => (
+              <View key={m} style={s.moodItem} accessibilityLabel={`${m}: ${n}`}>
+                <Mascot mood={m} size={26} still />
+                <Text style={s.body}>{n}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
         {d.mood.flagged ? <Text style={s.soft}>{d.mood.flagged} on the counsellor's list (she sees the names)</Text> : null}
         <Text style={s.soft}>{d.appreciated} appreciations from teachers</Text>
       </View>
@@ -115,5 +124,7 @@ const makeStyles = (P) =>
     q: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
     problem: { gap: 2, paddingVertical: 6, borderTopWidth: 1, borderTopColor: P.border },
     refresh: { minHeight: 40, justifyContent: "center" },
+    moods: { flexDirection: "row", flexWrap: "wrap", gap: 14, alignItems: "center" },
+    moodItem: { flexDirection: "row", alignItems: "center", gap: 4 },
     link: { fontSize: 14, fontFamily: "nunitoBold", color: P.label },
   });
