@@ -2,6 +2,8 @@
 // Per-kid summary for the admin dashboard (CODE_REVIEW: "Admin dashboard v0"). Pure, testable.
 // Stored in users/{uid}/questProgress/{questId}.stats and updated with every attempt save.
 
+import { updateLevels } from "./topicLevels.js";
+
 export const DAYS_KEPT = 14;
 export const WEAK_MIN_ANSWERS = 3;
 export const WEAK_BELOW = 0.6;
@@ -32,7 +34,7 @@ export const dayKey = (ms) => {
 export function updateStats(
   prev = {},
   answers = [],
-  { now = Date.now(), durationMs = 0, questId = null, userName = null, topicFallback = null } = {}
+  { now = Date.now(), durationMs = 0, questId = null, userName = null, topicFallback = null, quizId = null, activity = null, difficulty = null } = {}
 ) {
   const answered = answers.length;
   const correct = answers.filter((a) => a.isCorrect).length;
@@ -75,6 +77,8 @@ export function updateStats(
     bySubtopic,
     daily,
     speed,
+    // Topic levels (New → Practising → Learned → Still remembers / Slipping), saved in this same write.
+    levels: updateLevels(prev.levels, answers, { now, quizId, activity, difficulty, topicFallback, dayKey }),
   };
 }
 

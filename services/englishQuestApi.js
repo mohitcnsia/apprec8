@@ -320,6 +320,9 @@ async function saveStats(p, endedAt) {
       questId: p.questId,
       userName: user.displayName || null,
       topicFallback: p.topicTag || null,
+      quizId: p.quizId || p.nodeId || null, // topic levels: which questions were new to the kid
+      activity: p.activity || null,
+      difficulty: p.difficulty || null,
     });
     latestStats.set(key, next);
     // Days that dropped out of the 14-day window must be deleted (a merge would keep them).
