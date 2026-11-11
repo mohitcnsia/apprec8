@@ -2594,3 +2594,8 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
   teacher", Join a class only when none); Tell us what you think; everything else under **More** (How to use, Guides, idea,
   Reminders, Messages, Look, Join another class, Join as a teacher, link/PIN, Owner extras, Sign out, Delete). Nothing removed.
 - Not yet: stickers (needs the appreciation feature), avatar "Change my look" shop.
+
+## 2026-11-11 — Kid's Home: one next thing (Claude; redesign doc)
+- `utils/nextUp.js` + tests: teacher's topics (overdue first, then earliest due) → today's paper → mistakes → keep going on the
+  last quest; main + two "then" + "+N more". HomeScreen: one card with START (GlowButton) for kids (class set, not teaching);
+  the separate teacher / today / mistakes cards are hidden for kids only. Quest tiles stay below.

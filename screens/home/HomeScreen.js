@@ -39,6 +39,7 @@ import { keepPhoneSaved } from "../../services/push";
 import { scheduleWordReminders } from "../../services/dailyReminder";
 import MoodCheckCard from "../../components/home/MoodCheckCard";
 import ParentTonightCard from "../../components/parent/ParentTonightCard";
+import { nextUp } from "../../utils/nextUp";
 import { myChildren } from "../../services/familyApi";
 import { myMoodList } from "../../services/moodApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -521,6 +522,21 @@ export default function HomeScreen({ navigation }) {
     else openCategory(navigation, q);
   };
   const PRACTICE_NAMES = { IEO: "English", NSO: "Science", IMO: "Maths" }; // old category titles → subject names (no exam labels)
+  // Kid's Home: one next thing (utils/nextUp.js). Kids = accounts with a class; teachers and parents keep their cards.
+  const kidView = userGrade != null && teacherClasses.length === 0;
+  const lastQuest = visibleQuests
+    .filter((q) => Object.keys(progressById[q.questId]?.nodes || {}).length > 0)
+    .sort((a, b) => (progressById[b.questId]?.doc?.stats?.lastActiveAt || 0) - (progressById[a.questId]?.doc?.stats?.lastActiveAt || 0))[0];
+  const continueQuest = lastQuest ? { questId: lastQuest.questId, title: (lastQuest.title || "Quest").replace(/ Quest$/, ""), current: questStats(lastQuest)?.current || null, q: lastQuest } : null;
+  const next = nextUp({ teacherTopics, today, mistakeCount, continueQuest, daysUntil });
+  const [showMoreNext, setShowMoreNext] = useState(false);
+  const openNext = (it) => {
+    if (it.kind === "teacher") return openTopic(it.topic);
+    if (it.kind === "paper") return navigation.navigate("PracticePaper", { grade: userGrade, paperId: it.paper.id });
+    if (it.kind === "mistakes") return openMistakes();
+    if (it.kind === "quest") return openQuest(it.quest.q);
+    return undefined;
+  };
 
   const questTile = (key, title, sub, art, tint, onPress, { stats = null, dim = false, teacher = false } = {}) => (
     <Pressable key={key} style={styles.gridCell} onPress={onPress} disabled={!onPress} accessibilityRole="button" accessibilityLabel={`${title}, ${sub}`}>
@@ -654,8 +670,33 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
+      {/* Kid's Home (redesign 2026-11-11): one big next thing with START, two "then" lines, the rest folded. */}
+      {kidView && next.main ? (
+        <View style={styles.nextCard} accessibilityLabel={`Next: ${next.main.title}`}>
+          <Text style={styles.label}>{next.main.label}</Text>
+          <Text style={styles.nextTitle} numberOfLines={2}>{next.main.title}</Text>
+          <Text style={styles.questSub}>{next.main.sub}</Text>
+          {[...next.then, ...(showMoreNext ? next.rest : [])].length ? (
+            <View style={{ gap: 2, marginTop: 4 }}>
+              {[...next.then, ...(showMoreNext ? next.rest : [])].map((it) => (
+                <Pressable key={it.key} onPress={() => openNext(it)} accessibilityRole="button" accessibilityLabel={`Then: ${it.title}`} style={styles.thenRow}>
+                  <Text style={styles.thenText} numberOfLines={1}>Then: {it.title}</Text>
+                  <Text style={styles.questSub}>›</Text>
+                </Pressable>
+              ))}
+              {next.more && !showMoreNext ? (
+                <Pressable onPress={() => setShowMoreNext(true)} accessibilityRole="button" style={styles.thenRow}>
+                  <Text style={styles.questSub}>+{next.more} more ›</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          ) : null}
+          <GlowButton label="START" onPress={() => openNext(next.main)} styles={styles} />
+        </View>
+      ) : null}
+
       {/* G90 (Seema's decision 5): assigned work is the first thing a kid sees, top priority. */}
-      {teacherTopics.length ? (
+      {!kidView && teacherTopics.length ? (
         <View style={styles.teacherCard}>
           <Text style={styles.label}>FROM YOUR TEACHER</Text>
           {teacherTopics.slice(0, 3).map((t) => (
@@ -670,7 +711,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
-      {today ? (
+      {!kidView && today ? (
         <Pressable
           onPress={() => navigation.navigate("PracticePaper", { grade: userGrade, paperId: today.paper.id })}
           accessibilityRole="button"
@@ -703,7 +744,7 @@ export default function HomeScreen({ navigation }) {
       <HomeIdeaPromptCard userGrade={userGrade} userCreatedAt={userData?.createdAt} />
 
 
-      {mistakeCount > 0 ? (
+      {!kidView && mistakeCount > 0 ? (
         <Pressable onPress={openMistakes} accessibilityRole="button" accessibilityLabel={`My mistakes, ${mistakeCount} to fix`}>
           <View style={styles.mistakes}>
             <View style={styles.mistakesIcon}>
@@ -801,6 +842,10 @@ const makeStyles = (P, insets) =>
     teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
     teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
     todayCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 1, borderColor: P.selectedBorder, gap: 4 },
+    nextCard: { padding: 18, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 6 },
+    nextTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, lineHeight: 30 },
+    thenRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 40 },
+    thenText: { flex: 1, fontSize: 15, fontFamily: "nunitoBold", color: P.text },
     todayTip: { fontSize: 15, fontFamily: "nunitoBold", color: P.text, marginTop: 6, lineHeight: 21 },
     questArtBox: { height: 82, borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 8 },
     tileProgressRow: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 6, marginRight: 34 },

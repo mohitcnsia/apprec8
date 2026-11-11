@@ -3,6 +3,13 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Kid's Home: one next thing (11 Nov)
+After the next publish. Accounts with a class that don't teach (a kid; you see it if you don't teach a class).
+1. **Home:** one big card: FROM YOUR TEACHER (overdue first) → else TODAY'S PRACTICE → else FIX YOUR MISTAKES → else KEEP GOING,
+   with a big **START** at the bottom of the card.
+2. Under it, up to two small "Then: …" lines (tap = open that one) and "+2 more ›".
+3. The separate "From your teacher", "Today's practice" and "mistakes to fix" cards are gone for kids (teachers/parents keep theirs).
+
 ## ⭐ Me, redesigned (11 Nov)
 After the next publish. Every row is something you do; the rest folds under **More**.
 1. **You:** a line under your picture ("Your children, your classes, and help"), then **Decisions for you** + **Admin tools**,
