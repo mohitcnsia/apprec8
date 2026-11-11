@@ -2568,6 +2568,8 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
   quest: last practice, this week's days/answers/right, one letter per topic level), at most every 5 min per kid unless a level
   changed; `functions/utils/topicLevels.js` = the server's copy (test checks both agree).
 - Rules: `classSummaries/{classId}` read = teachers of that class + admin; write = nobody (local firestore.rules updated).
-- Not yet: the teacher's topic view and Home/Progress reading the summary (next pieces). Removed kids' entries stay until the
+- Teacher's topic view (`components/teacher/TopicViewCard.js`, `utils/topicView.js` + tests) on Progress → My classes → a class:
+  reads the one summary doc; topics worst first; tap for names per group. Not yet: common mistake, Nudge / Appreciate.
+- Not yet: Home/Progress for kids and parents reading levels (next pieces). Removed kids' entries stay until the
   view filters by current members.
 - **Deploy request (owner):** `firebase deploy --only functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229`

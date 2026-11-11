@@ -3,6 +3,13 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Topic view for teachers (11 Nov, DR-35)
+After the deploy (functions + rules) + publish. Levels fill in as kids do quizzes from now on (older answers count as Practising).
+1. **Seema (or you as a teacher):** Progress → My classes → open the class → card **TOPICS · WORST FIRST** at the top:
+   "<topic> needs you most: 2 of 30 have learned it", a coloured bar per topic.
+2. Tap a topic → names under Slipping / New / Practising / Learned.
+3. It opens fast: one read for the whole class.
+
 ## ⭐ Mood check + Calm corner (11 Nov, DR-34)
 After the deploy + publish. Your account has a class, so you see the kid's side too.
 1. **Home:** a card "THIS WEEK · How are you feeling?" with 😀 🙂 😢. Tap 🙂 → "Okay days are normal too…" → Thanks. It comes back in 7 days.

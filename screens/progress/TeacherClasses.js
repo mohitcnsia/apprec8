@@ -20,6 +20,7 @@ import JoinRequestCard from "../../components/teacher/JoinRequestCard";
 import { markGuide } from "../../services/guideFacts";
 import { teacherWeek } from "../../utils/weeklySummary";
 import TeacherWeekCard from "../../components/teacher/TeacherWeekCard";
+import TopicViewCard from "../../components/teacher/TopicViewCard";
 import { summarize, accuracy, weakTopics, timeAgo } from "../../utils/kidStats";
 import { bundledQuest } from "../../data/quests";
 import { topicTitle } from "../../data/papers";
@@ -134,6 +135,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
   const [classes, setClasses] = useState(null);
   const [open, setOpen] = useState(null);
   const [rows, setRows] = useState(null);
+  const [approved, setApproved] = useState([]); // kids in the open class (for the topic view)
   const [error, setError] = useState(null);
   const [pending, setPending] = useState([]);
   const [reloadKey, setReloadKey] = useState(0);
@@ -207,6 +209,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
     const forceMembers = force || forceNext.current;
     forceNext.current = false;
     const cacheKey = `${uid}|${open.id}`;
+    setApproved([]); // another class: its own kids only
     if (rowsCache.has(cacheKey)) setRows(rowsCache.get(cacheKey));
     else setRows(null);
     const questIds = questsForTeacher(open, uid);
@@ -215,6 +218,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
         const all = await membersCache.get(cacheKey, () => classMembers(open.id), { force: forceMembers });
         setPending(all.filter((m) => m.status === "pending" || m.status === "unsure"));
         const members = all.filter((m) => m.status === "approved");
+        setApproved(members.map((m) => ({ uid: m.uid, firstName: m.firstName })));
         const out = await Promise.all(
           members.map(async (m) => {
             const perQuest = await Promise.all(
@@ -256,6 +260,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade}</Text>
         </Pressable>
       ))}
+      {/* Topic view (DR-35): one summary document per class, topics worst first. */}
+      {open && approved.length ? <TopicViewCard classId={open.id} members={approved} questIds={questsForTeacher(open, uid)} refreshKey={refreshTrigger} P={P} /> : null}
       {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
       {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} P={P} /> : null}
       {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
