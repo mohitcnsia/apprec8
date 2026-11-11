@@ -32,7 +32,7 @@ async function sendThrottledPushToUser(uid, message, view) {
   const throttle = canSendPush(rateData.lastPushedAt, now, TEN_MINUTES_MS);
 
   if (!throttle.allowed) {
-    await rateLimitRef.set({ pendingCount: (rateData.pendingCount || 1) + 1 }, { merge: true });
+    await rateLimitRef.set({ pendingCount: (Number(rateData.pendingCount) || 0) + 1 }, { merge: true });
     return;
   }
 
@@ -53,14 +53,26 @@ async function sendThrottledPushToUser(uid, message, view) {
     return;
   }
 
+  // Alerts held back by the 10-minute limit are not lost: the next one says how many more are waiting (owner,
+  // 2026-11-11: "we can't miss alerts ever"). Everything waiting also shows on Home → Needs you.
+  const held = Number(rateData.pendingCount) || 0;
+  const body = held > 0 ? `${message.body} (+${held} more waiting)` : message.body;
   try {
     const res = await admin.messaging().sendEachForMulticast({
       tokens,
-      notification: { title: message.title, body: message.body },
+      notification: { title: message.title, body },
       data: { view: view || "home" },
       android: { priority: "high" }, // "normal" can sit for hours on an idle phone (owner, 2026-11-10)
     });
     console.log(`push ${view}: sent ${res.successCount}/${tokens.length} to ${uid.slice(0, 6)}…`);
+    // Drop phones Google says are gone (reinstalled app, old phone), so they don't hide a working one.
+    const dead = [];
+    res.responses.forEach((r, i) => {
+      if (!r.success && /registration-token-not-registered|invalid-registration-token/.test(r.error?.code || "")) dead.push(tokens[i]);
+    });
+    if (dead.length && userDoc.exists && Array.isArray(userDoc.data().pushTokens)) {
+      await db.collection("users").doc(uid).set({ pushTokens: userDoc.data().pushTokens.filter((t) => !dead.includes(t)) }, { merge: true });
+    }
     await rateLimitRef.set({ lastPushedAt: now, pendingCount: 0 }, { merge: true });
   } catch (err) {
     console.warn("FCM multicast failed:", err);

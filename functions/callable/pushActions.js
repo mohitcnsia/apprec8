@@ -13,6 +13,7 @@ const db = admin.firestore();
 const QUESTS = ["english-quest", "science-quest", "word-power", "word-bank"];
 const pushRuntime = { memory: "256MB", timeoutSeconds: 300, maxInstances: 1 };
 const ROLES = ["parent", "teacher"];
+const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3"; // same as schoolActions.js
 
 exports.savePushSettings = functions
   .region(region)
@@ -33,6 +34,32 @@ exports.savePushSettings = functions
     const token = String(data.token || "");
     if (token.length < 20 || token.length > 4096) throw new functions.https.HttpsError("invalid-argument", "Bad device token.");
     await ref.set({ pushOptIn: { [role]: true }, pushTokens: mergeTokens(d.pushTokens, token), pushLang: data.lang === "hi" ? "hi" : "en" }, { merge: true });
+    return { ok: true };
+  });
+
+/**
+ * savePushToken (owner, 2026-11-11: "we can't miss alerts ever"): saves this phone for alerts that need an adult now
+ * (a child waiting to join, a teacher waiting). Called by the app on every start, only when the phone's address changed.
+ * Adults only: refused for child profiles and for kids with a class, unless they teach a class or are the app admin.
+ * Does not touch the weekly summary switch (savePushSettings).
+ */
+exports.savePushToken = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const uid = context.auth.uid;
+    const token = String(data?.token || "");
+    if (token.length < 20 || token.length > 4096) throw new functions.https.HttpsError("invalid-argument", "Bad device token.");
+    const ref = db.collection("users").doc(uid);
+    const me = await ref.get();
+    const d = me.exists ? me.data() : {};
+    const teaches = Array.isArray(d.teachesClassIds) && d.teachesClassIds.length > 0;
+    const owner = uid === OWNER_UID || (await db.collection("roles").doc(uid).get()).data()?.admin === true;
+    if (d.isChild || (Number.isInteger(d.grade) && !teaches && !owner)) {
+      throw new functions.https.HttpsError("permission-denied", "Alerts are for adults.");
+    }
+    await ref.set({ pushTokens: mergeTokens(d.pushTokens, token) }, { merge: true });
     return { ok: true };
   });
 

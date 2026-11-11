@@ -2527,3 +2527,17 @@ Seema confirms it when approving.
 - `components/home/DailyWordFactCard.js` on Home under Today's practice: 🔊 Hear (expo-speech), "I knew it / New for me", ✕ until tomorrow.
   Taps and "new" words stay on the phone (AsyncStorage, per account). 0 database reads, no server change. JS only (OTA).
 - Left for later: star for opening (needs a callable), My words in Me (Me redesign), 5 pm alert (needs expo-notifications, next build).
+
+## 2026-11-11 — DR-33: never miss an alert (Claude; owner: "Banner would be good. We can't miss alerts ever")
+Found: teachers' phones were saved for alerts only if they turned on the weekly summary (Seema may get no "waiting to join"
+alerts); the owner's phone could only be saved by a button that hides after the first tap; alerts inside the 10-minute limit
+were dropped; alerts that arrive while the app is open were never shown.
+- Server: new callable `savePushToken` (adults only: refused for child profiles and kids with a class unless they teach or are
+  the app admin; doesn't touch the weekly switch). `sendThrottledPushToUser`: held-back alerts are counted into the next one
+  ("+2 more waiting"), dead phones are removed.
+- App (OTA): `keepPhoneSaved` (services/push.js) from Home for teachers + the owner on every start; writes only when the
+  phone's address changed or once a week; asks for notification permission once; follows token refreshes.
+  `AlertBanner` (components/common/AlertBanner.js): alerts while the app is open show at the top for 8 s, tap = same screen.
+- Cost: one small write per teacher per week (or on a new phone); FCM is free.
+- **Deploy request (Gemini or owner):** `firebase deploy --only functions:savePushToken,functions:onStudentJoinRequest,functions:redeemTeacherInvite --project apprec8-ca229`.
+  The app part works before the deploy for the owner's Decisions phone; teachers' saving starts after it.

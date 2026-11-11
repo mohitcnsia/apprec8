@@ -28,6 +28,7 @@ import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
 import { listenForSummaryTaps } from "./services/push";
+import AlertBanner from "./components/common/AlertBanner";
 import { navigateTo } from "./navigation/navRef";
 
 const MIN_LOADER_DISPLAY_TIME = 3000;
@@ -46,6 +47,14 @@ const ThemedStatusBar = () => {
     />
   );
 };
+
+// Where an alert opens (phone notification tap or the in-app banner). "decisions" = the owner's Decisions inbox;
+// "home" / missing = Home (Needs you); anything else = that Progress view ("family", "classes", "schools").
+function openAlertView(view) {
+  if (view === "decisions") return navigateTo("Profile", { screen: "Decisions" });
+  if (!view || view === "home") return navigateTo("Apprec8");
+  return navigateTo("Stats", { screen: "ProgressScreen", params: { view } });
+}
 
 const AppContent = () => {
   const { theme, isDark, isThemeLoaded } = useTheme();
@@ -143,13 +152,7 @@ const AppContent = () => {
 
   // Weekly summary notifications (20.0.30+): a tap opens Progress on the right view. No-op on older builds.
   // "decisions" = the owner's Decisions inbox (scripts/admin/decisions.mjs).
-  useEffect(
-    () =>
-      listenForSummaryTaps((view) =>
-        setTimeout(() => (view === "decisions" ? navigateTo("Profile", { screen: "Decisions" }) : navigateTo("Stats", { screen: "ProgressScreen", params: { view } })), 300)
-      ),
-    []
-  );
+  useEffect(() => listenForSummaryTaps((view) => setTimeout(() => openAlertView(view), 300)), []);
 
   useEffect(() => {
     if (fontError) console.error("Font Loading Error:", fontError);
@@ -238,6 +241,7 @@ const AppContent = () => {
       <GuideStrip />
       {updateReady ? <UpdateReadyBanner onPress={reloadNow} /> : null}
       <AppDialogHost />
+      <AlertBanner onOpen={openAlertView} />
      </FreeTextContext.Provider>
     </PaperProvider>
   );

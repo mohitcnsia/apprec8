@@ -35,6 +35,7 @@ import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import DailyWordFactCard from "../../components/home/DailyWordFactCard";
+import { keepPhoneSaved } from "../../services/push";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
 import { computeNeedsYou } from "../../utils/needsYou";
@@ -288,6 +289,12 @@ export default function HomeScreen({ navigation }) {
   }, [isAdmin, uid, navigation]);
 
   const teachesKey = (userData?.teachesClassIds || []).join(",");
+  // Never miss an alert (owner, 2026-11-11): teachers and the owner get this phone saved for alerts on every start.
+  const profileLoaded = userData != null;
+  useEffect(() => {
+    if (!uid || !profileLoaded) return undefined;
+    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: isAdmin });
+  }, [uid, profileLoaded, teachesKey, isAdmin]);
   useEffect(() => {
     if (!teachesKey || !uid) {
       setTeacherClasses([]);
