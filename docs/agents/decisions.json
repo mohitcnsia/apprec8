@@ -752,5 +752,12 @@
     "ask": "C: Me → More → Delete my account. A: Test Riya → remove. Tell Claude anything that felt confusing. Each test below is also a card in Me → Decisions: YES = it works · NO = something broke (say which step, voice typing is fine) · MORE DETAILS · LATER. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
     "from": "claude"
+  },
+  {
+    "id": "signin-parent-code",
+    "title": "Sign-in screen still shows 'Code from my parent'",
+    "ask": "The first screen offers CONTINUE WITH GOOGLE, 'Use email instead' and 'Code from my parent' (the old child login code). The sign-up doc says the codes go away, and students may tap the wrong one. My view: fold 'Code from my parent' into the 'Use email instead' screen (still there for families who use it, no one locked out). YES = fold it · NO = keep as is · MORE DETAILS.",
+    "details": "Found while testing on the emulator overnight (12 Nov). Students should use Continue with Google.",
+    "from": "claude"
   }
 ]
