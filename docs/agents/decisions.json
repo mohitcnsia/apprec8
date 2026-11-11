@@ -614,5 +614,26 @@
     "ask": "Kids' notes (Tell us what you think, report notes, Chamku asks) are read only when you check in with me; a worrying note could sit for days. Fix: one daily list, Seema reads her class, you the rest, within 24 h; Seema shapes the rules. YES = I draft the routine with Seema's input, then a mockup of the daily list.",
     "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P4). Safeguarding plan B4 moves before the pilot.",
     "from": "claude"
+  },
+  {
+    "id": "test-student-join",
+    "title": "Test: a student joins Seema's class from the link",
+    "ask": "On your second phone: brand-new Google account (15-year-old birthday) → join the testers group → install → Seema shares her class link → tap it → roll number + parent's mobile → ASK TO JOIN → Seema approves. YES = it worked. NO = it broke: say at which step (voice typing is fine).",
+    "details": "Full steps: My notes → Testing → \"Seema's Class 10\". Known risk: Google's age check at \"Become a tester\". Delete the test account afterwards (Me → Delete my account).",
+    "from": "claude"
+  },
+  {
+    "id": "test-parent-link",
+    "title": "Test: a parent joins a child from the class link",
+    "ask": "Seema shares the class link to you → tap it on your phone → OPEN APPREC8 → + Another child (\"Test Riya\", roll 23, your mobile) → JOIN → Seema's card shows Call / WhatsApp → she approves. YES = it worked. NO = say at which step.",
+    "details": "Full steps: My notes → Testing → \"sign-up without codes, stage 1\". Delete Test Riya afterwards.",
+    "from": "claude"
+  },
+  {
+    "id": "test-word-card",
+    "title": "Test: word and fact of the day (after the next publish)",
+    "ask": "After I publish and you restart the app: Home → under Today's practice, WORD OF THE DAY. Tap Hear, tap New for me, tap ✕ (gone until tomorrow; tomorrow a new word). YES = all fine. NO = say what looked wrong. LATER if not published yet.",
+    "details": "Class 3–5 see a Science fact, Class 6–10 a Space fact, Class 1–2 the word only. Steps: My notes → Testing.",
+    "from": "claude"
   }
 ]

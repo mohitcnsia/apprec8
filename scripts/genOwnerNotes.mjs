@@ -8,14 +8,9 @@ import { redactEmails } from "../utils/ownerNotes.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const NOTES = [
-  { id: "launch", title: "Launch checklist", file: "docs/LAUNCH_CHECKLIST.md" },
-  { id: "love", title: "Why they'll love it", file: "docs/PRODUCT_LOVE_PLAN.md" },
+  // Owner, 2026-11-11: only what he uses on the phone. Tests are Decisions cards (YES / NO / MORE DETAILS / LATER).
+  { id: "launch", title: "Where we are", file: "docs/LAUNCH_CHECKLIST.md" },
   { id: "testing", title: "Testing", file: "docs/qa/OWNER_TESTING.md" },
-  { id: "store", title: "Store listing", file: "docs/release/STORE_LISTING.md" },
-  { id: "map", title: "App map", file: "docs/APP_MAP.md" },
-  { id: "play", title: "Play forms", file: "docs/release/PLAY_FORMS_STEPS.md" },
-  { id: "practice", title: "Master the app", file: "docs/release/OWNER_PRACTICE.md" },
-  { id: "pilot", title: "Seema's pilot", file: "docs/release/PILOT_KIT.md" },
 ];
 const updated = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 const notes = NOTES.map(({ id, title, file }) => ({ id, title, md: redactEmails(readFileSync(join(root, file), "utf8")) }));

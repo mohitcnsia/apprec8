@@ -68,6 +68,8 @@ the owner; G14/G11 parked).
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
   reporting. Star for opening the card and "My words" in Me: later, only if they prove useful (owner unsure of value).
+- **Sunday word quest (owner 2026-11-11, later):** a Sunday card that quizzes the week's 6 words (and facts) to see how much
+  the kid remembers; "New for me" words come back first. Bundled, taps only.
 - **Parent learning quest (owner 2026-11-11: "an educated, aware parent is a bigger value for the kid"):** a "For
   parents" tile quest (reuse the tile-quest system: Learn cards + 3 tap questions, shown to the parent role; content-only
   once it exists), English + Hindi with read-aloud, 1-minute cards, one a week. Topics: body safety (taught as "safe and
