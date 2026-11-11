@@ -36,6 +36,7 @@ import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import DailyWordFactCard from "../../components/home/DailyWordFactCard";
 import { keepPhoneSaved } from "../../services/push";
+import { scheduleWordReminders } from "../../services/dailyReminder";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
 import { computeNeedsYou } from "../../utils/needsYou";
@@ -387,6 +388,10 @@ export default function HomeScreen({ navigation }) {
     userData?.firstName?.trim() || authInstance.currentUser?.displayName?.trim()?.split(" ")[0] || null;
   const stars = userData?.stats?.totalStars || 0;
   const userGrade = Number.isInteger(userData?.grade) ? userData.grade : null;
+  // Word-of-the-day reminder at 5 pm, set again on every open (build 20.0.31+; kids with a class only).
+  useEffect(() => {
+    if (userGrade != null) scheduleWordReminders(userGrade);
+  }, [userGrade]);
 
   // Filter out quests that have no topics for the child's class (G79). The owner and testers (Owner extras on) see every quest.
   const visibleQuests = useMemo(() => {

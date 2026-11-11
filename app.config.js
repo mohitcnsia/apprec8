@@ -44,7 +44,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 30; // 20.0.30: weekly summary notifications (parents, teachers), unused permissions removed
+  const patchVersion = 31; // 20.0.31: word-of-the-day reminder at 5 pm (expo-notifications), crash reporting (Crashlytics)
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =

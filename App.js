@@ -5,6 +5,9 @@ import { V2Provider } from "./context/V2Context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppContent from "./AppContent"; // Import the new AppContent component
 import { navRef } from "./navigation/navRef";
+import { startCrashReports } from "./services/crashReports";
+
+startCrashReports(); // build 20.0.31+: crashes and uncaught errors reach Firebase Crashlytics
 
 export default function App() {
   // Wrap the main application content with the ThemeProvider

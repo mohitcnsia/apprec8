@@ -92,8 +92,8 @@ android {
         applicationId 'com.mohitchilkoti.apprec8'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 36
-        versionCode 20003000
-        versionName "20.0.30"
+        versionCode 20003100
+        versionName "20.0.31"
     }
     flavorDimensions "version"
     productFlavors {
@@ -187,3 +187,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics' // crash reporting (owner, 2026-11-11)
