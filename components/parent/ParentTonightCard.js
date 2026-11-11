@@ -30,6 +30,7 @@ export default function ParentTonightCard({ child, P }) {
   const [quests, setQuests] = useState(() => (mine.every((m) => peekProgress(child.uid, m.QUEST_ID) !== undefined) ? mine.map((m) => shape(m, peekProgress(child.uid, m.QUEST_ID))) : null));
   const [saved, setSaved] = useState(undefined);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [justDone, setJustDone] = useState(false); // the thank-you shows once, then the card is gone until tomorrow
   const today = dayNumber();
 
   useFocusEffect(
@@ -47,6 +48,11 @@ export default function ParentTonightCard({ child, P }) {
       .catch(() => setSaved({}));
   }, [today]);
 
+  useEffect(() => {
+    if (!justDone) return undefined;
+    const t = setTimeout(() => setJustDone(false), 6000); // thank-you for 6 s, then the card leaves Home for today
+    return () => clearTimeout(t);
+  }, [justDone]);
   const questions = useMemo(() => (quests ? talkQuestions(quests, 5) : []), [quests]);
   if (!quests || saved === undefined) return null;
 
@@ -59,6 +65,8 @@ export default function ParentTonightCard({ child, P }) {
   const prog = tonightProgress(saved, today, child.uid, questions);
   const strong = questions.find((q) => q.kind === "strong")?.topic || null;
   const current = typeof prog.step === "number" ? questions[prog.step] : null;
+  // Owner, 2026-11-11: once tonight is done, the card goes away for the day (back tomorrow with new questions).
+  if (prog.step === "done" && !justDone) return null;
 
   return (
     <View style={s.card} accessibilityLabel={`${name} tonight`}>
@@ -100,7 +108,7 @@ export default function ParentTonightCard({ child, P }) {
           <Text style={s.label}>NOW, ONE KIND WORD</Text>
           <Text style={s.q}>Tell {name} one thing they did well today.</Text>
           <Text style={s.answer}>{praiseLine(name, strong)}</Text>
-          <Pressable onPress={() => persist(recordPraise(saved, today, child.uid))} accessibilityRole="button" style={[s.btn, s.btnMain]}>
+          <Pressable onPress={() => (setJustDone(true), persist(recordPraise(saved, today, child.uid)))} accessibilityRole="button" style={[s.btn, s.btnMain]}>
             <Text style={[s.btnText, s.btnTextMain]}>I praised {name}</Text>
           </Pressable>
         </>

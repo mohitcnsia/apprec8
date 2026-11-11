@@ -7,7 +7,7 @@ Each test below is also a card in **Me → Decisions**: **YES** = it works · **
 After the next publish. Needs an account with a linked child (you: Pratha).
 1. **Home:** a card per child, e.g. "Pratha · Practised today ✓ / Not yet today", "3 of 7 days this week".
 2. **TONIGHT · ASK PRATHA · 1 OF 5:** a question she practised. Ask her; tap **See answer** to check; tap **Right ✓** or **Needs help** → next.
-3. After 5: "Tell Pratha one thing they did well today." with a ready line → **I praised Pratha** → "Thank you!…".
+3. After 5: "Tell Pratha one thing they did well today." with a ready line → **I praised Pratha** → "Thank you!…" for a few seconds, then the card leaves Home for today.
 4. Tomorrow it starts again with new questions.
 
 ## ⭐ Topic view for teachers (11 Nov, DR-35)
