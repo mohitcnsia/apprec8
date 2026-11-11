@@ -17,10 +17,17 @@ export function daysThisWeek(quests = [], now = Date.now()) {
   return n;
 }
 
-/** The ready praise line, from the child's strongest topic (or effort when there's none). */
-export function praiseLine(name, strongTopic = null) {
-  const who = name || "your child";
-  return strongTopic ? `"You really know ${strongTopic}! I'm proud of how hard you practise."` : `"I'm proud of you for practising, ${who}. Keep going!"`;
+/**
+ * The ready praise line, matched to how tonight went (owner, 2026-11-11: never the same words for 0 right as for 5).
+ * Praises effort when answers were hard; names the strong topic only if the child got it right tonight.
+ * @param {object} t - { right, total, strongTopic, strongRight }
+ */
+export function praiseLine(name, { right = 0, total = 0, strongTopic = null, strongRight = false } = {}) {
+  const topic = strongTopic && strongRight ? ` You really know ${strongTopic}.` : "";
+  if (!total) return `"I'm proud of you for practising today. Keep going!"`;
+  if (right / total >= 0.8) return `"You knew almost all of them!${topic} I'm proud of you."`;
+  if (right > 0) return `"You got ${right} right, and you kept trying on the hard ones. That's how you get better."`;
+  return `"These were hard, and you didn't give up. Let's practise them together tomorrow."`;
 }
 
 /** Saved taps on this phone: { [day]: { [childUid]: { answers: { [qKey]: "right"|"help" }, praised, done } } }, last 7 days. */

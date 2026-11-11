@@ -63,7 +63,8 @@ export default function ParentTonightCard({ child, P }) {
   const did = practisedToday(quests);
   const days = daysThisWeek(quests);
   const prog = tonightProgress(saved, today, child.uid, questions);
-  const strong = questions.find((q) => q.kind === "strong")?.topic || null;
+  const strongQ = questions.find((q) => q.kind === "strong") || null;
+  const strongRight = !!strongQ && saved?.[today]?.[child.uid]?.answers?.[strongQ.key] === "right";
   const current = typeof prog.step === "number" ? questions[prog.step] : null;
   // Owner, 2026-11-11: once tonight is done, the card goes away for the day (back tomorrow with new questions).
   if (prog.step === "done" && !justDone) return null;
@@ -107,7 +108,7 @@ export default function ParentTonightCard({ child, P }) {
         <>
           <Text style={s.label}>NOW, ONE KIND WORD</Text>
           <Text style={s.q}>Tell {name} one thing they did well today.</Text>
-          <Text style={s.answer}>{praiseLine(name, strong)}</Text>
+          <Text style={s.answer}>{praiseLine(name, { right: prog.right, total: questions.length, strongTopic: strongQ?.topic || null, strongRight })}</Text>
           <Pressable onPress={() => (setJustDone(true), persist(recordPraise(saved, today, child.uid)))} accessibilityRole="button" style={[s.btn, s.btnMain]}>
             <Text style={[s.btnText, s.btnTextMain]}>I praised {name}</Text>
           </Pressable>
