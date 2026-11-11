@@ -9,6 +9,7 @@ import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "rea
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Constants from "expo-constants";
+import * as Updates from "expo-updates";
 import firestore from "@react-native-firebase/firestore";
 
 import { useTheme } from "../../context/ThemeContext";
@@ -118,6 +119,9 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const photo = userData?.photoURL || auth?.photoURL || null;
   const activeReminders = tasks.filter((t) => t.userId === uid && !t.completed).length;
   const version = Constants.expoConfig?.version || "";
+  // Which over-the-air update this phone runs (owner, 2026-11-11: "is my phone up to date?"): first 8 characters of
+  // the update id, as in the EAS update list; "built-in" = the Play Store version with no update yet.
+  const updateCode = Updates.updateId ? Updates.updateId.slice(0, 8) : "built-in";
 
   const editProfile = () =>
     navigation.navigate("EditProfile", {
@@ -343,7 +347,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
       ) : null}
 
       <Text style={styles.version}>
-        Apprec8 {version} · © {new Date().getFullYear()} Apprec8
+        Apprec8 {version} · update {updateCode} · © {new Date().getFullYear()} Apprec8
       </Text>
 
       <ConfirmationModal
