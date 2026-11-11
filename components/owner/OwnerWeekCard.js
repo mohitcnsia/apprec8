@@ -61,7 +61,7 @@ export default function OwnerWeekCard({ P, refreshTrigger = 0 }) {
           {d.topics.remembersNow} still remembered a week later · {d.topics.slippingNow} slipping
         </Text>
         <Text style={s.soft}>
-          {d.answers.answered} answers{d.answers.accuracy !== null ? `, ${d.answers.accuracy}% right` : ""}
+          {d.answers.answered} answers{d.answers.accuracy !== null ? ` · ${d.answers.accuracy}% accuracy` : ""}
         </Text>
       </View>
 
