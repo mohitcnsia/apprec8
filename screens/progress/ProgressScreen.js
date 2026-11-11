@@ -1,6 +1,6 @@
 // screens/progress/ProgressScreen.js
 // Progress tab (owner-approved mockups "D · Progress" and "E · admin view", 2026-11-04).
-// Kid: streak week, stars / this week / % right, quest progress, "Work on these", "Great at", leaderboard.
+// Kid (redesign 2026-11-11): a cheer + week strip, the near goal on the class board, Needs practice / Learned / Doing well.
 // Admin also gets Me · Kids (the old Dashboard, embedded: Kids + Reported).
 // English Quest numbers come from the kid's progress doc; topic names and topic counts come from
 // the quest content bundled in the app (no extra Firestore reads).
@@ -23,6 +23,8 @@ import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
+import { encouragement, nearGoal, topicLists } from "../../utils/kidProgress";
+import functions from "@react-native-firebase/functions";
 import { isTileVisible } from "../../utils/courseVisibility";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
 import TeacherClasses from "./TeacherClasses";
@@ -131,6 +133,30 @@ export default function ProgressScreen({ navigation, route }) {
   );
   const weak = perQuest.flatMap((q) => q.weak).sort((a, b) => a.percent - b.percent).slice(0, 3);
   const great = perQuest.flatMap((q) => q.great).sort((a, b) => b.percent - a.percent).slice(0, 3);
+
+  // Redesign: cheer, near goal, topic lists (utils/kidProgress.js).
+  const cheer = encouragement({ daily, grade, streak });
+  const lists = useMemo(
+    () => topicLists(quests.filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade)).map((m) => ({ questId: m.QUEST_ID, stats: statsOf(m.QUEST_ID), namer: topicNamer(m.nodes) }))),
+    [quests, progressById, grade, isAdmin, extras] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const [showAllNeeds, setShowAllNeeds] = useState(false);
+  const myClassId = (userData?.classIds || [])[0] || null;
+  const [goal, setGoal] = useState(null);
+  const goalAt = useRef(0);
+  useEffect(() => {
+    if (!myClassId || !uid) return setGoal(null);
+    const load = () => {
+      if (Date.now() - goalAt.current < 10 * 60 * 1000) return; // the server recomputes the board hourly
+      goalAt.current = Date.now();
+      functions()
+        .httpsCallable("getClassLeaderboard")({ classId: myClassId })
+        .then((r) => setGoal(nearGoal(r.data?.rows || [], uid)))
+        .catch(() => setGoal(null));
+    };
+    load();
+    return navigation.addListener("focus", load);
+  }, [myClassId, uid, navigation]);
 
   const openQuestMap = (questId) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId } });
   // "Work on these" → Practise: straight into practice on that topic (owner: the map alone didn't say what to do).
@@ -245,12 +271,13 @@ export default function ProgressScreen({ navigation, route }) {
       {title}
       {segment}
 
-      {/* Streak + this week */}
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <FlameIcon />
-          <Text style={styles.cardTitle}>{streak === 1 ? "1-day streak" : `${streak}-day streak`}</Text>
-        </View>
+      {/* Redesign (owner OK 2026-11-11): encouragement first, the near goal, then topics by level. No quest list. */}
+      <View style={[styles.card, styles.cheerCard]}>
+        <Text style={styles.cheer}>{cheer.headline}</Text>
+        {cheer.line ? <Text style={styles.soft}>{cheer.line}</Text> : null}
+        <Text style={styles.soft}>
+          ⭐ {stars} stars · 🔥 {streak === 1 ? "1-day streak" : `${streak}-day streak`}
+        </Text>
         <View style={styles.weekRow}>
           {week.map((d) => (
             <View key={d.key} style={{ alignItems: "center", gap: 4 }}>
@@ -270,82 +297,61 @@ export default function ProgressScreen({ navigation, route }) {
         </View>
       </View>
 
-      <View style={styles.tiles}>
-        {[
-          ["STARS", String(stars)],
-          ["THIS WEEK", `${thisWeek.answered} Qs`],
-          ["RIGHT", right === null ? "—" : `${right}%`],
-        ].map(([label, value]) => (
-          <View key={label} style={styles.tile}>
-            <Text style={styles.tileLabel}>{label}</Text>
-            <Text style={styles.tileValue}>{value}</Text>
+      {/* The near goal on the class board (never the gap); the whole board one tap away. */}
+      <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
+        <View style={[styles.card, styles.row]}>
+          <TrophyIcon color={P.label} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>{goal || "Leaderboard"}</Text>
+            <Text style={styles.soft}>{myClassId ? "Your class this week · starts fresh every Monday" : "See how you rank"}</Text>
           </View>
-        ))}
-      </View>
+          <Text style={styles.link}>See ›</Text>
+        </View>
+      </Pressable>
 
-      {/* Quests */}
-      <Text style={styles.section}>Quests</Text>
-      {perQuest.map((q) => (
-        <Pressable key={q.questId} onPress={() => openQuestMap(q.questId)} accessibilityRole="button">
-          <View style={styles.card}>
-            <View style={styles.rowBetween}>
-              <Text style={styles.cardTitle}>
-                {q.title}
-                {q.summary?.unitOrder !== null && q.summary?.unitOrder !== undefined ? ` · Unit ${q.summary.unitOrder}` : ""}
-                {q.draft ? " (draft)" : ""}
-              </Text>
-              {q.summary ? <Text style={styles.soft}>{q.summary.cleared} / {q.summary.total} topics</Text> : null}
-            </View>
-            {q.summary ? <Bar percent={q.summary.total ? (q.summary.cleared / q.summary.total) * 100 : 0} P={P} /> : null}
-            {q.summary?.current ? <Text style={styles.soft}>Now: {q.summary.current}</Text> : null}
-          </View>
-        </Pressable>
-      ))}
-
-      {/* Work on these */}
-      {weak.length > 0 ? (
+      {lists.needs.length > 0 ? (
         <>
-          <Text style={styles.section}>Work on these</Text>
-          {weak.map((t) => (
+          <Text style={styles.section}>Needs practice</Text>
+          {(showAllNeeds ? lists.needs : lists.needs.slice(0, 4)).map((t) => (
             <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
-              <View style={{ flex: 1, gap: 6 }}>
+              <View style={{ flex: 1, gap: 4 }}>
                 <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
-                <Bar percent={t.percent} P={P} color={P.wrongBorder} />
-                <Text style={styles.soft}>{t.percent}% right · {t.total} answers</Text>
+                <Text style={styles.soft}>{t.level === "slipping" ? "You knew this. A quick practice brings it back." : "Keep going, you're getting there."}</Text>
               </View>
               <Pressable onPress={() => practiseTopic(t)} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${t.name}`}>
                 <Text style={styles.smallButtonText}>Practise</Text>
               </Pressable>
             </View>
           ))}
+          {lists.needs.length > 4 ? (
+            <Pressable onPress={() => setShowAllNeeds(!showAllNeeds)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
+              <Text style={styles.link}>{showAllNeeds ? "Show fewer" : `+${lists.needs.length - 4} more ›`}</Text>
+            </Pressable>
+          ) : null}
         </>
       ) : null}
 
-      {great.length > 0 ? (
+      {lists.learned.length > 0 ? (
         <View style={[styles.card, styles.greatCard]}>
-          <Text style={styles.greatText}>
-            ⭐ Great at: {great.map((t) => `${t.name} (${t.percent}%)`).join(", ")}
-          </Text>
+          <Text style={styles.greatTitle}>Learned ✓</Text>
+          <Text style={styles.greatText}>{lists.learned.map((t) => (t.level === "remembers" ? `⭐ ${t.name}` : t.name)).join(" · ")}</Text>
+          {lists.learned.some((t) => t.level === "remembers") ? <Text style={styles.soft}>⭐ = you still remembered it a week later</Text> : null}
+        </View>
+      ) : null}
+
+      {lists.doingWell.length > 0 ? (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Doing well</Text>
+          <Text style={styles.soft}>{lists.doingWell.map((t) => t.name).join(" · ")}</Text>
+          <Text style={styles.soft}>A few more new questions on different days and these become Learned.</Text>
         </View>
       ) : null}
 
       {(stats.answered || 0) === 0 ? (
         <View style={styles.card}>
-          <Text style={styles.soft}>Play a quest to see your strong and tricky topics here.</Text>
+          <Text style={styles.soft}>Play a quest to see what you've learned and what to practise next.</Text>
         </View>
       ) : null}
-
-      {/* Leaderboard: My class (this week + claps) and Everyone, in one screen (mockup M1) */}
-      <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
-        <View style={[styles.card, styles.row]}>
-          <TrophyIcon color={P.label} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>Leaderboard</Text>
-            <Text style={styles.soft}>{(userData?.classIds || [])[0] ? "My class this week, claps and everyone" : "See how you rank"}</Text>
-          </View>
-          <Text style={styles.link}>See ›</Text>
-        </View>
-      </Pressable>
     </ScrollView>
   );
 }
@@ -378,6 +384,9 @@ const makeStyles = (P, insets) =>
     smallButton: { paddingHorizontal: 14, height: 40, borderRadius: 14, backgroundColor: P.primary, alignItems: "center", justifyContent: "center", borderBottomWidth: 3, borderBottomColor: P.primaryShadow },
     smallButtonText: { color: P.onPrimary, fontSize: 15, fontFamily: "nunitoBold" },
     greatCard: { backgroundColor: P.correctBg, borderColor: P.correctBorder },
+    greatTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.correctText },
+    cheerCard: { borderColor: P.selectedBorder },
+    cheer: { fontSize: 20, fontFamily: "nunitoBold", color: P.text, lineHeight: 26 },
     greatText: { fontSize: 15, fontFamily: "nunitoBold", color: P.correctText },
     bigButton: { height: 54, borderRadius: 16, backgroundColor: P.primary, alignItems: "center", justifyContent: "center", borderBottomWidth: 4, borderBottomColor: P.primaryShadow },
     bigButtonText: { color: P.onPrimary, fontSize: 18, fontFamily: "nunitoBold", letterSpacing: 1 },

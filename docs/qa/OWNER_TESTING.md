@@ -3,6 +3,14 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Kid's Progress, redesigned (11 Nov)
+After the next publish. Progress → Me (your account has a class, so you see the kid's side).
+1. **Top:** a cheer, e.g. "12 more right than last week! 🎉" or "3 days in a row. Keep it going!", then "78% accuracy this week"
+   (Class 5 and below: "45 right this week"), stars + streak, the week's dots. A worse week is never pointed out.
+2. **Near goal:** "3 more right answers to pass Aman this week" (kids in a class) → See › opens the leaderboard.
+3. **Needs practice:** slipping topics first ("You knew this. A quick practice brings it back."), each with **Practise**.
+4. **Learned ✓** (⭐ = still remembered a week later) and **Doing well**. The quest list and the 3 number tiles are gone.
+
 ## ⭐ Parent's Home: tonight with each child (11 Nov)
 After the next publish. Needs an account with a linked child (you: Pratha).
 1. **Home:** a card per child, e.g. "Pratha · Practised today ✓ / Not yet today", "3 of 7 days this week".

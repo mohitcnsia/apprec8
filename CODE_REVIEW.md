@@ -2580,3 +2580,10 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
   help, then the praise prompt + "I praised <name>". `utils/tonight.js` + tests. Same cached progress reads as Progress
   (0 extra reads). Taps on the phone only for now. Not yet: kid-side "Did someone at home ask you?", the 3-line topic summary,
   "Let <name> play on this phone" on the card.
+
+## 2026-11-11 — Kid's Progress, redesigned (Claude; redesign doc)
+- `utils/kidProgress.js` + tests: `encouragement` (good news or a next step only; right counts up to Class 5, accuracy above),
+  `nearGoal` (the next classmate up on the class board, never the gap to the top), `topicLists` (Learned / Doing well /
+  Needs practice from topic levels; old answers 80%+ = Doing well, not Learned).
+- ProgressScreen kid view: cheer + week strip, near goal → Leaderboard, Needs practice (Practise buttons), Learned, Doing well.
+  Removed: quest list, 3 number tiles, "Work on these" / "Great at". `getClassLeaderboard` at most every 10 min (server: hourly).
