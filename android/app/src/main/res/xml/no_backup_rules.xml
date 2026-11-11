@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Apprec8 keeps nothing in Android's app backup or phone-to-phone transfer (owner bug, 2026-11-11): a restored copy of
+     Firebase's saved sign-in can't be unlocked on the new install (its key never leaves the phone), so the kid is signed
+     out on every start. Also right for a kids' app: no child data in device backups. Progress lives on the server. -->
+<data-extraction-rules>
+  <cloud-backup>
+    <exclude domain="root" path="." />
+    <exclude domain="file" path="." />
+    <exclude domain="database" path="." />
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="external" path="." />
+  </cloud-backup>
+  <device-transfer>
+    <exclude domain="root" path="." />
+    <exclude domain="file" path="." />
+    <exclude domain="database" path="." />
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="external" path="." />
+  </device-transfer>
+</data-extraction-rules>

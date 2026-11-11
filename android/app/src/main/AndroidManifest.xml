@@ -14,7 +14,8 @@
       <data android:scheme="https"/>
     </intent>
   </queries>
-  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:supportsRtl="true" android:fullBackupContent="@xml/secure_store_backup_rules" android:dataExtractionRules="@xml/secure_store_data_extraction_rules">
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/AppTheme" android:supportsRtl="true" android:fullBackupContent="false" android:dataExtractionRules="@xml/no_backup_rules" tools:replace="android:allowBackup,android:fullBackupContent,android:dataExtractionRules">
+    <!-- No app backup (2026-11-11): a restored Firebase sign-in can't be unlocked after a reinstall (res/xml/no_backup_rules.xml). -->
     <!-- expo-notifications is used only for the phone's own 5 pm word reminder (20.0.31). Its alert handler is removed so
          every incoming alert keeps going to @react-native-firebase/messaging (alerts + the in-app banner, DR-33). -->
     <service android:name="expo.modules.notifications.service.ExpoFirebaseMessagingService" tools:node="remove"/>

@@ -65,6 +65,7 @@ the owner; G14/G11 parked).
 - **How to test:** `docs/qa/OWNER_TESTING.md` (sections from "Guide quests" down).
 
 ## Future TODOs
+- **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
   reporting. Star for opening the card and "My words" in Me: later, only if they prove useful (owner unsure of value).
