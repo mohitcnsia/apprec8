@@ -96,6 +96,8 @@ export function assignmentStatus(assignments = [], kids = [], now = Date.now()) 
   const targets = a.kidIds?.length ? kids.filter((k) => a.kidIds.includes(k.uid)) : kids;
   let done = 0;
   let half = 0;
+  // Names per group (owner, 2026-11-12: the teacher sees who, and can nudge or appreciate them).
+  const who = { done: [], half: [], notStarted: [] };
   targets.forEach((k) => {
     const nodes = k.quests.find((q) => q.questId === a.questId)?.nodes || {};
     const defs = bundledQuest(a.questId)?.nodes || [];
@@ -103,10 +105,13 @@ export function assignmentStatus(assignments = [], kids = [], now = Date.now()) 
       const def = defs.find((x) => x.id === id);
       return def ? topicDone(def, nodes) : nodes[id]?.status === "completed";
     }).length;
-    if (n === (a.nodeIds || []).length && n > 0) done++;
-    else if (n > 0 || (a.nodeIds || []).some((id) => nodes[id])) half++;
+    const me = { uid: k.uid, firstName: k.firstName || "Student" };
+    if (n === (a.nodeIds || []).length && n > 0) (done++, who.done.push(me));
+    else if (n > 0 || (a.nodeIds || []).some((id) => nodes[id])) (half++, who.half.push(me));
+    else who.notStarted.push(me);
   });
-  return { id: a.id, title: (a.nodeTitles || []).join(", "), dueDate: a.dueDate || null, done, half, notStarted: targets.length - done - half, total: targets.length };
+  Object.values(who).forEach((list) => list.sort((x, y) => x.firstName.localeCompare(y.firstName)));
+  return { id: a.id, title: (a.nodeTitles || []).join(", "), dueDate: a.dueDate || null, done, half, notStarted: targets.length - done - half, total: targets.length, who };
 }
 
 /** 🚀 Kids ready for harder work: 85%+ this week with 30+ answers. */

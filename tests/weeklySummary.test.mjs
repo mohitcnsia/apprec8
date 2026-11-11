@@ -41,3 +41,16 @@ assert.equal(e.reteach, null);
 assert.equal(e.assignment, null);
 assert.equal(assignmentStatus([{ id: "a", questId: "q", nodeIds: ["n"], dueDate: "2026-11-13" }], [{ uid: "k", quests: [{ questId: "q", nodes: { n: { status: "completed" } } }] }], now).done, 1);
 console.log(`weeklySummary tests passed (reteach ${w.reteach.title} ${w.reteach.kids}/32; ${whys})`);
+
+// Assignment names per group (2026-11-12): who is done, started, not started.
+{
+  const { assignmentStatus } = await import("../utils/weeklySummary.js");
+  const kids = [
+    { uid: "a", firstName: "Zoya", quests: [{ questId: "english-quest", nodes: { n1: { status: "completed" } } }] },
+    { uid: "b", firstName: "Aman", quests: [{ questId: "english-quest", nodes: {} }] },
+  ];
+  const r = assignmentStatus([{ id: "x", questId: "english-quest", nodeIds: ["n1"], nodeTitles: ["T"], dueDate: "2030-01-01" }], kids, Date.UTC(2026, 10, 12));
+  if (r.who.notStarted.map((k) => k.firstName).join() !== "Aman") throw new Error("not started names");
+  if (r.who.done.length + r.who.half.length + r.who.notStarted.length !== 2) throw new Error("everyone in one group");
+  console.log("assignment names passed");
+}
