@@ -37,6 +37,9 @@ import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import DailyWordFactCard from "../../components/home/DailyWordFactCard";
 import { keepPhoneSaved } from "../../services/push";
 import { scheduleWordReminders } from "../../services/dailyReminder";
+import MoodCheckCard from "../../components/home/MoodCheckCard";
+import { myMoodList } from "../../services/moodApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
 import { computeNeedsYou } from "../../utils/needsYou";
@@ -313,16 +316,42 @@ export default function HomeScreen({ navigation }) {
       });
   }, [teachesKey, uid]);
 
+  // Well-being list (school counsellor / backup): only teachers and the owner ask the server, at most every 30 minutes;
+  // a teacher who isn't a counsellor is remembered for a day, so subject teachers cost nothing.
+  const [wellbeingCount, setWellbeingCount] = useState(0);
+  useEffect(() => {
+    if (!uid || (!teachesKey && !isAdmin)) return undefined;
+    const KEY = `moodListCheck.v1.${uid}`;
+    let lastAt = 0;
+    const load = async () => {
+      if (Date.now() - lastAt < 30 * 60 * 1000) return;
+      lastAt = Date.now();
+      try {
+        const no = Number(await AsyncStorage.getItem(KEY));
+        if (no && Date.now() - no < 24 * 3600 * 1000) return;
+        const r = await myMoodList();
+        setWellbeingCount((r?.items || []).length);
+      } catch (e) {
+        if (e?.code === "functions/permission-denied") AsyncStorage.setItem(KEY, String(Date.now())).catch(() => {});
+      }
+    };
+    load();
+    return navigation.addListener("focus", load);
+  }, [uid, teachesKey, isAdmin, navigation]);
+
   const needsYouRows = useMemo(() => {
     return computeNeedsYou({
       decisions,
       teacherRequests,
       studentRequests,
+      wellbeing: wellbeingCount,
     });
-  }, [decisions, teacherRequests, studentRequests]);
+  }, [decisions, teacherRequests, studentRequests, wellbeingCount]);
 
   const onNeedsYouPress = (row) => {
-    if (row.screen === "Decisions") {
+    if (row.screen === "MoodList") {
+      navigation.navigate("MoodList");
+    } else if (row.screen === "Decisions") {
       navigation.navigate("Decisions");
     } else if (row.screen === "ClassDetail") {
       navigation.navigate("ClassDetail", row.params);
@@ -645,6 +674,14 @@ export default function HomeScreen({ navigation }) {
 
       {/* Word and fact of the day (owner + Seema, 2026-11-11): small, closeable, under the kid's main cards. */}
       {userGrade != null ? <DailyWordFactCard grade={userGrade} /> : null}
+
+      {/* Weekly mood check + Calm corner (well-being safety steps, owner 2026-11-11: pilot uses Claude's messages). */}
+      {userGrade != null ? <MoodCheckCard createdAt={userData?.createdAt} onCalm={() => navigation.navigate("CalmCorner")} /> : null}
+      {userGrade != null ? (
+        <Pressable onPress={() => navigation.navigate("CalmCorner")} accessibilityRole="button" accessibilityLabel="Calm corner" style={{ minHeight: 44, justifyContent: "center" }}>
+          <Text style={styles.link}>🌿 Calm corner: ways to feel better ›</Text>
+        </Pressable>
+      ) : null}
 
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 

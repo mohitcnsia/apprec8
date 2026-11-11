@@ -94,3 +94,13 @@ assert.deepEqual(computeNeedsYou({ decisions: 0, teacherRequests: [], studentReq
 }
 
 console.log("needsYou tests passed!");
+
+// Well-being: kids to see come first (2026-11-11).
+{
+  const { computeNeedsYou: cny } = await import("../utils/needsYou.js");
+  const rows = cny({ decisions: 2, wellbeing: 1 });
+  if (rows[0].id !== "needs-you-wellbeing" || rows[0].screen !== "MoodList" || !/1 kid to see/.test(rows[0].label)) throw new Error("wellbeing row first");
+  if (cny({ wellbeing: 0 }).length !== 0) throw new Error("no wellbeing row at 0");
+  console.log("needsYou wellbeing passed");
+}
+

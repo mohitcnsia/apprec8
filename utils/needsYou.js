@@ -43,8 +43,21 @@ export function computeNeedsYou({
   teacherRequests = [],
   studentRequests = [],
   parentRequests = [],
+  wellbeing = 0,
 } = {}) {
   const rows = [];
+
+  // 0. Kids to see (school counsellor / her backup): first, because a kid asked for help (well-being, 2026-11-11).
+  const wb = Number(wellbeing) || 0;
+  if (wb > 0) {
+    rows.push({
+      id: "needs-you-wellbeing",
+      type: "wellbeing",
+      count: wb,
+      label: wb === 1 ? "1 kid to see today (well-being)" : `${wb} kids to see today (well-being)`,
+      screen: "MoodList",
+    });
+  }
 
   // 1. Decisions (Admin / Owner)
   const decCount = Array.isArray(decisions) ? decisions.length : Number(decisions) || 0;

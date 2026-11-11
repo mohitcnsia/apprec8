@@ -2541,3 +2541,20 @@ were dropped; alerts that arrive while the app is open were never shown.
 - Cost: one small write per teacher per week (or on a new phone); FCM is free.
 - **Deploy request (Gemini or owner):** `firebase deploy --only functions:savePushToken,functions:onStudentJoinRequest,functions:redeemTeacherInvite --project apprec8-ca229`.
   The app part works before the deploy for the owner's Decisions phone; teachers' saving starts after it.
+
+## 2026-11-11 — DR-34: weekly mood check, Calm corner, counsellor's list (Claude; owner: "we go with your messages in pilot")
+Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Seema's answers in it).
+- Kid (Home, kids with a class): once a week "How are you feeling?" 😀 🙂 😢 → its message. Sad → "Just today, or for a while?"
+  Just today → Calm corner; for a while → Let the counsellor know · 1098 · 14416 · I'm okay for now. Taps only.
+- Calm corner (`screens/wellbeing/CalmCornerScreen.js`, Home link): Seema's 9 strategies; breathing (4 s in / 4 s out × 3,
+  voice) and 5 senses guided; read aloud. Nothing saved.
+- Server (`functions/callable/moodActions.js`): `recordMood` (kids only, one doc per kid per day in `moodTaps/`, flag =
+  asked / sad for a while / sad two weeks running; one sad tap reaches nobody), `myMoodList` (counsellor = roles/{uid}.counsellor
+  for the classes she teaches; the owner as backup only while she's away, and for classes with no counsellor),
+  `setMoodOutcome` (Talked, okay · Follow up = back in 3 days · Referred), `setCounsellorAway`, `amICounsellor`.
+  No Firestore rule opens `moodTaps/` or `wellbeingState/`: phones can't read them. `expireAt` = 60 days.
+- Counsellor's list (`screens/wellbeing/MoodListScreen.js`) from Home → Needs you "N kids to see today (well-being)".
+  Home asks only for teachers and the owner, at most every 30 min; a non-counsellor teacher is remembered for a day.
+- **Deploy request (owner):** `firebase deploy --only functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor --project apprec8-ca229`
+- **Owner, one-time:** (1) Seema as counsellor: `node scripts/admin/setCounsellor.cjs <her email>` then the same with `--apply`.
+  (2) Firebase console → Firestore → Time-to-live → add policy: collection group `moodTaps`, field `expireAt` (deletes after 2 months).

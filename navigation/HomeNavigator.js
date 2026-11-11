@@ -33,6 +33,8 @@ import TaskDetails from "../screens/task/TaskDetails";
 import PracticePaperScreen from "../screens/paper/PracticePaperScreen";
 import DecisionsScreen from "../screens/admin/DecisionsScreen";
 import ClassDetailScreen from "../screens/admin/ClassDetailScreen";
+import CalmCornerScreen from "../screens/wellbeing/CalmCornerScreen";
+import MoodListScreen from "../screens/wellbeing/MoodListScreen";
 
 const Stack = createStackNavigator();
 
@@ -70,6 +72,8 @@ const HomeNavigator = () => (
     <Stack.Screen name="PracticePaper" component={PracticePaperScreen} />
     <Stack.Screen name="Decisions" component={DecisionsScreen} />
     <Stack.Screen name="ClassDetail" component={ClassDetailScreen} />
+    <Stack.Screen name="CalmCorner" component={CalmCornerScreen} />
+    <Stack.Screen name="MoodList" component={MoodListScreen} />
   </Stack.Navigator>
 );
 
