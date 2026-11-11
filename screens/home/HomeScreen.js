@@ -631,7 +631,7 @@ export default function HomeScreen({ navigation }) {
 
       {/* Parent Home: tonight with each child (5 questions to ask, then one kind word). */}
       {children.map((c) => (
-        <ParentTonightCard key={c.uid} child={c} P={P} />
+        <ParentTonightCard key={c.uid} child={c} P={P} onPlayHere={() => navigation.navigate("Profile")} />
       ))}
 
       {/* 2. Teacher Home: Your classes */}

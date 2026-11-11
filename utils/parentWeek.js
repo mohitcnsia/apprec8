@@ -29,6 +29,7 @@ export const WORDS = {
     nothing: (n) => `${n} didn't practise this week. A short, friendly reminder helps more than a long talk.`,
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`),
     missed: (n) => `Questions to talk about (${n})`,
+    talk: (wins, hard) => `Talk about this week · ${wins} got right · ${hard} found hard`, // redesign mockup
     topicMiss: (topic) => `Missed a Challenge question on “${topic}”. Ask this similar one:`,
     strongAsk: (topic) => `Strong in “${topic}”. Start with this one:`,
     months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -52,6 +53,7 @@ export const WORDS = {
     nothing: (n) => `${n} ने इस हफ़्ते अभ्यास नहीं किया। लंबी बात से ज़्यादा एक छोटी, प्यार भरी याद दिलाना काम करता है।`,
     min: (m) => (m >= 60 ? `${Math.floor(m / 60)} घंटा ${m % 60} मिनट` : `${m} मिनट`),
     missed: (n) => `बात करने के लिए सवाल (${n})`,
+    talk: (wins, hard) => `इस हफ़्ते की बातें · ${wins} सही · ${hard} कठिन`, // Hindi: owner / Seema to check
     topicMiss: (topic) => `“${topic}” पर एक चैलेंज सवाल गलत हुआ। यह मिलता-जुलता सवाल पूछें:`,
     strongAsk: (topic) => `“${topic}” में मज़बूत। इस सवाल से शुरू करें:`,
     months: ["जन", "फ़र", "मार्च", "अप्रै", "मई", "जून", "जुला", "अग", "सितं", "अक्टू", "नवं", "दिसं"],

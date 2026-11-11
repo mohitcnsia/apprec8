@@ -261,24 +261,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           <Text style={styles.soft}>{c.schoolName} · Class {c.grade}</Text>
         </Pressable>
       ))}
-      {/* Topic view (DR-35): one summary document per class, topics worst first. */}
-      {open && approved.length ? <TopicViewCard classId={open.id} members={approved} questIds={questsForTeacher(open, uid)} refreshKey={refreshTrigger} P={P} /> : null}
-      {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
-      {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} classId={String(open.id).startsWith("demo_") ? null : open.id} P={P} /> : null}
-      {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
-      {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
-      {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
-      {/* Guide step 2: share the class link (WhatsApp); parents tap it, nobody types a code. */}
-      {open && !String(open.id).startsWith("demo_") ? (
-        <>
-          <Pressable onPress={() => shareLink(false)} accessibilityRole="button" style={styles.button}>
-            <Text style={styles.buttonText}>SHARE CLASS LINK</Text>
-          </Pressable>
-          <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
-            <Text style={styles.soft}>Forwarded too far? New link ›</Text>
-          </Pressable>
-        </>
-      ) : null}
+      {/* Redesign doc (owner YES): the teacher's top card is the most urgent thing, so kids waiting to join come first. */}
       {/* Join requests: only the teacher, who knows the family, lets a child in (child safety). Not sure → the
           follow-up list (the teacher and the owner call the parent). */}
       {open && pending.some((k) => k.status !== "unsure") ? (
@@ -311,6 +294,24 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
               <JoinRequestCard key={k.uid} k={k} P={P} onApprove={(how) => decide(k, true, how)} onDecline={() => decide(k, false)} />
             ))}
         </View>
+      ) : null}
+      {/* Topic view (DR-35): one summary document per class, topics worst first. */}
+      {open && approved.length ? <TopicViewCard classId={open.id} members={approved} questIds={questsForTeacher(open, uid)} refreshKey={refreshTrigger} P={P} /> : null}
+      {/* "This week" (mockup V4): reteach one thing, who needs you, the assignment. */}
+      {open && rows?.length ? <TeacherWeekCard week={weekOf(open, rows, assignments)} className={classLabel(open)} classId={String(open.id).startsWith("demo_") ? null : open.id} P={P} /> : null}
+      {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
+      {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
+      {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
+      {/* Guide step 2: share the class link (WhatsApp); parents tap it, nobody types a code. */}
+      {open && !String(open.id).startsWith("demo_") ? (
+        <>
+          <Pressable onPress={() => shareLink(false)} accessibilityRole="button" style={styles.button}>
+            <Text style={styles.buttonText}>SHARE CLASS LINK</Text>
+          </Pressable>
+          <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
+            <Text style={styles.soft}>Forwarded too far? New link ›</Text>
+          </Pressable>
+        </>
       ) : null}
       {open && rows ? <AssignPanel cls={open} uid={uid} kids={rows} P={P} styles={styles} /> : null}
       {open && rows === null ? <ActivityIndicator color={P.label} /> : null}

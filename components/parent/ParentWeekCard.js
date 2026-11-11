@@ -95,9 +95,8 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
               <Text style={s.subject}>{sub.title}</Text>
               {sub.strong ? <Text style={s.line}>✅ {t.strong}: {sub.strong}</Text> : null}
               {sub.practise ? <Text style={[s.line, { color: P.gold }]}>🎯 {t.practise}: {sub.practise}</Text> : null}
-              <Text style={s.small}>
-                {sub.done}/{sub.total} · {sub.next ? `${t.next}: ${sub.next}` : t.allDone}
-              </Text>
+              {/* No topic counts for parents (redesign doc: "12/44" needs explaining); what's next is enough. */}
+              {sub.next ? <Text style={s.small}>{`${t.next}: ${sub.next}`}</Text> : null}
             </View>
           ))}
         </View>
@@ -117,7 +116,7 @@ export default function ParentWeekCard({ child, lang, P, refreshTrigger = 0 }) {
       {missed.length ? (
         <View style={s.card}>
           <Pressable onPress={() => setShowMissed((v) => !v)} accessibilityRole="button" accessibilityState={{ expanded: showMissed }} style={{ flexDirection: "row", alignItems: "center", minHeight: 40 }}>
-            <Text style={[s.subject, { flex: 1 }]}>{t.missed(missed.length)}</Text>
+            <Text style={[s.subject, { flex: 1 }]}>{t.talk ? t.talk(missed.filter((m) => m.kind === "strong").length, missed.filter((m) => m.kind !== "strong").length) : t.missed(missed.length)}</Text>
             <Text style={s.soft}>{showMissed ? "▲" : "▼"}</Text>
           </Pressable>
           {showMissed

@@ -198,7 +198,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
                 <Row
                   icon="happy-outline"
                   label={k.ownLogin ? `See ${k.firstName || "your child"}'s week` : `Let ${k.firstName || "your child"} play on this phone`}
-                  detail={k.grade ? `Class ${k.grade}` : null}
+                  detail={k.waitingForTeacher ? "waiting for the teacher" : k.grade ? `Class ${k.grade}` : null}
                   onPress={() =>
                     k.ownLogin
                       ? navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "family" } })

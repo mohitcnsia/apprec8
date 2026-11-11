@@ -25,7 +25,8 @@ export async function myChildren(childUids = []) {
   for (const uid of childUids) {
     try {
       const d = await getDoc(doc(db, "users", uid));
-      if (d.exists()) out.push({ uid, firstName: d.data().firstName, grade: d.data().grade, ownLogin: !!d.data().ownLogin });
+      // waitingForTeacher: the sign-up doc's "waiting for the teacher" under My children (asked to join, not approved yet).
+      if (d.exists()) out.push({ uid, firstName: d.data().firstName, grade: d.data().grade, ownLogin: !!d.data().ownLogin, waitingForTeacher: (d.data().pendingClassIds || []).length > 0 });
     } catch (e) {
       out.push({ uid, firstName: "Child", grade: null });
     }

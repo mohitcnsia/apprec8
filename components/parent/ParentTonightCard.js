@@ -19,7 +19,7 @@ import { practisedToday, daysThisWeek, praiseLine, recordAnswer, recordPraise, t
 
 const storeKey = () => `tonight.v1.${authInstance.currentUser?.uid || "guest"}`;
 
-export default function ParentTonightCard({ child, P }) {
+export default function ParentTonightCard({ child, P, onPlayHere = null }) {
   const s = useMemo(() => makeStyles(P), [P]);
   const name = child.firstName || "your child";
   const mine = useMemo(
@@ -78,6 +78,12 @@ export default function ParentTonightCard({ child, P }) {
       <Text style={s.soft}>
         {days} of 7 days this week{did ? "" : ` · a few minutes tonight helps ${name} most`}
       </Text>
+      {child.waitingForTeacher ? <Text style={s.soft}>Class: waiting for the teacher to approve</Text> : null}
+      {!child.ownLogin && onPlayHere ? (
+        <Pressable onPress={onPlayHere} accessibilityRole="button" style={s.link}>
+          <Text style={s.linkText}>Let {name} play on this phone ›</Text>
+        </Pressable>
+      ) : null}
 
       {current ? (
         <>
