@@ -79,7 +79,7 @@ export default function MoodCheckCard({ createdAt, onCalm }) {
         </>
       ) : null}
 
-      {step === "happy" || step === "okay" ? (
+      {step !== "ask" && step !== "sad" && step !== "today" && step !== "while" && step !== "told" ? (
         <>
           <Text style={styles.body}>{MESSAGES[step]}</Text>
           <Btn label="Thanks" onPress={done} main />
@@ -125,10 +125,10 @@ const makeStyles = (P) =>
     label: { fontSize: 13, fontFamily: "nunitoBold", letterSpacing: 1, color: P.label },
     title: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
     body: { fontSize: 16, fontFamily: "nunito", color: P.text, lineHeight: 22 },
-    faces: { flexDirection: "row", justifyContent: "space-between", gap: 10 },
-    face: { flex: 1, alignItems: "center", paddingVertical: 12, borderRadius: 16, borderWidth: 1.5, borderColor: P.border, minHeight: 76 },
-    emoji: { fontSize: 32 },
-    faceText: { fontSize: 14, fontFamily: "nunitoBold", color: P.text, marginTop: 4 },
+    faces: { flexDirection: "row", justifyContent: "space-between", gap: 6 },
+    face: { flex: 1, alignItems: "center", paddingVertical: 10, borderRadius: 14, borderWidth: 1.5, borderColor: P.border, minHeight: 72 },
+    emoji: { fontSize: 28 },
+    faceText: { fontSize: 12, fontFamily: "nunitoBold", color: P.text, marginTop: 4 },
     btn: { paddingVertical: 12, paddingHorizontal: 14, borderRadius: 14, borderWidth: 1.5, borderColor: P.border, minHeight: 48, justifyContent: "center" },
     btnMain: { backgroundColor: P.selectedBg, borderColor: P.selectedBorder },
     btnText: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },

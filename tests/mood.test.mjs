@@ -19,7 +19,9 @@ assert.equal(moodFlag({ mood: "sad", span: "today", prev: { mood: "sad", day: 98
 assert.equal(moodFlag({ mood: "sad", span: "today", prev: { mood: "sad", day: 60 }, day: 100 }), null, "long ago");
 assert.equal(moodFlag({ mood: "sad", span: "today", prev: { mood: "okay", day: 93 }, day: 100 }), null);
 
-// Every mood has its message; helplines are the official numbers; Seema's 9 strategies.
+// At most 5 moods (owner); every mood has its message; only sad can be flagged; helplines; Seema's 9 strategies.
+assert.ok(MOODS.length <= 5);
+["happy", "excited", "okay", "tired"].forEach((m) => assert.equal(moodFlag({ mood: m, span: "while", day: 100 }), null, m));
 MOODS.forEach((m) => assert.ok(MESSAGES[m.id], m.id));
 assert.deepEqual(HELPLINES.map((h) => h.tel), ["1098", "14416"]);
 assert.equal(CALM.length, 9);

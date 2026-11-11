@@ -73,7 +73,16 @@ const BeeArt = () => (
   </Svg>
 );
 
+const LeafArt = () => (
+  <Svg width={44} height={44} viewBox="0 0 44 44">
+    <Path d="M8 36C8 18 20 8 38 6c-2 18-12 30-30 30z" fill="#E6F6E4" stroke="#3E9B3A" strokeWidth={3} strokeLinejoin="round" />
+    <Path d="M10 34C18 26 24 20 32 12" stroke="#3E9B3A" strokeWidth={2.5} strokeLinecap="round" />
+  </Svg>
+);
+
 const GAMES = [
+  // Seema's 9 calming strategies (well-being, 2026-11-12): always here, not only after a mood tap.
+  { key: "calm", title: "Calm corner", sub: "Ways to feel better", screen: "CalmCorner", Art: LeafArt },
   { key: "sudoku", title: "Sudoku", sub: "Number puzzle", screen: "SudokuGame", Art: GridArt },
   { key: "mines", title: "Minesweeper", sub: "Find the mines", screen: "Minesweeper", Art: MineArt },
   { key: "clock", title: "Tell the time", sub: "Clock practice", screen: "ClockPracticeGenerator", Art: ClockArt },

@@ -3,6 +3,13 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Mood taps, lists by subject, Calm corner in Fun (12 Nov)
+After the deploy (recordMood) + publish.
+1. **Home mood card:** 5 taps: 😀 Happy · 🤩 Excited · 🙂 Okay · 😴 Tired · 😢 Sad, each with its own line. Calm corner link inside the card.
+2. **Progress:** Needs practice and Doing well are split into **English** / **Science**, 3 each + "+N more in Science ›".
+   Doing well topics have **Make it Learned** (practice on that topic). Learned shows "English: …" / "Science: …".
+3. **Fun tab:** a **Calm corner** tile first in Games.
+
 ## ⭐ Appreciate, Nudge, Cheer on + stickers (12 Nov)
 After the deploy + publish. Needs a teacher with kids who have done quizzes since the levels started.
 1. **Teacher:** Progress → My classes → a class → TOPICS · WORST FIRST → tap a topic. Each group has a button:

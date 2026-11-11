@@ -47,3 +47,13 @@ assert.deepEqual(lists.doingWell.map((t) => t.name), ["NOUNS"]);
 assert.deepEqual(lists.needs.map((t) => [t.name, t.level]), [["TENSES", "slipping"], ["VERBS", "practising"]]);
 
 console.log("kidProgress tests passed");
+
+// Grouped by subject, order kept inside each subject.
+{
+  const { bySubject, subjectOf } = await import("../utils/kidProgress.js");
+  assert.equal(subjectOf("science-quest"), "Science");
+  assert.equal(subjectOf("word-bank"), "English");
+  const g = bySubject([{ questId: "science-quest", n: 1 }, { questId: "english-quest", n: 2 }, { questId: "science-quest", n: 3 }]);
+  assert.deepEqual(g.map((x) => [x.subject, x.items.map((i) => i.n)]), [["English", [2]], ["Science", [1, 3]]]);
+  console.log("kidProgress bySubject passed");
+}

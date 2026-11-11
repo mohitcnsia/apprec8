@@ -17,12 +17,14 @@ import SudokuGame from "../components/SudokuGame";
 import Minesweeper from "../components/Minesweeper";
 import VocabBuilder from "../components/VocabBuilder";
 import SpellingBeeGame from "../components/SpellingBeeGame";
+import CalmCornerScreen from "../screens/wellbeing/CalmCornerScreen";
 
 const Stack = createStackNavigator();
 
 const FunNavigator = () => (
   <Stack.Navigator initialRouteName="FunScreen" screenOptions={{ headerShown: false }}>
     <Stack.Screen name="FunScreen" component={FunScreen} />
+    <Stack.Screen name="CalmCorner" component={CalmCornerScreen} />
     <Stack.Screen name="ClockPracticeGenerator" component={ClockPracticeGenerator} />
     <Stack.Screen name="SudokuGame" component={SudokuGame} />
     <Stack.Screen name="Minesweeper" component={Minesweeper} />

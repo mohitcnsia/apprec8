@@ -2616,3 +2616,9 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - `sendThrottledPushToUser` moved to `functions/utils/throttledPush.js` (same code; schoolActions.js uses it from there).
 - App: `keepPhoneSaved` now also for parents (accounts with children): asks once, saves the phone via `savePushToken`.
 - **Deploy request (owner):** `firebase deploy --only functions:sendSticker,functions:onStudentJoinRequest,functions:redeemTeacherInvite --project apprec8-ca229`
+
+## 2026-11-12 — Mood taps ×5, Progress lists by subject, Calm corner in Fun (Claude; owner OK)
+- Moods: Happy, Excited, Okay, Tired, Sad (max 5, owner); only Sad can reach the counsellor. Server `recordMood` accepts the new ones.
+- Progress: Needs practice / Doing well / Learned grouped by subject (`bySubject`), 3 each + more; Doing well → "Make it Learned".
+- Fun tab: Calm corner tile (FunNavigator route). Not yet: "Take a breath?" after a long or frustrating session.
+- **Deploy request (owner):** `firebase deploy --only functions:recordMood --project apprec8-ca229`

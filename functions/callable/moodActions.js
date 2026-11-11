@@ -19,7 +19,7 @@ const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3"; // same as schoolActions.js
 const DAY_MS = 864e5;
 const KEEP_DAYS = 60;
 const FOLLOW_UP_DAYS = 3;
-const MOODS = ["happy", "okay", "sad"];
+const MOODS = ["happy", "excited", "okay", "tired", "sad"]; // same as utils/mood.js MOODS
 const OUTCOMES = ["talked", "follow", "referred"];
 
 const istDay = (ms) => Math.floor((ms + 5.5 * 3600e3) / DAY_MS); // calendar day in India

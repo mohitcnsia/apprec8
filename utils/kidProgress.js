@@ -90,3 +90,14 @@ export function topicLists(quests = []) {
   doingWell.sort((a, b) => b.percent - a.percent);
   return { learned, doingWell, needs };
 }
+
+/** Subject of a quest, for grouping the kid's lists (owner, 2026-11-12: subjects must not be clubbed). */
+export const subjectOf = (questId = "") => (/science/i.test(questId) ? "Science" : /space/i.test(questId) ? "Space" : /math/i.test(questId) ? "Maths" : "English");
+
+/** [{ subject, items }] in a fixed order (English, Science, Maths, Space), keeping each list's own order. */
+export function bySubject(list = []) {
+  const order = ["English", "Science", "Maths", "Space"];
+  const groups = {};
+  list.forEach((t) => (groups[subjectOf(t.questId)] ||= []).push(t));
+  return order.filter((s) => groups[s]?.length).map((subject) => ({ subject, items: groups[subject] }));
+}

@@ -2,15 +2,21 @@
 // "Well-being safety steps"). Pilot messages are Claude's (owner, 2026-11-11); Seema's own words replace them later.
 // Taps only: kids can't type anywhere in the app. Pure, so it is tested without a phone.
 
+// 5 taps at most (owner, 2026-11-12: "excited to study, or something like this. max 5 in total"). Only "sad" can reach
+// the counsellor (moodFlag); the others get a kind line.
 export const MOODS = [
   { id: "happy", emoji: "😀", label: "Happy" },
+  { id: "excited", emoji: "🤩", label: "Excited" },
   { id: "okay", emoji: "🙂", label: "Okay" },
+  { id: "tired", emoji: "😴", label: "Tired" },
   { id: "sad", emoji: "😢", label: "Sad" },
 ];
 
 export const MESSAGES = {
   happy: "That's lovely! Hold on to that happy feeling today.",
+  excited: "Love that energy! Let's learn something great today. 🚀",
   okay: "Okay days are normal too. Thanks for telling us.",
+  tired: "Thanks for telling us. A glass of water or a short stretch helps. Even 5 minutes of practice counts.",
   sad: "Thanks for telling us. Some days are hard, and that's okay. You're not alone.",
   sadAsk: "Just today, or for a while?",
   sadToday: "Hard days pass. Want to try something that helps right now?",

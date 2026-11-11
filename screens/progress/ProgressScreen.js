@@ -23,7 +23,7 @@ import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
-import { encouragement, nearGoal, topicLists } from "../../utils/kidProgress";
+import { encouragement, nearGoal, topicLists, bySubject } from "../../utils/kidProgress";
 import functions from "@react-native-firebase/functions";
 import { isTileVisible } from "../../utils/courseVisibility";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
@@ -140,7 +140,8 @@ export default function ProgressScreen({ navigation, route }) {
     () => topicLists(quests.filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade)).map((m) => ({ questId: m.QUEST_ID, stats: statsOf(m.QUEST_ID), namer: topicNamer(m.nodes) }))),
     [quests, progressById, grade, isAdmin, extras] // eslint-disable-line react-hooks/exhaustive-deps
   );
-  const [showAllNeeds, setShowAllNeeds] = useState(false);
+  const [openSubjects, setOpenSubjects] = useState({}); // "needs-English" → shown in full
+  const toggleSubject = (k) => setOpenSubjects((o) => ({ ...o, [k]: !o[k] }));
   const myClassId = (userData?.classIds || [])[0] || null;
   const [goal, setGoal] = useState(null);
   const goalAt = useRef(0);
@@ -309,10 +310,12 @@ export default function ProgressScreen({ navigation, route }) {
         </View>
       </Pressable>
 
-      {lists.needs.length > 0 ? (
-        <>
-          <Text style={styles.section}>Needs practice</Text>
-          {(showAllNeeds ? lists.needs : lists.needs.slice(0, 4)).map((t) => (
+      {/* Grouped by subject, 3 each, the rest one tap away (owner, 2026-11-12). */}
+      {lists.needs.length > 0 ? <Text style={styles.section}>Needs practice</Text> : null}
+      {bySubject(lists.needs).map(({ subject, items }) => (
+        <View key={`needs-${subject}`} style={{ gap: 10 }}>
+          <Text style={styles.subject}>{subject}</Text>
+          {(openSubjects[`needs-${subject}`] ? items : items.slice(0, 3)).map((t) => (
             <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
               <View style={{ flex: 1, gap: 4 }}>
                 <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
@@ -323,28 +326,53 @@ export default function ProgressScreen({ navigation, route }) {
               </Pressable>
             </View>
           ))}
-          {lists.needs.length > 4 ? (
-            <Pressable onPress={() => setShowAllNeeds(!showAllNeeds)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
-              <Text style={styles.link}>{showAllNeeds ? "Show fewer" : `+${lists.needs.length - 4} more ›`}</Text>
+          {items.length > 3 ? (
+            <Pressable onPress={() => toggleSubject(`needs-${subject}`)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
+              <Text style={styles.link}>{openSubjects[`needs-${subject}`] ? "Show fewer" : `+${items.length - 3} more in ${subject} ›`}</Text>
             </Pressable>
           ) : null}
-        </>
-      ) : null}
+        </View>
+      ))}
 
       {lists.learned.length > 0 ? (
         <View style={[styles.card, styles.greatCard]}>
           <Text style={styles.greatTitle}>Learned ✓</Text>
-          <Text style={styles.greatText}>{lists.learned.map((t) => (t.level === "remembers" ? `⭐ ${t.name}` : t.name)).join(" · ")}</Text>
+          {bySubject(lists.learned).map(({ subject, items }) => (
+            <Text key={`learned-${subject}`} style={styles.greatText}>
+              <Text style={{ fontFamily: "nunitoBold" }}>{subject}: </Text>
+              {items.map((t) => (t.level === "remembers" ? `⭐ ${t.name}` : t.name)).join(" · ")}
+            </Text>
+          ))}
           {lists.learned.some((t) => t.level === "remembers") ? <Text style={styles.soft}>⭐ = you still remembered it a week later</Text> : null}
         </View>
       ) : null}
 
       {lists.doingWell.length > 0 ? (
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Doing well</Text>
-          <Text style={styles.soft}>{lists.doingWell.map((t) => t.name).join(" · ")}</Text>
-          <Text style={styles.soft}>A few more new questions on different days and these become Learned.</Text>
-        </View>
+        <>
+          <Text style={styles.section}>Doing well</Text>
+          <Text style={styles.soft}>Answer a few new questions on another day and these become Learned.</Text>
+          {bySubject(lists.doingWell).map(({ subject, items }) => (
+            <View key={`well-${subject}`} style={{ gap: 10 }}>
+              <Text style={styles.subject}>{subject}</Text>
+              {(openSubjects[`well-${subject}`] ? items : items.slice(0, 3)).map((t) => (
+                <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
+                  <View style={{ flex: 1, gap: 4 }}>
+                    <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
+                    <Text style={styles.soft}>{t.percent}% right so far</Text>
+                  </View>
+                  <Pressable onPress={() => practiseTopic(t)} style={styles.outlineSmall} accessibilityRole="button" accessibilityLabel={`Make ${t.name} Learned`}>
+                    <Text style={styles.outlineSmallText}>Make it Learned</Text>
+                  </Pressable>
+                </View>
+              ))}
+              {items.length > 3 ? (
+                <Pressable onPress={() => toggleSubject(`well-${subject}`)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
+                  <Text style={styles.link}>{openSubjects[`well-${subject}`] ? "Show fewer" : `+${items.length - 3} more in ${subject} ›`}</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          ))}
+        </>
       ) : null}
 
       {(stats.answered || 0) === 0 ? (
@@ -385,6 +413,9 @@ const makeStyles = (P, insets) =>
     smallButtonText: { color: P.onPrimary, fontSize: 15, fontFamily: "nunitoBold" },
     greatCard: { backgroundColor: P.correctBg, borderColor: P.correctBorder },
     greatTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.correctText },
+    subject: { fontSize: 13, fontFamily: "nunitoBold", letterSpacing: 1, color: P.label, marginTop: 2 },
+    outlineSmall: { paddingHorizontal: 12, height: 40, borderRadius: 14, borderWidth: 2, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
+    outlineSmallText: { color: P.selectedText, fontSize: 14, fontFamily: "nunitoBold" },
     cheerCard: { borderColor: P.selectedBorder },
     cheer: { fontSize: 20, fontFamily: "nunitoBold", color: P.text, lineHeight: 26 },
     greatText: { fontSize: 15, fontFamily: "nunitoBold", color: P.correctText },
