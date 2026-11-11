@@ -2,7 +2,9 @@
 
 Two steps: **A. Seema's class pilot** → **B. public release**. Done steps and old notes: docs/history/LAUNCH_CHECKLIST_LOG.md.
 
-## 📍 Where we are (11 Nov)
+## 📍 Where we are (12 Nov)
+- **How students join (Seema's guide, messages to paste, Class 7):** https://claude.ai/artifact/RaQCrzE8k1ZPghSz1TXkRt
+- **Sign-up and consent, server side:** the 38-check emulator test passes (parent join, consent record, student join, no approval without the parent's yes, Not sure, follow-up list). The phone side is tested in the E2E test (steps 3–5).
 - **Your tests are cards now:** Me → Decisions (YES works · NO broke, say which step · MORE DETAILS · LATER).
 - **Test next:** a student joins Seema's class from the class link, on your second phone (brand-new Google account, 15-year-old birthday).
 - **Ready to publish (say "publish"):** word and fact of the day on kids' Home · Owner extras off by default · you always see every quest.
