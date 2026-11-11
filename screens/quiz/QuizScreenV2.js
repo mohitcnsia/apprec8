@@ -33,6 +33,10 @@ import { evaluateGate, canRetryAfter } from "../../utils/gateRules";
 import { shouldConfirmLeave, leaveMessage } from "../../utils/quizLeave";
 import { showAlert } from "../../services/dialog";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
+import { newBreakState, recordBreakAnswer, breakReason, markOffered, BREAK_TEXT } from "../../utils/breakPrompt";
+
+// "Take a breath?" (Calm corner, 2026-11-12): one shared state for the app session, across quizzes.
+let breakState = newBreakState();
 
 const QuizScreenV2 = ({ route, navigation }) => {
   useImmersiveStatusBar(); // hide the phone status bar while reading/playing
@@ -319,6 +323,13 @@ const QuizScreenV2 = ({ route, navigation }) => {
     const isCorrect = state.selectedAnswer.isCorrect;
     const currentQuestion = questions[currentIndex];
     logAnswer(currentQuestion, state.selectedAnswer);
+    // After 3 wrong in a row or 20 minutes of practice: offer a breath on the next Continue (never in Exam mode).
+    breakState = recordBreakAnswer(breakState, !!isCorrect);
+    const reason = breakReason(breakState, { mode });
+    if (reason) {
+      breakState = markOffered(breakState);
+      breakOfferRef.current = reason;
+    }
 
     if (isCorrect) {
       playSuccess();
@@ -351,10 +362,21 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
 
   // After Check: plain-text explanations show in the sheet; a picture or fun fact keeps its screen.
-  const handleContinue = () => {
+  const advance = () => {
     const currentQuestion = questions[currentIndex];
     if (sheetExplanation(currentQuestion?.explanation).rich) handleContinueToExplanation();
     else dispatch({ type: "NEXT_QUESTION" });
+  };
+  const breakOfferRef = useRef(null);
+  const handleContinue = () => {
+    const reason = breakOfferRef.current;
+    if (!reason) return advance();
+    breakOfferRef.current = null;
+    const t = BREAK_TEXT[reason];
+    showAlert(t.title, t.line, [
+      { text: "Keep going", style: "cancel", onPress: advance },
+      { text: "Take a breath 🌿", onPress: () => (advance(), navigation.navigate("CalmCorner")) },
+    ]);
   };
 
   const bigButton = (label, onPress, { disabled = false, tone = "primary", style } = {}) => {

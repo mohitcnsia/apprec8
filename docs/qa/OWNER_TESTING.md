@@ -3,6 +3,13 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ "Take a breath?" during practice (12 Nov)
+After the next publish. In any practice quiz (not Exam mode):
+1. Get **3 answers wrong in a row** → after CHECK, tap Continue → "That was a tricky run. Take a breath? 🌿 · "I can handle difficult things.""
+   → **Take a breath 🌿** opens the Calm corner (back = the quiz goes on) · **Keep going** carries on.
+2. Or practise for **20 minutes** (across quizzes) → "20 minutes of practice. Great effort! Take a short break?".
+3. It asks at most once every 30 minutes.
+
 ## ⭐ Mood taps, lists by subject, Calm corner in Fun (12 Nov)
 After the deploy (recordMood) + publish.
 1. **Home mood card:** 5 taps: 😀 Happy · 🤩 Excited · 🙂 Okay · 😴 Tired · 😢 Sad, each with its own line. Calm corner link inside the card.

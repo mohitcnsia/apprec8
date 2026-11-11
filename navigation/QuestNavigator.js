@@ -9,6 +9,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import QuestScreen from "../screens/quest/QuestScreen";
 import QuizDetailsScreen from "../screens/quiz/QuizDetailsScreen";
 import QuizScreenV2 from "../screens/quiz/QuizScreenV2";
+import CalmCornerScreen from "../screens/wellbeing/CalmCornerScreen";
 import ExplanationScreen from "../screens/quiz/ExplanationScreen";
 import ResultsScreen from "../screens/common/ResultsScreen";
 import Apprec8Reader from "../components/common/reader/Apprec8Reader";
@@ -42,6 +43,7 @@ const QuestNavigator = () => {
       <Stack.Screen name="QuestMap" component={QuestScreen} />
       <Stack.Screen name="QuizDetails" component={QuizDetailsScreen} />
       <Stack.Screen name="QuizScreenV2" component={QuizScreenV2} />
+      <Stack.Screen name="CalmCorner" component={CalmCornerScreen} />
       <Stack.Screen name="Explanation" component={ExplanationScreen} />
       <Stack.Screen name="ResultsScreen" component={ResultsScreen} />
       <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} />

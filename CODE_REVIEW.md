@@ -2622,3 +2622,8 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - Progress: Needs practice / Doing well / Learned grouped by subject (`bySubject`), 3 each + more; Doing well → "Make it Learned".
 - Fun tab: Calm corner tile (FunNavigator route). Not yet: "Take a breath?" after a long or frustrating session.
 - **Deploy request (owner):** `firebase deploy --only functions:recordMood --project apprec8-ca229`
+
+## 2026-11-12 — "Take a breath?" during practice (Claude; owner OK)
+- `utils/breakPrompt.js` + tests: after 3 wrong in a row or 20 min of practice (a 10-min gap starts a new session), at most once per
+  30 min, never in Exam mode. QuizScreenV2: offered on Continue (after the explanation) with the app dialog: Keep going / Take a
+  breath 🌿 (opens CalmCorner; registered in the Quest stack too). No server, no writes.
