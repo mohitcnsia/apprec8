@@ -23,6 +23,16 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
+- **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
+  phone-tested one piece at a time; every publish goes to both 20.0.31 and 20.0.30 phones.
+- **Done:** word + fact of the day (two cards); alerts (DR-33: phones re-saved on start, banner while open, separate from the weekly
+  summary); mood check ×5 + Calm corner + counsellor list (DR-34); topic levels + one summary per class + teacher topic view (DR-35);
+  parent "tonight" card; kid Progress (cheer, near goal, lists by subject); Me with More; kid Home one next thing; Appreciate /
+  Nudge / Cheer on + stickers + parents' alert (DR-36); "Take a breath?" in practice. Build 20.0.31 (5 pm reminder, Crashlytics).
+- **Found:** a reinstall restored Firebase's encrypted sign-in without its key → signed out every start (fix: no app backup, next build).
+- **How to test:** docs/qa/OWNER_TESTING.md (top), also in the app under Admin tools → My notes.
+
 ## 2026-11-10/11: sign-up without codes + students join from their own phones (Claude)
 - **Goal:** parents and teachers found 3 codes "difficult as hell"; owner + Seema approved doc + mockups "Simpler sign-up:
   one WhatsApp link" (https://claude.ai/artifact/Qp9hkoLhrYYbADza2Pur8b). Claude builds stage by stage, phone test between.
@@ -39,30 +49,6 @@ the owner; G14/G11 parked).
   G90 pilot ready, G91 check-up by topic, G92 weekly report (mockup https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj; parents see
   only their own child), G93 challenge track (waits for the owner's olympiad books).
 - **How to test:** after each G task, Claude reviews; the owner tests on his phone (OWNER_TESTING.md).
-
-## 2026-11-06 (day): closed-testing push (Claude)
-- **Goal:** owner: "make app ready for closed testing soon"; plan = docs/LAUNCH_CHECKLIST.md "Road to closed testing" (C1–C11).
-- **Done:** published 3× (20.0.29 once, then 20.0.30): old content owner-only (dogs too), My notes (Admin tools: checklist,
-  testing, store listing), Me → Delete my account + delete a child profile. DR-16/17/18 live (G41). DR-19 "delete means
-  delete" (eraseUser): G42 found 7 issues, all fixed → G44 re-check + deploy. New policy pages (docs/policies/, waiting
-  for repo access: C1). Spec + mockup row X (parent consent), built on branch `feat/consent-gate` (waits for owner OK).
-  Store text + feature graphic drafts. 22 broken Space image links fixed (repo is `mohitcnsia/images`).
-- **How to test:** Admin tools → My notes → Testing (top sections).
-
-## 2026-11-06 (night, owner: "keep building and documenting"): closer to closed testing (Claude)
-- **Goal:** everything Seema's pilot and the closed test need that Claude can build; owner + Seema test in the morning.
-- **Published (OTA):** guides (Me → Guides: admin "Set up a school", teacher "Start your class"; real screens + guide
-  strip; steps tick from real data). **Not yet published (needs "publish"):** "Need help?" sheet (Me tab), old content
-  hidden except dogs/animals, teacher "This week" card, parent "My children" week card (EN/हिंदी), link a child's
-  existing account, Unit 10 Word Building (Gemini G37 + 19 fixes; needs an English re-seed), Demo School button.
-- **Server, waiting for owner OK → Gemini deploys:** DR-16 Demo School (+ G38 fixes), DR-17 account linking,
-  DR-18 weekly notifications (branch `feat/push-20.0.30`).
-- **Build 20.0.30** (branch `feat/push-20.0.30`, native): weekly summary notifications + unused permissions removed.
-  `.aab` built locally overnight; owner: `check-aab.sh`, upload to internal testing, test, then merge the branch.
-- **Gemini:** G37 + G38 done and merged; G39 (QA run) and G40 (dog fact sheet) queued.
-- **For the owner:** Play Console steps + draft form answers in `docs/release/PLAY_CONSOLE.md`; Dog Squad plan and
-  pricing decisions in CODE_REVIEW.md; Seema's review page for Grammar Pro 1–6 + Unit 10.
-- **How to test:** `docs/qa/OWNER_TESTING.md` (sections from "Guide quests" down).
 
 ## Future TODOs
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
