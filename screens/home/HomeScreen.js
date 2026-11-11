@@ -40,6 +40,7 @@ import { scheduleWordReminders } from "../../services/dailyReminder";
 import MoodCheckCard from "../../components/home/MoodCheckCard";
 import ParentTonightCard from "../../components/parent/ParentTonightCard";
 import { nextUp } from "../../utils/nextUp";
+import NudgeCard from "../../components/home/NudgeCard";
 import { myChildren } from "../../services/familyApi";
 import { myMoodList } from "../../services/moodApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -694,6 +695,9 @@ export default function HomeScreen({ navigation }) {
           <GlowButton label="START" onPress={() => openNext(next.main)} styles={styles} />
         </View>
       ) : null}
+
+      {/* A teacher's private note (Nudge / Cheer on), only this kid sees it. */}
+      {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
 
       {/* G90 (Seema's decision 5): assigned work is the first thing a kid sees, top priority. */}
       {!kidView && teacherTopics.length ? (

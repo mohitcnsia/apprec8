@@ -182,11 +182,15 @@ exports.getClassLeaderboard = functions
         })
       );
     });
+    // Teachers' appreciation this week (stickerActions.js): first names shown on the class board. Its own week key.
+    const appWeek = require("./stickerActions")._stickerForTests.weekKey(now);
+    const appDoc = await classRef.collection("appreciations").doc(appWeek).get();
+    const appreciated = appDoc.exists ? (appDoc.data().names || []).slice(0, 30) : [];
     const clapsDoc = await classRef.collection("claps").doc(week).get();
     const claps = clapsDoc.exists ? clapsDoc.data().counts || {} : {};
     const rows = base.map((r) => ({ ...r, claps: claps[r.uid] || 0 }));
     rows.sort((a, b) => b.points - a.points || a.firstName.localeCompare(b.firstName));
-    return { className: cls.data().name, week, nextAt, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
+    return { className: cls.data().name, week, nextAt, appreciated, rows: rows.map((r, i) => ({ ...r, rank: i + 1 })) };
   });
 
 /** One clap per kid, per classmate, per day. */

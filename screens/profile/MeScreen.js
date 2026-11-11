@@ -233,6 +233,20 @@ export default function MeScreen({ navigation, signoutHandler }) {
         </>
       ) : null}
 
+      {/* Stickers from teachers' Appreciate (2026-11-11): the stamp book kids show their friends. */}
+      {(userData?.stickers || []).length ? (
+        <>
+          <Text style={styles.section}>MY STICKERS · {userData.stickerCount || userData.stickers.length}</Text>
+          <View style={[styles.card, { gap: 8 }]}>
+            <Text style={{ fontSize: 30, lineHeight: 40 }}>{userData.stickers.slice(-12).map((x) => x.emoji).join(" ")}</Text>
+            {(() => {
+              const last = userData.stickers[userData.stickers.length - 1];
+              return <Text style={styles.soft}>From {last.from}: great work{last.topic ? ` on ${last.topic}` : ""}!</Text>;
+            })()}
+          </View>
+        </>
+      ) : null}
+
       {/* A student's own class: in it, or waiting for the teacher (T1: the kid sees "waiting for your teacher"). */}
       {myClasses.length + pendingClasses.length > 0 || isStudent ? (
         <>

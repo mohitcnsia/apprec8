@@ -3,6 +3,15 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Appreciate, Nudge, Cheer on + stickers (12 Nov)
+After the deploy + publish. Needs a teacher with kids who have done quizzes since the levels started.
+1. **Teacher:** Progress → My classes → a class → TOPICS · WORST FIRST → tap a topic. Each group has a button:
+   Slipping / New → **Nudge**, Practising → **Cheer on**, Learned → **Appreciate**. Tap → "Sent ✓ 3".
+2. **Kid (Nudge / Cheer on):** Home shows "FROM SEEMA · Let's practise Tenses today. You can do it! 🌱" with Practise now › and ✕.
+   Only that kid sees it; gone after 3 days or ✕.
+3. **Kid (Appreciate):** Me → MY STICKERS · 1 with a sticker, "From Seema: great work on Tenses!".
+4. **Class board** (Progress → Leaderboard → My class): "🌟 Appreciated this week: Meera, Arjun". One sticker per kid per topic per week.
+
 ## ⭐ Kid's Home: one next thing (11 Nov)
 After the next publish. Accounts with a class that don't teach (a kid; you see it if you don't teach a class).
 1. **Home:** one big card: FROM YOUR TEACHER (overdue first) → else TODAY'S PRACTICE → else FIX YOUR MISTAKES → else KEEP GOING,

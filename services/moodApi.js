@@ -9,3 +9,6 @@ export const myMoodList = () => call("myMoodList");
 export const setMoodOutcome = (id, outcome) => call("setMoodOutcome", { id, outcome });
 export const setCounsellorAway = (away) => call("setCounsellorAway", { away });
 export const amICounsellor = () => call("amICounsellor");
+
+// Teachers appreciate (a public sticker) or nudge / cheer on (a private note) kids (functions/callable/stickerActions.js).
+export const sendSticker = (classId, kind, toUids, topic) => call("sendSticker", { classId, kind, toUids, topic });

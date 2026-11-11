@@ -1,13 +1,15 @@
 // components/teacher/TopicViewCard.js: the teacher's topic view (mockup "Reported speech needs teaching again", owner OK
 // 2026-11-11). Reads ONE document (classSummaries/{classId}) instead of every kid's progress. Topics worst first, a bar
 // split into Learned / Practising / New / Slipping; tap a topic for the names in each group.
-// Not yet in this version: the common mistake and the Nudge / Appreciate buttons (they need stickers + nudges).
+// Per group: Nudge (slipping, new), Cheer on (practising): a private note on the kid's Home; Appreciate (learned): a
+// sticker + the name on the class board. Not yet: the common mistake.
 import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getFirestore, doc, getDoc } from "@react-native-firebase/firestore";
 import { bundledQuest } from "../../data/quests";
 import { topicNamer } from "../../utils/progressView";
 import { topicRows, rowLine, headline } from "../../utils/topicView";
+import { sendSticker } from "../../services/moodApi";
 
 const db = getFirestore();
 
@@ -15,6 +17,7 @@ export default function TopicViewCard({ classId, members, questIds, refreshKey =
   const styles = useMemo(() => makeStyles(P), [P]);
   const [summary, setSummary] = useState(undefined);
   const [open, setOpen] = useState(null);
+  const [sent, setSent] = useState({}); // `${rowKey}|${group}` → "sending" | number sent | "error"
 
   useEffect(() => {
     let alive = true;
@@ -34,11 +37,21 @@ export default function TopicViewCard({ classId, members, questIds, refreshKey =
 
   const colors = { learned: P.correctBorder, practising: P.selectedBorder, new: P.track, slipping: P.gold };
   const groups = [
-    ["slipping", "Slipping"],
-    ["new", "New"],
-    ["practising", "Practising"],
-    ["learned", "Learned"],
+    ["slipping", "Slipping", "nudge", "Nudge"],
+    ["new", "New", "nudge", "Nudge"],
+    ["practising", "Practising", "cheer", "Cheer on"],
+    ["learned", "Learned", "appreciate", "Appreciate"],
   ];
+  const send = async (r, g, kind) => {
+    const k = `${r.key}|${g}`;
+    setSent((x) => ({ ...x, [k]: "sending" }));
+    try {
+      const res = await sendSticker(classId, kind, r.uids[g], r.title);
+      setSent((x) => ({ ...x, [k]: res?.sent ?? 0 }));
+    } catch (e) {
+      setSent((x) => ({ ...x, [k]: "error" }));
+    }
+  };
 
   return (
     <View style={styles.card} accessibilityLabel="Topics, worst first">
@@ -63,16 +76,30 @@ export default function TopicViewCard({ classId, members, questIds, refreshKey =
           <Text style={styles.soft}>{rowLine(r)}</Text>
           {open === r.key ? (
             <View style={{ gap: 6, marginTop: 8 }}>
-              {groups.map(([k, label]) =>
-                r.names[k].length ? (
-                  <Text key={k} style={styles.names}>
-                    <Text style={styles.bold}>
-                      {label} · {r.names[k].length}:{" "}
+              {groups.map(([k, label, kind, action]) => {
+                if (!r.names[k].length) return null;
+                const st = sent[`${r.key}|${k}`];
+                return (
+                  <View key={k} style={styles.group}>
+                    <Text style={[styles.names, { flex: 1 }]}>
+                      <Text style={styles.bold}>
+                        {label} · {r.names[k].length}:{" "}
+                      </Text>
+                      {r.names[k].join(", ")}
                     </Text>
-                    {r.names[k].join(", ")}
-                  </Text>
-                ) : null
-              )}
+                    <Pressable
+                      disabled={st === "sending" || typeof st === "number"}
+                      onPress={() => send(r, k, kind)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`${action} ${r.names[k].length} kids`}
+                      style={styles.act}
+                    >
+                      <Text style={styles.actText}>{st === "sending" ? "…" : typeof st === "number" ? `Sent ✓ ${st}` : st === "error" ? "Try again" : action}</Text>
+                    </Pressable>
+                  </View>
+                );
+              })}
+              <Text style={styles.soft}>Nudge and Cheer on reach only that kid. Appreciate shows the names to the class.</Text>
             </View>
           ) : null}
         </Pressable>
@@ -96,4 +123,7 @@ const makeStyles = (P) =>
     soft: { fontSize: 13, fontFamily: "nunito", color: P.textSoft },
     names: { fontSize: 14, fontFamily: "nunito", color: P.text, lineHeight: 20 },
     bold: { fontFamily: "nunitoBold" },
+    group: { flexDirection: "row", alignItems: "center", gap: 8 },
+    act: { paddingHorizontal: 12, minHeight: 36, borderRadius: 18, borderWidth: 1.5, borderColor: P.selectedBorder, justifyContent: "center" },
+    actText: { fontSize: 13, fontFamily: "nunitoBold", color: P.selectedText },
   });

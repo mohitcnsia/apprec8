@@ -20,11 +20,17 @@ export function topicRows(summary, members = [], questIds = [], namerFor = () =>
     const namer = namerFor(questId);
     topics.forEach((topic) => {
       const names = { learned: [], practising: [], new: [], slipping: [] };
+      const uids = { learned: [], practising: [], new: [], slipping: [] }; // for Appreciate / Nudge / Cheer on
+      const byGroup = { learned: [], practising: [], new: [], slipping: [] };
       members.forEach((m) => {
         const code = kids[m.uid]?.[questId]?.lv?.[topic] || "n";
-        names[GROUP[code] || "new"].push(m.firstName || kids[m.uid]?.name || "Kid");
+        byGroup[GROUP[code] || "new"].push({ uid: m.uid, name: m.firstName || kids[m.uid]?.name || "Kid" });
       });
-      Object.values(names).forEach((list) => list.sort((a, b) => a.localeCompare(b)));
+      Object.entries(byGroup).forEach(([g, list]) => {
+        list.sort((a, b) => a.name.localeCompare(b.name));
+        names[g] = list.map((x) => x.name);
+        uids[g] = list.map((x) => x.uid);
+      });
       rows.push({
         key: `${questId}|${topic}`,
         questId,
@@ -36,6 +42,7 @@ export function topicRows(summary, members = [], questIds = [], namerFor = () =>
         newCount: names.new.length,
         slipping: names.slipping.length,
         names,
+        uids,
       });
     });
   });

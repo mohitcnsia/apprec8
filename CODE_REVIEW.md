@@ -2599,3 +2599,13 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - `utils/nextUp.js` + tests: teacher's topics (overdue first, then earliest due) → today's paper → mistakes → keep going on the
   last quest; main + two "then" + "+N more". HomeScreen: one card with START (GlowButton) for kids (class set, not teaching);
   the separate teacher / today / mistakes cards are hidden for kids only. Quest tiles stay below.
+
+## 2026-11-12 — DR-36: Appreciate, Nudge, Cheer on + stickers (Claude; owner + Seema in the redesign doc)
+- Server `functions/callable/stickerActions.js` `sendSticker({ classId, kind, toUids, topic })`: teacher of the class (or owner)
+  only, approved kids only, max 200 kids per teacher per day. Appreciate → `users/{uid}.stickers` (newest 60) + `stickerCount`,
+  name on `classes/{id}/appreciations/{week}` (one per kid per topic per week). Nudge / Cheer on → `users/{uid}.nudge`
+  (private, 3 days). No phone alerts for kids. `getClassLeaderboard` also returns `appreciated` (first names this week).
+- App: topic view buttons per group; `components/home/NudgeCard.js` on the kid's Home; Me → MY STICKERS; class board line.
+- Known: a kid could edit their own `stickers` field (rules allow own-doc writes); the class list comes from the server.
+- **Deploy queue (owner), everything not yet deployed today:**
+  `firebase deploy --only functions:sendSticker,functions:getClassLeaderboard,functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor,functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229`

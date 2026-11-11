@@ -25,6 +25,7 @@ assert.equal(m.total, 4);
 assert.deepEqual([m.learned, m.practising, m.newCount, m.slipping], [0, 1, 2, 1]);
 assert.deepEqual(m.names.new, ["Dev", "Isha"]);
 assert.deepEqual(m.names.slipping, ["Aman"]);
+assert.deepEqual(m.uids.new, ["c", "d"], "uids in the same order as names");
 const t = rows[1];
 assert.deepEqual([t.learned, t.practising, t.newCount, t.slipping], [2, 1, 1, 0], "still remembers counts as learned; removed kids left out");
 assert.equal(rowLine(m), "0 learned · 1 practising · 2 new · 1 slipping");
@@ -33,3 +34,14 @@ assert.deepEqual(topicRows(null, members, ["eq"]), []);
 assert.equal(headline([]), null);
 
 console.log("topicView tests passed");
+
+// Stickers (functions/callable/stickerActions.js): week starts Monday (India time); same seed = same sticker.
+{
+  const { createRequire } = await import("node:module");
+  const require = createRequire(import.meta.url);
+  const { _stickerForTests: st } = require("../functions/callable/stickerActions.js");
+  assert.equal(st.weekKey(Date.UTC(2026, 10, 11, 6)), "2026-11-09", "Wednesday → that Monday");
+  assert.equal(st.weekKey(Date.UTC(2026, 10, 16, 6)), "2026-11-16", "Monday → itself");
+  assert.equal(st.pick("a"), st.pick("a"));
+  console.log("sticker week + pick passed");
+}

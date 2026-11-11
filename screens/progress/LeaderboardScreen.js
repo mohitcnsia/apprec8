@@ -85,10 +85,12 @@ export default function LeaderboardScreen({ route }) {
         let rows;
         let className = null;
         let nextAt = null;
+        let appreciated = [];
         if (which === "class") {
           const r = await functions().httpsCallable("getClassLeaderboard")({ classId });
           className = r.data.className || null;
           nextAt = Number.isFinite(r.data.nextAt) ? r.data.nextAt : null; // server recomputes the class board hourly
+          appreciated = Array.isArray(r.data.appreciated) ? r.data.appreciated : []; // teachers' Appreciate this week
           rows = (r.data.rows || []).map((x) => ({ id: x.uid, name: firstNameOf(x.firstName), points: x.points || 0, rank: x.rank, claps: x.claps || 0 }));
         } else {
           const [top, mine] = await Promise.all([
@@ -101,7 +103,7 @@ export default function LeaderboardScreen({ route }) {
             rows.push({ id: m.id, name: firstNameOf(m.firstName || m.username), grade: userData?.grade, points: m.points || 0, rank: m.rank });
           }
         }
-        const value = { rows, className, nextAt };
+        const value = { rows, className, nextAt, appreciated };
         cache[which] = { at: Date.now(), data: value };
         if (active.current) {
           setData((d) => ({ ...d, [which]: value }));
@@ -168,6 +170,7 @@ export default function LeaderboardScreen({ route }) {
       )}
       <Text style={styles.subtitle}>{subtitle}</Text>
       {tab === "class" && current?.nextAt && current.nextAt > Date.now() ? <Text style={styles.subtitle}>{nextUpdateText(current.nextAt)}</Text> : null}
+      {tab === "class" && current?.appreciated?.length ? <Text style={styles.subtitle}>🌟 Appreciated this week: {current.appreciated.map((n) => firstNameOf(n)).join(", ")}</Text> : null}
 
       {view.podium.length ? (
         <View style={styles.podium}>
