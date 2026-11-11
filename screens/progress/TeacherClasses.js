@@ -17,6 +17,7 @@ import { questsForTeacher, classLabel } from "../../utils/classes";
 import { classLinkMessage } from "../../utils/joinLink";
 import { getClassLink, markNotSure } from "../../services/joinApi";
 import JoinRequestCard from "../../components/teacher/JoinRequestCard";
+import BulkApproveCard from "../../components/teacher/BulkApproveCard";
 import { markGuide } from "../../services/guideFacts";
 import { teacherWeek } from "../../utils/weeklySummary";
 import TeacherWeekCard from "../../components/teacher/TeacherWeekCard";
@@ -283,6 +284,16 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       {open && pending.some((k) => k.status !== "unsure") ? (
         <View style={{ gap: 8 }}>
           <Text style={styles.title}>Waiting for you ({pending.filter((k) => k.status !== "unsure").length})</Text>
+          {/* 50 students at once (owner, 2026-11-12): tick the ones whose parents said YES, approve together. */}
+          <BulkApproveCard
+            kids={pending.filter((k) => k.status !== "unsure")}
+            P={P}
+            approveOne={(kid, how) => approveMember({ classId: open.id, kidUid: kid.uid, approve: true, parentSaidYes: how })}
+            onDone={() => {
+              forceNext.current = true;
+              setReloadKey((k) => k + 1);
+            }}
+          />
           {pending
             .filter((k) => k.status !== "unsure")
             .map((k) => (
