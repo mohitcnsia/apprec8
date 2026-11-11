@@ -6,8 +6,7 @@ Each test below is also a card in **Me → Decisions**: **YES** = it works · **
 ## ⭐ Mood check + Calm corner (11 Nov, DR-34)
 After the deploy + publish. Your account has a class, so you see the kid's side too.
 1. **Home:** a card "THIS WEEK · How are you feeling?" with 😀 🙂 😢. Tap 🙂 → "Okay days are normal too…" → Thanks. It comes back in 7 days.
-2. To try sad again on the same phone: Me → More → sign out and in is not needed; ask Claude to reset the week, or use the second phone.
-   😢 → "Just today, or for a while?" → **Just today** → Try something calming → Calm corner. **For a while** → Let the counsellor know → Done.
+2. **Sad (second phone, or the next week):** 😢 → "Just today, or for a while?" → **Just today** → Try something calming → Calm corner. **For a while** → Let the counsellor know → Done.
 3. **Calm corner** (link on Home "🌿 Calm corner"): Take deep breaths → START (circle + voice, 3 rounds); Use your 5 senses → START → NEXT.
 4. **Kids to see:** after a "Let the counsellor know", Home → Needs you shows "1 kid to see today (well-being)" for you (no counsellor set yet)
    → tap → the kid's name, class, "asked to talk" → **Talked, okay** removes it. After Seema is set as counsellor, it goes to her instead.
