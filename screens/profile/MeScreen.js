@@ -96,6 +96,12 @@ export default function MeScreen({ navigation, signoutHandler }) {
   }, [pendingKey]);
   const [ideaModalOpen, setIdeaModalOpen] = useState(false);
   const [isSchoolAdmin, setIsSchoolAdmin] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  // Who this person is on Me (a parent who also teaches sees both sections).
+  const isParent = !userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0);
+  const isTeacher = (userData?.teachesClassIds || []).length > 0;
+  const isStudent = Number.isInteger(userData?.grade) && !isTeacher && !(userData?.childUids || []).length;
+  const greet = isStudent || userData?.isChild ? "Your profile, your class, and help" : isTeacher && isParent && (userData?.childUids || []).length ? "Your children, your classes, and help" : isTeacher ? "Your classes, and help" : "Your children, and help";
 
   useEffect(() => {
     if (isAdmin || !uid) return;
@@ -144,6 +150,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
       {/* Profile card */}
       <View style={styles.card}>
+        <Text style={[styles.soft, { textAlign: "center" }]}>{greet}</Text>
         {/* Big picture + name (Pratha 2026-11-04: "kids love to see their pictures") */}
         <View style={styles.profileRow}>
           {photo ? (
@@ -164,42 +171,35 @@ export default function MeScreen({ navigation, signoutHandler }) {
         </Pressable>
       </View>
 
-      {/* Owner only: questions from Claude waiting for a one-tap answer. */}
-      {isAdmin && decisionsWaiting > 0 ? (
+      {/* Redesign (owner + Seema, 2026-11-11): Me shows only what this person does; every row is an action. Settings
+          and rarely used rows fold under More (fold, don't delete). */}
+
+      {/* Owner: Decisions + Admin tools first. School admins: their admin tools. */}
+      {isAdmin ? (
         <View style={styles.group}>
-          <Row icon="checkmark-done-outline" label="Decisions for you" detail={String(decisionsWaiting)} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+          <Row icon="checkmark-done-outline" label="Decisions for you" detail={decisionsWaiting ? String(decisionsWaiting) : null} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+          <View style={styles.divider} />
+          <Row icon="construct-outline" label="Admin tools" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
+        </View>
+      ) : isSchoolAdmin ? (
+        <View style={styles.group}>
+          <Row icon="construct-outline" label="Admin tools (schools & classes)" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
         </View>
       ) : null}
 
-      {/* Always here, for every child (mockup P1): calm green, safe to tap. */}
+      {/* Always here, for everyone (mockup P1): calm green, safe to tap. */}
       <NeedHelpRow onPress={() => setHelpOpen(true)} P={P} />
 
-      <Text style={styles.section}>MY STUFF</Text>
-      <View style={styles.group}>
-        <Row
-          icon="alarm-outline"
-          label="Reminders"
-          detail={activeReminders ? String(activeReminders) : null}
-          onPress={() => navigation.navigate("Tasks")}
-          styles={styles}
-          P={P}
-        />
-        <View style={styles.divider} />
-        <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
-      </View>
-
-      {/* Parents add their children here (RB-6). Child accounts and students (with a class) don't see this,
-          unless they already have children (a parent who also set a class, e.g. the owner viewing as Class 10). */}
-      {!userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0) ? (
+      {isParent ? (
         <>
           <Text style={styles.section}>MY CHILDREN</Text>
           <View style={styles.group}>
             {children.map((k) => (
               <View key={k.uid}>
-                {/* A linked child has their own login: no "Play as"; their week is in Progress → My children. */}
+                {/* A linked child has their own login: their week; a child on this phone: play here. */}
                 <Row
                   icon="happy-outline"
-                  label={k.ownLogin ? `${k.firstName || "Child"}'s week` : `Play as ${k.firstName || "child"}`}
+                  label={k.ownLogin ? `See ${k.firstName || "your child"}'s week` : `Let ${k.firstName || "your child"} play on this phone`}
                   detail={k.grade ? `Class ${k.grade}` : null}
                   onPress={() =>
                     k.ownLogin
@@ -215,10 +215,6 @@ export default function MeScreen({ navigation, signoutHandler }) {
               </View>
             ))}
             <Row icon="person-add-outline" label="Add a child" onPress={() => navigation.navigate("AddChild")} styles={styles} P={P} />
-            <View style={styles.divider} />
-            <Row icon="link-outline" label="Link my child's own account" detail="they already use the app" onPress={() => navigation.navigate("LinkChild")} styles={styles} P={P} />
-            <View style={styles.divider} />
-            <Row icon="keypad-outline" label={userData?.hasParentPin ? "Change parent PIN" : "Set parent PIN"} onPress={() => navigation.navigate("ParentPin", { mode: "set" })} styles={styles} P={P} />
           </View>
         </>
       ) : userData?.isChild ? (
@@ -228,122 +224,147 @@ export default function MeScreen({ navigation, signoutHandler }) {
         </View>
       ) : null}
 
-      {/* A student with their own login links to a parent (decision 9). */}
-      {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length && !(userData?.childUids || []).length ? (
-        <View style={styles.group}>
-          <Row icon="link-outline" label="Link to my parent" detail="with a code from them" onPress={() => navigation.navigate("LinkParent")} styles={styles} P={P} />
-        </View>
+      {isTeacher ? (
+        <>
+          <Text style={styles.section}>MY CLASSES</Text>
+          <View style={styles.group}>
+            <Row icon="people-outline" label="Open my classes" detail={`${(userData?.teachesClassIds || []).length}`} onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes" } })} styles={styles} P={P} />
+          </View>
+        </>
       ) : null}
 
-      <Text style={styles.section}>MY CLASSES</Text>
-      <View style={styles.group}>
-        {myClasses.map((c) => (
-          <View key={c.id}>
-            <Row icon="people-outline" label={classLabel(c)} detail={c.schoolName || null} onPress={() => {}} styles={styles} P={P} />
-            <View style={styles.divider} />
+      {/* A student's own class: in it, or waiting for the teacher (T1: the kid sees "waiting for your teacher"). */}
+      {myClasses.length + pendingClasses.length > 0 || isStudent ? (
+        <>
+          <Text style={styles.section}>MY CLASS</Text>
+          <View style={styles.group}>
+            {myClasses.map((c) => (
+              <View key={c.id}>
+                <Row icon="people-outline" label={`You're in ${classLabel(c)}`} detail={c.schoolName || null} onPress={() => {}} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </View>
+            ))}
+            {pendingClasses.map((c) => (
+              <View key={c.id}>
+                <Row icon="time-outline" label={classLabel(c)} detail="waiting for your teacher" onPress={() => {}} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </View>
+            ))}
+            {!myClasses.length && !pendingClasses.length ? (
+              <Row icon="add-circle-outline" label="Join a class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+            ) : null}
           </View>
-        ))}
-        {pendingClasses.map((c) => (
-          <View key={c.id}>
-            <Row icon="time-outline" label={classLabel(c)} detail="waiting for teacher" onPress={() => {}} styles={styles} P={P} />
-            <View style={styles.divider} />
-          </View>
-        ))}
-        {myClasses.length + pendingClasses.length < MAX_CLASSES ? (
-          <Row icon="add-circle-outline" label="Join a class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
-        ) : null}
-        {/* Teachers enter the school's invite code (mockup L4). Not on child profiles. */}
-        {!userData?.isChild ? (
-          <>
-            <View style={styles.divider} />
-            <Row icon="school-outline" label="Join as a teacher" onPress={() => navigation.navigate("JoinAsTeacher")} styles={styles} P={P} />
-          </>
-        ) : null}
-      </View>
+        </>
+      ) : null}
 
-      <Text style={styles.section}>LOOK</Text>
-      <View style={styles.segment} accessibilityRole="radiogroup">
-        {THEMES.map(([id, label]) => (
-          <Pressable
-            key={id}
-            onPress={() => setThemeChoice && setThemeChoice(id)}
-            style={[styles.segmentItem, themeChoice === id && styles.segmentOn]}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: themeChoice === id }}
-          >
-            <Text style={[styles.segmentText, themeChoice === id && styles.segmentTextOn]}>{label}</Text>
-          </Pressable>
-        ))}
-      </View>
-
-      <Text style={styles.section}>HELP</Text>
       <View style={styles.group}>
-        {/* Guide quests (mockup W1): learn by doing. Children and students get "Your first day"; grown-ups the tour,
-            parents' and teachers' guides (utils/guides.js). */}
-        <Row
-          icon="compass-outline"
-          label="Guides"
-          detail="Learn by doing"
-          onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild || Number.isInteger(userData?.grade) })}
-          styles={styles}
-          P={P}
-        />
-        <View style={styles.divider} />
-        <Row icon="help-circle-outline" label="Help" onPress={openHelp} styles={styles} P={P} />
-        <View style={styles.divider} />
-        <Row icon="bulb-outline" label="💡 I have an idea for Apprec8!" onPress={() => setIdeaModalOpen(true)} styles={styles} P={P} />
-        <View style={styles.divider} />
         <Row icon="chatbubble-ellipses-outline" label="Tell us what you think" onPress={() => navigation.navigate("cntct")} styles={styles} P={P} />
       </View>
 
-      {isAdmin ? (
+      {/* Everything else, one tap away. */}
+      <Pressable onPress={() => setMoreOpen(!moreOpen)} accessibilityRole="button" accessibilityState={{ expanded: moreOpen }} style={styles.more}>
+        <Text style={styles.moreText}>{moreOpen ? "Less ▲" : "More: look, guides, reminders, sign out ▼"}</Text>
+      </Pressable>
+
+      {moreOpen ? (
         <>
-          <Text style={styles.section}>ADMIN</Text>
           <View style={styles.group}>
-            <Row icon="checkmark-done-outline" label="Decisions" detail={decisionsWaiting ? String(decisionsWaiting) : null} onPress={() => navigation.navigate("Decisions")} styles={styles} P={P} />
+            <Row icon="help-circle-outline" label="How to use Apprec8" onPress={openHelp} styles={styles} P={P} />
             <View style={styles.divider} />
             <Row
-              icon={ownerExtras ? "eye-outline" : "eye-off-outline"}
-              label="Owner extras"
-              detail={ownerExtras ? "On" : "Off: you see what others see"}
-              onPress={() => setOwnerExtras(!ownerExtras)}
+              icon="compass-outline"
+              label="Guides"
+              detail="Learn by doing"
+              onPress={() => navigation.navigate("Guides", { isChild: !!userData?.isChild || Number.isInteger(userData?.grade) })}
               styles={styles}
               P={P}
             />
             <View style={styles.divider} />
-            <Row icon="construct-outline" label="Admin tools" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
+            <Row icon="bulb-outline" label="I have an idea for Apprec8" onPress={() => setIdeaModalOpen(true)} styles={styles} P={P} />
+            <View style={styles.divider} />
+            <Row icon="alarm-outline" label="Reminders" detail={activeReminders ? String(activeReminders) : null} onPress={() => navigation.navigate("Tasks")} styles={styles} P={P} />
+            <View style={styles.divider} />
+            <Row icon="mail-outline" label="Messages" onPress={() => navigation.navigate("MessageCenter")} styles={styles} P={P} />
           </View>
-        </>
-      ) : null}
 
-      {!isAdmin && isSchoolAdmin ? (
-        <>
-          <Text style={styles.section}>SCHOOL ADMIN</Text>
+          <Text style={styles.section}>LOOK</Text>
+          <View style={styles.segment} accessibilityRole="radiogroup">
+            {THEMES.map(([id, label]) => (
+              <Pressable
+                key={id}
+                onPress={() => setThemeChoice && setThemeChoice(id)}
+                style={[styles.segmentItem, themeChoice === id && styles.segmentOn]}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: themeChoice === id }}
+              >
+                <Text style={[styles.segmentText, themeChoice === id && styles.segmentTextOn]}>{label}</Text>
+              </Pressable>
+            ))}
+          </View>
+
           <View style={styles.group}>
-            <Row icon="construct-outline" label="Admin tools (schools & classes)" onPress={() => navigation.navigate("AdminTools")} styles={styles} P={P} />
+            {myClasses.length + pendingClasses.length > 0 && myClasses.length + pendingClasses.length < MAX_CLASSES ? (
+              <>
+                <Row icon="add-circle-outline" label="Join another class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {!userData?.isChild ? (
+              <>
+                <Row icon="school-outline" label="Join as a teacher" onPress={() => navigation.navigate("JoinAsTeacher")} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {isParent ? (
+              <>
+                <Row icon="link-outline" label="Link my child's own account" detail="they already use the app" onPress={() => navigation.navigate("LinkChild")} styles={styles} P={P} />
+                <View style={styles.divider} />
+                <Row icon="keypad-outline" label={userData?.hasParentPin ? "Change parent PIN" : "Set parent PIN"} onPress={() => navigation.navigate("ParentPin", { mode: "set" })} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {/* A student with their own login links to a parent (decision 9). */}
+            {!userData?.isChild && Number.isInteger(userData?.grade) && !(userData?.parentUids || []).length && !(userData?.childUids || []).length ? (
+              <>
+                <Row icon="link-outline" label="Link to my parent" detail="with a code from them" onPress={() => navigation.navigate("LinkParent")} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {isAdmin ? (
+              <>
+                <Row
+                  icon={ownerExtras ? "eye-outline" : "eye-off-outline"}
+                  label="Owner extras"
+                  detail={ownerExtras ? "On" : "Off: you see what others see"}
+                  onPress={() => setOwnerExtras(!ownerExtras)}
+                  styles={styles}
+                  P={P}
+                />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {typeof signoutHandler === "function" ? (
+              <>
+                <Row icon="log-out-outline" label="Sign out" onPress={() => setConfirmSignOut(true)} styles={styles} P={P} danger />
+                {/* Play and DPDP: everyone with their own login can delete their account in the app. A "Play as" child
+                    profile can't: its parent removes it (Me → the child → Remove). */}
+                {!(userData?.isChild && !userData?.ownLogin) ? (
+                  <>
+                    <View style={styles.divider} />
+                    <Row
+                      icon="trash-outline"
+                      label="Delete my account"
+                      onPress={() => navigation.navigate("DeleteAccountConfirmation", { userEmail: authInstance.currentUser?.email || null })}
+                      styles={styles}
+                      P={P}
+                      danger
+                    />
+                  </>
+                ) : null}
+              </>
+            ) : null}
           </View>
         </>
-      ) : null}
-
-      {typeof signoutHandler === "function" ? (
-        <View style={styles.group}>
-          <Row icon="log-out-outline" label="Sign out" onPress={() => setConfirmSignOut(true)} styles={styles} P={P} danger />
-          {/* Play and DPDP: everyone with their own login can delete their account in the app. A "Play as" child
-              profile can't: its parent removes it (Me → the child → Remove). */}
-          {!(userData?.isChild && !userData?.ownLogin) ? (
-            <>
-              <View style={styles.divider} />
-              <Row
-                icon="trash-outline"
-                label="Delete my account"
-                onPress={() => navigation.navigate("DeleteAccountConfirmation", { userEmail: authInstance.currentUser?.email || null })}
-                styles={styles}
-                P={P}
-                danger
-              />
-            </>
-          ) : null}
-        </View>
       ) : null}
 
       <Text style={styles.version}>
@@ -402,4 +423,6 @@ const makeStyles = (P, insets) =>
     segmentText: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
     segmentTextOn: { color: P.selectedText },
     version: { textAlign: "center", fontSize: 12, fontFamily: "nunitoBold", color: P.dimText, marginTop: 14 },
+    more: { minHeight: 52, borderRadius: 16, backgroundColor: P.track, alignItems: "center", justifyContent: "center", paddingHorizontal: 14 },
+    moreText: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
   });

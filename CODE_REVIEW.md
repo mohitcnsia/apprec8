@@ -2587,3 +2587,10 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
   Needs practice from topic levels; old answers 80%+ = Doing well, not Learned).
 - ProgressScreen kid view: cheer + week strip, near goal → Leaderboard, Needs practice (Practise buttons), Learned, Doing well.
   Removed: quest list, 3 number tiles, "Work on these" / "Great at". `getClassLeaderboard` at most every 10 min (server: hourly).
+
+## 2026-11-11 — Me, redesigned (Claude; redesigned mockup in the doc)
+- MeScreen: a greeting line per role; owner: Decisions + Admin tools first; Need help; MY CHILDREN (See X's week / Let X play on
+  this phone, Add a child); MY CLASSES for teachers (Open my classes); MY CLASS for students ("You're in 10-A" / "waiting for your
+  teacher", Join a class only when none); Tell us what you think; everything else under **More** (How to use, Guides, idea,
+  Reminders, Messages, Look, Join another class, Join as a teacher, link/PIN, Owner extras, Sign out, Delete). Nothing removed.
+- Not yet: stickers (needs the appreciation feature), avatar "Change my look" shop.

@@ -3,6 +3,15 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Me, redesigned (11 Nov)
+After the next publish. Every row is something you do; the rest folds under **More**.
+1. **You:** a line under your picture ("Your children, your classes, and help"), then **Decisions for you** + **Admin tools**,
+   **Need help? Talk to someone**, MY CHILDREN (See Pratha's week / Let … play on this phone, Add a child), MY CLASSES
+   (Open my classes), **Tell us what you think**, then **More: look, guides, reminders, sign out ▼**.
+2. **More** opens: How to use Apprec8, Guides, idea, Reminders, Messages, Look (theme), Join as a teacher, link/PIN rows,
+   Owner extras, Sign out, Delete my account. Nothing is gone, only folded.
+3. **A kid:** MY CLASS shows "You're in 10-A" or "10-A · waiting for your teacher".
+
 ## ⭐ Kid's Progress, redesigned (11 Nov)
 After the next publish. Progress → Me (your account has a class, so you see the kid's side).
 1. **Top:** a cheer, e.g. "12 more right than last week! 🎉" or "3 days in a row. Keep it going!", then "78% accuracy this week"
