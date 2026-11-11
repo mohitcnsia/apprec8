@@ -560,9 +560,9 @@
     "ask": "Class 7 kids see English (44 topics) and Treasure Words, but NO Science: every Science topic is written for Classes 3–5. My pick: B. YES = B. MORE DETAILS for A and C.",
     "details": "**A. Open the existing Science to Class 7 as is.** Instant, but it's Class 3–5 level (plants, bones, magnets): bright Class 7 kids will find it childish, and Seema's school sees an easy app.\n\n**B. Class 7 starts with English + a Check-up; Science comes as real Class 7 topics (recommended).** I write Class 7 Science rungs (NCERT Class 7: nutrition in plants and animals, heat, acids and bases, physical and chemical changes, respiration, electric current, light, motion and time) at about 2 topics a day, each checked by Gemini before it goes live. First 4 topics by 17 Nov, so Science opens in pilot week 1.\n\n**C. Open only the harder existing units (Matter, Forces, Earth, Light, Sound, Magnets, Puzzles) to Class 7 as 'revision', and write B in the background.** Something on day 1, but labelled honestly as revision.\n\nAlso for Class 7: a Check-up like Class 10's (built from English Quest topics), so Seema's teachers get Accuracy by topic on day 1. Small, same code as Class 10.",
     "from": "claude",
-    "answer": "later",
-    "note": null,
-    "answeredAt": "2026-11-10T09:12:01.506Z"
+    "answer": "more",
+    "note": "Need much better formatting. It is pain to read.",
+    "answeredAt": "2026-11-11T14:48:09.206Z"
   },
   {
     "id": "pilot-100-play",
@@ -570,9 +570,9 @@
     "ask": "With ~100 kids and their parents (each family = 2 phones), we pass Play's internal-testing limit of 100 testers. The closed test (no limit) has been in Google's review since 6 Nov. YES = I write the exact steps for both cases. LATER = we start with the 3 kids today on internal testing.",
     "details": "**Today's 3 kids:** internal testing works now: add the parent's and the child's Gmail in Play Console → Testing → Internal testing → Testers, send them the link.\n\n**For 100 kids:** we need the closed test approved (no tester limit; the Google Group link). Please check Play Console → Publishing overview: if it says approved, press Publish.\n\nIf Google still hasn't answered by 13 Nov, the fallback is internal testing in two waves (first 50 families).",
     "from": "claude",
-    "answer": "later",
+    "answer": "more",
     "note": null,
-    "answeredAt": "2026-11-10T09:11:58.575Z"
+    "answeredAt": "2026-11-11T14:46:53.675Z"
   },
   {
     "id": "report-pick-answer",
@@ -599,21 +599,30 @@
     "title": "Gap 1: alerts that work for teachers + admins",
     "ask": "Today a teacher's phone is saved for alerts only if they turn on the weekly summary, so Seema may never hear \"student waiting\". Fix: save the phone on first open (one permission ask), refresh it on every app start, show \"Alerts: on\" in Me, and tell a kid \"waiting for your teacher\" / \"You're in 10-A!\". YES = spec + mockup for your OK, then build.",
     "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P1, T7, T1). App update + a small server change (deploy with your OK).",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-11T14:24:20.387Z"
   },
   {
     "id": "gap-families-in",
     "title": "Gap 2: getting 100 families in",
     "ask": "The closed test installs only for Google Group members (~200 emails by hand). Fix: make the group \"anyone with the link can join\", a WhatsApp message with two links (join group, install), and a dry run with 2 real families before the rest. YES = I write the exact Play Console steps + the message.",
     "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P2, P3). No code.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-11T14:46:57.398Z"
   },
   {
     "id": "gap-notes-read",
     "title": "Gap 3: every kid note read within 24 hours",
     "ask": "Kids' notes (Tell us what you think, report notes, Chamku asks) are read only when you check in with me; a worrying note could sit for days. Fix: one daily list, Seema reads her class, you the rest, within 24 h; Seema shapes the rules. YES = I draft the routine with Seema's input, then a mockup of the daily list.",
     "details": "Gap review: https://claude.ai/artifact/MrWrmXPMAj1Ev67KB2C3pz (P4). Safeguarding plan B4 moves before the pilot.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-11T14:47:31.121Z"
   },
   {
     "id": "test-student-join",
@@ -634,6 +643,13 @@
     "title": "Test: word and fact of the day (after the next publish)",
     "ask": "After I publish and you restart the app: Home → under Today's practice, WORD OF THE DAY. Tap Hear, tap New for me, tap ✕ (gone until tomorrow; tomorrow a new word). YES = all fine. NO = say what looked wrong. LATER if not published yet.",
     "details": "Class 3–5 see a Science fact, Class 6–10 a Space fact, Class 1–2 the word only. Steps: My notes → Testing.",
+    "from": "claude"
+  },
+  {
+    "id": "build-20-0-31",
+    "title": "Build 20.0.31 ready: upload, deploy, then say publish",
+    "ask": "1) Upload build-1794411381837.aab (apprec8 folder, check PASS) to Internal testing first (installs today, no review), then Closed testing. 2) Deploy: firebase deploy --only functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor,functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229. 3) Tell me \"publish\". YES = done. MORE DETAILS = I explain any step.",
+    "details": "New in the build: the phone's own 5 pm word reminder, crash reporting. Over-the-air after publish: mood check + Calm corner, the counsellor's list, topic levels, teacher topic view. Play Console: Data safety needs 'Crash logs' and 'Diagnostics' added (Crashlytics). Later, one-time: Seema as counsellor (node scripts/admin/setCounsellor.cjs <her email> --apply) and a 2-month auto-delete on moodTaps (Firestore → TTL → moodTaps, field expireAt). Updates I publish now reach 20.0.31 phones only, so install 20.0.31 first.",
     "from": "claude"
   }
 ]
