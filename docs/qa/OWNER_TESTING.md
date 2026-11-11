@@ -1,5 +1,42 @@
 # Testing on your phone
 
+## ⭐⭐ END-TO-END TEST with Seema (13 Nov) — do these in order
+Each step is also a card in **Me → Decisions** ("E2E 1" … "E2E 14"): **YES** = worked · **NO** = failed (say which step,
+voice typing is fine) · **MORE DETAILS** = unclear · **LATER** = skipped. Add a note whenever something looked odd.
+**Phones:** A = yours (owner + parent of Pratha) · B = Seema's (teacher + counsellor) · C = second phone (a "student", new Google
+account with a 15-year-old's birthday) · D = Pratha's (optional). Close and reopen the app twice on every phone first.
+
+**E2E 1 · Get ready (you, Mac).** `firebase deploy --only functions:recordMood --project apprec8-ca229` (Excited / Tired taps) ·
+`node scripts/admin/setCounsellor.cjs <Seema's email> --apply` · phones A and B: Me → bottom line shows today's update code.
+**E2E 2 · Class link (B).** Progress → My classes → the test class → **SHARE CLASS LINK** → WhatsApp → send to A and C.
+**E2E 3 · Parent asks to join (A).** Tap the link → "Your child's class…" → OPEN APPREC8 → **+ Another child** "Test Riya",
+roll 23, your mobile, Mother/Father, tick the form → **JOIN** → Yes → "Request sent". Home: Test Riya's card says
+"Class: waiting for the teacher to approve"; Me → MY CHILDREN shows "waiting for the teacher".
+**E2E 4 · Student asks to join (C).** Join the testers group → Become a tester → install → Continue with Google → first name,
+Class 10 → tap the link → roll number + parent's mobile → **ASK TO JOIN** → Yes → "Request sent". Me → MY CLASS:
+"… · waiting for your teacher".
+**E2E 5 · Seema approves both (B).** Alert or Home → Needs you → the class: **Waiting for you** is at the top →
+**Approve several at once ›** → **Tick all** → WhatsApp → **APPROVE 2** → confirm. C: Me says "You're in …".
+**E2E 6 · Assign + START (B, C).** B: Assign a topic for tomorrow. C: Home shows one big card **FROM YOUR TEACHER** with **START**
+(+ "Then: …" lines) → START → do the quiz; get **3 wrong in a row** once → after Continue: "Take a breath? 🌿" →
+Take a breath → Calm corner → back → quiz goes on.
+**E2E 7 · Mood + counsellor (C, B).** C: Home → THIS WEEK, 5 Chamku faces → **Sad** → **For a while** → **Let the counsellor know**.
+B (later, or after a pull-down): Home → Needs you "1 kid to see today (well-being)" → the name, "asked to talk" → **Talked, okay**.
+**E2E 8 · Topic view, Appreciate, Nudge (B).** After C (and Test Riya on A, via Let Test Riya play on this phone) did a quiz:
+Progress → My classes → the class → **TOPICS · WORST FIRST** → tap a topic → names per group → **Appreciate** on Learned or
+**Nudge** on New. Levels need a few quizzes over 2 days, so at first most kids are "New"/"Practising": that's expected.
+**E2E 9 · What the kids see (C, A).** Nudge → C's Home: "FROM SEEMA · Let's practise …" with Practise now. Appreciate on
+Test Riya → **A gets an alert** "🌟 Test Riya was appreciated …"; Me (as Test Riya) → MY STICKERS.
+**E2E 10 · Assignment names (B).** The class → "3 · ASSIGNMENT": Done / Started / Not started names → **Nudge N not started**.
+**E2E 11 · Parent tonight (A).** Home → Pratha's (or Test Riya's) card → 5 questions with See answer, Right / Needs help → the
+praise line matches how it went → I praised … → thank-you, then the card leaves Home for today.
+**E2E 12 · Kid screens (C or D).** Home: WORD OF THE DAY (Hear, Close) and SCIENCE/SPACE FACT (Learn more); Progress → Me: a cheer,
+the near goal, Needs practice / Learned / Doing well by subject, Make it Learned; Me: profile, MY CLASS, More ▼; Fun: Calm corner.
+**E2E 13 · You see everything (A).** C taps 🚩 on a question → A: Home → Needs you "1 new report from a kid" → opens Ideas &
+reports. Progress → **This week**: kids, learning, questions to check, well-being totals. Alerts: with the app open, a banner.
+**E2E 14 · Clean up.** C: Me → More → Delete my account. A: Test Riya → remove. Tell Claude anything that felt confusing.
+
+
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 

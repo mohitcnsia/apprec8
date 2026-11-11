@@ -2645,3 +2645,17 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
    (sendSticker; demo classes excluded).
 3. `services/reportsInbox.js`: owner's Home → Needs you "N new reports from kids" = userFeedback since the last visit to Ideas &
    reports (only the new docs are read; at most every 10 min on Home focus). Opening the list = seen.
+
+## 2026-11-12 — Review: built screens vs the two agreed docs (Claude; owner asked)
+**Fixed today:** waiting kids first on the teacher's class screen ("top card = most urgent"); "waiting for the teacher" under My
+children + on the parent's Home card (sign-up doc); "Let X play on this phone" on the parent's Home card; parent Progress without
+topic counts, "Talk about this week · N got right · N found hard" (Hindi wording to check).
+**Not built, not needed for the Class 10 pilot (sign-up doc stages 2–6):** child finds the parent by mobile (+ parent's one-tap yes);
+teacher join link with classes/subjects (teachers still use the invite code); Learn on my own + parent's yes before learning;
+codes removed; the no-install web "yes" page; parent's Google photo on the request card; requests closing after 7 days;
+Me → Change Google account. Pilot deviation (agreed): Seema confirms the parent's WhatsApp YES (B11 replaces it later).
+**Not built from the redesign doc:** kid's face tap after a step; kid-side "Did someone at home ask you?"; parents' taps reaching
+the owner's totals; teacher's monthly "saved me time"; Appreciate / Nudge lists on the teacher's Home (they are in Progress);
+class-average line for kids; avatar "Change my look"; "Share a class link" on the teacher's Me (it's on Home + Progress);
+reminders / Chamku's idea card still show on the kid's Home below the next thing.
+**Test plan:** docs/qa/OWNER_TESTING.md → END-TO-END TEST (13 Nov), cards e2e-01 … e2e-14 in Decisions.

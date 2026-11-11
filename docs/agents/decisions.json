@@ -650,6 +650,107 @@
     "title": "Build 20.0.31 ready: upload, deploy, then say publish",
     "ask": "1) Upload build-1794411381837.aab (apprec8 folder, check PASS) to Internal testing first (installs today, no review), then Closed testing. 2) Deploy: firebase deploy --only functions:recordMood,functions:myMoodList,functions:setMoodOutcome,functions:setCounsellorAway,functions:amICounsellor,functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229. 3) Tell me \"publish\". YES = done. MORE DETAILS = I explain any step.",
     "details": "New in the build: the phone's own 5 pm word reminder, crash reporting. Over-the-air after publish: mood check + Calm corner, the counsellor's list, topic levels, teacher topic view. Play Console: Data safety needs 'Crash logs' and 'Diagnostics' added (Crashlytics). Later, one-time: Seema as counsellor (node scripts/admin/setCounsellor.cjs <her email> --apply) and a 2-month auto-delete on moodTaps (Firestore → TTL → moodTaps, field expireAt). Updates I publish now reach 20.0.31 phones only, so install 20.0.31 first.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "It is already done.",
+    "answeredAt": "2026-11-11T18:16:38.089Z"
+  },
+  {
+    "id": "e2e-01",
+    "title": "E2E 1 · Get ready (you, Mac)",
+    "ask": "firebase deploy --only functions:recordMood --project apprec8-ca229 (Excited / Tired taps) · node scripts/admin/setCounsellor.cjs <Seema's email> --apply · phones A and B: Me → bottom line shows today's update code. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-02",
+    "title": "E2E 2 · Class link (B)",
+    "ask": "Progress → My classes → the test class → SHARE CLASS LINK → WhatsApp → send to A and C. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-03",
+    "title": "E2E 3 · Parent asks to join (A)",
+    "ask": "Tap the link → \"Your child's class…\" → OPEN APPREC8 → + Another child \"Test Riya\", roll 23, your mobile, Mother/Father, tick the form → JOIN → Yes → \"Request sent\". Home: Test Riya's card says \"Class: waiting for the teacher to approve\"; Me → MY CHILDREN shows \"waiting for the teacher\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-04",
+    "title": "E2E 4 · Student asks to join (C)",
+    "ask": "Join the testers group → Become a tester → install → Continue with Google → first name, Class 10 → tap the link → roll number + parent's mobile → ASK TO JOIN → Yes → \"Request sent\". Me → MY CLASS: \"… · waiting for your teacher\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-05",
+    "title": "E2E 5 · Seema approves both (B)",
+    "ask": "Alert or Home → Needs you → the class: Waiting for you is at the top → Approve several at once › → Tick all → WhatsApp → APPROVE 2 → confirm. C: Me says \"You're in …\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-06",
+    "title": "E2E 6 · Assign + START (B, C)",
+    "ask": "B: Assign a topic for tomorrow. C: Home shows one big card FROM YOUR TEACHER with START (+ \"Then: …\" lines) → START → do the quiz; get 3 wrong in a row once → after Continue: \"Take a breath? 🌿\" → Take a breath → Calm corner → back → quiz goes on. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-07",
+    "title": "E2E 7 · Mood + counsellor (C, B)",
+    "ask": "C: Home → THIS WEEK, 5 Chamku faces → Sad → For a while → Let the counsellor know. B (later, or after a pull-down): Home → Needs you \"1 kid to see today (well-being)\" → the name, \"asked to talk\" → Talked, okay. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-08",
+    "title": "E2E 8 · Topic view, Appreciate, Nudge (B)",
+    "ask": "After C (and Test Riya on A, via Let Test Riya play on this phone) did a quiz: Progress → My classes → the class → TOPICS · WORST FIRST → tap a topic → names per group → Appreciate on Learned or Nudge on New. Levels need a few quizzes over 2 days, so at first most kids are \"New\"/\"Practising\": that's expected. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-09",
+    "title": "E2E 9 · What the kids see (C, A)",
+    "ask": "Nudge → C's Home: \"FROM SEEMA · Let's practise …\" with Practise now. Appreciate on Test Riya → A gets an alert \"🌟 Test Riya was appreciated …\"; Me (as Test Riya) → MY STICKERS. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-10",
+    "title": "E2E 10 · Assignment names (B)",
+    "ask": "The class → \"3 · ASSIGNMENT\": Done / Started / Not started names → Nudge N not started. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-11",
+    "title": "E2E 11 · Parent tonight (A)",
+    "ask": "Home → Pratha's (or Test Riya's) card → 5 questions with See answer, Right / Needs help → the praise line matches how it went → I praised … → thank-you, then the card leaves Home for today. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-12",
+    "title": "E2E 12 · Kid screens (C or D)",
+    "ask": "Home: WORD OF THE DAY (Hear, Close) and SCIENCE/SPACE FACT (Learn more); Progress → Me: a cheer, the near goal, Needs practice / Learned / Doing well by subject, Make it Learned; Me: profile, MY CLASS, More ▼; Fun: Calm corner. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-13",
+    "title": "E2E 13 · You see everything (A)",
+    "ask": "C taps 🚩 on a question → A: Home → Needs you \"1 new report from a kid\" → opens Ideas & reports. Progress → This week: kids, learning, questions to check, well-being totals. Alerts: with the app open, a banner. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
+    "from": "claude"
+  },
+  {
+    "id": "e2e-14",
+    "title": "E2E 14 · Clean up",
+    "ask": "C: Me → More → Delete my account. A: Test Riya → remove. Tell Claude anything that felt confusing. Each test below is also a card in Me → Decisions: YES = it works · NO = something broke (say which step, voice typing is fine) · MORE DETAILS · LATER. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
+    "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
     "from": "claude"
   }
 ]
