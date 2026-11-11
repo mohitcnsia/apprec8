@@ -34,6 +34,7 @@ import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
+import DailyWordFactCard from "../../components/home/DailyWordFactCard";
 import { assignedTopics } from "../../utils/assignedTopics";
 import { filterVisibleTiles, orderQuestsForHome } from "../../utils/courseVisibility";
 import { computeNeedsYou } from "../../utils/needsYou";
@@ -629,6 +630,9 @@ export default function HomeScreen({ navigation }) {
           {today.tip ? <Text style={styles.todayTip}>{today.tip}</Text> : null}
         </Pressable>
       ) : null}
+
+      {/* Word and fact of the day (owner + Seema, 2026-11-11): small, closeable, under the kid's main cards. */}
+      {userGrade != null ? <DailyWordFactCard grade={userGrade} /> : null}
 
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 

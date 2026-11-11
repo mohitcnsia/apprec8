@@ -2520,3 +2520,10 @@ Seema confirms it when approving.
   1. `firebase deploy --only functions:studentJoinByLink,functions:approveMember --project apprec8-ca229`
   2. `firebase deploy --only hosting --project apprec8-ca229`
   3. `node scripts/genOwnerNotes.mjs && npm install && npx eas update --channel production --message "Students join a class from their own phone"`
+
+## 2026-11-11 — Word and fact of the day on the kid's Home (Claude; owner + Seema approved the mockup in the redesign doc)
+- `utils/dailyCard.js` (pure, `tests/dailyCard.test.mjs`): one word (Treasure Words, by class) + one fact (Science Learn cards
+  Classes 3–5, Space quest fun facts Classes 6–10, none for 1–2) per calendar day; same for a whole class; no repeats until the list is used up.
+- `components/home/DailyWordFactCard.js` on Home under Today's practice: 🔊 Hear (expo-speech), "I knew it / New for me", ✕ until tomorrow.
+  Taps and "new" words stay on the phone (AsyncStorage, per account). 0 database reads, no server change. JS only (OTA).
+- Left for later: star for opening (needs a callable), My words in Me (Me redesign), 5 pm alert (needs expo-notifications, next build).

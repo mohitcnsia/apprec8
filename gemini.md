@@ -65,6 +65,14 @@ the owner; G14/G11 parked).
 - **How to test:** `docs/qa/OWNER_TESTING.md` (sections from "Guide quests" down).
 
 ## Future TODOs
+- **Parent learning quest (owner 2026-11-11: "an educated, aware parent is a bigger value for the kid"):** a "For
+  parents" tile quest (reuse the tile-quest system: Learn cards + 3 tap questions, shown to the parent role; content-only
+  once it exists), English + Hindi with read-aloud, 1-minute cards, one a week. Topics: body safety (taught as "safe and
+  unsafe touch" + no secrets + trusted adults, wording by Seema), traffic safety (helmets, pillion kids, school vans),
+  online/phone safety, exam stress and talking without scolding, helping with homework without knowing the subject,
+  who helps when nobody else does (1098, 112, 14416, Child Welfare Committee, district child protection unit, social
+  workers), the law in plain words (POCSO: abuse a child tells an adult must be reported), how the app protects their
+  child. Every number and law checked against an official source before it ships. After the pilot; spec + mockup first.
 - **Sign-up without codes, next stages (owner 2026-11-11):** 2) child's own phone finds the parent by mobile + parent's one tap ·
   3) teacher staff link (classes + subjects, admin approves) · 4) Learn on my own + consent before learning (children only) +
   old child accounts pause + codes removed · 5) new app build (direct open, one-tap number pick) · 6) web "yes" page →

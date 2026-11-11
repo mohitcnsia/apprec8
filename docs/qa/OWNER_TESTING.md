@@ -1,5 +1,15 @@
 # Testing the app yourself (owner guide)
 
+## ⭐ Word and fact of the day (11 Nov): a small card on a kid's Home
+After the next publish and an app restart. Use an account with a class set (Me → your class).
+1. **Home:** under "Today's practice" there is a card **WORD OF THE DAY** with a word, its meaning and **🔊 Hear**.
+   Class 3–5: a **SCIENCE FACT** below it; Class 6–10: a **SPACE FACT** (some with a small picture); Class 1–2: word only.
+2. Tap **🔊 Hear**: the phone says the word, then "It means: …".
+3. Tap **New for me** → it turns purple + "Nice! A new word for your collection." Tap **I knew it** → "Great, you knew it!"
+4. Tap **✕** → the card goes away. Close and reopen the app: it stays away today. Tomorrow a new word and fact appear.
+5. Two phones in the same class show the same word on the same day.
+Not in this version: the star for opening (needs a server change), My words in Me (comes with the Me redesign), the 5 pm alert (next app build).
+
 ## ⭐ Seema's Class 10 (11 Nov): students join from their own phones; Seema confirms the parent's yes
 After DR-32 (CODE_REVIEW.md) and an app restart. Try it first with one student (or your own second Google account).
 1. **Student, own phone (13+):** groups.google.com/g/apprec8-testers → Join group → play.google.com/apps/testing/com.mohitchilkoti.apprec8
