@@ -2573,3 +2573,10 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - Not yet: Home/Progress for kids and parents reading levels (next pieces). Removed kids' entries stay until the
   view filters by current members.
 - **Deploy request (owner):** `firebase deploy --only functions:onQuestProgressForClass,firestore:rules --project apprec8-ca229`
+
+## 2026-11-11 — Parent's Home: "tonight" with each child (Claude; redesign doc, owner + Seema)
+- `components/parent/ParentTonightCard.js` on Home for parents (one per linked child, after Needs you): practised today, days
+  this week, 5 questions from `talkQuestions` (strong topics first, then mistakes) one at a time with See answer + Right / Needs
+  help, then the praise prompt + "I praised <name>". `utils/tonight.js` + tests. Same cached progress reads as Progress
+  (0 extra reads). Taps on the phone only for now. Not yet: kid-side "Did someone at home ask you?", the 3-line topic summary,
+  "Let <name> play on this phone" on the card.

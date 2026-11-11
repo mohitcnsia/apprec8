@@ -38,6 +38,8 @@ import DailyWordFactCard from "../../components/home/DailyWordFactCard";
 import { keepPhoneSaved } from "../../services/push";
 import { scheduleWordReminders } from "../../services/dailyReminder";
 import MoodCheckCard from "../../components/home/MoodCheckCard";
+import ParentTonightCard from "../../components/parent/ParentTonightCard";
+import { myChildren } from "../../services/familyApi";
 import { myMoodList } from "../../services/moodApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { assignedTopics } from "../../utils/assignedTopics";
@@ -316,6 +318,14 @@ export default function HomeScreen({ navigation }) {
       });
   }, [teachesKey, uid]);
 
+  // Parents: one "tonight" card per child on Home (redesign doc: a parent's Home used to show nothing about the child).
+  const childKey = (userData?.childUids || []).join(",");
+  const [children, setChildren] = useState([]);
+  useEffect(() => {
+    if (!childKey) return setChildren([]);
+    myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
+  }, [childKey]);
+
   // Well-being list (school counsellor / backup): only teachers and the owner ask the server, at most every 30 minutes;
   // a teacher who isn't a counsellor is remembered for a day, so subject teachers cost nothing.
   const [wellbeingCount, setWellbeingCount] = useState(0);
@@ -579,6 +589,11 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
       ) : null}
+
+      {/* Parent Home: tonight with each child (5 questions to ask, then one kind word). */}
+      {children.map((c) => (
+        <ParentTonightCard key={c.uid} child={c} P={P} />
+      ))}
 
       {/* 2. Teacher Home: Your classes */}
       {teacherClasses.length > 0 ? (
