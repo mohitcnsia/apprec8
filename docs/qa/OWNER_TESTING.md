@@ -3,6 +3,14 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Your weekly "Is it working?" (12 Nov, DR-37)
+After the deploy (ownerWeekly) + publish. Progress → **This week** (only you).
+1. **KIDS:** "N kids practised, up from M last week", how many came back on 2+ days.
+2. **LEARNING:** topics learned this week, still remembered, slipping; answers and % right.
+3. **QUESTIONS TO CHECK:** questions strong kids keep getting wrong (text, the app's answer, the most picked wrong answer).
+4. **WELL-BEING · TOTALS ONLY:** mood taps by face, how many are on the counsellor's list; appreciations.
+5. **NOT COLLECTED YET** says so (talks at home, teachers' "saved me time"); Cost opens Firebase usage. **Refresh** recomputes.
+
 ## ⭐ "Take a breath?" during practice (12 Nov)
 After the next publish. In any practice quiz (not Exam mode):
 1. Get **3 answers wrong in a row** → after CHECK, tap Continue → "That was a tricky run. Take a breath? 🌿 · "I can handle difficult things.""

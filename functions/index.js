@@ -11,6 +11,7 @@ const pushActionsCallable = require("./callable/pushActions");
 const joinActionsCallable = require("./callable/joinActions");
 const moodActionsCallable = require("./callable/moodActions");
 const { sendSticker } = require("./callable/stickerActions");
+const { ownerWeekly } = require("./callable/ownerActions");
 
 // Export all functions for Firebase to discover
 // 2026-11-09 (DR-23): the old HTTP content endpoints in functions/api/ are no longer exported: they had no auth
@@ -28,4 +29,5 @@ module.exports = {
   ...joinActionsCallable,
   ...moodActionsCallable,
   sendSticker,
+  ownerWeekly,
 };

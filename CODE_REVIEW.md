@@ -2627,3 +2627,13 @@ Spec: "Well-being safety steps" tab of the Simpler Home, Progress and Me doc (Se
 - `utils/breakPrompt.js` + tests: after 3 wrong in a row or 20 min of practice (a 10-min gap starts a new session), at most once per
   30 min, never in Exam mode. QuizScreenV2: offered on Continue (after the explanation) with the app dialog: Keep going / Take a
   breath 🌿 (opens CalmCorner; registered in the Quest stack too). No server, no writes.
+
+## 2026-11-12 — DR-37: the owner's weekly "Is it working?" (Claude; owner: "critical")
+- Server `functions/callable/ownerActions.js` `ownerWeekly` (owner / app admins): this week vs last (Monday, India time): kids
+  practised, back on 2+ days, topics learned / remembered / slipping, answers + accuracy, problem questions (strong kids = 80%+ over
+  50+ answers; ≥3 of them answered, ≥50% wrong; with the most picked wrong option), mood totals, appreciations. Cached 1 h in
+  ownerConfig/weeklyCache; Refresh forces. `summarizeWeek` is pure (tests/ownerWeek.test.mjs).
+- App: Progress → This week (owner only), `components/owner/OwnerWeekCard.js`. "Not collected yet" lines instead of made-up
+  numbers (talks at home, teachers' monthly tap); cost = link to Firebase usage.
+- Scale note: reads every kid's progress once an hour when opened; fine for the pilot; later read the class summaries instead.
+- **Deploy request (owner):** `firebase deploy --only functions:ownerWeekly --project apprec8-ca229`

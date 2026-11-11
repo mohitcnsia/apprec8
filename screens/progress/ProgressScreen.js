@@ -24,6 +24,7 @@ import { subtopicPractice } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import { encouragement, nearGoal, topicLists, bySubject } from "../../utils/kidProgress";
+import OwnerWeekCard from "../../components/owner/OwnerWeekCard";
 import functions from "@react-native-firebase/functions";
 import { isTileVisible } from "../../utils/courseVisibility";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
@@ -201,7 +202,7 @@ export default function ProgressScreen({ navigation, route }) {
   useEffect(() => {
     if (route?.params?.view) pickView(route.params.view);
   }, [route?.params?.view]);
-  const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["kids", "Kids · Reported"]] : [])];
+  const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["owner", "This week"], ["kids", "Kids · Reported"]] : [])];
   const segment = tabs.length > 1 ? (
     <View style={styles.segment} accessibilityRole="tablist">
       {tabs.map(([id, label]) => (
@@ -214,6 +215,16 @@ export default function ProgressScreen({ navigation, route }) {
 
   // No big screen title (owner 2026-11-04: wasted space + clutter); the tab bar says where you are.
   const title = null;
+
+  // Owner's weekly "Is it working?" (2026-11-12): the app's week on top, questions to check, well-being totals.
+  if (isAdmin && view === "owner") {
+    return (
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {segment}
+        <OwnerWeekCard P={P} />
+      </ScrollView>
+    );
+  }
 
   if (isAdmin && view === "kids") {
     return (
