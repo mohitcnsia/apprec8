@@ -10,8 +10,8 @@ const daily = (entries) => Object.fromEntries(entries.map(([ago, answered, corre
 // Encouragement: good news first; a worse week is never pointed out.
 assert.equal(encouragement({ daily: {}, now }).headline, "A new week! One quiz today starts your streak.");
 let e = encouragement({ daily: daily([[0, 10, 9], [1, 10, 8], [8, 10, 5]]), now, grade: 4 });
-assert.match(e.headline, /12 more right than last week/);
-assert.equal(e.line, "17 right this week", "Class 5 and below: right counts");
+assert.equal(e.headline, "Better than last week! 🎉");
+assert.equal(e.line, "17 right answers this week, up from 5", "Class 5 and below: right counts");
 e = encouragement({ daily: daily([[0, 10, 9], [8, 10, 5]]), now, grade: 10 });
 assert.equal(e.line, "90% accuracy this week, up from 50%");
 e = encouragement({ daily: daily([[0, 10, 4], [8, 10, 9]]), now, grade: 10, streak: 3 });

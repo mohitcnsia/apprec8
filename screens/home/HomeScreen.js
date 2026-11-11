@@ -674,7 +674,7 @@ export default function HomeScreen({ navigation }) {
 
       {/* Kid's Home (redesign 2026-11-11): one big next thing with START, two "then" lines, the rest folded. */}
       {kidView && next.main ? (
-        <View style={styles.nextCard} accessibilityLabel={`Next: ${next.main.title}`}>
+        <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
           <Text style={styles.label}>{next.main.label}</Text>
           <Text style={styles.nextTitle} numberOfLines={2}>{next.main.title}</Text>
           <Text style={styles.questSub}>{next.main.sub}</Text>
@@ -738,11 +738,6 @@ export default function HomeScreen({ navigation }) {
 
       {/* Weekly mood check + Calm corner (well-being safety steps, owner 2026-11-11: pilot uses Claude's messages). */}
       {userGrade != null ? <MoodCheckCard createdAt={userData?.createdAt} onCalm={() => navigation.navigate("CalmCorner")} /> : null}
-      {userGrade != null ? (
-        <Pressable onPress={() => navigation.navigate("CalmCorner")} accessibilityRole="button" accessibilityLabel="Calm corner" style={{ minHeight: 44, justifyContent: "center" }}>
-          <Text style={styles.link}>🌿 Calm corner: ways to feel better ›</Text>
-        </Pressable>
-      ) : null}
 
       <ComingUp items={coming} P={P} isDark={isDark} styles={styles} onAdd={addReminder} />
 
@@ -847,7 +842,7 @@ const makeStyles = (P, insets) =>
     teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
     teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
     todayCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 1, borderColor: P.selectedBorder, gap: 4 },
-    nextCard: { padding: 18, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 6 },
+    upNextCard: { padding: 18, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 6 }, // not "nextCard": an older style of that name exists
     nextTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, lineHeight: 30 },
     thenRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 40 },
     thenText: { flex: 1, fontSize: 15, fontFamily: "nunitoBold", color: P.text },

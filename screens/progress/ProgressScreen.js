@@ -284,12 +284,12 @@ export default function ProgressScreen({ navigation, route }) {
               <View
                 style={[
                   styles.dayDot,
-                  d.played ? { backgroundColor: "#F5C842" } : { backgroundColor: P.track },
+                  d.played ? { backgroundColor: P.primary } : { backgroundColor: P.track }, // purple, our theme (owner 2026-11-12)
                   d.isToday && { borderWidth: 3, borderColor: P.primary },
                 ]}
                 accessibilityLabel={`${d.letter}${d.played ? ", played" : ""}`}
               >
-                <Text style={[styles.dayMark, { color: d.played ? "#7A5B00" : P.dimText }]}>{d.played ? "✓" : ""}</Text>
+                <Text style={[styles.dayMark, { color: d.played ? P.onPrimary : P.dimText }]}>{d.played ? "✓" : ""}</Text>
               </View>
               <Text style={styles.dayLetter}>{d.letter}</Text>
             </View>

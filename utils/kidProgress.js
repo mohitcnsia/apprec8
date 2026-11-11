@@ -34,14 +34,14 @@ export function encouragement({ daily = {}, now = Date.now(), grade = null, stre
 
   let headline;
   if (!w.answered) headline = "A new week! One quiz today starts your streak.";
-  else if (w.correct > last.correct && last.answered) headline = `${w.correct - last.correct} more right than last week! 🎉`;
+  else if (w.correct > last.correct && last.answered) headline = "Better than last week! 🎉"; // owner 2026-11-12: "132 more right" read poorly
   else if (streak >= 2) headline = `${streak} days in a row. Keep it going! 🔥`;
   else if (w.days >= 2) headline = `You practised on ${w.days} days this week. Every day counts!`;
   else headline = "Great start this week! Come back tomorrow to build a streak.";
 
   let line = null;
   if (w.answered) {
-    if (young) line = `${w.correct} right this week`;
+    if (young) line = last.answered && w.correct > last.correct ? `${w.correct} right answers this week, up from ${last.correct}` : `${w.correct} right answers this week`;
     else line = acc !== null && lastAcc !== null && acc > lastAcc ? `${acc}% accuracy this week, up from ${lastAcc}%` : `${acc}% accuracy this week`;
   }
   return { headline, line };

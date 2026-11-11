@@ -70,6 +70,12 @@ export default function MoodCheckCard({ createdAt, onCalm }) {
               </Pressable>
             ))}
           </View>
+          {/* With the mood card, not on its own (owner, 2026-11-12): it goes when the card goes. */}
+          {onCalm ? (
+            <Pressable onPress={onCalm} accessibilityRole="button" accessibilityLabel="Calm corner" style={{ minHeight: 40, justifyContent: "center" }}>
+              <Text style={styles.link}>🌿 Calm corner: ways to feel better ›</Text>
+            </Pressable>
+          ) : null}
         </>
       ) : null}
 
@@ -128,4 +134,5 @@ const makeStyles = (P) =>
     btnText: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
     btnTextMain: { color: P.selectedText },
     btnSub: { fontSize: 13, fontFamily: "nunito", color: P.textSoft, marginTop: 2 },
+    link: { fontSize: 15, fontFamily: "nunitoBold", color: P.label },
   });

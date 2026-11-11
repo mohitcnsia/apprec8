@@ -101,7 +101,6 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const isParent = !userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0);
   const isTeacher = (userData?.teachesClassIds || []).length > 0;
   const isStudent = Number.isInteger(userData?.grade) && !isTeacher && !(userData?.childUids || []).length;
-  const greet = isStudent || userData?.isChild ? "Your profile, your class, and help" : isTeacher && isParent && (userData?.childUids || []).length ? "Your children, your classes, and help" : isTeacher ? "Your classes, and help" : "Your children, and help";
 
   useEffect(() => {
     if (isAdmin || !uid) return;
@@ -150,7 +149,6 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
       {/* Profile card */}
       <View style={styles.card}>
-        <Text style={[styles.soft, { textAlign: "center" }]}>{greet}</Text>
         {/* Big picture + name (Pratha 2026-11-04: "kids love to see their pictures") */}
         <View style={styles.profileRow}>
           {photo ? (

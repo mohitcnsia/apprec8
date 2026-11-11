@@ -36,8 +36,8 @@ export function learnCardsFor(quest, grade, nodesForGrade) {
   if (!quest?.nodes) return [];
   return nodesForGrade(quest.nodes, grade)
     .filter((n) => n.kind === "main")
-    .flatMap((n) => (n.steps || []).filter((s) => s.type === "study"))
-    .flatMap((s) => quest.studyPages?.[s.contentId]?.cards || []);
+    .flatMap((n) => (n.steps || []).filter((s) => s.type === "study").map((s) => ({ s, nodeId: n.id })))
+    .flatMap(({ s, nodeId }) => (quest.studyPages?.[s.contentId]?.cards || []).map((c) => ({ ...c, nodeId }))); // nodeId: "Learn more" opens that topic
 }
 
 /** Word cards → { word, meaning, emoji } (quick-check cards left out). */
@@ -50,7 +50,7 @@ export const toWords = (cards) =>
 export const toScienceFacts = (cards) =>
   cards
     .filter((c) => !c.kind && c.text)
-    .map((c) => ({ title: c.title || null, text: c.text, emoji: c.emoji || null, image: null }));
+    .map((c) => ({ title: c.title || null, text: c.text, emoji: c.emoji || null, image: null, nodeId: c.nodeId || null }));
 
 const IMAGE_HOST = "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/"; // project rule 1: our own image repo only
 
@@ -94,7 +94,7 @@ export function pruneSaved(saved, today, { keepDays = 14, maxWords = 200 } = {})
     if (today - Number(d) < keepDays) taps[d] = v;
   });
   const newWords = Array.isArray(s.newWords) ? s.newWords.slice(-maxWords) : [];
-  return { closedDay: Number.isFinite(s.closedDay) ? s.closedDay : null, taps, newWords };
+  return { closedDay: Number.isFinite(s.closedDay) ? s.closedDay : null, closedFactDay: Number.isFinite(s.closedFactDay) ? s.closedFactDay : null, taps, newWords };
 }
 
 /** Record a tap ("knew" | "new") on the word or the fact; a "new" word joins the kid's word list once. */
