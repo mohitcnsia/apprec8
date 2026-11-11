@@ -3,6 +3,12 @@
 Each test below is also a card in **Me → Decisions**: **YES** = it works · **NO** = something broke (say which step, voice typing is fine)
 · **MORE DETAILS** · **LATER**. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md.
 
+## ⭐ Alerts you can't miss (11 Nov, DR-33)
+After the deploy + publish, close and reopen the app once (it saves your phone for alerts by itself). Do Not Disturb off.
+1. **App closed:** tell Claude "ready" → a test alert arrives on the phone.
+2. **App open (any screen):** tell Claude → a banner slides in at the top with **Open ›** and ✕; Open goes to Decisions.
+3. **Seema:** reopen the app once; a parent asks to join her class → she gets an alert (closed) or the banner (open).
+
 ## ⭐ Word and fact of the day (11 Nov): a small card on a kid's Home
 After the next publish and an app restart. Use an account with a class set (Me → your class).
 1. **Home:** under "Today's practice" there is a card **WORD OF THE DAY** with a word, its meaning and **🔊 Hear**.
