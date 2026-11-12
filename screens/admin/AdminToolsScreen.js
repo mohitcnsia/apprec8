@@ -72,6 +72,11 @@ export default function AdminToolsScreen({ navigation }) {
         <Text style={styles.h1}>School admin</Text>
         <Text style={styles.soft}>{schoolAdminSchools.map((s) => s.name).join(", ")}</Text>
 
+        <Pressable onPress={() => navigation.navigate("People")} style={styles.row} accessibilityRole="button">
+          <Ionicons name="people-outline" size={20} color={P.selectedText} />
+          <Text style={styles.rowText}>People (who joined, when, who is stuck)</Text>
+          <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+        </Pressable>
         <Pressable onPress={() => navigation.navigate("Schools")} style={styles.row} accessibilityRole="button">
           <Ionicons name="school-outline" size={20} color={P.selectedText} />
           <Text style={styles.rowText}>Schools & classes (codes, teachers)</Text>
@@ -122,6 +127,11 @@ export default function AdminToolsScreen({ navigation }) {
       <Pressable onPress={() => navigation.navigate("AdminDashboard")} style={styles.row} accessibilityRole="button">
         <Ionicons name="stats-chart-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>Dashboard (also in Progress → Kids)</Text>
+        <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+      </Pressable>
+      <Pressable onPress={() => navigation.navigate("People")} style={styles.row} accessibilityRole="button">
+        <Ionicons name="people-outline" size={20} color={P.selectedText} />
+        <Text style={styles.rowText}>People (who joined, when, who is stuck)</Text>
         <Ionicons name="chevron-forward" size={20} color={P.dimText} />
       </Pressable>
       <Pressable onPress={() => navigation.navigate("Schools")} style={styles.row} accessibilityRole="button">

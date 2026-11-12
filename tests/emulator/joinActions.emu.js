@@ -124,6 +124,14 @@ async function call(name, data, who) {
   const pp = await call("joinClassByLink", { ...form, token: undefined, classId: "c1", firstName: "Meera" }, parent);
   ok(pp.className === "10-A" || !!pp.kidUid, "a parent adds a child by tapping the class too");
 
+  // 6c) People screen (owner, 13 Nov): admins see everyone with email; strangers are refused.
+  await db.doc(`users/${student.uid}`).set({ createdAt: admin.firestore.Timestamp.now() }, { merge: true });
+  ok((await call("peopleList", {}, stranger)).error === "PERMISSION_DENIED", "a stranger can't see people");
+  const ppl = await call("peopleList", {}, boss);
+  const aar = (ppl.people || []).find((x) => x.uid === student.uid);
+  ok(!!aar && aar.kind === "student" && aar.grade === 10 && aar.email === "student@test.dev" && ppl.withEmail === true, "admin sees Aarav: student, Class 10, with email");
+  ok(typeof ppl.counts?.total === "number" && ppl.counts.total >= 1, "people counts come back");
+
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });
   ok((await call("joinClassByLink", { ...form, token: l2.token, firstName: "Fifth" }, stranger)).error === "RESOURCE_EXHAUSTED", "a 5th child: Need more? Tell us");

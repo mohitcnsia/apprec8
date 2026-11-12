@@ -125,6 +125,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
   }, [uid]);
 
   const name = nameOf(userData, auth);
+  const enrolledMs = rawUser?.createdAt?.toMillis?.() || (auth?.metadata?.creationTime ? Date.parse(auth.metadata.creationTime) : null);
+  const enrolled = enrolledMs ? new Date(enrolledMs).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : null;
   const photo = userData?.photoURL || auth?.photoURL || null;
   const activeReminders = tasks.filter((t) => t.userId === uid && !t.completed).length;
   const version = Constants.expoConfig?.version || "";
@@ -167,6 +169,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
             <Text style={styles.name} numberOfLines={2}>{name}</Text>
             {userData?.grade ? <Text style={styles.soft}>Class {userData.grade}</Text> : null}
             {auth?.email ? <Text style={styles.soft} numberOfLines={1}>{auth.email}</Text> : null}
+            {/* Back from the old Profile screen (owner, 13 Nov): when this account joined, with the year. */}
+            {enrolled ? <Text style={styles.soft}>Enrolled {enrolled}</Text> : null}
           </View>
         </View>
         <Pressable onPress={editProfile} style={styles.outlineButton} accessibilityRole="button" disabled={!userData}>

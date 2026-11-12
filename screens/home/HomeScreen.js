@@ -30,6 +30,7 @@ import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
 import { usePersona } from "../../services/persona";
+import functions from "@react-native-firebase/functions";
 import PersonaBanner from "../../components/admin/PersonaBanner";
 import { needsClass } from "../../utils/pickClass";
 import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
@@ -357,6 +358,20 @@ export default function HomeScreen({ navigation }) {
     return navigation.addListener("focus", load);
   }, [uid, teachesKey, isAdmin, navigation]);
 
+  // Owner: who joined today and who is stuck (People screen), at most every 30 minutes (owner, 13 Nov).
+  const [peopleCounts, setPeopleCounts] = useState(null);
+  const peopleAt = useRef(0);
+  useEffect(() => {
+    if (!isAdmin) return undefined;
+    const load = () => {
+      if (Date.now() - peopleAt.current < 30 * 60 * 1000) return;
+      peopleAt.current = Date.now();
+      functions().httpsCallable("peopleList")({}).then((r) => setPeopleCounts(r.data?.counts || null)).catch(() => {});
+    };
+    load();
+    return navigation.addListener("focus", load);
+  }, [isAdmin, navigation]);
+
   // Owner: new reports from kids (never miss one), checked when Home comes back into view, at most every 10 minutes.
   const [reportCount, setReportCount] = useState(0);
   const reportsAt = useRef(0);
@@ -620,6 +635,14 @@ export default function HomeScreen({ navigation }) {
           </Pressable>
         );
       })()}
+
+      {isAdmin && peopleCounts && (peopleCounts.newToday || peopleCounts.stuck) ? (
+        <Pressable onPress={() => navigation.navigate("Profile", { screen: "People" })} accessibilityRole="button" style={styles.joinCard}>
+          <Text style={styles.joinTitle}>People</Text>
+          <Text style={styles.joinLine}>{peopleCounts.newToday} joined today · {peopleCounts.stuck} stuck (signed in, picked nothing)</Text>
+          <Text style={styles.joinLink}>See who ›</Text>
+        </Pressable>
+      ) : null}
 
       {/* 1. Needs you card = the FIRST card on Home for anyone with pending items */}
       {needsYouRows.length > 0 ? (
