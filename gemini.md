@@ -23,6 +23,16 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
+## 2026-11-12 (evening): Class 7 science, join a class in the app, first real device walk (Claude)
+**Goal:** Class 7 exam in 3 days; kids installed but never reached a class; blank screens. **Done:** 13 Class 7 topics
+(open, 114 Qs) + Papers 1–2 · in-app "Join your class" (school → class; learning opens at once, classmates after the
+teacher confirms) · no automatic deletion (90-day request; scripts locked) · View as · safety net for screen errors.
+**Device walk on the owner's phone** (test build + Metro, evidence: artifact FwXSochP7K8Zs7qwhbV2Tt) found + fixed: Progress
+re-subscribe loop (984 → 1; the "dark screen"), Seema's course never seeded + tile lacked `order`, COURSE tile opened the
+old screen, usernames on the leaderboard, join card for teacher-parents, parent list on the child's class.
+**Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
+publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
+
 ## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
 - **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
   phone-tested one piece at a time; every publish goes to both 20.0.31 and 20.0.30 phones.
