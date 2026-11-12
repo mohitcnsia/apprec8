@@ -759,5 +759,12 @@
     "ask": "The first screen offers CONTINUE WITH GOOGLE, 'Use email instead' and 'Code from my parent' (the old child login code). The sign-up doc says the codes go away, and students may tap the wrong one. My view: fold 'Code from my parent' into the 'Use email instead' screen (still there for families who use it, no one locked out). YES = fold it · NO = keep as is · MORE DETAILS.",
     "details": "Found while testing on the emulator overnight (12 Nov). Students should use Continue with Google.",
     "from": "claude"
+  },
+  {
+    "id": "build-20-0-32",
+    "title": "Build 20.0.32 ready: upload to Internal + Closed testing",
+    "ask": "Upload build-1794450111834.aab (apprec8 folder, check PASS) to Internal testing, then Closed testing. When Google approves it on Closed testing, set Remote Config active_message min_version to 20.0.32 so everyone moves to it (not before: that's the loop from last night). YES = uploaded · MORE DETAILS.",
+    "details": "20.0.32 = no Android app backup (the sign-in loop after a reinstall). Today's updates are already on it (update 01a1cd83). After everyone is on 20.0.32, Claude publishes once instead of three times.",
+    "from": "claude"
   }
 ]
