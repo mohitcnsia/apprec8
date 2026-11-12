@@ -104,6 +104,10 @@ async function call(name, data, who) {
   const sc = (await db.doc(`consents/${sm2.consentId}`).get()).data();
   ok(sm2.status === "approved" && sm2.consentBy === "teacher-confirmed" && sc.method === "whatsapp" && sc.confirmedBy === teacher.uid && sc.kidUid === student.uid, "the consent record says who confirmed it and how");
   ok((await db.doc(`users/${student.uid}`).get()).data().classIds.includes("c1"), "Aarav is in 10-A");
+  // G97: the teacher removes an approved kid; the class goes from the kid's lists and the member doc.
+  ok((await call("approveMember", { classId: "c1", kidUid: student.uid, approve: false }, teacher)).ok, "teacher removes Aarav from 10-A");
+  ok(!((await db.doc(`users/${student.uid}`).get()).data().classIds || []).includes("c1"), "Aarav is no longer in 10-A");
+  ok(!(await db.doc(`classes/c1/members/${student.uid}`).get()).exists, "his member record is gone");
 
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });

@@ -218,7 +218,8 @@ exports.approveMember = functions
       batch.set(userRef, { classIds: FieldValue.arrayUnion(classId), pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     } else {
       batch.delete(memberRef);
-      batch.set(userRef, { pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
+      // Decline a request, or remove an approved kid (G97, Gemini; merged 2026-11-12): the class goes from both lists.
+      batch.set(userRef, { classIds: FieldValue.arrayRemove(classId), pendingClassIds: FieldValue.arrayRemove(classId) }, { merge: true });
     }
     batch.delete(classRef.collection("cache").doc("board")); // a new classmate shows on the board straight away
     batch.delete(db.collection("followUps").doc(`${classRef.id}__${kidUid}`)); // settled: off the follow-up list

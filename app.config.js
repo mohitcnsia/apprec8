@@ -44,7 +44,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 31; // 20.0.31: word-of-the-day reminder at 5 pm (expo-notifications), crash reporting (Crashlytics)
+  const patchVersion = 32; // 20.0.32: no Android app backup (sign-in loop after reinstall); 20.0.31: 5 pm word reminder, crash reporting
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =

@@ -2659,3 +2659,12 @@ the owner's totals; teacher's monthly "saved me time"; Appreciate / Nudge lists 
 class-average line for kids; avatar "Change my look"; "Share a class link" on the teacher's Me (it's on Home + Progress);
 reminders / Chamku's idea card still show on the kid's Home below the next thing.
 **Test plan:** docs/qa/OWNER_TESTING.md → END-TO-END TEST (13 Nov), cards e2e-01 … e2e-14 in Decisions.
+
+## 2026-11-12 — G97 merged (Gemini, reviewed 10 Nov) + child codes removed + build 20.0.32 (Claude)
+- Remove an approved kid: `approveMember` with `approve: false` now removes the class from `classIds` too; TeacherClasses →
+  each kid row → "Remove from class" (confirm). Emulator join test extended (3 checks, pass). Applied by hand (the screen changed
+  since Gemini's branch).
+- Child login codes removed from the app (owner: nobody uses them): sign-in "Code from my parent", Play-as "Get a login code",
+  Add a child's code screen. Server functions stay (unused).
+- Build 20.0.32: no Android app backup (sign-in loop after a reinstall).
+- **Deploy request (owner), BEFORE the next publish:** `firebase deploy --only functions:approveMember --project apprec8-ca229`

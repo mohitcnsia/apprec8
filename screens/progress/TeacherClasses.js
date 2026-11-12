@@ -151,6 +151,14 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
         setReloadKey((k) => k + 1);
       })
       .catch((e) => showAlert("Couldn't do that", e.message));
+  // G97 (Gemini, merged 2026-11-12): remove an approved kid from the class; their own progress stays.
+  const confirmRemove = (kid) => {
+    const kidName = kid.firstName || "this child";
+    showAlert(`Remove ${kidName} from ${open ? classLabel(open) : "this class"}?`, "Their own progress stays. They can ask to join again with the class link.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Remove", style: "destructive", onPress: () => decide(kid, false) },
+    ]);
+  };
   const notSure = (kid) =>
     markNotSure(open.id, kid.uid)
       .then(() => {
@@ -330,6 +338,11 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
                   {p.weak ? ` · weak: ${p.weak}` : ""}
                 </Text>
               ))}
+              {!String(open.id).startsWith("demo_") ? (
+                <Pressable onPress={() => confirmRemove(k)} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Remove ${k.firstName || "child"} from class`} style={{ alignSelf: "flex-end", minHeight: 36, justifyContent: "center" }}>
+                  <Text style={styles.soft}>Remove from class</Text>
+                </Pressable>
+              ) : null}
             </View>
           ))
         : null}
