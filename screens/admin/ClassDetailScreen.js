@@ -13,8 +13,8 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "./schoolUi";
 import { getClasses, classMembers, approveMember, classTeam, decideTeacherRequest, setPilotOpen } from "../../services/classesApi";
 import { SUBJECT_NAMES, classSubjects } from "../../utils/classes";
-import { classLinkMessage } from "../../utils/joinLink";
 import { getClassLink } from "../../services/joinApi";
+import { shareInvite } from "../../services/invite";
 import { askParentYes, needsParentYes } from "../../components/teacher/JoinRequestCard";
 import { showAlert } from "../../services/dialog";
 
@@ -88,19 +88,12 @@ export default function ClassDetailScreen({ route, navigation }) {
   const kids = members.filter((m) => m.status === "approved");
   const requests = team?.requests || [];
   const waiting = pendingKids.length + requests.length;
-  // Sign-up without codes (2026-11-11): one class link; a new link makes the old one stop working.
-  const shareLink = async (renew = false) => {
-    try {
-      const { url } = await getClassLink(classId, { renew });
-      await Share.share({ message: classLinkMessage({ className: cls.name, schoolName: cls.schoolName, url }) });
-    } catch (e) {
-      showAlert("Couldn't share the link", e?.message || "Check the internet and try again.");
-    }
-  };
-  const newLink = () =>
-    showAlert("Make a new link?", "The old link stops working. Families who haven't joined yet need the new one.", [
+  // One invite for every teacher (owner, 12 Nov): steps that end at "Join your class"; no class link to forward.
+  const invite = () => shareInvite({ className: cls.name, schoolName: cls.schoolName }).catch(() => {});
+  const offOldLink = () =>
+    showAlert("Turn off the old class link?", "Anyone with the old link can no longer use it. Families join with the Home button instead.", [
       { text: "Cancel", style: "cancel" },
-      { text: "New link", onPress: () => shareLink(true) },
+      { text: "Turn off", onPress: () => getClassLink(classId, { renew: true }).then(() => showAlert("Done", "The old class link no longer works.")).catch((e) => showAlert("Couldn't do that", e?.message || "Try again.")) },
     ]);
 
   return (
@@ -130,7 +123,7 @@ export default function ClassDetailScreen({ route, navigation }) {
 
         <Text style={styles.label}>WAITING FOR YOU ({waiting})</Text>
         {waiting === 0 ? (
-          <Text style={styles.dim}>Nobody is waiting. Share the class link below with parents.</Text>
+          <Text style={styles.dim}>Nobody is waiting. Tap INVITE FAMILIES below and send it to the parents.</Text>
         ) : (
           <View style={styles.listCard}>
             {pendingKids.map((m, i) => (
@@ -231,10 +224,10 @@ export default function ClassDetailScreen({ route, navigation }) {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
-          <Text style={styles.dim}>Forwarded too far? New link ›</Text>
+        <Pressable onPress={offOldLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
+          <Text style={styles.dim}>Old class link sent too far? Turn it off ›</Text>
         </Pressable>
-        <MainButton label="SHARE CLASS LINK" onPress={() => shareLink(false)} styles={styles} P={P} />
+        <MainButton label="INVITE FAMILIES" onPress={invite} styles={styles} P={P} />
       </View>
     </View>
   );

@@ -55,8 +55,7 @@ import { listenDecisions } from "../../services/decisionsApi";
 import { inbox } from "../../utils/decisions";
 import { loadTeacherClassesOverview, loadAdminTeacherRequests } from "../../services/classesApi";
 import { classLabel } from "../../utils/classes";
-import { classLinkMessage } from "../../utils/joinLink";
-import { getClassLink } from "../../services/joinApi";
+import { shareInvite } from "../../services/invite";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -676,16 +675,12 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 {!String(c.id).startsWith("demo_") ? (
                   <Pressable
-                    onPress={() =>
-                      getClassLink(c.id)
-                        .then(({ url }) => Share.share({ message: classLinkMessage({ className: c.name, schoolName: c.schoolName, url }) }))
-                        .catch(() => {})
-                    }
+                    onPress={() => shareInvite({ className: c.name, schoolName: c.schoolName, teacherName: firstName }).catch(() => {})}
                     style={styles.shareCodeButton}
                     accessibilityRole="button"
-                    accessibilityLabel={`Share the link for ${c.name}`}
+                    accessibilityLabel={`Invite families to ${c.name}`}
                   >
-                    <Text style={styles.shareCodeText}>SHARE LINK</Text>
+                    <Text style={styles.shareCodeText}>INVITE</Text>
                   </Pressable>
                 ) : null}
               </View>

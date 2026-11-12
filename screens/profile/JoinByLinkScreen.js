@@ -50,7 +50,7 @@ export default function JoinByLinkScreen({ route, navigation }) {
 
   useEffect(() => listenToUserDocument((d) => setUser(d || null), () => setUser(null)), []);
   useEffect(() => {
-    if (!token && !classId) return setLoadError("This class link doesn't work. Ask the teacher to share it again.");
+    if (!token && !classId) return setLoadError("This class link no longer works. Open Apprec8 → Join your class instead.");
     classLinkInfo(token, classId)
       .then(setInfo)
       .catch((e) => setLoadError(e?.message || "Couldn't open this class. Check the internet and try again."));

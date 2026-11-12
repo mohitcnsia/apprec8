@@ -14,8 +14,8 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
 import { questsForTeacher, classLabel } from "../../utils/classes";
-import { classLinkMessage } from "../../utils/joinLink";
 import { getClassLink, markNotSure } from "../../services/joinApi";
+import { shareInvite } from "../../services/invite";
 import JoinRequestCard from "../../components/teacher/JoinRequestCard";
 import BulkApproveCard from "../../components/teacher/BulkApproveCard";
 import { markGuide } from "../../services/guideFacts";
@@ -166,22 +166,16 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
         setReloadKey((k) => k + 1);
       })
       .catch((e) => showAlert("Couldn't do that", e.message));
-  // Sign-up without codes (2026-11-11): one class link for the class WhatsApp group. "New link" if it was forwarded
+  // Sign-up without codes (2026-11-11), then (12 Nov) one invite instead of the class link. Turning the old link off if it was forwarded
   // too far: the old link stops working.
   const teacherName = (authInstance.currentUser?.displayName || "").trim().split(/\s+/)[0] || null;
-  const shareLink = async (renew = false) => {
-    try {
-      const { url } = await getClassLink(open.id, { renew });
-      markGuide("teacher.share");
-      await Share.share({ message: classLinkMessage({ className: open.name, schoolName: open.schoolName, teacherName, url }) });
-    } catch (e) {
-      showAlert("Couldn't share the link", e?.message || "Check the internet and try again.");
-    }
-  };
-  const newLink = () =>
-    showAlert("Make a new link?", "The old link stops working. Families who haven't joined yet need the new one.", [
+  // One invite for every teacher (owner, 12 Nov): steps that end at "Join your class"; no class link to forward.
+  const invite = () => shareInvite({ className: open.name, schoolName: open.schoolName, teacherName }).catch(() => {});
+  // An old class link that went too far: turn it off (it is no longer shared; families join with the Home button).
+  const offOldLink = () =>
+    showAlert("Turn off the old class link?", "Anyone with the old link can no longer use it. Families join with the Home button instead.", [
       { text: "Cancel", style: "cancel" },
-      { text: "New link", onPress: () => shareLink(true) },
+      { text: "Turn off", onPress: () => getClassLink(open.id, { renew: true }).then(() => showAlert("Done", "The old class link no longer works.")).catch((e) => showAlert("Couldn't do that", e?.message || "Try again.")) },
     ]);
 
   const reloadClasses = useCallback(() => {
@@ -312,20 +306,20 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
       {open && rows?.length && readAt ? <Text style={styles.soft}>{updatedText(readAt)}{pullRefreshAllowed() ? " · pull down for the latest" : ""}</Text> : null}
       {/* G91: the week-1 check-up, whole class by topic (only kids who took it; names only for the teacher). */}
       {open && rows?.length ? <CheckupCard rows={rows} P={P} styles={styles} /> : null}
-      {/* Guide step 2: share the class link (WhatsApp); parents tap it, nobody types a code. */}
+      {/* Guide step 2: invite families (WhatsApp): one message with steps that end at the app's "Join your class". */}
       {open && !String(open.id).startsWith("demo_") ? (
         <>
-          <Pressable onPress={() => shareLink(false)} accessibilityRole="button" style={styles.button}>
-            <Text style={styles.buttonText}>SHARE CLASS LINK</Text>
+          <Pressable onPress={invite} accessibilityRole="button" style={styles.button}>
+            <Text style={styles.buttonText}>INVITE FAMILIES</Text>
           </Pressable>
-          <Pressable onPress={newLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
-            <Text style={styles.soft}>Forwarded too far? New link ›</Text>
+          <Pressable onPress={offOldLink} accessibilityRole="button" hitSlop={8} style={{ alignSelf: "center", minHeight: 40, justifyContent: "center" }}>
+            <Text style={styles.soft}>Old class link sent too far? Turn it off ›</Text>
           </Pressable>
         </>
       ) : null}
       {open && rows ? <AssignPanel cls={open} uid={uid} kids={rows} P={P} styles={styles} /> : null}
       {open && rows === null ? <ActivityIndicator color={P.label} /> : null}
-      {open && rows?.length === 0 ? <Text style={styles.soft}>No children yet. Share the class link in your class WhatsApp group.</Text> : null}
+      {open && rows?.length === 0 ? <Text style={styles.soft}>No children yet. Tap INVITE FAMILIES and send it to your class WhatsApp group.</Text> : null}
       {open && rows
         ? rows.map((k) => (
             <View key={k.uid} style={styles.kid}>

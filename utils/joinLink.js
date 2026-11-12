@@ -19,7 +19,28 @@ export function parseJoinLink(url) {
 /** The address shared on WhatsApp. `base` ends with "/j/" (config/appConfig.js JOIN_LINK_BASE). */
 export const joinUrl = (base, token) => `${base}${token}`;
 
-/** The WhatsApp message a teacher shares with the class's parents. */
+/**
+ * The one message every teacher sends (owner, 12 Nov: "teachers might send the old link anyway"). It ends at the app's
+ * own "Join your class" button, so there is one way in. testing = { groupUrl, optInUrl } while in closed testing.
+ */
+export function inviteMessage({ className, schoolName, teacherName, storeUrl, testing = null }) {
+  const where = [className, schoolName].filter(Boolean).join(", ");
+  const steps = [
+    ...(testing ? [`Join the testers group: ${testing.groupUrl}`, `Become a tester: ${testing.optInUrl}`] : []),
+    `Install Apprec8: ${storeUrl}`,
+    `Open Apprec8 → tap "Join your class" → ${[schoolName, className].filter(Boolean).join(" → ")}`,
+  ];
+  return [
+    `Namaste! Our class ${where} is on Apprec8, the learning app.`,
+    "",
+    ...steps.map((t, i) => `${i + 1}. ${t}`),
+    "",
+    `${teacherName || "The teacher"} checks every child, so only our class can join. Use the same Gmail as your Play Store.`,
+    `हिंदी: Apprec8 खोलें → "Join your class" → ${className || "अपनी कक्षा"} चुनें।`,
+  ].join("\n");
+}
+
+/** The WhatsApp message a teacher shares with the class's parents (old class link; kept for links already sent). */
 export function classLinkMessage({ className, schoolName, teacherName, url }) {
   const where = [className, schoolName].filter(Boolean).join(", ");
   return [

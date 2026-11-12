@@ -24,6 +24,12 @@ export const APPREC8_TEAM_REVIEWER_UID = UID_FROM_ENV || ADMIN_UID;
  * Compared case-insensitively. The admin (APPREC8_TEAM_REVIEWER_UID) is always a tester.
  */
 export const TESTER_EMAILS = ["mohitchilkoti@gmail.com"];
+// While the app is in Play closed testing, families first join the tester group and become testers (owner, 12 Nov).
+// Set IN_CLOSED_TESTING to false once the app is public: the two steps drop out of every invite.
+export const IN_CLOSED_TESTING = true;
+export const TESTER_GROUP_URL = "https://groups.google.com/g/apprec8-testers";
+export const TESTER_OPTIN_URL = "https://play.google.com/apps/testing/com.mohitchilkoti.apprec8";
+export const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.mohitchilkoti.apprec8";
 // Children who may type free text (owner 2026-11-05: Pratha, supervised by the owner). Never list a child's email in
 // code (it would be published with the repo): the list lives in Remote Config, key "free_text_emails" (JSON array or
 // comma-separated). This constant stays empty.

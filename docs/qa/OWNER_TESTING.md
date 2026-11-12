@@ -16,7 +16,7 @@ account with a 15-year-old's birthday) · D = Pratha's (optional). Close and reo
 
 **E2E 1 · Get ready (you, Mac).** `firebase deploy --only functions:recordMood --project apprec8-ca229` (Excited / Tired taps) ·
 `node scripts/admin/setCounsellor.cjs <Seema's email> --apply` · phones A and B: Me → bottom line shows today's update code.
-**E2E 2 · Class link (B).** Progress → My classes → the test class → **SHARE CLASS LINK** → WhatsApp → send to A and C.
+**E2E 2 · Class link (B).** Progress → My classes → the test class → **INVITE FAMILIES** → WhatsApp → send to A and C.
 **E2E 3 · Parent asks to join (A).** Tap the link → "Your child's class…" → OPEN APPREC8 → **+ Another child** "Test Riya",
 roll 23, your mobile, Mother/Father, tick the form → **JOIN** → Yes → "Request sent". Home: Test Riya's card says
 "Class: waiting for the teacher to approve"; Me → MY CHILDREN shows "waiting for the teacher".
@@ -156,7 +156,7 @@ Not in this version: the star for opening (needs a server change), My words in M
 After DR-32 (CODE_REVIEW.md) and an app restart. Try it first with one student (or your own second Google account).
 1. **Student, own phone (13+):** groups.google.com/g/apprec8-testers → Join group → play.google.com/apps/testing/com.mohitchilkoti.apprec8
    → Become a tester → Install → sign in with Google → first name + Class 10.
-2. **Seema:** Progress → My classes → the class → SHARE CLASS LINK → the students' WhatsApp group.
+2. **Seema:** Progress → My classes → the class → INVITE FAMILIES → the students' WhatsApp group.
 3. **Student:** taps the link → Apprec8 opens on **Join a class** (student screen) → roll number + parent's mobile →
    ASK TO JOIN → "Is this your parent's number?" → Yes → Request sent.
 4. **Seema:** posts in the parents' group "Reply YES" (or a slip). The student's card says "parent's yes: ask them",
@@ -165,7 +165,7 @@ After DR-32 (CODE_REVIEW.md) and an app restart. Try it first with one student (
 
 ## ⭐ On your phone: sign-up without codes, stage 1 (11 Nov) — class link + parent's one screen
 First the deploy (DR-31 in CODE_REVIEW.md), then close and reopen the app. Use a NEW test child; delete it afterwards.
-1. **Seema (teacher):** Progress → My classes → open the test class → **SHARE CLASS LINK** → WhatsApp → send it to you.
+1. **Seema (teacher):** Progress → My classes → open the test class → **INVITE FAMILIES** → WhatsApp → send it to you.
 2. **You (parent), on your phone:** tap the link in WhatsApp → page "Your child's class is on Apprec8" → **OPEN APPREC8**.
    Apprec8 opens on **Join a class** with the class name and Seema's name. (Not signed in? Sign in; it opens after.)
 3. Fill the one screen: **+ Another child** → "Test Riya", roll 23, your mobile, Mother/Father, tick the form → **JOIN**

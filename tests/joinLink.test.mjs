@@ -82,3 +82,15 @@ assert.deepEqual(joinPayload({ ...ok, token: undefined, classId: "c10a" }).class
 assert.equal(joinPayload({ ...ok, token: undefined, classId: "c10a" }).token, undefined);
 assert.throws(() => joinPayload({ ...ok, token: undefined }), /link/);
 console.log("joinLink: picked class ok");
+
+// One invite for every teacher (owner, 12 Nov): steps end at "Join your class"; no class link in it.
+{
+  const { inviteMessage } = await import("../utils/joinLink.js");
+  const m = inviteMessage({ className: "10-A", schoolName: "Appreciate International School", teacherName: "Seema", storeUrl: "https://play/x", testing: { groupUrl: "https://g", optInUrl: "https://o" } });
+  assert.ok(m.includes("1. Join the testers group: https://g") && m.includes("2. Become a tester: https://o") && m.includes("3. Install Apprec8: https://play/x"));
+  assert.ok(m.includes('4. Open Apprec8 → tap "Join your class" → Appreciate International School → 10-A'));
+  assert.ok(!/\/j\//.test(m), "no old class link");
+  const pub = inviteMessage({ className: "10-A", schoolName: "S", storeUrl: "https://play/x" });
+  assert.ok(pub.startsWith("Namaste!") && pub.includes("1. Install Apprec8") && !pub.includes("tester"), "public: install is step 1");
+  console.log("joinLink: invite message ok");
+}
