@@ -13,6 +13,7 @@ import InviteTeacherScreen from "../screens/admin/InviteTeacherScreen";
 import JoinAsTeacherScreen from "../screens/profile/JoinAsTeacherScreen";
 import JoinClassScreen from "../screens/profile/JoinClassScreen";
 import JoinByLinkScreen from "../screens/profile/JoinByLinkScreen";
+import PickClassScreen from "../screens/profile/PickClassScreen";
 import GuidesScreen from "../screens/guides/GuidesScreen";
 import OwnerNotesScreen from "../screens/admin/OwnerNotesScreen";
 import IdeasReportsScreen from "../screens/admin/IdeasReportsScreen";
@@ -111,6 +112,7 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen name="JoinAsTeacher" component={JoinAsTeacherScreen} options={{ headerShown: false }} />
           <Stack.Screen name="JoinClass" component={JoinClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="JoinByLink" component={JoinByLinkScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="PickClass" component={PickClassScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Guides" component={GuidesScreen} options={{ headerShown: false }} />
           <Stack.Screen name="LinkChild" component={LinkChildScreen} options={{ headerShown: false }} />
           <Stack.Screen name="LinkParent" component={LinkParentScreen} options={{ headerShown: false }} />

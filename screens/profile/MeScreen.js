@@ -268,7 +268,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
               </View>
             ))}
             {!myClasses.length && !pendingClasses.length ? (
-              <Row icon="add-circle-outline" label="Join a class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+              <Row icon="add-circle-outline" label="Join a class" onPress={() => navigation.navigate("PickClass")} styles={styles} P={P} />
             ) : null}
           </View>
         </>
@@ -322,7 +322,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <View style={styles.group}>
             {myClasses.length + pendingClasses.length > 0 && myClasses.length + pendingClasses.length < MAX_CLASSES ? (
               <>
-                <Row icon="add-circle-outline" label="Join another class" onPress={() => navigation.navigate("JoinClass")} styles={styles} P={P} />
+                <Row icon="add-circle-outline" label="Join another class" onPress={() => navigation.navigate("PickClass")} styles={styles} P={P} />
                 <View style={styles.divider} />
               </>
             ) : null}

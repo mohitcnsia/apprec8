@@ -184,3 +184,13 @@ const teacherQuests5a = questsForTeacher(cls5aTeacher, "otherTeacher");
 assert.ok(!teacherQuests5a.includes("course-seema-c10-english"), "5-A English teacher cannot assign from Seema course");
 
 console.log("courseVisibility tests passed");
+
+// Owner, 12 Nov: a child waiting for the teacher's approval already sees the class course.
+{
+  const { isTileVisible: vis, isEnrolledCourse: enrolled } = await import("../utils/courseVisibility.js");
+  const course = { forClassIds: ["c10a"] };
+  assert.equal(vis(course, { pendingClassIds: ["c10a"] }), true, "waiting = learning already");
+  assert.equal(enrolled(course, { pendingClassIds: ["c10a"] }), true, "the course comes first on Home");
+  assert.equal(vis(course, { pendingClassIds: ["other"] }), false);
+  console.log("courseVisibility: waiting kids see the course");
+}

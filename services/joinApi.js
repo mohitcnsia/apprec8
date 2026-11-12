@@ -10,12 +10,15 @@ export async function getClassLink(classId, { renew = false } = {}) {
   const { token } = await call("classLink", { classId, renew });
   return { token, url: joinUrl(JOIN_LINK_BASE, token) };
 }
-/** What a link points to → { classId, className, schoolName, grade, teacherNames }. */
-export const classLinkInfo = (token) => call("classLinkInfo", { token });
+/** What a link (token) or a picked class (classId) points to → { classId, className, schoolName, grade, teacherNames }. */
+export const classLinkInfo = (token, classId = null) => call("classLinkInfo", classId ? { classId } : { token });
+/** Every class a child can ask to join, by school (PickClassScreen) → [{ schoolId, schoolName, classes }]. */
+export const joinableClasses = () => call("joinableClasses", {}).then((r) => r.schools || []);
 /** The parent's one screen → { kidUid, firstName, className, isNew }. Throws a parent-friendly error first. */
 export const joinClassByLink = (form) => call("joinClassByLink", joinPayload(form));
 /** A student asks to join from their own phone → { className, teacherConfirms }. */
-export const studentJoinByLink = ({ token, rollNo, parentMobile }) => call("studentJoinByLink", { token, rollNo, parentMobile });
+export const studentJoinByLink = ({ token, classId = null, rollNo, parentMobile }) =>
+  call("studentJoinByLink", { ...(classId ? { classId } : { token }), rollNo, parentMobile });
 /** Teacher: "Not sure" → the family goes on the follow-up list. */
 export const markNotSure = (classId, kidUid) => call("markNotSure", { classId, kidUid });
 /** Admin: everyone on the follow-up list. */

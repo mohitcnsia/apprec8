@@ -4,12 +4,18 @@
 
 export const ADMIN_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
 
+/** Classes a child is in or has asked to join (waiting for the teacher). */
+const myClassIds = (userDoc) => [
+  ...(Array.isArray(userDoc?.classIds) ? userDoc.classIds : []),
+  ...(Array.isArray(userDoc?.pendingClassIds) ? userDoc.pendingClassIds : []),
+];
+
 /**
  * Checks if a tile, quest, or bundled quest module is visible to a user.
  * - Items without `forClassIds` (or empty) are public and visible to everyone.
  * - Items with `forClassIds` are restricted: visible only to:
  *   1. Admins / owners (isAdmin flag, userDoc.isAdmin, or matching admin UID).
- *   2. Students enrolled in any of those classes (userDoc.classIds).
+ *   2. Students in, or waiting to join, any of those classes (userDoc.classIds / pendingClassIds).
  *   3. Teachers who teach any of those classes (userDoc.teachesClassIds).
  * Everyone else never sees it (Home, Progress, parent week).
  */
@@ -28,8 +34,9 @@ export function isTileVisible(tileOrQuest, userDoc, { isAdmin = false, adminUid 
   const uid = userDoc?.uid || userDoc?.userId || null;
   if (adminUid && uid && uid === adminUid) return true;
 
-  // Check student classes
-  const studentClasses = Array.isArray(userDoc?.classIds) ? userDoc.classIds : [];
+  // Check student classes. Owner, 12 Nov ("a person wants to learn"): asking to join is enough to start learning;
+  // the teacher's approval only adds the child to her class list, it never holds back the course.
+  const studentClasses = myClassIds(userDoc);
   if (forClassIds.some((cid) => studentClasses.includes(cid))) return true;
 
   // Check teacher classes
@@ -58,7 +65,7 @@ export function isEnrolledCourse(tileOrQuest, userDoc) {
 
   if (!Array.isArray(forClassIds) || forClassIds.length === 0) return false;
 
-  const studentClasses = Array.isArray(userDoc?.classIds) ? userDoc.classIds : [];
+  const studentClasses = myClassIds(userDoc);
   return forClassIds.some((cid) => studentClasses.includes(cid));
 }
 

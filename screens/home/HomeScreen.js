@@ -31,6 +31,7 @@ import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig"
 import { useOwnerExtras } from "../../services/ownerView";
 import { usePersona } from "../../services/persona";
 import PersonaBanner from "../../components/admin/PersonaBanner";
+import { needsClass } from "../../utils/pickClass";
 import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
 import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
@@ -608,6 +609,19 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
+      {/* Join your class (owner, 12 Nov): anyone not in a class picks it here, no link to come back to. */}
+      {(() => {
+        const nc = needsClass(userData, children);
+        if (!nc) return null;
+        return (
+          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass" })} accessibilityRole="button" style={styles.joinCard}>
+            <Text style={styles.joinTitle}>{nc.who === "kid" ? "Join your class" : `Join ${nc.name}'s class`}</Text>
+            <Text style={styles.joinLine}>Pick your school and class. Your teacher lets you in; keep learning meanwhile.</Text>
+            <Text style={styles.joinLink}>Find my class ›</Text>
+          </Pressable>
+        );
+      })()}
+
       {/* 1. Needs you card = the FIRST card on Home for anyone with pending items */}
       {needsYouRows.length > 0 ? (
         <View style={styles.needsYouCard} accessibilityLabel="Needs you">
@@ -868,6 +882,10 @@ const makeStyles = (P, insets) =>
     teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
     teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },
     todayCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 1, borderColor: P.selectedBorder, gap: 4 },
+    joinCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 4, marginBottom: 12 },
+    joinTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    joinLine: { fontSize: 14, fontFamily: "nunito", color: P.textSoft, lineHeight: 20 },
+    joinLink: { fontSize: 15, fontFamily: "nunitoBold", color: P.label, marginTop: 4 },
     upNextCard: { padding: 18, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 6 }, // not "nextCard": an older style of that name exists
     nextTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, lineHeight: 30 },
     thenRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 40 },

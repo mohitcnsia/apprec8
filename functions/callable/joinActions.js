@@ -74,13 +74,61 @@ async function classFromToken(token) {
   return cls;
 }
 
+/**
+ * The class a join is for: a class link's token, or (owner, 12 Nov: "a person wants to learn") a class the child or
+ * parent tapped in the app's class list (joinableClasses). Either way the teacher still approves every child.
+ */
+async function classFor(data) {
+  if (data?.classId) {
+    const id = String(data.classId);
+    if (id.startsWith("demo_")) throw fail("failed-precondition", "The Demo School can't be joined.");
+    const cls = await db.collection("classes").doc(id).get();
+    if (!cls.exists) throw fail("not-found", "This class isn't there any more. Pick your class again.");
+    return cls;
+  }
+  return classFromToken(String(data?.token || ""));
+}
+
+/**
+ * Every real class a child can ask to join, by school (owner, 12 Nov): { schools: [{ schoolId, schoolName,
+ * classes: [{ classId, name, grade, teachers: [first names] }] }] }. Signed-in users only; no children's data.
+ * Reads: the classes (at most 300) + their teachers' first names.
+ */
+exports.joinableClasses = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const snap = await db.collection("classes").limit(300).get();
+    const classes = snap.docs.filter((d) => !d.id.startsWith("demo_") && !d.data().archived);
+    const teacherIds = [...new Set(classes.flatMap((d) => (d.data().teacherIds || []).slice(0, 3)))].slice(0, 200);
+    const teachers = teacherIds.length ? await db.getAll(...teacherIds.map((id) => db.collection("users").doc(id))) : [];
+    const nameOf = Object.fromEntries(teachers.filter((t) => t.exists).map((t) => [t.id, firstWord(t.data().firstName)]));
+    const bySchool = new Map();
+    classes.forEach((d) => {
+      const c = d.data();
+      const key = c.schoolId || "none";
+      if (!bySchool.has(key)) bySchool.set(key, { schoolId: c.schoolId || null, schoolName: c.schoolName || "Other", classes: [] });
+      bySchool.get(key).classes.push({
+        classId: d.id,
+        name: c.name || "Class",
+        grade: Number.isInteger(c.grade) ? c.grade : null,
+        teachers: (c.teacherIds || []).map((id) => nameOf[id]).filter(Boolean).slice(0, 3),
+      });
+    });
+    const schools = [...bySchool.values()]
+      .map((sc) => ({ ...sc, classes: sc.classes.sort((a, b) => (a.grade || 0) - (b.grade || 0) || a.name.localeCompare(b.name)) }))
+      .sort((a, b) => a.schoolName.localeCompare(b.schoolName));
+    return { schools };
+  });
+
 /** { token } → what the join screen shows: class, school, the teachers' first names. Signed-in users only. */
 exports.classLinkInfo = functions
   .region(region)
   .runWith(runtimeOptions)
   .https.onCall(async (data, context) => {
     if (!context.auth) throw fail("unauthenticated", "Sign in first.");
-    const cls = await classFromToken(String(data?.token || ""));
+    const cls = await classFor(data);
     const ids = (cls.data().teacherIds || []).slice(0, 4);
     const teachers = ids.length ? await db.getAll(...ids.map((id) => db.collection("users").doc(id))) : [];
     return {
@@ -104,7 +152,7 @@ exports.joinClassByLink = functions
     if (!context.auth) throw fail("unauthenticated", "Sign in first.");
     const parentUid = context.auth.uid;
     if (parentUid.startsWith("demo_")) throw fail("failed-precondition", "Demo accounts can't join real classes.");
-    const cls = await classFromToken(String(data?.token || ""));
+    const cls = await classFor(data);
     const classId = cls.id;
     const parentRef = db.collection("users").doc(parentUid);
     const parentDoc = await parentRef.get();
@@ -206,7 +254,7 @@ exports.studentJoinByLink = functions
     if (!context.auth) throw fail("unauthenticated", "Sign in first.");
     const kidUid = context.auth.uid;
     if (kidUid.startsWith("demo_")) throw fail("failed-precondition", "Demo accounts can't join real classes.");
-    const cls = await classFromToken(String(data?.token || ""));
+    const cls = await classFor(data);
     const classId = cls.id;
     const kidRef = db.collection("users").doc(kidUid);
     const kidDoc = await kidRef.get();

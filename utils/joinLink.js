@@ -73,8 +73,9 @@ export function normalizeRoll(input) {
 }
 
 /** Validates the parent's join screen → the payload for joinClassByLink, or throws a parent-friendly error. */
-export function joinPayload({ token, kidUid, firstName, rollNo, mobile, relation, agreed, language, version }) {
-  if (!isJoinToken(token)) throw new Error("This class link doesn't work. Ask the teacher to share it again.");
+export function joinPayload({ token, classId, kidUid, firstName, rollNo, mobile, relation, agreed, language, version }) {
+  // A class picked in the app (classId) or a class link (token), owner 12 Nov.
+  if (!classId && !isJoinToken(token)) throw new Error("This class link doesn't work. Ask the teacher to share it again.");
   const name = String(firstName || "").trim().replace(/\s+/g, " ").split(" ")[0];
   if (!kidUid && (name.length < 2 || name.length > 30)) throw new Error("Write your child's first name");
   const roll = normalizeRoll(rollNo);
@@ -84,5 +85,5 @@ export function joinPayload({ token, kidUid, firstName, rollNo, mobile, relation
   if (!RELATIONS.includes(relation)) throw new Error("Choose mother, father or guardian");
   if (!agreed) throw new Error("Please read the form and tick that you agree");
   if (!["en", "hi"].includes(language) || !version) throw new Error("Please read the form again");
-  return { token, ...(kidUid ? { kidUid } : { firstName: name }), rollNo: roll, mobile: m, relation, language, version };
+  return { ...(classId ? { classId } : { token }), ...(kidUid ? { kidUid } : { firstName: name }), rollNo: roll, mobile: m, relation, language, version };
 }

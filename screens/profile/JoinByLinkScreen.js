@@ -27,6 +27,7 @@ const NEW = "new";
 
 export default function JoinByLinkScreen({ route, navigation }) {
   const token = route?.params?.token || null;
+  const classId = route?.params?.classId || null; // a class picked in the app (PickClassScreen), owner 12 Nov
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -49,11 +50,11 @@ export default function JoinByLinkScreen({ route, navigation }) {
 
   useEffect(() => listenToUserDocument((d) => setUser(d || null), () => setUser(null)), []);
   useEffect(() => {
-    if (!token) return setLoadError("This class link doesn't work. Ask the teacher to share it again.");
-    classLinkInfo(token)
+    if (!token && !classId) return setLoadError("This class link doesn't work. Ask the teacher to share it again.");
+    classLinkInfo(token, classId)
       .then(setInfo)
       .catch((e) => setLoadError(e?.message || "Couldn't open this class. Check the internet and try again."));
-  }, [token]);
+  }, [token, classId]);
   const childKey = (user?.childUids || []).join(",");
   useEffect(() => {
     if (!childKey) return;
@@ -74,7 +75,7 @@ export default function JoinByLinkScreen({ route, navigation }) {
   const childName = isNew ? firstName.trim().split(/\s+/)[0] : kids.find((k) => k.uid === pick)?.firstName || "your child";
   const className = info?.className || "the class";
   const teacher = info?.teacherNames?.length ? info.teacherNames.join(", ") : null;
-  const form = { token, kidUid: isNew ? null : pick, firstName, rollNo, mobile, relation, agreed, language: lang, version };
+  const form = { token, classId, kidUid: isNew ? null : pick, firstName, rollNo, mobile, relation, agreed, language: lang, version };
   let ready = false;
   try {
     joinPayload(form);
@@ -110,7 +111,7 @@ export default function JoinByLinkScreen({ route, navigation }) {
   const sendStudent = async () => {
     setBusy(true);
     try {
-      const r = await studentJoinByLink({ token, rollNo, parentMobile: mobile });
+      const r = await studentJoinByLink({ token, classId, rollNo, parentMobile: mobile });
       setDone({ firstName: user?.firstName, className: r.className, student: true });
     } catch (e) {
       showAlert("Couldn't ask to join", e?.message || "Please try again.");

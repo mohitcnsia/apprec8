@@ -109,6 +109,21 @@ async function call(name, data, who) {
   ok(!((await db.doc(`users/${student.uid}`).get()).data().classIds || []).includes("c1"), "Aarav is no longer in 10-A");
   ok(!(await db.doc(`classes/c1/members/${student.uid}`).get()).exists, "his member record is gone");
 
+  // 6b) Owner, 12 Nov: pick the class inside the app (no link). Same checks; the teacher still approves.
+  const picked = await call("joinableClasses", {}, student);
+  const c1Row = (picked.schools || []).flatMap((x) => x.classes).find((c) => c.classId === "c1");
+  ok(!!c1Row && c1Row.name === "10-A", "the class list shows 10-A");
+  ok(!(picked.schools || []).flatMap((x) => x.classes).some((c) => c.classId.startsWith("demo_")), "the Demo School is never in the list");
+  ok((await call("classLinkInfo", { classId: "c1" }, student)).className === "10-A", "a picked class opens the same join screen");
+  ok((await call("studentJoinByLink", { classId: "nope", rollNo: "31", parentMobile: "91234 56780" }, student)).error === "NOT_FOUND", "a class that isn't there is refused");
+  ok((await call("studentJoinByLink", { classId: "demo_c10b", rollNo: "31", parentMobile: "91234 56780" }, student)).error === "FAILED_PRECONDITION", "Demo School classes can't be joined");
+  const pj = await call("studentJoinByLink", { classId: "c1", rollNo: "31", parentMobile: "91234 56780" }, student);
+  ok(pj.className === "10-A", "Aarav asks again, by tapping 10-A in the app");
+  ok((await db.doc(`classes/c1/members/${student.uid}`).get()).data().status === "pending", "his request waits for the teacher");
+  ok(((await db.doc(`users/${student.uid}`).get()).data().pendingClassIds || []).includes("c1"), "he is waiting for 10-A (the course opens for him now)");
+  const pp = await call("joinClassByLink", { ...form, token: undefined, classId: "c1", firstName: "Meera" }, parent);
+  ok(pp.className === "10-A" || !!pp.kidUid, "a parent adds a child by tapping the class too");
+
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });
   ok((await call("joinClassByLink", { ...form, token: l2.token, firstName: "Fifth" }, stranger)).error === "RESOURCE_EXHAUSTED", "a 5th child: Need more? Tell us");

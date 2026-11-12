@@ -76,3 +76,9 @@ assert.throws(() => joinPayload({ ...ok, token: "bad" }), /link/);
 assert.throws(() => joinPayload({ ...ok, rollNo: "1234567" }), /roll/);
 
 console.log("joinLink tests passed");
+
+// A class picked in the app (owner, 12 Nov): classId instead of a link token.
+assert.deepEqual(joinPayload({ ...ok, token: undefined, classId: "c10a" }).classId, "c10a");
+assert.equal(joinPayload({ ...ok, token: undefined, classId: "c10a" }).token, undefined);
+assert.throws(() => joinPayload({ ...ok, token: undefined }), /link/);
+console.log("joinLink: picked class ok");
