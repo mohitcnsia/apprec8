@@ -25,11 +25,12 @@ function teacherWaitingMessage({ teacherName, className, count = 1 }) {
 function studentWaitingMessage({ studentName, className, count = 1 }) {
   const sName = String(studentName || "").trim() || "A student";
   const cName = String(className || "").trim() || "your class";
-  const title = "Apprec8: Student waiting";
+  // Owner, 12 Nov: the child is already learning; the teacher's confirm only adds them to the class board.
+  const title = "Apprec8: New in your class";
   const body =
     count > 1
-      ? `${sName} + ${count - 1} new waiting to join ${cName} · Approve`
-      : `${sName} wants to join ${cName} · Approve`;
+      ? `${sName} + ${count - 1} more joined ${cName} and started learning · Confirm or remove`
+      : `${sName} joined ${cName} and started learning · Confirm or remove`;
   return { title, body };
 }
 

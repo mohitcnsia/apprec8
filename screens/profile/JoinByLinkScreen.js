@@ -127,14 +127,12 @@ export default function JoinByLinkScreen({ route, navigation }) {
   if (done?.student) {
     return (
       <View style={[s.screen, s.center]}>
-        <Text style={s.bigTitle}>Request sent ✓</Text>
-        <Text style={s.softCenter}>
-          {teacher ? `${teacher} will` : "Your teacher will"} ask your parent, then let you into {done.className}.
-        </Text>
-        <Text style={s.softCenter}>You can keep practising meanwhile.</Text>
+        <Text style={s.bigTitle}>You joined {done.className} ✓</Text>
+        <Text style={s.softCenter}>Your class's lessons are on Home now. Start learning!</Text>
+        <Text style={s.softCenter}>{teacher || "Your teacher"} will check with your parent, then you'll see your classmates too.</Text>
         <View style={[s.footer, s.footerAbs]}>
-          <Pressable onPress={() => navigation.navigate("ProfileScreen")} style={s.button} accessibilityRole="button">
-            <Text style={s.buttonText}>DONE</Text>
+          <Pressable onPress={() => navigation.navigate("Apprec8")} style={s.button} accessibilityRole="button">
+            <Text style={s.buttonText}>START LEARNING</Text>
           </Pressable>
         </View>
       </View>
@@ -143,11 +141,9 @@ export default function JoinByLinkScreen({ route, navigation }) {
   if (done) {
     return (
       <View style={[s.screen, s.center]}>
-        <Text style={s.bigTitle}>Request sent ✓</Text>
-        <Text style={s.softCenter}>
-          {teacher ? `${teacher} will` : "The teacher will"} let {done.firstName} into {done.className}.
-        </Text>
-        <Text style={s.softCenter}>Meanwhile {done.firstName} can start learning: Me → My children → Play as {done.firstName}.</Text>
+        <Text style={s.bigTitle}>{done.firstName} joined {done.className} ✓</Text>
+        <Text style={s.softCenter}>{done.firstName}'s class lessons are open now: Me → My children → Play as {done.firstName}.</Text>
+        <Text style={s.softCenter}>{teacher || "The teacher"} will confirm, then {done.firstName} sees classmates too.</Text>
         <View style={[s.footer, s.footerAbs]}>
           <Pressable onPress={() => navigation.navigate("ProfileScreen")} style={s.button} accessibilityRole="button">
             <Text style={s.buttonText}>DONE</Text>

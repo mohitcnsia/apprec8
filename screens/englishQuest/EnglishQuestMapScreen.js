@@ -188,7 +188,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     () =>
       listenToUserDocument((d) => {
         setGrade(Number.isInteger(d?.grade) ? d.grade : null);
-        setClassIds(d?.classIds || []);
+        setClassIds([...(d?.classIds || []), ...(d?.pendingClassIds || [])]); // waiting kids get the teacher's topics too (12 Nov)
       }, () => {}),
     []
   );

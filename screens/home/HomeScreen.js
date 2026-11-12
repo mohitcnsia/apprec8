@@ -446,7 +446,7 @@ export default function HomeScreen({ navigation }) {
 
   // RB-7: a teacher's assignment (not past its due date) becomes the "Next up" card.
   const [assignments, setAssignments] = useState([]);
-  const myClassKey = (userData?.classIds || []).join(",");
+  const myClassKey = [...(userData?.classIds || []), ...(userData?.pendingClassIds || [])].join(","); // waiting kids learn too (12 Nov)
   useEffect(() => {
     if (!myClassKey) return setAssignments([]);
     myAssignments(myClassKey.split(",")).then(setAssignments).catch(() => setAssignments([]));

@@ -5,7 +5,7 @@
 // classLinks/{token}               { classId, createdBy, createdAt }                 (server only)
 // classes/{id}.linkToken           the class's current link token (a new link replaces the old one)
 // classes/{id}/members/{kidUid}    + via: "link", rollNo, parentUid, parentName, relation, parentMobile
-//                                    status: "pending" | "unsure" | "approved"
+//                                    status: "pending" (learning already open) | "unsure" | "approved" (on the class board)
 // parentMobiles/{+91…}             { uids: [parentUid] }   how a child finds their parent (stage 2)  (server only)
 // followUps/{classId__kidUid}      { classId, kidUid, … }  families a teacher wasn't sure about    (server only)
 const functions = require("firebase-functions");
@@ -227,6 +227,8 @@ exports.joinClassByLink = functions
       parentMobile: mobile,
       consentId: consentRef.id,
       consentBy: "parent-account",
+      // Owner, 12 Nov: learning starts at once (pendingClassIds opens the class course and the teacher's topics);
+      // the teacher's confirm only puts the child on the class board with classmates (no stranger sees the kids).
       status: "pending",
       joinedAt: now,
     });
@@ -263,6 +265,7 @@ exports.studentJoinByLink = functions
     const firstName = firstWord(k.firstName);
     if (firstName.length < 2) throw fail("failed-precondition", "Add your first name first: Me → Edit profile.");
     if ((k.classIds || []).includes(classId)) throw fail("already-exists", "You're already in this class.");
+    if ((k.classIds || []).includes(classId)) throw fail("already-exists", "You're already in this class.");
     if ((k.pendingClassIds || []).includes(classId)) throw fail("already-exists", "You're already waiting for the teacher.");
     if ([...(k.classIds || []), ...(k.pendingClassIds || [])].length >= MAX_CLASSES) throw fail("resource-exhausted", `You're in ${MAX_CLASSES} classes already.`);
     const rollNo = normalizeRoll(data?.rollNo);
@@ -284,7 +287,7 @@ exports.studentJoinByLink = functions
       parentMobile, // typed by the child: for the teacher's call, not a verified parent account
       consentId: null,
       consentBy: linkedParent ? "parent-account" : "teacher-confirms",
-      status: "pending",
+      status: "pending", // learning starts at once; the teacher's confirm adds the classmates (see joinClassByLink)
       joinedAt: now,
     });
     batch.set(kidRef, { pendingClassIds: FieldValue.arrayUnion(classId) }, { merge: true });

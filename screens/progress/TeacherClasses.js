@@ -274,7 +274,9 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
           follow-up list (the teacher and the owner call the parent). */}
       {open && pending.some((k) => k.status !== "unsure") ? (
         <View style={{ gap: 8 }}>
-          <Text style={styles.title}>Waiting for you ({pending.filter((k) => k.status !== "unsure").length})</Text>
+          <Text style={styles.title}>New in your class ({pending.filter((k) => k.status !== "unsure").length})</Text>
+          {/* Owner, 12 Nov: they are already learning; confirming adds them to the class board with their classmates. */}
+          <Text style={styles.soft}>Already learning. Confirm the ones you know to show them their classmates; remove anyone who isn't yours.</Text>
           {/* 50 students at once (owner, 2026-11-12): tick the ones whose parents said YES, approve together. */}
           <BulkApproveCard
             kids={pending.filter((k) => k.status !== "unsure")}
