@@ -20,7 +20,8 @@ Core flow now: deploy → publish → walk on the phone (kids join a class in th
 4. **Kids can't type:** the student join form still asks a roll number + parent's mobile. Keep, shorten or drop?
 5. **Parents' yes for kids on their own phone:** Seema confirms in one batch later (consent record).
 6. **People screen** (owner, 12 Nov: "who joined, who they are, what they did"): search, Stuck list, person page with Help buttons; nothing deletes. Mockup in the sign-ups doc, waiting for your answers. Next after the walk.
-7. **Fable plan:** delete the old code screens; retire V1 quizzes + old Space path; apply for production after 14 days (you).
+7. **Full name on "Join your class" (owner, 12 Nov):** only on that form, never at sign-up. Wording: "Your full name, so {Teacher's name} (Teacher) knows it's you. Required to join the class." Last name kept only on the join request (teacher-only), removed when the teacher confirms or removes the child, or after 30 days. Plus a one-time "What should we call you?" card for older accounts with no first name (they show as "Learner").
+8. **Fable plan:** delete the old code screens; retire V1 quizzes + old Space path; apply for production after 14 days (you).
 
 ## Road to production (open steps)
 | # | Step | State |
