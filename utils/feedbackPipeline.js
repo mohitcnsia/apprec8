@@ -143,7 +143,8 @@ export function redactFeedbackForExport(doc = {}) {
     prompt: doc.promptQuestion || doc.contentContext?.titlePreview || null,
     choice: doc.selectedChoice ? `${doc.choiceEmoji || ""} ${doc.selectedChoice}`.trim() : null,
     reason: doc.childReason || doc.issueCategory || null,
-    note: doc.feedbackText ? String(doc.feedbackText).trim().slice(0, 300) : null,
+    // App errors (components/common/ErrorBoundary.js) keep the whole stack: it is code, not personal text.
+    note: doc.feedbackText ? String(doc.feedbackText).trim().slice(0, doc.feedbackType === "app_error" ? 3000 : 300) : null,
     status: doc.status || "new",
     entryPoint: doc.entryPoint || null,
     createdAt: dateStr,
@@ -157,6 +158,7 @@ export function redactFeedbackForExport(doc = {}) {
     chosen: doc.chosen ?? null,
     subject: doc.subject ? String(doc.subject).slice(0, 120) : null,
     appVersion: doc.appVersion || null,
+    updateId: doc.updateId || null,
   };
 }
 

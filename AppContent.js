@@ -24,6 +24,7 @@ import InAppMessageModal from "./components/common/InAppMessageModal";
 import useStartupUpdate from "./hooks/useStartupUpdate";
 import useJoinLink from "./hooks/useJoinLink";
 import UpdateReadyBanner from "./components/common/UpdateReadyBanner";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
@@ -209,6 +210,7 @@ const AppContent = () => {
   return (
     <PaperProvider theme={currentPaperTheme}>
      <FreeTextContext.Provider value={freeText}>
+      <ErrorBoundary where="app">
       <ThemedStatusBar />
       <View style={styles.container}>
         {showFirstRun ? (
@@ -242,6 +244,7 @@ const AppContent = () => {
       {updateReady ? <UpdateReadyBanner onPress={reloadNow} /> : null}
       <AppDialogHost />
       <AlertBanner onOpen={openAlertView} />
+      </ErrorBoundary>
      </FreeTextContext.Provider>
     </PaperProvider>
   );
