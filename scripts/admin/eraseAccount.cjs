@@ -23,7 +23,10 @@ const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
   const doc = await admin.firestore().collection("users").doc(u.uid).get();
   const d = doc.exists ? doc.data() : {};
   console.log(`Found ${u.uid}: ${d.firstName || u.displayName || "(no name)"}, class ${d.grade ?? "-"}, children ${(d.childUids || []).length}, classes ${(d.classIds || []).length}`);
-  if (!process.argv.includes("--apply")) return console.log("Look-up only. Add --apply to delete.");
+  // LOCKED (owner, 12 Nov 2026): no deletion without the owner's own click; every deletion gets a 90-day window and a
+  // pending decision on his Home. Until that flow exists, this script only looks up.
+  if (process.argv.includes("--apply")) return console.log("Deleting is switched off (owner, 12 Nov): no deletion without the owner's own click.");
+  return console.log("Look-up only.");
   console.log(JSON.stringify(await eraseUser(admin, u.uid)));
   console.log("Deleted. Reply to the email to confirm.");
 })().catch((e) => {

@@ -26,7 +26,8 @@ const DAYS = 14;
   const old = rows.filter((u) => ms(u.createdAt) && ms(u.createdAt) < cutoff);
   rows.forEach((u) => console.log(`${ms(u.createdAt) < cutoff ? "OLD " : "new "} ${u.uid}  ${u.firstName || "-"}  class ${u.grade}  since ${new Date(ms(u.createdAt)).toISOString().slice(0, 10)}`));
   console.log(`${rows.length} students without a parent's yes; ${old.length} older than ${DAYS} days.`);
-  if (!process.argv.includes("--apply")) return console.log("List only. Add --apply to delete the OLD ones.");
+  // LOCKED (owner, 12 Nov 2026): no automatic deletion, no 14-day cleanup. List only.
+  return console.log("List only. Deleting is switched off (owner, 12 Nov): every deletion waits for the owner's own click.");
   for (const u of old) console.log(JSON.stringify(await eraseUser(admin, u.uid)));
   console.log(`Deleted ${old.length}.`);
 })().catch((e) => {

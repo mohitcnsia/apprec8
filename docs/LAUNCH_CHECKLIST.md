@@ -12,6 +12,16 @@ Two steps: **A. Seema's class pilot** → **B. public release**. Done steps and 
 - **Next full app build:** 5 pm word reminder + crash reporting.
 - **Your phone gets no alerts yet:** Me → Decisions → "Notify me on this phone".
 
+## 🅿️ Parked (agreed, not built yet; review together once joining works)
+Core flow now: deploy → publish → walk on the phone (kids join a class in the app, learn at once; classmates after the teacher confirms).
+1. **Deletion (owner, 12 Nov):** no automatic deletion. "Delete my account" → kept 90 days, a pending decision on your Home, erased only by your tap. Delete scripts locked today.
+2. **Class 7 exam 15 Nov:** Paper 3 + more topic questions (Papers 1–2 are live).
+3. **Empty screens say why** (Fable): "Pick your class to see your quests", "Your class course opens once…".
+4. **Kids can't type:** the student join form still asks a roll number + parent's mobile. Keep, shorten or drop?
+5. **Parents' yes for kids on their own phone:** Seema confirms in one batch later (consent record).
+6. **New sign-ups list** (doc waiting for your 3 answers).
+7. **Fable plan:** delete the old code screens; retire V1 quizzes + old Space path; apply for production after 14 days (you).
+
 ## Road to production (open steps)
 | # | Step | State |
 |---|---|---|
