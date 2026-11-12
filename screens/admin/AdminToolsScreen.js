@@ -16,6 +16,8 @@ import { SEEN_MESSAGES_KEY } from "../../hooks/useInAppMessaging";
 import SeedDataFixButton from "../../components/quiz/SeedDataFixButton";
 import SeedQuestNodesButton from "../../components/quiz/SeedQuestNodesButton";
 import SeedTileQuestButton from "../../components/quiz/SeedTileQuestButton";
+import PersonaCard from "../../components/admin/PersonaCard";
+import firestore from "@react-native-firebase/firestore";
 import { QUESTS } from "../../data/quests";
 import SeedDataButton from "../../components/quiz/SeedDataButton";
 import FixIeoQuestionsButton from "../../components/quiz/FixIeoQuestionsButton";
@@ -29,6 +31,16 @@ export default function AdminToolsScreen({ navigation }) {
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
   const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
   const [schoolAdminSchools, setSchoolAdminSchools] = useState(null);
+  const [mine, setMine] = useState({ teaches: 0, children: 0 }); // for View as (the real doc, not the persona's)
+  useEffect(() => {
+    if (!isAdmin) return;
+    firestore()
+      .collection("users")
+      .doc(authInstance.currentUser.uid)
+      .get()
+      .then((d) => setMine({ teaches: (d.data()?.teachesClassIds || []).length, children: (d.data()?.childUids || []).length }))
+      .catch(() => {});
+  }, [isAdmin]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -86,6 +98,11 @@ export default function AdminToolsScreen({ navigation }) {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.h1}>Admin tools</Text>
+
+      <Text style={styles.section}>VIEW AS</Text>
+      <View style={styles.card}>
+        <PersonaCard P={P} teaches={mine.teaches} children={mine.children} />
+      </View>
 
       <Pressable onPress={() => navigation.navigate("OwnerNotes")} style={styles.row} accessibilityRole="button">
         <Ionicons name="document-text-outline" size={20} color={P.selectedText} />

@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isTesterUser } from "../config/appConfig";
+import { personaIsOwner, onPersonaChange } from "./persona";
 
 const KEY = "ownerExtras:v1";
 // Owner, 11 Nov: starts OFF (old content kept coming back after a reinstall); on only after switching it on in Me.
@@ -21,7 +22,8 @@ AsyncStorage.getItem(KEY)
   })
   .catch(() => {});
 
-export const ownerExtrasOn = () => extrasOn;
+// Viewing as a kid, parent or teacher (services/persona.js) turns the extras off too.
+export const ownerExtrasOn = () => extrasOn && personaIsOwner();
 
 export function setOwnerExtras(on) {
   extrasOn = !!on;
@@ -31,14 +33,19 @@ export function setOwnerExtras(on) {
 
 /** Re-renders when the switch changes. */
 export function useOwnerExtras() {
-  const [on, setOn] = useState(extrasOn);
+  const [on, setOn] = useState(ownerExtrasOn());
   useEffect(() => {
-    subs.add(setOn);
-    setOn(extrasOn);
-    return () => subs.delete(setOn);
+    const update = () => setOn(ownerExtrasOn());
+    subs.add(update);
+    const offPersona = onPersonaChange(update);
+    update();
+    return () => {
+      subs.delete(update);
+      offPersona();
+    };
   }, []);
   return on;
 }
 
 /** Tester mode (unlock-all, drafts) for what the screen SHOWS: off while the owner views as everyone else. */
-export const isTesterView = (user) => isTesterUser(user) && extrasOn;
+export const isTesterView = (user) => isTesterUser(user) && ownerExtrasOn();

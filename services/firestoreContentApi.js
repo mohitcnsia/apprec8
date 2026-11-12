@@ -14,6 +14,7 @@ import { getApp } from "@react-native-firebase/app"; // To get the default app i
 // Assuming authInstance is correctly configured and exported from your firebase setup.
 // Please ensure this path is correct for your project structure.
 import { authInstance } from "../config/firebaseConfig"; // Assuming this is already modular and provides auth
+import { withPersona, onPersonaChange } from "./persona";
 import { APPREC8_TEAM_REVIEWER_UID } from "../config/appConfig";
 import { cachedGameData } from "./gameCache";
 import { cacheKeys } from "../utils/cachePolicy";
@@ -371,8 +372,10 @@ export const listenToUserDocument = (onResult, onError) => {
   // Use modular `doc` to get a document reference
   const userDocRef = doc(db, "users", userId);
 
+  let lastRaw = null;
+  const offPersona = onPersonaChange(() => lastRaw && typeof onResult === "function" && onResult(withPersona(lastRaw)));
   // Use modular `onSnapshot`
-  const unsubscribe = onSnapshot(
+  const unsubscribeDoc = onSnapshot(
     userDocRef,
     (docSnapshot) => {
       if (docSnapshot.exists()) {
@@ -388,8 +391,9 @@ export const listenToUserDocument = (onResult, onError) => {
         console.log(
           `LISTENER: Snapshot for user document ${userId}. Perfect completions map exists: ${!!userData.perfectQuizCompletions}`
         );
+        lastRaw = userData;
         if (typeof onResult === "function") {
-          onResult(userData);
+          onResult(withPersona(userData)); // owner's "View as" (services/persona.js); others unchanged
         }
       } else {
         console.warn(`LISTENER: User document ${userId} does not exist.`);
@@ -405,7 +409,10 @@ export const listenToUserDocument = (onResult, onError) => {
       }
     }
   );
-  return unsubscribe;
+  return () => {
+    offPersona();
+    unsubscribeDoc();
+  };
 };
 
 /**

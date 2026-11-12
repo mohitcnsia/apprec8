@@ -29,6 +29,8 @@ import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
+import { usePersona } from "../../services/persona";
+import PersonaBanner from "../../components/admin/PersonaBanner";
 import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
 import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
@@ -269,7 +271,9 @@ export default function HomeScreen({ navigation }) {
   const extras = useOwnerExtras(); // owner's "Owner extras" switch (services/ownerView.js)
   const isTester = isTesterUser(authInstance.currentUser) && extras;
   const ownerView = uid === APPREC8_TEAM_REVIEWER_UID && extras;
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
+  const persona = usePersona(); // owner's "View as" (Admin tools)
+  const realOwner = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
+  const isAdmin = realOwner && persona.role === "owner"; // viewing as a kid/parent/teacher hides the owner's rows
 
   const [decisions, setDecisions] = useState([]);
   const [teacherRequests, setTeacherRequests] = useState([]);
@@ -303,8 +307,8 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     if (!uid || !profileLoaded) return undefined;
     // Parents too (2026-11-12): they hear when their child is appreciated.
-    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: isAdmin, parent: (userData?.childUids || []).length > 0 && !userData?.isChild });
-  }, [uid, profileLoaded, teachesKey, isAdmin, userData?.childUids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
+    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: realOwner, parent: (userData?.childUids || []).length > 0 && !userData?.isChild });
+  }, [uid, profileLoaded, teachesKey, realOwner, userData?.childUids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!teachesKey || !uid) {
       setTeacherClasses([]);
@@ -587,6 +591,7 @@ export default function HomeScreen({ navigation }) {
   // Home (owner 2026-11-04: back to mockup A, quest tiles carry the continue; no exam labels anywhere).
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <PersonaBanner />
       <View style={styles.header}>
         <Mascot size={50} />
         <View style={{ flex: 1 }}>

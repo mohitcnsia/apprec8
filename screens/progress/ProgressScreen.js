@@ -15,6 +15,8 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID, isTesterUser } from "../../config/appConfig";
 import { useOwnerExtras } from "../../services/ownerView";
+import { usePersona } from "../../services/persona";
+import PersonaBanner from "../../components/admin/PersonaBanner";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS, bundledQuest } from "../../data/quests";
@@ -62,7 +64,8 @@ export default function ProgressScreen({ navigation, route }) {
   const user = authInstance.currentUser;
   const uid = user?.uid || null;
   const extras = useOwnerExtras();
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID; // owner: every quest + Kids tab, extras or not
+  const persona = usePersona(); // owner's "View as" (Admin tools)
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID && persona.role === "owner"; // owner: every quest + Kids tab, extras or not
   const [view, setView] = useState("me");
   const [userData, setUserData] = useState(null);
   const [progressById, setProgressById] = useState({}); // { questId: { nodes, doc } }
@@ -246,6 +249,7 @@ export default function ProgressScreen({ navigation, route }) {
   if (view === "family" && children.length) {
     return (
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
+        <PersonaBanner />
         {segment}
         <LangSwitch lang={lang} onChange={setLang} P={P} />
         {children.map((c) => (
@@ -259,6 +263,7 @@ export default function ProgressScreen({ navigation, route }) {
   if (view === "classes" && isTeacher) {
     return (
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
+        <PersonaBanner />
         {segment}
         <TeacherClasses refreshTrigger={refreshTick} />
         <WeeklyPushCard role="teacher" on={!!userData?.pushOptIn?.teacher} P={P} />
@@ -280,6 +285,7 @@ export default function ProgressScreen({ navigation, route }) {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <PersonaBanner />
       {title}
       {segment}
 

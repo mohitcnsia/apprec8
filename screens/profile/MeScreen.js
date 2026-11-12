@@ -26,6 +26,8 @@ import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
 import { listenDecisions } from "../../services/decisionsApi";
 import { useOwnerExtras, setOwnerExtras } from "../../services/ownerView";
+import { usePersona, withPersona } from "../../services/persona";
+import PersonaBanner from "../../components/admin/PersonaBanner";
 import { inbox } from "../../utils/decisions";
 import IdeaModal from "../../components/feedback/IdeaModal";
 
@@ -68,8 +70,10 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
   const auth = authInstance.currentUser;
   const uid = auth?.uid || null;
-  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID;
-  const [userData, setUserData] = useState(null);
+  const persona = usePersona(); // owner's "View as" (Admin tools): Me shows that person's sections
+  const isAdmin = !!APPREC8_TEAM_REVIEWER_UID && uid === APPREC8_TEAM_REVIEWER_UID && persona.role === "owner";
+  const [rawUser, setUserData] = useState(null);
+  const userData = useMemo(() => withPersona(rawUser), [rawUser, persona]); // eslint-disable-line react-hooks/exhaustive-deps
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [myClasses, setMyClasses] = useState([]);
   const [children, setChildren] = useState([]);
@@ -146,6 +150,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <PersonaBanner />
 
       {/* Profile card */}
       <View style={styles.card}>
