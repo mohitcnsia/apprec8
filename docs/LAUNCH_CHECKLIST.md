@@ -19,7 +19,7 @@ Core flow now: deploy → publish → walk on the phone (kids join a class in th
 3. **Empty screens say why** (Fable): "Pick your class to see your quests", "Your class course opens once…".
 4. **Kids can't type:** the student join form still asks a roll number + parent's mobile. Keep, shorten or drop?
 5. **Parents' yes for kids on their own phone:** Seema confirms in one batch later (consent record).
-6. **New sign-ups list** (doc waiting for your 3 answers).
+6. **People screen** (owner, 12 Nov: "who joined, who they are, what they did"): search, Stuck list, person page with Help buttons; nothing deletes. Mockup in the sign-ups doc, waiting for your answers. Next after the walk.
 7. **Fable plan:** delete the old code screens; retire V1 quizzes + old Space path; apply for production after 14 days (you).
 
 ## Road to production (open steps)
