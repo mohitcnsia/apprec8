@@ -114,7 +114,7 @@ export default function AuthScreen({
         {primary("CONTINUE WITH GOOGLE", onGoogleLogin, isAuthLoading, G)}
         <View style={s.row}>
           {link("✉️ Use email instead", () => go("email"))}
-          {link("🔑 Code from my parent", () => setCodeOpen(true))}
+          {/* "Code from my parent" removed (owner, 2026-11-12: the sign-up doc drops the codes; nobody uses it). */}
         </View>
         <View style={{ alignItems: "center" }}>{link("Just look around first ›", onGuestLogin)}</View>
       </>

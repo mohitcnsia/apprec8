@@ -1,6 +1,6 @@
 // screens/profile/AddChildScreen.js
 // RB-6 parent-first accounts: a parent adds a child (first name, class, consent in English or Hindi) and gets a
-// one-time login code. On the child's phone: sign-in screen → "I have a code from my parent". Me → My children.
+// (no login code since 2026-11-12). Me → My children.
 // With route.params.kid it only makes a NEW code for an existing child.
 
 import React, { useMemo, useState } from "react";
@@ -19,7 +19,7 @@ const RELATIONS = [
   ["guardian", "Guardian · अभिभावक"],
 ];
 
-export default function AddChildScreen({ route }) {
+export default function AddChildScreen({ route, navigation }) {
   const existing = route?.params?.kid || null;
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
@@ -52,17 +52,21 @@ export default function AddChildScreen({ route }) {
     setBusy(false);
   };
 
+  // No login code any more (owner, 2026-11-12: the sign-up doc drops the codes). The child plays on this phone, and joins a
+  // class when the parent taps the teacher's class link.
   if (result) {
     return (
       <View style={[styles.screen, styles.content]}>
-        <Text style={styles.label}>LOGIN CODE FOR {String(result.name || "").toUpperCase()}</Text>
-        <Text style={styles.bigCode} selectable>{result.code}</Text>
+        <Text style={styles.label}>ADDED</Text>
+        <Text style={styles.bigCode}>{result.name} ✓</Text>
         <Text style={styles.soft}>
-          On {result.name}'s phone: open Apprec8 → "I have a code from my parent" → type this code. It works once, for {result.hours} hours.
+          {result.name} plays on this phone: Home → "Let {result.name} play on this phone". To join a school class, tap the class link your child's teacher sends.
         </Text>
-        <Text style={styles.soft}>बच्चे के फ़ोन पर: Apprec8 खोलें → "I have a code from my parent" → यह कोड लिखें। यह एक बार, {result.hours} घंटे तक काम करता है।</Text>
-        <Pressable onPress={() => Share.share({ message: `Apprec8 login code for ${result.name}: ${result.code} (works once, ${result.hours} hours)` })} style={styles.button}>
-          <Text style={styles.buttonText}>SHARE CODE</Text>
+        <Text style={styles.soft}>
+          {result.name} इसी फ़ोन पर खेल सकते हैं: Home → "Let {result.name} play on this phone"। स्कूल की कक्षा से जुड़ने के लिए शिक्षक का भेजा लिंक खोलें।
+        </Text>
+        <Pressable onPress={() => navigation.goBack()} style={styles.button} accessibilityRole="button">
+          <Text style={styles.buttonText}>DONE</Text>
         </Pressable>
       </View>
     );

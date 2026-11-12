@@ -90,9 +90,7 @@ export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
       <Pressable onPress={() => go(false)} disabled={busy} accessibilityRole="button" style={[styles.smallButton, { minHeight: 48, borderColor: P.border, backgroundColor: "transparent" }]}>
         <Text style={[styles.smallButtonText, { color: canLock ? P.textSoft : P.selectedText }]}>{canLock ? "Play without lock" : `Play as ${name}`}</Text>
       </Pressable>
-      <Pressable onPress={onLoginCode} accessibilityRole="button" style={[styles.link, { justifyContent: "center" }]}>
-        <Text style={[styles.dim, { textDecorationLine: "underline" }]}>{name} has another phone? Get a login code</Text>
-      </Pressable>
+      {/* "Get a login code" removed with the child codes (owner, 2026-11-12). */}
       <Pressable onPress={removeProfile} disabled={busy} accessibilityRole="button" style={[styles.link, { justifyContent: "center" }]}>
         <Text style={[styles.dim, { color: P.wrongText }]}>Delete {name}'s profile</Text>
       </Pressable>
