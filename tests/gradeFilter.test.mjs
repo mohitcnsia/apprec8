@@ -83,3 +83,20 @@ assert.equal(questHasTopicsForGrade(WordPower.nodes, 4), true, "Word Power has t
 assert.equal(questHasTopicsForGrade(WordPower.nodes, 10), false, "Word Power has 0 topics for Class 10 (only teaser unit)");
 
 console.log("gradeFilter tests passed");
+
+// Class 7 (2026-11-12): their own topics only, every topic open from the start (openTopics), the teaser unit hidden.
+{
+  const sci = await import("../data/scienceQuestData.js");
+  const seven = nodesForGrade(sci.nodes, 7);
+  assert.ok(!seven.some((n) => n.id === "sq-u7"), "Class 7 doesn't see the Class 3–6 teaser unit");
+  assert.ok(seven.every((n) => n.id.startsWith("sq7-")), "Class 7 sees only Class 7 topics");
+  const p7 = buildQuestPath(seven, {});
+  const mains7 = p7.path.filter((x) => x.kind === "main");
+  assert.equal(mains7.length, 13);
+  assert.ok(mains7.every((m) => m.status === "unlocked"), "every Class 7 topic is open");
+  assert.equal(p7.stats.unitsDone, 0, "nothing counts as done before it is played");
+  // Class 5 still unlocks in order.
+  const p5 = buildQuestPath(nodesForGrade(sci.nodes, 5), {});
+  assert.equal(p5.path.filter((x) => x.kind === "main" && x.status === "unlocked").length, 1);
+  console.log("Class 7 science: 13 open topics");
+}

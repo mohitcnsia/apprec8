@@ -1,5 +1,13 @@
 # Testing on your phone
 
+## ⭐ Class 7 Science (12 Nov, exam on 15 Nov)
+**After "publish", seed once:** Me → Admin tools → **Update Science Quest** (writes the 13 Class 7 topics; a few cents of reads
+as phones re-download Science once). Then, on a Class 7 account:
+1. Home → **Science Quest** tile → the map shows only Class 7 units (Life Processes · Matter & Energy · Thinking Skills),
+   and **every topic is open** (no locks). Open "Heat" → Learn cards → warm-up.
+2. Home → **Practice paper** → "Class 7 · Paper 1" (50 questions, 60 min) → finish → topic list → "Practise this" opens that topic.
+3. A Class 5 account still sees its own Science map, unlocking in order, and doesn't see the Class 7 paper.
+
 ## ⭐⭐ END-TO-END TEST with Seema (13 Nov) — do these in order
 Each step is also a card in **Me → Decisions** ("E2E 1" … "E2E 14"): **YES** = worked · **NO** = failed (say which step,
 voice typing is fine) · **MORE DETAILS** = unclear · **LATER** = skipped. Add a note whenever something looked odd.

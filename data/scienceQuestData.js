@@ -25,6 +25,7 @@ import {
 import sqU4 from "./scienceQuest/units/u4.js"; // Unit 4 Our Environment (2026-11-05)
 import sqU5 from "./scienceQuest/units/u5.js"; // Unit 5 Light, Sound & Magnets (2026-11-05)
 import sqU6 from "./scienceQuest/units/u6.js"; // Unit 6 Patterns & Puzzles (2026-11-05)
+import sqU7 from "./scienceQuest/units/u7.js"; // Class 7: Life Processes, Matter & Energy, Thinking Skills (2026-11-12)
 
 export const QUEST_ID = "science-quest";
 
@@ -1084,6 +1085,7 @@ The Moon is Earth's only natural satellite, orbiting Earth every 27.3 days.
   ...sqU4.studyPages,
   ...sqU5.studyPages,
   ...sqU6.studyPages,
+  ...sqU7.studyPages,
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -4996,6 +4998,7 @@ export const quizzes = {
   ...sqU4.quizzes,
   ...sqU5.quizzes,
   ...sqU6.quizzes,
+  ...sqU7.quizzes,
 };
 
 export const readings = {};
@@ -5422,7 +5425,8 @@ const u3Boss = forGrades(
 );
 
 // Units 4–6: data/scienceQuest/units/u4.js, u5.js, u6.js. Unit 7 teaser (coming soon).
-const u7 = unit("sq-u7", 7, "Water, Air & Weather", { comingSoon: true });
+// Classes 3–6 only: Class 7 has its own units (u7.js), and a teaser before them would add noise to their map.
+const u7 = forGrades(unit("sq-u7", 7, "Water, Air & Weather", { comingSoon: true }), [3, 4, 5, 6]);
 
 export const nodes = [
   u1,
@@ -5470,5 +5474,6 @@ export const nodes = [
   ...sqU4.nodes,
   ...sqU5.nodes,
   ...sqU6.nodes,
+  ...sqU7.nodes,
   u7,
 ];

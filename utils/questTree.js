@@ -122,7 +122,10 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false, e
       continue;
     }
     stats.unitsTotal += 1;
-    const unitOpen = previousUnitDone || unlockAll;
+    // openTopics (Class 7 exam crunch, 2026-11-12): every topic of this unit is open from the start, in any order.
+    const openAll = !!unit.openTopics;
+    const unitOpen = previousUnitDone || unlockAll || openAll;
+    let allCleared = true;
     const inUnit = nodes.filter((n) => n.unitId === unit.id);
     const mains = inUnit.filter((n) => n.kind === "main").sort(byNumber("branchOrder"));
     const boss = inUnit.find((n) => n.kind === "boss");
@@ -222,7 +225,8 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false, e
         mastered,
         practiceDone: practices.filter((p) => p.status === "completed").length,
       });
-      previousBranchCleared = cleared;
+      previousBranchCleared = cleared || openAll;
+      allCleared = allCleared && cleared;
     }
 
     let unitDone = false;
@@ -234,7 +238,7 @@ export function buildQuestPath(nodes = [], progress = {}, { unlockAll = false, e
       if (!currentPathId && bossStatus === "unlocked") currentPathId = boss.id;
       path.push({ ...boss, kind: "boss", status: bossStatus, bestPercent: bestOf(progress, boss.id) });
     } else {
-      unitDone = previousBranchCleared; // a unit without a boss is done when its last branch is cleared
+      unitDone = openAll ? allCleared : previousBranchCleared; // a unit without a boss is done when its last branch is cleared
     }
     if (unitDone) stats.unitsDone += 1;
     previousUnitDone = unitDone;
