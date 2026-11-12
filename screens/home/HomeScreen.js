@@ -614,9 +614,9 @@ export default function HomeScreen({ navigation }) {
         const nc = needsClass(userData, children);
         if (!nc) return null;
         return (
-          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass" })} accessibilityRole="button" style={styles.joinCard}>
+          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass", params: nc.who === "parent" ? { grade: nc.grade } : {} })} accessibilityRole="button" style={styles.joinCard}>
             <Text style={styles.joinTitle}>{nc.who === "kid" ? "Join your class" : `Join ${nc.name}'s class`}</Text>
-            <Text style={styles.joinLine}>Pick your school and class. Your teacher lets you in; keep learning meanwhile.</Text>
+            <Text style={styles.joinLine}>{nc.who === "kid" ? "Pick your school and class. You start learning at once." : `Pick ${nc.name}'s school and class. ${nc.name} starts learning at once.`}</Text>
             <Text style={styles.joinLink}>Find my class ›</Text>
           </Pressable>
         );

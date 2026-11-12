@@ -60,10 +60,10 @@ export default function AddChildScreen({ route, navigation }) {
         <Text style={styles.label}>ADDED</Text>
         <Text style={styles.bigCode}>{result.name} ✓</Text>
         <Text style={styles.soft}>
-          {result.name} plays on this phone: Home → "Let {result.name} play on this phone". To join a school class, tap the class link your child's teacher sends.
+          {result.name} plays on this phone: Home → "Let {result.name} play on this phone". To join a school class: Home → "Join {result.name}'s class".
         </Text>
         <Text style={styles.soft}>
-          {result.name} इसी फ़ोन पर खेल सकते हैं: Home → "Let {result.name} play on this phone"। स्कूल की कक्षा से जुड़ने के लिए शिक्षक का भेजा लिंक खोलें।
+          {result.name} इसी फ़ोन पर खेल सकते हैं: Home → "Let {result.name} play on this phone"। स्कूल की कक्षा से जुड़ने के लिए: Home → "Join {result.name}'s class"।
         </Text>
         <Pressable onPress={() => navigation.goBack()} style={styles.button} accessibilityRole="button">
           <Text style={styles.buttonText}>DONE</Text>

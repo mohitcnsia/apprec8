@@ -10,7 +10,7 @@ import { joinableClasses } from "../../services/joinApi";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { classesFor, firstSchool } from "../../utils/pickClass";
 
-export default function PickClassScreen({ navigation }) {
+export default function PickClassScreen({ navigation, route }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -27,7 +27,9 @@ export default function PickClassScreen({ navigation }) {
       .then(setSchools)
       .catch((e) => setError(e?.code === "functions/not-found" ? "This needs an update on our side. Please try again in a little while." : "Couldn't load the classes. Check the internet and try again."));
   }, []);
-  const grade = Number.isInteger(user?.grade) ? user.grade : null;
+  // A parent joining a child's class passes the child's class (Home's join card); otherwise the person's own class.
+  const forGrade = route?.params?.grade;
+  const grade = Number.isInteger(forGrade) ? forGrade : Number.isInteger(user?.grade) && !(user?.childUids || []).length ? user.grade : null;
   useEffect(() => {
     if (schools && schoolId === undefined) {
       const first = firstSchool(schools, grade);

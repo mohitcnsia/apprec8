@@ -17,9 +17,13 @@ export function firstSchool(schools = [], grade = null) {
 
 /** Home's "Join your class" card: a child (or a parent of a child) who is in no class and waiting for none. */
 export function needsClass(userDoc, children = []) {
-  if (!userDoc || (userDoc.teachesClassIds || []).length) return null;
+  if (!userDoc) return null;
   const free = (d) => !(d?.classIds || []).length && !(d?.pendingClassIds || []).length;
-  if (Number.isInteger(userDoc.grade) && !(userDoc.childUids || []).length) return free(userDoc) ? { who: "kid" } : null;
+  const teaches = (userDoc.teachesClassIds || []).length > 0;
+  // A teacher never gets it for themselves, but a teacher who is also a parent does for their children (walk, 12 Nov:
+  // the owner and Seema both teach and are parents).
+  if (Number.isInteger(userDoc.grade) && !(userDoc.childUids || []).length) return !teaches && free(userDoc) ? { who: "kid" } : null;
   const kid = children.find(free);
-  return kid ? { who: "parent", name: kid.firstName || "your child" } : null;
+  // The child's own class (walk, 12 Nov: a parent's list opened on the parent's class, not the child's).
+  return kid ? { who: "parent", name: kid.firstName || "your child", grade: Number.isInteger(kid.grade) ? kid.grade : null } : null;
 }
