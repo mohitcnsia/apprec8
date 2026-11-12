@@ -17,3 +17,23 @@ assert.ok(whenText(now - 864e5, now).startsWith("yesterday "));
 assert.ok(/2026/.test(whenText(now - 4 * 864e5, now)), "older: with the year");
 assert.equal(whenText(null, now), "—");
 console.log("peopleView tests passed");
+
+// 13 Nov walk: Play robots and 2025 accounts were counted as stuck.
+{
+  const { shapePerson, peopleCounts, isPlayRobot } = await import("../utils/people.js");
+  const robot = shapePerson({ kind: "none", email: "jeffflowers.93150@gmail.com", joinedAt: now - 864e5, quizzes: 0 }, now);
+  assert.equal(robot.robot, true); assert.equal(robot.stuck, false); assert.equal(robot.kind, "robot");
+  assert.equal(isPlayRobot({ kind: "none", email: "seemachilkoti@gmail.com" }), false);
+  assert.equal(isPlayRobot({ kind: "student", email: "jeffflowers.93150@gmail.com" }), false, "a real student is never a robot");
+  const old = shapePerson({ kind: "none", email: "old@gmail.com", joinedAt: now - 200 * 864e5, quizzes: 0 }, now);
+  assert.equal(old.stuck, false, "2025 accounts are not 'stuck'");
+  const joshi = shapePerson({ kind: "none", email: "josh@gmail.com", joinedAt: now - 4 * 864e5, quizzes: 0 }, now);
+  assert.equal(joshi.stuck, true);
+  const played = shapePerson({ kind: "none", email: "p@gmail.com", joinedAt: now - 4 * 864e5, quizzes: 3 }, now);
+  assert.equal(played.stuck, false, "someone learning is not stuck");
+  assert.deepEqual(peopleCounts([robot, old, joshi, played], now), { total: 3, newToday: 0, stuck: 1, robots: 1, tests: 0 });
+  const t = shapePerson({ kind: "none", email: "claude.parenttest.1109@example.com", joinedAt: now - 4 * 864e5, quizzes: 0 }, now);
+  assert.deepEqual([t.kind, t.stuck], ["test", false], "our own test accounts are not stuck people");
+  assert.deepEqual(filterPeople([robot, joshi], { tab: "stuck", now }).map((p) => p.email), ["josh@gmail.com"]);
+  console.log("peopleView: robots and old accounts ok");
+}

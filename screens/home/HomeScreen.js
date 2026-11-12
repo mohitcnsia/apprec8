@@ -33,6 +33,7 @@ import { usePersona } from "../../services/persona";
 import functions from "@react-native-firebase/functions";
 import PersonaBanner from "../../components/admin/PersonaBanner";
 import { needsClass } from "../../utils/pickClass";
+import { shapePerson, peopleCounts as countPeople } from "../../utils/people";
 import { papersFor, MIX_GRADES, CHECKUP_GRADES } from "../../data/papers";
 import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
@@ -366,7 +367,7 @@ export default function HomeScreen({ navigation }) {
     const load = () => {
       if (Date.now() - peopleAt.current < 30 * 60 * 1000) return;
       peopleAt.current = Date.now();
-      functions().httpsCallable("peopleList")({}).then((r) => setPeopleCounts(r.data?.counts || null)).catch(() => {});
+      functions().httpsCallable("peopleList")({}).then((r) => setPeopleCounts(countPeople((r.data?.people || []).map((p) => shapePerson(p))))).catch(() => {});
     };
     load();
     return navigation.addListener("focus", load);

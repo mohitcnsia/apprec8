@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
-import { filterPeople, whenText, KIND_LABEL } from "../../utils/people";
+import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts } from "../../utils/people";
 
 const TABS = [
   ["new", "New today"],
@@ -30,7 +30,7 @@ export default function PeopleScreen() {
     setError("");
     functions()
       .httpsCallable("peopleList")({})
-      .then((r) => setData(r.data))
+      .then((r) => setData({ ...r.data, people: (r.data.people || []).map((p) => shapePerson(p)) }))
       .catch((e) => setError(e?.code === "functions/not-found" ? "Deploy peopleList first (see My notes)." : e?.message || "Couldn't load. Try again."));
   };
   useEffect(load, []);
@@ -40,17 +40,17 @@ export default function PeopleScreen() {
 
   if (!data && !error) return <View style={[s.screen, s.center]}><ActivityIndicator color={P.label} /></View>;
   if (!data) return <View style={[s.screen, s.center]}><Text style={s.soft}>{error}</Text></View>;
-  const c = data.counts;
+  const c = peopleCounts(data.people, now);
 
   return (
     <ScrollView style={s.screen} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
       <Text style={s.h1}>People</Text>
-      <Text style={s.soft}>{c.total} accounts · {c.newToday} joined today · {c.stuck} stuck. {whenText(data.at, now)}.</Text>
+      <Text style={s.soft}>{c.total} people · {c.newToday} joined today · {c.stuck} stuck{c.robots || c.tests ? ` · not counted: ${[c.robots ? `${c.robots} Play robots` : null, c.tests ? `${c.tests} test accounts` : null].filter(Boolean).join(", ")}` : ""} · updated {whenText(data.at, now)}</Text>
       <View style={s.tabs} accessibilityRole="tablist">
         {TABS.map(([id, label]) => (
           <Pressable key={id} onPress={() => setTab(id)} accessibilityRole="tab" accessibilityState={{ selected: tab === id }} style={[s.tab, tab === id && s.tabOn]}>
             <Text style={[s.tabText, tab === id && s.tabTextOn]}>
-              {label} {id === "new" ? c.newToday : id === "stuck" ? c.stuck : c.total}
+              {label} {id === "new" ? c.newToday : id === "stuck" ? c.stuck : data.people.length}
             </Text>
           </Pressable>
         ))}
@@ -76,12 +76,13 @@ export default function PeopleScreen() {
             </View>
             {p.email ? <Text style={s.soft} numberOfLines={1}>{p.email}</Text> : null}
             <Text style={s.small}>Joined {whenText(p.joinedAt, now)} · last seen {p.lastSeenAt ? whenText(p.lastSeenAt, now) : "—"}</Text>
-            <Text style={s.small}>{place} · {p.quizzes} quizzes · {p.stars} ★</Text>
+            <Text style={s.small}>{place} · {p.quizzes} {p.quizzes === 1 ? "quiz" : "quizzes"} · {p.stars} ★</Text>
             {isOpen ? (
               <View style={s.detail}>
                 <Text style={s.small}>Joined: {new Date(p.joinedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" })}{p.via ? ` · via ${p.via}` : ""}</Text>
                 {p.kind === "parent" ? <Text style={s.small}>{p.children} {p.children === 1 ? "child" : "children"} added</Text> : null}
                 {p.kind === "none" ? <Text style={s.small}>Signed in but picked no class and added no child. Call or message them.</Text> : null}
+                {p.robot ? <Text style={s.small}>Google Play's automatic test account: it signs in once to check the app. Not a real person.</Text> : null}
                 {p.deletionRequested ? <Text style={s.warn}>Asked to delete the account (kept 90 days; you decide)</Text> : null}
               </View>
             ) : null}
