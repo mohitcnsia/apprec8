@@ -259,6 +259,21 @@ exports.submitFeedback = functions
   });
 
 /** V1 Callable Function: Handles user account deletion request. */
+/** A deletion request (owner, 12 Nov 2026): nothing is erased; the owner decides within 90 days. */
+async function recordDeletionRequest(uid, kind, requestedBy) {
+  const db = admin.firestore();
+  const u = await db.collection("users").doc(uid).get();
+  const now = Date.now();
+  await db.collection("deletionRequests").doc(uid).set({
+    uid, kind, requestedBy, status: "pending",
+    firstName: u.exists ? u.data().firstName || null : null,
+    requestedAt: now, keepUntil: now + 90 * 864e5,
+  }, { merge: true });
+  if (u.exists) await u.ref.set({ deletionRequestedAt: now }, { merge: true });
+  return { uid, kind, pending: true };
+}
+exports._recordDeletionRequest = recordDeletionRequest;
+
 exports.requestAccountDeletion = functions
   .region(region)
   .runWith(longRuntimeOptions) // G42: a big account (thousands of answers, child profiles) needs more than 60 s
@@ -271,10 +286,11 @@ exports.requestAccountDeletion = functions
     }
     const userId = context.auth.uid;
     try {
-      // Everything goes: progress, answers, class lists, consent names, sign-in (functions/utils/eraseUser.js).
-      const res = await eraseUser(admin, userId);
-      console.log("requestAccountDeletion", JSON.stringify(res));
-      return { success: true, message: "Account deleted successfully." };
+      // Owner, 12 Nov 2026: no deletion without the owner's own click. The tap records a request (kept 90 days, nothing
+      // erased); the owner reviews it and deletes by hand (eraseUser, later from his Home). Signing in again keeps it.
+      const res = await recordDeletionRequest(userId, "account", userId);
+      console.log("requestAccountDeletion (request only)", JSON.stringify(res));
+      return { success: true, pending: true, message: "Your request is noted." };
     } catch (error) {
       console.error(`Error during account deletion for user ${userId}:`, error);
       throw new functions.https.HttpsError(

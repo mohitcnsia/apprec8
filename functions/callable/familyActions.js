@@ -126,9 +126,9 @@ exports.deleteChildProfile = functions
     }
     // A linked account has its own login and history: a parent can't delete it from here (decision 9).
     if (kidDoc.data().ownLogin) throw new functions.https.HttpsError("failed-precondition", "This child has their own account. They can delete it from their own Me tab.");
-    // Everything goes: progress, answers, class lists, consent names, sign-in; the parent is unlinked (utils/eraseUser.js).
-    await eraseUser(admin, kidUid, { depth: 1 });
-    return { ok: true };
+    // Owner, 12 Nov 2026: no deletion without the owner's own click. Recorded as a request (kept 90 days, nothing erased).
+    await require("./userActions")._recordDeletionRequest(kidUid, "child-profile", context.auth.uid);
+    return { ok: true, pending: true };
   });
 
 // ---------- One phone, several profiles (owner: kids use their parent's phone) ----------

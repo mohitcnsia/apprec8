@@ -50,8 +50,8 @@ const DeleteAccountConfirmationScreen = ({ route, navigation }) => {
       setIsLoading(false);
 
       showAlert(
-        "Account Deletion Successful",
-        "Your account has been deleted. You will now be signed out."
+        "Request received",
+        "Your account will be removed after a check, within 90 days. Until then nothing is lost: sign in again to keep using it."
       );
 
       // Perform local sign out and navigate to the start of the authentication flow
