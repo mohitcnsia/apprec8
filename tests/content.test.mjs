@@ -166,6 +166,8 @@ function checkQuest(D) {
   nodes.forEach((n) => scanText(`node ${n.id}`, { title: n.title, description: n.description, story: n.story, subtopicTitles: n.subtopicTitles }));
 
   assert.ok(D.QUEST_ID && D.quest?.title && D.tile?.questId === D.QUEST_ID, `${D.QUEST_ID}: quest/tile/QUEST_ID mismatch`);
+  // Home lists tiles with orderBy("order"), and Firestore leaves out any tile without that field (12 Nov: Seema's course).
+  assert.ok(Number.isFinite(D.tile?.order), `${D.QUEST_ID}: tile needs a numeric "order" or Home never shows it`);
   if (D.quest.draft) assert.equal(D.tile.carouselGroup, "quest_draft", `${D.QUEST_ID}: draft quests must use carouselGroup quest_draft`);
   else assert.equal(D.tile.carouselGroup, "quest", `${D.QUEST_ID}: tile carouselGroup`);
 }

@@ -74,7 +74,8 @@ export default function JoinByLinkScreen({ route, navigation }) {
   const version = isNew ? CHILD_CONSENT_VERSION : CONSENT_VERSION;
   const childName = isNew ? firstName.trim().split(/\s+/)[0] : kids.find((k) => k.uid === pick)?.firstName || "your child";
   const className = info?.className || "the class";
-  const teacher = info?.teacherNames?.length ? info.teacherNames.join(", ") : null;
+  // Each name once (walk, 12 Nov: a teacher with two accounts showed as "Seema, Seema").
+  const teacher = info?.teacherNames?.length ? [...new Set(info.teacherNames)].join(", ") : null;
   const form = { token, classId, kidUid: isNew ? null : pick, firstName, rollNo, mobile, relation, agreed, language: lang, version };
   let ready = false;
   try {
@@ -190,7 +191,7 @@ export default function JoinByLinkScreen({ route, navigation }) {
           <Text style={s.label}>YOUR PARENT'S MOBILE NUMBER</Text>
           <TextInput value={mobile} onChangeText={setMobile} placeholder="98765 43210" placeholderTextColor={P.dimText} style={s.input} keyboardType="phone-pad" maxLength={16} accessibilityLabel="Your parent's mobile number" />
           <Text style={s.small}>
-            {teacher || "Your teacher"} asks your parent to say yes, then lets you in. Only your teacher and Apprec8 see this number.
+            You start learning straight away. {teacher || "Your teacher"} checks with your parent, then you see your classmates. Only your teacher and Apprec8 see this number.
           </Text>
           <Pressable onPress={() => setAsStudent(false)} hitSlop={8} style={{ alignSelf: "center", minHeight: 44, justifyContent: "center" }} accessibilityRole="button">
             <Text style={s.small}>I'm a parent ›</Text>

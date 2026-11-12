@@ -54,11 +54,12 @@ export default function PickClassScreen({ navigation }) {
     );
   }
 
+  const names = (c) => [...new Set(c.teachers)]; // each teacher once (a teacher with two accounts showed twice)
   const ClassRow = ({ c }) => (
-    <Pressable onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`Join ${c.name}${c.teachers.length ? `, ${c.teachers.join(" and ")}` : ""}`} style={s.row}>
+    <Pressable onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`Join ${c.name}${c.teachers.length ? `, ${names(c).join(" and ")}` : ""}`} style={s.row}>
       <View style={{ flex: 1 }}>
         <Text style={s.rowTitle}>{c.name}</Text>
-        {c.teachers.length ? <Text style={s.soft}>{c.teachers.join(", ")}</Text> : null}
+        {c.teachers.length ? <Text style={s.soft}>{names(c).join(", ")}</Text> : null}
       </View>
       <Text style={s.chev}>›</Text>
     </Pressable>

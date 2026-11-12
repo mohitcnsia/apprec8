@@ -80,21 +80,26 @@ export default function ProgressScreen({ navigation, route }) {
     [uid, extras, userData, isAdmin] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  // Two separate listeners (walk on the owner's phone, 12 Nov): when both lived in one effect keyed on `quests`, every
+  // user-doc snapshot rebuilt `quests`, which re-ran the effect, re-subscribed the user doc, which fired again: an
+  // endless re-subscribe loop that crashed the app ("Property storage exceeds 196607 properties") on any screen, since
+  // this tab stays mounted, and cost reads. Quest listeners now restart only when the SET of quests changes.
   useEffect(() => {
     if (!uid) return undefined;
-    const unsubUser = listenToUserDocument(setUserData, (e) => console.warn("Progress: user doc failed", e));
-    const unsubs = quests.map((m) =>
+    return listenToUserDocument(setUserData, (e) => console.warn("Progress: user doc failed", e));
+  }, [uid]);
+  const questKey = quests.map((m) => m.QUEST_ID).join(",");
+  useEffect(() => {
+    if (!uid || !questKey) return undefined;
+    const unsubs = questKey.split(",").map((id) =>
       listenToQuestProgress(
-        m.QUEST_ID,
-        (nodes, doc) => setProgressById((p) => ({ ...p, [m.QUEST_ID]: { nodes: nodes || {}, doc: doc || {} } })),
-        (e) => console.warn(`Progress: ${m.QUEST_ID} progress failed`, e)
+        id,
+        (nodes, doc) => setProgressById((p) => ({ ...p, [id]: { nodes: nodes || {}, doc: doc || {} } })),
+        (e) => console.warn(`Progress: ${id} progress failed`, e)
       )
     );
-    return () => {
-      unsubUser && unsubUser();
-      unsubs.forEach((u) => u && u());
-    };
-  }, [uid, quests]);
+    return () => unsubs.forEach((u) => u && u());
+  }, [uid, questKey]);
 
   const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const statsOf = (id) => progressById[id]?.doc?.stats || {};

@@ -65,7 +65,8 @@ exports.getLeaderboard = functions
           // Older apps show "firstName lastName", so sending lastName: null makes them show the first name too.
           firstName: String(userData.firstName || "").trim().split(/\s+/)[0] || null,
           lastName: null,
-          username: userData.username ? String(userData.username).split("@")[0] : null,
+          // Never another user's username (walk, 12 Nov): it defaults to the start of their email ("seemaj2310").
+          username: null,
           grade: Number.isInteger(userData.grade) ? userData.grade : null,
           // Child safety (owner 2026-11-04): other users only ever see our preset avatars, never a real photo
           // (Google sign-in can put a child's face in photoURL).

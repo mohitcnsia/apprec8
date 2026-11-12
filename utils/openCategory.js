@@ -35,6 +35,13 @@ export function openCategory(navigation, item) {
       navigation.navigate("EnglishQuestIntro", { questId: item.questId || item.id });
       break;
     case "COURSE":
+      // A teacher's course built as a tile quest (e.g. Seema Ma'am · Class 10 English, G81) opens like a quest. Walk on
+      // the owner's phone, 12 Nov: it opened the old category screen ("No items found for this section").
+      if (item.questId) {
+        navigation.navigate("EnglishQuestIntro", { questId: item.questId });
+        break;
+      }
+    // falls through: old courses (no questId) keep the old screen
     case "COMPLEX":
     case "ACTIVITY":
       navigation.push("LinkScreen", { categoryId: item.id, categoryTitle: item.title });

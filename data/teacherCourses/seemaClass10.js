@@ -45,6 +45,9 @@ export const tile = {
   description: "Class 10 CBSE English grammar with Seema Ma'am.",
   image: "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/english_quest_tile.png",
   carouselGroup: "quest",
+  // Home lists tiles with orderBy("order"): Firestore silently leaves out a tile without it (walk, 12 Nov: the course
+  // never showed). 0 = first; an enrolled child's course comes first anyway (orderQuestsForHome).
+  order: 0,
   forClassIds: FOR_CLASS_IDS,
   type: "COURSE",
 };

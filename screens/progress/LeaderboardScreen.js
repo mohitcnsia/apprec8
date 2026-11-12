@@ -97,7 +97,8 @@ export default function LeaderboardScreen({ route }) {
             functions().httpsCallable("getLeaderboard")({ topN: 20 }),
             functions().httpsCallable("getCurrentUserRank")(),
           ]);
-          rows = (top.data.leaderboard || []).map((x) => ({ id: x.id, name: firstNameOf(x.firstName || x.username), grade: x.grade, points: x.points || 0, rank: x.rank }));
+          // Never another child's username: it defaults to the start of their email (walk, 12 Nov: "seemaj2310").
+          rows = (top.data.leaderboard || []).map((x) => ({ id: x.id, name: x.firstName ? firstNameOf(x.firstName) : "Learner", grade: x.grade, points: x.points || 0, rank: x.rank }));
           const m = mine.data;
           if (m && !rows.some((x) => x.id === m.id)) {
             rows.push({ id: m.id, name: firstNameOf(m.firstName || m.username), grade: userData?.grade, points: m.points || 0, rank: m.rank });
