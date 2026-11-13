@@ -74,7 +74,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
-| G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **todo (next)** | `gemini/g105-chess-book1` | |
+| G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
 | G16 Science Unit 1 | Gemini | **done, merged** | | |
 | G18 NSO pattern notes | Gemini | **done, merged** | `gemini/g18-exam-patterns` | Good: `docs/exam/nso-pattern.md` (sections, weightage, 9 question styles, gap list) |
@@ -116,7 +116,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 ## Task details (Gemini reads these; one task at a time, top to bottom)
 
-### G105 · [next] · gemini · Chess book extraction, game 1 (owner's trainer)
+### G105 · [parked] · gemini · Chess book extraction, game 1 (owner's trainer)
 **Why:** the owner's "Guess the Move" chess trainer (spec frozen 13 Nov). Your two earlier samples failed because moves
 were written partly from memory — both had moves no piece could play. The pipeline now gates every game by machine.
 **Read first:** `scripts/chess/README.md` (rules are frozen there). **Base:** `feat/quiz-redesign`.

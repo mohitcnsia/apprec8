@@ -18,6 +18,8 @@ import Minesweeper from "../components/Minesweeper";
 import VocabBuilder from "../components/VocabBuilder";
 import SpellingBeeGame from "../components/SpellingBeeGame";
 import CalmCornerScreen from "../screens/wellbeing/CalmCornerScreen";
+import ChessTrainerScreen from "../screens/fun/chess/ChessTrainerScreen";
+import ChessPlayScreen from "../screens/fun/chess/ChessPlayScreen";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +32,8 @@ const FunNavigator = () => (
     <Stack.Screen name="Minesweeper" component={Minesweeper} />
     <Stack.Screen name="VocabBuilder" component={VocabBuilder} />
     <Stack.Screen name="SpellingBeeGame" component={SpellingBeeGame} />
+    <Stack.Screen name="ChessTrainer" component={ChessTrainerScreen} />
+    <Stack.Screen name="ChessPlay" component={ChessPlayScreen} />
     <Stack.Screen name="Apprec8Reader" component={Apprec8Reader} />
     <Stack.Screen name="LinkScreen" component={LinksScreen} />
     <Stack.Screen name="Overview" component={TopicOverviewScreen} />

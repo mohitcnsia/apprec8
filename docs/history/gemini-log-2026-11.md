@@ -80,3 +80,11 @@ Moved out of `gemini.md` to keep it under 24 KB (Antigravity reads only the firs
   pricing decisions in CODE_REVIEW.md; Seema's review page for Grammar Pro 1–6 + Unit 10.
 - **How to test:** `docs/qa/OWNER_TESTING.md` (sections from "Guide quests" down).
 
+
+## 2026-11-09/10: pilot reset around Seema's decisions (Claude)
+- **Goal:** stop going in circles; freeze the pilot (free tuition at home, Class 10 English + Class 5) and build only what was agreed.
+- **Done:** published leave-quiz popup, report reasons, card formatting, Progress → Practise; pilot plan doc rewritten from the
+  owner's 17 comments; Seema's 6 decisions → board G89 two-way cards (mockup https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4),
+  G90 pilot ready, G91 check-up by topic, G92 weekly report (mockup https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj; parents see
+  only their own child), G93 challenge track (waits for the owner's olympiad books).
+- **How to test:** after each G task, Claude reviews; the owner tests on his phone (OWNER_TESTING.md).

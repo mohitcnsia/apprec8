@@ -1,5 +1,20 @@
 # Testing on your phone
 
+## ⭐ Chess "Guess the Move" (13 Nov, your game — waiting for the phone check, then publish)
+Owner extras must be ON (Me → ADMIN → Owner extras). Dark and light theme both worth a glance.
+1. Fun → **Guess the Move** (knight tile, last in the grid) → "Morphy vs Duke Karl" → Start.
+2. Tap **Next** through the opening: the book's note appears under FROM THE BOOK after the moves that have one.
+3. From move 6 it's your turn: tap a white piece → dots show where it may go; tap a dot → the move plays.
+   - Guess right (e.g. 7. Qb3) → green arrow + "You found Morphy's move".
+   - Guess wrong → "Morphy played … — your idea: …", both arrows, the game continues with his move.
+4. At 10. Nxb5 the note shows a **▶ a4 bxc4 Qxc4** chip → tap it → the line plays on the board move by move → "Back to the game".
+5. Finish the game (17. Rd8#) → "1–0 · You found X of 12" → Done → the list row says "Done · found X/12".
+6. **Add a game (paste PGN)**: paste any PGN (lichess → game → Share → copy PGN works) → "Check and add" → it opens.
+   Paste junk ("1. e4 e5 2. Nf6") → a readable error names the illegal move, nothing is added.
+7. Close the app mid-game, reopen → the row says "Continue · move N" and resumes where you were.
+8. Me → ADMIN → Owner extras OFF → Fun: the chess tile is gone (kids never see it).
+Not yet (by design): centipawns / red / blue verdicts — they come with the Stockfish pass; today a wrong guess is neutral.
+
 ## ⭐ People screen + your 13 Nov notes (waiting for the phone check, then publish)
 1. Me → Admin tools → People: All hides Play robots + test accounts ("Show" brings them back); Sort: Newest / Oldest / Last seen.
 2. Stuck tab → tap Khushboo → **WhatsApp** opens with the message ready (you pick her) · **Email** opens addressed to her.

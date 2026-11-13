@@ -46,9 +46,20 @@ scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py scripts/chess/fixtu
    PASS. The first game of each book also gets a human read-through of the comments
    against the book page (Claude reviews, owner spot-checks).
 
+## The app (built 13 Nov 2026, owner-approved: app first, extraction later)
+
+The trainer lives in the Fun tab (owner extras only): `screens/fun/chess/`,
+`components/games/chess/ChessBoard.js`, logic in `utils/chessGame.js`. It consumes exactly
+this pipeline's `--json` output — `uci`, `fenAfter` and `legal` per main-line move — so it
+needs no chess engine. `free/` holds committable PGNs (public-domain games, our own notes);
+the validated JSON is bundled at `data/chess/`. Pasted PGNs are replayed in-app by chess.js
+(`utils/chessPgn.js`), same gate idea, variations dropped.
+
 ## Later steps (not built yet)
 
 - `analyze.py`: Stockfish offline pass — every legal move of every guess position evaluated
-  (depth 20+), written into the game JSON (`evals`). Runs overnight on the Mac.
-- Seeding: JSON → Firestore `chessBooks/{bookId}/games/{gameId}` (admin-only rules).
-  Comes with the app build, which is not approved yet.
+  (depth 20+), written into the game JSON (`evals`: per ply index, uci → centipawns for the
+  side to move). The app's red/blue/amber verdicts switch on automatically once present.
+- Book games: G105 (parked) extracts into `content-private/chess/`; book JSON is seeded to
+  Firestore `chessBooks/{bookId}/games/{gameId}` (admin-only rules), never bundled — the repo
+  is public.

@@ -92,23 +92,31 @@ def node_to_dict(node, board):
     return entry
 
 
-def walk_line(parent_node, board):
-    """All moves of one line (the first child chain), with alternatives attached per move."""
+def walk_line(parent_node, board, with_legal=False):
+    """All moves of one line (the first child chain), with alternatives attached per move.
+
+    with_legal: on mainline moves, also record every legal move of the position before the
+    move plus the FEN after it, so the app needs no chess engine to replay or accept guesses.
+    FENs are emitted for variation moves too (tap-through animation)."""
     moves = []
     node = parent_node
     while node.variations:
         main_child = node.variations[0]
         entry = node_to_dict(main_child, board)
+        if with_legal:
+            entry["legal"] = sorted(m.uci() for m in board.legal_moves)
         alternatives = []
         for alt in node.variations[1:]:
             alt_board = board.copy()
             alt_entry = node_to_dict(alt, alt_board)
             alt_board.push(alt.move)
+            alt_entry["fenAfter"] = alt_board.fen()
             alt_line = [alt_entry] + walk_line(alt, alt_board)
             alternatives.append(alt_line)
         if alternatives:
             entry["variations"] = alternatives
         board.push(main_child.move)
+        entry["fenAfter"] = board.fen()
         moves.append(entry)
         node = main_child
     return moves
@@ -117,7 +125,7 @@ def walk_line(parent_node, board):
 def game_to_json(game):
     headers = game.headers
     board = game.board()
-    moves = walk_line(game, board)
+    moves = walk_line(game, board, with_legal=True)
     return {
         "event": headers.get("Event", ""),
         "site": headers.get("Site", ""),

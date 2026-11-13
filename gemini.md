@@ -41,6 +41,12 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
   content never enters the public repo). Board: **G105** = book 1, game 1 through the gate.
 - **How to test:** `scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py scripts/chess/fixtures/sample_pass.pgn
   scripts/chess/fixtures/sample_fail.pgn` → 1/2 passed, fail at 23.Rag1.
+- **Evening — the app itself (owner approved: app first, extraction later; G105 parked):** Fun tab → "Guess the Move"
+  (owner extras only). Bundled Opera Game (free, `data/chess/opera-game.json` from the validator's `--json`), paste-a-PGN
+  (`utils/chessPgn.js`, chess.js replays every move before accepting), play screen with green/book verdicts + tappable
+  variations (`screens/fun/chess/`, `utils/chessGame.js`); progress on-phone (AsyncStorage, zero Firestore). Engine
+  verdicts (red/blue + centipawns) wait for analyze.py. JS-only (chess.js is pure JS) → ships as an OTA update.
+- **Test:** `npm test` (chessGame + chessPgn), bundle export clean; owner's phone walk before any publish.
 
 ## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
 - **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
@@ -60,14 +66,6 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
   teacher card Approve · Not sure · Decline + follow-up list; Approve asks "Did the parent say yes?" (WhatsApp YES = test only,
   launch checklist B11). Owner's 15 family testers join apprec8-testers (12 × 14 days → production).
 - **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
-
-## 2026-11-09/10: pilot reset around Seema's decisions (Claude)
-- **Goal:** stop going in circles; freeze the pilot (free tuition at home, Class 10 English + Class 5) and build only what was agreed.
-- **Done:** published leave-quiz popup, report reasons, card formatting, Progress → Practise; pilot plan doc rewritten from the
-  owner's 17 comments; Seema's 6 decisions → board G89 two-way cards (mockup https://claude.ai/artifact/RkCWYMsYCRjHuHcx1q5op4),
-  G90 pilot ready, G91 check-up by topic, G92 weekly report (mockup https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj; parents see
-  only their own child), G93 challenge track (waits for the owner's olympiad books).
-- **How to test:** after each G task, Claude reviews; the owner tests on his phone (OWNER_TESTING.md).
 
 ## Future TODOs
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.

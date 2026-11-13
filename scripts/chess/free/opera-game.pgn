@@ -1,0 +1,41 @@
+[Event "A Night at the Opera"]
+[Site "Paris"]
+[Date "1858.??.??"]
+[White "Morphy, Paul"]
+[Black "Duke Karl / Count Isouard"]
+[Result "1-0"]
+[GuessSide "White"]
+[GuessFrom "6"]
+[SourceBook "Free classics (no book), p. 0"]
+
+{Paris, 1858. Paul Morphy was invited to the opera, but his hosts wanted a chess
+game more than the music. Every move of this game is now a classic lesson:
+develop fast, open lines, and the king in the middle will fall. The moves are
+public domain; these notes are Apprec8's own, not from any book.}
+1. e4 e5 2. Nf3 d6 {The Philidor Defence. Solid but passive: Black's bishop on
+f8 stays locked in.} 3. d4 Bg4 {Pinning the knight looks active, but the bishop
+will have to give itself up for it, trading a bishop for a knight while behind
+in development.} 4. dxe5 Bxf3 {Forced, or the e5 pawn falls for nothing: after
+4...dxe5 5. Qxd8+ Kxd8 6. Nxe5 White is simply a pawn up.} 5. Qxf3 dxe5 6. Bc4
+{Development with a threat: the queen and bishop both look at f7, the weakest
+square on the board.} 6... Nf6 7. Qb3 {The queen forks b7 and f7. Black cannot
+guard both squares with one move.} 7... Qe7 {The only defence: the queen covers
+f7 and prepares to block a check. But now Black's own bishop on f8 is buried.}
+8. Nc3 {Morphy ignores the free b7 pawn! After 8. Qxb7 Qb4+ the queens come off
+and Black escapes into an ending. Morphy wants the king, not a pawn.} 8... c6
+9. Bg5 {Every white piece that moves comes out with a threat or a pin. Black has
+only his queen developed.} 9... b5 {Trying to push the bishop away and finally
+gain space, but Black has no time for pawn moves.} 10. Nxb5 {The famous knight
+sacrifice: the b-file and the a4-e8 diagonal are worth more than a piece.}
+( 10. a4 {is the quiet way to keep the pressure, but after} 10... bxc4 11. Qxc4
+{White has only a small plus; Morphy saw further.} ) 10... cxb5 11. Bxb5+ Nbd7
+{The knight blocks the check but is pinned, and now every Black piece on the
+d-file is glued in place.} 12. O-O-O {Castling as an attacking move: the rook
+lands on d1, piling onto the pinned knight.} 12... Rd8 13. Rxd7 {Removing the
+defender: a whole rook goes into the pin.} 13... Rxd7 14. Rd1 {The second rook
+replaces the first. Black's rook on d7 is now pinned twice over and his queen
+must babysit it.} 14... Qe6 {Offering the queen trade to survive. Morphy never
+trades when he is attacking.} 15. Bxd7+ Nxd7 16. Qb8+ {The final deflection:
+the knight is dragged away from guarding d8.} 16... Nxb8 17. Rd8# {Checkmate
+with the two pieces White had left. Sixteen moves of development, one immortal
+finish.} 1-0

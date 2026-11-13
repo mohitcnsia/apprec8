@@ -15,7 +15,7 @@ import { THOUGHTS } from "../../data/thoughts";
 import { listenToCategoriesByGroup } from "../../services/firestoreContentApi";
 import { visibleOldTiles } from "../../utils/oldContent";
 import { authInstance } from "../../config/firebaseConfig";
-import { ownerExtrasOn } from "../../services/ownerView";
+import { ownerExtrasOn, useOwnerExtras } from "../../services/ownerView";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 
 const isOwner = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID && ownerExtrasOn();
@@ -73,6 +73,19 @@ const BeeArt = () => (
   </Svg>
 );
 
+const KnightArt = () => (
+  <Svg width={44} height={44} viewBox="0 0 44 44">
+    <Rect x={6} y={34} width={32} height={6} rx={3} fill="#B58863" />
+    <Path
+      d="M14 34c0-8 3-11 8-14l-4-2c-1-3 1-7 5-9 1-2 3-2 3 0 5 1 9 6 9 13 0 5-2 8-5 12z"
+      fill="#F0D9B5"
+      stroke="#3b0940"
+      strokeWidth={2.5}
+      strokeLinejoin="round"
+    />
+    <Circle cx={25} cy={14} r={1.6} fill="#3b0940" />
+  </Svg>
+);
 const LeafArt = () => (
   <Svg width={44} height={44} viewBox="0 0 44 44">
     <Path d="M8 36C8 18 20 8 38 6c-2 18-12 30-30 30z" fill="#E6F6E4" stroke="#3E9B3A" strokeWidth={3} strokeLinejoin="round" />
@@ -90,11 +103,16 @@ const GAMES = [
   { key: "spell", title: "Spelling bee", sub: "Hear and spell", screen: "SpellingBeeGame", Art: BeeArt },
 ];
 
+// The owner's own game (13 Nov 2026): guess the moves of annotated master games. Owner extras only.
+const CHESS_TILE = { key: "chess", title: "Guess the Move", sub: "Classic chess games", screen: "ChessTrainer", Art: KnightArt };
+
 export default function FunScreen({ navigation }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
+  const ownerExtras = useOwnerExtras();
+  const games = ownerExtras && isOwner() ? [...GAMES, CHESS_TILE] : GAMES;
 
   const [stories, setStories] = useState([]);
   const [books, setBooks] = useState([]);
@@ -118,7 +136,7 @@ export default function FunScreen({ navigation }) {
 
       <Text style={styles.section}>Games</Text>
       <View style={styles.grid}>
-        {GAMES.map(({ key, title, sub, screen, Art }) => (
+        {games.map(({ key, title, sub, screen, Art }) => (
           <Pressable key={key} style={styles.gridCell} onPress={() => navigation.push(screen, {})} accessibilityRole="button">
             <View style={styles.gameTile}>
               <Art />
