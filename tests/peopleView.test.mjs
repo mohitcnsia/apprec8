@@ -82,3 +82,15 @@ console.log("peopleView tests passed");
   assert.equal(ids("everyone"), "aar,kunal,riya,seema,sunita");
   console.log("peopleView: show filters ok");
 }
+
+// Our own "+" aliases and the Play reviewer login are test accounts (walk, 13 Nov).
+{
+  const { isTestAccount } = await import("../utils/people.js");
+  assert.equal(isTestAccount({ email: "mohitchilkoti+s13nov@gmail.com" }), true);
+  assert.equal(isTestAccount({ email: "seemachilkoti+student@gmail.com" }), true);
+  assert.equal(isTestAccount({ email: "playtest@apprec8.com" }), true);
+  assert.equal(isTestAccount({ email: "mohitchilkoti@gmail.com" }), false, "the owner himself is real");
+  assert.equal(isTestAccount({ email: "seemachilkoti@gmail.com" }), false);
+  assert.equal(isTestAccount({ email: "kkhushboo033@gmail.com" }), false);
+  console.log("peopleView: test aliases ok");
+}

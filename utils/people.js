@@ -16,7 +16,11 @@ export const isPlayRobot = (p) => p?.kind === "none" && !p.quizzes && /^[a-z]{4,
  * nothing and done no quiz.
  */
 // Our own test sign-ups (example.com, testprobe.com, test.dev) are not people to help.
-export const isTestAccount = (p) => /@(example\.com|testprobe\.com|test\.dev)$/i.test(String(p?.email || ""));
+// Also our own "+" aliases (mohitchilkoti+…, seemachilkoti+…) and the Play reviewer login (walk, 13 Nov).
+export const isTestAccount = (p) => {
+  const e = String(p?.email || "").toLowerCase();
+  return /@(example\.com|testprobe\.com|test\.dev)$/.test(e) || /^(mohitchilkoti|seemachilkoti)\+[^@]*@gmail\.com$/.test(e) || e === "playtest@apprec8.com";
+};
 
 export function shapePerson(p, now = Date.now()) {
   const test = isTestAccount(p);

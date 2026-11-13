@@ -383,6 +383,7 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     if (!isAdmin) {
       setReportCount(0); // "View as" a kid: the owner's count must not stay on screen (owner's note, 13 Nov)
+      reportsAt.current = 0; // and back as owner, count again at once
       return undefined;
     }
     const load = () => {
