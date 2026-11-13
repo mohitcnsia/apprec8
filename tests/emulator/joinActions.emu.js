@@ -131,6 +131,11 @@ async function call(name, data, who) {
   const aar = (ppl.people || []).find((x) => x.uid === student.uid);
   ok(!!aar && aar.kind === "student" && aar.grade === 10 && aar.email === "student@test.dev" && ppl.withEmail === true, "admin sees Aarav: student, Class 10, with email");
   ok(typeof ppl.counts?.total === "number" && ppl.counts.total >= 1, "people counts come back");
+  // School admin of ANOTHER school who teaches c1 (13 Nov: two "Glorious Academy" schools): sees c1's people, no emails.
+  await db.doc("schools/s9").set({ name: "Other School", admins: [teacher.uid] });
+  const sa = await call("peopleList", {}, teacher);
+  ok(sa.withEmail === false && (sa.people || []).length >= 1 && sa.people.every((x) => x.email === null), "school admin sees the class she teaches, no emails");
+  ok(!(sa.people || []).some((x) => x.uid === stranger.uid), "school admin doesn't see strangers");
 
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });

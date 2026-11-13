@@ -33,6 +33,25 @@ export function peopleCounts(people = [], now = Date.now()) {
   return { total: real.length, newToday: real.filter((p) => p.joinedAt && istDay(p.joinedAt) === today).length, stuck: real.filter((p) => p.stuck).length, robots: people.filter((p) => p.kind === "robot").length, tests: people.filter((p) => p.kind === "test").length };
 }
 
+/** "Who is who" (owner, 13 Nov: "kids say they joined but are not in the app"). */
+export const SHOWS = [
+  ["everyone", "Everyone"],
+  ["students", "Students"],
+  ["noclass", "No class yet"],
+  ["waiting", "Waiting"],
+  ["parents", "Parents"],
+  ["teachers", "Teachers"],
+];
+const isLearner = (p) => p.kind === "student" || p.kind === "child";
+const SHOW_TEST = {
+  everyone: () => true,
+  students: isLearner,
+  noclass: (p) => isLearner(p) && !(p.classes || []).length && !(p.waiting || []).length,
+  waiting: (p) => (p.waiting || []).length > 0,
+  parents: (p) => p.kind === "parent",
+  teachers: (p) => p.kind === "teacher",
+};
+
 export const SORTS = [
   ["joined", "Newest"],
   ["oldest", "Oldest"],
@@ -44,12 +63,13 @@ export const SORTS = [
  * accounts only with showBots (owner, 13 Nov: "All shows 125 people, there should be a way to filter bots");
  * sort: "joined" (newest first) | "oldest" | "seen" (most recently seen first).
  */
-export function filterPeople(people = [], { tab = "all", query = "", now = Date.now(), showBots = false, sort = "joined" } = {}) {
+export function filterPeople(people = [], { tab = "all", query = "", now = Date.now(), showBots = false, sort = "joined", show = "everyone" } = {}) {
   const q = String(query || "").trim().toLowerCase();
   const today = istDay(now);
   const by = { joined: (a, b) => (b.joinedAt || 0) - (a.joinedAt || 0), oldest: (a, b) => (a.joinedAt || Infinity) - (b.joinedAt || Infinity), seen: (a, b) => (b.lastSeenAt || 0) - (a.lastSeenAt || 0) }[sort];
   return people.filter((p) => {
     if (p.robot && !(showBots && tab === "all")) return false;
+    if (!(SHOW_TEST[show] || SHOW_TEST.everyone)(p)) return false;
     if (tab === "new" && !(p.joinedAt && istDay(p.joinedAt) === today)) return false;
     if (tab === "stuck" && !p.stuck) return false;
     if (q && !`${p.name || ""} ${p.email || ""}`.toLowerCase().includes(q)) return false;

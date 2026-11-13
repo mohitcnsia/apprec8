@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
-import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl, SORTS } from "../../utils/people";
+import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl, SORTS, SHOWS } from "../../utils/people";
 
 const TABS = [
   ["new", "New today"],
@@ -27,6 +27,7 @@ export default function PeopleScreen() {
   const [open, setOpen] = useState(null);
   const [sort, setSort] = useState("joined");
   const [showBots, setShowBots] = useState(false);
+  const [show, setShow] = useState("everyone");
 
   const load = () => {
     setError("");
@@ -38,7 +39,7 @@ export default function PeopleScreen() {
   useEffect(load, []);
 
   const now = Date.now();
-  const list = useMemo(() => (data ? filterPeople(data.people, { tab, query: q, now, sort, showBots }) : []), [data, tab, q, sort, showBots]); // eslint-disable-line react-hooks/exhaustive-deps
+  const list = useMemo(() => (data ? filterPeople(data.people, { tab, query: q, now, sort, showBots, show }) : []), [data, tab, q, sort, showBots, show]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!data && !error) return <View style={[s.screen, s.center]}><ActivityIndicator color={P.label} /></View>;
   if (!data) return <View style={[s.screen, s.center]}><Text style={s.soft}>{error}</Text></View>;
@@ -54,6 +55,14 @@ export default function PeopleScreen() {
             <Text style={[s.tabText, tab === id && s.tabTextOn]}>
               {label} {id === "new" ? c.newToday : id === "stuck" ? c.stuck : showBots ? data.people.length : c.total}
             </Text>
+          </Pressable>
+        ))}
+      </View>
+      <View style={s.tabs}>
+        <Text style={s.small}>Show:</Text>
+        {SHOWS.map(([id, label]) => (
+          <Pressable key={id} onPress={() => setShow(id)} accessibilityRole="button" accessibilityState={{ selected: show === id }} style={[s.chipBtn, show === id && s.tabOn]}>
+            <Text style={[s.chipBtnText, show === id && s.tabTextOn]}>{label}</Text>
           </Pressable>
         ))}
       </View>
@@ -80,6 +89,8 @@ export default function PeopleScreen() {
         autoCapitalize="none"
         style={s.search}
       />
+      {show !== "everyone" || q ? <Text style={s.small}>{list.length} {list.length === 1 ? "person" : "people"}</Text> : null}
+      {show === "noclass" && list.length ? <Text style={s.small}>Signed up and picked a class number, but never tapped "Join your class", so no teacher can see them yet.</Text> : null}
       {list.length ? null : <Text style={s.soft}>Nobody here.</Text>}
       {list.map((p) => {
         const isOpen = open === p.uid;

@@ -38,7 +38,9 @@ exports.peopleList = functions
       const schools = await db.collection("schools").where("admins", "array-contains", uid).limit(20).get();
       const schoolIds = new Set(schools.docs.map((s) => s.id));
       if (!schoolIds.size) throw fail("permission-denied", "Only the owner and school admins can see people.");
-      const mine = classSnap.docs.filter((c) => schoolIds.has(c.data().schoolId));
+      // Her schools' classes, plus any class she teaches (13 Nov: two "Glorious Academy" schools, classes under the
+      // one without her as admin).
+      const mine = classSnap.docs.filter((c) => schoolIds.has(c.data().schoolId) || (c.data().teacherIds || []).includes(uid));
       const ids = new Set();
       for (const c of mine) {
         (c.data().teacherIds || []).forEach((t) => ids.add(t));

@@ -63,3 +63,22 @@ console.log("peopleView tests passed");
   assert.deepEqual(filterPeople(ppl, { now, sort: "seen" }).map((p) => p.uid), ["old", "new"]);
   console.log("peopleView: hide bots + sort ok");
 }
+
+// Who is who (owner, 13 Nov: "kids say they joined but are not in the app").
+{
+  const ppl = [
+    { uid: "kunal", kind: "student", classes: [], waiting: [], joinedAt: now - 3 },
+    { uid: "aar", kind: "student", classes: [], waiting: ["10-A"], joinedAt: now - 2 },
+    { uid: "riya", kind: "child", classes: ["5-A"], waiting: [], joinedAt: now - 1 },
+    { uid: "sunita", kind: "parent", classes: [], waiting: [], joinedAt: now - 4 },
+    { uid: "seema", kind: "teacher", classes: [], waiting: [], joinedAt: now - 5 },
+  ];
+  const ids = (show) => filterPeople(ppl, { now, show }).map((p) => p.uid).sort().join(",");
+  assert.equal(ids("noclass"), "kunal");
+  assert.equal(ids("waiting"), "aar");
+  assert.equal(ids("students"), "aar,kunal,riya");
+  assert.equal(ids("parents"), "sunita");
+  assert.equal(ids("teachers"), "seema");
+  assert.equal(ids("everyone"), "aar,kunal,riya,seema,sunita");
+  console.log("peopleView: show filters ok");
+}
