@@ -9,7 +9,7 @@ const people = [
   { uid: "c", name: null, email: "abhi@gmail.com", joinedAt: now - 864e5, stuck: true },
 ];
 assert.deepEqual(filterPeople(people, { tab: "new", now }).map((p) => p.uid), ["a"]);
-assert.deepEqual(filterPeople(people, { tab: "stuck", now }).map((p) => p.uid), ["b", "c"]);
+assert.deepEqual(filterPeople(people, { tab: "stuck", now }).map((p) => p.uid), ["c", "b"], "newest first");
 assert.deepEqual(filterPeople(people, { query: "JOSH", now }).map((p) => p.uid), ["b"], "email search, any case");
 assert.deepEqual(filterPeople(people, { query: "abhi", tab: "stuck", now }).map((p) => p.uid), ["c"]);
 assert.ok(whenText(now - 3600e3, now).startsWith("today "));
@@ -48,4 +48,18 @@ console.log("peopleView tests passed");
   assert.ok(emailNudgeUrl({ email: "a@b.com" }).startsWith("mailto:a@b.com?subject="));
   assert.equal(emailNudgeUrl({ email: null }), null);
   console.log("peopleView: contact buttons ok");
+}
+
+// Hide bots + sort (owner, 13 Nov: "All shows 125 people ... filter bots and sort by date").
+{
+  const ppl = [
+    { uid: "r", robot: true, kind: "robot", joinedAt: now - 1000, lastSeenAt: now - 1000 },
+    { uid: "old", joinedAt: now - 9 * 864e5, lastSeenAt: now - 60e3 },
+    { uid: "new", joinedAt: now - 3600e3, lastSeenAt: now - 5 * 864e5 },
+  ];
+  assert.deepEqual(filterPeople(ppl, { now }).map((p) => p.uid), ["new", "old"], "All hides bots, newest first");
+  assert.deepEqual(filterPeople(ppl, { now, showBots: true }).map((p) => p.uid), ["r", "new", "old"]);
+  assert.deepEqual(filterPeople(ppl, { now, sort: "oldest" }).map((p) => p.uid), ["old", "new"]);
+  assert.deepEqual(filterPeople(ppl, { now, sort: "seen" }).map((p) => p.uid), ["old", "new"]);
+  console.log("peopleView: hide bots + sort ok");
 }

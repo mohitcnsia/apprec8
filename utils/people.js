@@ -33,17 +33,28 @@ export function peopleCounts(people = [], now = Date.now()) {
   return { total: real.length, newToday: real.filter((p) => p.joinedAt && istDay(p.joinedAt) === today).length, stuck: real.filter((p) => p.stuck).length, robots: people.filter((p) => p.kind === "robot").length, tests: people.filter((p) => p.kind === "test").length };
 }
 
-/** tab: "new" (joined today, India time) | "stuck" | "all"; query matches name or email. */
-export function filterPeople(people = [], { tab = "all", query = "", now = Date.now() } = {}) {
+export const SORTS = [
+  ["joined", "Newest"],
+  ["oldest", "Oldest"],
+  ["seen", "Last seen"],
+];
+
+/**
+ * tab: "new" (joined today, India time) | "stuck" | "all"; query matches name or email; Play robots and our test
+ * accounts only with showBots (owner, 13 Nov: "All shows 125 people, there should be a way to filter bots");
+ * sort: "joined" (newest first) | "oldest" | "seen" (most recently seen first).
+ */
+export function filterPeople(people = [], { tab = "all", query = "", now = Date.now(), showBots = false, sort = "joined" } = {}) {
   const q = String(query || "").trim().toLowerCase();
   const today = istDay(now);
+  const by = { joined: (a, b) => (b.joinedAt || 0) - (a.joinedAt || 0), oldest: (a, b) => (a.joinedAt || Infinity) - (b.joinedAt || Infinity), seen: (a, b) => (b.lastSeenAt || 0) - (a.lastSeenAt || 0) }[sort];
   return people.filter((p) => {
-    if (tab !== "all" && p.robot) return false;
+    if (p.robot && !(showBots && tab === "all")) return false;
     if (tab === "new" && !(p.joinedAt && istDay(p.joinedAt) === today)) return false;
     if (tab === "stuck" && !p.stuck) return false;
     if (q && !`${p.name || ""} ${p.email || ""}`.toLowerCase().includes(q)) return false;
     return true;
-  });
+  }).sort(by || (() => 0));
 }
 
 /** "today 8:39 pm" · "yesterday 7:10 am" · "9 Nov 2026" (India time). */

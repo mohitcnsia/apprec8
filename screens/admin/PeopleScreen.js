@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
-import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl } from "../../utils/people";
+import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl, SORTS } from "../../utils/people";
 
 const TABS = [
   ["new", "New today"],
@@ -25,6 +25,8 @@ export default function PeopleScreen() {
   const [tab, setTab] = useState("all");
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(null);
+  const [sort, setSort] = useState("joined");
+  const [showBots, setShowBots] = useState(false);
 
   const load = () => {
     setError("");
@@ -36,7 +38,7 @@ export default function PeopleScreen() {
   useEffect(load, []);
 
   const now = Date.now();
-  const list = useMemo(() => (data ? filterPeople(data.people, { tab, query: q, now }) : []), [data, tab, q]); // eslint-disable-line react-hooks/exhaustive-deps
+  const list = useMemo(() => (data ? filterPeople(data.people, { tab, query: q, now, sort, showBots }) : []), [data, tab, q, sort, showBots]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!data && !error) return <View style={[s.screen, s.center]}><ActivityIndicator color={P.label} /></View>;
   if (!data) return <View style={[s.screen, s.center]}><Text style={s.soft}>{error}</Text></View>;
@@ -50,11 +52,25 @@ export default function PeopleScreen() {
         {TABS.map(([id, label]) => (
           <Pressable key={id} onPress={() => setTab(id)} accessibilityRole="tab" accessibilityState={{ selected: tab === id }} style={[s.tab, tab === id && s.tabOn]}>
             <Text style={[s.tabText, tab === id && s.tabTextOn]}>
-              {label} {id === "new" ? c.newToday : id === "stuck" ? c.stuck : data.people.length}
+              {label} {id === "new" ? c.newToday : id === "stuck" ? c.stuck : showBots ? data.people.length : c.total}
             </Text>
           </Pressable>
         ))}
       </View>
+      <View style={s.tabs}>
+        <Text style={s.small}>Sort:</Text>
+        {SORTS.map(([id, label]) => (
+          <Pressable key={id} onPress={() => setSort(id)} accessibilityRole="button" accessibilityState={{ selected: sort === id }} style={[s.chipBtn, sort === id && s.tabOn]}>
+            <Text style={[s.chipBtnText, sort === id && s.tabTextOn]}>{label}</Text>
+          </Pressable>
+        ))}
+      </View>
+      {tab === "all" && c.robots + c.tests > 0 ? (
+        <Pressable onPress={() => setShowBots((v) => !v)} accessibilityRole="switch" accessibilityState={{ checked: showBots }} style={s.botToggle}>
+          <Text style={s.small}>{showBots ? "Showing" : "Hiding"} {c.robots} Play robots + {c.tests} test accounts · </Text>
+          <Text style={s.link}>{showBots ? "Hide" : "Show"}</Text>
+        </Pressable>
+      ) : null}
       <TextInput
         nativeID="people-search"
         value={q}
@@ -120,6 +136,10 @@ const makeStyles = (P, insets) =>
     tabOn: { backgroundColor: P.selectedBg, borderColor: P.selectedBorder },
     tabText: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft },
     tabTextOn: { color: P.selectedText },
+    chipBtn: { minHeight: 36, paddingHorizontal: 12, borderRadius: 18, borderWidth: 1.5, borderColor: P.border, justifyContent: "center" },
+    chipBtnText: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
+    botToggle: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", minHeight: 36 },
+    link: { fontSize: 13, fontFamily: "nunitoBold", color: P.selectedText },
     search: { minHeight: 46, borderRadius: 14, borderWidth: 1.5, borderColor: P.border, paddingHorizontal: 14, color: P.text, fontFamily: "nunito", fontSize: 15, backgroundColor: P.card },
     row: { padding: 14, borderRadius: 16, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, gap: 3 },
     rowStuck: { borderColor: P.wrongText },
