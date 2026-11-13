@@ -55,3 +55,20 @@ export function whenText(t, now = Date.now()) {
   if (istDay(t) === istDay(now - 24 * HOUR)) return `yesterday ${time}`;
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
 }
+
+/** The owner's friendly nudge to someone stuck (owner, 13 Nov: "can I WhatsApp them from within the app?"). */
+export function nudgeMessage(p = {}) {
+  const hi = p.name ? `Namaste ${p.name}!` : "Namaste!";
+  return [
+    `${hi} I saw you signed in to Apprec8. Thank you!`,
+    `One small step is left: open Apprec8 → tap "Join your class" → pick your school and class. If you're a parent, tap "Add my child" instead.`,
+    "Reply here if anything is confusing and I'll help.",
+    `हिंदी: Apprec8 खोलें → "Join your class" → अपना स्कूल और क्लास चुनें।`,
+  ].join("\n\n");
+}
+
+/** WhatsApp with the message ready; the owner picks the contact (the app has no phone numbers). */
+export const whatsappNudgeUrl = (p) => `https://wa.me/?text=${encodeURIComponent(nudgeMessage(p))}`;
+
+export const emailNudgeUrl = (p) =>
+  p?.email ? `mailto:${p.email}?subject=${encodeURIComponent("Apprec8: one small step left")}&body=${encodeURIComponent(nudgeMessage(p))}` : null;

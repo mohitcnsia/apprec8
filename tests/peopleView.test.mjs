@@ -37,3 +37,15 @@ console.log("peopleView tests passed");
   assert.deepEqual(filterPeople([robot, joshi], { tab: "stuck", now }).map((p) => p.email), ["josh@gmail.com"]);
   console.log("peopleView: robots and old accounts ok");
 }
+
+// Contact buttons for stuck people (owner, 13 Nov).
+{
+  const { nudgeMessage, whatsappNudgeUrl, emailNudgeUrl } = await import("../utils/people.js");
+  assert.ok(nudgeMessage({ name: "Khushboo" }).startsWith("Namaste Khushboo!"));
+  assert.ok(nudgeMessage({}).startsWith("Namaste! "));
+  assert.ok(nudgeMessage({}).includes('"Join your class"'));
+  assert.ok(whatsappNudgeUrl({ name: "Lokendra" }).startsWith("https://wa.me/?text=Namaste%20Lokendra"), "no number: owner picks the contact");
+  assert.ok(emailNudgeUrl({ email: "a@b.com" }).startsWith("mailto:a@b.com?subject="));
+  assert.equal(emailNudgeUrl({ email: null }), null);
+  console.log("peopleView: contact buttons ok");
+}

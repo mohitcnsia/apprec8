@@ -2,12 +2,12 @@
 // details, who all have joined and when"; mockup in the sign-ups doc). The owner sees everyone with email; a school admin
 // sees their school's classes. Read-only for now (Help buttons come next). Data: functions/callable/peopleActions.js.
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
-import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts } from "../../utils/people";
+import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl } from "../../utils/people";
 
 const TABS = [
   ["new", "New today"],
@@ -81,7 +81,20 @@ export default function PeopleScreen() {
               <View style={s.detail}>
                 <Text style={s.small}>Joined: {new Date(p.joinedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" })}{p.via ? ` · via ${p.via}` : ""}</Text>
                 {p.kind === "parent" ? <Text style={s.small}>{p.children} {p.children === 1 ? "child" : "children"} added</Text> : null}
-                {p.kind === "none" ? <Text style={s.small}>Signed in but picked no class and added no child. Call or message them.</Text> : null}
+                {p.kind === "none" ? <Text style={s.small}>Signed in but picked no class and added no child. Send them the next step:</Text> : null}
+                {p.kind === "none" ? (
+                  <View style={s.actions}>
+                    <Pressable onPress={() => Linking.openURL(whatsappNudgeUrl(p)).catch(() => {})} accessibilityRole="button" accessibilityLabel={`WhatsApp ${p.name || "them"} the next step`} style={s.action}>
+                      <Text style={s.actionText}>WhatsApp</Text>
+                    </Pressable>
+                    {p.email ? (
+                      <Pressable onPress={() => Linking.openURL(emailNudgeUrl(p)).catch(() => {})} accessibilityRole="button" accessibilityLabel={`Email ${p.name || "them"} the next step`} style={s.action}>
+                        <Text style={s.actionText}>Email</Text>
+                      </Pressable>
+                    ) : null}
+                  </View>
+                ) : null}
+                {p.kind === "none" ? <Text style={s.small}>WhatsApp opens with the message ready; pick {p.name || "them"} from your contacts.</Text> : null}
                 {p.robot ? <Text style={s.small}>Google Play's automatic test account: it signs in once to check the app. Not a real person.</Text> : null}
                 {p.deletionRequested ? <Text style={s.warn}>Asked to delete the account (kept 90 days; you decide)</Text> : null}
               </View>
@@ -114,5 +127,8 @@ const makeStyles = (P, insets) =>
     name: { flex: 1, fontSize: 16, fontFamily: "nunitoBold", color: P.text },
     chip: { fontSize: 11, fontFamily: "nunitoBold", letterSpacing: 0.5, color: P.selectedText, backgroundColor: P.selectedBg, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, overflow: "hidden" },
     chipStuck: { color: P.wrongText, backgroundColor: P.wrongBg || P.selectedBg },
+    actions: { flexDirection: "row", gap: 10, marginTop: 4 },
+    action: { flex: 1, minHeight: 44, borderRadius: 22, borderWidth: 1.5, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
+    actionText: { fontSize: 15, fontFamily: "nunitoBold", color: P.selectedText },
     detail: { marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: P.border, gap: 3 },
   });
