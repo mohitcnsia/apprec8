@@ -660,98 +660,140 @@
     "title": "E2E 1 · Get ready (you, Mac)",
     "ask": "firebase deploy --only functions:recordMood --project apprec8-ca229 (Excited / Tired taps) · node scripts/admin/setCounsellor.cjs <Seema's email> --apply · phones A and B: Me → bottom line shows today's update code. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:18.373Z"
   },
   {
     "id": "e2e-02",
     "title": "E2E 2 · Class link (B)",
     "ask": "Progress → My classes → the test class → SHARE CLASS LINK → WhatsApp → send to A and C. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:19.541Z"
   },
   {
     "id": "e2e-03",
     "title": "E2E 3 · Parent asks to join (A)",
     "ask": "Tap the link → \"Your child's class…\" → OPEN APPREC8 → + Another child \"Test Riya\", roll 23, your mobile, Mother/Father, tick the form → JOIN → Yes → \"Request sent\". Home: Test Riya's card says \"Class: waiting for the teacher to approve\"; Me → MY CHILDREN shows \"waiting for the teacher\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:21.412Z"
   },
   {
     "id": "e2e-04",
     "title": "E2E 4 · Student asks to join (C)",
     "ask": "Join the testers group → Become a tester → install → Continue with Google → first name, Class 10 → tap the link → roll number + parent's mobile → ASK TO JOIN → Yes → \"Request sent\". Me → MY CLASS: \"… · waiting for your teacher\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:22.247Z"
   },
   {
     "id": "e2e-05",
     "title": "E2E 5 · Seema approves both (B)",
     "ask": "Alert or Home → Needs you → the class: Waiting for you is at the top → Approve several at once › → Tick all → WhatsApp → APPROVE 2 → confirm. C: Me says \"You're in …\". — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:23.045Z"
   },
   {
     "id": "e2e-06",
     "title": "E2E 6 · Assign + START (B, C)",
     "ask": "B: Assign a topic for tomorrow. C: Home shows one big card FROM YOUR TEACHER with START (+ \"Then: …\" lines) → START → do the quiz; get 3 wrong in a row once → after Continue: \"Take a breath? 🌿\" → Take a breath → Calm corner → back → quiz goes on. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:23.749Z"
   },
   {
     "id": "e2e-07",
     "title": "E2E 7 · Mood + counsellor (C, B)",
     "ask": "C: Home → THIS WEEK, 5 Chamku faces → Sad → For a while → Let the counsellor know. B (later, or after a pull-down): Home → Needs you \"1 kid to see today (well-being)\" → the name, \"asked to talk\" → Talked, okay. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:24.396Z"
   },
   {
     "id": "e2e-08",
     "title": "E2E 8 · Topic view, Appreciate, Nudge (B)",
     "ask": "After C (and Test Riya on A, via Let Test Riya play on this phone) did a quiz: Progress → My classes → the class → TOPICS · WORST FIRST → tap a topic → names per group → Appreciate on Learned or Nudge on New. Levels need a few quizzes over 2 days, so at first most kids are \"New\"/\"Practising\": that's expected. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:25.113Z"
   },
   {
     "id": "e2e-09",
     "title": "E2E 9 · What the kids see (C, A)",
     "ask": "Nudge → C's Home: \"FROM SEEMA · Let's practise …\" with Practise now. Appreciate on Test Riya → A gets an alert \"🌟 Test Riya was appreciated …\"; Me (as Test Riya) → MY STICKERS. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:25.796Z"
   },
   {
     "id": "e2e-10",
     "title": "E2E 10 · Assignment names (B)",
     "ask": "The class → \"3 · ASSIGNMENT\": Done / Started / Not started names → Nudge N not started. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:26.472Z"
   },
   {
     "id": "e2e-11",
     "title": "E2E 11 · Parent tonight (A)",
     "ask": "Home → Pratha's (or Test Riya's) card → 5 questions with See answer, Right / Needs help → the praise line matches how it went → I praised … → thank-you, then the card leaves Home for today. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:27.132Z"
   },
   {
     "id": "e2e-12",
     "title": "E2E 12 · Kid screens (C or D)",
     "ask": "Home: WORD OF THE DAY (Hear, Close) and SCIENCE/SPACE FACT (Learn more); Progress → Me: a cheer, the near goal, Needs practice / Learned / Doing well by subject, Make it Learned; Me: profile, MY CLASS, More ▼; Fun: Calm corner. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:27.791Z"
   },
   {
     "id": "e2e-13",
     "title": "E2E 13 · You see everything (A)",
     "ask": "C taps 🚩 on a question → A: Home → Needs you \"1 new report from a kid\" → opens Ideas & reports. Progress → This week: kids, learning, questions to check, well-being totals. Alerts: with the app open, a banner. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:28.451Z"
   },
   {
     "id": "e2e-14",
     "title": "E2E 14 · Clean up",
     "ask": "C: Me → More → Delete my account. A: Test Riya → remove. Tell Claude anything that felt confusing. Each test below is also a card in Me → Decisions: YES = it works · NO = something broke (say which step, voice typing is fine) · MORE DETAILS · LATER. Your answer closes the card and comes back to Claude. Older tests: docs/history/OWNER_TESTING_LOG.md. — YES = worked · NO = failed (say which step) · MORE DETAILS = unclear · LATER = skipped.",
     "details": "Full list: My notes → Testing → END-TO-END TEST. Phones: A = you, B = Seema, C = second phone (student), D = Pratha.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "no",
+    "note": null,
+    "answeredAt": "2026-11-12T20:23:29.190Z"
   },
   {
     "id": "signin-parent-code",
@@ -765,6 +807,30 @@
     "title": "Build 20.0.32 ready: upload to Internal + Closed testing",
     "ask": "Upload build-1794450111834.aab (apprec8 folder, check PASS) to Internal testing, then Closed testing. When Google approves it on Closed testing, set Remote Config active_message min_version to 20.0.32 so everyone moves to it (not before: that's the loop from last night). YES = uploaded · MORE DETAILS.",
     "details": "20.0.32 = no Android app backup (the sign-in loop after a reinstall). Today's updates are already on it (update 01a1cd83). After everyone is on 20.0.32, Claude publishes once instead of three times.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "Promoted to internal successfully. Submitted for closed testing",
+    "answeredAt": "2026-11-12T02:53:21.743Z"
+  },
+  {
+    "id": "help-put-in-class",
+    "title": "Help buttons: \"Put in a class\" goes to the teacher's waiting list?",
+    "ask": "On People, \"Put in a class\" sends the person to that teacher's waiting list, not straight into the class, so the teacher still checks every child. YES (recommended) / NO = straight in.",
+    "details": "Why waiting list: the invite message promises families that the teacher checks every child. Straight in is faster, but a wrong child could land in a class with nobody checking.\n\nThe person sees on Home: \"Waiting for Seema to approve 10-A\". Every change is saved (who, when, before → after) with an Undo.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
+    "from": "claude"
+  },
+  {
+    "id": "help-parent",
+    "title": "Help buttons: \"She's a parent\" only after she names her child?",
+    "ask": "You add a child profile for a parent only after she has told you the child's first name and class (e.g. on WhatsApp), and she confirms it on her phone. YES (recommended) / NO.",
+    "details": "On 12 Nov you said no to a \"She's a parent\" button, because kid profiles replace it. This version keeps it safe: we never guess a child, and the parent sees on Me: \"Riya was added by the Apprec8 team. Right? Yes / Change\".\n\nNO = drop this button; parents add their own child (Me → Add my child) and you send them the WhatsApp message instead.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
+    "from": "claude"
+  },
+  {
+    "id": "help-build-all",
+    "title": "Build all three Help buttons together?",
+    "ask": "She's a teacher · She's a parent · Put in a class, built together (about a day), then a phone walk before publish. YES (recommended) / NO = only \"She's a teacher\" first / LATER.",
+    "details": "You deploy one new server function (I give the command). One server call per tap, no extra reads on anyone's phone. Nothing deletes.\n\nMeanwhile the WhatsApp and Email buttons on stuck people are built and waiting for a 10-minute phone check before publish.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
     "from": "claude"
   }
 ]
