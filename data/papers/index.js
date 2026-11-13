@@ -13,11 +13,12 @@ import sciencePaper4 from "./sciencePaper4.js";
 import sciencePaper5 from "./sciencePaper5.js";
 import class7SciencePaper1 from "./class7SciencePaper1.js";
 import class7SciencePaper2 from "./class7SciencePaper2.js";
+import class7SciencePaper3 from "./class7SciencePaper3.js";
 import { bundledQuest } from "../quests/index.js";
 import { buildMixPaper, mixPaperId, parseMixId, buildCheckupPaper, checkupPaperId, parseCheckupId, CHECKUP_GRADES } from "./mix.js";
 export { CHECKUP_GRADES } from "./mix.js";
 
-export const PAPERS = [englishPaper1, englishPaper2, englishPaper3, englishPaper4, sciencePaper1, sciencePaper2, sciencePaper3, sciencePaper4, sciencePaper5, class7SciencePaper1, class7SciencePaper2];
+export const PAPERS = [englishPaper1, englishPaper2, englishPaper3, englishPaper4, sciencePaper1, sciencePaper2, sciencePaper3, sciencePaper4, sciencePaper5, class7SciencePaper1, class7SciencePaper2, class7SciencePaper3];
 
 export const SUBJECTS = [
   { id: "english", title: "English" },

@@ -6,6 +6,7 @@
 3. Home → My mistakes: tap it once; the card no longer says 5 (the 5 test mistakes are cleared).
 4. Me → Contact us: the button says **Send**.
 5. Admin tools → View as Kid → Home: no "new reports" or People row.
+6. View as Kid · Class 7 → Home → Practice paper → **Class 7 · Paper 3** (50 questions, 60 min) opens; answer 2, leave, it resumes.
 
 ## ⭐ Class 7 Science (12 Nov, exam on 15 Nov)
 **After "publish", seed once:** Me → Admin tools → **Update Science Quest** (writes the 13 Class 7 topics; a few cents of reads
