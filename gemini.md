@@ -33,6 +33,15 @@ old screen, usernames on the leaderboard, join card for teacher-parents, parent 
 **Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
 publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
 
+## 2026-11-13: chess book pipeline, step 1 (Claude)
+- **Goal:** owner's "Guess the Move" chess trainer (spec + mockups agreed; app build NOT approved yet). Gemini's two PGN
+  samples had invented moves, so extraction is now machine-gated before any bulk work.
+- **Done:** `scripts/chess/validate_pgn.py` (replays every move incl. variations; FAIL names the move — it caught 23.Rag1,
+  which a hand review missed) + fixtures + README with the frozen extraction rules; `content-private/` gitignored (book
+  content never enters the public repo). Board: **G105** = book 1, game 1 through the gate.
+- **How to test:** `scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py scripts/chess/fixtures/sample_pass.pgn
+  scripts/chess/fixtures/sample_fail.pgn` → 1/2 passed, fail at 23.Rag1.
+
 ## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
 - **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
   phone-tested one piece at a time; every publish goes to both 20.0.31 and 20.0.30 phones.

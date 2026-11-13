@@ -234,3 +234,7 @@ qa-screenshots/
 
 # SOF syllabus PDFs (owner-provided, not ours to publish)
 docs/exam/syllabus/
+
+# Chess book pipeline: private book content + local venv (never commit)
+content-private/
+scripts/chess/.venv/

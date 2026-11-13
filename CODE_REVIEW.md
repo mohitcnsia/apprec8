@@ -7,6 +7,12 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ---
 
+**2026-11-13 (small, tooling only):** chess book pipeline step 1 — `scripts/chess/validate_pgn.py` + fixtures + README
+(owner's trainer; spec in Claude Doc "Chess: Guess the Move"). No app code touched; book content stays in gitignored
+`content-private/`. Self-test: fixtures 1/2 pass, garbled sample fails at 23.Rag1 as intended.
+
+---
+
 ## 2026-10-28 — Review: English Olympiad (IEO) Quest & Roadmap
 
 - **Branch under review:** `feat/tile-quests`

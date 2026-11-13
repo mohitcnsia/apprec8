@@ -74,6 +74,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
+| G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **todo (next)** | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
 | G16 Science Unit 1 | Gemini | **done, merged** | | |
 | G18 NSO pattern notes | Gemini | **done, merged** | `gemini/g18-exam-patterns` | Good: `docs/exam/nso-pattern.md` (sections, weightage, 9 question styles, gap list) |
@@ -114,6 +115,19 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 ---
 
 ## Task details (Gemini reads these; one task at a time, top to bottom)
+
+### G105 · [next] · gemini · Chess book extraction, game 1 (owner's trainer)
+**Why:** the owner's "Guess the Move" chess trainer (spec frozen 13 Nov). Your two earlier samples failed because moves
+were written partly from memory — both had moves no piece could play. The pipeline now gates every game by machine.
+**Read first:** `scripts/chess/README.md` (rules are frozen there). **Base:** `feat/quiz-redesign`.
+**Do:** extract exactly ONE game from the owner's London System book PDF (ask Claude via your report if you don't have the
+path). The PDF is real text: COPY the moves from the page, never recall them. Words in `{ }`, playable lines in `( )`,
+tags `GuessSide` / `GuessFrom` / `SourceBook` ("short name (author), page"). Write it to `content-private/chess/book1.pgn`
+— that folder is gitignored; **book content must never be committed to this public repo**.
+**Gate:** `scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py content-private/chess/book1.pgn` must print PASS
+(venv setup: README). Iterate until it does.
+**Deliver:** `docs/agents/reports/G105.md` = the PASS output + book page number + any line you demoted to prose and why.
+No batch extraction: game 2 only after Claude reads game 1's comments against the book page and accepts.
 
 ### G15 · [later] · gemini · English Unit 2 answer-key review
 **Why:** Unit 2 (Articles & Determiners) is written but not seeded; IEO is on 17 Nov. **Base:** `feat/quiz-redesign`.
