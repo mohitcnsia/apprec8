@@ -1,5 +1,12 @@
 # Testing on your phone
 
+## ⭐ People screen + your 13 Nov notes (waiting for the phone check, then publish)
+1. Me → Admin tools → People: All hides Play robots + test accounts ("Show" brings them back); Sort: Newest / Oldest / Last seen.
+2. Stuck tab → tap Khushboo → **WhatsApp** opens with the message ready (you pick her) · **Email** opens addressed to her.
+3. Home → My mistakes: tap it once; the card no longer says 5 (the 5 test mistakes are cleared).
+4. Me → Contact us: the button says **Send**.
+5. Admin tools → View as Kid → Home: no "new reports" or People row.
+
 ## ⭐ Class 7 Science (12 Nov, exam on 15 Nov)
 **After "publish", seed once:** Me → Admin tools → **Update Science Quest** (writes the 13 Class 7 topics; a few cents of reads
 as phones re-download Science once). Then, on a Class 7 account:
