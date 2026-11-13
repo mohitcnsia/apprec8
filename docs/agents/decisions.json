@@ -853,5 +853,19 @@
     "ask": "First the server rule and hidden buttons (small), then the progress move. YES (recommended) / LATER = after the first week of the pilot.",
     "details": "Until it is built, a kid on a parent's Gmail could see parent screens if the parent adds a child from the same account. Small part first: a student account can't add a child or make a parent code (server + app).\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
     "from": "claude"
+  },
+  {
+    "id": "dpdp-deletion-window",
+    "title": "DPDP: how long to keep an account after \"Delete my account\"?",
+    "ask": "Today a deletion request is kept 90 days and erased only by your tap, but the privacy policy says \"deleted at once\". India's DPDP Act expects erasure soon after consent is withdrawn. Pick: YES = 30 days, then erased automatically unless you keep it (recommended) · NO = keep 90 days + your tap · MORE DETAILS.",
+    "details": "**Why it matters:** Google checks that the app does what the privacy policy says, and DPDP asks for erasure once the purpose ends or consent is withdrawn (a short grace window to undo a mistake is common).\n\n**My recommendation:** 30 days to undo, shown to the person (\"Your account will be erased on 13 Dec. Changed your mind? Tap Keep my account\"), then erased by the server. You still see each request on Home and can erase sooner. This changes your 12 Nov rule (\"nothing erased without my click\"), so it's your call.\n\n**Then the policy text:** section 8 says the window and what is kept (the consent record and question reports without names). Ask the lawyer once during the legal check (B3).\n\n**Parked with this:** two more policy fixes: Seema's WhatsApp YES for the pilot (section 5), and teachers seeing a waiting child's first name and roll number before approving (section 4). I draft the text; you publish it on your GitHub Pages site.",
+    "from": "claude"
+  },
+  {
+    "id": "glorious-academy-duplicate",
+    "title": "Two \"Glorious Academy\" schools: merge them?",
+    "ask": "One (made 4 Nov) has Seema as admin and no classes. The other (made from your account at 00:47 on 13 Nov) has 7-A, 5-A and 10-A and no admin. YES = I move the 3 classes into the first and leave the empty one unused (nothing deleted) · NO = keep both and add Seema as admin of the second.",
+    "details": "Kids picking a school see \"Glorious Academy\" twice, which is confusing. No real kid is in either school yet, so moving the classes now is safe; later it means moving members too.\n\nMeanwhile Seema already sees the classes she teaches on People (fixed today, after you deploy peopleList).",
+    "from": "claude"
   }
 ]
