@@ -18,10 +18,10 @@ import ReportQuestionButton from "../../components/quiz/ReportQuestionButton";
 import ListenButtons from "../../components/quiz/ListenButtons";
 import { useSoundEffects } from "../../hooks/useSoundEffects";
 import { getQuizQuestions, getStudyDoc } from "../../services/contentCache";
-import { saveQuestAttempt, updateEndlessStats } from "../../services/englishQuestApi";
+import { saveQuestAttempt, updateEndlessStats, removeDeadMistakes } from "../../services/englishQuestApi";
 import { GENERATORS, nextEndlessQuestion } from "../../utils/generators";
 import { shuffle } from "../../utils/gateRules";
-import { buildMistakeItems, similarQuestions, RIGHT_TO_CLEAR } from "../../utils/mistakes";
+import { buildMistakeItems, similarQuestions, deadMistakeKeys, RIGHT_TO_CLEAR } from "../../utils/mistakes";
 import { onlyTopic } from "../../utils/subtopicPractice";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 
@@ -122,8 +122,10 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       const entries = Object.values(mistakes);
       const byId = new Map();
       const all = []; // { ...question, branchId }
+      const loadedQuizIds = new Set(); // quizzes that really came back (a failed load must not clear anything)
       const loadQuiz = async (quizId, b, subtopicFallback) => {
         const qs = (await getQuizQuestions(quizId, contentVersion).catch(() => [])) || [];
+        if (qs.length) loadedQuizIds.add(quizId);
         qs.forEach((q) => {
           if (hidden.has(q.id) || !q.options?.some((o) => o.isCorrect)) return;
           const item = { ...q, quizId, subtopic: q.subtopic || subtopicFallback || null, branchId: b };
@@ -135,6 +137,7 @@ export default function EndlessPracticeScreen({ route, navigation }) {
         const doc = await getStudyDoc(table, contentVersion).catch(() => null);
         const make = GENERATORS[type];
         if (!doc?.entries || !make) return;
+        loadedQuizIds.add(table);
         make(doc.entries).forEach((q) => {
           if (hidden.has(q.id)) return;
           const item = { ...q, quizId: table, branchId: b };
@@ -177,6 +180,8 @@ export default function EndlessPracticeScreen({ route, navigation }) {
       // Similar questions for a topic mistake: same branch(es), same sub-topic when known.
       similarRef.current = (entry) => similarQuestions(all, entry, unitBranches);
       const items = buildMistakeItems(mistakes, { byId, similar: similarRef.current });
+      const dead = deadMistakeKeys(mistakes, { byId, loadedQuizIds });
+      if (dead.length) removeDeadMistakes(questId, dead); // so Home's count matches what can be fixed
       if (!alive) return;
       if (!items.length) {
         setError("No mistakes to fix right now. Great job! 🎉");

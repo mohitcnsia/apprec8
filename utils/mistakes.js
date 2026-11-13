@@ -164,3 +164,16 @@ export function buildMistakeItems(mistakes = {}, { byId = new Map(), similar = (
     });
   return items;
 }
+
+/**
+ * Mistakes that can never come back as a question, so "My mistakes" could never fix them while Home kept counting them
+ * (owner's note, 13 Nov: "even after fixing all my mistakes, the home card still shows 5"). Only question mistakes
+ * (not topics, not practice-paper ones that carry their question): no quiz to load from, or their quiz loaded fine
+ * (loadedQuizIds) and the question is gone from it. A quiz that failed to load clears nothing.
+ */
+export function deadMistakeKeys(mistakes = {}, { byId = new Map(), loadedQuizIds = new Set() } = {}) {
+  return Object.entries(mistakes)
+    .filter(([, e]) => e && e.kind !== "topic" && !e.inline && !byId.has(e.questionId))
+    .filter(([, e]) => !e.quizId || loadedQuizIds.has(e.quizId))
+    .map(([k]) => k);
+}

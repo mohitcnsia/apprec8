@@ -225,13 +225,10 @@ const ContactUsForm = ({ navigation }) => {
           onPress={submitHandler}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Sending..." : "Send E-mail Coming Soon"}
+          {isSubmitting ? "Sending..." : "Send"}
         </PrimaryButton>
         <View style={styles.helperTextContainer}>
-          <Text style={styles.infoHelperText}>
-            * For now you can use Profile -> MyTasks and assign the task to
-            Apprec8 Team.
-          </Text>
+          <Text style={styles.infoHelperText}>We read every message and reply in the app.</Text>
         </View>
       </ScrollView>
     </LinearGradient>

@@ -279,6 +279,18 @@ export async function addPaperMistakes(questId, wrongs, paperId) {
   }
 }
 
+/** Drops mistakes that can never be practised (utils/mistakes.js deadMistakeKeys). Never throws. */
+export async function removeDeadMistakes(questId, keys = []) {
+  const user = currentUser();
+  if (!user || !questId || !keys.length) return;
+  try {
+    const current = latestMistakes.get(`${user.uid}/${questId}`) || {};
+    await writeMistakes(questId, current, Object.fromEntries(keys.map((k) => [k, null])));
+  } catch (e) {
+    console.warn("removeDeadMistakes failed:", e);
+  }
+}
+
 async function writeMistakes(questId, current, updates) {
   const user = currentUser();
   if (!user) return;

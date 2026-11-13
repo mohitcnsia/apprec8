@@ -363,7 +363,11 @@ export default function HomeScreen({ navigation }) {
   const [peopleCounts, setPeopleCounts] = useState(null);
   const peopleAt = useRef(0);
   useEffect(() => {
-    if (!isAdmin) return undefined;
+    if (!isAdmin) {
+      setPeopleCounts(null);
+      peopleAt.current = 0;
+      return undefined;
+    }
     const load = () => {
       if (Date.now() - peopleAt.current < 30 * 60 * 1000) return;
       peopleAt.current = Date.now();
@@ -377,7 +381,10 @@ export default function HomeScreen({ navigation }) {
   const [reportCount, setReportCount] = useState(0);
   const reportsAt = useRef(0);
   useEffect(() => {
-    if (!isAdmin) return undefined;
+    if (!isAdmin) {
+      setReportCount(0); // "View as" a kid: the owner's count must not stay on screen (owner's note, 13 Nov)
+      return undefined;
+    }
     const load = () => {
       if (Date.now() - reportsAt.current < 10 * 60 * 1000) return;
       reportsAt.current = Date.now();

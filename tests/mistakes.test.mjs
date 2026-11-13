@@ -93,3 +93,19 @@ console.log("mistakes: all tests passed");
   assert.deepEqual(similarQuestions(all, { branchId: "none", subtopic: "x" }), []);
   console.log("mistakes similarQuestions: ok");
 }
+
+// Dead mistakes (owner's note, 13 Nov: Home said 5, practice had nothing to fix).
+{
+  const { deadMistakeKeys } = await import("../utils/mistakes.js");
+  const m = {
+    q_mistake_1: { kind: "question", questionId: "q_mistake_1", branchId: "b" }, // no quiz: can never load
+    gone: { kind: "question", questionId: "gone", quizId: "qz1" }, // quiz loaded, question removed
+    here: { kind: "question", questionId: "here", quizId: "qz1" },
+    offline: { kind: "question", questionId: "x", quizId: "qz2" }, // quiz failed to load: keep
+    paper: { kind: "question", questionId: "p1", inline: { text: "?" } },
+    "topic:b": { kind: "topic", branchId: "b" },
+  };
+  const dead = deadMistakeKeys(m, { byId: new Map([["here", {}]]), loadedQuizIds: new Set(["qz1"]) });
+  assert.deepEqual(dead.sort(), ["gone", "q_mistake_1"]);
+  console.log("mistakes: dead entries ok");
+}
