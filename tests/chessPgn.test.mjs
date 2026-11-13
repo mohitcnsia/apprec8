@@ -47,6 +47,11 @@ const bad = parsePastedPgn(`1. e4 e5 2. Nf6 Nc6 3. d4 exd4`);
 assert.equal(bad.ok, false);
 assert.ok(bad.error.includes("2.Nf6"), bad.error);
 
+// Phone keyboards capitalise pawn moves after "1." — forgiven, since E/A/C/D/F/G/H are not pieces
+const caps = parsePastedPgn(`1. E4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7# 1-0`);
+assert.equal(caps.ok, true, caps.error);
+assert.equal(caps.game.moves[0].san, "e4");
+
 // Empty / junk pastes get readable errors
 assert.equal(parsePastedPgn("").ok, false);
 assert.equal(parsePastedPgn("[Event \"x\"]").ok, false);

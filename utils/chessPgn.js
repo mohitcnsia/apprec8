@@ -93,6 +93,15 @@ export function parsePastedPgn(text) {
     } catch (e) {
       made = null;
     }
+    // Phone keyboards auto-capitalise after "1." ("E4"). A,C,D,E,F,G,H are not piece
+    // letters, so a capitalised pawn move is unambiguous — forgive it. (B stays strict.)
+    if (!made && /^[ACDEFGH]/.test(token.value)) {
+      try {
+        made = chess.move(token.value[0].toLowerCase() + token.value.slice(1));
+      } catch (e) {
+        made = null;
+      }
+    }
     if (!made) {
       const moveNo = Math.floor(moves.length / 2) + 1;
       const dots = moves.length % 2 === 0 ? "." : "...";

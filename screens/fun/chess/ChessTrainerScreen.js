@@ -125,6 +125,9 @@ export default function ChessTrainerScreen({ navigation }) {
             <TextInput
               style={styles.input}
               multiline
+              autoCapitalize="none"
+              autoCorrect={false}
+              spellCheck={false}
               placeholder={'[White "..."]\n1. e4 e5 2. Nf3 ...'}
               placeholderTextColor={P.dimText}
               value={pgnText}
