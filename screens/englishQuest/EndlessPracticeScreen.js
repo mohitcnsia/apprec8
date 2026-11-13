@@ -491,7 +491,7 @@ const makeStyles = (theme, insets) =>
     listenRow: { flexDirection: "row", justifyContent: "flex-end", marginBottom: 6 },
     feedbackBox: { marginTop: 12, padding: 12, borderRadius: 14, backgroundColor: theme.cardBackground, gap: 4 },
     feedbackTitle: { fontSize: 17, fontFamily: "nunitoBold" },
-    feedbackText: { fontSize: 15, fontFamily: "nunito", color: theme.textPrimary, lineHeight: 21 },
+    feedbackText: { fontSize: 17, fontFamily: "nunito", color: theme.textPrimary, lineHeight: 25 }, // owner 9 Nov: "explanation text too small"
     footer: { flexDirection: "row", gap: 12, paddingHorizontal: 15, paddingTop: 8, paddingBottom: Math.max(24, insets.bottom + 16) },
     button: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, borderRadius: 28, paddingVertical: 14 },
     stopButton: { flex: 1, borderWidth: 2, borderColor: theme.border },

@@ -126,7 +126,8 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
   // ---- Reported tab data: "needs you" first, then most-reported
   const issueRows = useMemo(
     () =>
-      [...issues].sort(
+      // Reviewed ones stay hidden until a kid reports them again (reports review, 13 Nov).
+      issues.filter((x) => !x.reviewedAt || (x.lastReportAt?.toMillis?.() || 0) > (x.reviewedAt?.toMillis?.() || 0)).sort(
         (a, b) => (b.needsAdmin ? 1 : 0) - (a.needsAdmin ? 1 : 0) || (b.counts?.distinct || 0) - (a.counts?.distinct || 0)
       ),
     [issues]
@@ -205,7 +206,7 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
       <View style={styles.tabs}>
         {[
           ["kids", "Kids"],
-          ["reported", `Reported 🚩 ${issues.length}`],
+          ["reported", `Reported 🚩 ${issueRows.length}`],
         ].map(([id, label]) => (
           <TouchableOpacity key={id} onPress={() => setTab(id)} style={[styles.tab, tab === id && styles.tabActive]}>
             <Text style={[styles.tabText, tab === id && styles.tabTextActive]}>{label}</Text>

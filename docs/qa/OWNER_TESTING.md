@@ -15,6 +15,12 @@ Owner extras must be ON (Me → ADMIN → Owner extras). Dark and light theme bo
 8. Me → ADMIN → Owner extras OFF → Fun: the chess tile is gone (kids never see it).
 Not yet (by design): centipawns / red / blue verdicts — they come with the Stockfish pass; today a wrong guess is neutral.
 
+## ⭐ Reports review (13 Nov, next walk)
+1. Home → Needs you: no "new reports from kids" row (all 62 closed; a new report brings it back).
+2. Progress → Kids → Reported 🚩: 0 (21 reviewed; a new report on one of them brings it back).
+3. My mistakes / Keep practising: explanation text is bigger (17).
+4. Progress → Kids: pull down to refresh — does it reload? (to check)
+
 ## ⭐ People screen + your 13 Nov notes (waiting for the phone check, then publish)
 1. Me → Admin tools → People: All hides Play robots + test accounts ("Show" brings them back); Sort: Newest / Oldest / Last seen.
 2. Stuck tab → tap Khushboo → **WhatsApp** opens with the message ready (you pick her) · **Email** opens addressed to her.

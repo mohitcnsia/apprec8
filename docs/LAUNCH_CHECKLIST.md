@@ -23,6 +23,25 @@ Core flow now: deploy → publish → walk on the phone (kids join a class in th
 7. **Full name on "Join your class" (owner, 12 Nov):** only on that form, never at sign-up. Wording: "Your full name, so {Teacher's name} (Teacher) knows it's you. Required to join the class." Last name kept only on the join request (teacher-only), removed when the teacher confirms or removes the child, or after 30 days. Plus a one-time "What should we call you?" card for older accounts with no first name (they show as "Learner").
 8. **Fable plan:** delete the old code screens; retire V1 quizzes + old Space path; apply for production after 14 days (you).
 
+## 📥 From the reports review (13 Nov: 62 items read, all closed in Ideas & reports)
+Fixed already or today: Pratha's grammar flags (IEO fixes), reading options invisible, mistakes count stuck at 5, "Send E-mail Coming
+Soon", reports row in View as, practice explanation text bigger (15 → 17). Answers checked and right: digestion finishes in the
+small intestine, a seed needs water, cheetah "!", "I wonder…" = statement, horse–mare (explanation names the stallion too).
+To do (small, next walk):
+- Dashboard (Progress → Kids): pull down to refresh doesn't reload (owner 10 Nov) — check on the phone; likely the list sits inside another scroll.
+- Gender practice: "48/50, 33 in a row" keeps counting past 50 (owner 9 Nov) — say what the number means, or stop at the goal.
+- Practice paper list: highlight the paper in progress, not Paper 1 (walk 13 Nov).
+- New parent's Home: "Add your child" card on top (walk 13 Nov).
+- Kid's Me: "My class" row wraps badly (walk 13 Nov).
+- View as: Home scrolls to the top when switching (walk 13 Nov).
+- Stars earned today / last 24 h on Progress (owner 13 Nov).
+Content (Seema / Claude):
+- Science Class 5: more on rabi and kharif crops (Pratha 10 Nov: "not enough content").
+- English Grammar Pro: "Time and Place Shifts" card (reported speech) marked confusing (9 Nov) — Seema to look.
+Waiting for decisions (cards in your inbox): Home tidy-up (mockup), delete our own test accounts from People.
+Already planned: see what happened to my feedback = two-way cards (G89).
+Closed without a change: May–June reports on old quizzes (hidden for everyone but you), test notes, emoji-only notes.
+
 ## Road to production (open steps)
 | # | Step | State |
 |---|---|---|

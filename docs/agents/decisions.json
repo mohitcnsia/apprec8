@@ -817,42 +817,60 @@
     "title": "Help buttons: \"Put in a class\" goes to the teacher's waiting list?",
     "ask": "On People, \"Put in a class\" sends the person to that teacher's waiting list, not straight into the class, so the teacher still checks every child. YES (recommended) / NO = straight in.",
     "details": "Why waiting list: the invite message promises families that the teacher checks every child. Straight in is faster, but a wrong child could land in a class with nobody checking.\n\nThe person sees on Home: \"Waiting for Seema to approve 10-A\". Every change is saved (who, when, before → after) with an Undo.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-13T14:17:24.743Z"
   },
   {
     "id": "help-parent",
     "title": "Help buttons: \"She's a parent\" only after she names her child?",
     "ask": "You add a child profile for a parent only after she has told you the child's first name and class (e.g. on WhatsApp), and she confirms it on her phone. YES (recommended) / NO.",
     "details": "On 12 Nov you said no to a \"She's a parent\" button, because kid profiles replace it. This version keeps it safe: we never guess a child, and the parent sees on Me: \"Riya was added by the Apprec8 team. Right? Yes / Change\".\n\nNO = drop this button; parents add their own child (Me → Add my child) and you send them the WhatsApp message instead.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-13T14:17:22.730Z"
   },
   {
     "id": "help-build-all",
     "title": "Build all three Help buttons together?",
     "ask": "She's a teacher · She's a parent · Put in a class, built together (about a day), then a phone walk before publish. YES (recommended) / NO = only \"She's a teacher\" first / LATER.",
     "details": "You deploy one new server function (I give the command). One server call per tap, no extra reads on anyone's phone. Nothing deletes.\n\nMeanwhile the WhatsApp and Email buttons on stuck people are built and waiting for a 10-minute phone check before publish.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": "Link should be clickable. I like th fact that it can not be copied.",
+    "answeredAt": "2026-11-13T05:49:22.814Z"
   },
   {
     "id": "family-learning-only",
     "title": "Learning-only view until the family link is approved?",
     "ask": "A student account with no approved parent link sees only learning (quests, practice, class, own Progress, Need help). Add a child, parent codes and a child's week wait for the link. YES (recommended) / NO.",
     "details": "Your rule from today: minimal view to unblock learning; everything else needs an approved parent–child link, and the app says so. Me shows a card: \"Is this a parent's Google account? … I'm the parent on this phone ›\".\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-13T14:18:07.323Z"
   },
   {
     "id": "family-move-progress",
     "title": "\"I'm the parent on this phone\": move the child's progress to a child profile?",
     "ask": "When a parent claims a Gmail the kid used, the kid's stars, class and progress move into the kid's own child profile (recorded), and the Gmail becomes the parent's. YES (recommended) / NO = the kid keeps the Gmail; the parent uses another one.",
     "details": "Steps: grown-up check (year of birth 18+) → progress moves (nothing lost) → parent agrees in the app → Seema sees \"parent confirmed\" → the kid plays via \"Let Riya play on this phone\".\n\nNO is simpler to build, but many families have only one Google account on the phone.\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-13T14:18:48.136Z"
   },
   {
     "id": "family-build-timing",
     "title": "Build the family rule before Seema approves her first kids?",
     "ask": "First the server rule and hidden buttons (small), then the progress move. YES (recommended) / LATER = after the first week of the pilot.",
     "details": "Until it is built, a kid on a parent's Gmail could see parent screens if the parent adds a child from the same account. Small part first: a student account can't add a child or make a parent code (server + app).\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
-    "from": "claude"
+    "from": "claude",
+    "answer": "more",
+    "note": null,
+    "answeredAt": "2026-11-13T14:17:50.525Z"
   },
   {
     "id": "dpdp-deletion-window",
@@ -875,5 +893,19 @@
     "note": "merge (done 13 Nov: 7-A, 5-A, 10-A moved; duplicate kept, marked merged)",
     "via": "chat",
     "answeredAt": "2026-11-13T03:41:24.043021Z"
+  },
+  {
+    "id": "home-tidy-up-mockup",
+    "title": "Home tidy-up: make a mockup from your notes?",
+    "ask": "One mockup for a calmer Home: Thought + Word + Fact as one swipe card on top; quests and Explore folded into tap-to-open cards; reminders up top; parents see the child who needs most help + \"+3 more\"; stars earned today; kids' reports go to me, not your Home. YES = mockup first (recommended) · LATER.",
+    "details": "From your notes on 12–13 Nov (7 notes). Every child sees Home, so it needs a mockup and your OK before building (design rules: one loud thing, main button at the bottom, fold don't delete).\n\n**My view on reports:** keep a small count on your Home (you asked never to miss one), but I triage them at each check-in and turn what matters into fixes, to-dos or cards, as I did today.\n\nNothing changes until you approve the mockup.",
+    "from": "claude"
+  },
+  {
+    "id": "people-delete-test-accounts",
+    "title": "People: a Delete button for our own test accounts?",
+    "ask": "Owner-only Delete on accounts the app knows are ours (example.com, mohitchilkoti+…, seemachilkoti+…), with a confirm step. Play robots stay (hidden; Google signs them in again anyway). Real people are never deletable from People. YES (recommended) · NO.",
+    "details": "Your note (13 Nov): \"a deletion button with confirmation popup to delete dummy users and play robots\".\n\n**Why not robots:** Google's review robots sign in again on every review, so deleting them is wasted work, and they're already hidden from the counts.\n\n**Why only ours:** a real family's account is erased only through their own request (30 days to undo, the DPDP rule you agreed today). Deleting a test account frees its class seats and keeps Seema's lists clean.",
+    "from": "claude"
   }
 ]
