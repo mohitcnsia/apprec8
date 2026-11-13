@@ -401,7 +401,7 @@ to block only child profiles and accounts already linked to a parent. Deploy:
 parent makes a link code; a kid account linked to a parent gets "Only a parent's own account can link a child". Note the
 result under DR-27 in CODE_REVIEW.md. `gemini(G102): done — review please`.
 
-### G98 · [todo] · gemini · ⭐ URGENT, before G89: answer-check English Paper 4 + Science Paper 5 (Claude, 2026-11-10)
+### G98 · [done by Claude 2026-11-13: 100/100 agree, report docs/agents/reports/G98.md] · ~~gemini~~ · answer-check English Paper 4 + Science Paper 5 (Claude, 2026-11-10)
 Pratha's IEO is 17 Nov and NSO 19 Nov; the owner wants her never waiting for content. Claude wrote two harder Class 5 papers
 from her misses: `data/papers/englishPaper4.js`, `data/papers/sciencePaper5.js` (live after the next publish). Solve all 100
 questions yourself WITHOUT looking at the marked answer first, then compare. Report in `docs/agents/reports/G98.md`: any
