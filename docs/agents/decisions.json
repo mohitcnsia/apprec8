@@ -832,5 +832,26 @@
     "ask": "She's a teacher · She's a parent · Put in a class, built together (about a day), then a phone walk before publish. YES (recommended) / NO = only \"She's a teacher\" first / LATER.",
     "details": "You deploy one new server function (I give the command). One server call per tap, no extra reads on anyone's phone. Nothing deletes.\n\nMeanwhile the WhatsApp and Email buttons on stuck people are built and waiting for a 10-minute phone check before publish.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
     "from": "claude"
+  },
+  {
+    "id": "family-learning-only",
+    "title": "Learning-only view until the family link is approved?",
+    "ask": "A student account with no approved parent link sees only learning (quests, practice, class, own Progress, Need help). Add a child, parent codes and a child's week wait for the link. YES (recommended) / NO.",
+    "details": "Your rule from today: minimal view to unblock learning; everything else needs an approved parent–child link, and the app says so. Me shows a card: \"Is this a parent's Google account? … I'm the parent on this phone ›\".\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
+    "from": "claude"
+  },
+  {
+    "id": "family-move-progress",
+    "title": "\"I'm the parent on this phone\": move the child's progress to a child profile?",
+    "ask": "When a parent claims a Gmail the kid used, the kid's stars, class and progress move into the kid's own child profile (recorded), and the Gmail becomes the parent's. YES (recommended) / NO = the kid keeps the Gmail; the parent uses another one.",
+    "details": "Steps: grown-up check (year of birth 18+) → progress moves (nothing lost) → parent agrees in the app → Seema sees \"parent confirmed\" → the kid plays via \"Let Riya play on this phone\".\n\nNO is simpler to build, but many families have only one Google account on the phone.\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
+    "from": "claude"
+  },
+  {
+    "id": "family-build-timing",
+    "title": "Build the family rule before Seema approves her first kids?",
+    "ask": "First the server rule and hidden buttons (small), then the progress move. YES (recommended) / LATER = after the first week of the pilot.",
+    "details": "Until it is built, a kid on a parent's Gmail could see parent screens if the parent adds a child from the same account. Small part first: a student account can't add a child or make a parent code (server + app).\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
+    "from": "claude"
   }
 ]
