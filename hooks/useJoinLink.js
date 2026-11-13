@@ -43,7 +43,7 @@ export default function useJoinLink(ready) {
     let timer = null;
     const open = () => {
       if (navRef.isReady()) {
-        navRef.navigate("Profile", { screen: "JoinByLink", params: { token } });
+        navRef.navigate("Profile", { screen: "JoinByLink", initial: false, params: { token } });
         setToken(null);
         AsyncStorage.removeItem(KEY).catch(() => {});
       } else if (tries++ < 20) {

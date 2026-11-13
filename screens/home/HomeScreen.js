@@ -411,13 +411,13 @@ export default function HomeScreen({ navigation }) {
     if (row.screen === "MoodList") {
       navigation.navigate("MoodList");
     } else if (row.screen === "IdeasReports") {
-      navigation.navigate("Profile", { screen: "IdeasReports" });
+      navigation.navigate("Profile", { screen: "IdeasReports", initial: false });
     } else if (row.screen === "Decisions") {
       navigation.navigate("Decisions");
     } else if (row.screen === "ClassDetail") {
       navigation.navigate("ClassDetail", row.params);
     } else if (row.screen === "Progress") {
-      navigation.navigate("Stats", { screen: "Progress", params: row.params });
+      navigation.navigate("Stats", { screen: "ProgressScreen", params: row.params });
     }
   };
 
@@ -636,7 +636,7 @@ export default function HomeScreen({ navigation }) {
         const nc = needsClass(userData, children);
         if (!nc) return null;
         return (
-          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass", params: nc.who === "parent" ? { grade: nc.grade } : {} })} accessibilityRole="button" style={styles.joinCard}>
+          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass", initial: false, params: nc.who === "parent" ? { grade: nc.grade } : {} })} accessibilityRole="button" style={styles.joinCard}>
             <Text style={styles.joinTitle}>{nc.who === "kid" ? "Join your class" : `Join ${nc.name}'s class`}</Text>
             <Text style={styles.joinLine}>{nc.who === "kid" ? "Pick your school and class. You start learning at once." : `Pick ${nc.name}'s school and class. ${nc.name} starts learning at once.`}</Text>
             <Text style={styles.joinLink}>Find my class ›</Text>
@@ -645,7 +645,7 @@ export default function HomeScreen({ navigation }) {
       })()}
 
       {isAdmin && peopleCounts && (peopleCounts.newToday || peopleCounts.stuck) ? (
-        <Pressable onPress={() => navigation.navigate("Profile", { screen: "People" })} accessibilityRole="button" style={styles.joinCard}>
+        <Pressable onPress={() => navigation.navigate("Profile", { screen: "People", initial: false })} accessibilityRole="button" style={styles.joinCard}>
           <Text style={styles.joinTitle}>People</Text>
           <Text style={styles.joinLine}>{peopleCounts.newToday} joined today · {peopleCounts.stuck} stuck (signed in, picked nothing)</Text>
           <Text style={styles.joinLink}>See who ›</Text>
@@ -691,7 +691,7 @@ export default function HomeScreen({ navigation }) {
             <Pressable
               key={c.id}
               style={styles.classCard}
-              onPress={() => navigation.navigate("Stats", { screen: "Progress", params: { view: "classes", classId: c.id } })}
+              onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: c.id } })}
               accessibilityRole="button"
               accessibilityLabel={`${classLabel(c)}, ${c.totalStudents} students`}
             >
@@ -725,7 +725,7 @@ export default function HomeScreen({ navigation }) {
                   {c.weakestTopic ? `Teach again: ${c.weakestTopic}` : "All topics on track 👍"}
                 </Text>
                 <Pressable
-                  onPress={() => navigation.navigate("Stats", { screen: "Progress", params: { view: "classes", classId: c.id } })}
+                  onPress={() => navigation.navigate("Stats", { screen: "ProgressScreen", params: { view: "classes", classId: c.id } })}
                   style={styles.assignButton}
                   accessibilityRole="button"
                   accessibilityLabel={`Assign practice for ${c.name}`}

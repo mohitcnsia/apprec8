@@ -29,7 +29,7 @@ export default function GuideStrip() {
   useEffect(() => setFolded(false), [active?.stepId]);
 
   if (!active || HIDDEN_ON.has(route)) return null;
-  const back = () => navigateTo("Profile", { screen: "Guide", params: { guideId: active.guideId } });
+  const back = () => navigateTo("Profile", { screen: "Guide", initial: false, params: { guideId: active.guideId } });
 
   if (folded) {
     return (

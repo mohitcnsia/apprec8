@@ -132,7 +132,14 @@ export default function JoinByLinkScreen({ route, navigation }) {
         <Text style={s.softCenter}>Your class's lessons are on Home now. Start learning!</Text>
         <Text style={s.softCenter}>{teacher || "Your teacher"} will check with your parent, then you'll see your classmates too.</Text>
         <View style={[s.footer, s.footerAbs]}>
-          <Pressable onPress={() => navigation.navigate("Apprec8")} style={s.button} accessibilityRole="button">
+          <Pressable
+            onPress={() => {
+              navigation.popToTop(); // else Me keeps showing the join screens, and a kid thinks she didn't join (walk, 13 Nov)
+              navigation.navigate("Apprec8");
+            }}
+            style={s.button}
+            accessibilityRole="button"
+          >
             <Text style={s.buttonText}>START LEARNING</Text>
           </Pressable>
         </View>

@@ -37,7 +37,11 @@ export default function PickClassScreen({ navigation, route }) {
     }
   }, [schools, grade]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const learnAlone = () => navigation.navigate("Apprec8");
+  // Clear the join screens off the Me tab first, or Me keeps showing "Join your class" (walk, 13 Nov).
+  const learnAlone = () => {
+    navigation.popToTop();
+    navigation.navigate("Apprec8");
+  };
   const pick = (c) => navigation.navigate("JoinByLink", { classId: c.classId });
   const school = (schools || []).find((x) => (x.schoolId ?? "none") === schoolId) || null;
 
