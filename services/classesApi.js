@@ -43,7 +43,8 @@ export async function createSchool({ name, city = "" }) {
 
 export async function listSchools() {
   const snap = await getDocs(collection(db, "schools"));
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  // A merged duplicate is kept (nothing deleted) but not listed (13 Nov: two "Glorious Academy" schools).
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((s) => !s.mergedInto);
 }
 
 /** Schools where the current user is an admin or creator. */
