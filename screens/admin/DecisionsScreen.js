@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Image, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Markdown from "react-native-markdown-display";
+import Markdown, { MarkdownIt } from "react-native-markdown-display";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { makeSchoolStyles, MainButton } from "./schoolUi";
@@ -17,6 +17,27 @@ import { inbox, answerLabel } from "../../utils/decisions";
 import { listenDecisions, answerDecision, notifyThisPhone } from "../../services/decisionsApi";
 
 const PHONE_KEY = "decisions:phone:v1";
+// Bare https links in a card become tappable (owner 13-14 Nov: "Link should be clickable. I like the fact that it can
+// not be copied"), so card text stays non-selectable.
+const mdParser = MarkdownIt({ typographer: true, linkify: true });
+const URL_RE = /(https?:\/\/[^\s)]+)/g;
+const openUrl = (u) => /^https?:/.test(u) && Linking.openURL(u).catch(() => {});
+function LinkedText({ style, linkStyle, children }) {
+  const parts = String(children || "").split(URL_RE);
+  return (
+    <Text style={style}>
+      {parts.map((p, i) =>
+        /^https?:\/\//.test(p) ? (
+          <Text key={i} style={linkStyle} onPress={() => openUrl(p)} accessibilityRole="link">
+            {p}
+          </Text>
+        ) : (
+          p
+        )
+      )}
+    </Text>
+  );
+}
 const mdRules = {
   image: (node) => <Image key={node.key} source={{ uri: node.attributes.src }} style={{ width: "100%", aspectRatio: 1024 / 500, borderRadius: 12, marginVertical: 6 }} resizeMode="contain" />,
 };
@@ -115,7 +136,7 @@ export default function DecisionsScreen() {
     <View key={d.id} style={styles.card}>
       <Text style={styles.small}>{d.from === "gemini" ? "FROM GEMINI" : "FROM CLAUDE"}</Text>
       <Text style={styles.title}>{d.title}</Text>
-      <Text style={styles.soft}>{d.ask}</Text>
+      <LinkedText style={styles.soft} linkStyle={styles.linkText}>{d.ask}</LinkedText>
       {d.link ? (
         <Pressable onPress={() => Linking.openURL(d.link).catch(() => {})} accessibilityRole="link" style={styles.link}>
           <Text style={styles.linkText}>🔗 Open the mockup / page</Text>
@@ -123,7 +144,7 @@ export default function DecisionsScreen() {
       ) : null}
       {d.details ? (
         open[d.id] ? (
-          <Markdown style={md} rules={mdRules} onLinkPress={(u) => (/^https?:/.test(u) && Linking.openURL(u).catch(() => {}), false)}>
+          <Markdown style={md} rules={mdRules} markdownit={mdParser} onLinkPress={(u) => (openUrl(u), false)}>
             {d.details}
           </Markdown>
         ) : (
