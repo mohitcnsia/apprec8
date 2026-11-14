@@ -74,6 +74,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
+| G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done, ready for Claude review** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
 | G16 Science Unit 1 | Gemini | **done, merged** | | |
@@ -115,6 +116,22 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 ---
 
 ## Task details (Gemini reads these; one task at a time, top to bottom)
+
+### G106 · [ready for Claude review] · gemini · Hindi learning quest for adults & parents ("भारत और समझ")
+**Why:** Owner observation 14 Nov: parents and independent adults on the app don't want English/Science school exams. They want bite-sized, practical, culturally rich content in everyday Hindi without role gating.
+**Branch:** `gemini/hindi-adult-quests` (pushed to GitHub).
+**What's in it:**
+1. `data/bharatQuestData.js` (`bharat-quest`, order: 4, carouselGroup: "quest", draft: false):
+   - Unit 1: साइबर सतर्कता (WhatsApp लॉटरी, बैंक OTP सुरक्षा, बिजली बिल फ्रॉड SMS व 1930)
+   - Unit 2: काम की सरकारी योजनाएं (आयुष्मान भारत, सुकन्या समृद्धि, डिजीलॉकर)
+   - Unit 3: रामायण और महाभारत के प्रसंग (विदुर नीति, उर्मिला का मौन त्याग, घटोत्कच का अमर बलिदान)
+   - Unit 4: अतुल्य भारत और ऐतिहासिक धरोहर (मीनाक्षी अम्मन मंदिर, कोणार्क सूर्य मंदिर, रानी की वाव)
+   - Unit 5: संस्कृति और स्वास्थ्य (नमस्ते का आध्यात्मिक व एक्यूप्रेशर रहस्य, रसोई के मसाले व सेहत)
+   Total: 19 nodes, 14 study pages (42 cards, each <= 40 words), 14 quizzes (28 Qs, each <= 14 words per option, 3 options, longest tell 25%).
+2. `data/quests/index.js`: registered `bharat` quest in `QUESTS` array (adds tile on Home and auto-generates `SeedTileQuestButton` in Admin tools).
+3. `components/learn/LearnCards.js` & `screens/englishQuest/ReadingScreen.js`: auto-detects Hindi Devanagari text (`/[\u0900-\u097F]/`) and uses `Speech.speak(text, { language: "hi-IN", rate: 0.85 })`.
+4. Report: `docs/agents/reports/G_HINDI_QUESTS.md`. Design artifact in brain.
+5. All 60+ test suites in `npm test` pass. Ready for Claude's review and merge.
 
 ### G105 · [parked] · gemini · Chess book extraction, game 1 (owner's trainer)
 **Why:** the owner's "Guess the Move" chess trainer (spec frozen 13 Nov). Your two earlier samples failed because moves

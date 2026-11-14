@@ -33,6 +33,11 @@ old screen, usernames on the leaderboard, join card for teacher-parents, parent 
 **Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
 publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
 
+## 2026-11-14: Adult & parent Hindi course "भारत और समझ" (Gemini, owner request)
+- **Goal:** Parents and adult independent learners joined who don't know English and aren't interested in 7th-grade English or Science. Owner decision: build courses for general Indians in pure everyday Hindi that they love to play (cyber safety, govt schemes, epics, heritage, wellness). No role gating right now (open to all users).
+- **Done:** Branch `gemini/hindi-adult-quests` (pushed to origin). Module `data/bharatQuestData.js` (`bharat-quest`, order 4, carouselGroup "quest", 19 nodes, 14 study pages / 42 cards, 14 quizzes / 28 original questions). No exam labels, 3 options per Q, longest-answer tell 25%, all options <= 14 words, all card texts <= 40 words. Auto-switches TTS in `LearnCards.js` and `ReadingScreen.js` to `hi-IN` at rate 0.85 when Devanagari text is detected.
+- **Test:** `npm test` green across all 60+ test suites. Full report in `docs/agents/reports/G_HINDI_QUESTS.md`.
+
 ## 2026-11-13: chess book pipeline, step 1 (Claude)
 - **Goal:** owner's "Guess the Move" chess trainer (spec + mockups agreed; app build NOT approved yet). Gemini's two PGN
   samples had invented moves, so extraction is now machine-gated before any bulk work.
