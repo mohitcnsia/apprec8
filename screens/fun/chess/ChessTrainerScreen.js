@@ -70,7 +70,7 @@ export default function ChessTrainerScreen({ navigation }) {
   };
 
   const toggleFold = (col) => {
-    setFolded((prev) => ({ ...prev, [col]: !prev[col] }));
+    setFolded((prev) => ({ ...prev, [col]: prev[col] === undefined ? false : !prev[col] }));
   };
 
   // A seeded copy of a bundled game wins (it carries the engine evals); other seeded
