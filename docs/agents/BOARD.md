@@ -149,19 +149,22 @@ Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
    Sicilian Accelerated Dragon, Bogo-Indian, plus classic master games. Pipeline per game (Fable's, frozen):
    `validate_pgn.py` → `analyze.py` (Stockfish) → `seedChessGame.mjs` into `chessGames` with new fields
    `collection` ("King's Gambit"…), `source` (URL), `license` (e.g. "lichess CC0", "public domain (pre-1955 game)").
-   **COMMENTARY (owner 14 Nov):** moves, variations and chess ideas are free; only the WORDING of a commentary is
-   protected. Use good commentary for what matters in each position, then write our OWN note fresh from the position:
-   beginner-friendly, instructive (the plan, the threat, why the move works / why the obvious move fails), short. Do
-   not edit the source's sentences line by line; no distinctive phrases copied. Credit the source in the game's
-   `source` field ("ideas from: …"). Every note must name only moves legal at that point (validate_pgn.py checks).
+   **COMMENTARY (owner 14 Nov, final):** the trainer is the owner's private, owner-only tool, not distributed; he
+   decides on sources. Make the notes the best possible: beginner-friendly and instructive (plan, threat, why the move
+   works / why the obvious move fails), reworded from good commentary is fine. Keep `source` filled. Every note names
+   only legal moves (validate_pgn.py). If the tile is ever opened to other users, Claude raises copyright again.
    List screen: games grouped by collection, folded (one row per collection, tap to open).
    Moves are never typed from memory: every game comes from a fetched PGN that `validate_pgn.py` passes.
    PGNs/evals stay out of git (gitignored `content-private/` as now); a list of games + sources + licences goes in
    `docs/agents/reports/G108-library.md`.
-3. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
+3. **Watch mode (owner 14 Nov: "sometimes I just wish to go over the game and enjoy the commentary, no guess"):** on
+   the game screen a choice **Guess · Watch**. Watch = step through the game with ‹ › (and a slow auto-play ▶),
+   comment under the board for every move, side-lines openable like now, no verdicts, no score. Progress in Guess mode
+   is not touched by watching. Thumb zone: ‹ ▶ › at the bottom.
+4. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
    `ChessBoard` as props. Mockup: Themes artboard (claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb). Readable in light + dark.
 **Done means:** tests green · walk report (a lichess link and a .pgn link each add a game that plays; the library shows
-collections; theme switch persists after restart; logcat clean) · library report with a licence per game ·
+collections; Watch mode steps through a game with comments; theme switch persists after restart; logcat clean) · library report with a licence per game ·
 `gemini(G108): done — review please`. Seeding the library to Firestore: say "ready" — Claude reviews licences first.
 
 ### G107 · [todo] · gemini · भारत और समझ round 2 (owner 14 Nov) — after G108
