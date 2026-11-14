@@ -42,6 +42,18 @@ Waiting for decisions (cards in your inbox): Home tidy-up (mockup), delete our o
 Already planned: see what happened to my feedback = two-way cards (G89).
 Closed without a change: May–June reports on old quizzes (hidden for everyone but you), test notes, emoji-only notes.
 
+## 🌏 Owner's ideas, 14 Nov (parked; plan + mockup before building)
+- **Hindi everywhere ("a massive success factor")**: app text, notifications and the WhatsApp/Email nudges in Hindi, picked
+  on first run (English · हिंदी). Start with what grown-ups read (first run, join, parent screens, nudges), then kids' UI.
+- **Quests for Indian elders (roots and history)**: Ramayana, Mahabharata, Gita, Indian history and festivals, in Hindi with
+  read-aloud. Books like Gita Press and Ami Ganatra's are inspiration only: their translations and text are copyrighted, so
+  every line and question is written fresh (the Sanskrit originals themselves are public domain). Kamla and Mohan
+  (no English) are the first users to test with.
+- **Stuck-person nudge**: when someone who picked nothing opens the app, one easy question (in their language) → a star →
+  "Who are you? Student · Parent · Teacher". Push needs a phone token, which stuck people don't have yet, so until then
+  the WhatsApp button (People) is the way.
+- **Chess board colours** (owner: ignore for now).
+
 ## Road to production (open steps)
 | # | Step | State |
 |---|---|---|
