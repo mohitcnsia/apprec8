@@ -66,7 +66,8 @@ async function updateAll(db, query, update) {
  */
 async function eraseUser(admin, uid, opts = {}) {
   const db = admin.firestore();
-  const { FieldValue } = admin.firestore;
+  // Newer firebase-admin has no admin.firestore.FieldValue; this crashed the first real erase (emulator test, 14 Nov).
+  const FieldValue = admin.firestore.FieldValue || require("firebase-admin/firestore").FieldValue;
   const depth = opts.depth || 0;
   const userRef = db.collection("users").doc(uid);
   const snap = await userRef.get();

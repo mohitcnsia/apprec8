@@ -133,7 +133,7 @@ export default function ClassDetailScreen({ route, navigation }) {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.text}>{m.firstName || "Child"}</Text>
                     <Text style={styles.small}>
-                      {[m.rollNo ? `Roll ${m.rollNo}` : null, m.parentName ? `Added by ${m.parentName}${m.relation ? ` (${m.relation})` : ""}` : m.via === "link-student" ? "Joined from own phone" : "Added by a parent", m.status === "unsure" ? "teacher not sure" : null]
+                      {[m.rollNo ? `Roll ${m.rollNo}` : null, m.parentName ? `Added by ${m.parentName}${m.relation ? ` (${m.relation})` : ""}` : m.via === "link-student" ? "Joined from own phone" : m.via === "helped" ? "Put in by the Apprec8 team" : "Added by a parent", m.status === "unsure" ? "teacher not sure" : null]
                         .filter(Boolean)
                         .join(" · ")}
                     </Text>

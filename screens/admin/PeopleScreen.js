@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
+import PeopleHelp from "./PeopleHelp";
 import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl, SORTS, SHOWS } from "../../utils/people";
 
 const TABS = [
@@ -123,7 +124,8 @@ export default function PeopleScreen() {
                 ) : null}
                 {p.kind === "none" ? <Text style={s.small}>WhatsApp opens with the message ready; pick {p.name || "them"} from your contacts.</Text> : null}
                 {p.robot ? <Text style={s.small}>Google Play's automatic test account: it signs in once to check the app. Not a real person.</Text> : null}
-                {p.deletionRequested ? <Text style={s.warn}>Asked to delete the account (kept 90 days; you decide)</Text> : null}
+                {p.deletionRequested ? <Text style={s.warn}>Asked to delete the account: use Delete account below.</Text> : null}
+                <PeopleHelp person={p} isOwner={!!data.withEmail} schoolIds={data.schoolIds || null} s={s} P={P} onDone={load} />
               </View>
             ) : null}
           </Pressable>
@@ -161,5 +163,7 @@ const makeStyles = (P, insets) =>
     actions: { flexDirection: "row", gap: 10, marginTop: 4 },
     action: { flex: 1, minHeight: 44, borderRadius: 22, borderWidth: 1.5, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
     actionText: { fontSize: 15, fontFamily: "nunitoBold", color: P.selectedText },
+    helpTitle: { fontSize: 11, fontFamily: "nunitoBold", letterSpacing: 0.6, color: P.dimText },
+    helpBox: { gap: 8, padding: 10, borderRadius: 12, borderWidth: 1, borderColor: P.border },
     detail: { marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: P.border, gap: 3 },
   });

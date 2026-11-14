@@ -5,7 +5,9 @@
 const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
-const { personRow, summarize } = require("../utils/people");
+const { personRow, summarize, helpCheck } = require("../utils/people");
+const { eraseUser } = require("../utils/eraseUser");
+const { FieldValue } = require("firebase-admin/firestore");
 
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
@@ -32,11 +34,13 @@ exports.peopleList = functions
     const className = Object.fromEntries(classSnap.docs.map((c) => [c.id, c.data().name || "a class"]));
 
     let docs;
+    let adminSchoolIds = new Set();
     if (appAdmin) {
       docs = (await db.collection("users").orderBy("createdAt", "desc").limit(1000).get()).docs;
     } else {
       const schools = await db.collection("schools").where("admins", "array-contains", uid).limit(20).get();
       const schoolIds = new Set(schools.docs.map((s) => s.id));
+      adminSchoolIds = schoolIds;
       if (!schoolIds.size) throw fail("permission-denied", "Only the owner and school admins can see people.");
       // Her schools' classes, plus any class she teaches (13 Nov: two "Glorious Academy" schools, classes under the
       // one without her as admin).
@@ -56,5 +60,79 @@ exports.peopleList = functions
       .map((d) => personRow({ uid: d.id, doc: d.data(), auth: auth[d.id] || null, className, now }))
       .map((r) => (appAdmin ? r : { ...r, email: null })) // school admins never see emails
       .sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
-    return { at: now, people: rows, counts: summarize(rows, now), withEmail: appAdmin };
+    return { at: now, people: rows, counts: summarize(rows, now), withEmail: appAdmin, schoolIds: appAdmin ? null : [...adminSchoolIds] };
+  });
+
+// Help buttons on People (owner 13-14 Nov: "go ahead"): { uid, action: "class"|"teacher"|"delete", classId?, subjects?,
+// firstName?, typed? }. Every help is logged in helpLog (who, when, what), also after a delete.
+exports.helpPerson = functions
+  .region(region)
+  .runWith({ ...runtimeOptions, timeoutSeconds: 120 })
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const caller = context.auth.uid;
+    const uid = String(data?.uid || "");
+    const action = String(data?.action || "");
+    if (!uid || uid.startsWith("demo_")) throw fail("invalid-argument", "Pick a person.");
+    const role = caller === OWNER_UID ? { admin: true } : (await db.collection("roles").doc(caller).get()).data() || {};
+    const appAdmin = role.admin === true;
+    const adminOfSchools = appAdmin ? [] : (await db.collection("schools").where("admins", "array-contains", caller).limit(20).get()).docs.map((s) => s.id);
+    const userRef = db.collection("users").doc(uid);
+    const userDoc = await userRef.get();
+    let cls = null;
+    if (action !== "delete") {
+      const c = await db.collection("classes").doc(String(data?.classId || "x")).get();
+      cls = c.exists ? { id: c.id, ...c.data() } : null;
+    }
+    const check = helpCheck({
+      action,
+      target: { exists: userDoc.exists, uid, data: userDoc.data() || {}, isOwner: uid === OWNER_UID },
+      cls,
+      caller: { uid: caller, appAdmin, adminOfSchools },
+      typed: data?.typed,
+      subjects: data?.subjects,
+      firstName: data?.firstName,
+    });
+    if (check.error) throw fail(check.error, check.message);
+    const now = FieldValue.serverTimestamp();
+    const log = (detail) => db.collection("helpLog").add({ uid, action, by: caller, at: now, ...detail });
+
+    if (action === "class") {
+      const batch = db.batch();
+      batch.set(db.collection("classes").doc(cls.id).collection("members").doc(uid), {
+        firstName: check.firstName,
+        grade: check.grade,
+        code: null,
+        via: "helped",
+        helpedBy: caller,
+        rollNo: null,
+        parentUid: (userDoc.data().parentUids || [])[0] || null,
+        parentName: null,
+        relation: null,
+        parentMobile: null,
+        consentId: null,
+        consentBy: "teacher-confirms",
+        status: "pending",
+        joinedAt: now,
+      });
+      const patch = { pendingClassIds: FieldValue.arrayUnion(cls.id) };
+      if (!Number.isInteger(userDoc.data().grade) && Number.isInteger(check.grade)) patch.grade = check.grade;
+      if (!userDoc.data().firstName) patch.firstName = check.firstName;
+      batch.set(userRef, patch, { merge: true });
+      await batch.commit(); // the teacher gets "waiting" from onStudentJoinRequest
+      await log({ classId: cls.id, className: cls.name || "" });
+      return { ok: true, message: `On ${cls.name || "the class"}'s waiting list. The teacher confirms.` };
+    }
+    if (action === "teacher") {
+      const batch = db.batch();
+      batch.update(db.collection("classes").doc(cls.id), { teacherIds: FieldValue.arrayUnion(uid), [`teacherSubjects.${uid}`]: check.subjects });
+      batch.set(userRef, { teachesClassIds: FieldValue.arrayUnion(cls.id) }, { merge: true });
+      await batch.commit();
+      await log({ classId: cls.id, className: cls.name || "", subjects: check.subjects });
+      return { ok: true, message: `Teacher of ${cls.name || "the class"} now.` };
+    }
+    // delete: the owner's own typed confirmation (Fable's idea); nothing else erases accounts automatically
+    await log({ firstName: String((userDoc.data() || {}).firstName || "").split(" ")[0] || null });
+    await eraseUser(admin, uid);
+    return { ok: true, message: "Deleted." };
   });

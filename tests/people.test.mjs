@@ -30,3 +30,29 @@ assert.equal(child.via, "added by a parent");
 const c = summarize([joshi, fresh, kunal, child], now);
 assert.deepEqual(c, { total: 4, newToday: 3, stuck: 1 });
 console.log("people tests passed");
+
+// Help buttons (owner 13-14 Nov).
+{
+  const { helpCheck } = require("../functions/utils/people.js");
+  const owner = { uid: "own", appAdmin: true, adminOfSchools: [] };
+  const seema = { uid: "see", appAdmin: false, adminOfSchools: ["glor"] };
+  const kunal = { exists: true, uid: "k", data: { grade: 7, firstName: "Kunal" } };
+  const c7 = { id: "c7", schoolId: "glor", grade: 7, name: "7-A", teacherIds: [] };
+  const other = { id: "x", schoolId: "else", grade: 7 };
+  assert.equal(helpCheck({ action: "class", target: kunal, cls: c7, caller: owner }).ok, true);
+  assert.equal(helpCheck({ action: "class", target: kunal, cls: c7, caller: seema }).ok, true, "school admin, own school");
+  assert.equal(helpCheck({ action: "class", target: kunal, cls: other, caller: seema }).error, "permission-denied", "not another school");
+  assert.equal(helpCheck({ action: "class", target: { exists: true, uid: "k", data: { grade: 7, firstName: "Kunal", pendingClassIds: ["c7"] } }, cls: c7, caller: owner }).error, "already-exists");
+  assert.equal(helpCheck({ action: "class", target: { exists: true, uid: "n", data: {} }, cls: c7, caller: owner }).error, "invalid-argument", "no name: ask for one");
+  const named = helpCheck({ action: "class", target: { exists: true, uid: "n", data: {} }, cls: c7, caller: owner, firstName: "Ehsaas Kumari" });
+  assert.deepEqual([named.firstName, named.grade], ["Ehsaas", 7], "name typed, class number from the class");
+  assert.equal(helpCheck({ action: "class", target: { exists: true, uid: "p", data: { childUids: ["c"] } }, cls: c7, caller: owner }).error, "failed-precondition", "parents add the child first");
+  assert.equal(helpCheck({ action: "teacher", target: kunal, cls: c7, caller: owner, subjects: [] }).error, "invalid-argument");
+  assert.deepEqual(helpCheck({ action: "teacher", target: kunal, cls: c7, caller: owner, subjects: ["english", "hack"] }).subjects, ["english"]);
+  assert.equal(helpCheck({ action: "delete", target: kunal, caller: seema, typed: "DELETE" }).error, "permission-denied", "only the owner deletes");
+  assert.equal(helpCheck({ action: "delete", target: kunal, caller: owner, typed: "delete it" }).error, "invalid-argument", "typed confirmation");
+  assert.equal(helpCheck({ action: "delete", target: kunal, caller: owner, typed: " DELETE " }).ok, true);
+  assert.equal(helpCheck({ action: "delete", target: { ...kunal, isOwner: true }, caller: owner, typed: "DELETE" }).error, "failed-precondition");
+  assert.equal(helpCheck({ action: "delete", target: { exists: true, uid: "own" }, caller: owner, typed: "DELETE" }).error, "failed-precondition", "not yourself");
+  console.log("people: help checks ok");
+}

@@ -137,6 +137,27 @@ async function call(name, data, who) {
   ok(sa.withEmail === false && (sa.people || []).length >= 1 && sa.people.every((x) => x.email === null), "school admin sees the class she teaches, no emails");
   ok(!(sa.people || []).some((x) => x.uid === stranger.uid), "school admin doesn't see strangers");
 
+  // 6d) Help buttons (owner 14 Nov): put in a class (waiting list), make a teacher, delete with typed confirmation.
+  const helpKid = await signUp("helpkid@test.dev");
+  await db.doc(`users/${helpKid.uid}`).set({ createdAt: admin.firestore.Timestamp.now() }, { merge: true });
+  ok((await call("helpPerson", { uid: helpKid.uid, action: "class", classId: "c1" }, boss)).error === "INVALID_ARGUMENT", "no name: asks for one");
+  const put = await call("helpPerson", { uid: helpKid.uid, action: "class", classId: "c1", firstName: "Ehsaas" }, boss);
+  const hk = (await db.doc(`users/${helpKid.uid}`).get()).data();
+  const hm = (await db.doc(`classes/c1/members/${helpKid.uid}`).get()).data() || {};
+  ok(put.ok && (hk.pendingClassIds || []).includes("c1") && hk.grade === 10 && hk.firstName === "Ehsaas" && hm.status === "pending" && hm.via === "helped", "put in a class: on the waiting list, name and class number set");
+  ok((await call("helpPerson", { uid: helpKid.uid, action: "class", classId: "c1" }, stranger)).error === "PERMISSION_DENIED", "a stranger can't help");
+  const helpT = await signUp("helpteacher@test.dev");
+  await db.doc(`users/${helpT.uid}`).set({ firstName: "Kamla" }, { merge: true });
+  const mt = await call("helpPerson", { uid: helpT.uid, action: "teacher", classId: "c1", subjects: ["english"] }, boss);
+  const c1 = (await db.doc("classes/c1").get()).data();
+  ok(mt.ok && c1.teacherIds.includes(helpT.uid) && (c1.teacherSubjects[helpT.uid] || []).includes("english"), "make a teacher");
+  ok((await call("helpPerson", { uid: helpT.uid, action: "delete", typed: "yes" }, boss)).error === "INVALID_ARGUMENT", "delete needs DELETE typed");
+  ok((await call("helpPerson", { uid: helpT.uid, action: "delete", typed: "DELETE" }, teacher)).error === "PERMISSION_DENIED", "only the owner deletes");
+  const del = await call("helpPerson", { uid: helpT.uid, action: "delete", typed: "DELETE" }, boss);
+  const gone = !(await db.doc(`users/${helpT.uid}`).get()).exists && !((await db.doc("classes/c1").get()).data().teacherIds || []).includes(helpT.uid);
+  ok(del.ok && gone, "delete erases the account and its class places");
+  ok((await db.collection("helpLog").where("uid", "==", helpT.uid).get()).size === 2, "both helps logged, also after the delete");
+
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });
   ok((await call("joinClassByLink", { ...form, token: l2.token, firstName: "Fifth" }, stranger)).error === "RESOURCE_EXHAUSTED", "a 5th child: Need more? Tell us");
