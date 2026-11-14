@@ -10,8 +10,27 @@ import Svg, { Line, Polygon } from "react-native-svg";
 
 import { parseFen } from "../../../utils/chessGame";
 
-const LIGHT_SQ = "#F0D9B5";
-const DARK_SQ = "#B58863";
+export const BOARD_THEMES = {
+  wood: {
+    id: "wood",
+    name: "Wood",
+    light: "#F0D9B5",
+    dark: "#B58863",
+  },
+  green: {
+    id: "green",
+    name: "Green",
+    light: "#EEEED2",
+    dark: "#769656",
+  },
+  blue: {
+    id: "blue",
+    name: "Blue",
+    light: "#DEE3E6",
+    dark: "#8CA2AD",
+  },
+};
+
 const LAST_MOVE = "rgba(246, 214, 85, 0.55)";
 const SELECTED = "rgba(133, 80, 138, 0.55)";
 const DOT = "rgba(40, 28, 44, 0.35)";
@@ -62,11 +81,14 @@ function Arrow({ from, to, color, flipped, sq, size }) {
  * dots (array of destination squares), arrows ([{ from, to, color }]),
  * onSquarePress (square) — omit to make the board read-only.
  */
-export default function ChessBoard({ fen, size, flipped = false, lastMove, selected, dots = [], arrows = [], onSquarePress }) {
+export default function ChessBoard({ fen, size, flipped = false, lastMove, selected, dots = [], arrows = [], onSquarePress, theme = "wood" }) {
   const sq = size / 8;
   const { squares } = useMemo(() => parseFen(fen), [fen]);
   const dotSet = useMemo(() => new Set(dots), [dots]);
   const last = new Set(lastMove || []);
+  const activeTheme = typeof theme === "object" && theme ? theme : (BOARD_THEMES[theme] || BOARD_THEMES.wood);
+  const lightSq = activeTheme.light || "#F0D9B5";
+  const darkSq = activeTheme.dark || "#B58863";
 
   const rows = [];
   for (let row = 0; row < 8; row += 1) {
@@ -81,7 +103,7 @@ export default function ChessBoard({ fen, size, flipped = false, lastMove, selec
         <Pressable
           key={square}
           onPress={onSquarePress ? () => onSquarePress(square) : undefined}
-          style={{ width: sq, height: sq, backgroundColor: isDark ? DARK_SQ : LIGHT_SQ }}
+          style={{ width: sq, height: sq, backgroundColor: isDark ? darkSq : lightSq }}
           accessibilityLabel={piece ? `${square} ${piece}` : square}
         >
           {last.has(square) ? <View style={[StyleSheet.absoluteFill, { backgroundColor: LAST_MOVE }]} /> : null}

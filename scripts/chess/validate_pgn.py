@@ -137,6 +137,9 @@ def game_to_json(game):
         "guessSide": headers.get("GuessSide", ""),
         "guessFrom": int(headers.get("GuessFrom", "1")),
         "sourceBook": headers.get("SourceBook", ""),
+        "collection": headers.get("Collection", ""),
+        "source": headers.get("Source", ""),
+        "license": headers.get("License", ""),
         "gameComment": game.comment.strip(),
         "moves": moves,
         # Per-position engine data is added later by the analysis step (analyze.py, not built yet).
