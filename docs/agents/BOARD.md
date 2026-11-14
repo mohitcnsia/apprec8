@@ -75,7 +75,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G109 ⭐ Chess library REDO from fetched PGNs only | Gemini | **todo — FIRST** | `gemini/g109-chess-library` | spec below |
+| G110 ⭐ Fix seeded chess library: evals lost, Opera duplicate, 4 misfiled, opening check | Gemini | **todo — FIRST** | `gemini/g110-chess-fix` | spec below |
+| G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
 | G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
@@ -133,6 +134,25 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
+
+### G110 · [todo] · gemini · ⭐ FIRST: fix the seeded chess library (Claude review of G109, 14 Nov)
+Good: all 26 seeded games replay legally through chess.js and the app's logic (no crash risk); sources fetched from
+pgnmentor (e.g. Spassky–Bronstein now ends 22…Kh7 23.Qe4+, matching the record). Fix before the owner relies on it:
+1. **Engine verdicts lost:** every seeded doc has `evals: 0` — including `opera-game`, which had Fable's Stockfish
+   evals (the "engine ✓" the owner saw). Merge `content-private/chess/evals/*.json` into each doc when seeding, re-seed,
+   and confirm `evals` is non-empty for every game.
+2. **Duplicate:** the Opera Game is in twice (`opera-game` and `01-morphy-…-1858`). Keep `opera-game` (bundled id);
+   delete the other doc.
+3. **Misfiled (first moves don't match the collection)** — replace each with a real game of that opening:
+   London System: `01-carlsen-m-karjakin-sergey-2016` (1.e4 c5… Alapin Sicilian), `01-kamsky-g-shirov-a-2007`
+   (1.e4 c5… Sicilian). Accelerated Dragon: `01-anand-viswanathan-kasparov-gary-1995`,
+   `01-larsen-bent-miles-anthony-j-1978` (both 2…d6 = normal Sicilian; the Accelerated Dragon is 2…Nc6 + …g6 without …d6).
+4. **Add a check to the build script:** a game is filed under an opening only if its first moves match (London: d4 +
+   Bf4 in the first 5 moves; King's Gambit: 1.e4 e5 2.f4; Accelerated Dragon: 1.e4 c5 2.Nf3 Nc6 + …g6, no early …d6;
+   Bogo-Indian: 1.d4 Nf6 2.c4 e6 3.Nf3 Bb4+ or close transposition). It refuses otherwise.
+**Done means:** re-seeded, report lists each doc with collection, ECO, evals count · phone walk (Owner extras on → Fun →
+Guess the Move: collections show, a game shows "engine ✓", a wrong guess shows a coloured verdict) with screenshots ·
+`gemini(G110): done — review please`.
 
 ### G109 · [todo] · gemini · ⭐ FIRST: Chess library redo — fetched PGNs only (Claude review of G108, 14 Nov)
 **Why G108's library was rejected:** the 25 games were typed into build_library.py from memory. validate_pgn.py only
