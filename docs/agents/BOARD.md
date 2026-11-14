@@ -130,6 +130,11 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
   doesn't show `2ae01cda`, write "phone needed" in your report and stop; the owner plugs it in. Always
   `export ANDROID_SERIAL=2ae01cda`. Test build on the owner's OnePlus: `adb install -r
   android/app/build/outputs/apk/real/debug/app-real-debug.apk`, Metro, `adb reverse tcp:8081 tcp:8081`.
+- **Prove it's the NEW code (owner 14 Nov: "else it is wasted effort"):** uninstall the Play app, install the DEBUG
+  test build, start Metro from your branch's folder, `adb reverse tcp:8081 tcp:8081`, open it through the dev launcher
+  (localhost:8081). The report must include (a) a screenshot of the dev launcher showing localhost:8081, (b) the Metro
+  log line "Android Bundled … index.js" with its time, (c) `git log -1 --oneline` of the folder Metro ran from. A walk
+  on the Play/production app doesn't count. Afterwards reinstall the Play app for the owner.
 - One screenshot per checklist step (in `docs/agents/reports/G<n>-walk/`, PNG, no personal data: test accounts only),
   each with one line: what you tapped, what you expected, what you saw.
 - `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
