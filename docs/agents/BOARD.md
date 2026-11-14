@@ -75,7 +75,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G108 ⭐ Chess: games from links (lichess, chess.com, .pgn), library by opening, board themes | Gemini | **todo — FIRST (owner 14 Nov)** | `gemini/g108-chess` | spec below; Fable's handoff |
+| G109 ⭐ Chess library REDO from fetched PGNs only | Gemini | **todo — FIRST** | `gemini/g109-chess-library` | spec below |
+| G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
 | G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
@@ -132,6 +133,19 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
+
+### G109 · [todo] · gemini · ⭐ FIRST: Chess library redo — fetched PGNs only (Claude review of G108, 14 Nov)
+**Why G108's library was rejected:** the 25 games were typed into build_library.py from memory. validate_pgn.py only
+proves moves are LEGAL, not that they are the real game: Spassky–Bronstein 1960 ends 22…Kh7 23.Qe4+, yours 22…Kh8
+23.Qe4. Sources were unverified links; some games aren't examples of their opening; PGNs + notes sat in the public repo.
+**Do:** for each game, FETCH the PGN (never type moves): lichess masters database
+`https://lichess.org/api/masters/pgn/<gameId>` (find ids with `https://explorer.lichess.ovh/masters?play=<uci moves>` for
+the opening line), or a PGN file the owner downloads into `content-private/chess/`. Save the fetched text unchanged in
+`content-private/chess/raw/` (gitignored), with the fetch URL. Check the ECO code / first moves really are the opening
+(King's Gambit C30–C39, London D02/A46 with Bf4, Accelerated Dragon B34–B39, Bogo-Indian E11). Then notes (owner's
+rule: reworded, beginner-friendly), `validate_pgn.py`, `analyze.py`. **Nothing with moves or notes in git**: delete
+build_library.py's inline PGNs; the script may only read from content-private/. Report `G109-library.md`: game, ECO,
+fetch URL, raw file name. Say "ready"; Claude spot-checks 5 games against the raw files, then seeds.
 
 ### G108 · [todo] · gemini · ⭐ FIRST (owner 14 Nov): Chess — games from links + a library by opening + board themes
 Read `docs/agents/CHESS_HANDOFF.md` (Fable) and `scripts/chess/README.md` first. Branch `gemini/g108-chess`.
