@@ -75,7 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G113 Linking rewards · G112 Home tidy-up · G111 Word Power (content first) · G87 Teacher results | Gemini | todo, in that order after G110 + G107 | | specs below; doc C3dWqo9 |
+| G107 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
 | G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -138,7 +138,28 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G113 · [todo, after G110 + G107] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
+### G107 · [todo] · gemini · ⭐ NEXT: भारत और समझ round 2 (owner 14 Nov)
+Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
+first; it shows the kind of fact/health wording Claude expects).
+1. **Simple Hindi intro, no school words:** the quest intro screen for this quest shows Hindi, no "Unit Boss",
+   "Challenge", "Tester mode" talk (e.g. "हर विषय में 2-3 छोटे कार्ड पढ़ें, फिर 2 आसान सवाल। कोई परीक्षा नहीं।").
+   Find where `EnglishQuestIntro` builds "How it works"; add a per-quest override (`quest.intro`) instead of
+   hard-coding.
+2. **"सहमत / पता नहीं" on tradition cards** (owner: let people agree or disagree; tells us what they trust): cards in
+   unit 5 (namaste, spices) get two buttons; one tap writes `{ cardId, choice }` to the existing userFeedback
+   collection (entryPoint "card_vote") — no new collection, no rules change. Show "धन्यवाद 🙏" after.
+3. **4 more topics** (same style, 2 cards + 1 check + 2 quiz Qs each): festivals of India (Diwali, Eid, Christmas,
+   Pongal: what and why, respectfully, no ranking), Panchatantra (one story with its lesson), digital payments safety
+   (UPI PIN never needed to RECEIVE money), freedom fighters (one lesser-known: e.g. Rani Gaidinliu). Every fact
+   with a source in the report.
+4. **Picture list** (no images yet): `docs/agents/reports/G107-pictures.md`, one line per topic: what the picture
+   shows, style (warm, Indian, adult-friendly, no text in the image), and a file name. Owner/Claude make them later.
+**Done means:** `npm test` green · walk report (intro in Hindi, a vote recorded, the 4 new topics open and read aloud
+in Hindi) · sources listed · `gemini(G107): done — review please`.
+
+
+
+### G113 · [todo] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `gemini/g113-linking`.
 - Server (functions): when a parent–child link is created (createChildProfile, redeemParentLinkCode, the class-join
   consent path), grant +100 stars ONCE per child: write `users/{kid}.linkBonusAt` in the same transaction and skip if set.
@@ -150,7 +171,7 @@ Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `g
 **Done means:** unit + emulator tests · walk report (unlinked kid: lock + card; link → +100 once, leaderboard opens) ·
 `gemini(G113): done — review please`. Claude reviews every line (stars + permissions) and walks it again.
 
-### G112 · [todo, after G113] · gemini · Home tidy-up (owner YES 14 Nov)
+### G112 · [todo] · gemini · Home tidy-up (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 2 (read the comments). Branch `gemini/g112-home`. Kids' Home: Thought/Word/Fact as ONE
 swipe card on top; "⭐ Today: N · this week: M"; reminders STAY a card, sorted overdue → soonest → latest; Your quests and
 Explore as folded rows (tap to open tiles); one big CONTINUE button at the bottom (thumb zone). Parents: the child who needs
@@ -161,7 +182,7 @@ from the existing class summary (no new per-kid reads). Follow docs/DESIGN_RULES
 (kid, parent, owner Home; light + dark) · no new Firestore reads on Home except the banner's one cached doc ·
 `gemini(G112): done — review please`.
 
-### G87 · [todo, after G111 step 1] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
+### G87 · [todo] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 3. Branch `gemini/g87-results`. For an assigned topic, Seema's class screen groups
 children: Not started · Fixing mistakes (N left) · Done (Accuracy) — **done = every mistake in that topic fixed** (the
 existing My mistakes rule: 2 right in a row). **Remind:** per child and "Remind all", at most once a day per child, to the
@@ -172,7 +193,7 @@ classSummary trigger exists; extend it. **Done means:** tests (grouping, done ru
 teacher (assign, child finishes with a mistake → "Fixing", fixes it → "Done", Remind, Share) · read count noted ·
 `gemini(G87): done — review please`. Claude reviews the server + summary doc.
 
-### G111 · [todo, after G112] · gemini · Word Power merge, content first (owner YES 14 Nov)
+### G111 · [todo] · gemini · Word Power merge, content first (owner YES 14 Nov)
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
 `data/wordPower/wordBank.js` add `example` (one natural sentence, the word used in its real meaning, kid-safe),
 `synonym` and `antonym` ONLY where a natural one exists (else null), `confusable` spellings (2 near misses) — in a new file
@@ -181,7 +202,7 @@ words + 3 stories before step 2 (the ladder screens, merge, book summaries). **D
 word has an example containing the word and that synonyms ≠ antonyms ≠ the word · report with 20 sample rows ·
 `gemini(G111): step 1 done — review please`.
 
-### G110 · [todo] · gemini · ⭐ FIRST: fix the seeded chess library (Claude review of G109, 14 Nov)
+### G110 · [done: merged 14 Nov] · gemini · fix the seeded chess library (Claude review of G109, 14 Nov)
 Good: all 26 seeded games replay legally through chess.js and the app's logic (no crash risk); sources fetched from
 pgnmentor (e.g. Spassky–Bronstein now ends 22…Kh7 23.Qe4+, matching the record). Fix before the owner relies on it:
 1. **Engine verdicts lost:** every seeded doc has `evals: 0` — including `opera-game`, which had Fable's Stockfish
@@ -200,7 +221,7 @@ pgnmentor (e.g. Spassky–Bronstein now ends 22…Kh7 23.Qe4+, matching the reco
 Guess the Move: collections show, a game shows "engine ✓", a wrong guess shows a coloured verdict) with screenshots ·
 `gemini(G110): done — review please`.
 
-### G109 · [todo] · gemini · ⭐ FIRST: Chess library redo — fetched PGNs only (Claude review of G108, 14 Nov)
+### G109 · [done: seeded, fixed in G110] · gemini · Chess library redo — fetched PGNs only (Claude review of G108, 14 Nov)
 **Why G108's library was rejected:** the 25 games were typed into build_library.py from memory. validate_pgn.py only
 proves moves are LEGAL, not that they are the real game: Spassky–Bronstein 1960 ends 22…Kh7 23.Qe4+, yours 22…Kh8
 23.Qe4. Sources were unverified links; some games aren't examples of their opening; PGNs + notes sat in the public repo.
@@ -213,7 +234,7 @@ rule: reworded, beginner-friendly), `validate_pgn.py`, `analyze.py`. **Nothing w
 build_library.py's inline PGNs; the script may only read from content-private/. Report `G109-library.md`: game, ECO,
 fetch URL, raw file name. Say "ready"; Claude spot-checks 5 games against the raw files, then seeds.
 
-### G108 · [todo] · gemini · ⭐ FIRST (owner 14 Nov): Chess — games from links + a library by opening + board themes
+### G108 · [done: app part merged 14 Nov] · gemini · Chess — games from links + a library by opening + board themes
 Read `docs/agents/CHESS_HANDOFF.md` (Fable) and `scripts/chess/README.md` first. Branch `gemini/g108-chess`.
 Owner's goal: "a library of best commentated games and the most instructive games in the King's Gambit, London System,
 Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
@@ -247,27 +268,6 @@ Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
 **Done means:** tests green · walk report (a lichess link and a .pgn link each add a game that plays; the library shows
 collections; Watch mode steps through a game with comments; theme switch persists after restart; logcat clean) · library report with a licence per game ·
 `gemini(G108): done — review please`. Seeding the library to Firestore: say "ready" — Claude reviews licences first.
-
-### G107 · [todo] · gemini · भारत और समझ round 2 (owner 14 Nov) — after G108
-Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
-first; it shows the kind of fact/health wording Claude expects).
-1. **Simple Hindi intro, no school words:** the quest intro screen for this quest shows Hindi, no "Unit Boss",
-   "Challenge", "Tester mode" talk (e.g. "हर विषय में 2-3 छोटे कार्ड पढ़ें, फिर 2 आसान सवाल। कोई परीक्षा नहीं।").
-   Find where `EnglishQuestIntro` builds "How it works"; add a per-quest override (`quest.intro`) instead of
-   hard-coding.
-2. **"सहमत / पता नहीं" on tradition cards** (owner: let people agree or disagree; tells us what they trust): cards in
-   unit 5 (namaste, spices) get two buttons; one tap writes `{ cardId, choice }` to the existing userFeedback
-   collection (entryPoint "card_vote") — no new collection, no rules change. Show "धन्यवाद 🙏" after.
-3. **4 more topics** (same style, 2 cards + 1 check + 2 quiz Qs each): festivals of India (Diwali, Eid, Christmas,
-   Pongal: what and why, respectfully, no ranking), Panchatantra (one story with its lesson), digital payments safety
-   (UPI PIN never needed to RECEIVE money), freedom fighters (one lesser-known: e.g. Rani Gaidinliu). Every fact
-   with a source in the report.
-4. **Picture list** (no images yet): `docs/agents/reports/G107-pictures.md`, one line per topic: what the picture
-   shows, style (warm, Indian, adult-friendly, no text in the image), and a file name. Owner/Claude make them later.
-**Done means:** `npm test` green · walk report (intro in Hindi, a vote recorded, the 4 new topics open and read aloud
-in Hindi) · sources listed · `gemini(G107): done — review please`.
-
-
 
 ### G106 · [done: reviewed + merged by Claude 14 Nov, published as draft] · gemini · Hindi learning quest for adults & parents ("भारत और समझ")
 **Why:** Owner observation 14 Nov: parents and independent adults on the app don't want English/Science school exams. They want bite-sized, practical, culturally rich content in everyday Hindi without role gating.
