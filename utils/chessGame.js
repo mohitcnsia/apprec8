@@ -106,9 +106,8 @@ const CP_CAP = 900; // one missed mate shouldn't turn an average into nonsense
 /**
  * Maps Average Centipawn Loss (ACPL) to an estimated Elo performance rating.
  *
- * Formula & Source:
- * Standard empirical linear regression model derived from chess engine analytics (e.g.,
- * Kenneth W. Regan's Intrinsic Performance Rating models and Lichess/Chess.com analysis data):
+ * A ROUGH heuristic (Claude review 14 Nov: not Regan's model, which is far more involved): a straight line that
+ * matches the commonly quoted ballpark (super-GM games ~10-20 cp ACPL, club players ~80-100 cp):
  *   Elo ≈ 3000 - 15 * ACPL
  *
  * Calibration against Stockfish 16+ evaluations:

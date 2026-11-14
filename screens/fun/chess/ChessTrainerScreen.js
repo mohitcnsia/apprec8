@@ -208,7 +208,8 @@ export default function ChessTrainerScreen({ navigation }) {
           <View style={styles.statsCard}>
             <View style={{ flex: 1 }}>
               <Text style={styles.statsLabel}>YOUR STRENGTH</Text>
-              <Text style={styles.statsValue}>{stats.overallElo} Elo</Text>
+              <Text style={styles.statsValue}>≈ {stats.overallElo}</Text>
+              <Text style={styles.statsSub}>rough estimate</Text>
             </View>
             <View style={{ alignItems: "flex-end", justifyContent: "center" }}>
               <Text style={styles.statsSub}>
