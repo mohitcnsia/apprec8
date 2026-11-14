@@ -68,6 +68,10 @@ const TONES = {
   plum: { head: "#85508a", border: "#E0C6E3", num: "#3b0940" },
 };
 
+// Quests shown under Explore, not "Your quests": learning for its own sake, no school ladder (owner 14 Nov:
+// "put these Hindi quests in explore").
+const EXPLORE_QUESTS = ["bharat-quest"];
+
 const tileOf = (c) => ({
   id: c.id,
   title: c.title,
@@ -454,6 +458,7 @@ export default function HomeScreen({ navigation }) {
     return orderQuestsForHome(visible, userData);
   }, [quests, draftQuests, userData, isTester, isAdmin]);
   const questKey = allQuests.map((q) => q.questId).join(",");
+  const exploreQuests = useMemo(() => allQuests.filter((q) => EXPLORE_QUESTS.includes(q.questId)), [allQuests]);
 
   useEffect(() => {
     const ids = questKey ? questKey.split(",") : [];
@@ -830,7 +835,7 @@ export default function HomeScreen({ navigation }) {
 
       <Text style={styles.section}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
       <View style={styles.grid}>
-        {visibleQuests.map((q) => {
+        {visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).map((q) => {
           const st = questStats(q);
           const isDraft = draftQuests.some((d) => d.id === q.id);
           const sub = isDraft
@@ -856,8 +861,19 @@ export default function HomeScreen({ navigation }) {
         {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
       </View>
 
-      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper ? <Text style={styles.section}>Explore</Text> : null}
+      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper || exploreQuests.length ? <Text style={styles.section}>Explore</Text> : null}
       <View style={styles.grid}>
+        {exploreQuests.map((q) =>
+          questTile(
+            q.id,
+            q.title || "Quest",
+            draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.description || "संस्कृति, सतर्कता और काम की बातें",
+            <BookArt />,
+            isDark ? "#3A2414" : "#FDEBDD",
+            () => openQuest(q),
+            { stats: questStats(q) }
+          )
+        )}
         {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
         {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
         {hasPaper
