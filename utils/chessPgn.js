@@ -11,7 +11,7 @@ import { flattenComment } from "./chessGame.js";
 const TAG_RE = /^\s*\[(\w+)\s+"([^"]*)"\]\s*$/;
 
 /** Split raw PGN text into { tags, movetext }. */
-function splitPgn(text) {
+export function splitPgn(text) {
   const tags = {};
   const lines = String(text || "").replace(/\r/g, "").split("\n");
   const rest = [];
@@ -27,6 +27,157 @@ function splitPgn(text) {
     rest.push(line);
   }
   return { tags, movetext: rest.join("\n").trim() };
+}
+
+/** Split a multi-game PGN file into individual PGN game entries. */
+export function splitMultiPgn(text) {
+  const lines = String(text || "").replace(/\r/g, "").split("\n");
+  const games = [];
+  let currentLines = [];
+  let currentTags = {};
+  let inHeader = false;
+  let hasMoves = false;
+
+  const pushGame = () => {
+    if (currentLines.length === 0) return;
+    const pgnText = currentLines.join("\n").trim();
+    if (!pgnText) return;
+    const white = currentTags.White || "White";
+    const black = currentTags.Black || "Black";
+    const date = currentTags.Date ? currentTags.Date.split(".")[0] : "";
+    const event = currentTags.Event || "";
+    const opening = currentTags.Opening || currentTags.ECO || "";
+    const titleParts = [`${white} vs ${black}`];
+    if (date && date !== "????") titleParts.push(date);
+    if (opening) titleParts.push(opening);
+    games.push({
+      id: `game-${games.length + 1}`,
+      title: titleParts.join(" · "),
+      white,
+      black,
+      date,
+      event,
+      opening,
+      pgnText,
+    });
+  };
+
+  for (const line of lines) {
+    const isTag = TAG_RE.test(line);
+    // If we were already reading moves and now hit a new [Event ...], that's a new game
+    if (isTag && hasMoves && /^\s*\[Event\s/i.test(line)) {
+      pushGame();
+      currentLines = [];
+      currentTags = {};
+      inHeader = true;
+      hasMoves = false;
+    }
+    if (isTag) {
+      inHeader = true;
+      const m = line.match(TAG_RE);
+      if (m) currentTags[m[1]] = m[2];
+    } else if (line.trim()) {
+      inHeader = false;
+      hasMoves = true;
+    }
+    currentLines.push(line);
+  }
+  pushGame();
+  return games;
+}
+
+/**
+ * Resolve a user-supplied URL to a direct PGN download URL.
+ * Handles lichess games, lichess study chapters, and checks for chess.com.
+ */
+export function resolvePgnUrl(rawUrl) {
+  const url = String(rawUrl || "").trim();
+  if (!url) return { ok: false, error: "Please enter a valid link." };
+  if (!/^https?:\/\//i.test(url)) {
+    return { ok: false, error: "Please enter a valid link starting with http:// or https://" };
+  }
+
+  // chess.com games do not have an open unauthenticated single-game PGN export API
+  if (/^https?:\/\/(?:[a-zA-Z0-9-]+\.)?chess\.com\b/i.test(url)) {
+    return {
+      ok: false,
+      error: "chess.com: copy the PGN there (Share → PGN) and paste it here",
+    };
+  }
+
+  // lichess study chapter: https://lichess.org/study/{studyId}/{chapterId}
+  const studyMatch = url.match(/^https?:\/\/(?:[a-zA-Z0-9-]+\.)?lichess\.org\/study\/([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(?:\.pgn)?/i);
+  if (studyMatch) {
+    return {
+      ok: true,
+      url: `https://lichess.org/study/${studyMatch[1]}/${studyMatch[2]}.pgn`,
+      type: "lichess-study",
+    };
+  }
+
+  // lichess game: https://lichess.org/{gameId} (gameId is 8 or 12 alphanumeric chars)
+  const lichessGameMatch = url.match(/^https?:\/\/(?:[a-zA-Z0-9-]+\.)?lichess\.org\/([a-zA-Z0-9]{8})(?:[a-zA-Z0-9]{4})?(?:\/.*)?$/i);
+  if (lichessGameMatch) {
+    return {
+      ok: true,
+      url: `https://lichess.org/game/export/${lichessGameMatch[1]}`,
+      type: "lichess-game",
+    };
+  }
+
+  // Direct link (e.g. pgnmentor, raw github, or any .pgn link)
+  return { ok: true, url, type: "direct" };
+}
+
+/**
+ * Fetch PGN text from a link (lichess, direct .pgn download, etc.)
+ * Returns { ok: true, game } for single games, or { ok: true, multiple: true, games } for files with multiple games.
+ */
+export async function fetchPgnFromUrl(rawUrl) {
+  const resolved = resolvePgnUrl(rawUrl);
+  if (!resolved.ok) return { ok: false, error: resolved.error };
+
+  let res;
+  try {
+    res = await fetch(resolved.url, {
+      headers: { Accept: "application/x-chess-pgn, text/plain, */*" },
+    });
+  } catch (err) {
+    return { ok: false, error: "No internet connection or link is unreachable. Check your network." };
+  }
+
+  if (!res.ok) {
+    return { ok: false, error: `Could not download from that link (status ${res.status}). Check the URL.` };
+  }
+
+  let text;
+  try {
+    text = await res.text();
+  } catch (err) {
+    return { ok: false, error: "Could not read data from that link." };
+  }
+
+  if (!text || !text.trim()) {
+    return { ok: false, error: "That link returned an empty file." };
+  }
+
+  // Reject web page HTML (e.g. when an HTML page was returned instead of raw text)
+  if (/^\s*<!DOCTYPE|^\s*<html/i.test(text)) {
+    return { ok: false, error: "That link returned a web page, not a PGN. Copy the PGN text instead." };
+  }
+
+  const games = splitMultiPgn(text);
+  if (games.length === 0) {
+    return { ok: false, error: "No chess moves found in that link." };
+  }
+
+  if (games.length === 1) {
+    const parsed = parsePastedPgn(games[0].pgnText);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
+    return { ok: true, game: parsed.game, rawPgn: games[0].pgnText };
+  }
+
+  return { ok: true, multiple: true, games };
 }
 
 /** Remove ( ... ) variations, nested ones too. Comments inside them go with them. */

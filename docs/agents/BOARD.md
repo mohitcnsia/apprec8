@@ -75,7 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G108 ⭐ Chess: games from links (lichess, chess.com, .pgn), library by opening, board themes | Gemini | **todo — FIRST (owner 14 Nov)** | `gemini/g108-chess` | spec below; Fable's handoff |
+| G108 ⭐ Chess: games from links (lichess, chess.com, .pgn), library by opening, board themes | Gemini | **done** (review please) | `gemini/g108-chess` | `docs/agents/reports/G108.md` |
 | G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
@@ -133,7 +133,7 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G108 · [todo] · gemini · ⭐ FIRST (owner 14 Nov): Chess — games from links + a library by opening + board themes
+### G108 · [done] · gemini · ⭐ FIRST (owner 14 Nov): Chess — games from links + a library by opening + board themes
 Read `docs/agents/CHESS_HANDOFF.md` (Fable) and `scripts/chess/README.md` first. Branch `gemini/g108-chess`.
 Owner's goal: "a library of best commentated games and the most instructive games in the King's Gambit, London System,
 Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".

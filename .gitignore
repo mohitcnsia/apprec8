@@ -237,4 +237,5 @@ docs/exam/syllabus/
 
 # Chess book pipeline: private book content + local venv (never commit)
 content-private/
+scripts/chess/.venv
 scripts/chess/.venv/

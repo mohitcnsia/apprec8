@@ -33,6 +33,16 @@ old screen, usernames on the leaderboard, join card for teacher-parents, parent 
 **Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
 publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
 
+## 2026-11-14: Chess "Guess the Move" enhancements (Gemini, task G108)
+- **Goal:** Games from links (Lichess, direct .pgn, Chess.com notice), library by opening with folded sections, Wood/Green/Blue board themes, and Watch mode with isolated progress.
+- **Done:** Branch `gemini/g108-chess`.
+  1. `utils/chessPgn.js`: URL resolution (`resolvePgnUrl`), multi-game parsing (`splitMultiPgn`), and network fetch (`fetchPgnFromUrl`).
+  2. `components/games/chess/ChessBoard.js`: `BOARD_THEMES` (wood, green, blue) + `theme` prop.
+  3. `screens/fun/chess/ChessTrainerScreen.js`: Theme selector with swatches + AsyncStorage (`chessBoardTheme:v1`), folded collection sections for library games, modal with Link and Paste tabs, and multi-game picker.
+  4. `screens/fun/chess/ChessPlayScreen.js`: Segmented `[ Guess | Watch ]` toggle. Watch mode has `‹`, `▶ / ⏸` (slow auto-play 2.5s), `›` in thumb zone; comments above board; leaves `chessProgress:v1` untouched.
+  5. Curated 25 games (5 King's Gambit, 5 London System, 5 Sicilian Accelerated Dragon, 5 Bogo-Indian, 5 Classic Masters) into gitignored `content-private/chess/library/`. All 25 passed `validate_pgn.py` (0 errors). Documented licenses in `docs/agents/reports/G108-library.md`. Status: ready for Claude review before Firestore seeding.
+- **Test:** `npm test` green, `chessPgn` and `chessGame` passed, `validate_pgn.py` 25/25 passed. Walk report in `docs/agents/reports/G108.md`.
+
 ## 2026-11-14: Adult & parent Hindi course "भारत और समझ" (Gemini, owner request)
 - **Goal:** Parents and adult independent learners joined who don't know English and aren't interested in 7th-grade English or Science. Owner decision: build courses for general Indians in pure everyday Hindi that they love to play (cyber safety, govt schemes, epics, heritage, wellness). No role gating right now (open to all users).
 - **Done:** Branch `gemini/hindi-adult-quests` (pushed to origin). Module `data/bharatQuestData.js` (`bharat-quest`, order 4, carouselGroup "quest", 19 nodes, 14 study pages / 42 cards, 14 quizzes / 28 original questions). No exam labels, 3 options per Q, longest-answer tell 25%, all options <= 14 words, all card texts <= 40 words. Auto-switches TTS in `LearnCards.js` and `ReadingScreen.js` to `hi-IN` at rate 0.85 when Devanagari text is detected.
