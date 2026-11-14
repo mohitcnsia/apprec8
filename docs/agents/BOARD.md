@@ -155,16 +155,6 @@ Steps (owner's OnePlus, test build + Metro from apprec8's latest commit, `adb re
 **Done means:** `docs/agents/reports/G115-walk.md` + one PNG per step from THIS build · logcat clean ·
 `gemini(G115): done — review please`. Then continue G113 (in progress).
 
-### G116 · [todo] · gemini · ⭐ Feature switches: Gemini ships owner-only, Claude releases to all (owner 14 Nov)
-Branch `gemini/g116-flags`. Remote Config key `features` (JSON) e.g. `{"homeV2":"owner","linkRewards":"off"}`;
-values "off" | "owner" | "all". `utils/features.js` (pure, tested): `featureOn(name, { isOwner })` — unknown/missing →
-off. `hooks/useFeature(name)` reads the existing Remote Config fetch (no extra fetch). Wrap each flagged screen/card in
-the existing ErrorBoundary so a crash shows "something went wrong", not a blank app. From now on EVERY new Gemini
-feature is built behind a switch (default "owner"); Claude flips it to "all" after review + walk. Server changes
-(functions/rules/stars/permissions) can't be switched: they still need Claude's review before deploy.
-Before ANY publish: 2-minute launch check on the phone (new code): app opens, Home loads as a kid AND as the owner,
-logcat clean. **Done means:** tests · walk report · `gemini(G116): done — review please`. Then build G112/G87 behind it.
-
 ### G114 · [done: merged by Claude 14 Nov, walk in G115] · gemini · chess full screen + honest Elo summary (owner 14 Nov)
 Branch `gemini/g114-chess-polish`. JS only (ships as an update).
 1. **Full screen while playing** (owner: top and bottom bars are distracting): on ChessPlay hide the app tab bar (add
