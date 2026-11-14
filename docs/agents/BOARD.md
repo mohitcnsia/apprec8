@@ -75,6 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
+| G113 Linking rewards · G112 Home tidy-up · G111 Word Power (content first) | Gemini | todo, in that order after G110 + G107 | | specs below; doc C3dWqo9 |
 | G110 ⭐ Fix seeded chess library: evals lost, Opera duplicate, 4 misfiled, opening check | Gemini | **todo — FIRST** | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -134,6 +135,38 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
+
+### G113 · [todo, after G110 + G107] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
+Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `gemini/g113-linking`.
+- Server (functions): when a parent–child link is created (createChildProfile, redeemParentLinkCode, the class-join
+  consent path), grant +100 stars ONCE per child: write `users/{kid}.linkBonusAt` in the same transaction and skip if set.
+  Never from the phone.
+- Server safety: createChildProfile + createParentLinkCode refuse a caller whose own doc has `grade` and no `childUids`
+  (a student account). Emulator tests for both (tests/emulator/joinActions.emu.js pattern).
+- App: Leaderboard shows a friendly lock "Link with your parent to join the leaderboard" until `parentUids` is set;
+  Me shows a "Link with your parent: +100 ⭐" card until linked. Learning is never gated.
+**Done means:** unit + emulator tests · walk report (unlinked kid: lock + card; link → +100 once, leaderboard opens) ·
+`gemini(G113): done — review please`. Claude reviews every line (stars + permissions) and walks it again.
+
+### G112 · [todo, after G113] · gemini · Home tidy-up (owner YES 14 Nov)
+Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 2 (read the comments). Branch `gemini/g112-home`. Kids' Home: Thought/Word/Fact as ONE
+swipe card on top; "⭐ Today: N · this week: M"; reminders STAY a card, sorted overdue → soonest → latest; Your quests and
+Explore as folded rows (tap to open tiles); one big CONTINUE button at the bottom (thumb zone). Parents: the child who needs
+most help + "+3 more"; a child drops off once done for the day. Owner: People/reports/decisions folded into one "Owner ›" row.
+Plus (owner comment): a light **classmate banner** "Tripti earned 20 ⭐ in Tenses 🎉" that fades after 10 s — classmates
+only, first names, only for kids whose parent linked (G113), max one per app open, cheering only, never comparisons; read
+from the existing class summary (no new per-kid reads). Follow docs/DESIGN_RULES.md. **Done means:** tests · walk report
+(kid, parent, owner Home; light + dark) · no new Firestore reads on Home except the banner's one cached doc ·
+`gemini(G112): done — review please`.
+
+### G111 · [todo, after G112] · gemini · Word Power merge, content first (owner YES 14 Nov)
+Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
+`data/wordPower/wordBank.js` add `example` (one natural sentence, the word used in its real meaning, kid-safe),
+`synonym` and `antonym` ONLY where a natural one exists (else null), `confusable` spellings (2 near misses) — in a new file
+`data/wordPower/wordDetails.js`; one original 120–180-word story per group using ≥8 of its words. Claude spot-checks 50
+words + 3 stories before step 2 (the ladder screens, merge, book summaries). **Done means (step 1):** a test that every
+word has an example containing the word and that synonyms ≠ antonyms ≠ the word · report with 20 sample rows ·
+`gemini(G111): step 1 done — review please`.
 
 ### G110 · [todo] · gemini · ⭐ FIRST: fix the seeded chess library (Claude review of G109, 14 Nov)
 Good: all 26 seeded games replay legally through chess.js and the app's logic (no crash risk); sources fetched from
