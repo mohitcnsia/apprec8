@@ -57,6 +57,13 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
   practice, not at sign-up (learning first, 2-tap budget); changeable on Me. Saved as `users.interests` (a short list only).
   Used to (1) put those tiles first on Home, (2) show us what to build next: options we don't have yet say "coming soon"
   and count as votes. Kids and grown-ups get their own list (grown-ups: scriptures, history, stories for their child).
+- **भारत और समझ shelf (owner 15 Nov):** one Explore tile → small quests (साइबर सुरक्षा, रामायण, महाभारत, योजनाएं, धरोहर,
+  परंपरा-सेहत), each its own progress + a "ऐसे और विषय चाहिए? 👍/👎" card at the end.
+- **Send a quest by push (owner 15 Nov):** People → a person → "Send quest" → a notification that opens that quest's
+  first screen. Needs every signed-in phone that allows notifications to save its token; falls back to WhatsApp.
+- **Stars = 1 per correct answer (+1–2 for reading/finishing)**, app-wide, earned stars kept; server change.
+- **Stars buy fun minutes, looks, challenge entries; never learning.** **Diamonds** (later, after legal research):
+  scarce, scored on the server, may turn into real value at year end. Not a priority.
 - **Chess board colours** (owner: ignore for now).
 
 ## Road to production (open steps)
