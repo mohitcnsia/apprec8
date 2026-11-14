@@ -104,12 +104,53 @@ export function guessPlies(game) {
 const CP_CAP = 900; // one missed mate shouldn't turn an average into nonsense
 
 /**
+ * Maps Average Centipawn Loss (ACPL) to an estimated Elo performance rating.
+ * Standard chess analytics regression curve clamped between 600 and 2850 Elo:
+ *   - < 20 cp  => 2700+ (Grandmaster / Super GM)
+ *   - ~ 50 cp  => 2250  (Expert / Candidate Master)
+ *   - ~ 93 cp  => 1600  (Club / Intermediate)
+ *   - > 160 cp => 600   (Beginner / Casual)
+ */
+export function eloFromAcpl(avgLossCp) {
+  if (avgLossCp == null || typeof avgLossCp !== "number" || isNaN(avgLossCp)) return null;
+  const raw = Math.round(3000 - 15 * Math.max(0, avgLossCp));
+  return Math.max(600, Math.min(2850, raw));
+}
+
+/**
+ * Aggregates player stats and average strength across all played games in progressMap (chessProgress:v1).
+ */
+export function computePlayerStats(progressMap) {
+  if (!progressMap || typeof progressMap !== "object") {
+    return { gamesCompleted: 0, totalGuesses: 0, overallElo: null, avgLossCp: null };
+  }
+  let totalLoss = 0;
+  let count = 0;
+  let gamesCompleted = 0;
+  for (const entry of Object.values(progressMap)) {
+    if (!entry) continue;
+    if (entry.done) gamesCompleted += 1;
+    if (Array.isArray(entry.guessLog)) {
+      for (const g of entry.guessLog) {
+        if (typeof g.cpLoss === "number") {
+          totalLoss += Math.min(g.cpLoss, CP_CAP);
+          count += 1;
+        }
+      }
+    }
+  }
+  const avgLossCp = count > 0 ? Math.round(totalLoss / count) : null;
+  const overallElo = eloFromAcpl(avgLossCp);
+  return { gamesCompleted, totalGuesses: count, overallElo, avgLossCp };
+}
+
+/**
  * End-of-game strength report (owner, 13 Nov 2026: "how well did I play, compared to Morphy?").
  * guessLog: [{ ply, verdict, cpLoss }] — one entry per guess the player made.
  * Pawn-loss numbers need `evals` (the offline Stockfish pass); without them only the
  * found/total counts are filled and the cp fields stay null.
  */
-export function strengthReport(game, guessLog) {
+export function strengthReport(game, guessLog, progressMap = null) {
   const total = guessPlies(game).length;
   const found = guessLog.filter((g) => g.verdict === "green").length;
   const blues = guessLog.filter((g) => g.verdict === "blue").length;
@@ -117,6 +158,10 @@ export function strengthReport(game, guessLog) {
   const avgLossCp = withCp.length
     ? Math.round(withCp.reduce((s, g) => s + Math.min(g.cpLoss, CP_CAP), 0) / withCp.length)
     : null;
+
+  const gameElo = eloFromAcpl(avgLossCp);
+  const overallStats = progressMap ? computePlayerStats(progressMap) : null;
+  const overallElo = overallStats?.overallElo || gameElo;
 
   // The master's own average loss over the same positions — the bar to compare against.
   let masterAvgLossCp = null;
@@ -132,6 +177,7 @@ export function strengthReport(game, guessLog) {
     }
     if (losses.length) masterAvgLossCp = Math.round(losses.reduce((a, b) => a + b, 0) / losses.length);
   }
+  const masterElo = eloFromAcpl(masterAvgLossCp);
 
   let worst = null;
   for (const g of withCp) {
@@ -141,5 +187,5 @@ export function strengthReport(game, guessLog) {
     ? { moveNo: Math.floor(worst.ply / 2) + 1, cpLoss: Math.min(worst.cpLoss, CP_CAP) }
     : null;
 
-  return { total, found, blues, avgLossCp, masterAvgLossCp, worstMiss };
+  return { total, found, blues, avgLossCp, masterAvgLossCp, worstMiss, gameElo, overallElo, masterElo };
 }

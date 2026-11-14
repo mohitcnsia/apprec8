@@ -62,6 +62,7 @@ export default function ChessPlayScreen({ navigation, route }) {
   const [selected, setSelected] = useState(null);
   const [reveal, setReveal] = useState(null); // { verdict, guessUci, cpLoss, cpDelta }
   const [variation, setVariation] = useState(null); // { line, vply, baseFen }
+  const [allProgress, setAllProgress] = useState({});
   const loaded = useRef(false);
 
   // Load board theme if not passed via route
@@ -77,7 +78,9 @@ export default function ChessPlayScreen({ navigation, route }) {
   useEffect(() => {
     AsyncStorage.getItem(PROGRESS_KEY)
       .then((raw) => {
-        const saved = raw ? JSON.parse(raw)[gameId] : null;
+        const all = raw ? JSON.parse(raw) : {};
+        setAllProgress(all);
+        const saved = all[gameId];
         if (saved && !saved.done && saved.ply > 0 && saved.ply < game.moves.length) {
           setPly(saved.ply);
           setCorrect(saved.correct || 0);
@@ -98,6 +101,7 @@ export default function ChessPlayScreen({ navigation, route }) {
       .then((raw) => {
         const all = raw ? JSON.parse(raw) : {};
         all[gameId] = { ply, correct, guessed, guessLog, done: ply >= game.moves.length, updatedAt: Date.now() };
+        setAllProgress(all);
         return AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
       })
       .catch(() => {});
@@ -294,10 +298,23 @@ export default function ChessPlayScreen({ navigation, route }) {
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.middle} showsVerticalScrollIndicator={false}>
         {mode === "guess" && done ? (() => {
-          const r = strengthReport(game, guessLog);
+          const r = strengthReport(game, guessLog, allProgress);
           const pawns = (cp) => (cp / 100).toFixed(1);
           return (
-            <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 6 }]}>
+            <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 8 }]}>
+              {r.gameElo != null ? (
+                <View style={styles.eloCard}>
+                  <View style={styles.eloCol}>
+                    <Text style={styles.eloLabel}>YOUR STRENGTH</Text>
+                    <Text style={styles.eloValue}>{r.gameElo} Elo</Text>
+                  </View>
+                  <View style={styles.eloDivider} />
+                  <View style={styles.eloCol}>
+                    <Text style={styles.eloLabel}>AVERAGE STRENGTH</Text>
+                    <Text style={styles.eloValue}>{r.overallElo} Elo</Text>
+                  </View>
+                </View>
+              ) : null}
               <Text style={[styles.bannerText, { color: P.correctText }]}>
                 {game.result === "1-0" ? "1–0" : game.result === "0-1" ? "0–1" : "½–½"} · You found {r.found} of {r.total} of {master}'s moves.
               </Text>
@@ -451,6 +468,40 @@ const makeStyles = (P, insets) =>
     middle: { paddingHorizontal: 12, paddingVertical: 6, gap: 8 },
     banner: { borderWidth: 2, borderRadius: 14, padding: 10 },
     bannerText: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
+    eloCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+      backgroundColor: P.card,
+      borderRadius: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderWidth: 1.5,
+      borderColor: P.correctBorder,
+      marginBottom: 2,
+    },
+    eloCol: {
+      alignItems: "center",
+      flex: 1,
+    },
+    eloDivider: {
+      width: 1.5,
+      height: 36,
+      backgroundColor: P.border,
+      marginHorizontal: 8,
+    },
+    eloLabel: {
+      fontSize: 10,
+      fontFamily: "nunitoBold",
+      color: P.textSoft,
+      letterSpacing: 0.6,
+    },
+    eloValue: {
+      fontSize: 18,
+      fontFamily: "nunitoBold",
+      color: P.correctText || P.text,
+      marginTop: 2,
+    },
     bookCard: {
       borderWidth: 2,
       borderColor: P.selectedBorder,
