@@ -1,7 +1,7 @@
 // utils/people.js: the People screen's filters and dates (pure; tests/peopleView.test.mjs). Rows come from
 // functions/utils/people.js via the peopleList function.
 
-export const KIND_LABEL = { teacher: "TEACHER", parent: "PARENT", student: "STUDENT", child: "CHILD", none: "NO ROLE YET", robot: "PLAY ROBOT", test: "TEST" };
+export const KIND_LABEL = { teacher: "TEACHER", parent: "PARENT", student: "STUDENT", child: "CHILD", none: "NO ROLE YET", robot: "PLAY ROBOT", test: "TEST", learner: "LEARNER" };
 
 const HOUR = 3600e3;
 const DAY = 24 * HOUR;

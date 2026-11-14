@@ -20,7 +20,16 @@ export const cleanName = (name = "") =>
     .trim()
     .slice(0, 24);
 
-export const canSave = ({ name, grade, role }) => cleanName(name).length >= 1 && (Number.isInteger(grade) || role === "parent" || role === "teacher");
+/** Grown-up who just wants to learn (owner 14 Nov): a level, stored as a class number so every quest works unchanged. */
+export const LEVELS = [
+  { grade: 5, label: "Easy · आसान" },
+  { grade: 8, label: "Medium · मध्यम" },
+  { grade: 10, label: "Hard · कठिन" },
+];
+export const levelLabel = (grade) => (LEVELS.find((l) => l.grade === grade)?.label || "").split(" · ")[0] || null;
+
+export const canSave = ({ name, grade, role }) =>
+  cleanName(name).length >= 1 && (role === "learner" ? LEVELS.some((l) => l.grade === grade) : Number.isInteger(grade) || role === "parent" || role === "teacher");
 
 /**
  * Fields for users/{uid}.update(). `stamp` = the server timestamp value. The class is set once (rules), so it's only sent
@@ -34,7 +43,7 @@ export function firstRunUpdate(doc = {}, { name, grade, role }, { stamp, default
     lastUpdatedAt: stamp,
     profileLastSavedAt: stamp,
   };
-  if (!role && Number.isInteger(grade) && !Number.isInteger(doc.grade)) out.grade = grade;
+  if ((!role || role === "learner") && Number.isInteger(grade) && !Number.isInteger(doc.grade)) out.grade = grade;
   return out;
 }
 
@@ -48,8 +57,8 @@ export function needsProfileSave(doc = {}, { name, grade, role }) {
   const hasPhoto = typeof doc.photoURL === "string" && doc.photoURL.length > 0;
   // A grown-up who already has a name: never write here (names change in Edit profile). Seema stayed blocked when the
   // typed name differed from her account's name (2026-11-09).
-  if (role && hasName) return false;
-  if (!role && sameName && hasPhoto && Number.isInteger(doc.grade)) return false;
+  if (role && role !== "learner" && hasName) return false;
+  if ((!role || role === "learner") && sameName && hasPhoto && Number.isInteger(doc.grade)) return false;
   return true;
 }
 
@@ -58,6 +67,7 @@ export function bubbleText({ name, grade, role }) {
   const n = cleanName(name).split(" ")[0];
   if (role === "parent") return n ? `Welcome, ${n}! 👋` : "Welcome! 👋";
   if (role === "teacher") return n ? `Hello, ${n}! 🍎` : "Hello, teacher! 🍎";
+  if (role === "learner") return n ? `Welcome, ${n}! Learning is for every age 🌱` : "Learning is for every age 🌱";
   if (n && Number.isInteger(grade)) return `Class ${grade}! Let's go, ${n}! 🚀`;
   if (n) return `Hi ${n}! 👋`;
   return "Hi! What's your name?";

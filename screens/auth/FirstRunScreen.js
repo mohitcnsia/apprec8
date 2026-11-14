@@ -12,7 +12,8 @@ import { db } from "../../config/firebaseConfig";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import HeroScene from "../../components/auth/HeroScene";
-import { canSave, firstRunUpdate, bubbleText, needsProfileSave } from "../../utils/firstRun";
+import { canSave, firstRunUpdate, bubbleText, needsProfileSave, LEVELS } from "../../utils/firstRun";
+import functions from "@react-native-firebase/functions";
 
 const DEFAULT_AVATAR =
   "https://firebasestorage.googleapis.com/v0/b/apprec8-ca229.firebasestorage.app/o/avatars%2Fbee3.webp?alt=media&token=e4b96cb2-7180-4a9b-900d-14c34dbaa6ba";
@@ -32,7 +33,7 @@ export default function FirstRunScreen({ uid, userDoc, onDone, onSignOut }) {
 
   const [name, setName] = useState(userDoc?.firstName || "");
   const [grade, setGrade] = useState(Number.isInteger(userDoc?.grade) ? userDoc.grade : null);
-  const [role, setRole] = useState(null); // null (child) | "parent" | "teacher"
+  const [role, setRole] = useState(null); // null (child) | "parent" | "teacher" | "learner" (grown-up, owner 14 Nov)
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const ready = !!userDoc; // the account doc is made by the server a few seconds after sign-up
@@ -49,8 +50,9 @@ export default function FirstRunScreen({ uid, userDoc, onDone, onSignOut }) {
           .collection("users")
           .doc(uid)
           .update(firstRunUpdate(userDoc, { name, grade, role }, { stamp: firestore.FieldValue.serverTimestamp(), defaultAvatar: DEFAULT_AVATAR }));
-      if (role) await AsyncStorage.setItem(grownUpKey(uid), "1").catch(() => {});
-      onDone?.({ grownUp: !!role });
+      if (role === "learner") await functions().httpsCallable("markSelfLearner")({ on: true }).catch(() => {}); // no join card; learning works without it
+      else if (role) await AsyncStorage.setItem(grownUpKey(uid), "1").catch(() => {});
+      onDone?.({ grownUp: !!role && role !== "learner" });
     } catch (e) {
       console.warn("First run save failed:", e?.code || e);
       setError(
@@ -100,19 +102,34 @@ export default function FirstRunScreen({ uid, userDoc, onDone, onSignOut }) {
             />
           </View>
           <View style={{ gap: 8 }}>
-            <Text style={s.label}>YOUR CLASS</Text>
-            <View style={s.chips}>
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((g) =>
-                chip(String(g), !role && grade === g, () => {
-                  if (gradeFixed) return;
-                  setGrade(g);
-                  setRole(null);
-                })
-              )}
-            </View>
+            <Text style={s.label}>{role === "learner" ? "YOUR LEVEL · आपका स्तर" : "YOUR CLASS"}</Text>
+            {role === "learner" ? (
+              <View style={s.chips}>
+                {LEVELS.map((l) =>
+                  chip(l.label, grade === l.grade, () => {
+                    if (!gradeFixed) setGrade(l.grade);
+                  })
+                )}
+              </View>
+            ) : (
+              <View style={s.chips}>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((g) =>
+                  chip(String(g), !role && grade === g, () => {
+                    if (gradeFixed) return;
+                    setGrade(g);
+                    setRole(null);
+                  })
+                )}
+              </View>
+            )}
             <View style={s.chips}>
               {chip("I'm a parent", role === "parent", () => setRole(role === "parent" ? null : "parent"))}
               {chip("I'm a teacher", role === "teacher", () => setRole(role === "teacher" ? null : "teacher"))}
+              {chip("I just want to learn · खुद सीखना है", role === "learner", () => {
+                if (role === "learner") return setRole(null);
+                setRole("learner");
+                if (!gradeFixed) setGrade(null);
+              })}
             </View>
           </View>
           <Text style={s.small}>Others only see your first name and class.</Text>

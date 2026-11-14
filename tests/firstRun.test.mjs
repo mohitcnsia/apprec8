@@ -44,3 +44,17 @@ assert.equal(needsFirstRun({ firstName: "Asha" }), true, "unknown grown-up still
   assert.equal(needsProfileSave({}, { name: "Asha", role: "learner" }), true, "new account: write");
 }
 console.log("firstRun tests passed");
+
+// Grown-up who just wants to learn (owner 14 Nov): a level, saved as a class number.
+{
+  const { LEVELS, levelLabel } = await import("../utils/firstRun.js");
+  assert.deepEqual(LEVELS.map((l) => l.grade), [5, 8, 10]);
+  assert.equal(canSave({ name: "Kamla", role: "learner" }), false, "a level is needed");
+  assert.equal(canSave({ name: "Kamla", role: "learner", grade: 7 }), false, "only the three levels");
+  assert.equal(canSave({ name: "Kamla", role: "learner", grade: 5 }), true);
+  assert.equal(firstRunUpdate({}, { name: "Kamla", role: "learner", grade: 5 }, { stamp: 1, defaultAvatar: "a" }).grade, 5);
+  assert.equal(firstRunUpdate({}, { name: "Sunita", role: "parent", grade: 5 }, { stamp: 1, defaultAvatar: "a" }).grade, undefined, "a parent gets no class");
+  assert.equal(levelLabel(8), "Medium");
+  assert.ok(bubbleText({ name: "Kamla", role: "learner" }).includes("every age"));
+  console.log("firstRun: grown-up learner ok");
+}

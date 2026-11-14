@@ -5,6 +5,7 @@
 // (the Space quest is always on Home now). Old screens/quiz/ProfileScreen.js is no longer used.
 
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { levelLabel } from "../../utils/firstRun";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -167,7 +168,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
           )}
           <View style={{ alignItems: "center" }}>
             <Text style={styles.name} numberOfLines={2}>{name}</Text>
-            {userData?.grade ? <Text style={styles.soft}>Class {userData.grade}</Text> : null}
+            {userData?.grade ? <Text style={styles.soft}>{rawUser?.selfLearner && levelLabel(userData.grade) ? `Level: ${levelLabel(userData.grade)}` : `Class ${userData.grade}`}</Text> : null}
             {auth?.email ? <Text style={styles.soft} numberOfLines={1}>{auth.email}</Text> : null}
             {/* Back from the old Profile screen (owner, 13 Nov): when this account joined, with the year. */}
             {enrolled ? <Text style={styles.soft}>Enrolled {enrolled}</Text> : null}

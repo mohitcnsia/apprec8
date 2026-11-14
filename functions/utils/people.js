@@ -8,6 +8,7 @@ const ms = (t) => (t == null ? null : typeof t === "number" ? t : t.toMillis ? t
 function kindOf(d = {}) {
   if ((d.teachesClassIds || []).length) return "teacher";
   if (d.isChild) return "child";
+  if (d.selfLearner) return "learner"; // grown-up learning for themselves (owner 14 Nov)
   if ((d.childUids || []).length) return "parent";
   if (Number.isInteger(d.grade)) return "student";
   return "none"; // signed in, picked nothing yet

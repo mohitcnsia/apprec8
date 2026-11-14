@@ -18,6 +18,7 @@ export function firstSchool(schools = [], grade = null) {
 /** Home's "Join your class" card: a child (or a parent of a child) who is in no class and waiting for none. */
 export function needsClass(userDoc, children = []) {
   if (!userDoc) return null;
+  if (userDoc.selfLearner) return null; // a grown-up who just wants to learn has no school class (owner 14 Nov)
   const free = (d) => !(d?.classIds || []).length && !(d?.pendingClassIds || []).length;
   const teaches = (userDoc.teachesClassIds || []).length > 0;
   // A teacher never gets it for themselves, but a teacher who is also a parent does for their children (walk, 12 Nov:

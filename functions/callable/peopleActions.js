@@ -136,3 +136,18 @@ exports.helpPerson = functions
     await eraseUser(admin, uid);
     return { ok: true, message: "Deleted." };
   });
+
+// "I just want to learn" on first run (owner 14 Nov): marks the caller's own account as a grown-up learner, so no
+// "Join your class" card and People shows LEARNER. Rules don't let the phone write this field itself.
+exports.markSelfLearner = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const ref = db.collection("users").doc(context.auth.uid);
+    const d = (await ref.get()).data() || {};
+    if (d.isChild) throw fail("failed-precondition", "A child profile can't be a grown-up learner.");
+    const on = data?.on !== false;
+    await ref.set({ selfLearner: on }, { merge: true });
+    return { ok: true, selfLearner: on };
+  });

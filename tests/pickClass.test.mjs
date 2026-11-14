@@ -22,3 +22,11 @@ assert.equal(needsClass({ grade: 10, childUids: ["k"] }, [{ firstName: "Hazel", 
 assert.equal(needsClass({ childUids: ["k"] }, [{ firstName: "Riya", classIds: ["a"] }]), null);
 assert.equal(needsClass({}), null, "no class and no children: nothing to join for");
 console.log("pickClass tests passed");
+
+// A grown-up learner has no school class: no "Join your class" card (owner 14 Nov).
+{
+  const { needsClass } = await import("../utils/pickClass.js");
+  assert.equal(needsClass({ grade: 5, selfLearner: true }), null);
+  assert.deepEqual(needsClass({ grade: 5 }), { who: "kid" });
+  console.log("pickClass: grown-up learner ok");
+}
