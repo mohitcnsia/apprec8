@@ -27,7 +27,7 @@ export function shapePerson(p, now = Date.now()) {
   const robot = test || isPlayRobot(p);
   const age = p.joinedAt ? now - p.joinedAt : 0;
   const stuck = !robot && p.kind === "none" && !p.quizzes && age > HOUR && age < 30 * DAY;
-  return { ...p, robot, stuck, kind: test ? "test" : robot ? "robot" : p.kind };
+  return { ...p, robot, stuck, kind: test ? "test" : robot ? "robot" : p.kind, baseKind: p.kind };
 }
 
 /** Counts for the header and the owner's Home row, robots left out. */

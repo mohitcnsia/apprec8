@@ -453,7 +453,14 @@ export default function EndlessPracticeScreen({ route, navigation }) {
             <Text style={[styles.feedbackTitle, { color: wasCorrect ? theme.success : theme.warning }]}>
               {wasCorrect ? "Correct! 🎉" : "Not quite."}
             </Text>
-            {explanation ? <Text style={styles.feedbackText}>{explanation}</Text> : null}
+            {explanation ? (
+              <Text style={styles.feedbackText}>
+                {/* **bold** in explanations shows as bold, not as stars (walk, 14 Nov) */}
+                {String(explanation)
+                  .split(/\*\*(.+?)\*\*/g)
+                  .map((part, i) => (i % 2 ? <Text key={i} style={{ fontFamily: "nunitoBold" }}>{part}</Text> : part))}
+              </Text>
+            ) : null}
           </View>
         ) : null}
       </ScrollView>

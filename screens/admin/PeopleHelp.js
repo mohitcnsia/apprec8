@@ -28,8 +28,9 @@ export default function PeopleHelp({ person: p, isOwner, schoolIds, s, P, onDone
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
-  const learner = ["student", "child", "none"].includes(p.kind);
-  const adult = ["none", "parent", "student"].includes(p.kind);
+  const kind = p.baseKind || p.kind; // a TEST account still gets the buttons for what it really is
+  const learner = ["student", "child", "none"].includes(kind);
+  const adult = ["none", "parent", "student", "learner"].includes(kind);
   const canDelete = isOwner && p.kind !== "robot";
   if (!learner && !adult && !canDelete) return null;
 
