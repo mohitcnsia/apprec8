@@ -838,9 +838,10 @@
     "ask": "She's a teacher · She's a parent · Put in a class, built together (about a day), then a phone walk before publish. YES (recommended) / NO = only \"She's a teacher\" first / LATER.",
     "details": "You deploy one new server function (I give the command). One server call per tap, no extra reads on anyone's phone. Nothing deletes.\n\nMeanwhile the WhatsApp and Email buttons on stuck people are built and waiting for a 10-minute phone check before publish.\n\nMockup: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov\").",
     "from": "claude",
-    "answer": "more",
-    "note": "Link should be clickable. I like th fact that it can not be copied.",
-    "answeredAt": "2026-11-13T05:49:22.814Z"
+    "answer": "yes",
+    "note": "go ahead (chat 14 Nov); links clickable done",
+    "answeredAt": "2026-11-14T00:29:09.942340+00:00",
+    "via": "chat"
   },
   {
     "id": "family-learning-only",
@@ -868,9 +869,10 @@
     "ask": "First the server rule and hidden buttons (small), then the progress move. YES (recommended) / LATER = after the first week of the pilot.",
     "details": "Until it is built, a kid on a parent's Gmail could see parent screens if the parent adds a child from the same account. Small part first: a student account can't add a child or make a parent code (server + app).\n\nSpec: https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9 (section \"Added 13 Nov: learning-only\").",
     "from": "claude",
-    "answer": "more",
-    "note": null,
-    "answeredAt": "2026-11-13T14:17:50.525Z"
+    "answer": "yes",
+    "note": "replaced by family-rewards (chat 14 Nov: learning never waits; rewards for linking)",
+    "answeredAt": "2026-11-14T00:29:09.942340+00:00",
+    "via": "chat"
   },
   {
     "id": "dpdp-deletion-window",
@@ -899,13 +901,28 @@
     "title": "Home tidy-up: make a mockup from your notes?",
     "ask": "One mockup for a calmer Home: Thought + Word + Fact as one swipe card on top; quests and Explore folded into tap-to-open cards; reminders up top; parents see the child who needs most help + \"+3 more\"; stars earned today; kids' reports go to me, not your Home. YES = mockup first (recommended) · LATER.",
     "details": "From your notes on 12–13 Nov (7 notes). Every child sees Home, so it needs a mockup and your OK before building (design rules: one loud thing, main button at the bottom, fold don't delete).\n\n**My view on reports:** keep a small count on your Home (you asked never to miss one), but I triage them at each check-in and turn what matters into fixes, to-dos or cards, as I did today.\n\nNothing changes until you approve the mockup.",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-13T15:22:20.634Z"
   },
   {
     "id": "people-delete-test-accounts",
     "title": "People: a Delete button for our own test accounts?",
     "ask": "Owner-only Delete on accounts the app knows are ours (example.com, mohitchilkoti+…, seemachilkoti+…), with a confirm step. Play robots stay (hidden; Google signs them in again anyway). Real people are never deletable from People. YES (recommended) · NO.",
     "details": "Your note (13 Nov): \"a deletion button with confirmation popup to delete dummy users and play robots\".\n\n**Why not robots:** Google's review robots sign in again on every review, so deleting them is wasted work, and they're already hidden from the counts.\n\n**Why only ours:** a real family's account is erased only through their own request (30 days to undo, the DPDP rule you agreed today). Deleting a test account frees its class seats and keeps Seema's lists clean.",
+    "from": "claude",
+    "answer": "yes",
+    "note": "chat 14 Nov: manual delete for any account a person asks to delete, with typed confirmation (Fable's idea); not only test accounts",
+    "via": "chat",
+    "answeredAt": "2026-11-14T00:29:09.942340+00:00"
+  },
+  {
+    "id": "family-rewards",
+    "title": "Linking rewards: +100 stars, leaderboards after linking, stars from day one?",
+    "ask": "Learning never waits (your rule). To encourage parent–child linking: +100 stars once per child when the link is approved; leaderboards open only after linking; stars count from day one (not held back). YES = all three (recommended) · NO / MORE DETAILS = tell me which.",
+    "details": "**Why not 'stars only after linking':** many kids use their own phone with no parent nearby; holding back stars feels like a punishment and stops learning. The 100-star bonus gives the push without taking anything away.\n\n**Leaderboards after linking:** showing a child's name to others needs the parent's yes anyway (DPDP), and unlinked accounts cost fewer reads.\n\nBefore linking we keep only what learning needs: first name, class, answers, mistakes.\n\nSpec: sign-ups doc, section 'Updated 14 Nov'.",
+    "link": "https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9",
     "from": "claude"
   }
 ]
