@@ -74,8 +74,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
-| G107 ⭐ भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | **todo — FIRST** | `gemini/g107-bharat-2` | spec below; walk report required |
-| G108 Chess: PGN links + board themes | Gemini | todo (after G107) | `gemini/g108-chess` | spec below; Fable's handoff |
+| G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
+| G108 ⭐ Chess: games from links (lichess, chess.com, .pgn), library by opening, board themes | Gemini | **todo — FIRST (owner 14 Nov)** | `gemini/g108-chess` | spec below; Fable's handoff |
 | G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
@@ -133,7 +133,36 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G107 · [todo] · gemini · भारत और समझ round 2 (owner 14 Nov) — FIRST
+### G108 · [todo] · gemini · ⭐ FIRST (owner 14 Nov): Chess — games from links + a library by opening + board themes
+Read `docs/agents/CHESS_HANDOFF.md` (Fable) and `scripts/chess/README.md` first. Branch `gemini/g108-chess`.
+Owner's goal: "a library of best commentated games and the most instructive games in the King's Gambit, London System,
+Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
+1. **Add a game from a link** ("Add a game" modal): accept a URL, fetch, feed `parsePastedPgn`.
+   - lichess game `https://lichess.org/<id>` → `https://lichess.org/game/export/<id>`; lichess study chapter →
+     `https://lichess.org/study/<id>/<chapter>.pgn`.
+   - chess.com: only if their PUBLIC API gives the PGN without a key; otherwise say "chess.com: copy the PGN there
+     (Share → PGN) and paste it here".
+   - Any direct link that returns PGN text (`.pgn`, e.g. pgnmentor downloads) → fetch it; a file with many games → a
+     picker (title = White–Black, year, opening).
+   - Plain-word errors (no internet, not a PGN, illegal move named). Tests for every URL shape in `tests/chessPgn.test.mjs`.
+2. **Library by opening (Classics list grows):** curate ~5 instructive games each for King's Gambit, London System,
+   Sicilian Accelerated Dragon, Bogo-Indian, plus classic master games. Pipeline per game (Fable's, frozen):
+   `validate_pgn.py` → `analyze.py` (Stockfish) → `seedChessGame.mjs` into `chessGames` with new fields
+   `collection` ("King's Gambit"…), `source` (URL), `license` (e.g. "lichess CC0", "public domain (pre-1955 game)").
+   **COPYRIGHT: moves are free; commentary is not.** Keep a comment only if its licence allows reuse (lichess game
+   comments by the players / CC0 studies, or annotations whose author died 70+ years ago); otherwise write our own
+   short notes (why the move works, in plain words) — never copy from books, chess.com articles or paid sites.
+   List screen: games grouped by collection, folded (one row per collection, tap to open).
+   Moves are never typed from memory: every game comes from a fetched PGN that `validate_pgn.py` passes.
+   PGNs/evals stay out of git (gitignored `content-private/` as now); a list of games + sources + licences goes in
+   `docs/agents/reports/G108-library.md`.
+3. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
+   `ChessBoard` as props. Mockup: Themes artboard (claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb). Readable in light + dark.
+**Done means:** tests green · walk report (a lichess link and a .pgn link each add a game that plays; the library shows
+collections; theme switch persists after restart; logcat clean) · library report with a licence per game ·
+`gemini(G108): done — review please`. Seeding the library to Firestore: say "ready" — Claude reviews licences first.
+
+### G107 · [todo] · gemini · भारत और समझ round 2 (owner 14 Nov) — after G108
 Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
 first; it shows the kind of fact/health wording Claude expects).
 1. **Simple Hindi intro, no school words:** the quest intro screen for this quest shows Hindi, no "Unit Boss",
@@ -152,17 +181,7 @@ first; it shows the kind of fact/health wording Claude expects).
 **Done means:** `npm test` green · walk report (intro in Hindi, a vote recorded, the 4 new topics open and read aloud
 in Hindi) · sources listed · `gemini(G107): done — review please`.
 
-### G108 · [todo] · gemini · Chess: PGN links + board themes (owner's trainer, owner-only tile)
-Read `docs/agents/CHESS_HANDOFF.md` (Fable) first; tasks 2 and 3 there are this task. Branch `gemini/g108-chess`.
-1. **PGN link:** in "Add a game", accept a lichess game URL (`https://lichess.org/<id>`): fetch
-   `https://lichess.org/game/export/<id>` (plain PGN), feed `parsePastedPgn`. chess.com: public API only if it needs no
-   key; else say "paste the PGN for chess.com games". Errors in plain words. Tests for the URL parsing in
-   `tests/chessPgn.test.mjs`.
-2. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
-   `ChessBoard` as props (no hard-coded colours left inside). Mockup: Themes artboard in the Design canvas
-   (claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb). Readable in light and dark mode.
-**Done means:** tests green · walk report (paste a lichess link → game plays; switch theme → board changes and stays
-after restart) · logcat clean · `gemini(G108): done — review please`.
+
 
 ### G106 · [done: reviewed + merged by Claude 14 Nov, published as draft] · gemini · Hindi learning quest for adults & parents ("भारत और समझ")
 **Why:** Owner observation 14 Nov: parents and independent adults on the app don't want English/Science school exams. They want bite-sized, practical, culturally rich content in everyday Hindi without role gating.
