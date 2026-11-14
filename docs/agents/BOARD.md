@@ -159,7 +159,8 @@ Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
    `docs/agents/reports/G108-library.md`.
 3. **Watch mode (owner 14 Nov: "sometimes I just wish to go over the game and enjoy the commentary, no guess"):** on
    the game screen a choice **Guess · Watch**. Watch = step through the game with ‹ › (and a slow auto-play ▶),
-   comment under the board for every move, side-lines openable like now, no verdicts, no score. Progress in Guess mode
+   comment ABOVE the board for every move (owner: commentary always at the top, board near the thumb, as in
+   Guess mode), side-lines openable like now, no verdicts, no score. Progress in Guess mode
    is not touched by watching. Thumb zone: ‹ ▶ › at the bottom.
 4. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
    `ChessBoard` as props. Mockup: Themes artboard (claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb). Readable in light + dark.
