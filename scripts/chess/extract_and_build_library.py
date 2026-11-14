@@ -5,7 +5,18 @@ ZERO moves typed from memory. Every single ply is read directly from downloaded 
 import io
 import json
 import pathlib
+import importlib.util
 import chess.pgn
+
+# Load commentary from gitignored content-private/chess/
+comments_file = pathlib.Path("content-private/chess/rich_commentary_data.py")
+if comments_file.exists():
+    spec = importlib.util.spec_from_file_location("rich_commentary_data", comments_file)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    RICH_COMMENTS = mod.RICH_COMMENTS
+else:
+    RICH_COMMENTS = {}
 
 CACHE_DIR = pathlib.Path("/tmp/chess_cache")
 LIB_DIR = pathlib.Path("content-private/chess/library")
@@ -486,11 +497,12 @@ for t in TARGETS:
     # Attach comments to moves in the mainline
     node = real_g
     move_index = 0
+    comments_map = RICH_COMMENTS.get(t["fname"], t.get("comments", {}))
     while node.variations:
         node = node.variations[0]
         move_index += 1
-        if move_index in t["comments"]:
-            node.comment = t["comments"][move_index]
+        if move_index in comments_map:
+            node.comment = comments_map[move_index]
 
     out_path = LIB_DIR / t["fname"]
     exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True)
