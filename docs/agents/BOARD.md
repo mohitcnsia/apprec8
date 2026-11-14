@@ -74,7 +74,9 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
-| G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done, ready for Claude review** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
+| G107 ⭐ भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | **todo — FIRST** | `gemini/g107-bharat-2` | spec below; walk report required |
+| G108 Chess: PGN links + board themes | Gemini | todo (after G107) | `gemini/g108-chess` | spec below; Fable's handoff |
+| G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
 | G105 ⭐ Chess book extraction, game 1 (owner's trainer; rules: `scripts/chess/README.md`) | Gemini | **parked** (owner 13 Nov: app built first; resumes when he shares a book PDF) | `gemini/g105-chess-book1` | |
 | G15 English Unit 2 answer-key review | Gemini | done → Claude accepted as structure check | `gemini/g15-unit2-review` | 111 checked, 0 fixed. Claude spot-checked; notes were templated (feedback in G18) |
 | G16 Science Unit 1 | Gemini | **done, merged** | | |
@@ -117,7 +119,52 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 
 ## Task details (Gemini reads these; one task at a time, top to bottom)
 
-### G106 · [ready for Claude review] · gemini · Hindi learning quest for adults & parents ("भारत और समझ")
+### ⚙️ HOW WE WORK FROM 14 NOV (owner): Gemini builds + walks, Claude specs + reviews
+**Accuracy and app engagement are non-negotiable.** Claude writes the spec; Gemini drafts/builds AND does the phone walk;
+Claude reviews the diff + the walk evidence, re-walks anything suspicious or touching core flows, and publishes.
+**Every task ends with a walk report** `docs/agents/reports/G<n>-walk.md`:
+- Test build on the owner's OnePlus (or the emulator if the phone isn't connected): `adb install -r
+  android/app/build/outputs/apk/real/debug/app-real-debug.apk`, Metro, `adb reverse tcp:8081 tcp:8081`.
+- One screenshot per checklist step (in `docs/agents/reports/G<n>-walk/`, PNG, no personal data: test accounts only),
+  each with one line: what you tapped, what you expected, what you saw.
+- `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
+- Screenshot first, tap second: never tap from a remembered layout (a blind tap once landed on Delete account).
+- Never publish, deploy or seed live content: say "ready" and Claude does it.
+**Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
+promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
+
+### G107 · [todo] · gemini · भारत और समझ round 2 (owner 14 Nov) — FIRST
+Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
+first; it shows the kind of fact/health wording Claude expects).
+1. **Simple Hindi intro, no school words:** the quest intro screen for this quest shows Hindi, no "Unit Boss",
+   "Challenge", "Tester mode" talk (e.g. "हर विषय में 2-3 छोटे कार्ड पढ़ें, फिर 2 आसान सवाल। कोई परीक्षा नहीं।").
+   Find where `EnglishQuestIntro` builds "How it works"; add a per-quest override (`quest.intro`) instead of
+   hard-coding.
+2. **"सहमत / पता नहीं" on tradition cards** (owner: let people agree or disagree; tells us what they trust): cards in
+   unit 5 (namaste, spices) get two buttons; one tap writes `{ cardId, choice }` to the existing userFeedback
+   collection (entryPoint "card_vote") — no new collection, no rules change. Show "धन्यवाद 🙏" after.
+3. **4 more topics** (same style, 2 cards + 1 check + 2 quiz Qs each): festivals of India (Diwali, Eid, Christmas,
+   Pongal: what and why, respectfully, no ranking), Panchatantra (one story with its lesson), digital payments safety
+   (UPI PIN never needed to RECEIVE money), freedom fighters (one lesser-known: e.g. Rani Gaidinliu). Every fact
+   with a source in the report.
+4. **Picture list** (no images yet): `docs/agents/reports/G107-pictures.md`, one line per topic: what the picture
+   shows, style (warm, Indian, adult-friendly, no text in the image), and a file name. Owner/Claude make them later.
+**Done means:** `npm test` green · walk report (intro in Hindi, a vote recorded, the 4 new topics open and read aloud
+in Hindi) · sources listed · `gemini(G107): done — review please`.
+
+### G108 · [todo] · gemini · Chess: PGN links + board themes (owner's trainer, owner-only tile)
+Read `docs/agents/CHESS_HANDOFF.md` (Fable) first; tasks 2 and 3 there are this task. Branch `gemini/g108-chess`.
+1. **PGN link:** in "Add a game", accept a lichess game URL (`https://lichess.org/<id>`): fetch
+   `https://lichess.org/game/export/<id>` (plain PGN), feed `parsePastedPgn`. chess.com: public API only if it needs no
+   key; else say "paste the PGN for chess.com games". Errors in plain words. Tests for the URL parsing in
+   `tests/chessPgn.test.mjs`.
+2. **Board themes:** Wood (now) · Green · Blue on the list screen, saved in AsyncStorage, colours passed into
+   `ChessBoard` as props (no hard-coded colours left inside). Mockup: Themes artboard in the Design canvas
+   (claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb). Readable in light and dark mode.
+**Done means:** tests green · walk report (paste a lichess link → game plays; switch theme → board changes and stays
+after restart) · logcat clean · `gemini(G108): done — review please`.
+
+### G106 · [done: reviewed + merged by Claude 14 Nov, published as draft] · gemini · Hindi learning quest for adults & parents ("भारत और समझ")
 **Why:** Owner observation 14 Nov: parents and independent adults on the app don't want English/Science school exams. They want bite-sized, practical, culturally rich content in everyday Hindi without role gating.
 **Branch:** `gemini/hindi-adult-quests` (pushed to GitHub).
 **What's in it:**
