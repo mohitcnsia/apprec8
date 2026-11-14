@@ -125,3 +125,43 @@ export function submitStudyReport(r) {
   AsyncStorage.setItem(reportedKey(targetId), "1").catch(() => {});
   return true;
 }
+
+const cardVoteKey = (cardId) => `card_vote_${cardId}`;
+
+/** Has the user already voted on this card on this phone? */
+export async function getCardVote(cardId) {
+  if (!cardId) return null;
+  try {
+    return await AsyncStorage.getItem(cardVoteKey(cardId));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Submits a vote on a card ("सहमत" / "पता नहीं") to userFeedback (entryPoint "card_vote").
+ * @param {object} v
+ * @param {string} v.cardId
+ * @param {string} v.choice - "सहमत" | "पता नहीं"
+ * @param {string} [v.cardTitle]
+ * @param {string} [v.questId]
+ */
+export function submitCardVote(v) {
+  const user = authInstance.currentUser;
+  if (!user || !v?.cardId || !v?.choice) return false;
+
+  addDoc(collection(db, "userFeedback"), {
+    userId: user.uid,
+    userName: user.displayName || null,
+    entryPoint: "card_vote",
+    cardId: String(v.cardId),
+    choice: String(v.choice),
+    cardTitle: v.cardTitle ? String(v.cardTitle) : null,
+    questId: v.questId ? String(v.questId) : null,
+    appVersion: Constants.expoConfig?.version || null,
+    createdAt: serverTimestamp(),
+  }).catch((e) => console.error("submitCardVote failed:", e));
+
+  AsyncStorage.setItem(cardVoteKey(v.cardId), String(v.choice)).catch(() => {});
+  return true;
+}
