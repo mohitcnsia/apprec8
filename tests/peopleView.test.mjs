@@ -38,16 +38,22 @@ console.log("peopleView tests passed");
   console.log("peopleView: robots and old accounts ok");
 }
 
-// Contact buttons for stuck people (owner, 13 Nov).
+// Help messages (owner 14 Nov): per situation, {name} filled, saved back as a template.
 {
-  const { nudgeMessage, whatsappNudgeUrl, emailNudgeUrl } = await import("../utils/people.js");
-  assert.ok(nudgeMessage({ name: "Khushboo" }).startsWith("Namaste Khushboo!"));
-  assert.ok(nudgeMessage({}).startsWith("Namaste! "));
-  assert.ok(nudgeMessage({}).includes('"Join your class"'));
-  assert.ok(whatsappNudgeUrl({ name: "Lokendra" }).startsWith("https://wa.me/?text=Namaste%20Lokendra"), "no number: owner picks the contact");
-  assert.ok(emailNudgeUrl({ email: "a@b.com" }).startsWith("mailto:a@b.com?subject="));
-  assert.equal(emailNudgeUrl({ email: null }), null);
-  console.log("peopleView: contact buttons ok");
+  const { messageSituation, fillMessage, toTemplate, DEFAULT_MESSAGES, whatsappUrl, emailUrl } = await import("../utils/people.js");
+  assert.equal(messageSituation({ kind: "none" }), "none");
+  assert.equal(messageSituation({ kind: "test", baseKind: "student", classes: [], waiting: [] }), "noclass");
+  assert.equal(messageSituation({ kind: "child", classes: [], waiting: ["7-A"] }), "waiting");
+  assert.equal(messageSituation({ kind: "parent", children: 0 }), "parent");
+  assert.equal(messageSituation({ kind: "learner" }), "learner");
+  assert.equal(messageSituation({ kind: "student", classes: ["7-A"] }), "other");
+  assert.ok(fillMessage(DEFAULT_MESSAGES.none, { name: "Kamla" }).startsWith("Namaste Kamla!"));
+  assert.ok(fillMessage(DEFAULT_MESSAGES.none, {}).startsWith("Namaste!"));
+  assert.equal(toTemplate("Hi Kamla, Kamla!", { name: "Kamla" }), "Hi {name}, {name}!");
+  assert.equal(toTemplate("Hi there", { name: "A" }), "Hi there", "a one-letter name is never replaced");
+  assert.ok(whatsappUrl("Hi Kamla").startsWith("https://wa.me/?text=Hi%20Kamla"));
+  assert.equal(emailUrl(null, "x"), null);
+  console.log("peopleView: help messages ok");
 }
 
 // Hide bots + sort (owner, 13 Nov: "All shows 125 people ... filter bots and sort by date").

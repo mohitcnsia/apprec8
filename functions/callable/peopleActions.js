@@ -60,7 +60,8 @@ exports.peopleList = functions
       .map((d) => personRow({ uid: d.id, doc: d.data(), auth: auth[d.id] || null, className, now }))
       .map((r) => (appAdmin ? r : { ...r, email: null })) // school admins never see emails
       .sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
-    return { at: now, people: rows, counts: summarize(rows, now), withEmail: appAdmin, schoolIds: appAdmin ? null : [...adminSchoolIds] };
+    const msgDoc = await db.collection("ownerConfig").doc("helpMessages").get();
+    return { at: now, people: rows, counts: summarize(rows, now), withEmail: appAdmin, schoolIds: appAdmin ? null : [...adminSchoolIds], messages: (msgDoc.data() || {}).templates || {} };
   });
 
 // Help buttons on People (owner 13-14 Nov: "go ahead"): { uid, action: "class"|"teacher"|"delete", classId?, subjects?,
@@ -150,4 +151,27 @@ exports.markSelfLearner = functions
     const on = data?.on !== false;
     await ref.set({ selfLearner: on }, { merge: true });
     return { ok: true, selfLearner: on };
+  });
+
+// Saved Help messages (owner 14 Nov: "if I type something new, I should be able to save so it appears for other
+// parents/kids too"). { key, text } → ownerConfig/helpMessages.templates[key]. Owner, app admins, school admins.
+const MESSAGE_KEYS = ["none", "noclass", "waiting", "parent", "learner", "other"];
+exports.saveHelpMessage = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const caller = context.auth.uid;
+    const role = caller === OWNER_UID ? { admin: true } : (await db.collection("roles").doc(caller).get()).data() || {};
+    const schoolAdmin = role.admin === true ? true : !(await db.collection("schools").where("admins", "array-contains", caller).limit(1).get()).empty;
+    if (!schoolAdmin) throw fail("permission-denied", "Only the owner and school admins can save messages.");
+    const key = String(data?.key || "");
+    const text = String(data?.text || "").trim();
+    if (!MESSAGE_KEYS.includes(key)) throw fail("invalid-argument", "Unknown message.");
+    if (text.length < 10 || text.length > 1500) throw fail("invalid-argument", "A message is 10 to 1,500 characters.");
+    await db.collection("ownerConfig").doc("helpMessages").set(
+      { templates: { [key]: text }, updated: { [key]: { by: caller, at: FieldValue.serverTimestamp() } } },
+      { merge: true }
+    );
+    return { ok: true };
   });

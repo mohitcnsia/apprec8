@@ -8,7 +8,7 @@ import functions from "@react-native-firebase/functions";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import PeopleHelp from "./PeopleHelp";
-import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, whatsappNudgeUrl, emailNudgeUrl, SORTS, SHOWS } from "../../utils/people";
+import { filterPeople, whenText, KIND_LABEL, shapePerson, peopleCounts, SORTS, SHOWS } from "../../utils/people";
 
 const TABS = [
   ["new", "New today"],
@@ -109,23 +109,10 @@ export default function PeopleScreen() {
               <View style={s.detail}>
                 <Text style={s.small}>Joined: {new Date(p.joinedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" })}{p.via ? ` · via ${p.via}` : ""}</Text>
                 {p.kind === "parent" ? <Text style={s.small}>{p.children} {p.children === 1 ? "child" : "children"} added</Text> : null}
-                {p.kind === "none" ? <Text style={s.small}>Signed in but picked no class and added no child. Send them the next step:</Text> : null}
-                {p.kind === "none" ? (
-                  <View style={s.actions}>
-                    <Pressable onPress={() => Linking.openURL(whatsappNudgeUrl(p)).catch(() => {})} accessibilityRole="button" accessibilityLabel={`WhatsApp ${p.name || "them"} the next step`} style={s.action}>
-                      <Text style={s.actionText}>WhatsApp</Text>
-                    </Pressable>
-                    {p.email ? (
-                      <Pressable onPress={() => Linking.openURL(emailNudgeUrl(p)).catch(() => {})} accessibilityRole="button" accessibilityLabel={`Email ${p.name || "them"} the next step`} style={s.action}>
-                        <Text style={s.actionText}>Email</Text>
-                      </Pressable>
-                    ) : null}
-                  </View>
-                ) : null}
-                {p.kind === "none" ? <Text style={s.small}>WhatsApp opens with the message ready; pick {p.name || "them"} from your contacts.</Text> : null}
+                {p.kind === "none" ? <Text style={s.small}>Signed in but picked no class and added no child.</Text> : null}
                 {p.robot ? <Text style={s.small}>Google Play's automatic test account: it signs in once to check the app. Not a real person.</Text> : null}
                 {p.deletionRequested ? <Text style={s.warn}>Asked to delete the account: use Delete account below.</Text> : null}
-                <PeopleHelp person={p} isOwner={!!data.withEmail} schoolIds={data.schoolIds || null} s={s} P={P} onDone={load} />
+                <PeopleHelp person={p} isOwner={!!data.withEmail} schoolIds={data.schoolIds || null} messages={data.messages || {}} s={s} P={P} onDone={load} />
               </View>
             ) : null}
           </Pressable>

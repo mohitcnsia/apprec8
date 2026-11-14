@@ -2,8 +2,9 @@
 // sign-ups doc). Put in a class (the teacher still confirms) · Make a teacher · Delete account (owner only, type DELETE).
 // The server checks and logs every help: functions/callable/peopleActions.js helpPerson.
 import React, { useState } from "react";
-import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, Text, TextInput, View } from "react-native";
 import functions from "@react-native-firebase/functions";
+import { DEFAULT_MESSAGES, MESSAGE_SITUATIONS, messageSituation, fillMessage, toTemplate, whatsappUrl, emailUrl } from "../../utils/people";
 
 const SUBJECTS = [
   ["english", "English"],
@@ -18,7 +19,11 @@ const loadClasses = () => {
   return classesPromise;
 };
 
-export default function PeopleHelp({ person: p, isOwner, schoolIds, s, P, onDone }) {
+export default function PeopleHelp({ person: p, isOwner, schoolIds, messages = {}, s, P, onDone }) {
+  const situation = messageSituation(p);
+  const [text, setText] = useState(() => fillMessage(messages[situation] || DEFAULT_MESSAGES[situation], p));
+  const [msgNote, setMsgNote] = useState("");
+  const [saving, setSaving] = useState(false);
   const [mode, setMode] = useState(null); // "class" | "teacher" | "delete"
   const [schools, setSchools] = useState(null);
   const [classId, setClassId] = useState(null);
@@ -32,7 +37,20 @@ export default function PeopleHelp({ person: p, isOwner, schoolIds, s, P, onDone
   const learner = ["student", "child", "none"].includes(kind);
   const adult = ["none", "parent", "student", "learner"].includes(kind);
   const canDelete = isOwner && p.kind !== "robot";
-  if (!learner && !adult && !canDelete) return null;
+  if (p.kind === "robot") return null;
+
+  const saveTemplate = () => {
+    setSaving(true);
+    setMsgNote("");
+    functions()
+      .httpsCallable("saveHelpMessage")({ key: situation, text: toTemplate(text, p) })
+      .then(() => {
+        messages[situation] = toTemplate(text, p); // other cards on this screen use it at once
+        setMsgNote(`✓ Saved. Everyone "${MESSAGE_SITUATIONS[situation].toLowerCase()}" gets this message now.`);
+      })
+      .catch((e) => setMsgNote(e?.code === "functions/not-found" ? "Deploy saveHelpMessage first (see My notes)." : e?.message || "Couldn't save."))
+      .finally(() => setSaving(false));
+  };
 
   const open = (m) => {
     setMode(mode === m ? null : m);
@@ -87,7 +105,17 @@ export default function PeopleHelp({ person: p, isOwner, schoolIds, s, P, onDone
 
   return (
     <View style={{ gap: 8, marginTop: 6 }}>
-      <Text style={s.helpTitle}>HELP (nothing here deletes, except Delete)</Text>
+      <Text style={s.helpTitle}>MESSAGE · {MESSAGE_SITUATIONS[situation].toUpperCase()}</Text>
+      <TextInput value={text} onChangeText={setText} multiline style={[s.search, { minHeight: 120, paddingTop: 10, textAlignVertical: "top" }]} accessibilityLabel="Message to send" />
+      <View style={s.tabs}>
+        {chip("wa", "WhatsApp", false, () => Linking.openURL(whatsappUrl(text)).catch(() => {}))}
+        {p.email ? chip("em", "Email", false, () => Linking.openURL(emailUrl(p.email, text)).catch(() => {})) : null}
+        {chip("save", saving ? "Saving…" : "Save for everyone like this", false, () => !saving && saveTemplate())}
+      </View>
+      <Text style={s.small}>WhatsApp opens with this message ready; pick {p.name || "them"} from your contacts.</Text>
+      {msgNote ? <Text style={msgNote.startsWith("✓") ? s.small : s.warn}>{msgNote}</Text> : null}
+
+      {learner || adult || canDelete ? <Text style={s.helpTitle}>HELP (nothing here deletes, except Delete)</Text> : null}
       <View style={s.tabs}>
         {learner ? chip("class", "Put in a class", mode === "class", () => open("class")) : null}
         {adult ? chip("teacher", "Make a teacher", mode === "teacher", () => open("teacher")) : null}

@@ -157,6 +157,12 @@ async function call(name, data, who) {
   const gone = !(await db.doc(`users/${helpT.uid}`).get()).exists && !((await db.doc("classes/c1").get()).data().teacherIds || []).includes(helpT.uid);
   ok(del.ok && gone, "delete erases the account and its class places");
   ok((await db.collection("helpLog").where("uid", "==", helpT.uid).get()).size === 2, "both helps logged, also after the delete");
+  // Saved help messages (owner 14 Nov)
+  ok((await call("saveHelpMessage", { key: "none", text: "Namaste {name}! Open Apprec8." }, stranger)).error === "PERMISSION_DENIED", "a stranger can't save messages");
+  ok((await call("saveHelpMessage", { key: "nope", text: "Namaste {name}! Open Apprec8." }, boss)).error === "INVALID_ARGUMENT", "unknown message key refused");
+  const sv = await call("saveHelpMessage", { key: "none", text: "Namaste {name}! Open Apprec8." }, boss);
+  const pl = await call("peopleList", {}, boss);
+  ok(sv.ok && pl.messages?.none === "Namaste {name}! Open Apprec8.", "saved message comes back with People");
 
   // 7) Up to 4 children
   await db.doc(`users/${stranger.uid}`).set({ firstName: "Many", childUids: ["a", "b", "c", "d"] });
