@@ -126,7 +126,9 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 **Accuracy and app engagement are non-negotiable.** Claude writes the spec; Gemini drafts/builds AND does the phone walk;
 Claude reviews the diff + the walk evidence, re-walks anything suspicious or touching core flows, and publishes.
 **Every task ends with a walk report** `docs/agents/reports/G<n>-walk.md`:
-- Test build on the owner's OnePlus (or the emulator if the phone isn't connected): `adb install -r
+- **Phone only (owner 14 Nov: "the emulator is a mess"): never start or use the Android emulator.** If `adb devices`
+  doesn't show `2ae01cda`, write "phone needed" in your report and stop; the owner plugs it in. Always
+  `export ANDROID_SERIAL=2ae01cda`. Test build on the owner's OnePlus: `adb install -r
   android/app/build/outputs/apk/real/debug/app-real-debug.apk`, Metro, `adb reverse tcp:8081 tcp:8081`.
 - One screenshot per checklist step (in `docs/agents/reports/G<n>-walk/`, PNG, no personal data: test accounts only),
   each with one line: what you tapped, what you expected, what you saw.
