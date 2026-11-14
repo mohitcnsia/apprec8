@@ -144,11 +144,13 @@ Branch `gemini/g114-chess-polish`. JS only (ships as an update).
    the route to `IMMERSIVE_SCREENS` in navigation/BottomTabNavigator.js) and the status bar (`<StatusBar hidden />` from
    expo-status-bar while the screen is focused; shown again on leaving). No new library (Android's own navigation strip
    needs a native build: not now). Back gesture must still work.
-2. **Elo summary (your end-of-game card):** an estimate from 12–20 guesses is rough — show a RANGE and say so:
-   "Your play this game: ≈ 1500–1700 (rough estimate)", the average only after ≥ 3 games ("over 8 games: ≈ 1600"),
-   never a single exact number. Say whose it is ("Your play", not "Game strength"). Put the ACPL→Elo formula + its
-   source in a code comment and a unit test (range widens when fewer moves were guessed).
-**Done means:** tests · phone walk (a game in full screen, back gesture works, end card with range) ·
+2. **Elo summary (end-of-game card), owner's wording 14 Nov:** three lines, single numbers (no range), with one small
+   note "rough estimate":
+   - "Carlsen's strength (this game): ≈ 2700" (the master's real name: the owner plays the winning side)
+   - "Your strength (this game): ≈ 1600"
+   - "Your average (8 games): ≈ 1580" (only once there are 2+ games)
+   Put the ACPL→Elo formula + its source in a code comment and a unit test.
+**Done means:** tests · phone walk (a game in full screen, back gesture works, end card with the three lines) ·
 `gemini(G114): done — review please`. Owner-only tile → ships after Claude's review.
 
 ### G107 · [todo] · gemini · ⭐ NEXT: भारत और समझ round 2 (owner 14 Nov)
