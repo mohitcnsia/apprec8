@@ -130,6 +130,10 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
   doesn't show `2ae01cda`, write "phone needed" in your report and stop; the owner plugs it in. Always
   `export ANDROID_SERIAL=2ae01cda`. Test build on the owner's OnePlus: `adb install -r
   android/app/build/outputs/apk/real/debug/app-real-debug.apk`, Metro, `adb reverse tcp:8081 tcp:8081`.
+- **Never wait silently (owner 14 Nov: 2 hours lost on a hidden "waiting for device"):** before any adb step run
+  `adb devices`; if `2ae01cda` isn't listed, print "PHONE NEEDED: please plug in the OnePlus (unlocked, File transfer)"
+  and stop. Never run `adb wait-for-device` or anything that can wait without a limit. If any step is stuck for more
+  than 5 minutes, stop it, write what you were doing and what you need in the report, and say so in chat.
 - **Prove it's the NEW code (owner 14 Nov: "else it is wasted effort"):** uninstall the Play app, install the DEBUG
   test build, start Metro from your branch's folder, `adb reverse tcp:8081 tcp:8081`, open it through the dev launcher
   (localhost:8081). The report must include (a) a screenshot of the dev launcher showing localhost:8081, (b) the Metro
