@@ -11,6 +11,8 @@ import {
   orderBy,
   limit,
   getDocs,
+  getDoc,
+  doc,
 } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 
@@ -47,4 +49,19 @@ export async function listKidAttempts(uid, max = 20) {
 export async function listQuestionIssues() {
   const snap = await getDocs(collection(db, "questionIssues"));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+// The child's own first name (Tripti), not the Google account's name (her sister Jatin's), for the Dashboard (14 Nov).
+// Only the uids on screen, at most 60, kept for the app session.
+const firstNames = new Map();
+export async function kidFirstNames(uids = []) {
+  const need = [...new Set(uids)].filter((u) => u && !firstNames.has(u)).slice(0, 60);
+  await Promise.all(
+    need.map((u) =>
+      getDoc(doc(db, "users", u))
+        .then((d) => firstNames.set(u, String(d.data()?.firstName || "").trim().split(/\s+/)[0] || null))
+        .catch(() => firstNames.set(u, null))
+    )
+  );
+  return Object.fromEntries(uids.map((u) => [u, firstNames.get(u) || null]));
 }

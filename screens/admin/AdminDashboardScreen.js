@@ -9,7 +9,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
-import { listKidProgress, listQuestionIssues } from "../../services/adminApi";
+import { listKidProgress, listQuestionIssues, kidFirstNames } from "../../services/adminApi";
 import { getQuest, getQuestNodes } from "../../services/contentCache";
 import { buildQuestPath } from "../../utils/questTree";
 import { summarize, accuracy, weakTopics, activeIn, timeAgo, formatDuration } from "../../utils/kidStats";
@@ -95,6 +95,7 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
   };
 
   // ---- Kids tab data
+  const [names, setNames] = useState({}); // uid → the child's own first name
   const kidRows = useMemo(() => {
     if (!kids) return [];
     const now = Date.now();
@@ -104,7 +105,7 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
         const sum = summarize(k.stats, range, now);
         return {
           ...k,
-          name: k.stats?.userName || `Kid ${String(k.uid).slice(0, 5)}`,
+          name: names[k.uid] || k.stats?.userName || `Kid ${String(k.uid).slice(0, 5)}`,
           sum,
           acc: accuracy(sum),
           weak: weakTopics(k.stats)[0] || null,
@@ -113,7 +114,17 @@ export default function AdminDashboardScreen({ navigation, embedded = false, hea
         };
       })
       .sort((a, b) => (b.stats?.lastActiveAt || 0) - (a.stats?.lastActiveAt || 0));
-  }, [kids, range, nodes]);
+  }, [kids, range, nodes, names]);
+
+  const rowUids = kidRows.map((k) => k.uid).join(",");
+  useEffect(() => {
+    if (!rowUids) return undefined;
+    let on = true;
+    kidFirstNames(rowUids.split(",")).then((n) => on && setNames((old) => ({ ...old, ...n })));
+    return () => {
+      on = false;
+    };
+  }, [rowUids]);
 
   const totals = useMemo(() => {
     const t = kidRows.reduce(
