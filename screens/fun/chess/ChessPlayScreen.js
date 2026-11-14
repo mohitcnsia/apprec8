@@ -10,6 +10,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import { useIsFocused } from "@react-navigation/native";
+import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
 
 import { useTheme } from "../../../context/ThemeContext";
 import { quizPalette } from "../../../components/quiz/quizPalette";
@@ -47,6 +50,8 @@ export default function ChessPlayScreen({ navigation, route }) {
   const master = lastName(game.guessSide === "White" ? game.white : game.black);
   const flipped = game.guessSide === "Black";
   const totalGuesses = useMemo(() => guessPlies(game).length, [game]);
+  useImmersiveStatusBar();
+  const isFocused = useIsFocused();
 
   // Mode: "guess" (interactive guessing) vs "watch" (replay & commentary)
   const [mode, setMode] = useState("guess");
@@ -259,8 +264,18 @@ export default function ChessPlayScreen({ navigation, route }) {
 
   return (
     <View style={styles.screen}>
+      {isFocused ? <StatusBar hidden /> : null}
       <View style={styles.header}>
         <View style={styles.headerTop}>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+          >
+            <Text style={styles.backBtnText}>‹</Text>
+          </Pressable>
           <View style={{ flex: 1 }}>
             <Text style={styles.title} numberOfLines={1}>
               {lastName(game.white)} vs {lastName(game.black)}
@@ -304,15 +319,20 @@ export default function ChessPlayScreen({ navigation, route }) {
             <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 8 }]}>
               {r.gameElo != null ? (
                 <View style={styles.eloCard}>
-                  <View style={styles.eloCol}>
-                    <Text style={styles.eloLabel}>YOUR STRENGTH</Text>
-                    <Text style={styles.eloValue}>{r.gameElo} Elo</Text>
-                  </View>
-                  <View style={styles.eloDivider} />
-                  <View style={styles.eloCol}>
-                    <Text style={styles.eloLabel}>AVERAGE STRENGTH</Text>
-                    <Text style={styles.eloValue}>{r.overallElo} Elo</Text>
-                  </View>
+                  {r.masterElo != null ? (
+                    <Text style={styles.eloLine}>
+                      {master}'s strength (this game): ≈ {r.masterElo}
+                    </Text>
+                  ) : null}
+                  <Text style={styles.eloLine}>
+                    Your strength (this game): ≈ {r.gameElo}
+                  </Text>
+                  {r.gamesCount >= 2 && r.overallElo != null ? (
+                    <Text style={styles.eloLine}>
+                      Your average ({r.gamesCount} games): ≈ {r.overallElo}
+                    </Text>
+                  ) : null}
+                  <Text style={styles.eloNote}>rough estimate</Text>
                 </View>
               ) : null}
               <Text style={[styles.bannerText, { color: P.correctText }]}>
@@ -438,7 +458,20 @@ const makeStyles = (P, insets) =>
   StyleSheet.create({
     screen: { flex: 1, backgroundColor: P.bg, paddingTop: insets.top + 10 },
     header: { paddingHorizontal: 16, paddingBottom: 6 },
-    headerTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+    headerTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+    backBtn: {
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginRight: 2,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backBtnText: {
+      fontSize: 28,
+      lineHeight: 30,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
     title: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
     sub: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft, marginTop: 2 },
     modeTabs: {
@@ -469,37 +502,25 @@ const makeStyles = (P, insets) =>
     banner: { borderWidth: 2, borderRadius: 14, padding: 10 },
     bannerText: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
     eloCard: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
       backgroundColor: P.card,
       borderRadius: 12,
       paddingVertical: 10,
-      paddingHorizontal: 12,
+      paddingHorizontal: 14,
       borderWidth: 1.5,
       borderColor: P.correctBorder,
+      gap: 3,
       marginBottom: 2,
     },
-    eloCol: {
-      alignItems: "center",
-      flex: 1,
-    },
-    eloDivider: {
-      width: 1.5,
-      height: 36,
-      backgroundColor: P.border,
-      marginHorizontal: 8,
-    },
-    eloLabel: {
-      fontSize: 10,
+    eloLine: {
+      fontSize: 15,
       fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    eloNote: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      fontStyle: "italic",
       color: P.textSoft,
-      letterSpacing: 0.6,
-    },
-    eloValue: {
-      fontSize: 18,
-      fontFamily: "nunitoBold",
-      color: P.correctText || P.text,
       marginTop: 2,
     },
     bookCard: {

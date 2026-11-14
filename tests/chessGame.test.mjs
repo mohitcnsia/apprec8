@@ -147,6 +147,15 @@ const repWithProg = strengthReport(tiny, [
 assert.equal(repWithProg.gameElo, eloFromAcpl(125));
 assert.equal(repWithProg.overallElo, eloFromAcpl(47));
 assert.equal(repWithProg.masterElo, eloFromAcpl(15));
+assert.equal(repWithProg.gamesCount, 1);
+
+// strengthReport with 2 completed games
+const mockProgress2 = {
+  g1: { done: true, guessLog: [{ cpLoss: 20 }] },
+  g2: { done: true, guessLog: [{ cpLoss: 40 }] },
+};
+const repWith2 = strengthReport(tiny, [{ ply: 0, verdict: "green", cpLoss: 0 }], mockProgress2);
+assert.equal(repWith2.gamesCount, 2);
 
 // ---- fenBeforePly
 assert.equal(fenBeforePly(game, 0), START_FEN);

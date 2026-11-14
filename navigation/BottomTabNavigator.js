@@ -35,6 +35,7 @@ const IMMERSIVE_SCREENS = [
   "EndlessPractice",
   "AdminDashboard",
   "AdminKidDetail",
+  "ChessPlay",
 ];
 
 const ICONS = {
