@@ -149,9 +149,11 @@ Sicilian Accelerated Dragon, Bogo-Indian, classic master games…".
    Sicilian Accelerated Dragon, Bogo-Indian, plus classic master games. Pipeline per game (Fable's, frozen):
    `validate_pgn.py` → `analyze.py` (Stockfish) → `seedChessGame.mjs` into `chessGames` with new fields
    `collection` ("King's Gambit"…), `source` (URL), `license` (e.g. "lichess CC0", "public domain (pre-1955 game)").
-   **COPYRIGHT: moves are free; commentary is not.** Keep a comment only if its licence allows reuse (lichess game
-   comments by the players / CC0 studies, or annotations whose author died 70+ years ago); otherwise write our own
-   short notes (why the move works, in plain words) — never copy from books, chess.com articles or paid sites.
+   **COMMENTARY (owner 14 Nov):** moves, variations and chess ideas are free; only the WORDING of a commentary is
+   protected. Use good commentary for what matters in each position, then write our OWN note fresh from the position:
+   beginner-friendly, instructive (the plan, the threat, why the move works / why the obvious move fails), short. Do
+   not edit the source's sentences line by line; no distinctive phrases copied. Credit the source in the game's
+   `source` field ("ideas from: …"). Every note must name only moves legal at that point (validate_pgn.py checks).
    List screen: games grouped by collection, folded (one row per collection, tap to open).
    Moves are never typed from memory: every game comes from a fetched PGN that `validate_pgn.py` passes.
    PGNs/evals stay out of git (gitignored `content-private/` as now); a list of games + sources + licences goes in
