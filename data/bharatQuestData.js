@@ -25,7 +25,8 @@ export const quest = {
     continueText: "आगे बढ़ें",
     progressReady: "शुरू करने के लिए तैयार?",
     progressStarted: "आपकी प्रगति",
-    formatStats: (stats) => `विषय पूरे हुए: ${stats.unitsDone} / ${stats.unitsTotal}   ·   कदम: ${stats.stepsDone}`,
+    // A template, not a function: the quest doc is saved to Firestore, which can't store functions (review 14 Nov).
+    statsTemplate: "विषय पूरे हुए: {unitsDone} / {unitsTotal}   ·   कदम: {stepsDone}",
     currentPrefix: "आप अभी इस विषय पर हैं: ",
     signInTitle: "पढ़ने के लिए कृपया साइन-इन करें",
     signInText: "आपकी प्रगति सुरक्षित रहेगी ताकि आप किसी भी फोन पर वहीं से शुरू कर सकें।",
@@ -490,8 +491,8 @@ export const studyPages = {
     cards: [
       {
         emoji: "🌄",
-        title: "13 वर्ष की आयु में अंग्रेजी हुकूमत को चुनौती",
-        text: "मणिपुर और नगालैंड की रोंगमेई नगा वीरांगना गाइदिनल्यू ने मात्र 13 वर्ष की उम्र में अंग्रेजों के अत्याचार और भारी करों के खिलाफ हेराका आंदोलन का नेतृत्व किया।",
+        title: "16 वर्ष की उम्र में आंदोलन की अगुवाई",
+        text: "मणिपुर की रोंगमेई नगा वीरांगना गाइदिनल्यू 13 वर्ष की उम्र में अपने चचेरे भाई जादोनांग के हेराका आंदोलन से जुड़ीं, और 1931 में उनकी फाँसी के बाद 16 वर्ष की उम्र में अंग्रेज़ों के ख़िलाफ़ आंदोलन का नेतृत्व किया।",
         examples: ["रोंगमेई नगा समाज की नेत्री", "अंग्रेजों के करों का खुला विरोध"],
       },
       {

@@ -131,8 +131,8 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
                 : quest?.intro?.progressReady || "Ready to start?"}
             </Text>
             <Text style={styles.progressText}>
-              {quest?.intro?.formatStats
-                ? quest.intro.formatStats(tree.stats)
+              {quest?.intro?.statsTemplate
+                ? quest.intro.statsTemplate.replace(/\{(\w+)\}/g, (m, k) => String(tree.stats[k] ?? ""))
                 : `Units passed: ${tree.stats.unitsDone} of ${tree.stats.unitsTotal}   ·   Steps done: ${tree.stats.stepsDone}`}
             </Text>
             {currentNode && hasStarted ? (
