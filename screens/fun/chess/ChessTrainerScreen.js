@@ -14,7 +14,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { quizPalette } from "../../../components/quiz/quizPalette";
 import { BOARD_THEMES } from "../../../components/games/chess/ChessBoard";
 import { parsePastedPgn, fetchPgnFromUrl } from "../../../utils/chessPgn";
-import { guessPlies } from "../../../utils/chessGame";
+import { guessPlies, computePlayerStats } from "../../../utils/chessGame";
 import { loadSeededChessGames } from "../../../services/chessApi";
 
 import operaGame from "../../../data/chess/opera-game.json";
@@ -91,6 +91,9 @@ export default function ChessTrainerScreen({ navigation }) {
     }
     return Array.from(map.entries());
   }, [classics]);
+
+  // Overall player strength across all played games
+  const stats = useMemo(() => computePlayerStats(progress), [progress]);
 
   const addParsedGame = (game) => {
     const entry = { gameId: `u-${Date.now()}`, game };
@@ -199,6 +202,22 @@ export default function ChessTrainerScreen({ navigation }) {
           Play through a master game on the winning side. From the take-over move, guess what the
           master played — the book's own notes follow every move.
         </Text>
+
+        {/* Overall Player Strength Card */}
+        {stats.overallElo != null ? (
+          <View style={styles.statsCard}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.statsLabel}>YOUR STRENGTH</Text>
+              <Text style={styles.statsValue}>{stats.overallElo} Elo</Text>
+            </View>
+            <View style={{ alignItems: "flex-end", justifyContent: "center" }}>
+              <Text style={styles.statsSub}>
+                {stats.gamesCompleted} {stats.gamesCompleted === 1 ? "game" : "games"} completed
+              </Text>
+              <Text style={styles.statsSub}>{stats.totalGuesses} moves rated</Text>
+            </View>
+          </View>
+        ) : null}
 
         {/* Board theme selector */}
         <View style={styles.themeSection}>
@@ -395,6 +414,35 @@ const makeStyles = (P, insets) =>
     content: { paddingHorizontal: 16, paddingBottom: 90, gap: 10 },
     h1: { fontSize: 26, fontFamily: "nunitoBold", color: P.text },
     intro: { fontSize: 14, fontFamily: "nunitoBold", color: P.textSoft, lineHeight: 20 },
+    statsCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: P.card,
+      borderWidth: 1.5,
+      borderColor: P.border,
+      borderRadius: 14,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      marginTop: 2,
+    },
+    statsLabel: {
+      fontSize: 11,
+      fontFamily: "nunitoBold",
+      color: P.textSoft,
+      letterSpacing: 0.8,
+    },
+    statsValue: {
+      fontSize: 22,
+      fontFamily: "nunitoBold",
+      color: P.correctText || P.text,
+      marginTop: 2,
+    },
+    statsSub: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      color: P.textSoft,
+    },
     themeSection: {
       backgroundColor: P.card,
       borderRadius: 14,

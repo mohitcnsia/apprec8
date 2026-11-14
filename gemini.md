@@ -43,6 +43,15 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
   5. Curated 25 games (5 King's Gambit, 5 London System, 5 Sicilian Accelerated Dragon, 5 Bogo-Indian, 5 Classic Masters) into gitignored `content-private/chess/library/`. All 25 passed `validate_pgn.py` (0 errors). Documented licenses in `docs/agents/reports/G108-library.md`. Status: ready for Claude review before Firestore seeding.
 - **Test:** `npm test` green, `chessPgn` and `chessGame` passed, `validate_pgn.py` 25/25 passed. Walk report in `docs/agents/reports/G108.md`.
 
+## 2026-11-14: Chess library G110 fix & Player Rating Engine (Gemini, task G110 + owner request)
+- **Goal:** G110 fix for chess library (evals > 0, remove duplicate, fix misfiled openings, opening validator, mergePreservingAnnotations, phone walk) + calculate player strength ratings (Your Strength, Average Strength Elo).
+- **Done:** Branch `gemini/g110-chess`.
+  1. `utils/chessGame.js`: added `eloFromAcpl` (regression $3000 - 15 \times \text{ACPL}$ clamped 600–2850), `computePlayerStats(progressMap)` calculating lifetime average rating, rated guesses, and completed games, and updated `strengthReport` returning `gameElo`, `overallElo`, `masterElo`.
+  2. `screens/fun/chess/ChessPlayScreen.js`: End-of-game summary banner displays "YOUR STRENGTH: {r.gameElo} Elo" and "AVERAGE STRENGTH: {r.overallElo} Elo".
+  3. `screens/fun/chess/ChessTrainerScreen.js`: Main trainer header displays player strength card ("YOUR STRENGTH: {stats.overallElo} Elo", N games completed, M moves rated) once rated moves are played.
+  4. Real-device walk completed on OnePlus LE2121: 5 collections, engine ✓ badges verified, blunder move `b2-b4` verified with colored Stockfish centipawn verdict. Evidence in `docs/agents/reports/chess_engine_verdict_walk.png` and `chess_library_collections.png`.
+- **Test:** `npm test` 100% green (60+ suites), unit tests added in `tests/chessGame.test.mjs`. Full report in `docs/agents/reports/G110.md`.
+
 ## 2026-11-14: Adult & parent Hindi course "भारत और समझ" (Gemini, owner request)
 - **Goal:** Parents and adult independent learners joined who don't know English and aren't interested in 7th-grade English or Science. Owner decision: build courses for general Indians in pure everyday Hindi that they love to play (cyber safety, govt schemes, epics, heritage, wellness). No role gating right now (open to all users).
 - **Done:** Branch `gemini/hindi-adult-quests` (pushed to origin). Module `data/bharatQuestData.js` (`bharat-quest`, order 4, carouselGroup "quest", 19 nodes, 14 study pages / 42 cards, 14 quizzes / 28 original questions). No exam labels, 3 options per Q, longest-answer tell 25%, all options <= 14 words, all card texts <= 40 words. Auto-switches TTS in `LearnCards.js` and `ReadingScreen.js` to `hi-IN` at rate 0.85 when Devanagari text is detected.
