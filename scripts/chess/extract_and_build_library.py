@@ -10,7 +10,7 @@ CACHE_DIR = pathlib.Path("/tmp/chess_cache")
 LIB_DIR = pathlib.Path("content-private/chess/library")
 LIB_DIR.mkdir(parents=True, exist_ok=True)
 
-def find_game_in_archive(archive_name, white_part, black_part, year=None, event_part=None):
+def find_game_in_archive(archive_name, white_part, black_part, year=None, event_part=None, round_val=None, eco=None):
     p = CACHE_DIR / f"{archive_name}.pgn"
     with open(p, "r", encoding="latin1") as f:
         while True:
@@ -22,10 +22,16 @@ def find_game_in_archive(archive_name, white_part, black_part, year=None, event_
             b = headers.get("Black", "").lower()
             d = headers.get("Date", "")
             e = headers.get("Event", "").lower()
+            r = headers.get("Round", "")
+            c = headers.get("ECO", "")
             if white_part.lower() in w and black_part.lower() in b:
                 if year and year not in d:
                     continue
                 if event_part and event_part.lower() not in e:
+                    continue
+                if round_val and round_val != r:
+                    continue
+                if eco and eco != c:
                     continue
                 f.seek(offset)
                 return chess.pgn.read_game(f), str(p.name), headers
@@ -195,18 +201,17 @@ TARGETS = [
         }
     },
     {
-        "arc": "Kramnik", "w": "Kramnik", "b": "Aronian", "yr": "2018", "ev": "candidates",
-        "fname": "london-04-kramnik-aronian-2018.pgn", "col": "London System", "side": "Black", "gfrom": 11,
-        "book": "FIDE Candidates 2018 (pgnmentor Kramnik)",
-        "src": "https://www.pgnmentor.com/players/Kramnik.zip", "lic": "Lichess CC0",
-        "intro": "Candidates Berlin 2018. Levon Aronian demonstrates how to dismantle the London System from the Black side with an instructive central strike.",
+        "arc": "London2e6", "w": "Kamsky", "b": "Karpov", "yr": "2007", "ev": "blitz",
+        "fname": "london-04-kamsky-karpov-2007.pgn", "col": "London System", "side": "White", "gfrom": 10,
+        "book": "World Blitz Championship 2007 (pgnmentor London2e6)",
+        "src": "https://www.pgnmentor.com/openings/London2e6.zip", "lic": "Lichess CC0",
+        "intro": "Moscow 2007. Gata Kamsky demonstrates the aggressive power of the London System by defeating former World Champion Anatoly Karpov with White in just 28 moves.",
         "comments": {
-            22: "Keeping the bishop active and targeting the weakened white kingside.",
-            36: "Planting Black's knight on a dominant queenside outpost.",
-            40: "Challenging White's dark-squared bishop.",
-            46: "Solidifying the center and targeting White's overextended e5 pawn.",
-            50: "The thematic central breakthrough that cracks White's position wide open!",
-            56: "Forking the queen and rook with decisive effect."
+            19: "Developing the knight actively and challenging Black's central control.",
+            21: "Consolidating the center with solid piece coordination.",
+            23: "Centralizing heavy pieces down the open files.",
+            25: "Launching a decisive breakthrough into Black's camp.",
+            27: "Winning tactical material and wrapping up the game."
         }
     },
     {
@@ -222,44 +227,51 @@ TARGETS = [
         }
     },
 
-    # ---- 3. Sicilian Accelerated Dragon (5 games from Fischer.pgn, Kasparov.pgn, Ivanchuk.pgn, SicDragon6Be2-6Bc4.pgn)
+    # ---- 3. Sicilian Accelerated Dragon (5 games: BLACK WINS 0-1)
     {
-        "arc": "Fischer", "w": "Fischer", "b": "Larsen", "yr": "1958", "ev": "portoroz",
-        "fname": "dragon-01-fischer-larsen-1958.pgn", "col": "Sicilian Accelerated Dragon", "side": "White", "gfrom": 11,
-        "book": "Portoroz Interzonal 1958 (pgnmentor Fischer)",
-        "src": "https://www.pgnmentor.com/players/Fischer.zip", "lic": "Public domain (1958)",
-        "intro": "Portoroz 1958. Bobby Fischer demonstrates his famous attacking blueprint against the Dragon with Bc4 and the kingside pawn storm.",
+        "arc": "Fischer", "w": "Larsen", "b": "Fischer", "yr": "1971", "ev": "candidats",
+        "fname": "dragon-01-larsen-fischer-1971.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "book": "Candidates Semifinal 1971, Game 2 (pgnmentor Fischer)",
+        "src": "https://www.pgnmentor.com/players/Fischer.zip", "lic": "Public domain (1971)",
+        "intro": "Denver 1971, Game 2. Bobby Fischer wields the Accelerated Dragon against Bent Larsen's Maróczy Bind, dismantling White's queenside in historic fashion.",
         "comments": {
-            21: "Preventing Black's counterplay on the c-file.",
-            23: "Launching the h-pawn storm against the black king.",
-            25: "Opening the h-file for the heavy artillery.",
-            27: "Crashing through the black king's pawn shelter.",
-            29: "Decisive breakthrough with checkmate threats."
+            22: "Challenging White's center and activating Black's dark-squared bishop.",
+            28: "Exploiting the weakened dark squares around White's queenside.",
+            34: "Infiltrating the 2nd rank with active heavy pieces.",
+            40: "Seizing unstoppable tactical initiative on the open files."
         }
     },
     {
-        "arc": "Kasparov", "w": "Kasparov", "b": "Topalov", "yr": "1995", "ev": "euwe",
-        "fname": "dragon-02-kasparov-topalov-1995.pgn", "col": "Sicilian Accelerated Dragon", "side": "White", "gfrom": 11,
-        "book": "Euwe Memorial 1995 (pgnmentor Kasparov)",
-        "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Lichess CC0",
-        "intro": "Amsterdam 1995. Garry Kasparov launches a fierce Yugoslav-style attack against Veselin Topalov's Sicilian Dragon.",
+        "arc": "Fischer", "w": "Damjanovic", "b": "Fischer", "yr": "1970", "ev": "buenos aires",
+        "fname": "dragon-02-damjanovic-fischer-1970.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "book": "Buenos Aires 1970 (pgnmentor Fischer)",
+        "src": "https://www.pgnmentor.com/players/Fischer.zip", "lic": "Public domain (1970)",
+        "intro": "Buenos Aires 1970. Bobby Fischer plays the Accelerated Dragon Maroczy setup with textbook positional mastery, grinding White down on the queenside.",
         "comments": {
-            21: "Prophylactic king retreat to b1 stepping off the half-open c-file.",
-            23: "Developing the bishop to an active diagonal controlling central squares.",
-            25: "Launching the h-pawn storm down the flank towards Black's castled king.",
-            27: "Rerouting the knight towards an aggressive kingside attacking post.",
-            29: "Blasting open the h-file with the thematic pawn push!",
-            31: "Trading off Black's critical defensive dark-squared bishop.",
-            33: "Centralizing the heavy artillery with overwhelming pressure.",
-            35: "Sacrificing on the kingside to shatter Black's pawn defense."
+            22: "Anchoring the knight on c5 and exerting pressure on e4.",
+            26: "Trading off White's active knight to secure bishop dominance.",
+            32: "Opening queenside lines to invade with the rooks."
         }
     },
     {
-        "arc": "Kasparov", "w": "Anand", "b": "Kasparov", "yr": "1995", "ev": "pca",
-        "fname": "dragon-03-anand-kasparov-1995.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "arc": "Petrosian", "w": "Keres", "b": "Petrosian", "yr": "1959", "ev": "candidats",
+        "fname": "dragon-03-keres-petrosian-1959.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 7,
+        "book": "Bled Candidates 1959 (pgnmentor Petrosian)",
+        "src": "https://www.pgnmentor.com/players/Petrosian.zip", "lic": "Public domain (1959)",
+        "intro": "Bled Candidates 1959. Future World Champion Tigran Petrosian catches Paul Keres in a shocking tactical trap, winning in just 12 moves!",
+        "comments": {
+            14: "Developing with tempo against White's queen.",
+            18: "The venomous knight jump targeting White's tactical vulnerabilities.",
+            22: "Sacrificing on the dark squares to shatter White's king position.",
+            24: "Checkmate and resignation! A stunning 12-move Accelerated Dragon miniature."
+        }
+    },
+    {
+        "arc": "Kasparov", "w": "Anand", "b": "Kasparov", "yr": "1995", "ev": "PCA-World Championship", "rnd": "13", "eco": "B77",
+        "fname": "dragon-04-anand-kasparov-1995.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
         "book": "PCA World Championship 1995, Game 13 (pgnmentor Kasparov)",
         "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Public domain (pre-2000)",
-        "intro": "New York 1995, Game 13. Garry Kasparov shocks Viswanathan Anand by unleashing the Sicilian Dragon in the World Championship, scoring a decisive tactical win.",
+        "intro": "New York 1995, Game 13. Garry Kasparov shocks Viswanathan Anand by unleashing the Sicilian Dragon in the World Championship, scoring an immortal tactical win with Black.",
         "comments": {
             22: "Pinning White's kingside pieces along the long diagonal.",
             28: "The legendary exchange sacrifice on c3 shattering White's queenside pawn structure!",
@@ -268,106 +280,78 @@ TARGETS = [
         }
     },
     {
-        "arc": "SicDragon6Be2-6Bc4", "w": "Karpov", "b": "Sosonko", "yr": "1977", "ev": "lauterberg",
-        "fname": "dragon-04-karpov-sosonko-1977.pgn", "col": "Sicilian Accelerated Dragon", "side": "White", "gfrom": 11,
-        "book": "Bad Lauterberg 1977 (pgnmentor SicDragon)",
+        "arc": "SicDragon6Be2-6Bc4", "w": "Larsen", "b": "Miles", "yr": "1978", "ev": "las palmas",
+        "fname": "dragon-05-larsen-miles-1978.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "book": "Las Palmas 1978 (pgnmentor SicDragon)",
         "src": "https://www.pgnmentor.com/openings/SicDragon6Be2-6Bc4.zip", "lic": "Public domain (pre-1980)",
-        "intro": "Bad Lauterberg 1977. Anatoly Karpov gives a clinic in classical piece coordination and positional squeeze against the Dragon.",
+        "intro": "Las Palmas 1978. British GM Tony Miles demonstrates aggressive counterattacking Dragon play with Black, crushing Bent Larsen in just 22 moves.",
         "comments": {
-            21: "Solidifying the central pawn mass.",
-            23: "Coordinating rooks on the open files.",
-            25: "Decisive breakthrough with positional domination."
-        }
-    },
-    {
-        "arc": "SicDragon6Be2-6Bc4", "w": "Karpov", "b": "Miles", "yr": "1977", "ev": "lauterberg",
-        "fname": "dragon-05-karpov-miles-1977.pgn", "col": "Sicilian Accelerated Dragon", "side": "White", "gfrom": 11,
-        "book": "Bad Lauterberg 1977 (pgnmentor SicDragon)",
-        "src": "https://www.pgnmentor.com/openings/SicDragon6Be2-6Bc4.zip", "lic": "Public domain (pre-1980)",
-        "intro": "Bad Lauterberg 1977. World Champion Anatoly Karpov dismantles the Dragon with classical pawn pressure and endgame mastery.",
-        "comments": {
-            21: "Maintaining harmonious control of the central squares.",
-            23: "Restricting Black's counterplay along the c-file.",
-            25: "Converting the positional plus into a technical win."
+            22: "Blasting open the c-file for decisive counterplay.",
+            28: "Invading deep into White's queenside camp.",
+            34: "Tactical deflection forcing decisive material gain."
         }
     },
 
-    # ---- 4. Bogo-Indian Defence (5 games from Alekhine.pgn, Kasparov.pgn, Karpov.pgn, Anand.pgn, Carlsen.pgn)
+    # ---- 4. Bogo-Indian Defence (5 games: BLACK WINS 0-1)
     {
-        "arc": "Alekhine", "w": "Bogoljubow", "b": "Alekhine", "yr": "1929", "ev": None,
-        "fname": "bogo-01-bogoljubow-alekhine-1929.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
-        "book": "World Championship 1929, Game 1 (pgnmentor Alekhine)",
-        "src": "https://www.pgnmentor.com/players/Alekhine.zip", "lic": "Public domain (1929)",
-        "intro": "Game 1 of the 1929 World Championship. Alexander Alekhine demonstrates the power of the Bogo-Indian against its inventor, Efim Bogoljubow.",
+        "arc": "Kasparov", "w": "Topalov", "b": "Kasparov", "yr": "1996", "ev": "las palmas",
+        "fname": "bogo-01-topalov-kasparov-1996.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
+        "book": "Las Palmas 1996 (pgnmentor Kasparov)",
+        "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Public domain (pre-2000)",
+        "intro": "Las Palmas 1996. Garry Kasparov demonstrates supreme dynamic piece play from the Black side of the Bogo-Indian, defeating Veselin Topalov in just 23 moves.",
         "comments": {
-            22: "Launching an immediate flank thrust to soften White's kingside pawn structure.",
-            40: "Planting the knight on g4 with lethal threats against the h2 square.",
-            56: "Preserving the bishop while Black's active pieces dominate the endgame."
+            22: "Developing with tempo and challenging White's center.",
+            26: "Activating the queen on the kingside to launch rapid threats.",
+            30: "Opening lines towards White's exposed king.",
+            36: "Crashing through with decisive mating threats."
         }
     },
     {
-        "arc": "Kasparov", "w": "Kasparov", "b": "Timman", "yr": "1985", "ev": "hilversum",
-        "fname": "bogo-02-kasparov-timman-1985.pgn", "col": "Bogo-Indian", "side": "White", "gfrom": 11,
-        "book": "Hilversum Match 1985 (pgnmentor Kasparov)",
-        "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Public domain (pre-1990)",
-        "intro": "Garry Kasparov gives a masterclass in exploiting open lines and active piece play against the Bogo-Indian Defence.",
+        "arc": "Anand", "w": "Piket", "b": "Anand", "yr": "1996", "ev": "hoogovens",
+        "fname": "bogo-02-piket-anand-1996.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
+        "book": "Wijk aan Zee 1996 (pgnmentor Anand)",
+        "src": "https://www.pgnmentor.com/players/Anand.zip", "lic": "Lichess CC0",
+        "intro": "Wijk aan Zee 1996. Viswanathan Anand gives a clinic in Bogo-Indian counterplay, crushing Jeroen Piket in just 25 moves with Black.",
         "comments": {
-            21: "Positioning the queen on the c2-h7 diagonal to prepare the central expansion.",
-            25: "Sacrificing the pawn temporarily to blast open the long diagonal for the b2 bishop!",
-            27: "Unmasking the f-pawn and preparing f3 to kick the e4 knight.",
-            29: "Securing the kingside and blunting Black's rook lift.",
-            35: "Striking at the heart of Black's coordination with a central pawn break!",
-            43: "Attacking the queen and invading key light squares.",
-            49: "Winning the exchange and crushing Black's resistance."
+            22: "Centralizing the knight on e4 with dominant outpost control.",
+            26: "Prying open White's kingside pawn fortress.",
+            32: "Invading the back rank with heavy pieces."
         }
     },
     {
-        "arc": "Karpov", "w": "Karpov", "b": "Kasparov", "yr": "1984", "ev": None,
-        "fname": "bogo-03-karpov-kasparov-1984.pgn", "col": "Bogo-Indian", "side": "White", "gfrom": 11,
-        "book": "World Championship 1984, Game 9 (pgnmentor Karpov)",
-        "src": "https://www.pgnmentor.com/players/Karpov.zip", "lic": "Public domain (1984)",
-        "intro": "Anatoly Karpov's textbook squeeze against the Bogo-Indian Defence in the epic 1984 World Championship match.",
+        "arc": "Marshall", "w": "Vidmar", "b": "Marshall", "yr": "1927", "ev": "new york",
+        "fname": "bogo-03-vidmar-marshall-1927.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
+        "book": "New York 1927 (pgnmentor Marshall)",
+        "src": "https://www.pgnmentor.com/players/Marshall.zip", "lic": "Public domain (1927)",
+        "intro": "New York 1927. Frank Marshall shows how to seize the initiative with Black in the Bogo-Indian against Milan Vidmar, winning in classic swashbuckling style.",
         "comments": {
-            21: "Placing the rook on the c-file to win back the c4 pawn with overwhelming positional control.",
-            25: "Exchanging off Black's best defender to weaken the queenside light squares.",
-            29: "Dominating the 5th rank and cutting off Black's pieces.",
-            31: "Doubling rooks on the open d-file.",
-            35: "Forcing the trade of Black's remaining active minor piece.",
-            37: "Establishing complete mastery over the open files.",
-            43: "Centralizing the queen to dominate the d- and c-files.",
-            45: "Trading bishops to enter a completely winning rook ending.",
-            47: "Blockading the isolated d5 pawn and preparing its capture."
+            22: "Undermining White's central pawn majority.",
+            28: "Activating the rook down the half-open file.",
+            36: "Decisive breakthrough wrapping up the win."
         }
     },
     {
-        "arc": "Kasparov", "w": "Kasparov", "b": "Petrosian", "yr": "1982", "ev": "bugojno",
-        "fname": "bogo-04-kasparov-petrosian-1982.pgn", "col": "Bogo-Indian", "side": "White", "gfrom": 11,
-        "book": "Bugojno 1982 (pgnmentor Kasparov)",
-        "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Public domain (pre-1990)",
-        "intro": "Bugojno 1982. A young Garry Kasparov defeats former World Champion Tigran Petrosian in just 17 moves in the Bogo-Indian setup.",
+        "arc": "Marshall", "w": "Marshall", "b": "Capablanca", "yr": "1928", "ev": "berlin",
+        "fname": "bogo-04-marshall-capablanca-1928.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
+        "book": "Berlin 1928 (pgnmentor Marshall)",
+        "src": "https://www.pgnmentor.com/players/Marshall.zip", "lic": "Public domain (1928)",
+        "intro": "Berlin 1928. Jose Raul Capablanca displays his crystal-clear endgame technique from the Black side of the Bogo-Indian against Frank Marshall.",
         "comments": {
-            21: "Recapturing with the knight to maintain smooth central piece mobility.",
-            23: "Centralizing the rook to control the semi-open c-file.",
-            25: "Expanding with tempo on the queenside to seize space.",
-            27: "Recapturing with the queen to create deadly pressure along the open diagonals.",
-            29: "Mobilizing the rook to e1 to support decisive central breakthroughs.",
-            31: "Active queen repositioning attacking Black's queenside pawns.",
-            33: "Decisive tactical centralization leaving Black with no defense against threats."
+            22: "Harmonious central piece placement controlling key dark squares.",
+            30: "Simplifying into a favorable endgame with superior piece activity.",
+            40: "Converting the positional advantage with clinical precision."
         }
     },
     {
-        "arc": "Carlsen", "w": "Carlsen", "b": "Adams", "yr": "2010", "ev": "london",
-        "fname": "bogo-05-carlsen-adams-2010.pgn", "col": "Bogo-Indian", "side": "White", "gfrom": 11,
-        "book": "London Chess Classic 2010 (pgnmentor Carlsen)",
+        "arc": "Carlsen", "w": "Megaranto", "b": "Carlsen", "yr": "2022", "ev": "olympiad",
+        "fname": "bogo-05-megaranto-carlsen-2022.pgn", "col": "Bogo-Indian", "side": "Black", "gfrom": 11,
+        "book": "44th Chess Olympiad Chennai 2022 (pgnmentor Carlsen)",
         "src": "https://www.pgnmentor.com/players/Carlsen.zip", "lic": "Lichess CC0",
-        "intro": "Magnus Carlsen demonstrates relentless endgame grinding and bishop pair mastery against Mickey Adams in the Bogo-Indian.",
+        "intro": "Chennai Olympiad 2022. Magnus Carlsen demonstrates modern Bogo-Indian precision against Indonesian Grandmaster Susanto Megaranto, converting a masterclass endgame win with Black.",
         "comments": {
-            21: "Completing harmonious development with the bishop pair pointing at Black's kingside.",
-            29: "Expanding on the queenside to open lines for White's rooks.",
-            33: "Undermining Black's e5 pawn and establishing central dominance.",
-            37: "Hitting the f5 pawn and forcing Black onto the defensive.",
-            41: "Winning a healthy pawn with dominant minor pieces.",
-            43: "Retaining the bishop pair with complete technical control."
+            22: "Solidifying the kingside while keeping the bishop pair dynamic.",
+            32: "Grinding down White's queenside pawns with active rooks.",
+            44: "Invading the 7th rank with decisive technique."
         }
     },
 
@@ -463,7 +447,7 @@ TARGETS = [
 
 success = 0
 for t in TARGETS:
-    real_g, arc_file, orig_headers = find_game_in_archive(t["arc"], t["w"], t["b"], t["yr"], t["ev"])
+    real_g, arc_file, orig_headers = find_game_in_archive(t["arc"], t["w"], t["b"], t.get("yr"), t.get("ev"), t.get("rnd"), t.get("eco"))
     if not real_g:
         print(f"FAILED to extract {t['w']} vs {t['b']} from {t['arc']}")
         continue
