@@ -75,7 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G107 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
+| G114 → G107 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
 | G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -137,6 +137,19 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
+
+### G114 · [todo] · gemini · ⭐ NEXT (small): chess full screen + honest Elo summary (owner 14 Nov)
+Branch `gemini/g114-chess-polish`. JS only (ships as an update).
+1. **Full screen while playing** (owner: top and bottom bars are distracting): on ChessPlay hide the app tab bar (add
+   the route to `IMMERSIVE_SCREENS` in navigation/BottomTabNavigator.js) and the status bar (`<StatusBar hidden />` from
+   expo-status-bar while the screen is focused; shown again on leaving). No new library (Android's own navigation strip
+   needs a native build: not now). Back gesture must still work.
+2. **Elo summary (your end-of-game card):** an estimate from 12–20 guesses is rough — show a RANGE and say so:
+   "Your play this game: ≈ 1500–1700 (rough estimate)", the average only after ≥ 3 games ("over 8 games: ≈ 1600"),
+   never a single exact number. Say whose it is ("Your play", not "Game strength"). Put the ACPL→Elo formula + its
+   source in a code comment and a unit test (range widens when fewer moves were guessed).
+**Done means:** tests · phone walk (a game in full screen, back gesture works, end card with range) ·
+`gemini(G114): done — review please`. Owner-only tile → ships after Claude's review.
 
 ### G107 · [todo] · gemini · ⭐ NEXT: भारत और समझ round 2 (owner 14 Nov)
 Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
