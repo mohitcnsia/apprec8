@@ -23,14 +23,14 @@ export PATH="$HOME/Library/Android/sdk/platform-tools:/usr/local/bin:$PATH"
 OUT="${QA_OUT:-/tmp/apprec8-qa}"
 mkdir -p "$OUT"
 
-DUMP_TIMEOUT="${DUMP_TIMEOUT:-10}"
+DUMP_TIMEOUT="${DUMP_TIMEOUT:-25}"
 dump() {
-  adb shell rm -f /sdcard/eq-ui.xml >/dev/null 2>&1 || true
+  adb shell rm -f /data/local/tmp/eq-ui.xml >/dev/null 2>&1 || true
   # `timeout` runs on the device (toybox), so a screen that never goes still can't hang the run.
-  if ! adb shell timeout "$DUMP_TIMEOUT" uiautomator dump /sdcard/eq-ui.xml >/dev/null 2>&1; then
+  if ! adb shell timeout "$DUMP_TIMEOUT" uiautomator dump /data/local/tmp/eq-ui.xml >/dev/null 2>&1; then
     echo "WARN: screen read timed out after ${DUMP_TIMEOUT}s (did you run 'eq.sh prep'?)" >&2
   fi
-  adb shell cat /sdcard/eq-ui.xml 2>/dev/null || true
+  adb shell cat /data/local/tmp/eq-ui.xml 2>/dev/null || true
 }
 
 # Prints "x y text" for nodes whose text or content-desc contains $1 (case-insensitive).
@@ -80,8 +80,8 @@ for t in re.findall(r"text=\"([^\"]+)\"", sys.stdin.read()):
     echo "TIMEOUT waiting for: $1" >&2; exit 1
     ;;
   shot)
-    adb shell screencap -p /sdcard/shot.png
-    adb pull /sdcard/shot.png "$OUT/${1:-shot}.png" >/dev/null 2>&1
+    adb shell screencap -p /data/local/tmp/shot.png
+    adb pull /data/local/tmp/shot.png "$OUT/${1:-shot}.png" >/dev/null 2>&1
     echo "$OUT/${1:-shot}.png"
     ;;
   reload) adb shell input keyevent 46 46; sleep 10; echo "reloaded" ;;

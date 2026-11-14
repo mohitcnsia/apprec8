@@ -30,6 +30,14 @@ from fractional square widths.
 
 ---
 
+## 2026-11-14 — Review of Gemini's waiting branches (Claude)
+- **G97** (teacher removes a kid): already merged 12 Nov in a tidier form; this branch only recorded as merged. Gemini's test
+  re-implemented the logic locally (proves nothing); the real check is the emulator test of approveMember.
+- **G104** (test app via App Distribution): merged: QA script fix (`scripts/qa/eq.sh` reads the screen from /data/local/tmp,
+  longer timeout) + TEST_VS_REAL notes. Owner's rule "test app first" stands; today's practice is the device walk.
+- **G94 / G95** (deploy reports + 3 screenshots of the old "ask a parent" gate): **not merged**. The gate was removed in the
+  simplification (learning never waits), and the screenshots don't belong in the public repo. Deploys themselves were done.
+
 ## 2026-10-28 — Review: English Olympiad (IEO) Quest & Roadmap
 
 - **Branch under review:** `feat/tile-quests`
