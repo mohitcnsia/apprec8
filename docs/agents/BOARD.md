@@ -75,7 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G114 → G107 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
+| G115 → G113 → G112 → G111 → G87 → G117 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
 | G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -224,6 +224,19 @@ Cost: one class summary doc per class, updated when a child finishes (Seema's sc
 classSummary trigger exists; extend it. **Done means:** tests (grouping, done rule, remind throttle) · walk report as
 teacher (assign, child finishes with a mistake → "Fixing", fixes it → "Done", Remind, Share) · read count noted ·
 `gemini(G87): done — review please`. Claude reviews the server + summary doc.
+
+### G117 · [todo] · gemini · Finish the test-app route (owner 14 Nov) — LAST in the current list
+So nothing Gemini publishes can ever reach real users. Builds on G85 (apprec8-test project, "Apprec8 (Test)" app) and
+G104 (App Distribution). Branch `gemini/g117-test-route`.
+1. **Own update channel:** the test app listens to EAS channel `preview` (never `production`). One test-app build
+   (APP_VARIANT=test) with that channel; check `scripts/release/check-aab.sh`-style that the real build still says
+   `production`.
+2. **Test data:** copy quests + content into apprec8-test with the G85 content-copy script (no user data copied).
+3. **Tester:** the owner only (mohitchilkoti@gmail.com) in App Distribution; send him the build.
+4. **Rule (write it at the top of this board):** Gemini publishes ONLY with `--channel preview`; only Claude runs
+   `--channel production`, after review + walk.
+**Done means:** test app installed on the owner's phone next to the Play app, an update on `preview` reaches it and NOT
+the Play app (screenshots of both) · report · `gemini(G117): done — review please`. Claude reviews the build config.
 
 ### G111 · [todo] · gemini · Word Power merge, content first (owner YES 14 Nov)
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
