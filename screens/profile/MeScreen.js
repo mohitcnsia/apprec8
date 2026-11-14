@@ -103,6 +103,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const [isSchoolAdmin, setIsSchoolAdmin] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   // Who this person is on Me (a parent who also teaches sees both sections).
+  const isLinked = (userData?.parentUids || []).length > 0;
   const isParent = !userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0);
   const isTeacher = (userData?.teachesClassIds || []).length > 0;
   const isStudent = Number.isInteger(userData?.grade) && !isTeacher && !(userData?.childUids || []).length;
@@ -197,6 +198,29 @@ export default function MeScreen({ navigation, signoutHandler }) {
 
       {/* Always here, for everyone (mockup P1): calm green, safe to tap. */}
       <NeedHelpRow onPress={() => setHelpOpen(true)} P={P} />
+
+      {/* Unlinked student/child: Link with your parent: +100 ⭐ card (G113) */}
+      {!isLinked && !isParent && !isTeacher && !isAdmin ? (
+        <Pressable
+          onPress={() => navigation.navigate("LinkParent")}
+          accessibilityRole="button"
+          accessibilityLabel="Link with your parent: +100 stars"
+          style={({ pressed }) => [styles.linkBonusCard, pressed && { opacity: 0.9 }]}
+        >
+          <View style={styles.linkBonusHeader}>
+            <View style={styles.linkBonusIconWrap}>
+              <Ionicons name="link-outline" size={24} color={P.selectedText} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.linkBonusTitle}>Link with your parent: +100 ⭐</Text>
+              <Text style={styles.linkBonusSub}>
+                Ask your parent for the code to connect accounts and get +100 bonus stars!
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+          </View>
+        </Pressable>
+      ) : null}
 
       {isParent ? (
         <>
@@ -447,4 +471,9 @@ const makeStyles = (P, insets) =>
     version: { textAlign: "center", fontSize: 12, fontFamily: "nunitoBold", color: P.dimText, marginTop: 14 },
     more: { minHeight: 52, borderRadius: 16, backgroundColor: P.track, alignItems: "center", justifyContent: "center", paddingHorizontal: 14 },
     moreText: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
+    linkBonusCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder },
+    linkBonusHeader: { flexDirection: "row", alignItems: "center", gap: 12 },
+    linkBonusIconWrap: { width: 44, height: 44, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
+    linkBonusTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.selectedText },
+    linkBonusSub: { fontSize: 13, fontFamily: "nunitoBold", color: P.label, marginTop: 2, lineHeight: 18 },
   });

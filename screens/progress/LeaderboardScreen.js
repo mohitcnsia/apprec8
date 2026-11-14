@@ -43,7 +43,7 @@ function Avatar({ name, index, size, ring }) {
   );
 }
 
-export default function LeaderboardScreen({ route }) {
+export default function LeaderboardScreen({ route, navigation }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -52,6 +52,10 @@ export default function LeaderboardScreen({ route }) {
 
   const [userData, setUserData] = useState(null);
   const classId = (userData?.classIds || [])[0] || null;
+  const isLinked = (userData?.parentUids || []).length > 0;
+  const isAdult = !userData?.isChild && ((userData?.childUids || []).length > 0 || (userData?.teachesClassIds || []).length > 0);
+  const needsParentLink = userData !== null && !isLinked && !isAdult;
+
   const [tab, setTab] = useState(route?.params?.tab || null); // "class" | "all"; null until we know if the kid has a class
   const [data, setData] = useState({ class: null, all: null });
   const [failed, setFailed] = useState({ class: false, all: false });
@@ -119,10 +123,10 @@ export default function LeaderboardScreen({ route }) {
   );
 
   useEffect(() => {
-    if (!tab) return;
+    if (!tab || needsParentLink) return;
     if (tab === "class" && !classId) return;
     load(tab);
-  }, [tab, classId, load]);
+  }, [tab, classId, load, needsParentLink]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -219,6 +223,37 @@ export default function LeaderboardScreen({ route }) {
     );
   };
 
+  if (needsParentLink) {
+    return (
+      <View style={styles.screen}>
+        <View style={[styles.center, { paddingTop: insets.top + 24 }]}>
+          <Text style={styles.h1}>Leaderboard</Text>
+          <View style={styles.lockCard}>
+            <View style={styles.lockIconWrap}>
+              <Text style={{ fontSize: 44 }}>🔒</Text>
+            </View>
+            <Text style={styles.lockTitle}>Link with your parent to join the leaderboard</Text>
+            <Text style={styles.lockSubtext}>
+              Connect with your parent to see where you stand with classmates, cheer on friends, and earn +100 ⭐ bonus stars!
+            </Text>
+            <Pressable
+              onPress={() => {
+                if (navigation?.navigate) {
+                  navigation.navigate("Profile", { screen: "LinkParent", initial: false });
+                }
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Link with parent: +100 stars"
+              style={styles.lockButton}
+            >
+              <Text style={styles.lockButtonText}>Link with parent · +100 ⭐</Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   const loading = !tab || (!current && !failed[tab]);
   return (
     <View style={styles.screen}>
@@ -297,4 +332,10 @@ const makeStyles = (P, insets) =>
     me: { flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 14, minHeight: 64, borderRadius: 18, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder },
     retry: { alignSelf: "center", paddingHorizontal: 20, height: 48, borderRadius: 16, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
     retryText: { color: P.onPrimary, fontSize: 16, fontFamily: "nunitoBold" },
+    lockCard: { padding: 24, borderRadius: 24, backgroundColor: P.card, borderWidth: 2, borderColor: P.border, alignItems: "center", gap: 16, marginTop: 24 },
+    lockIconWrap: { width: 80, height: 80, borderRadius: 40, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
+    lockTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.text, textAlign: "center", lineHeight: 28 },
+    lockSubtext: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft, textAlign: "center", lineHeight: 22 },
+    lockButton: { marginTop: 8, paddingHorizontal: 24, height: 50, borderRadius: 16, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
+    lockButtonText: { color: P.onPrimary, fontSize: 16, fontFamily: "nunitoBold" },
   });

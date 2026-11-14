@@ -3,7 +3,7 @@
 // with consent stored; the child signs in on any phone with a one-time code (48 h). Deploy: DR-10 in CODE_REVIEW.md.
 // Needs the functions' service account to have "Service Account Token Creator" (for createCustomToken).
 const functions = require("firebase-functions");
-const { admin } = require("../common/admin");
+const { admin, FieldValue } = require("../common/admin");
 const { region, runtimeOptions, longRuntimeOptions } = require("../common/config");
 
 const db = admin.firestore();
@@ -24,7 +24,7 @@ async function issueCode(kidUid, parentUid) {
     const code = makeCode();
     const ref = db.collection("childLoginCodes").doc(code);
     if ((await ref.get()).exists) continue;
-    await ref.set({ kidUid, parentUid, used: false, expiresAt: Date.now() + CODE_HOURS * 3600 * 1000, createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    await ref.set({ kidUid, parentUid, used: false, expiresAt: Date.now() + CODE_HOURS * 3600 * 1000, createdAt: FieldValue.serverTimestamp() });
     return code;
   }
   throw new functions.https.HttpsError("internal", "Couldn't make a code. Try again.");
@@ -38,10 +38,14 @@ exports.createChildProfile = functions
     if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
     const parentUid = context.auth.uid;
     const parentDoc = await db.collection("users").doc(parentUid).get();
-    if (parentDoc.exists && (parentDoc.data().isChild || (parentDoc.data().parentUids || []).length)) {
+    const pData = parentDoc.exists ? parentDoc.data() : {};
+    if (pData.isChild || (pData.parentUids || []).length) {
       throw new functions.https.HttpsError("permission-denied", "A child account can't add children. Ask a parent.");
     }
-    const children = (parentDoc.exists && parentDoc.data().childUids) || [];
+    if (Number.isInteger(pData.grade) && !(pData.childUids || []).length) {
+      throw new functions.https.HttpsError("permission-denied", "A student account can't add children. Ask a parent.");
+    }
+    const children = pData.childUids || [];
     if (children.length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can add up to 6 children.");
     const firstName = String(data?.firstName || "").trim().split(/\s+/)[0];
     const grade = Number(data?.grade);
@@ -52,7 +56,7 @@ exports.createChildProfile = functions
       throw new functions.https.HttpsError("invalid-argument", "The parent's consent is needed.");
     }
     const kid = await admin.auth().createUser({ displayName: firstName });
-    const now = admin.firestore.FieldValue.serverTimestamp();
+    const now = FieldValue.serverTimestamp();
     const batch = db.batch();
     batch.set(db.collection("users").doc(kid.uid), {
       firstName,
@@ -61,7 +65,8 @@ exports.createChildProfile = functions
       isChild: true,
       parentUids: [parentUid],
       createdAt: now,
-      stats: { totalStars: 0, currentStreak: 0 },
+      stats: { totalStars: 100, currentStreak: 0 },
+      linkBonusAt: now,
     });
     const consentRef = db.collection("consents").doc();
     batch.set(consentRef, {
@@ -74,7 +79,7 @@ exports.createChildProfile = functions
       version: c.version,
       acceptedAt: now,
     });
-    batch.set(db.collection("users").doc(parentUid), { childUids: admin.firestore.FieldValue.arrayUnion(kid.uid), isParent: true }, { merge: true });
+    batch.set(db.collection("users").doc(parentUid), { childUids: FieldValue.arrayUnion(kid.uid), isParent: true }, { merge: true });
     await batch.commit();
     const code = await issueCode(kid.uid, parentUid);
     return { kidUid: kid.uid, code, hours: CODE_HOURS };
@@ -106,7 +111,7 @@ exports.redeemChildLoginCode = functions
       if (!snap.exists) return null;
       const d = snap.data();
       if (d.used || !(d.expiresAt > Date.now())) return null;
-      t.update(ref, { used: true, usedAt: admin.firestore.FieldValue.serverTimestamp() });
+      t.update(ref, { used: true, usedAt: FieldValue.serverTimestamp() });
       return d.kidUid;
     });
     if (!kidUid) throw new functions.https.HttpsError("not-found", "That code doesn't work (wrong, used or older than 2 days). Ask your parent for a new one.");
@@ -148,7 +153,7 @@ exports.setParentPin = functions
     const pin = String(data?.pin || "");
     if (!/^\d{4}$/.test(pin)) throw new functions.https.HttpsError("invalid-argument", "The PIN is 4 numbers.");
     const salt = crypto.randomBytes(16).toString("hex");
-    await db.collection("parentPins").doc(context.auth.uid).set({ salt, hash: hashPin(pin, salt), updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+    await db.collection("parentPins").doc(context.auth.uid).set({ salt, hash: hashPin(pin, salt), updatedAt: FieldValue.serverTimestamp() });
     await db.collection("users").doc(context.auth.uid).set({ hasParentPin: true }, { merge: true });
     return { ok: true };
   });
@@ -206,12 +211,16 @@ exports.createParentLinkCode = functions
     if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
     const parentUid = context.auth.uid;
     const me = await db.collection("users").doc(parentUid).get();
+    const meData = me.exists ? me.data() : {};
     // DR-27 (owner, 2026-11-10: "a parent can be a student somewhere"): a class on the account doesn't make it a child.
     // Blocked: child profiles, and accounts that are themselves linked to a parent (a linked kid can't become a "parent").
-    if (me.exists && (me.data().isChild || (me.data().parentUids || []).length)) {
+    if (meData.isChild || (meData.parentUids || []).length) {
       throw new functions.https.HttpsError("permission-denied", "Only a parent's own account can link a child.");
     }
-    if (((me.exists && me.data().childUids) || []).length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can link up to 6 children.");
+    if (Number.isInteger(meData.grade) && !(meData.childUids || []).length) {
+      throw new functions.https.HttpsError("permission-denied", "A student account can't link children. Ask a parent.");
+    }
+    if ((meData.childUids || []).length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can link up to 6 children.");
     const c = data?.consent || {};
     if (String(c.parentName || "").trim().length < 2 || !RELATIONS.includes(c.relation) || !["en", "hi"].includes(c.language) || !c.version) {
       throw new functions.https.HttpsError("invalid-argument", "The parent's consent is needed.");
@@ -228,7 +237,7 @@ exports.createParentLinkCode = functions
         version: c.version,
         used: false,
         expiresAt: Date.now() + LINK_HOURS * 3600 * 1000,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
       });
       return { code, hours: LINK_HOURS };
     }
@@ -257,8 +266,17 @@ exports.redeemParentLinkCode = functions
       if ((kid.data().childUids || []).length) throw new functions.https.HttpsError("failed-precondition", "A parent's account can't be linked as a child.");
       const children = (parent.exists && parent.data().childUids) || [];
       if (!children.includes(kidUid) && children.length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "That parent already has 6 children linked.");
-      const { FieldValue } = admin.firestore;
-      t.set(kidRef, { parentUids: FieldValue.arrayUnion(v.parentUid), ownLogin: true }, { merge: true });
+      const kidData = kid.data() || {};
+      const hadBonus = !!kidData.linkBonusAt;
+      const kidUpdates = {
+        parentUids: FieldValue.arrayUnion(v.parentUid),
+        ownLogin: true,
+      };
+      if (!hadBonus) {
+        kidUpdates.linkBonusAt = FieldValue.serverTimestamp();
+        kidUpdates["stats.totalStars"] = FieldValue.increment(100);
+      }
+      t.update(kidRef, kidUpdates);
       t.set(parentRef, { childUids: FieldValue.arrayUnion(kidUid), isParent: true }, { merge: true });
       t.set(db.collection("consents").doc(), {
         kind: "link-existing",

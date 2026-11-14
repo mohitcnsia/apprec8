@@ -170,10 +170,11 @@ exports.joinClassByLink = functions
     let kidUid = data?.kidUid ? String(data.kidUid) : null;
     let firstName;
     let isNew = false;
+    let existingKidDoc = null;
     if (kidUid) {
-      const kid = await db.collection("users").doc(kidUid).get();
-      if (!kid.exists || !(kid.data().parentUids || []).includes(parentUid)) throw fail("permission-denied", "That isn't one of your children.");
-      const k = kid.data();
+      existingKidDoc = await db.collection("users").doc(kidUid).get();
+      if (!existingKidDoc.exists || !(existingKidDoc.data().parentUids || []).includes(parentUid)) throw fail("permission-denied", "That isn't one of your children.");
+      const k = existingKidDoc.data();
       firstName = firstWord(k.firstName) || "Child";
       if ((k.classIds || []).includes(classId)) throw fail("already-exists", `${firstName} is already in this class.`);
       if ((k.pendingClassIds || []).includes(classId)) throw fail("already-exists", `${firstName} is already waiting for the teacher.`);
@@ -200,8 +201,17 @@ exports.joinClassByLink = functions
         isChild: true,
         parentUids: [parentUid],
         createdAt: now,
-        stats: { totalStars: 0, currentStreak: 0 },
+        stats: { totalStars: 100, currentStreak: 0 },
+        linkBonusAt: now,
       });
+    } else {
+      const k = existingKidDoc?.data() || {};
+      if (!k.linkBonusAt) {
+        batch.update(db.collection("users").doc(kidUid), {
+          linkBonusAt: now,
+          "stats.totalStars": FieldValue.increment(100),
+        });
+      }
     }
     batch.set(consentRef, {
       kind: isNew ? "child-account+class" : "class-join",
