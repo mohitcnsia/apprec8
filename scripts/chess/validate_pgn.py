@@ -134,6 +134,7 @@ def game_to_json(game):
         "white": headers.get("White", ""),
         "black": headers.get("Black", ""),
         "result": headers.get("Result", ""),
+        "eco": headers.get("ECO", ""),
         "guessSide": headers.get("GuessSide", ""),
         "guessFrom": int(headers.get("GuessFrom", "1")),
         "sourceBook": headers.get("SourceBook", ""),
@@ -189,7 +190,8 @@ def main():
                 if args.json:
                     outdir = pathlib.Path(args.json)
                     outdir.mkdir(parents=True, exist_ok=True)
-                    out = outdir / f"{slugify(game.headers, index)}.json"
+                    out_name = game.headers.get("Id") or slugify(game.headers, index)
+                    out = outdir / f"{out_name}.json"
                     out.write_text(json.dumps(game_to_json(game), ensure_ascii=False, indent=1), encoding="utf-8")
                     print(f"      -> {out}")
     print(f"\n{passed}/{total} game(s) passed")

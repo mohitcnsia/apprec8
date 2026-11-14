@@ -76,7 +76,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
 | G113 Linking rewards · G112 Home tidy-up · G111 Word Power (content first) · G87 Teacher results | Gemini | todo, in that order after G110 + G107 | | specs below; doc C3dWqo9 |
-| G110 ⭐ Fix seeded chess library: evals lost, Opera duplicate, 4 misfiled, opening check | Gemini | **todo — FIRST** | `gemini/g110-chess-fix` | spec below |
+| G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
 | G106 Adult Hindi Course "भारत और समझ" (Cyber, Schemes, Epics, Heritage, Wellness) | Gemini | **done; Claude reviewed, fixed facts/health wording, merged, published as draft (14 Nov)** | `gemini/hindi-adult-quests` | 19 nodes, 14 quizzes (28 Qs), 14 study pages (42 cards), hi-IN speech. npm test green. Report: `docs/agents/reports/G_HINDI_QUESTS.md` |
