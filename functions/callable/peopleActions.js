@@ -175,3 +175,23 @@ exports.saveHelpMessage = functions
     );
     return { ok: true };
   });
+
+// First names for the owner's Dashboard (14 Nov: it showed the Google account's name, "Jatin Chand", for Tripti).
+// Owner / app admins only; at most 60 profiles per call.
+exports.kidNames = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw fail("unauthenticated", "Sign in first.");
+    const caller = context.auth.uid;
+    const role = caller === OWNER_UID ? { admin: true } : (await db.collection("roles").doc(caller).get()).data() || {};
+    if (role.admin !== true) throw fail("permission-denied", "Owner only.");
+    const uids = [...new Set((data?.uids || []).map(String))].filter((u) => u && !u.includes("/")).slice(0, 60);
+    const docs = uids.length ? await db.getAll(...uids.map((u) => db.collection("users").doc(u))) : [];
+    const names = {};
+    docs.forEach((d) => {
+      const n = String((d.exists && d.data().firstName) || "").trim().split(/\s+/)[0];
+      if (n) names[d.id] = n;
+    });
+    return { names };
+  });

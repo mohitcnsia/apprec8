@@ -923,6 +923,9 @@
     "ask": "Learning never waits (your rule). To encourage parent–child linking: +100 stars once per child when the link is approved; leaderboards open only after linking; stars count from day one (not held back). YES = all three (recommended) · NO / MORE DETAILS = tell me which.",
     "details": "**Why not 'stars only after linking':** many kids use their own phone with no parent nearby; holding back stars feels like a punishment and stops learning. The 100-star bonus gives the push without taking anything away.\n\n**Leaderboards after linking:** showing a child's name to others needs the parent's yes anyway (DPDP), and unlinked accounts cost fewer reads.\n\nBefore linking we keep only what learning needs: first name, class, answers, mistakes.\n\nSpec: sign-ups doc, section 'Updated 14 Nov'.",
     "link": "https://claude.ai/artifact/Q7mpcL2kLC5oqr6LufFPi9",
-    "from": "claude"
+    "from": "claude",
+    "answer": "yes",
+    "note": null,
+    "answeredAt": "2026-11-14T00:36:46.752Z"
   }
 ]

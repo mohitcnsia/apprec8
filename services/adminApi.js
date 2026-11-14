@@ -11,9 +11,8 @@ import {
   orderBy,
   limit,
   getDocs,
-  getDoc,
-  doc,
 } from "@react-native-firebase/firestore";
+import functions from "@react-native-firebase/functions";
 import { getApp } from "@react-native-firebase/app";
 
 const db = getFirestore(getApp());
@@ -52,16 +51,13 @@ export async function listQuestionIssues() {
 }
 
 // The child's own first name (Tripti), not the Google account's name (her sister Jatin's), for the Dashboard (14 Nov).
-// Only the uids on screen, at most 60, kept for the app session.
+// Through the server (rules keep other people's profiles private). Only the uids on screen, kept for the app session.
 const firstNames = new Map();
 export async function kidFirstNames(uids = []) {
   const need = [...new Set(uids)].filter((u) => u && !firstNames.has(u)).slice(0, 60);
-  await Promise.all(
-    need.map((u) =>
-      getDoc(doc(db, "users", u))
-        .then((d) => firstNames.set(u, String(d.data()?.firstName || "").trim().split(/\s+/)[0] || null))
-        .catch(() => firstNames.set(u, null))
-    )
-  );
+  if (need.length) {
+    const r = await functions().httpsCallable("kidNames")({ uids: need }).catch(() => null);
+    need.forEach((u) => firstNames.set(u, r?.data?.names?.[u] || null));
+  }
   return Object.fromEntries(uids.map((u) => [u, firstNames.get(u) || null]));
 }
