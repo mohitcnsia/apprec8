@@ -75,7 +75,7 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G113 Linking rewards · G112 Home tidy-up · G111 Word Power (content first) | Gemini | todo, in that order after G110 + G107 | | specs below; doc C3dWqo9 |
+| G113 Linking rewards · G112 Home tidy-up · G111 Word Power (content first) · G87 Teacher results | Gemini | todo, in that order after G110 + G107 | | specs below; doc C3dWqo9 |
 | G110 ⭐ Fix seeded chess library: evals lost, Opera duplicate, 4 misfiled, opening check | Gemini | **todo — FIRST** | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -158,6 +158,17 @@ only, first names, only for kids whose parent linked (G113), max one per app ope
 from the existing class summary (no new per-kid reads). Follow docs/DESIGN_RULES.md. **Done means:** tests · walk report
 (kid, parent, owner Home; light + dark) · no new Firestore reads on Home except the banner's one cached doc ·
 `gemini(G112): done — review please`.
+
+### G87 · [todo, after G111 step 1] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
+Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 3. Branch `gemini/g87-results`. For an assigned topic, Seema's class screen groups
+children: Not started · Fixing mistakes (N left) · Done (Accuracy) — **done = every mistake in that topic fixed** (the
+existing My mistakes rule: 2 right in a row). **Remind:** per child and "Remind all", at most once a day per child, to the
+child + linked parent (existing push; throttled). **Star of the week:** best accuracy + effort this week; a share button
+sends "This week's star: Tripti 🌟" (first name only; owner: "this week's", not "today's") to the class WhatsApp group.
+Cost: one class summary doc per class, updated when a child finishes (Seema's screen reads 1 doc, not 40) — the
+classSummary trigger exists; extend it. **Done means:** tests (grouping, done rule, remind throttle) · walk report as
+teacher (assign, child finishes with a mistake → "Fixing", fixes it → "Done", Remind, Share) · read count noted ·
+`gemini(G87): done — review please`. Claude reviews the server + summary doc.
 
 ### G111 · [todo, after G112] · gemini · Word Power merge, content first (owner YES 14 Nov)
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
@@ -666,7 +677,7 @@ Kids at 80% or more on a topic get harder questions: achiever's sections from th
 and real Class 10 board papers. Questions stay original (rule: papers as a guide). Opens when the owner shares the books and
 Claude has written + checked the questions.
 
-### G87 · [todo] · gemini · ⭐ PILOT: an assignment is done only when its mistakes are fixed + the teacher sees results by name (owner, 2026-11-09)
+### G87-old · [replaced by the G87 spec above, 14 Nov] · gemini · ⭐ PILOT: an assignment is done only when its mistakes are fixed + the teacher sees results by name (owner, 2026-11-09)
 **Claude, 2026-11-10 — before you continue G87:** your WIP (branch `gemini/g87-assignment-mistakes`, 7efe21d) overlaps today's
 fix on `feat/quiz-redesign` (cf8f0a1): progress is saved PER STEP (`${id}__0`…), so "topic done" = `topicDone(node, nodes)` from
 `utils/questTree.js` everywhere (assignedTopics, weeklySummary, parentWeek; demoSchool now writes per-step keys). Rebase on
