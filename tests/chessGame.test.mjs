@@ -13,6 +13,7 @@ import {
   guessVerdict,
   fenBeforePly,
   guessPlies,
+  strengthReport,
 } from "../utils/chessGame.js";
 
 const game = JSON.parse(readFileSync(new URL("../data/chess/opera-game.json", import.meta.url), "utf8"));
@@ -75,6 +76,47 @@ assert.equal(guessVerdict("a2a4", "c3b5", evals).verdict, "amber"); // within 1.
 const red = guessVerdict("h2h3", "c3b5", evals);
 assert.equal(red.verdict, "red");
 assert.equal(red.cpLoss, 260); // vs best (d1d2 = 300)
+
+// ---- strengthReport
+// Without evals: only the counts.
+const noEvals = strengthReport(game, [
+  { ply: 10, verdict: "green", cpLoss: 0 },
+  { ply: 12, verdict: "book", cpLoss: null },
+]);
+assert.deepEqual(
+  { total: noEvals.total, found: noEvals.found, avg: noEvals.avgLossCp, master: noEvals.masterAvgLossCp },
+  { total: 12, found: 1, avg: 0, master: null } // the green's 0 still averages; master needs evals
+);
+// With evals on a tiny synthetic game: 2 guess plies for White.
+const tiny = {
+  guessSide: "White",
+  guessFrom: 1,
+  moves: [
+    { uci: "e2e4", fenAfter: "x" },
+    { uci: "e7e5", fenAfter: "x" },
+    { uci: "g1f3", fenAfter: "x" },
+    { uci: "b8c6", fenAfter: "x" },
+  ],
+  evals: {
+    0: { e2e4: 30, d2d4: 30, h2h4: -80 }, // book move is joint best: master loss 0
+    2: { g1f3: 20, f1c4: 50, f2f3: -200 }, // book move loses 30 to best
+  },
+};
+const rep = strengthReport(tiny, [
+  { ply: 0, verdict: "green", cpLoss: 0 },
+  { ply: 2, verdict: "red", cpLoss: 250 }, // guessed f2f3
+]);
+assert.equal(rep.total, 2);
+assert.equal(rep.found, 1);
+assert.equal(rep.avgLossCp, 125);
+assert.equal(rep.masterAvgLossCp, 15); // (0 + 30) / 2
+assert.deepEqual(rep.worstMiss, { moveNo: 2, cpLoss: 250 });
+// Mate-scale losses are capped so averages stay readable.
+const capped = strengthReport(tiny, [{ ply: 0, verdict: "red", cpLoss: 99000 }]);
+assert.equal(capped.avgLossCp, 900);
+assert.equal(capped.worstMiss.cpLoss, 900);
+// Blues are counted.
+assert.equal(strengthReport(tiny, [{ ply: 0, verdict: "blue", cpLoss: 0 }]).blues, 1);
 
 // ---- fenBeforePly
 assert.equal(fenBeforePly(game, 0), START_FEN);

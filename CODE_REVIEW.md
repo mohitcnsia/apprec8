@@ -7,6 +7,17 @@ This file tracks technical reviews, architecture decisions, and deployment readi
 
 ---
 
+**2026-11-14 — Chess step 2: engine verdicts + strength report (Fable; handoff to Opus in
+`docs/agents/CHESS_HANDOFF.md`):** `scripts/chess/analyze.py` (Stockfish 19, every legal move of every guess position,
+depth 20) → evals into Firestore `chessGames/{gameId}` via `scripts/chess/seedChessGame.mjs` (admin SDK) — never git
+(owner). App: `services/chessApi.js` one get per screen open (owner-only reader, ~zero cost); seeded game replaces the
+bundled copy; red/amber/blue verdicts with pawn loss + end-of-game report (your avg loss vs the master's, blues, biggest
+miss; `strengthReport` tested). Opera Game analysed + seeded. **Deploy request: `firebase deploy --only firestore:rules`**
+(new admin-read `chessGames` block) — until then the app falls back to bundled games. Not published; Opus device-walks
+then the owner publishes.
+
+---
+
 **2026-11-13 (evening) — Chess "Guess the Move" app (spec + mockups owner-approved; owner flipped the order: app first,
 extraction parked as G105):** Fun tab tile, **owner extras only** — kids never see it. New: `screens/fun/chess/`
 (list + paste-a-PGN + play screen), `components/games/chess/ChessBoard.js` (pure Views + existing react-native-svg),

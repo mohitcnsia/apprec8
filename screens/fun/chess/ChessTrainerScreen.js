@@ -14,6 +14,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { quizPalette } from "../../../components/quiz/quizPalette";
 import { parsePastedPgn } from "../../../utils/chessPgn";
 import { guessPlies } from "../../../utils/chessGame";
+import { loadSeededChessGames } from "../../../services/chessApi";
 
 import operaGame from "../../../data/chess/opera-game.json";
 
@@ -31,6 +32,7 @@ export default function ChessTrainerScreen({ navigation }) {
 
   const [myGames, setMyGames] = useState([]);
   const [progress, setProgress] = useState({});
+  const [seeded, setSeeded] = useState([]); // from Firestore: analysed games (evals) + future book games
   const [adding, setAdding] = useState(false);
   const [pgnText, setPgnText] = useState("");
   const [error, setError] = useState("");
@@ -43,8 +45,21 @@ export default function ChessTrainerScreen({ navigation }) {
           setProgress(prog ? JSON.parse(prog) : {});
         })
         .catch(() => {});
+      let on = true;
+      loadSeededChessGames().then((rows) => on && setSeeded(rows));
+      return () => {
+        on = false;
+      };
     }, [])
   );
+
+  // A seeded copy of a bundled game wins (it carries the engine evals); other seeded
+  // games (the books, later) are listed after the bundled ones.
+  const seededById = Object.fromEntries(seeded.map((r) => [r.gameId, r]));
+  const classics = [
+    ...BUNDLED.map((b) => seededById[b.gameId] || b),
+    ...seeded.filter((r) => !BUNDLED.some((b) => b.gameId === r.gameId)),
+  ];
 
   const addGame = () => {
     const parsed = parsePastedPgn(pgnText);
@@ -80,6 +95,7 @@ export default function ChessTrainerScreen({ navigation }) {
           </Text>
           <Text style={styles.rowSub} numberOfLines={1}>
             {game.event}{game.date ? ` · ${game.date.split(".")[0]}` : ""} · you play {game.guessSide}
+            {game.evals ? " · engine ✓" : ""}
           </Text>
           <Text style={[styles.rowSub, p?.done ? { color: P.correctBorder } : null]} numberOfLines={1}>{state}</Text>
         </View>
@@ -102,7 +118,7 @@ export default function ChessTrainerScreen({ navigation }) {
         </Text>
 
         <Text style={styles.section}>Classics</Text>
-        {BUNDLED.map((e) => (
+        {classics.map((e) => (
           <Row key={e.gameId} {...e} />
         ))}
 

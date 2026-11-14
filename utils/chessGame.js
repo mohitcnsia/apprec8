@@ -100,3 +100,46 @@ export const fenBeforePly = (game, i) =>
 export function guessPlies(game) {
   return game.moves.map((_, i) => i).filter((i) => isGuessPly(game, i));
 }
+
+const CP_CAP = 900; // one missed mate shouldn't turn an average into nonsense
+
+/**
+ * End-of-game strength report (owner, 13 Nov 2026: "how well did I play, compared to Morphy?").
+ * guessLog: [{ ply, verdict, cpLoss }] — one entry per guess the player made.
+ * Pawn-loss numbers need `evals` (the offline Stockfish pass); without them only the
+ * found/total counts are filled and the cp fields stay null.
+ */
+export function strengthReport(game, guessLog) {
+  const total = guessPlies(game).length;
+  const found = guessLog.filter((g) => g.verdict === "green").length;
+  const blues = guessLog.filter((g) => g.verdict === "blue").length;
+  const withCp = guessLog.filter((g) => typeof g.cpLoss === "number");
+  const avgLossCp = withCp.length
+    ? Math.round(withCp.reduce((s, g) => s + Math.min(g.cpLoss, CP_CAP), 0) / withCp.length)
+    : null;
+
+  // The master's own average loss over the same positions — the bar to compare against.
+  let masterAvgLossCp = null;
+  if (game.evals) {
+    const losses = [];
+    for (const i of guessPlies(game)) {
+      const e = game.evals[String(i)];
+      if (!e) continue;
+      const book = game.moves[i].uci;
+      const bookCp = e[book] != null ? e[book] : e[book.slice(0, 4)];
+      if (bookCp == null) continue;
+      losses.push(Math.min(Math.max(...Object.values(e)) - bookCp, CP_CAP));
+    }
+    if (losses.length) masterAvgLossCp = Math.round(losses.reduce((a, b) => a + b, 0) / losses.length);
+  }
+
+  let worst = null;
+  for (const g of withCp) {
+    if (g.cpLoss >= 100 && (!worst || g.cpLoss > worst.cpLoss)) worst = g;
+  }
+  const worstMiss = worst
+    ? { moveNo: Math.floor(worst.ply / 2) + 1, cpLoss: Math.min(worst.cpLoss, CP_CAP) }
+    : null;
+
+  return { total, found, blues, avgLossCp, masterAvgLossCp, worstMiss };
+}

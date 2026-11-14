@@ -24,6 +24,7 @@ import {
   resolveGuess,
   guessVerdict,
   guessPlies,
+  strengthReport,
 } from "../../../utils/chessGame";
 
 const PROGRESS_KEY = "chessProgress:v1";
@@ -50,6 +51,7 @@ export default function ChessPlayScreen({ navigation, route }) {
   const [ply, setPly] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [guessed, setGuessed] = useState(0);
+  const [guessLog, setGuessLog] = useState([]); // [{ ply, verdict, cpLoss }] for the end report
   const [selected, setSelected] = useState(null);
   const [reveal, setReveal] = useState(null); // { verdict, guessUci, cpLoss, cpDelta }
   const [variation, setVariation] = useState(null); // { line, vply, baseFen }
@@ -64,6 +66,7 @@ export default function ChessPlayScreen({ navigation, route }) {
           setPly(saved.ply);
           setCorrect(saved.correct || 0);
           setGuessed(saved.guessed || 0);
+          setGuessLog(saved.guessLog || []);
         }
         loaded.current = true;
       })
@@ -78,11 +81,11 @@ export default function ChessPlayScreen({ navigation, route }) {
     AsyncStorage.getItem(PROGRESS_KEY)
       .then((raw) => {
         const all = raw ? JSON.parse(raw) : {};
-        all[gameId] = { ply, correct, guessed, done: ply >= game.moves.length, updatedAt: Date.now() };
+        all[gameId] = { ply, correct, guessed, guessLog, done: ply >= game.moves.length, updatedAt: Date.now() };
         return AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
       })
       .catch(() => {});
-  }, [ply, correct, guessed]);
+  }, [ply, correct, guessed, guessLog]);
 
   const done = ply >= game.moves.length;
   const guessing = !done && !reveal && isGuessPly(game, ply);
@@ -102,6 +105,7 @@ export default function ChessPlayScreen({ navigation, route }) {
         const v = guessVerdict(uci, bookUci, game.evals?.[String(ply)] || null);
         setGuessed((n) => n + 1);
         if (v.verdict === "green") setCorrect((n) => n + 1);
+        setGuessLog((l) => [...l, { ply, verdict: v.verdict, cpLoss: v.cpLoss }]);
         setReveal({ ...v, guessUci: uci, bookUci });
         setSelected(null);
         setPly((p) => p + 1); // the master's move is played on the board
@@ -203,13 +207,32 @@ export default function ChessPlayScreen({ navigation, route }) {
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.middle} showsVerticalScrollIndicator={false}>
-        {done ? (
-          <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg }]}>
-            <Text style={[styles.bannerText, { color: P.correctText }]}>
-              {game.result === "1-0" ? "1–0" : game.result === "0-1" ? "0–1" : "½–½"} · You found {correct} of {totalGuesses} of {master}'s moves.
-            </Text>
-          </View>
-        ) : null}
+        {done ? (() => {
+          const r = strengthReport(game, guessLog);
+          const pawns = (cp) => (cp / 100).toFixed(1);
+          return (
+            <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 6 }]}>
+              <Text style={[styles.bannerText, { color: P.correctText }]}>
+                {game.result === "1-0" ? "1–0" : game.result === "0-1" ? "0–1" : "½–½"} · You found {r.found} of {r.total} of {master}'s moves.
+              </Text>
+              {r.avgLossCp != null ? (
+                <Text style={[styles.bannerText, { color: P.correctText }]}>
+                  Your moves lost {pawns(r.avgLossCp)} pawns on average{r.masterAvgLossCp != null ? ` — ${master}'s lost ${pawns(r.masterAvgLossCp)}` : ""}.
+                </Text>
+              ) : null}
+              {r.blues > 0 ? (
+                <Text style={[styles.bannerText, { color: P.correctText }]}>
+                  {r.blues === 1 ? "One of your ideas was" : `${r.blues} of your ideas were`} even better than {master}'s!
+                </Text>
+              ) : null}
+              {r.worstMiss ? (
+                <Text style={[styles.bannerText, { color: P.correctText }]}>
+                  Biggest miss: move {r.worstMiss.moveNo} (−{pawns(r.worstMiss.cpLoss)} pawns).
+                </Text>
+              ) : null}
+            </View>
+          );
+        })() : null}
         {banner ? (
           <View style={[styles.banner, { borderColor: banner.color, backgroundColor: banner.bg }]}>
             <Text style={[styles.bannerText, banner.textColor ? { color: banner.textColor } : null]}>{banner.text}</Text>
