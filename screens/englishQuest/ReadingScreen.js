@@ -222,9 +222,11 @@ export default function ReadingScreen({ route, navigation }) {
       return;
     }
     setSpeakingIndex(index);
-    Speech.speak(paragraphs[index], {
-      language: "en-IN",
-      rate: 0.9,
+    const pText = paragraphs[index] || "";
+    const isHindi = /[\u0900-\u097F]/.test(pText);
+    Speech.speak(pText, {
+      language: isHindi ? "hi-IN" : "en-IN",
+      rate: isHindi ? 0.85 : 0.9,
       onDone: () => setSpeakingIndex(null),
       onStopped: () => setSpeakingIndex(null),
       onError: () => setSpeakingIndex(null),
