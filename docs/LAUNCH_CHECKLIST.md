@@ -52,6 +52,11 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Stuck-person nudge**: when someone who picked nothing opens the app, one easy question (in their language) → a star →
   "Who are you? Student · Parent · Teacher". Push needs a phone token, which stuck people don't have yet, so until then
   the WhatsApp button (People) is the way.
+- **"What do you want to learn most?" (owner 14 Nov)**: one card, English · हिंदी, tap any: English, Science, General
+  knowledge, Stories to read, Book summaries, Our scriptures & history (+ later Maths). Asked once on Home after the first
+  practice, not at sign-up (learning first, 2-tap budget); changeable on Me. Saved as `users.interests` (a short list only).
+  Used to (1) put those tiles first on Home, (2) show us what to build next: options we don't have yet say "coming soon"
+  and count as votes. Kids and grown-ups get their own list (grown-ups: scriptures, history, stories for their child).
 - **Chess board colours** (owner: ignore for now).
 
 ## Road to production (open steps)
