@@ -51,7 +51,10 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
   const speak = () => {
     Speech.stop();
     const text = onSummary ? `You learned: ${summary.join(". ")}` : cardSpeech(card);
-    if (text) Speech.speak(text, { language: "en-IN", rate: 0.9 });
+    if (text) {
+      const isHindi = /[\u0900-\u097F]/.test(text);
+      Speech.speak(text, { language: isHindi ? "hi-IN" : "en-IN", rate: isHindi ? 0.85 : 0.9 });
+    }
   };
   const finish = () => onFinish({ allSeen: allSeen(seen, total) });
 
