@@ -126,28 +126,36 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
         {user ? (
           <View style={styles.progressCard}>
             <Text style={styles.progressTitle}>
-              {hasStarted ? "Your progress" : "Ready to start?"}
+              {hasStarted
+                ? quest?.intro?.progressStarted || "Your progress"
+                : quest?.intro?.progressReady || "Ready to start?"}
             </Text>
             <Text style={styles.progressText}>
-              Units passed: {tree.stats.unitsDone} of {tree.stats.unitsTotal}
-              {"   ·   "}Steps done: {tree.stats.stepsDone}
+              {quest?.intro?.formatStats
+                ? quest.intro.formatStats(tree.stats)
+                : `Units passed: ${tree.stats.unitsDone} of ${tree.stats.unitsTotal}   ·   Steps done: ${tree.stats.stepsDone}`}
             </Text>
             {currentNode && hasStarted ? (
-              <Text style={styles.progressText}>You are on: {currentNode.title}</Text>
+              <Text style={styles.progressText}>
+                {quest?.intro?.currentPrefix || "You are on: "}
+                {currentNode.title}
+              </Text>
             ) : null}
           </View>
         ) : (
           <View style={styles.progressCard}>
             <Ionicons name="person-circle-outline" size={36} color={theme.gold} />
-            <Text style={styles.progressTitle}>Please sign in to play</Text>
+            <Text style={styles.progressTitle}>
+              {quest?.intro?.signInTitle || "Please sign in to play"}
+            </Text>
             <Text style={styles.progressText}>
-              Your progress is saved to your account, so you can continue on any phone and your
-              teacher or parent can see how you are doing.
+              {quest?.intro?.signInText ||
+                "Your progress is saved to your account, so you can continue on any phone and your teacher or parent can see how you are doing."}
             </Text>
           </View>
         )}
 
-        {isTester ? (
+        {isTester && !quest?.intro?.hideTester ? (
           <View style={styles.howCard}>
             <Text style={styles.howTitle}>🧪 Tester mode</Text>
             <Text style={styles.howText}>Only visible to tester accounts. Resets when the app restarts.</Text>
@@ -187,9 +195,9 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
         ) : null}
 
         <View style={styles.howCard}>
-          <Text style={styles.howTitle}>How it works</Text>
-          {HOW_IT_WORKS.map((item) => (
-            <View key={item.icon} style={styles.howRow}>
+          <Text style={styles.howTitle}>{quest?.intro?.title || "How it works"}</Text>
+          {(quest?.intro?.steps || HOW_IT_WORKS).map((item, idx) => (
+            <View key={item.icon || idx} style={styles.howRow}>
               <Ionicons name={item.icon} size={20} color={theme.gold} />
               <Text style={styles.howText}>{item.text}</Text>
             </View>
@@ -215,7 +223,7 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             onPress={() => navigation.navigate("Profile")}
           >
             <Ionicons name="log-in-outline" size={22} color={theme.textOnPrimary} />
-            <Text style={styles.startText}>Sign in to play</Text>
+            <Text style={styles.startText}>{quest?.intro?.signInButton || "Sign in to play"}</Text>
           </TouchableOpacity>
         </View>
       ) : null}
@@ -228,7 +236,11 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
             activeOpacity={0.85}
             onPress={() => navigation.navigate("EnglishQuestMap", { questId })}
           >
-            <Text style={styles.startText}>{hasStarted ? "Continue" : "Start the Quest"}</Text>
+            <Text style={styles.startText}>
+              {hasStarted
+                ? quest?.intro?.continueText || "Continue"
+                : quest?.intro?.startText || "Start the Quest"}
+            </Text>
             <Ionicons name="arrow-forward" size={22} color={theme.textOnPrimary} />
           </TouchableOpacity>
         </View>
