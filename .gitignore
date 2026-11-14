@@ -239,3 +239,5 @@ docs/exam/syllabus/
 content-private/
 scripts/chess/.venv
 scripts/chess/.venv/
+__pycache__/
+*.pyc

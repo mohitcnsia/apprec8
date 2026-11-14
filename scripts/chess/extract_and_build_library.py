@@ -24,6 +24,78 @@ LIB_DIR.mkdir(parents=True, exist_ok=True)
 RAW_DIR = pathlib.Path("content-private/chess/raw")
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
+def validate_opening(col, moves):
+    """Enforce strict opening classification rules (Requirement 4 of G110). Refuses otherwise."""
+    board = chess.Board()
+    sans = []
+    white_sans = []
+    black_sans = []
+    white_ucis = []
+    black_ucis = []
+    for i, m in enumerate(moves[:14]):
+        s = board.san(m)
+        sans.append(s)
+        if i % 2 == 0:
+            white_sans.append(s)
+            white_ucis.append(m.uci())
+        else:
+            black_sans.append(s)
+            black_ucis.append(m.uci())
+        board.push(m)
+
+    if col == "King's Gambit":
+        if len(sans) < 3 or sans[0] != "e4" or sans[1] != "e5" or sans[2] != "f4":
+            line_str = " ".join(sans[:3])
+            raise ValueError(f"King's Gambit requires 1.e4 e5 2.f4, got: {line_str}")
+        return True
+
+    elif col == "London System":
+        has_d4 = "d4" in white_sans[:5] or "d2d4" in white_ucis[:5]
+        has_bf4 = "Bf4" in white_sans[:5]
+        has_c4 = "c4" in white_sans[:5] or "cxd5" in white_sans[:5]
+        if not (has_d4 and has_bf4):
+            line_str = " ".join(white_sans[:5])
+            raise ValueError(f"London System requires d4 + Bf4 in first 5 white moves, got: {line_str}")
+        if has_c4:
+            line_str = " ".join(white_sans[:5])
+            raise ValueError(f"London System cannot have c4 in first 5 moves (that is QGD), got: {line_str}")
+        return True
+
+    elif col == "Sicilian Accelerated Dragon":
+        is_direct = (len(sans) >= 4 and sans[0] == "e4" and sans[1] == "c5")
+        is_transpo = ("c5" in black_sans[:5] and "Nc6" in black_sans[:5] and "g6" in black_sans[:5] and "e4" in white_sans[:6])
+        if not (is_direct or is_transpo):
+            line_str = " ".join(sans[:4])
+            raise ValueError(f"Accelerated Dragon requires 1.e4 c5 or Accelerated Dragon transposition, got: {line_str}")
+        b_first_5 = black_sans[:5]
+        if "d6" in b_first_5:
+            line_str = " ".join(b_first_5)
+            raise ValueError(f"Accelerated Dragon cannot have early ...d6 (that is normal Sicilian), got: {line_str}")
+        if not ("Nc6" in b_first_5 and "g6" in b_first_5):
+            line_str = " ".join(b_first_5)
+            raise ValueError(f"Accelerated Dragon requires ...Nc6 and ...g6, got: {line_str}")
+        return True
+
+    elif col == "Bogo-Indian":
+        w_first_3 = white_sans[:3]
+        b_first_3 = black_sans[:3]
+        has_d4 = "d4" in w_first_3
+        has_c4 = "c4" in w_first_3
+        has_nf6 = "Nf6" in b_first_3
+        has_e6 = "e6" in b_first_3
+        has_bb4 = any("Bb4" in s for s in b_first_3)
+        if not (has_d4 and has_c4 and has_nf6 and has_e6 and has_bb4):
+            w_str = " ".join(w_first_3)
+            b_str = " ".join(b_first_3)
+            raise ValueError(f"Bogo-Indian requires d4, c4 in first 3 white moves, and Nf6, e6, Bb4(+) in first 3 black moves, got W: {w_str}, B: {b_str}")
+        return True
+
+    elif col == "Classic Masters":
+        return True
+
+    else:
+        raise ValueError(f"Unknown collection: {col}")
+
 def find_game_in_archive(archive_name, white_part, black_part, year=None, event_part=None, round_val=None, eco=None):
     p = CACHE_DIR / f"{archive_name}.pgn"
     with open(p, "r", encoding="latin1") as f:
@@ -168,54 +240,66 @@ TARGETS = [
         }
     },
     {
-        "arc": "Carlsen", "w": "Carlsen", "b": "Karjakin", "yr": "2016", "ev": "masters",
-        "fname": "london-02-carlsen-karjakin-2016.pgn", "col": "London System", "side": "White", "gfrom": 11,
-        "book": "Bilbao Masters 2016 (pgnmentor Carlsen)",
-        "src": "https://www.pgnmentor.com/players/Carlsen.zip", "lic": "Lichess CC0",
-        "intro": "Bilbao 2016. Magnus Carlsen demonstrates the aggressive potential of the London System against his World Championship challenger Sergey Karjakin.",
+        "arc": "London2e6", "w": "Kamsky", "b": "Del Rio", "yr": "2016", "ev": "sitges",
+        "fname": "london-02-kamsky-delrio-2016.pgn", "col": "London System", "side": "White", "gfrom": 11,
+        "book": "Sunway Sitges Open 2016 (pgnmentor London2e6)",
+        "src": "https://www.pgnmentor.com/openings/London2e6.zip", "lic": "Lichess CC0",
+        "intro": "Sitges 2016. Gata Kamsky puts on a textbook display of London System piece harmony against GM Salvador Del Rio de Angelis, launching a decisive kingside storm.",
         "comments": {
-            21: "Developing the queen to a dynamic attacking post supporting the kingside expansion.",
-            23: "Preserving the bishop from the f5 knight trade.",
-            25: "Aiming fire directly at the h7 and f5 complexes.",
-            27: "Launching the kingside storm with pawn thrusts!",
-            29: "Bringing another piece to support the kingside pressure.",
-            31: "Ignoring the knight attack and blasting open lines to the black king!",
-            33: "Opening the d-file while attacking the knight.",
-            35: "Driving a wedge deep into Black's kingside pawn structure.",
-            37: "Swinging the rook into the semi-open g-file.",
-            39: "Eliminating Black's central outpost.",
-            41: "Double attack on g6 and e6.",
-            43: "Crashing through on g6 with check!",
-            45: "Bringing the queenside rook into the attack with tempo.",
-            47: "Targeting the f7 square with mate threats.",
-            49: "Recapturing with the rook to maintain overwhelming pressure.",
-            51: "A clinical exchange sacrifice stripping away Black's last defenders.",
-            53: "Winning back the piece with interest.",
-            55: "Central queen dominance with a winning endgame."
+            21: "Trading dark-squared bishops to eliminate Black's defensive coordinator.",
+            23: "Planting the knight into the permanent e5 outpost in classic London style!",
+            25: "Launching the kingside storm with h4! Pointing directly at Black's king.",
+            27: "Anchoring the e5 knight with f4, cementing White's spatial supremacy.",
+            29: "Advancing g4 with relentless momentum to break open Black's kingside shelter.",
+            31: "Prying open the h-file with h5! The rook will soon join the attack.",
+            33: "Recapturing towards the center, maintaining a rock-solid pawn front.",
+            35: "Cracking open Black's f7 and g6 pawn structure.",
+            37: "Recapturing on d4 to maintain total central dominance.",
+            39: "Bringing the queen into the assault, eyeing h3 and h8 mate combinations.",
+            41: "Threatening inescapable checkmate on the open h-file!",
+            43: "Checking on h8 to force Black's knight into a crippling self-pin.",
+            45: "King centralization! White's king steps up safely, connecting the back-rank rooks.",
+            47: "Tactical strike! Snatching the g6 pawn with check.",
+            49: "Repeating the check to gain time and tighten the tactical net.",
+            51: "Rerouting the knight to join the final assault.",
+            53: "Rook invasion on the 7th rank! Piling unbearable pressure on g7.",
+            55: "Activating the second rook to control open files.",
+            57: "Positioning the knight to dominate central entry points.",
+            59: "Stepping out of check while keeping all pieces fully defended.",
+            61: "Re-aligning the heavy artillery along the h-file.",
+            63: "Centralizing the knight with tempo against Black's misplaced queen.",
+            65: "Doubling major pieces on the h-file with unstoppable mating threats.",
+            67: "Shattering Black's last desperate counterplay.",
+            69: "Checking with the f-file rook and driving the black king into the open.",
+            71: "Guarding the 2nd rank while Black is helpless against incoming checks.",
+            73: "Discovered fork and check driving the king further away from safety.",
+            75: "Invading with Nc5+ with overwhelming knight coordination.",
+            77: "Eliminating Black's last active piece.",
+            79: "The final knight fork winning the queen! Complete tactical domination."
         }
     },
     {
-        "arc": "Kamsky", "w": "Kamsky", "b": "Shirov", "yr": "2007", "ev": "world cup",
-        "fname": "london-03-kamsky-shirov-2007.pgn", "col": "London System", "side": "White", "gfrom": 11,
-        "book": "FIDE World Cup 2007 (pgnmentor Kamsky)",
-        "src": "https://www.pgnmentor.com/players/Kamsky.zip", "lic": "Lichess CC0",
-        "intro": "FIDE World Cup 2007. Gata Kamsky uses his pet London System to defeat tactical wizard Alexei Shirov in the final.",
+        "arc": "London2e6", "w": "Kamsky", "b": "Taborsky", "yr": "2015", "ev": "lasker",
+        "fname": "london-03-kamsky-taborsky-2015.pgn", "col": "London System", "side": "White", "gfrom": 11,
+        "book": "99th Edward Lasker Mem 2015 (pgnmentor London2e6)",
+        "src": "https://www.pgnmentor.com/openings/London2e6.zip", "lic": "Lichess CC0",
+        "intro": "New York 2015. Gata Kamsky plays the London System with clinical precision against IM Rostislav Taborsky, controlling the e5 outpost and dominating the center.",
         "comments": {
-            21: "Striking at Black's advanced queenside pawn chain.",
-            23: "Re-establishing a solid queenside pawn duo.",
-            25: "Stepping off the c-file pin while supporting the b4 push.",
-            27: "Preparing queenside central breakthroughs.",
-            29: "Asking Black's bishop for its intentions.",
-            31: "Rerouting the knight toward the queenside to challenge Black's pieces.",
-            33: "Occupying a commanding outpost on d3.",
-            35: "Trading off the dark-squared bishops to weaken Black's light squares.",
-            37: "Planting the knight deep into Black's queenside camp.",
-            39: "Maintaining relentless pressure on the b6 pawn.",
-            41: "Pinning the c6 knight and preventing e5.",
-            43: "Patient retreat maintaining spatial advantage.",
-            45: "Offering a queen trade that accentuates White's superior pawn structure.",
-            47: "Continuing to harass the knight.",
-            49: "The decisive central break opening lines for White's rooks."
+            21: "Recapturing with the c-pawn to secure a classical two-pawn center.",
+            23: "Pinning the f6 knight to restrict Black's central counterplay.",
+            25: "Exchanging bishops to remove Black's defensive piece.",
+            27: "Seizing control of the open c-file with the rook.",
+            29: "Developing the queen and connecting rooks across the 1st rank.",
+            31: "Kicking Black's knight away and asking for its intentions.",
+            33: "Recapturing towards the center and establishing a dominant knight outpost.",
+            35: "Preserving the active bishop and targeting Black's vulnerable f7 point.",
+            37: "Recapturing with the knight while exerting massive pressure down the c-file.",
+            39: "Solidifying the e4 pawn and challenging Black's knight.",
+            41: "Winning the pinned piece and breaking Black's defenses.",
+            43: "Passed pawn push! Creating a dangerous central passed pawn.",
+            45: "Blocking the check with the knight and reinforcing the defense.",
+            47: "Recapturing the rook and maintaining absolute control over the c-file.",
+            49: "Guarding the 3rd rank and parrying Black's last desperate counter-threats."
         }
     },
     {
@@ -285,28 +369,46 @@ TARGETS = [
         }
     },
     {
-        "arc": "Kasparov", "w": "Anand", "b": "Kasparov", "yr": "1995", "ev": "PCA-World Championship", "rnd": "13", "eco": "B77",
-        "fname": "dragon-04-anand-kasparov-1995.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
-        "book": "PCA World Championship 1995, Game 13 (pgnmentor Kasparov)",
-        "src": "https://www.pgnmentor.com/players/Kasparov.zip", "lic": "Public domain (pre-2000)",
-        "intro": "New York 1995, Game 13. Garry Kasparov shocks Viswanathan Anand by unleashing the Sicilian Dragon in the World Championship, scoring an immortal tactical win with Black.",
+        "arc": "SicilianAccelDragon", "w": "Short", "b": "Larsen", "yr": "1985", "ev": "naestved",
+        "fname": "dragon-04-short-larsen-1985.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "book": "Naestved 1985 (pgnmentor SicilianAccelDragon)",
+        "src": "https://www.pgnmentor.com/openings/SicilianAccelDragon.zip", "lic": "Lichess CC0",
+        "intro": "Naestved 1985. Bent Larsen, one of the greatest champions of the Accelerated Dragon, teaches a masterclass against Nigel Short, executing a tactical demolition on the queenside to force resignation in just 23 moves.",
         "comments": {
-            22: "Pinning White's kingside pieces along the long diagonal.",
-            28: "The legendary exchange sacrifice on c3 shattering White's queenside pawn structure!",
-            34: "Invading the queenside with overwhelming tactical counterplay.",
-            40: "Centralizing the rook with unstoppable threats against White's exposed king."
+            22: "Preparing queenside expansion and controlling the b5 square.",
+            24: "Placing the rook on the semi-open c-file, the key highway for Black's counterplay.",
+            26: "Exchanging knights to remove White's central controller.",
+            28: "Pinning White's rook down the c1-h6 diagonal.",
+            30: "Activating the bishop to contest the central diagonals.",
+            32: "Trading on d5 to open lines for Black's pieces.",
+            34: "Repositioning the bishop to prepare the central breakthrough.",
+            36: "Striking at White's d5 pawn and opening lines in the center.",
+            38: "Recapturing with the rook and seizing the e-file.",
+            40: "The stunning deflection shot! Decoying White's queen away from defending the center.",
+            42: "Capturing towards the center while unleashing a deadly attack on White's bishop on d4.",
+            44: "Decisive tactical strike! Snapping off the bishop on e2.",
+            46: "The killer blow! Kicking White's queen away so White cannot defend d4, forcing immediate resignation."
         }
     },
     {
-        "arc": "SicDragon6Be2-6Bc4", "w": "Larsen", "b": "Miles", "yr": "1978", "ev": "las palmas",
-        "fname": "dragon-05-larsen-miles-1978.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
-        "book": "Las Palmas 1978 (pgnmentor SicDragon)",
-        "src": "https://www.pgnmentor.com/openings/SicDragon6Be2-6Bc4.zip", "lic": "Public domain (pre-1980)",
-        "intro": "Las Palmas 1978. British GM Tony Miles demonstrates aggressive counterattacking Dragon play with Black, crushing Bent Larsen in just 22 moves.",
+        "arc": "SicilianAccelDragon", "w": "Azarov", "b": "Bogdanovich", "yr": "2017", "ev": "lviv",
+        "fname": "dragon-05-azarov-bogdanovich-2017.pgn", "col": "Sicilian Accelerated Dragon", "side": "Black", "gfrom": 11,
+        "book": "Lviv Rapid Cup 2017 (pgnmentor SicilianAccelDragon)",
+        "src": "https://www.pgnmentor.com/openings/SicilianAccelDragon.zip", "lic": "Lichess CC0",
+        "intro": "Lviv 2017. Stanislav Bogdanovich plays the Accelerated Dragon with dynamic perfection against Sergei Azarov, striking in the center with ...d5 and dominating open files to force resignation in 19 moves.",
         "comments": {
-            22: "Blasting open the c-file for decisive counterplay.",
-            28: "Invading deep into White's queenside camp.",
-            34: "Tactical deflection forcing decisive material gain."
+            16: "Thematic central break! Striking at the center with ...d5 without wasting a tempo on ...d6.",
+            18: "Jumping the knight into b4 to target the weakened d5 and c2 squares.",
+            20: "Undermining White's advanced pawn and opening up central lines.",
+            22: "Recapturing with the bishop and taking control of the active diagonal.",
+            24: "Exchanging off White's knight to shatter White's queenside pawn structure.",
+            26: "Seizing the open e-file with check and tempo!",
+            28: "Repositioning the light-squared bishop onto an aggressive attacking diagonal.",
+            30: "Trading off White's key defensive bishop on f3.",
+            32: "Infiltrating with the queen to attack the pinned pieces.",
+            34: "Doubling rooks on the e-file with overwhelming pressure.",
+            36: "Seizing the d-file and pinning White's pieces.",
+            38: "The final invasion on e8! White's position collapses completely under the relentless pressure."
         }
     },
 
@@ -376,7 +478,7 @@ TARGETS = [
     # ---- 5. Classic Masters (5 games from Morphy.pgn, Anderssen.pgn, Steinitz.pgn, Marshall.pgn, Fischer.pgn)
     {
         "arc": "Morphy", "w": "Morphy", "b": "Isouard", "yr": "1858", "ev": None,
-        "fname": "classic-01-opera-game-1858.pgn", "col": "Classic Masters", "side": "White", "gfrom": 6,
+        "fname": "classic-01-opera-game-1858.pgn", "col": "Classic Masters", "side": "White", "gfrom": 6, "id": "opera-game",
         "book": "The Opera Game 1858 (pgnmentor Morphy)",
         "src": "https://www.pgnmentor.com/players/Morphy.zip", "lic": "Public domain (1858)",
         "intro": "Paris, 1858. Paul Morphy was invited to the opera, but his hosts wanted a chess game more than the music. Every move of this game is now a classic lesson in rapid development and king attack.",
@@ -492,7 +594,12 @@ for t in TARGETS:
     real_g.headers["SourceBook"] = t["book"]
     real_g.headers["Source"] = t["src"]
     real_g.headers["License"] = t["lic"]
+    if t.get("id"):
+        real_g.headers["Id"] = t["id"]
     real_g.comment = t["intro"]
+
+    # Validate opening moves (Requirement 4: refuses otherwise)
+    validate_opening(t["col"], list(real_g.mainline_moves()))
 
     # Attach comments to moves in the mainline
     node = real_g
