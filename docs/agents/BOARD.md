@@ -138,7 +138,19 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G114 · [todo] · gemini · ⭐ NEXT (small): chess full screen + honest Elo summary (owner 14 Nov)
+### G115 · [todo] · gemini · ⭐ NEXT: real phone walk for G114 + G107 (merged by Claude, needs YOUR walk before publish)
+Your G114 screenshot shows the status bar AND the tab bar on the chess screen: it was taken on the OLD installed app,
+not your code. Your G107 report has no walk at all. Build from `feat/quiz-redesign` (has Claude's review fixes: G107's
+`formatStats` was a function — Firestore can't store it, so "Update भारत और समझ" would have failed; now `statsTemplate`).
+Steps (owner's OnePlus, test build + Metro from apprec8's latest commit, `adb reverse`, screenshot first, tap second):
+1. Fun → Guess the Move → a game: NO status bar, NO tab bar; back gesture returns to the list; bars come back there.
+2. Finish a game (or a short one) → end card: master's strength · yours · average (2+ games) + "rough estimate".
+3. Admin tools → "Update भारत और समझ (DRAFT)" → succeeds. Home → Explore → भारत और समझ: intro in Hindi, no boss/tester
+   text; a namaste/spices card: tap सहमत → "धन्यवाद 🙏"; the 4 new topics open; 🔊 on a Hindi card.
+**Done means:** `docs/agents/reports/G115-walk.md` + one PNG per step from THIS build · logcat clean ·
+`gemini(G115): done — review please`. Then continue G113 (in progress).
+
+### G114 · [done: merged by Claude 14 Nov, walk in G115] · gemini · chess full screen + honest Elo summary (owner 14 Nov)
 Branch `gemini/g114-chess-polish`. JS only (ships as an update).
 1. **Full screen while playing** (owner: top and bottom bars are distracting): on ChessPlay hide the app tab bar (add
    the route to `IMMERSIVE_SCREENS` in navigation/BottomTabNavigator.js) and the status bar (`<StatusBar hidden />` from
@@ -153,7 +165,7 @@ Branch `gemini/g114-chess-polish`. JS only (ships as an update).
 **Done means:** tests · phone walk (a game in full screen, back gesture works, end card with the three lines) ·
 `gemini(G114): done — review please`. Owner-only tile → ships after Claude's review.
 
-### G107 · [todo] · gemini · ⭐ NEXT: भारत और समझ round 2 (owner 14 Nov)
+### G107 · [done: merged by Claude 14 Nov, walk in G115] · gemini · भारत और समझ round 2 (owner 14 Nov)
 Branch `gemini/g107-bharat-2` from `feat/quiz-redesign` (it now has Claude's review fixes: read the diff of `2afbcee`
 first; it shows the kind of fact/health wording Claude expects).
 1. **Simple Hindi intro, no school words:** the quest intro screen for this quest shows Hindi, no "Unit Boss",
