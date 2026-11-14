@@ -3,12 +3,15 @@
 ZERO moves typed from memory. Every single ply is read directly from downloaded PGNs.
 """
 import io
+import json
 import pathlib
 import chess.pgn
 
 CACHE_DIR = pathlib.Path("/tmp/chess_cache")
 LIB_DIR = pathlib.Path("content-private/chess/library")
 LIB_DIR.mkdir(parents=True, exist_ok=True)
+RAW_DIR = pathlib.Path("content-private/chess/raw")
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 def find_game_in_archive(archive_name, white_part, black_part, year=None, event_part=None, round_val=None, eco=None):
     p = CACHE_DIR / f"{archive_name}.pgn"
@@ -34,8 +37,12 @@ def find_game_in_archive(archive_name, white_part, black_part, year=None, event_
                 if eco and eco != c:
                     continue
                 f.seek(offset)
-                return chess.pgn.read_game(f), str(p.name), headers
-    return None, None, None
+                raw_game = chess.pgn.read_game(f)
+                raw_exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True)
+                raw_text = raw_game.accept(raw_exporter)
+                f.seek(offset)
+                return chess.pgn.read_game(f), str(p.name), headers, raw_text
+    return None, None, None, None
 
 # 25 Game targets from authentic archives
 TARGETS = [
@@ -447,12 +454,27 @@ TARGETS = [
 
 success = 0
 for t in TARGETS:
-    real_g, arc_file, orig_headers = find_game_in_archive(t["arc"], t["w"], t["b"], t.get("yr"), t.get("ev"), t.get("rnd"), t.get("eco"))
+    real_g, arc_file, orig_headers, raw_text = find_game_in_archive(t["arc"], t["w"], t["b"], t.get("yr"), t.get("ev"), t.get("rnd"), t.get("eco"))
     if not real_g:
         print(f"FAILED to extract {t['w']} vs {t['b']} from {t['arc']}")
         continue
 
-    # Set metadata
+    # Save raw game text unchanged in content-private/chess/raw/
+    raw_path = RAW_DIR / t["fname"]
+    raw_path.write_text(raw_text + "\n", encoding="utf-8")
+    meta_path = RAW_DIR / (t["fname"].replace(".pgn", ".meta.json"))
+    meta_path.write_text(json.dumps({
+        "archive": arc_file,
+        "fetchUrl": t["src"],
+        "eco": orig_headers.get("ECO", ""),
+        "date": orig_headers.get("Date", ""),
+        "event": orig_headers.get("Event", ""),
+        "white": orig_headers.get("White", ""),
+        "black": orig_headers.get("Black", ""),
+        "result": orig_headers.get("Result", "")
+    }, indent=2) + "\n", encoding="utf-8")
+
+    # Set metadata for library
     real_g.headers["Collection"] = t["col"]
     real_g.headers["GuessSide"] = t["side"]
     real_g.headers["GuessFrom"] = str(t["gfrom"])
@@ -477,4 +499,4 @@ for t in TARGETS:
     plies = len(list(real_g.mainline_moves()))
     print(f"[{success}/25] EXTRACTED from {arc_file}: {real_g.headers['White']} vs {real_g.headers['Black']} ({real_g.headers['Date']}) -> {out_path.name} ({plies} plies)")
 
-print(f"\nCompleted: {success}/25 games extracted from authentic archives into {LIB_DIR}!")
+print(f"\nCompleted: {success}/25 games extracted into {LIB_DIR} and raw saved in {RAW_DIR}!")
