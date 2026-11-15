@@ -71,6 +71,9 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
   (https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs): calm blue-grey cards, highlighter-marker under key words,
   Atkinson Hyperlegible for reading text (made for easy reading), Bricolage Grotesque headings, green/amber answer states,
   every option's meaning shown after answering. Fonts ship as app assets (OTA-able). Mockup first, then a theme option.
+- **Push notifications + WhatsApp messages look poor (owner 16 Nov: "should be fun, catchy and professional"):** after
+  star rules phase 1 (G125). One doc: every push text and WhatsApp template today → rewritten in one voice (short,
+  warm, a little playful; parents addressed as adults) + phone mockups before/after, owner approves, then a text change.
 - **Fun tab layout (owner 15 Nov):** Pratha prefers the older carousel style with nice images over today's Fun tab.
   Collect more feedback (Pratha + other kids) and discuss before changing anything.
 - **Chess board colours** (owner: ignore for now).
