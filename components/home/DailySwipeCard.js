@@ -102,6 +102,17 @@ export default function DailySwipeCard({ grade, starsToday = 0, starsWeek = 0 })
 
   useEffect(() => () => Speech.stop(), []);
 
+  const word = card?.word || null;
+  const fact = card?.fact || null;
+
+  const slides = useMemo(() => {
+    const list = [];
+    if (thought) list.push({ key: "thought", kind: "thought", data: thought });
+    if (word) list.push({ key: "word", kind: "word", data: word });
+    if (fact) list.push({ key: "fact", kind: "fact", data: fact });
+    return list;
+  }, [thought, word, fact]);
+
   if (saved === undefined) return null;
 
   const isClosed = saved?.closedDay === today;
@@ -120,16 +131,6 @@ export default function DailySwipeCard({ grade, starsToday = 0, starsWeek = 0 })
   };
 
   const mine = saved?.taps?.[today] || {};
-  const word = card?.word || null;
-  const fact = card?.fact || null;
-
-  const slides = useMemo(() => {
-    const list = [];
-    if (thought) list.push({ key: "thought", kind: "thought", data: thought });
-    if (word) list.push({ key: "word", kind: "word", data: word });
-    if (fact) list.push({ key: "fact", kind: "fact", data: fact });
-    return list;
-  }, [thought, word, fact]);
 
   const goToSlide = (idx) => {
     if (idx < 0 || idx >= slides.length) return;
