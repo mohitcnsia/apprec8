@@ -508,8 +508,19 @@ export default function HomeScreen({ navigation }) {
 
   // Every unfinished topic a teacher assigned, soonest first (2026-11-09: only the first showed, and it opened "Sentences").
   const todayIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-  const teacherTopics = assignedTopics(assignments, (q) => bundledQuest(q)?.nodes || [], (q) => progressById[q]?.nodes || {}, todayIso);
-  const openTopic = (t) => navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
+  const teacherTopics = assignedTopics(
+    assignments,
+    (q) => bundledQuest(q)?.nodes || [],
+    (q) => progressById[q]?.nodes || {},
+    todayIso,
+    (q) => progressById[q]?.doc?.mistakes || {}
+  );
+  const openTopic = (t) => {
+    if (t?.allStepsDone && t?.mistakesLeft > 0) {
+      return navigation.navigate("EnglishQuestMap", { questId: t.questId, openMistakes: true });
+    }
+    return navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
+  };
 
   const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
   const mistakeCount = visibleQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
@@ -780,7 +791,9 @@ export default function HomeScreen({ navigation }) {
             <Pressable key={t.key} onPress={() => openTopic(t)} accessibilityRole="button" accessibilityLabel={`From your teacher: ${t.title}`} style={{ paddingVertical: 6 }}>
               <Text style={styles.teacherTitle} numberOfLines={1}>{t.title} ›</Text>
               <Text style={styles.questSub} numberOfLines={1}>
-                {!t.dueDate ? "Open now" : t.overdue ? "Was due, still open" : daysUntil(t.dueDate) === 0 ? "Due today" : `Due in ${daysUntil(t.dueDate)} days`}
+                {t.allStepsDone && t.mistakesLeft > 0
+                  ? `Fix ${t.mistakesLeft} ${t.mistakesLeft === 1 ? "mistake" : "mistakes"} to finish`
+                  : !t.dueDate ? "Open now" : t.overdue ? "Was due, still open" : daysUntil(t.dueDate) === 0 ? "Due today" : `Due in ${daysUntil(t.dueDate)} days`}
               </Text>
             </Pressable>
           ))}

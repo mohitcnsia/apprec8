@@ -5,6 +5,9 @@
 
 /** "Was due, still open" | "Due today" | "Due in 3 days" | "Open now" */
 export function dueText(t, daysUntil) {
+  if (t?.allStepsDone && t?.mistakesLeft > 0) {
+    return `Fix ${t.mistakesLeft} ${t.mistakesLeft === 1 ? "mistake" : "mistakes"} to finish`;
+  }
   if (!t.dueDate) return "Open now";
   if (t.overdue) return "Was due, still open";
   const d = daysUntil(t.dueDate);

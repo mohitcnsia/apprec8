@@ -1,6 +1,6 @@
 // Tests for utils/assignedTopics.js. Run: npm test
 import assert from "node:assert/strict";
-import { assignedTopics } from "../utils/assignedTopics.js";
+import { assignedTopics, countTopicMistakes } from "../utils/assignedTopics.js";
 
 const nodes = [
   { id: "t1", kind: "main", steps: [{ type: "study" }, { type: "quiz" }] },
@@ -17,9 +17,37 @@ const A = [
 let rows = assignedTopics(A, nodesOf, () => ({}), "2026-11-09");
 assert.deepEqual(rows.map((r) => [r.nodeId, r.title, r.dueDate]), [["t1", "Agreement", "2026-11-12"], ["t2", "Determiners", "2026-11-12"], ["t3", "Will", "2026-11-16"]]);
 
-// A finished topic (all its steps) drops out; a half-done one stays.
+// A finished topic with NO mistakes drops out; a half-done one stays.
 rows = assignedTopics(A, nodesOf, () => ({ "t2__0": { status: "completed" }, "t1__0": { status: "completed" } }), "2026-11-09");
 assert.deepEqual(rows.map((r) => r.nodeId), ["t1", "t3"]);
+
+// G87: All steps completed, but mistakes left -> topic stays with allStepsDone: true, mistakesLeft: N
+const mistakesWithT2 = {
+  m1: { kind: "question", questionId: "q1", branchId: "t2" },
+  m2: { kind: "topic", branchId: "t2" },
+  m3: { kind: "question", questionId: "q3", branchId: "other" },
+};
+assert.equal(countTopicMistakes(mistakesWithT2, "t2"), 2);
+assert.equal(countTopicMistakes(mistakesWithT2, "t1"), 0);
+
+rows = assignedTopics(
+  A,
+  nodesOf,
+  () => ({
+    "t2__0": { status: "completed" },
+    "t1__0": { status: "completed" },
+    "t1__1": { status: "completed" },
+  }),
+  "2026-11-09",
+  () => mistakesWithT2
+);
+// t1 has all steps done and 0 mistakes -> dropped
+// t2 has all steps done but 2 mistakes left -> stays
+// t3 not started -> stays
+assert.deepEqual(rows.map((r) => r.nodeId), ["t2", "t3"]);
+const t2Row = rows.find((r) => r.nodeId === "t2");
+assert.equal(t2Row.allStepsDone, true);
+assert.equal(t2Row.mistakesLeft, 2);
 
 // Past the due date: still shown, marked overdue.
 rows = assignedTopics(A, nodesOf, () => ({}), "2026-11-14");

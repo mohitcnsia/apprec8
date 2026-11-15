@@ -28,12 +28,30 @@ function weekOf(daily = {}, now) {
   return { days, answered, correct };
 }
 
-function entryOf(stats, now) {
+function entryOf(after = {}, now) {
+  const stats = after.stats || after;
   const lv = {};
   Object.entries(levelsFromStats(stats)).forEach(([topic, level]) => {
     if (level !== "new") lv[topic] = LEVEL_CODE[level];
   });
-  return { at: now, last: stats.lastActiveAt || null, week: weekOf(stats.daily, now), lv };
+  const mistakes = {};
+  if (after.mistakes && typeof after.mistakes === "object") {
+    for (const m of Object.values(after.mistakes)) {
+      if (m && m.branchId) {
+        mistakes[m.branchId] = (mistakes[m.branchId] || 0) + 1;
+      }
+    }
+  }
+  const completed = [];
+  const nodes = after.nodes || {};
+  if (typeof nodes === "object") {
+    for (const [k, v] of Object.entries(nodes)) {
+      if (v?.status === "completed") {
+        completed.push(k);
+      }
+    }
+  }
+  return { at: now, last: stats.lastActiveAt || null, week: weekOf(stats.daily, now), lv, mistakes, completed };
 }
 
 const sameLevels = (a = {}, b = {}) => {
@@ -56,7 +74,7 @@ exports.onQuestProgressForClass = functions
     const classIds = Array.isArray(u.classIds) ? u.classIds.slice(0, 5) : [];
     if (!classIds.length) return null;
     const now = Date.now();
-    const entry = entryOf(after.stats, now);
+    const entry = entryOf(after, now);
     await Promise.all(
       classIds.map(async (classId) => {
         const ref = db.collection("classSummaries").doc(classId);

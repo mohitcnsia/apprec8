@@ -218,7 +218,7 @@ from the existing class summary (no new per-kid reads). Follow docs/DESIGN_RULES
 (kid, parent, owner Home; light + dark) · no new Firestore reads on Home except the banner's one cached doc ·
 `gemini(G112): done — review please`.
 
-### G87 · [todo] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
+### G87 · [done, review please] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 3. Branch `gemini/g87-results`. For an assigned topic, Seema's class screen groups
 children: Not started · Fixing mistakes (N left) · Done (Accuracy) — **done = every mistake in that topic fixed** (the
 existing My mistakes rule: 2 right in a row). **Remind:** per child and "Remind all", at most once a day per child, to the

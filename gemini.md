@@ -33,6 +33,17 @@ old screen, usernames on the leaderboard, join card for teacher-parents, parent 
 **Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
 publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
 
+## 2026-11-15: Teacher results by name & assignment mistakes done rule (Gemini, task G87)
+- **Goal:** For an assigned topic, Seema's class screen groups children: Not started · Halfway · Fixing mistakes (N left) · Done (Accuracy). Done = every step completed AND 0 open mistakes in that topic. Remind throttled to 1/day, Star of the week with WhatsApp share, 1-read class summary cost guard.
+- **Done:** Branch `gemini/g87-results`.
+  1. `utils/assignedTopics.js`: added `countTopicMistakes` (supports branchId counts and raw mistakes) and retains assigned topics with `allStepsDone && mistakesLeft > 0`.
+  2. `utils/assignmentResults.js`: implemented `computeAssignmentResults` (groups Not started → Halfway → Fixing mistakes → Done ✓; strictly uses "Accuracy XX%"), `computeStarOfTheWeek` (best accuracy + effort, WhatsApp share text "This week's star: <Name> 🌟"), `canRemindStudent`, and `formatRemindMessage`.
+  3. `screens/progress/TeacherClasses.js`: expandable assignment accordion with top summary line (`"${done} of ${total} done · ${fixingMistakes} fixing mistakes · ${halfway} halfway · ${notStarted} not started"`), 4-color progress bar, Star of the Week card with WhatsApp share, "Remind all not done" button, and student rows with Accuracy and per-student Remind.
+  4. `screens/home/HomeScreen.js` & `utils/nextUp.js`: assigned topic with mistakes left displays subtitle `"Fix N mistakes to finish"` and navigates directly to `EnglishQuestMap` with `{ openMistakes: true }`.
+  5. `functions/triggers/classSummary.js`: extended `entryOf` to record `mistakes` counts and `completed` steps/nodes so class screen loads 1 doc (`classSummaries/{classId}`).
+  6. `functions/callable/remindActions.js`: callable `remindAssignment` with teacher auth check, daily locking, child Home nudge card, and parent push notification.
+- **Test:** `npm test` 100% green across all 70+ test suites. Unit tests in `tests/assignedTopics.test.mjs`, `tests/assignmentResults.test.mjs`, `tests/remindAssignment.test.mjs`, and `tests/nextUp.test.mjs`. Full report in `docs/agents/reports/G87.md`.
+
 ## 2026-11-14: Chess "Guess the Move" enhancements (Gemini, task G108)
 - **Goal:** Games from links (Lichess, direct .pgn, Chess.com notice), library by opening with folded sections, Wood/Green/Blue board themes, and Watch mode with isolated progress.
 - **Done:** Branch `gemini/g108-chess`.

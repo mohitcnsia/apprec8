@@ -8,6 +8,7 @@ assert.equal(dueText({ dueDate: "2026-11-01", overdue: true }, days), "Was due, 
 assert.equal(dueText({ dueDate: "2026-11-11" }, days), "Due today");
 assert.equal(dueText({ dueDate: "2026-11-12" }, days), "Due tomorrow");
 assert.equal(dueText({ dueDate: "2026-11-14" }, days), "Due in 3 days");
+assert.equal(dueText({ allStepsDone: true, mistakesLeft: 4 }, days), "Fix 4 mistakes to finish");
 
 // Teacher's work first, overdue on top; then paper, mistakes, quest; two "then" lines; the rest counted.
 const r = nextUp({
