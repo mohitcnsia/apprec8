@@ -64,6 +64,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Stars = 1 per correct answer (+1–2 for reading/finishing)**, app-wide, earned stars kept; server change.
 - **Stars buy fun minutes, looks, challenge entries; never learning.** **Diamonds** (later, after legal research):
   scarce, scored on the server, may turn into real value at year end. Not a priority.
+- **English Quest variety (owner 15 Nov):** Vocab Builder and Word Inspector as nodes inside the English quest, for
+  variety and fun. Discuss with a mockup together with Word Power step 2 (after G121).
+- **Fun tab layout (owner 15 Nov):** Pratha prefers the older carousel style with nice images over today's Fun tab.
+  Collect more feedback (Pratha + other kids) and discuss before changing anything.
 - **Chess board colours** (owner: ignore for now).
 
 ## Road to production (open steps)

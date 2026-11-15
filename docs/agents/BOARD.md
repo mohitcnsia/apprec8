@@ -150,8 +150,8 @@ promise; why-not on every wrong option; exactly one defensible answer; no copied
 ### 📋 Claude's review of G87, G111, G112, G113, G115, G117 (15 Nov)
 Good work overall: clean code, tests, and G115 is a proper walk (accepted, already published). Nothing merged yet:
 each task below has fixes. **Stay inside each list: no extra features, no new TODOs in LAUNCH_CHECKLIST/gemini.md.**
-G111's extra `ieoExamWords.js` (66 IEO words + 549-line script) wasn't asked for: it stays on your branch, unmerged,
-until the owner says yes. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
+G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's request: good call, it goes
+through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
 Do them in this order (next-task.sh hands them out top to bottom).
 
 ### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
@@ -215,6 +215,10 @@ Claude checked 50 random words + 3 stories. Examples are good. Fix these across 
 3. **Story meaning check:** "A Test of Resolve" says "exhaustive battle" (exhaustive = thorough; the meaning is
    "exhausting"). Re-read all 17 stories: every target word used in its real meaning, as in its own example.
 4. fir: "Douglas fir" isn't a true fir (different genus): use a plain fir example.
+5. **The 66 IEO words (`ieoExamWords.js`) FIRST, same rules 1–3**, plus: every `meaning` is the sense used in that
+   paper's question (name the question in `paper`, as you did); synonyms a Class 5 child would know where possible
+   (e.g. agglomeration→"medley" is off: "cluster"/"mass"). Commit the 66 as soon as they're done
+   (`gemini(G121): IEO words ready`) so Claude can check them before the 17 Nov exam, then do the 370.
 **Done means:** test passes with the dictionary check · report lists every changed confusable/antonym · 
 `gemini(G121): done — review please`.
 
