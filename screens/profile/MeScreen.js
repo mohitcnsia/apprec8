@@ -25,6 +25,7 @@ import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
 import { classLabel, MAX_CLASSES } from "../../utils/classes";
+import { isStudentAccount } from "../../utils/family";
 import { listenDecisions } from "../../services/decisionsApi";
 import { useOwnerExtras, setOwnerExtras } from "../../services/ownerView";
 import { usePersona, withPersona } from "../../services/persona";
@@ -199,8 +200,8 @@ export default function MeScreen({ navigation, signoutHandler }) {
       {/* Always here, for everyone (mockup P1): calm green, safe to tap. */}
       <NeedHelpRow onPress={() => setHelpOpen(true)} P={P} />
 
-      {/* Unlinked student/child: Link with your parent: +100 ⭐ card (G113) */}
-      {!isLinked && !isParent && !isTeacher && !isAdmin ? (
+      {/* Unlinked student/child: Link with your parent: +100 ⭐ card (G113, G118) */}
+      {isStudentAccount(userData) && !(userData?.parentUids || []).length ? (
         <Pressable
           onPress={() => navigation.navigate("LinkParent")}
           accessibilityRole="button"

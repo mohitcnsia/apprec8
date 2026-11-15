@@ -79,9 +79,22 @@ async function call(name, data, who) {
 
   const studentCreateChild = await call("createChildProfile", { firstName: "LittleKid", grade: 2, consent: childConsent }, student);
   ok(studentCreateChild.error === "PERMISSION_DENIED", "createChildProfile refuses a student account (grade set, no childUids)");
+  ok(studentCreateChild.message && studentCreateChild.message.includes("This account is set up as a student"), "createChildProfile gives student helpful message");
 
   const studentCreateLink = await call("createParentLinkCode", { consent: childConsent }, student);
   ok(studentCreateLink.error === "PERMISSION_DENIED", "createParentLinkCode refuses a student account (grade set, no childUids)");
+  ok(studentCreateLink.message && studentCreateLink.message.includes("This account is set up as a student"), "createParentLinkCode gives student helpful message");
+
+  // G118: Grown-up selfLearner with grade 8 CAN create a link code
+  const selfLearner = await signUp("grownup_learner@test.dev");
+  await db.doc(`users/${selfLearner.uid}`).set({
+    firstName: "Vikram",
+    grade: 8,
+    selfLearner: true,
+    childUids: [],
+  });
+  const selfLearnerLink = await call("createParentLinkCode", { consent: childConsent }, selfLearner);
+  ok(!selfLearnerLink.error && selfLearnerLink.code && selfLearnerLink.code.length === 6, "selfLearner CAN create a link code");
 
   // 3. Parent can create child profile -> gets +100 stars and linkBonusAt
   const parentConsent = { parentName: "Anita Sharma", relation: "mother", language: "en", version: "2026-11-04" };

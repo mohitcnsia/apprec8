@@ -8,6 +8,7 @@ const { region, runtimeOptions, longRuntimeOptions } = require("../common/config
 
 const db = admin.firestore();
 const { eraseUser } = require("../utils/eraseUser");
+const { isStudentAccount } = require("../utils/family");
 const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 const CODE_HOURS = 48;
 const MAX_CHILDREN = 6;
@@ -42,8 +43,11 @@ exports.createChildProfile = functions
     if (pData.isChild || (pData.parentUids || []).length) {
       throw new functions.https.HttpsError("permission-denied", "A child account can't add children. Ask a parent.");
     }
-    if (Number.isInteger(pData.grade) && !(pData.childUids || []).length) {
-      throw new functions.https.HttpsError("permission-denied", "A student account can't add children. Ask a parent.");
+    if (isStudentAccount(pData) && !pData.isChild) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "This account is set up as a student. If you're a parent, tap Need help on Me and we'll fix it."
+      );
     }
     const children = pData.childUids || [];
     if (children.length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can add up to 6 children.");
@@ -217,8 +221,11 @@ exports.createParentLinkCode = functions
     if (meData.isChild || (meData.parentUids || []).length) {
       throw new functions.https.HttpsError("permission-denied", "Only a parent's own account can link a child.");
     }
-    if (Number.isInteger(meData.grade) && !(meData.childUids || []).length) {
-      throw new functions.https.HttpsError("permission-denied", "A student account can't link children. Ask a parent.");
+    if (isStudentAccount(meData) && !meData.isChild) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "This account is set up as a student. If you're a parent, tap Need help on Me and we'll fix it."
+      );
     }
     if ((meData.childUids || []).length >= MAX_CHILDREN) throw new functions.https.HttpsError("resource-exhausted", "You can link up to 6 children.");
     const c = data?.consent || {};

@@ -13,6 +13,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { leaderboardView, formatPoints } from "../../utils/leaderboardView";
+import { isStudentAccount } from "../../utils/family";
 import { showAlert } from "../../services/dialog";
 import { nextUpdateText } from "../../utils/refreshSlots";
 
@@ -52,9 +53,7 @@ export default function LeaderboardScreen({ route, navigation }) {
 
   const [userData, setUserData] = useState(null);
   const classId = (userData?.classIds || [])[0] || null;
-  const isLinked = (userData?.parentUids || []).length > 0;
-  const isAdult = !userData?.isChild && ((userData?.childUids || []).length > 0 || (userData?.teachesClassIds || []).length > 0);
-  const needsParentLink = userData !== null && !isLinked && !isAdult;
+  const needsParentLink = isStudentAccount(userData) && !(userData?.parentUids || []).length;
 
   const [tab, setTab] = useState(route?.params?.tab || null); // "class" | "all"; null until we know if the kid has a class
   const [data, setData] = useState({ class: null, all: null });
