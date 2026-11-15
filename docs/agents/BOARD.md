@@ -215,10 +215,13 @@ Claude checked 50 random words + 3 stories. Examples are good. Fix these across 
 3. **Story meaning check:** "A Test of Resolve" says "exhaustive battle" (exhaustive = thorough; the meaning is
    "exhausting"). Re-read all 17 stories: every target word used in its real meaning, as in its own example.
 4. fir: "Douglas fir" isn't a true fir (different genus): use a plain fir example.
-5. **The 66 IEO words (`ieoExamWords.js`) FIRST, same rules 1–3**, plus: every `meaning` is the sense used in that
-   paper's question (name the question in `paper`, as you did); synonyms a Class 5 child would know where possible
-   (e.g. agglomeration→"medley" is off: "cluster"/"mass"). Commit the 66 as soon as they're done
-   (`gemini(G121): IEO words ready`) so Claude can check them before the 17 Nov exam, then do the 370.
+5. **The 66 IEO words (`ieoExamWords.js`) FIRST, same rules 1–3**, plus (Claude read all 12 papers, 15 Nov):
+   - Where a word was asked as a synonym/antonym question, `synonym`/`antonym` = the paper's own option
+     (medley, repulsive, traitor, rewarding, explain are RIGHT: keep them). Claude's list of every question, answer and
+     option meaning is the page https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs: use it as the reference.
+   - **Owner: never skip option words.** Add every hard OPTION word too (strident, threadbare, Babylonian, hardscrabble,
+     smirch, gelid, obdurate, affray, effigy, encroachment, indigent, maleficent…), each with `meaning` + `paper`.
+   - Commit them as soon as they're done (`gemini(G121): IEO words ready`), then do the 370.
 **Done means:** test passes with the dictionary check · report lists every changed confusable/antonym · 
 `gemini(G121): done — review please`.
 
