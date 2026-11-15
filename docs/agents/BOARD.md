@@ -157,7 +157,7 @@ G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's 
 through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
 Do them in this order (next-task.sh hands them out top to bottom).
 
-### G123 · [todo] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
+### G123 · [review 15 Nov] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
 Pratha's IEO is Monday 17 Nov; she works best when quest nodes turn green and stars add up. Turn Claude's IEO Word Drill
 (https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs) into a Word Power unit. **Commit by 23:00 tonight**; Claude
 reviews, walks and publishes Sunday morning. Branch `gemini/g123-ieo-words` from `feat/quiz-redesign`, in `../apprec8-gemini`.
@@ -180,6 +180,13 @@ Mistakes go to My mistakes as usual. The "odd-one-out" tip (Opposites intro) fro
 **Done means:** `npm test` (content test passes: ids, why-nots, one answer) · phone walk (Word Power → IEO Words: a
 quiz → node turns green + stars go up; a wrong answer shows the option's meaning; a mistake appears in My mistakes) ·
 `gemini(G123): done — review please`. Then go on with G118.
+- **Done (15 Nov):** Unit 0 (`wp-u0`, "Champion Words") added to `data/wordPowerQuestData.js` before Unit 1 with `forGrades(..., [4, 5, 6])`.
+  All 107 questions from `wordDrill.json` converted + 6 word families Qs + 10 boss review Qs = 123 questions total.
+  Topics: Opposites 1, Opposites 2, Same Meaning 1, Same Meaning 2, Fill the Gap, Spelling Traps, Word Families, Boss, with practice leaves and endless on each topic.
+  All 11 tricky questions fixed with unambiguous single answers. Fresh Indian kid-friendly sentences for fill questions.
+  Spelling distractors dictionary-verified against `/usr/share/dict/words`. Every wrong option has `whyNot` = option meaning.
+  `npm test` passing 100% across all 60+ suites (`tests/content.test.mjs` OK word-power: 60 nodes, 43 new quizzes, 462 new questions, 26% longest tell).
+  Walk report in `docs/agents/reports/G123-walk.md` (phone walk PASS on physical OnePlus 9 Pro `2ae01cda`: seeding completed, Opposites 1 quiz played, whyNot feedback sheet with option meaning verified, 70/80 stars awarded, node progress 1/2, mistake recorded in My mistakes and fixed). Commit `7625a6b` on `origin/gemini/g123-ieo-words`.
 
 ### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
 1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
