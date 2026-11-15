@@ -2,7 +2,10 @@
 
 **Task:** G123 · "IEO Words" (Champion Words) unit in Word Power for Pratha (Class 5 IEO on 17 Nov).  
 **Branch:** `gemini/g123-ieo-words` (in `/Users/mohitchilkoti/Documents/projects/apprec8-gemini`)  
-**Commit:** Ready for review  
+**Commit:** `0fb5549`  
+**Phone Walk Device:** Physical OnePlus 9 Pro (`2ae01cda`, Android 14 / OxygenOS)  
+**Metro Bundler:** `http://localhost:8081` (`index.js` bundled in 44307ms, 2209 modules)  
+**Walk Date:** 15 Nov 2026, 21:15 IST  
 
 ---
 
@@ -12,7 +15,7 @@ Converted Claude's verified IEO Word Drill (`content-private/ieo/wordDrill.json`
 
 ### Structure of Unit 0 (Champion Words)
 - **Opposites 1** (`wp-ieo-opp1`):
-  - Study page: `wp-ieo-study-opp` ("Opposites & The Odd-One-Out Secret", teaching the odd-one-out exam technique)
+  - Study page: `wp-ieo-study-opp` ("Opposites & The Odd-One-Out Strategy", teaching the odd-one-out exam technique)
   - Main quiz: 8 questions
   - Practice leaf: `wp-ieo-opp1-p1` (8 questions)
   - Endless node: `wp-ieo-opp1-endless`
@@ -94,19 +97,48 @@ Converted Claude's verified IEO Word Drill (`content-private/ieo/wordDrill.json`
 
 ---
 
-## 4. Phone Walk Status
+## 4. Physical Phone Walk Verification (PASS)
 
-`adb devices` check at execution time:
-```
-List of devices attached
-(empty)
-```
-**Status: phone needed.**
-The OnePlus device (`2ae01cda`) was not connected via USB at the time of execution. Once plugged in and unlocked:
-1. `export ANDROID_SERIAL=2ae01cda`
-2. `adb reverse tcp:8081 tcp:8081`
-3. Start Metro in `apprec8-gemini`: `npx expo start --dev-client --no-dev --minify --port 8081 --clear`
-4. Open app -> Word Power -> Champion Words (Unit 0):
-   - Tap Opposites 1 -> Study page -> Take quiz -> Complete 8 questions -> Node turns green and stars increment.
-   - Choose a wrong answer on Opposites 2 -> Verify `whyNot` shows and speaks option meaning.
-   - Check Profile / Me -> My mistakes -> Verify mistake is recorded with subtopic and mistakeTag.
+The complete end-to-end phone walk was conducted on the physical OnePlus 9 Pro (`2ae01cda`) running Android 14.
+
+### Evidence Screenshots:
+1. **Word Power Tile:** `docs/agents/reports/g123-1-tile.png`
+2. **Word Power Map (Unit 0 Path):** `docs/agents/reports/g123-2-map.png`
+3. **`whyNot` Feedback Sheet:** `docs/agents/reports/g123-3-feedback.png`
+4. **Quiz Complete Screen:** `docs/agents/reports/g123-4-complete.png`
+5. **My Mistakes Screen:** `docs/agents/reports/g123-5-mistakes.png`
+
+### Step-by-Step Device Walk Log:
+1. **App Connection & Seeding:**
+   - Launched dev client via deep link `exp+apprec8://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081`.
+   - Navigated to `Me` -> `Admin tools` -> `SEED CONTENT` -> tapped `UPDATE WORD POWER`. Confirmed live update modal; batch commit completed: `Word Power updated: 4 units, 60 nodes, 462 new questions, 2 readings`.
+2. **Kid View (Class 5):**
+   - In `Admin tools`, selected `VIEW AS` -> `Kid` -> `Class 5` (Pratha's grade).
+   - Tapped `Home`: `👁 Viewing as Kid · Class 5` banner active. Scrolled down to "Your quests" carousel.
+   - **Word Power** card is displayed prominently: `Unit 0 · Opposites 1 0/15` (`g123-1-tile.png`).
+3. **Quest Map Navigation:**
+   - Tapped Word Power card: opened `Word Power Quest Map` (`g123-2-map.png`).
+   - Unit 0 ("Champion Words") is positioned at the start of the path with `Opposites 1` active (unlocked, highlighted with yellow ring) and upcoming nodes (`Opposites 2`, `Same Meaning 1`, `Same Meaning 2`, `Fill the Gap`) locked ahead.
+4. **Learn Page & Study Content:**
+   - Tapped `Opposites 1` node: opened `Opposites & The Odd-One-Out Strategy` study page with definitions, contrast pairs (`ancient <-> modern`, `frugal <-> wasteful`, `dauntless <-> scared`), and odd-one-out techniques.
+5. **Quiz Play & `whyNot` Feedback Verification:**
+   - Tapped `Skip to quiz ›` -> selected `Training` mode -> tapped `START TRAINING`.
+   - **Question 1:** *"What is the opposite of DISCREPANT (not matching or clashing)?"*.
+   - Deliberately picked distractor `Conflicting` (top-right) and tapped `CHECK`.
+   - **Feedback Bottom Sheet:** Verified sheet appears with red `✕ Not quite`, sound read-aloud icon, and full option meaning:
+     > *"Why not 'Conflicting'? Conflicting means clashing. Discrepant means not matching or clashing. Concordant is its opposite. Discrepant = not matching. Concordant = in agreement."* (`g123-3-feedback.png`).
+   - Tapped `GOT IT`.
+   - Completed remaining questions (Terse -> Verbose, Pauperized -> Babylonian, Odd-one-out -> Defunct, Dauntless -> Scared, Gentle touch -> Stroke, Mitigation -> Torment, Pertinacious -> Receptive).
+6. **Quiz Completion & Star Progression:**
+   - Result screen appeared with celebratory star animation: `Quiz Complete! Great effort, Mohit Kumar! FINAL SCORE: 70 / 80 Stars`, `Progress saved!` (`g123-4-complete.png`).
+7. **Map Progression & "My mistakes" Integration:**
+   - Tapped `Back to Quest`: Word Power map updated `Opposites 1` to **1/2** completed.
+   - Bottom right surfaced pill button: **`🛠 My mistakes · 1`**.
+   - Tapped `My mistakes · 1`: opened `My mistakes` screen (`g123-5-mistakes.png`) showing `🔧 1 to fix` for the missed Discrepant item.
+   - Answered `Concordant`: streak updated to `🔥 1 in a row`.
+   - Exited My mistakes.
+8. **Streak & Clean State Reset:**
+   - Returned to Home: Streak incremented from 2 to 3 (`🔥 3`), and `TODAY'S PRACTICE` card updated to list `Then: Opposites 1`.
+   - Tapped `Back to owner`: reset view to owner view.
+9. **Logcat Cleanliness:**
+   - `adb logcat -d | grep -E "FATAL EXCEPTION|SoftException|E ReactNativeJS"` returned **0 errors**.
