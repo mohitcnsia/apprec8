@@ -71,5 +71,16 @@ console.log("topicLevels tests passed");
   assert.deepEqual(e.lv, { nouns: "p", tenses: "l", modals: "p", a: "r", b: "s" });
   assert.ok(JSON.stringify(e).length < 400, "one kid's entry stays small");
   assert.ok(cs.sameLevels({ a: "l" }, { a: "l" }) && !cs.sameLevels({ a: "l" }, { a: "p" }));
+  const e2 = cs.entryOf(
+    {
+      ...stats,
+      mistakes: { m1: { branchId: "determiners" }, m2: { branchId: "determiners" }, m3: { branchId: "tenses" } },
+      nodes: { "determiners__0": { status: "completed" }, "determiners__1": { status: "completed" }, "determiners__2": { status: "completed" } },
+    },
+    now,
+    [{ id: "determiners", steps: [{}, {}, {}] }]
+  );
+  assert.deepEqual(e2.mistakes, { determiners: 2, tenses: 1 });
+  assert.deepEqual(e2.completed, ["determiners"], "gives topic id only when all steps completed");
   console.log("topicLevels server copy + class summary passed");
 }

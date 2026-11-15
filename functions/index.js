@@ -11,6 +11,7 @@ const pushActionsCallable = require("./callable/pushActions");
 const joinActionsCallable = require("./callable/joinActions");
 const moodActionsCallable = require("./callable/moodActions");
 const { sendSticker } = require("./callable/stickerActions");
+const { remindAssignment } = require("./callable/remindActions");
 const { ownerWeekly } = require("./callable/ownerActions");
 const { peopleList, helpPerson, markSelfLearner, saveHelpMessage, kidNames } = require("./callable/peopleActions");
 
@@ -30,6 +31,7 @@ module.exports = {
   ...joinActionsCallable,
   ...moodActionsCallable,
   sendSticker,
+  remindAssignment,
   ownerWeekly,
   peopleList,
   helpPerson,

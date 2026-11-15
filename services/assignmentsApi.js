@@ -52,3 +52,24 @@ export async function myAssignments(classIds = []) {
 /** Topic ids assigned to me in one quest (for buildQuestPath extraUnlocked). */
 export const assignedNodeIds = (assignments = [], questId) =>
   [...new Set(assignments.filter((a) => a.questId === questId).flatMap((a) => a.nodeIds || []))];
+
+/**
+ * G87/G84b: Remind uncompleted students of an assignment (max 1 reminder per child per day).
+ * Sends a nudge card on the child's Home and a throttled push to linked parents.
+ */
+export async function remindAssignment({ classId, assignmentId, assignmentTitle, toUids = [], mistakesMap = {} }) {
+  if (!classId || !assignmentId || !toUids.length) return { ok: true, reminded: 0, skipped: 0 };
+  if (String(classId).startsWith("demo_")) {
+    return { ok: true, reminded: toUids.length, skipped: 0 };
+  }
+  const { default: functions } = await import("@react-native-firebase/functions");
+  return functions()
+    .httpsCallable("remindAssignment")({
+      classId,
+      assignmentId,
+      assignmentTitle,
+      toUids,
+      mistakesMap,
+    })
+    .then((r) => r.data);
+}

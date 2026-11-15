@@ -48,9 +48,12 @@ console.log(`weeklySummary tests passed (reteach ${w.reteach.title} ${w.reteach.
   const kids = [
     { uid: "a", firstName: "Zoya", quests: [{ questId: "english-quest", nodes: { n1: { status: "completed" } } }] },
     { uid: "b", firstName: "Aman", quests: [{ questId: "english-quest", nodes: {} }] },
+    { uid: "c", firstName: "Rahul", quests: [{ questId: "english-quest", nodes: { n1: { status: "completed" } }, mistakes: { m1: { branchId: "n1" } } }] },
   ];
   const r = assignmentStatus([{ id: "x", questId: "english-quest", nodeIds: ["n1"], nodeTitles: ["T"], dueDate: "2030-01-01" }], kids, Date.UTC(2026, 10, 12));
   if (r.who.notStarted.map((k) => k.firstName).join() !== "Aman") throw new Error("not started names");
-  if (r.who.done.length + r.who.half.length + r.who.notStarted.length !== 2) throw new Error("everyone in one group");
+  if (r.who.done.map((k) => k.firstName).join() !== "Zoya") throw new Error("done names");
+  if (r.who.half.map((k) => k.firstName).join() !== "Rahul") throw new Error("half names with mistakes");
+  if (r.who.done.length + r.who.half.length + r.who.notStarted.length !== 3) throw new Error("everyone in one group");
   console.log("assignment names passed");
 }

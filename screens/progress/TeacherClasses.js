@@ -28,7 +28,8 @@ import { topicTitle } from "../../data/papers";
 import { classCheckup } from "../../utils/paperTopics";
 import { topicNamer } from "../../utils/progressView";
 import { nodesForGrade } from "../../utils/gradeFilter";
-import { createAssignment, listAssignments, deleteAssignment } from "../../services/assignmentsApi";
+import { createAssignment, listAssignments, deleteAssignment, remindAssignment } from "../../services/assignmentsApi";
+import { computeAssignmentResults, computeStarOfTheWeek } from "../../utils/assignmentResults";
 import { dayKey } from "../../utils/kidStats";
 import { showAlert } from "../../services/dialog";
 
@@ -45,16 +46,29 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
   const [due, setDue] = useState(7);
   const [note, setNote] = useState("");
   const [list, setList] = useState([]);
-  const reload = () => listAssignments(cls.id).then(setList).catch(() => setList([]));
+  const [expandedId, setExpandedId] = useState(null);
+  const [reminding, setReminding] = useState({});
+
+  const reload = () =>
+    listAssignments(cls.id)
+      .then((items) => {
+        setList(items);
+        setExpandedId((prev) => (prev ? prev : items[0]?.id || null));
+      })
+      .catch(() => setList([]));
+
   useEffect(() => {
     reload();
   }, [cls.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const topics = useMemo(() => {
     const nodes = bundledQuest(questId)?.nodes || [];
     return nodesForGrade(nodes, cls.grade).filter((n) => n.kind === "main");
   }, [questId, cls.grade]);
+
   if (!questIds.length) return <Text style={styles.soft}>No quests for your subjects yet.</Text>;
   const toggle = (arr, set, v) => set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+
   const assign = async () => {
     try {
       const dueDate = due ? dayKey(Date.now() + due * 24 * 60 * 60 * 1000) : null;
@@ -67,6 +81,61 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
       showAlert("Couldn't assign", e.message);
     }
   };
+
+  const handleRemindOne = async (a, student) => {
+    const k = `${a.id}:${student.uid}`;
+    setReminding((prev) => ({ ...prev, [k]: true }));
+    try {
+      const mistakesMap = { [student.uid]: student.mistakesLeft };
+      await remindAssignment({
+        classId: cls.id,
+        assignmentId: a.id,
+        assignmentTitle: (a.nodeTitles || []).join(", ") || "Assignment",
+        toUids: [student.uid],
+        mistakesMap,
+      });
+      showAlert("Reminded", `Sent reminder to ${student.name}.`);
+    } catch (e) {
+      setReminding((prev) => {
+        const copy = { ...prev };
+        delete copy[k];
+        return copy;
+      });
+      showAlert("Couldn't remind", e.message);
+    }
+  };
+
+  const handleRemindAll = async (a, students) => {
+    const toRemind = students.filter((s) => s.status !== "done" && s.canRemind && !reminding[`${a.id}:${s.uid}`]);
+    if (!toRemind.length) return;
+    const updates = {};
+    const mistakesMap = {};
+    toRemind.forEach((s) => {
+      updates[`${a.id}:${s.uid}`] = true;
+      mistakesMap[s.uid] = s.mistakesLeft;
+    });
+    setReminding((prev) => ({ ...prev, ...updates }));
+    try {
+      const res = await remindAssignment({
+        classId: cls.id,
+        assignmentId: a.id,
+        assignmentTitle: (a.nodeTitles || []).join(", ") || "Assignment",
+        toUids: toRemind.map((s) => s.uid),
+        mistakesMap,
+      });
+      showAlert("Reminded", `Sent reminder to ${res?.reminded ?? toRemind.length} student(s).`);
+    } catch (e) {
+      setReminding((prev) => {
+        const copy = { ...prev };
+        toRemind.forEach((s) => delete copy[`${a.id}:${s.uid}`]);
+        return copy;
+      });
+      showAlert("Couldn't remind", e.message);
+    }
+  };
+
+  const star = computeStarOfTheWeek(kids);
+
   return (
     <View style={[styles.kid, { gap: 8 }]}>
       <Text style={styles.title}>Assign a topic</Text>
@@ -103,17 +172,108 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
       <Pressable disabled={!picked.length} onPress={assign} style={[styles.button, !picked.length && { opacity: 0.45 }]}>
         <Text style={styles.buttonText}>ASSIGN</Text>
       </Pressable>
-      {list.map((a) => (
-        <View key={a.id} style={styles.rowBetween}>
-          <Text style={[styles.line, { flex: 1 }]} numberOfLines={2}>
-            {(a.nodeTitles || []).join(", ")} · {a.kidIds?.length ? `${a.kidIds.length} kid(s)` : "whole class"}
-            {a.dueDate ? ` · due ${a.dueDate}` : ""}
-          </Text>
-          <Pressable onPress={() => deleteAssignment(cls.id, a.id).then(reload)} hitSlop={8}>
-            <Text style={[styles.line, { color: P.wrongText }]}>Remove</Text>
-          </Pressable>
-        </View>
-      ))}
+      {list.map((a) => {
+        const isExpanded = expandedId === a.id;
+        const res = isExpanded ? computeAssignmentResults(a, kids, (q) => bundledQuest(q)?.nodes || []) : null;
+        const canRemindAny = res ? res.students.some((s) => s.status !== "done" && s.canRemind && !reminding[`${a.id}:${s.uid}`]) : false;
+
+        return (
+          <View key={a.id} style={styles.assignmentBox}>
+            <Pressable
+              onPress={() => setExpandedId(isExpanded ? null : a.id)}
+              style={styles.rowBetween}
+              accessibilityRole="button"
+              accessibilityLabel={`Assignment ${(a.nodeTitles || []).join(", ")}`}
+            >
+              <View style={{ flex: 1, paddingRight: 8 }}>
+                <Text style={styles.title} numberOfLines={2}>
+                  {(a.nodeTitles || []).join(", ")}
+                </Text>
+                <Text style={styles.soft}>
+                  {a.kidIds?.length ? `${a.kidIds.length} kid(s)` : "whole class"}
+                  {a.dueDate ? ` · due ${a.dueDate}` : ""}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                <Pressable onPress={() => deleteAssignment(cls.id, a.id).then(reload)} hitSlop={8} accessibilityLabel="Remove assignment">
+                  <Text style={[styles.soft, { color: P.wrongText }]}>Remove</Text>
+                </Pressable>
+                <Text style={[styles.title, { color: P.textSoft }]}>{isExpanded ? "▲" : "▼"}</Text>
+              </View>
+            </Pressable>
+
+            {isExpanded && res ? (
+              <View style={{ gap: 8, marginTop: 4 }}>
+                <Text style={styles.line}>{res.summary.topLine}</Text>
+
+                <View style={styles.bar}>
+                  <View style={{ flex: res.summary.done || 0.0001, backgroundColor: P.correctBorder }} />
+                  <View style={{ flex: res.summary.fixingMistakes || 0.0001, backgroundColor: P.gold }} />
+                  <View style={{ flex: res.summary.halfway || 0.0001, backgroundColor: P.selectedBorder }} />
+                  <View style={{ flex: res.summary.notStarted || 0.0001, backgroundColor: P.border }} />
+                </View>
+
+                {star ? (
+                  <View style={styles.starCard}>
+                    <View style={styles.rowBetween}>
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text style={styles.starTitle}>{star.shortShareText}</Text>
+                        <Text style={styles.soft}>Accuracy {star.student.accuracy}% · {star.student.answered} questions</Text>
+                      </View>
+                      <Pressable
+                        onPress={() => Share.share({ message: star.shortShareText })}
+                        style={styles.shareBtn}
+                        accessibilityRole="button"
+                        accessibilityLabel="Share star of the week to WhatsApp"
+                      >
+                        <Text style={styles.shareBtnText}>Share 💬</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                ) : null}
+
+                <Pressable
+                  disabled={!canRemindAny}
+                  onPress={() => handleRemindAll(a, res.students)}
+                  accessibilityRole="button"
+                  style={[styles.remindAllBtn, !canRemindAny && { opacity: 0.45 }]}
+                >
+                  <Text style={styles.remindAllText}>Remind all not done</Text>
+                </Pressable>
+
+                {res.students.map((s) => {
+                  const alreadyReminded = !s.canRemind || reminding[`${a.id}:${s.uid}`];
+                  return (
+                    <View key={s.uid} style={styles.studentRow}>
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text style={styles.studentName}>{s.name}</Text>
+                        <Text style={styles.soft}>
+                          {s.statusLabel} · {s.accuracyLabel}
+                        </Text>
+                      </View>
+                      {s.status !== "done" ? (
+                        <Pressable
+                          disabled={alreadyReminded}
+                          onPress={() => handleRemindOne(a, s)}
+                          accessibilityRole="button"
+                          accessibilityLabel={`Remind ${s.name}`}
+                          style={[styles.remindBtn, alreadyReminded && { opacity: 0.45, borderColor: P.border }]}
+                        >
+                          <Text style={[styles.remindBtnText, alreadyReminded && { color: P.textSoft }]}>
+                            {alreadyReminded ? "Reminded today" : "Remind"}
+                          </Text>
+                        </Pressable>
+                      ) : (
+                        <Text style={{ color: P.correctText, fontFamily: "nunitoBold", fontSize: 14 }}>✓</Text>
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            ) : null}
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -123,7 +283,7 @@ function weekOf(cls, rows, assignments) {
   const nodes = rows[0]?.perQuest.flatMap((p) => bundledQuest(p.q)?.nodes || []) || [];
   const namer = topicNamer(nodes);
   const titles = Object.fromEntries(nodes.map((n) => [n.id, n.title]));
-  const kids = rows.map((r) => ({ uid: r.uid, firstName: r.firstName, quests: r.perQuest.map((p) => ({ questId: p.q, stats: p.stats, nodes: p.nodes })) }));
+  const kids = rows.map((r) => ({ uid: r.uid, firstName: r.firstName, quests: r.perQuest.map((p) => ({ questId: p.q, stats: p.stats, nodes: p.nodes, mistakes: p.mistakesMap || p.mistakes })) }));
   return teacherWeek({ kids, assignments, namer, gateTitle: (id) => titles[id] || "challenge" });
 }
 
@@ -232,7 +392,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
                 const namer = topicNamer(bundledQuest(q)?.nodes || []);
                 const week = summarize(stats, "week");
                 const weak = weakTopics(stats)[0];
-                return { q, week, acc: accuracy(week), mistakes, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes: d?.nodes || {}, checkups: d?.checkups || null };
+                return { q, week, acc: accuracy(week), mistakes, mistakesMap: d?.mistakes || {}, weak: weak ? namer(weak.subtopic) : null, last: stats.lastActiveAt || 0, stats, nodes: d?.nodes || {}, checkups: d?.checkups || null };
               })
             );
             return { ...m, perQuest, last: Math.max(0, ...perQuest.map((p) => p.last)) };
@@ -361,6 +521,18 @@ const makeStyles = (P) =>
     input: { height: 44, borderRadius: 12, borderWidth: 1, borderColor: P.border, color: P.text, paddingHorizontal: 12, fontFamily: "nunitoBold" },
     button: { height: 48, borderRadius: 14, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
     buttonText: { color: P.onPrimary, fontSize: 15, fontFamily: "nunitoBold", letterSpacing: 0.5 },
+    assignmentBox: { padding: 12, borderRadius: 14, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, gap: 6 },
+    bar: { flexDirection: "row", height: 8, borderRadius: 4, overflow: "hidden", marginVertical: 6, gap: 2 },
+    starCard: { padding: 10, borderRadius: 14, borderWidth: 1.5, borderColor: P.gold, backgroundColor: P.card, marginVertical: 4 },
+    starTitle: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
+    shareBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: P.selectedBg, borderWidth: 1, borderColor: P.selectedBorder },
+    shareBtnText: { fontSize: 13, fontFamily: "nunitoBold", color: P.selectedText },
+    remindAllBtn: { height: 38, borderRadius: 12, borderWidth: 1.5, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center", marginVertical: 4 },
+    remindAllText: { fontSize: 13, fontFamily: "nunitoBold", color: P.selectedText },
+    studentRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 8, borderTopWidth: 1, borderTopColor: P.border },
+    studentName: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
+    remindBtn: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 10, borderWidth: 1, borderColor: P.selectedBorder },
+    remindBtnText: { fontSize: 12, fontFamily: "nunitoBold", color: P.selectedText },
   });
 
 function CheckupCard({ rows, P, styles }) {

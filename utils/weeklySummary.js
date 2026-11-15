@@ -8,6 +8,7 @@
 import { summarize, accuracy } from "./kidStats.js";
 import { topicDone } from "./questTree.js";
 import { bundledQuest } from "../data/quests/index.js";
+import { countTopicMistakes } from "./assignedTopics.js";
 
 const DAY = 24 * 60 * 60 * 1000;
 export const WEAK_BELOW = 0.6;
@@ -99,15 +100,21 @@ export function assignmentStatus(assignments = [], kids = [], now = Date.now()) 
   // Names per group (owner, 2026-11-12: the teacher sees who, and can nudge or appreciate them).
   const who = { done: [], half: [], notStarted: [] };
   targets.forEach((k) => {
-    const nodes = k.quests.find((q) => q.questId === a.questId)?.nodes || {};
+    const q = k.quests.find((x) => x.questId === a.questId) || {};
+    const nodes = q.nodes || {};
+    const mistakes = q.mistakes || {};
     const defs = bundledQuest(a.questId)?.nodes || [];
     const n = (a.nodeIds || []).filter((id) => {
       const def = defs.find((x) => x.id === id);
       return def ? topicDone(def, nodes) : nodes[id]?.status === "completed";
     }).length;
-    const me = { uid: k.uid, firstName: k.firstName || "Student" };
-    if (n === (a.nodeIds || []).length && n > 0) (done++, who.done.push(me));
-    else if (n > 0 || (a.nodeIds || []).some((id) => nodes[id])) (half++, who.half.push(me));
+    let mistakesLeft = 0;
+    (a.nodeIds || []).forEach((id) => {
+      mistakesLeft += countTopicMistakes(mistakes, id);
+    });
+    const me = { uid: k.uid, firstName: k.firstName || "Student", mistakesLeft };
+    if (n === (a.nodeIds || []).length && n > 0 && mistakesLeft === 0) (done++, who.done.push(me));
+    else if (n > 0 || (a.nodeIds || []).some((id) => nodes[id]) || mistakesLeft > 0) (half++, who.half.push(me));
     else who.notStarted.push(me);
   });
   Object.values(who).forEach((list) => list.sort((x, y) => x.firstName.localeCompare(y.firstName)));
