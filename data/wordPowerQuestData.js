@@ -395,13 +395,13 @@ export const quizzes = {
         ["Salving", "antonym-confusion", "Salving means soothing, like an ointment."],
         ["Mollification", "antonym-confusion", "Mollification means calming someone down."],
       ],
-        "Mitigation means making pain or harm less. Torment is its opposite. Mitigation = making pain or harm less. Alleviation, salving and mollification all mean easing. Torment is the odd one out."
+        "Mitigation means making pain or harm less. Torment is its opposite. Alleviation, salving and mollification all mean easing. Torment is the odd one out."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "Odd-one-out challenge: Three words mean happening together. Which word is the odd one out?",
+        "SYNCHRONOUS means happening at the same time. Three of these words mean nearly the same. Which is the odd one out?",
         "Defunct",
         [
         ["Attendant", "antonym-confusion", "Attendant means accompanying or going along together."],
@@ -421,7 +421,7 @@ export const quizzes = {
         ["Penurious", "antonym-confusion", "Penurious means extremely poor, or very stingy."],
         ["Straitened", "antonym-confusion", "Straitened means short of money."],
       ],
-        "Pauperized means made very poor. Babylonian is its opposite. Pauperized = made very poor. Hardscrabble, penurious and straitened all mean poor. Babylonian = luxurious, like rich ancient Babylon."
+        "Pauperized means made very poor. Babylonian is its opposite. Hardscrabble, penurious and straitened all mean poor. Babylonian = luxurious, like rich ancient Babylon."
       ),
     },
     {
@@ -434,13 +434,13 @@ export const quizzes = {
         ["Antipodal", "antonym-confusion", "Antipodal means exactly opposite."],
         ["Conflicting", "antonym-confusion", "Conflicting means clashing."],
       ],
-        "Discrepant means not matching or clashing. Concordant is its opposite. Discrepant = not matching. Concordant = in agreement."
+        "Discrepant means not matching or clashing. Concordant is its opposite. Concordant = in agreement."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "Odd-one-out challenge: Which word means a gentle touch of the hand, rather than a hard collision?",
+        "NUDGE means a small push. Three of these words are about hitting or bouncing off. Which is the odd one out?",
         "Stroke",
         [
         ["Ricochet", "antonym-confusion", "Ricochet means to bounce off a surface after hitting it hard."],
@@ -460,7 +460,7 @@ export const quizzes = {
         ["Obdurate", "antonym-confusion", "Obdurate means stubbornly refusing to change."],
         ["Staunch", "antonym-confusion", "Staunch means loyal and firm."],
       ],
-        "Pertinacious means stubbornly determined. Receptive is its opposite. Pertinacious = stubbornly determined. Mulish, obdurate and staunch are all firm or stubborn. Receptive = open to ideas."
+        "Pertinacious means stubbornly determined. Receptive is its opposite. Mulish, obdurate and staunch are all firm or stubborn. Receptive = open to ideas."
       ),
     },
     {
@@ -473,7 +473,7 @@ export const quizzes = {
         ["Curt", "antonym-confusion", "Curt means rudely short."],
         ["Concise", "antonym-confusion", "Concise means brief and clear."],
       ],
-        "Terse means using very few words. Verbose is its opposite. Terse = using few words. Verbose = using too many words."
+        "Terse means using very few words. Verbose is its opposite. Verbose = using too many words."
       ),
     },
     {
@@ -486,7 +486,7 @@ export const quizzes = {
         ["Courageous", "antonym-confusion", "Courageous means brave."],
         ["Resolute", "antonym-confusion", "Resolute means determined."],
       ],
-        "Dauntless means fearless and brave. Scared is its opposite. Dauntless = fearless."
+        "Dauntless means fearless and brave. Scared is its opposite."
       ),
     },
   ],
@@ -494,72 +494,72 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of METICULOUS (very careful about every detail)?",
+        "What is the opposite of METICULOUS?",
         "Messy",
         [
         ["Strict", "antonym-confusion", "Strict means firm about rules."],
         ["Picky", "antonym-confusion", "Picky means fussy."],
         ["Perfectionist", "antonym-confusion", "Perfectionist means wants everything perfect."],
       ],
-        "Meticulous means very careful about every detail. Messy is its opposite. Meticulous = very careful about every detail."
+        "Meticulous means very careful about every detail. Messy is its opposite."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of PROSAIC (dull, ordinary and routine)?",
+        "What is the opposite of PROSAIC?",
         "Exhilarating",
         [
         ["Banal", "antonym-confusion", "Banal means boring, unoriginal."],
         ["Hackneyed", "antonym-confusion", "Hackneyed means used so often it's stale."],
         ["Routine", "antonym-confusion", "Routine means the usual, everyday."],
       ],
-        "Prosaic means dull, ordinary and routine. Exhilarating is its opposite. Prosaic = dull, ordinary. Banal, hackneyed and routine are all dull too. Exhilarating = very exciting."
+        "Prosaic means dull, ordinary and routine. Exhilarating is its opposite. Banal, hackneyed and routine are all dull too. Exhilarating = very exciting."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of ERRATIC (unpredictable and irregular)?",
+        "What is the opposite of ERRATIC?",
         "Steadfast",
         [
         ["Volatile", "antonym-confusion", "Volatile means changes suddenly."],
         ["Bizarre", "antonym-confusion", "Bizarre means very strange."],
         ["Dreary", "antonym-confusion", "Dreary means dull and gloomy."],
       ],
-        "Erratic means unpredictable and irregular. Steadfast is its opposite. Erratic = unpredictable. Steadfast = firm and steady."
+        "Erratic means unpredictable and irregular. Steadfast is its opposite. Steadfast = firm and steady."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of INVETERATE (deep-rooted and long-lasting)?",
+        "What is the opposite of INVETERATE?",
         "Transitory",
         [
         ["Chronic", "antonym-confusion", "Chronic means long-lasting."],
         ["Fixed", "antonym-confusion", "Fixed means not changing."],
         ["Established", "antonym-confusion", "Established means settled for a long time."],
       ],
-        "Inveterate means deep-rooted and long-lasting. Transitory is its opposite. Inveterate = a long, fixed habit. Transitory = short-lived."
+        "Inveterate means deep-rooted and long-lasting. Transitory is its opposite. Transitory = short-lived."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of PUNITIVE (intended as a punishment)?",
+        "What is the opposite of PUNITIVE?",
         "Rewarding",
         [
         ["Severe", "antonym-confusion", "Severe means very strict or harsh."],
         ["Penal", "antonym-confusion", "Penal means to do with punishment."],
         ["Ordered", "antonym-confusion", "Ordered means arranged, or told to do."],
       ],
-        "Punitive means intended as a punishment. Rewarding is its opposite. Punitive = meant to punish. Rewarding is the opposite."
+        "Punitive means intended as a punishment. Rewarding is its opposite. Rewarding is the opposite."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of AMATEUR (doing an activity for love, not money)?",
+        "What is the opposite of AMATEUR?",
         "Expert",
         [
         ["Useless", "antonym-confusion", "Useless means no use."],
@@ -572,20 +572,20 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of OVERWROUGHT (deeply nervous and agitated)?",
+        "What is the opposite of OVERWROUGHT?",
         "Calm",
         [
         ["Overweight", "antonym-confusion", "Overweight means too heavy."],
         ["Overexcited", "antonym-confusion", "Overexcited means too excited."],
         ["Lively", "antonym-confusion", "Lively means full of energy."],
       ],
-        "Overwrought means deeply nervous and agitated. Calm is its opposite. Overwrought = very upset and nervous."
+        "Overwrought means deeply nervous and agitated. Calm is its opposite."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of SPECTATOR (someone who sits and watches)?",
+        "What is the opposite of SPECTATOR?",
         "Contestant",
         [
         ["Reviewer", "antonym-confusion", "Reviewer means someone who judges and writes about a show."],
@@ -620,7 +620,7 @@ export const quizzes = {
         ["Inert", "antonym-confusion", "Inert means not moving."],
         ["Waste", "antonym-confusion", "Waste means rubbish; or use carelessly."],
       ],
-        "Mediocre means just ordinary, not very good. Excellent is its opposite. Mediocre = just ordinary, not very good."
+        "Mediocre means just ordinary, not very good. Excellent is its opposite."
       ),
     },
     {
@@ -646,7 +646,7 @@ export const quizzes = {
         ["Quick", "antonym-confusion", "Quick means fast."],
         ["Timely", "antonym-confusion", "Timely means at the right time."],
       ],
-        "Prompt means done at once, on time. Later is its opposite. Prompt = done at once, on time."
+        "Prompt means done at once, on time. Later is its opposite."
       ),
     },
     {
@@ -659,7 +659,7 @@ export const quizzes = {
         ["Lenient", "antonym-confusion", "Lenient means not strict."],
         ["Compliant", "antonym-confusion", "Compliant means obeying easily."],
       ],
-        "Indulgent means giving in easily to wishes. Abstaining is its opposite. Indulgent = giving in to wishes. Abstaining = holding back, saying no to yourself."
+        "Indulgent means giving in easily to wishes. Abstaining is its opposite. Abstaining = holding back, saying no to yourself."
       ),
     },
     {
@@ -685,13 +685,13 @@ export const quizzes = {
         ["Special", "antonym-confusion", "Special means not ordinary."],
         ["Notable", "antonym-confusion", "Notable means worth noticing."],
       ],
-        "Exceptional means unusually good and rare. Familiar is its opposite. Exceptional = unusually good. Familiar = well known, ordinary."
+        "Exceptional means unusually good and rare. Familiar is its opposite. Familiar = well known, ordinary."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "Odd-one-out challenge: Three words relate to a shortage or missing thing. Which word is the odd one out?",
+        "DEARTH means a shortage. Three of these words are about something missing or faulty. Which is the odd one out?",
         "Advantage",
         [
         ["Defect", "antonym-confusion", "Defect means a fault, flaw, or imperfection."],
@@ -706,20 +706,20 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of COLOSSAL (gigantic and huge)?",
-        "Miniscule",
+        "What is the opposite of COLOSSAL?",
+        "Minuscule",
         [
         ["Enormous", "antonym-confusion", "Enormous means very big."],
         ["Mammoth", "antonym-confusion", "Mammoth means huge."],
         ["Immense", "antonym-confusion", "Immense means very big."],
       ],
-        "Colossal means gigantic and huge. Miniscule is its opposite. Colossal = huge. Note: the correct spelling is minuscule (like 'minus')."
+        "Colossal means gigantic and huge. Minuscule (tiny) is its opposite. Watch the spelling: minus-cule, like 'minus'. Papers sometimes print 'miniscule', a common misspelling."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of BLIZZARD (a violent, overwhelming snowstorm)?",
+        "What is the opposite of BLIZZARD?",
         "Dribble",
         [
         ["Squall", "antonym-confusion", "Squall means sudden short storm."],
@@ -732,14 +732,14 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of ASSUAGE (calm or ease an upset feeling)?",
+        "What is the opposite of ASSUAGE?",
         "Agitate",
         [
         ["Sate", "antonym-confusion", "Sate means satisfy fully."],
         ["Mitigate", "antonym-confusion", "Mitigate means make less bad."],
         ["Appease", "antonym-confusion", "Appease means calm someone by giving in."],
       ],
-        "Assuage means calm or ease an upset feeling. Agitate is its opposite. Assuage = calm or ease. Sate, mitigate and appease all ease something. Agitate = stir up, upset."
+        "Assuage means calm or ease an upset feeling. Agitate is its opposite. Sate, mitigate and appease all ease something. Agitate = stir up, upset."
       ),
     },
     {
@@ -758,53 +758,53 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of AMNESTY (an official pardon or forgiveness)?",
+        "What is the opposite of AMNESTY?",
         "Penalty",
         [
         ["Reprieve", "antonym-confusion", "Reprieve means cancelling a punishment."],
         ["Absolution", "antonym-confusion", "Absolution means being freed from blame."],
         ["Forgiveness", "antonym-confusion", "Forgiveness means pardoning."],
       ],
-        "Amnesty means an official pardon or forgiveness. Penalty is its opposite. Amnesty = an official pardon. Penalty = punishment."
+        "Amnesty means an official pardon or forgiveness. Penalty is its opposite. Penalty = punishment."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of BESIEGED (surrounded and trapped by troubles)?",
+        "What is the opposite of BESIEGED?",
         "Liberation",
         [
         ["Confined", "antonym-confusion", "Confined means kept in a small space."],
         ["Concentrated", "antonym-confusion", "Concentrated means gathered in one place."],
         ["Beset", "antonym-confusion", "Beset means troubled on all sides."],
       ],
-        "Besieged means surrounded and trapped by troubles. Liberation is its opposite. Besieged = surrounded by an enemy. Liberation = being set free."
+        "Besieged means surrounded and trapped by troubles. Liberation is its opposite. Liberation = being set free."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of VENERABLE (respected for age or wisdom)?",
+        "What is the opposite of VENERABLE?",
         "Common",
         [
         ["Grand", "antonym-confusion", "Grand means big and impressive."],
         ["Respected", "antonym-confusion", "Respected means looked up to."],
         ["Stately", "antonym-confusion", "Stately means grand and dignified."],
       ],
-        "Venerable means respected for age or wisdom. Common is its opposite. Venerable = respected for age or wisdom."
+        "Venerable means respected for age or wisdom. Common is its opposite."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of ACCLAIMED (praised and celebrated by many)?",
+        "What is the opposite of ACCLAIMED?",
         "Infamous",
         [
         ["Lauded", "antonym-confusion", "Lauded means praised highly."],
         ["Praised", "antonym-confusion", "Praised means spoken well of."],
         ["Extolled", "antonym-confusion", "Extolled means praised very highly."],
       ],
-        "Acclaimed means praised and celebrated by many. Infamous is its opposite. Acclaimed = praised by many. Infamous = famous for something bad."
+        "Acclaimed means praised and celebrated by many. Infamous is its opposite. Infamous = famous for something bad."
       ),
     },
   ],
@@ -812,33 +812,33 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of CONTRITE (feeling deeply sorry for doing wrong)?",
+        "What is the opposite of CONTRITE?",
         "Indifferent",
         [
         ["Regretful", "antonym-confusion", "Regretful means sorry about something."],
         ["Humble", "antonym-confusion", "Humble means not proud."],
         ["Penitent", "antonym-confusion", "Penitent means sorry for doing wrong."],
       ],
-        "Contrite means feeling deeply sorry for doing wrong. Indifferent is its opposite. Contrite = truly sorry. Indifferent = not caring."
+        "Contrite means feeling deeply sorry for doing wrong. Indifferent is its opposite. Indifferent = not caring."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of MOLLIFY (calm someone down and soothe anger)?",
+        "What is the opposite of MOLLIFY?",
         "Provoke",
         [
         ["Pacify", "antonym-confusion", "Pacify means calm down."],
         ["Soften", "antonym-confusion", "Soften means make gentler."],
         ["Cool", "antonym-confusion", "Cool means calm down."],
       ],
-        "Mollify means calm someone down and soothe anger. Provoke is its opposite. Mollify = calm someone down. Provoke = make angry."
+        "Mollify means calm someone down and soothe anger. Provoke is its opposite. Provoke = make angry."
       ),
     },
     {
       subtopic: "opposites",
       ...q(
-        "Three words mean to start, stir up or grow something. Which word means the opposite: to bring to an end?",
+        "FOMENT means to stir up trouble. Three of these words mean starting or growing something. Which word means the opposite: to bring to an end?",
         "Conclude",
         [
         ["Brew", "antonym-confusion", "Brew means getting ready to develop or happen (trouble is brewing)."],
@@ -851,14 +851,14 @@ export const quizzes = {
     {
       subtopic: "opposites",
       ...q(
-        "What is the opposite of INIMICAL (harmful, hostile and working against)?",
+        "What is the opposite of INIMICAL?",
         "Assisting",
         [
         ["Hostile", "antonym-confusion", "Hostile means unfriendly."],
         ["Ill", "antonym-confusion", "Ill means sick; or bad."],
         ["Adverse", "antonym-confusion", "Adverse means harmful, unfavourable."],
       ],
-        "Inimical means harmful, hostile and working against. Assisting is its opposite. Inimical = harmful, unfriendly. Assisting = helping."
+        "Inimical means harmful, hostile and working against. Assisting is its opposite. Assisting = helping."
       ),
     },
   ],
@@ -886,7 +886,7 @@ export const quizzes = {
         ["Diffusion", "synonym-confusion", "Diffusion means spreading out."],
         ["Exaggeration", "synonym-confusion", "Exaggeration means making something sound bigger than it is."],
       ],
-        "Agglomeration means a big mixed collection of things. Medley means the same. Agglomeration = a big mixed collection of things. Medley = a mix of different things."
+        "Agglomeration means a big mixed collection of things. Medley means the same."
       ),
     },
     {
@@ -899,7 +899,7 @@ export const quizzes = {
         ["Dilettante", "synonym-confusion", "Dilettante means someone who dabbles, not serious."],
         ["Curbstone", "synonym-confusion", "Curbstone means the stone edge of a pavement."],
       ],
-        "Protean means able to adapt and change forms easily. Versatile means the same. Protean = able to change into many forms (from Proteus, a Greek sea god who changed shape). Versatile = able to do many things."
+        "Protean means able to adapt and change forms easily. Versatile means the same."
       ),
     },
     {
@@ -912,7 +912,7 @@ export const quizzes = {
         ["Igneous", "synonym-confusion", "Igneous means formed from fire or lava."],
         ["Sweltering", "synonym-confusion", "Sweltering means very hot and sticky."],
       ],
-        "Cryogenic means relating to freezing, extreme cold. Gelid means the same. Cryogenic = to do with extreme cold. Gelid = icy cold."
+        "Cryogenic means relating to freezing, extreme cold. Gelid means the same."
       ),
     },
     {
@@ -925,7 +925,7 @@ export const quizzes = {
         ["Deference", "synonym-confusion", "Deference means polite respect."],
         ["Approbation", "synonym-confusion", "Approbation means approval, praise."],
       ],
-        "Opprobrium means public disgrace or dishonour. Smirch means the same. Opprobrium = public disgrace. Smirch = a stain on someone's good name."
+        "Opprobrium means public disgrace or dishonour. Smirch means the same."
       ),
     },
     {
@@ -938,7 +938,7 @@ export const quizzes = {
         ["Excess", "synonym-confusion", "Excess means too much."],
         ["Advantage", "synonym-confusion", "Advantage means something that helps you."],
       ],
-        "Dearth means a shortage or lack of something. Lack means the same. Dearth = a shortage."
+        "Dearth means a shortage or lack of something. Lack means the same."
       ),
     },
     {
@@ -951,7 +951,7 @@ export const quizzes = {
         ["Slight", "synonym-confusion", "Slight means small and thin."],
         ["Angular", "synonym-confusion", "Angular means bony, with sharp corners."],
       ],
-        "Corpulent means heavy, bulky, and fleshy in body. Hefty means the same. Corpulent = fat, heavy."
+        "Corpulent means heavy, bulky, and fleshy in body. Hefty means the same."
       ),
     },
     {
@@ -964,7 +964,7 @@ export const quizzes = {
         ["Accurate", "synonym-confusion", "Accurate means correct."],
         ["Credible", "synonym-confusion", "Credible means believable."],
       ],
-        "Spurious means fake, false, and not genuine. Phony means the same. Spurious = fake."
+        "Spurious means fake, false, and not genuine. Phony means the same."
       ),
     },
   ],
@@ -972,105 +972,105 @@ export const quizzes = {
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as CALLOUS (unkind, not caring about others' feelings)?",
+        "Which word means the same as CALLOUS?",
         "Insensitive",
         [
         ["Tender", "synonym-confusion", "Tender means gentle and kind."],
         ["Mindful", "synonym-confusion", "Mindful means careful, aware."],
         ["Responsive", "synonym-confusion", "Responsive means quick to react helpfully."],
       ],
-        "Callous means unkind, not caring about others' feelings. Insensitive means the same. Callous = unkind, not caring about others' feelings. (A 'callus' is hard skin.)"
+        "Callous means unkind, not caring about others' feelings. Insensitive means the same. (A 'callus' is hard skin.)"
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as CONSPICUOUS (clear, obvious, and easy to see)?",
+        "Which word means the same as CONSPICUOUS?",
         "Evident",
         [
         ["Vague", "synonym-confusion", "Vague means unclear."],
         ["Secret", "synonym-confusion", "Secret means hidden."],
         ["Obscure", "synonym-confusion", "Obscure means hidden or not well known."],
       ],
-        "Conspicuous means clear, obvious, and easy to see. Evident means the same. Conspicuous = easy to see."
+        "Conspicuous means clear, obvious, and easy to see. Evident means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as APPOSITE (suitable and relevant to the situation)?",
+        "Which word means the same as APPOSITE?",
         "Relevant",
         [
         ["Inapt", "synonym-confusion", "Inapt means not suitable."],
         ["Tasteless", "synonym-confusion", "Tasteless means in bad taste."],
         ["Discrepant", "synonym-confusion", "Discrepant means not matching."],
       ],
-        "Apposite means suitable and relevant to the situation. Relevant means the same. Apposite = just right for the situation. Careful: apposite is NOT opposite!"
+        "Apposite means suitable and relevant to the situation. Relevant means the same. Careful: apposite is NOT opposite!"
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as BARREN (producing no crops or fruit)?",
+        "Which word means the same as BARREN?",
         "Unfruitful",
         [
         ["Fruitful", "synonym-confusion", "Fruitful means producing a lot."],
         ["Productive", "synonym-confusion", "Productive means making a lot."],
         ["Useful", "synonym-confusion", "Useful means helpful."],
       ],
-        "Barren means producing no crops or fruit. Unfruitful means the same. Barren = producing nothing."
+        "Barren means producing no crops or fruit. Unfruitful means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as AMIABLE (warm, pleasant, and friendly)?",
+        "Which word means the same as AMIABLE?",
         "Affable",
         [
         ["Cruel", "synonym-confusion", "Cruel means unkind, causing pain."],
         ["Sore", "synonym-confusion", "Sore means painful; or upset."],
         ["Harsh", "synonym-confusion", "Harsh means rough, unkind."],
       ],
-        "Amiable means warm, pleasant, and friendly. Affable means the same. Amiable = friendly. Affable = friendly and easy to talk to."
+        "Amiable means warm, pleasant, and friendly. Affable means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as ARDUOUS (needing great effort and strenuous energy)?",
+        "Which word means the same as ARDUOUS?",
         "Strenuous",
         [
         ["Easy", "synonym-confusion", "Easy means not hard."],
         ["Light", "synonym-confusion", "Light means not heavy."],
         ["Feeble", "synonym-confusion", "Feeble means weak."],
       ],
-        "Arduous means needing great effort and strenuous energy. Strenuous means the same. Arduous = very hard, needing great effort."
+        "Arduous means needing great effort and strenuous energy. Strenuous means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as CONFIDENTIAL (meant to be kept private and secret)?",
+        "Which word means the same as CONFIDENTIAL?",
         "Secret",
         [
         ["Civic", "synonym-confusion", "Civic means to do with a town and its people."],
         ["Public", "synonym-confusion", "Public means open to everyone."],
         ["Sentiment", "synonym-confusion", "Sentiment means a feeling or opinion."],
       ],
-        "Confidential means meant to be kept private and secret. Secret means the same. Confidential = to be kept secret."
+        "Confidential means meant to be kept private and secret. Secret means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as SORDID (shabby, dirty, or dishonest)?",
+        "Which word means the same as SORDID?",
         "Dirty",
         [
         ["Attractive", "synonym-confusion", "Attractive means pleasant to look at."],
         ["Suspense", "synonym-confusion", "Suspense means the feeling of waiting to know."],
         ["Creative", "synonym-confusion", "Creative means full of new ideas."],
       ],
-        "Sordid means shabby, dirty, or dishonest. Dirty means the same. Sordid = dirty, or dishonest."
+        "Sordid means shabby, dirty, or dishonest. Dirty means the same."
       ),
     },
   ],
@@ -1085,7 +1085,7 @@ export const quizzes = {
         ["aspect", "synonym-confusion", "aspect means one part or side of something."],
         ["increase", "synonym-confusion", "increase means make more."],
       ],
-        "Alleviate means make pain or trouble less. reduce means the same. Alleviate = make (pain or trouble) less."
+        "Alleviate means make pain or trouble less. reduce means the same."
       ),
     },
     {
@@ -1098,7 +1098,7 @@ export const quizzes = {
         ["Covetous", "synonym-confusion", "Covetous means greedy for what others have."],
         ["Indifferent", "synonym-confusion", "Indifferent means not caring."],
       ],
-        "Acquit means declare free from blame or guilt. Absolve means the same. Acquit = declare not guilty. Absolve = declare free from blame."
+        "Acquit means declare free from blame or guilt. Absolve means the same."
       ),
     },
     {
@@ -1111,7 +1111,7 @@ export const quizzes = {
         ["Broken", "synonym-confusion", "Broken means damaged."],
         ["Ending", "synonym-confusion", "Ending means finishing."],
       ],
-        "Frequent means occurring often or commonly. Common means the same. Frequent = happening often."
+        "Frequent means occurring often or commonly. Common means the same."
       ),
     },
     {
@@ -1124,7 +1124,7 @@ export const quizzes = {
         ["Denounce", "synonym-confusion", "Denounce means criticise in public."],
         ["Scorn", "synonym-confusion", "Scorn means look down on."],
       ],
-        "Esteem means deep respect and high regard. Revere means the same. Esteem = deep respect. Revere = respect deeply."
+        "Esteem means deep respect and high regard. Revere means the same."
       ),
     },
     {
@@ -1137,7 +1137,7 @@ export const quizzes = {
         ["Factual", "synonym-confusion", "Factual means based on facts."],
         ["Precise", "synonym-confusion", "Precise means exact."],
       ],
-        "Fallacious means based on a false, misleading idea. Delusive means the same. Fallacious = based on a wrong idea. Delusive = misleading."
+        "Fallacious means based on a false, misleading idea. Delusive means the same."
       ),
     },
     {
@@ -1150,13 +1150,13 @@ export const quizzes = {
         ["Impotent", "synonym-confusion", "Impotent means without power."],
         ["Sluggish", "synonym-confusion", "Sluggish means slow and lazy."],
       ],
-        "Omnipotent means having unlimited, supreme power. Supreme means the same. Omnipotent = all-powerful (omni = all, potent = powerful)."
+        "Omnipotent means having unlimited, supreme power. Supreme means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "After years of continuous farming without pause, the overworked soil was completely ____.",
+        "Years of farming without rest can EXHAUST the soil (use it up completely). After that, the soil is ____.",
         "impoverished",
         [
         ["invigorated", "synonym-confusion", "Invigorated means filled with energy and vitality."],
@@ -1176,7 +1176,7 @@ export const quizzes = {
         ["Narrow", "synonym-confusion", "Narrow means small, limited."],
         ["Peculiar", "synonym-confusion", "Peculiar means strange."],
       ],
-        "Eclectic means drawn from many diverse sources. Diverse means the same. Eclectic = taken from many different sources."
+        "Eclectic means drawn from many diverse sources. Diverse means the same."
       ),
     },
   ],
@@ -1197,92 +1197,92 @@ export const quizzes = {
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as VINDICATE (show or prove someone to be right)?",
+        "Which word means the same as VINDICATE?",
         "Justify",
         [
         ["Convict", "synonym-confusion", "Convict means declare guilty."],
         ["Fault", "synonym-confusion", "Fault means blame."],
         ["Judge", "synonym-confusion", "Judge means decide; or a person who decides cases."],
       ],
-        "Vindicate means show or prove someone to be right. Justify means the same. Vindicate = prove someone right or not guilty. Justify = show to be right."
+        "Vindicate means show or prove someone to be right. Justify means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as SANCTIFY (honour, praise, and set apart as holy)?",
+        "Which word means the same as SANCTIFY?",
         "Glorify",
         [
         ["Condemn", "synonym-confusion", "Condemn means strongly disapprove."],
         ["Deprecate", "synonym-confusion", "Deprecate means disapprove of."],
         ["Demonize", "synonym-confusion", "Demonize means show as evil."],
       ],
-        "Sanctify means honour, praise, and set apart as holy. Glorify means the same. Sanctify = make holy, honour."
+        "Sanctify means honour, praise, and set apart as holy. Glorify means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as SENATOR (an elected lawmaker or legislator)?",
+        "Which word means the same as SENATOR?",
         "Legislator",
         [
         ["Steward", "synonym-confusion", "Steward means manager or attendant."],
         ["Curator", "synonym-confusion", "Curator means keeper of a museum collection."],
         ["Custodian", "synonym-confusion", "Custodian means guardian, caretaker."],
       ],
-        "Senator means an elected lawmaker or legislator. Legislator means the same. A senator makes laws. Legislator = lawmaker."
+        "Senator means an elected lawmaker or legislator. Legislator means the same. A senator makes laws."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as ASSIMILATE (take in and understand information fully)?",
+        "Which word means the same as ASSIMILATE?",
         "Comprehend",
         [
         ["Exclude", "synonym-confusion", "Exclude means leave out."],
         ["Mistake", "synonym-confusion", "Mistake means get wrong."],
         ["Unlearn", "synonym-confusion", "Unlearn means forget on purpose."],
       ],
-        "Assimilate means take in and understand information fully. Comprehend means the same. Assimilate = take in and understand fully."
+        "Assimilate means take in and understand information fully. Comprehend means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as INDUSTRIOUS (working with steady, hardworking effort)?",
+        "Which word means the same as INDUSTRIOUS?",
         "Hardworking",
         [
         ["Intelligent", "synonym-confusion", "Intelligent means clever."],
         ["Reserved", "synonym-confusion", "Reserved means quiet, shy."],
         ["Clever", "synonym-confusion", "Clever means quick to learn."],
       ],
-        "Industrious means working with steady, hardworking effort. Hardworking means the same. Industrious = hardworking. (Industrial = about factories.)"
+        "Industrious means working with steady, hardworking effort. Hardworking means the same. (Industrial = about factories.)"
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as NEBULOUS (hazy, cloudy, and unclear)?",
+        "Which word means the same as NEBULOUS?",
         "Vague",
         [
         ["Definite", "synonym-confusion", "Definite means fixed, certain."],
         ["Obvious", "synonym-confusion", "Obvious means easy to see."],
         ["Clear", "synonym-confusion", "Clear means easy to understand."],
       ],
-        "Nebulous means hazy, cloudy, and unclear. Vague means the same. Nebulous = cloudy, unclear (like a nebula)."
+        "Nebulous means hazy, cloudy, and unclear. Vague means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as CAUTIOUS (careful and sensible to avoid risk)?",
+        "Which word means the same as CAUTIOUS?",
         "Prudent",
         [
         ["Certain", "synonym-confusion", "Certain means sure."],
         ["Foolish", "synonym-confusion", "Foolish means silly."],
         ["Hasty", "synonym-confusion", "Hasty means too quick, rushed."],
       ],
-        "Cautious means careful and sensible to avoid risk. Prudent means the same. Prudent = careful and sensible."
+        "Cautious means careful and sensible to avoid risk. Prudent means the same."
       ),
     },
   ],
@@ -1290,53 +1290,53 @@ export const quizzes = {
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as AUSTERE (strict, severe, and demanding)?",
+        "Which word means the same as AUSTERE?",
         "Exacting",
         [
         ["Mild", "synonym-confusion", "Mild means gentle."],
         ["Bland", "synonym-confusion", "Bland means dull, without flavour."],
         ["Flexible", "synonym-confusion", "Flexible means able to bend; easy-going."],
       ],
-        "Austere means strict, severe, and demanding. Exacting means the same. Austere = strict and severe (also: very plain). Exacting = demanding, strict."
+        "Austere means strict, severe, and demanding. Exacting means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as MALIGN (harmful, spiteful, and evil in nature)?",
+        "Which word means the same as MALIGN?",
         "Maleficent",
         [
         ["Nice", "synonym-confusion", "Nice means pleasant."],
         ["Aiding", "synonym-confusion", "Aiding means helping."],
         ["Benign", "synonym-confusion", "Benign means kind, harmless."],
       ],
-        "Malign means harmful, spiteful, and evil in nature. Maleficent means the same. As an adjective, malign = harmful (mal = bad). Maleficent = causing harm. Benign is the opposite."
+        "Malign means harmful, spiteful, and evil in nature. Maleficent means the same. As an adjective, malign = harmful (mal = bad). Benign is the opposite."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as DESTITUTE (extremely poor and lacking necessities)?",
+        "Which word means the same as DESTITUTE?",
         "Indigent",
         [
         ["Secure", "synonym-confusion", "Secure means safe."],
         ["Solvent", "synonym-confusion", "Solvent means able to pay what you owe."],
         ["Affluent", "synonym-confusion", "Affluent means rich."],
       ],
-        "Destitute means extremely poor and lacking necessities. Indigent means the same. Destitute = extremely poor. Indigent = poor, in need."
+        "Destitute means extremely poor and lacking necessities. Indigent means the same."
       ),
     },
     {
       subtopic: "same-meaning",
       ...q(
-        "Which word means the same as EBULLIENT (overflowing with cheer and high spirits)?",
+        "Which word means the same as EBULLIENT?",
         "Buoyant",
         [
         ["Serious", "synonym-confusion", "Serious means not joking."],
         ["Apathetic", "synonym-confusion", "Apathetic means not caring."],
         ["Down", "synonym-confusion", "Down means sad."],
       ],
-        "Ebullient means overflowing with cheer and high spirits. Buoyant means the same. Ebullient = bubbling with cheer. Buoyant = cheerful (and able to float)."
+        "Ebullient means overflowing with cheer and high spirits. Buoyant means the same."
       ),
     },
   ],
@@ -1874,7 +1874,7 @@ export const quizzes = {
     {
       subtopic: "word-families",
       ...q(
-        "The root 'verb' means word, and 'gel' means freeze. If a speech is quoted 'verbatim', what does that mean?",
+        "The root 'verb' means word. If a speech is quoted 'verbatim', what does that mean?",
         "quoted word for word, exactly as spoken",
         [
         ["summarised in very few words", "word-root", "Terse or concise means brief with few words."],
@@ -1889,7 +1889,7 @@ export const quizzes = {
     {
       subtopic: "mixed-review",
       ...q(
-        "What is the opposite of TERSE (using very few words)?",
+        "What is the opposite of TERSE?",
         "Verbose",
         [
         ["Short", "antonym-confusion", "Short means brief in length."],
@@ -1902,7 +1902,7 @@ export const quizzes = {
     {
       subtopic: "mixed-review",
       ...q(
-        "What is the opposite of MITIGATION (making pain or harm less)?",
+        "What is the opposite of MITIGATION?",
         "Torment",
         [
         ["Alleviation", "antonym-confusion", "Alleviation means making pain less, not more."],
@@ -1915,7 +1915,7 @@ export const quizzes = {
     {
       subtopic: "mixed-review",
       ...q(
-        "Which word means the same as PROTEAN (able to adapt and change forms easily)?",
+        "Which word means the same as PROTEAN?",
         "Versatile",
         [
         ["Jackleg", "synonym-confusion", "Jackleg means unskilled or dishonest."],
@@ -1928,7 +1928,7 @@ export const quizzes = {
     {
       subtopic: "mixed-review",
       ...q(
-        "Which word means the same as OPPROBRIUM (public disgrace or dishonour)?",
+        "Which word means the same as OPPROBRIUM?",
         "Smirch",
         [
         ["Felicitations", "synonym-confusion", "Felicitations means congratulations."],
