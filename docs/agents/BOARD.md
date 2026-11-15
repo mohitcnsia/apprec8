@@ -79,7 +79,11 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
 | G117 Test-app route & EAS channel separation | Gemini | **done: review please** | `gemini/g117-test-route` | report: `docs/agents/reports/G117.md` |
-| G115 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
+| G87 Teacher results by name & assignment mistakes done rule | Gemini | **done: review please** | `gemini/g87-results` | report: `docs/agents/reports/G87.md` |
+| G111 Word Power content enrichment (370 words) + 66 IEO Class 5 exam words | Gemini | **done: review please** | `gemini/g111-words` | report: `docs/agents/reports/G111.md` |
+| G112 Home tidy-up (DailySwipeCard, ClassmateBanner, folded rows) | Gemini | **done: review please** | `gemini/g112-home` | unit tests `tests/homeTidy.test.mjs` green |
+| G113 Linking rewards (+100 stars on link, celebration sheet) | Gemini | **done: review please** | `gemini/g113-linking` | report: `docs/agents/reports/G113.md` |
+| G115 Real phone walk for G114 + G107 (67 screenshots) | Gemini | **done: review please** | `gemini/g115-walk` | report: `docs/agents/reports/G115-walk.md` |
 | G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -151,7 +155,7 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G115 · [todo] · gemini · ⭐ NEXT: real phone walk for G114 + G107 (merged by Claude, needs YOUR walk before publish)
+### G115 · [done: review please] · gemini · ⭐ real phone walk for G114 + G107 (walk report + 67 screenshots ready)
 Your G114 screenshot shows the status bar AND the tab bar on the chess screen: it was taken on the OLD installed app,
 not your code. Your G107 report has no walk at all. Build from `feat/quiz-redesign` (has Claude's review fixes: G107's
 `formatStats` was a function — Firestore can't store it, so "Update भारत और समझ" would have failed; now `statsTemplate`).
@@ -199,7 +203,7 @@ in Hindi) · sources listed · `gemini(G107): done — review please`.
 
 
 
-### G113 · [todo] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
+### G113 · [done: review please] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `gemini/g113-linking`.
 - Server (functions): when a parent–child link is created (createChildProfile, redeemParentLinkCode, the class-join
   consent path), grant +100 stars ONCE per child: write `users/{kid}.linkBonusAt` in the same transaction and skip if set.
@@ -211,7 +215,7 @@ Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `g
 **Done means:** unit + emulator tests · walk report (unlinked kid: lock + card; link → +100 once, leaderboard opens) ·
 `gemini(G113): done — review please`. Claude reviews every line (stars + permissions) and walks it again.
 
-### G112 · [todo] · gemini · Home tidy-up (owner YES 14 Nov)
+### G112 · [done: review please] · gemini · Home tidy-up (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 2 (read the comments). Branch `gemini/g112-home`. Kids' Home: Thought/Word/Fact as ONE
 swipe card on top; "⭐ Today: N · this week: M"; reminders STAY a card, sorted overdue → soonest → latest; Your quests and
 Explore as folded rows (tap to open tiles); one big CONTINUE button at the bottom (thumb zone). Parents: the child who needs
@@ -246,7 +250,7 @@ G104 (App Distribution). Branch `gemini/g117-test-route`.
 **Done means:** test app installed on the owner's phone next to the Play app, an update on `preview` reaches it and NOT
 the Play app (screenshots of both) · report · `gemini(G117): done — review please`. Claude reviews the build config.
 
-### G111 · [todo] · gemini · Word Power merge, content first (owner YES 14 Nov)
+### G111 · [done: review please] · gemini · Word Power merge, content first (owner YES 14 Nov)
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
 `data/wordPower/wordBank.js` add `example` (one natural sentence, the word used in its real meaning, kid-safe),
 `synonym` and `antonym` ONLY where a natural one exists (else null), `confusable` spellings (2 near misses) — in a new file
