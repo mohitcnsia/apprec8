@@ -186,7 +186,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
   All 11 tricky questions fixed with unambiguous single answers. Fresh Indian kid-friendly sentences for fill questions.
   Spelling distractors dictionary-verified against `/usr/share/dict/words`. Every wrong option has `whyNot` = option meaning.
   `npm test` passing 100% across all 60+ suites (`tests/content.test.mjs` OK word-power: 60 nodes, 43 new quizzes, 462 new questions, 26% longest tell).
-  Walk report in `docs/agents/reports/G123-walk.md` (phone needed: device `2ae01cda` not connected via adb).
+  Walk report in `docs/agents/reports/G123-walk.md` (phone walk PASS on physical OnePlus 9 Pro `2ae01cda`: seeding completed, Opposites 1 quiz played, whyNot feedback sheet with option meaning verified, 70/80 stars awarded, node progress 1/2, mistake recorded in My mistakes and fixed). Commit `7625a6b` on `origin/gemini/g123-ieo-words`.
 
 ### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
 1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
