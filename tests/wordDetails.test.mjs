@@ -118,3 +118,4 @@ for (const group of WORD_BANK) {
 
 console.log(`✓ All 17 group stories verified (120-180 words, >= 8 group words each)`);
 console.log("wordDetails tests passed 100%!");
+

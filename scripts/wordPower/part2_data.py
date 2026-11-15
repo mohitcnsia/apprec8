@@ -498,3 +498,4 @@ CONFLICT_QUALITIES = {
         "confusable": ["triger", "triggur"]
     }
 }
+
