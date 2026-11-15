@@ -16,3 +16,4 @@
 12. **Collocation / word-choice questions:** check that no wrong option is ALSO natural English (baking heat, kindled curiosity). (G25)
 13. **Spot the error:** exactly one error per sentence, and "No error" must sometimes be the answer. (G25)
 14. **No exam labels** in anything kids see (Olympiad / IEO / NSO / IMO). Use "champion level", "challenge". (owner)
+15. **Avoid heavy native builds:** Native APK/AAB builds take too much time and context tokens. Claude handles builds quickly. Gemini focuses strictly on implementation, tests, and verification scripts. (owner 2026-11-15)
