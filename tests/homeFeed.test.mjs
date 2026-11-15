@@ -1,6 +1,6 @@
 // Tests for utils/homeFeed.js (Home screen helpers). Run: npm test
 import assert from "node:assert/strict";
-import { greeting, dayStreak, daysUntil, shortDate, toDateKey, upcomingItems } from "../utils/homeFeed.js";
+import { greeting, dayStreak, daysUntil, shortDate, toDateKey, upcomingItems, starsSummary } from "../utils/homeFeed.js";
 import { dayKey } from "../utils/kidStats.js";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -57,15 +57,30 @@ const tasks = [
   { id: "t5", title: "Today", dueDate: now, completed: false },
 ];
 const items = upcomingItems(exams, tasks, now);
-assert.deepEqual(items.map((i) => i.title), ["Today", "Science project", "English Olympiad"]);
-assert.equal(items[0].unit, "TODAY");
-assert.equal(items[1].days, 4);
-assert.equal(items[1].sub, "Your reminder · Sun 8 Nov");
-assert.equal(items[2].sub, "Tue 17 Nov");
+// G112: reminders stay, sorted overdue → soonest → latest
+assert.deepEqual(items.map((i) => i.title), ["Late", "Today", "Science project"]);
+assert.equal(items[0].tag, "OVERDUE");
+assert.equal(items[0].tone, "red");
+assert.equal(items[0].unit, "DAYS LATE");
+assert.equal(items[0].sub, "Was due · Sun 1 Nov");
+assert.equal(items[1].unit, "TODAY");
+assert.equal(items[2].days, 4);
+assert.equal(items[2].sub, "Your reminder · Sun 8 Nov");
 assert.equal(upcomingItems(exams, [], now).length, 2);
 assert.equal(upcomingItems([], [], now).length, 0);
 // one day left says DAY
 assert.equal(upcomingItems([{ id: "x", tag: "X", title: "X", date: "2026-11-05" }], [], now)[0].unit, "DAY");
+
+// starsSummary: today and this week (Mon-Sun)
+const sampleDaily = {
+  "2026-11-04": { correct: 10 }, // Wed (now)
+  "2026-11-03": { correct: 15 }, // Tue
+  "2026-11-02": { correct: 5 },  // Mon (start of this week)
+  "2026-11-01": { correct: 20 }, // Sun (previous week)
+};
+const ss = starsSummary(sampleDaily, now);
+assert.equal(ss.today, 10);
+assert.equal(ss.week, 30); // 10 + 15 + 5 (Mon-Wed), excluding Sunday 2026-11-01
 
 console.log("homeFeed tests passed");
 

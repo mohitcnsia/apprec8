@@ -228,7 +228,7 @@ happen once, together, in G124.**
    classSummary trigger deployed: write "DEPLOY NEEDED: functions remindAssignment, onQuestProgressForClass" in the report
    and stop at that step; Claude asks the owner.
 
-### G120 · [todo] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
+### G120 · [review 15 Nov] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
 **Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
 happen once, together, in G124.**
 1. **Remove the classmate banner from this branch** (ClassmateBanner + `pickClassmateCheer`). Kids' phones can't read
@@ -243,7 +243,7 @@ happen once, together, in G124.**
    CONTINUE opens the right topic), parent Home with 2+ children (focus child + "+1 more"), owner Home (Owner row folds).
    Claude merges this with G87 (both touch HomeScreen) and publishes after the IEO (17 Nov).
 
-### G124 · [todo] · gemini · ONE combined phone walk for G118 + G119 + G120 (saves quota)
+### G124 · [review 15 Nov] · gemini · ONE combined phone walk for G118 + G119 + G120 (saves quota)
 Build ONE test bundle that has all three branches merged locally (`git checkout -b walk/g124 origin/feat/quiz-redesign`,
 then `git merge gemini/g113-linking gemini/g87-results gemini/g112-home`; resolve HomeScreen.js by keeping BOTH
 changes; never push this branch). Then one install, one sign-in, and walk the steps written in G118 (3), G119 (5) and
