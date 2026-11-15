@@ -27,6 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
+- **Word Power Made Easy quest plan (owner 2026-11-15: aligned with Claude's order: Unit 3 starts with the roots in the real IEO papers (am, bene/mal, omni, chron, -fy, pauper), then phil/phob etc.; mockup + discussion after the 17 Nov exam, no building yet):** Root words, prefixes/suffixes, and one-word substitutions for IEO Olympiad vocabulary (Units 3–5). Spec & curriculum outline logged in `gemini.md` Future TODOs. Waiting for Claude's review, task sizing, and work breakdown.
 - **Class 6 sample papers** (owner will share): Level 2 for Class 5 uses Class 6 questions → Level 2 papers + Champion sets (TODO in gemini.md).
 - ~~Review page (550 Qs + Paper 2 + Same & Opposite)~~ owner 2026-11-05: **"Content approved"**; misses get reported in play (🚩 flag). English Paper 2 live for Class 5.
 - **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
@@ -144,10 +145,145 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
 - Screenshot first, tap second: never tap from a remembered layout (a blind tap once landed on Delete account).
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
+- **Never tap "Update …"/"Seed …" in Admin tools during a walk** (15 Nov, G123: it wrote the unit to the LIVE
+  database before review). The debug build talks to the real Firebase. Walk with what's already seeded, or say
+  "SEED NEEDED" in the report and stop; Claude seeds after review.
+- **Never switch branches in the main folder `apprec8`** (15 Nov: it was moved to `gemini/g113-linking`, so next-task.sh
+  read an old board). Work only in `../apprec8-gemini`: `git -C ../apprec8-gemini checkout <your branch>`.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
-### G115 · [todo] · gemini · ⭐ NEXT: real phone walk for G114 + G107 (merged by Claude, needs YOUR walk before publish)
+### 📋 Claude's review of G87, G111, G112, G113, G115, G117 (15 Nov)
+Good work overall: clean code, tests, and G115 is a proper walk (accepted, already published). Nothing merged yet:
+each task below has fixes. **Stay inside each list: no extra features, no new TODOs in LAUNCH_CHECKLIST/gemini.md.**
+G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's request: good call, it goes
+through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
+Do them in this order (next-task.sh hands them out top to bottom).
+
+### G123 · [done: merged by Claude 15 Nov with review fixes 5bf856d] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
+Pratha's IEO is Monday 17 Nov; she works best when quest nodes turn green and stars add up. Turn Claude's IEO Word Drill
+(https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs) into a Word Power unit. **Commit by 23:00 tonight**; Claude
+reviews, walks and publishes Sunday morning. Branch `gemini/g123-ieo-words` from `feat/quiz-redesign`, in `../apprec8-gemini`.
+**Source:** `content-private/ieo/wordDrill.json` (gitignored; also copied into your folder): 107 questions from 12 past
+papers, each with options, answer, why and a meaning for EVERY option, plus 8 word families. Claude checked them all.
+**Copyright (repo is public, papers are SOF's):** never copy a question's sentence. Keep the WORDS:
+- Same meaning / Opposite: keep the target word and its answer; distractors may be re-mixed from the other option words
+  of the pool, as long as every option word in the JSON appears somewhere in the unit.
+- Fill the blank: write a NEW sentence (Indian kid-friendly context) for the same answer word; same option words.
+- Spelling: your own misspellings (none may be a real word or an accepted spelling: G121's dictionary check).
+- Idiom items (one-trick pony, nailing jelly to the wall): new sentences.
+**Accuracy:** exactly one defensible answer per question. The 11 `tricky: true` items: rewrite the options so one is
+clearly right (or ask "What does <word> mean?" instead); never ship a two-answer question.
+**Shape** (data/wordPowerQuestData.js, helpers from englishQuest/helpers.js, `forGrades(..., [4,5,6])`, placed
+BEFORE wp-u1 so Pratha sees it first): unit "IEO Words" with small topics so nodes go green often:
+Opposites 1 · Opposites 2 · Same meaning 1 · Same meaning 2 · Fill the gap · Spelling traps · Word families (study
+page from `families` + 6 questions) · a Boss mixing all · `endless`. 8 questions per quiz. Every wrong option's
+`whyNot` = that option's meaning from `optionMeanings` (owner: every option word gets learned). Read-aloud on.
+Mistakes go to My mistakes as usual. The "odd-one-out" tip (Opposites intro) from the page.
+**Done means:** `npm test` (content test passes: ids, why-nots, one answer) · phone walk (Word Power → IEO Words: a
+quiz → node turns green + stars go up; a wrong answer shows the option's meaning; a mistake appears in My mistakes) ·
+`gemini(G123): done — review please`. Then go on with G118.
+- **Done (15 Nov):** Unit 0 (`wp-u0`, "Champion Words") added to `data/wordPowerQuestData.js` before Unit 1 with `forGrades(..., [4, 5, 6])`.
+  All 107 questions from `wordDrill.json` converted + 6 word families Qs + 10 boss review Qs = 123 questions total.
+  Topics: Opposites 1, Opposites 2, Same Meaning 1, Same Meaning 2, Fill the Gap, Spelling Traps, Word Families, Boss, with practice leaves and endless on each topic.
+  All 11 tricky questions fixed with unambiguous single answers. Fresh Indian kid-friendly sentences for fill questions.
+  Spelling distractors dictionary-verified against `/usr/share/dict/words`. Every wrong option has `whyNot` = option meaning.
+  `npm test` passing 100% across all 60+ suites (`tests/content.test.mjs` OK word-power: 60 nodes, 43 new quizzes, 462 new questions, 26% longest tell).
+  Walk report in `docs/agents/reports/G123-walk.md` (phone walk PASS on physical OnePlus 9 Pro `2ae01cda`: seeding completed, Opposites 1 quiz played, whyNot feedback sheet with option meaning verified, 70/80 stars awarded, node progress 1/2, mistake recorded in My mistakes and fixed). Commit `7625a6b` on `origin/gemini/g123-ieo-words`.
+
+### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking` (code done e1717b2; NO walk here, see G124)
+**Code is done: just commit `gemini(G118): done — review please` (no walk; G124 walks it).**
+1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
+   learn") get a `grade` (Easy=5/Medium=8/Hard=10), and many parents picked a class in the old first run. Today they'd be
+   told "A student account can't add children", see "Link with your parent: +100 ⭐" on Me, and be locked out of the
+   Leaderboard. Fix all three with ONE pure helper `isStudentAccount(doc)` in `utils/family.js` (+ the same rule copied
+   in `functions/utils/`, tested both): `!!doc.isChild || (Number.isInteger(doc.grade) && !doc.selfLearner &&
+   !doc.isParent && !(doc.childUids||[]).length && !(doc.teachesClassIds||[]).length)`. Server blocks only
+   `isStudentAccount(me) && !isChild` (isChild has its own message), with the message: "This account is set up as a
+   student. If you're a parent, tap Need help on Me and we'll fix it." Me card + Leaderboard lock show only when
+   `isStudentAccount(userData) && !(userData.parentUids||[]).length`.
+2. Unit tests: a selfLearner with grade 5, a parent with grade + `isParent`, a teacher with grade → not students; a
+   kid with grade → student. Emulator test: a selfLearner CAN create a link code.
+3. **Walk** (owner's phone, rules above): unlinked kid test account → Me card + Leaderboard lock; link with a parent
+   test account → stars +100 once (screenshot before/after), Leaderboard opens; link again with a second parent → no
+   second bonus; a grown-up learner account → no card, no lock. Report `G118-walk.md`.
+
+### G119 · [todo] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
+**Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
+happen once, together, in G124.**
+1. **Stale results:** `onQuestProgressForClass` skips the write when the last one was < 5 min ago and the levels are the
+   same. A kid who fixes their last mistake 2 minutes after a quiz stays "Fixing mistakes" for the teacher. Also compare
+   `mistakes` and `completed` (skip only if all three are the same). Test it.
+2. **Doc size:** `completed` stores every STEP key (`topic__0`, `topic__1`…). 40 kids × 2 quests × hundreds of keys
+   heads for Firestore's 1 MB doc limit, and then the whole class summary stops updating. Store only TOPIC ids that are
+   done (`topicDone(node, nodes)` over the quest's bundled nodes, the same rule as Home). Test: a quest with 3-step
+   topics gives topic ids only. Note the worst-case size (40 kids) in the report.
+3. **The kid's card:** a reminder lands as `nudge.kind: "remind"`, but `nudgeText` (components/home/NudgeCard.js) has no
+   "remind" case, so it says "Let's practise <all titles> today" and never mentions the mistakes. Add:
+   "<Teacher> reminded you: finish <topic>" and, if `mistakesLeft`, " — <N> mistakes to fix". Test it.
+4. Spec said remind goes to "the child + linked parent": the child's Home card is enough (no push to kids). Fine.
+5. **Walk** as teacher (Demo School or a test class): assign → a kid test account finishes with a mistake → teacher
+   sees "Fixing mistakes (1)" → kid fixes it in My mistakes → teacher sees "Done ✓" → Remind (kid's Home card says it)
+   → Remind again same day says "Reminded today" → Star of the week share text. Note: needs `remindAssignment` and the
+   classSummary trigger deployed: write "DEPLOY NEEDED: functions remindAssignment, onQuestProgressForClass" in the report
+   and stop at that step; Claude asks the owner.
+
+### G120 · [todo] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
+**Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
+happen once, together, in G124.**
+1. **Remove the classmate banner from this branch** (ClassmateBanner + `pickClassmateCheer`). Kids' phones can't read
+   `classSummaries` (teacher-only by the rules, and it must stay that way: it holds every child's levels and mistakes),
+   so it would never show. Claude's spec error, not yours. It comes back later as its own task (a small server-written
+   "cheers" doc per class with linked kids only), after the owner agrees.
+2. **IEO is on 17 Nov:** keep the Practice paper / Check-up tile visible (not inside the folded Explore) — put it right
+   under the swipe card for kids whose class has one.
+3. CONTINUE bar: it sits above the tab bar, so use `paddingBottom: 12` (not `insets.bottom`): the tab bar already
+   handles the gesture area. Check it doesn't cover the last row of Home (scroll to the bottom in the walk).
+4. **Walk** (light + dark): kid Home (swipe card 3 slides, stars line, reminders card, folded quests open/close,
+   CONTINUE opens the right topic), parent Home with 2+ children (focus child + "+1 more"), owner Home (Owner row folds).
+   Claude merges this with G87 (both touch HomeScreen) and publishes after the IEO (17 Nov).
+
+### G124 · [todo] · gemini · ONE combined phone walk for G118 + G119 + G120 (saves quota)
+Build ONE test bundle that has all three branches merged locally (`git checkout -b walk/g124 origin/feat/quiz-redesign`,
+then `git merge gemini/g113-linking gemini/g87-results gemini/g112-home`; resolve HomeScreen.js by keeping BOTH
+changes; never push this branch). Then one install, one sign-in, and walk the steps written in G118 (3), G119 (5) and
+G120 (4), one screenshot per step, in `docs/agents/reports/G124-walk.md`. Never tap Update/Seed in Admin tools.
+If anything needs a deploy (remindAssignment, classSummary trigger), write "DEPLOY NEEDED" and skip that step.
+If your quota runs low, stop at a clean point and write exactly which steps are left: Claude finishes them.
+
+### G121 · [later: after Gemini's quota resets ~21 Nov] · gemini · G111 content fixes (Word Power) — on `gemini/g111-words`
+Claude checked 50 random words + 3 stories. Examples are good. Fix these across ALL 370:
+1. **Confusables must be misspellings that aren't real words or accepted spellings.** 80 of 740 are real words or
+   valid spellings, e.g. bear→**beer** (not for kids), yogurt→**yoghurt**, donut→**doughnut**, naive→**naïve**,
+   omelet→**omelette**, marvellous→**marvelous**, favourable→**favorable**, caliber→**calibre**, mould→**mold**
+   (all CORRECT spellings: a "pick the right spelling" question would have two right answers), and real words like
+   deer→dear, fir→fur, principal→principle, lion→loin, camel→caramel. Rule: check every confusable against
+   `/usr/share/dict/words` (Mac) + a list of British/American variants; none may match. Add that check to the test.
+   (Homophones like principal/principle are useful later as a separate `soundsLike` field: only if natural.)
+2. **Antonyms only where a natural opposite exists**, else null. Weak ones seen: trigger→halt, surpassed→trailed,
+   cerebral→emotional. Re-read every antonym with that bar.
+3. **Story meaning check:** "A Test of Resolve" says "exhaustive battle" (exhaustive = thorough; the meaning is
+   "exhausting"). Re-read all 17 stories: every target word used in its real meaning, as in its own example.
+4. fir: "Douglas fir" isn't a true fir (different genus): use a plain fir example.
+5. **The 66 IEO words (`ieoExamWords.js`) FIRST, same rules 1–3**, plus (Claude read all 12 papers, 15 Nov):
+   - Where a word was asked as a synonym/antonym question, `synonym`/`antonym` = the paper's own option
+     (medley, repulsive, traitor, rewarding, explain are RIGHT: keep them). Claude's list of every question, answer and
+     option meaning is the page https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs: use it as the reference.
+   - **Owner: never skip option words.** Add every hard OPTION word too (strident, threadbare, Babylonian, hardscrabble,
+     smirch, gelid, obdurate, affray, effigy, encroachment, indigent, maleficent…), each with `meaning` + `paper`.
+   - Commit them as soon as they're done (`gemini(G121): IEO words ready`), then do the 370.
+**Done means:** test passes with the dictionary check · report lists every changed confusable/antonym · 
+`gemini(G121): done — review please`.
+
+### G122 · [later: after Gemini's quota resets ~21 Nov] · gemini · G117 proof (test-app route) — on `gemini/g117-test-route`
+The config is reasonable, but "done" needed the proof and the report has none: (a) screenshot of "Apprec8 (Test)"
+installed next to the Play app on the owner's phone, (b) `eas update --channel preview` with a visible change (e.g.
+the version line on Me says "preview test"), (c) screenshots: the test app shows it, the Play app does NOT. Also
+answer in the report: EAS builds already inject the channel; does your new manifest `expo-channel-name` meta-data
+clash with it in an `eas build` (check the merged manifest of a `real` build has exactly one entry, value
+`production`)? Never run `--channel production`.
+
+### G115 · [done: accepted by Claude 15 Nov, published 14 Nov] · gemini · real phone walk for G114 + G107 (merged by Claude, needs YOUR walk before publish)
 Your G114 screenshot shows the status bar AND the tab bar on the chess screen: it was taken on the OLD installed app,
 not your code. Your G107 report has no walk at all. Build from `feat/quiz-redesign` (has Claude's review fixes: G107's
 `formatStats` was a function — Firestore can't store it, so "Update भारत और समझ" would have failed; now `statsTemplate`).
@@ -195,7 +331,7 @@ in Hindi) · sources listed · `gemini(G107): done — review please`.
 
 
 
-### G113 · [todo] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
+### G113 · [review 15 Nov: fixes in G118] · gemini · Linking rewards (owner YES 14 Nov) — Claude re-walks this one
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `gemini/g113-linking`.
 - Server (functions): when a parent–child link is created (createChildProfile, redeemParentLinkCode, the class-join
   consent path), grant +100 stars ONCE per child: write `users/{kid}.linkBonusAt` in the same transaction and skip if set.
@@ -207,7 +343,7 @@ Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 4. Branch `g
 **Done means:** unit + emulator tests · walk report (unlinked kid: lock + card; link → +100 once, leaderboard opens) ·
 `gemini(G113): done — review please`. Claude reviews every line (stars + permissions) and walks it again.
 
-### G112 · [todo] · gemini · Home tidy-up (owner YES 14 Nov)
+### G112 · [review 15 Nov: fixes in G120] · gemini · Home tidy-up (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 2 (read the comments). Branch `gemini/g112-home`. Kids' Home: Thought/Word/Fact as ONE
 swipe card on top; "⭐ Today: N · this week: M"; reminders STAY a card, sorted overdue → soonest → latest; Your quests and
 Explore as folded rows (tap to open tiles); one big CONTINUE button at the bottom (thumb zone). Parents: the child who needs
@@ -218,7 +354,7 @@ from the existing class summary (no new per-kid reads). Follow docs/DESIGN_RULES
 (kid, parent, owner Home; light + dark) · no new Firestore reads on Home except the banner's one cached doc ·
 `gemini(G112): done — review please`.
 
-### G87 · [todo] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
+### G87 · [review 15 Nov: fixes in G119] · gemini · ⭐ Teacher results by name (owner YES 14 Nov)
 Spec + mockup: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 3. Branch `gemini/g87-results`. For an assigned topic, Seema's class screen groups
 children: Not started · Fixing mistakes (N left) · Done (Accuracy) — **done = every mistake in that topic fixed** (the
 existing My mistakes rule: 2 right in a row). **Remind:** per child and "Remind all", at most once a day per child, to the
@@ -229,7 +365,7 @@ classSummary trigger exists; extend it. **Done means:** tests (grouping, done ru
 teacher (assign, child finishes with a mistake → "Fixing", fixes it → "Done", Remind, Share) · read count noted ·
 `gemini(G87): done — review please`. Claude reviews the server + summary doc.
 
-### G117 · [todo] · gemini · Finish the test-app route (owner 14 Nov) — LAST in the current list
+### G117 · [review 15 Nov: proof in G122] · gemini · Finish the test-app route (owner 14 Nov) — LAST in the current list
 So nothing Gemini publishes can ever reach real users. Builds on G85 (apprec8-test project, "Apprec8 (Test)" app) and
 G104 (App Distribution). Branch `gemini/g117-test-route`.
 1. **Own update channel:** the test app listens to EAS channel `preview` (never `production`). One test-app build
@@ -242,7 +378,7 @@ G104 (App Distribution). Branch `gemini/g117-test-route`.
 **Done means:** test app installed on the owner's phone next to the Play app, an update on `preview` reaches it and NOT
 the Play app (screenshots of both) · report · `gemini(G117): done — review please`. Claude reviews the build config.
 
-### G111 · [todo] · gemini · Word Power merge, content first (owner YES 14 Nov)
+### G111 · [review 15 Nov: fixes in G121] · gemini · Word Power merge, content first (owner YES 14 Nov)
 Spec: doc https://claude.ai/artifact/C3dWqo9YLhc5HEHACzb9vD section 1. Branch `gemini/g111-words`. **Step 1 (content, no app code):** for each of the 370 words in
 `data/wordPower/wordBank.js` add `example` (one natural sentence, the word used in its real meaning, kid-safe),
 `synonym` and `antonym` ONLY where a natural one exists (else null), `confusable` spellings (2 near misses) — in a new file
