@@ -145,6 +145,9 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
 - Screenshot first, tap second: never tap from a remembered layout (a blind tap once landed on Delete account).
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
+- **Never tap "Update …"/"Seed …" in Admin tools during a walk** (15 Nov, G123: it wrote the unit to the LIVE
+  database before review). The debug build talks to the real Firebase. Walk with what's already seeded, or say
+  "SEED NEEDED" in the report and stop; Claude seeds after review.
 - **Never switch branches in the main folder `apprec8`** (15 Nov: it was moved to `gemini/g113-linking`, so next-task.sh
   read an old board). Work only in `../apprec8-gemini`: `git -C ../apprec8-gemini checkout <your branch>`.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
@@ -157,7 +160,7 @@ G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's 
 through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
 Do them in this order (next-task.sh hands them out top to bottom).
 
-### G123 · [review 15 Nov] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
+### G123 · [done: merged by Claude 15 Nov with review fixes 5bf856d] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
 Pratha's IEO is Monday 17 Nov; she works best when quest nodes turn green and stars add up. Turn Claude's IEO Word Drill
 (https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs) into a Word Power unit. **Commit by 23:00 tonight**; Claude
 reviews, walks and publishes Sunday morning. Branch `gemini/g123-ieo-words` from `feat/quiz-redesign`, in `../apprec8-gemini`.
