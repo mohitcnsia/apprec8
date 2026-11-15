@@ -58,6 +58,9 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
    AND right next to the board, no empty gap (owner: "too far from the board… requires eye movement… tiring").
 5. **Moves in the note as chips; tap one → the line plays on the board; one tap back to the game** (12 Nov notes:
    clickable lines + graphical notation; "Variations" never got built).
+7. **Controls:** the big full-width "Next" button → a small row of simple buttons: ◀ (back) · ⏯ (play/pause) · ▶ (next).
+8. **Less text on "your turn":** owner: "this note is not really necessary" (on the move-6 screen: "Your move — what did
+   Morphy play?" and/or "Tap a piece, then its square"). Show the mockup without them and confirm which.
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
    `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
    sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
