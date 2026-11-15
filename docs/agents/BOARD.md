@@ -251,7 +251,7 @@ G120 (4), one screenshot per step, in `docs/agents/reports/G124-walk.md`. Never 
 If anything needs a deploy (remindAssignment, classSummary trigger), write "DEPLOY NEEDED" and skip that step.
 If your quota runs low, stop at a clean point and write exactly which steps are left: Claude finishes them.
 
-### G121 · [CLAUDE is doing this, 15 Nov (owner): Gemini never touches G121 or `data/wordPower/`] · claude · G111 content fixes (Word Power) — on `gemini/g111-words`
+### G121 · [done by Claude 15 Nov, merged: Gemini never touches `data/wordPower/wordDetails.js`] · claude · G111 content fixes (Word Power) — on `gemini/g111-words`
 Claude checked 50 random words + 3 stories. Examples are good. Fix these across ALL 370:
 1. **Confusables must be misspellings that aren't real words or accepted spellings.** 80 of 740 are real words or
    valid spellings, e.g. bear→**beer** (not for kids), yogurt→**yoghurt**, donut→**doughnut**, naive→**naïve**,

@@ -117,6 +117,26 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
     - Mistake tags on all distractors (e.g. `wp-root-confusion`, `wp-root-polarity-flip`, `wp-part-of-speech-error`).
   - **Exam Calibration:** Definition-clued spelling, exact collocational distractors (no obvious nonsense), one-word substitutions, two-blank Achievers questions.
   - **Location & Seeding:** Module in `data/wordPowerQuestData.js` (or `data/wordPower/units/`), registered in `data/quests/index.js`, verified via `npm test tests/content.test.mjs`, and seeded via Admin tools (`SeedTileQuestButton`).
+- **English Quest Content & Variety Overhaul (Owner + Pratha Feedback, 15 Nov 2026):**
+  Pratha reported that English Quest questions feel "super simple and lack variety" compared to Word Power. Maintain foundational simplicity for younger kids (Class 1–3) while injecting rich, Olympiad-level multi-format challenge for Class 4–6 based on the 12 Grade 5 IEO past papers:
+  1. **Preserve Foundations for Younger Kids:** Keep all existing simple and warm-up questions intact for primary learners; kids who find it easy can use the existing Boss quiz to test out and skip ahead.
+  2. **Multi-Format Question Variety (Beyond Single-Blank Sentences):**
+     - *Sentence Transformations:* Shift between parts of speech (e.g., "He showed empathy" → "He was empathetic"), active/passive voice, and direct/indirect speech.
+     - *Two-Blank Synthesised Clozes:* Multi-clause sentences testing tense sequences ("By the time Mum arrived, I ___ the dishes") and correlative agreement ("Neither the coach nor the players ___ ready when the bell ___").
+     - *Spot the Error (A / B / C / No Error):* Real-world grammatical slips where all options are plausible English, training sharp proofreading eyes.
+     - *Spoken Expression & Conversational Dialogue:* Everyday social exchanges, polite requests, and conversational idioms (matching Section 3 of IEO).
+     - *Short Narrative Clozes:* 3–4 sentence mini-stories where 2–3 blanks must be resolved using context clues rather than isolated syntax.
+  3. **Plausible Distractors (Anti-Autopilot):** Replace obvious nonsensical distractors with authentic student misconceptions so Class 5+ students must analyze the rule rather than guess by sound.
+  4. **Structure:** Add a "Champion / Olympiad Challenge" practice node in each core unit (Units 1, 2, 3, 5, 8) carrying these rich formats, leaving the warm-up rung simple for younger learners.
+
+- **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):**
+  Ensure the "Guess the Move" app delivers 100% of the value of master chess books (Logical Chess, Most Instructive Games, New York 1924, Zurich 1953, Fischer 60 Memorable Games, Alekhine, etc.) so the owner never needs to read the physical books. Annotations must be deeply educational, highly consumable, and exceed static print:
+  1. **Purge/Upgrade Generic Library Games:** Replace bare/generic database PGNs (the 25 opening/master library games) with richly annotated master games that explain every key plan.
+  2. **First-Class Interactive Variations `( ... )`:** Parse all tactical sub-variations and refutations into legal PGN branches so the user can tap and play out the master's "what if" lines directly on the board.
+  3. **Full Narrative & Psychological Context:** Preserve the complete 1-page historical game introductions, player psychology, and concluding lessons in game start/end cards.
+  4. **Strict Move Alignment:** Ensure 100% synchronization between move numbers and author commentary (fixing old descriptive-to-algebraic notation shifts and OCR cutoff).
+  5. **Master Synthesis (AI Prose + Stockfish Rigor):** Blend the master author's deep human intuition and thematic explanations with Stockfish 16+ objective tactical truth. This produces the ultimate learning medium for a 1600 FIDE player aiming for 2000+.
+
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
