@@ -67,6 +67,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Word games in the right place (owner 15 Nov, corrected):** Vocab Builder inside Word Power; Word Inspector inside
   the English quest, also as new rounds like "highlight every synonym of <word>". Owner: "we really need to be creative
   to keep the kids learning while enjoying the sessions." Discuss with a mockup alongside Word Power step 2 (after G121).
+- **"Word Drill" look in the app (owner 15 Nov: "I loved the theme too"):** the IEO Word Drill page's style
+  (https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs): calm blue-grey cards, highlighter-marker under key words,
+  Atkinson Hyperlegible for reading text (made for easy reading), Bricolage Grotesque headings, green/amber answer states,
+  every option's meaning shown after answering. Fonts ship as app assets (OTA-able). Mockup first, then a theme option.
 - **Fun tab layout (owner 15 Nov):** Pratha prefers the older carousel style with nice images over today's Fun tab.
   Collect more feedback (Pratha + other kids) and discuss before changing anything.
 - **Chess board colours** (owner: ignore for now).

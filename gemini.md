@@ -92,6 +92,31 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
 - **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
 
 ## Future TODOs
+- **Word Power Quest: Root Words & Morphology ("Word Power Made Easy" for Olympiads; owner plan 2026-11-15; Claude to review & plan):**
+  - **Goal & Pedagogy:** Teach vocabulary via Latin/Greek roots (etymology) rather than rote alphabetical lists, unlocking 10–15 words per root and directly addressing IEO Section 1 (Word & Structure Knowledge) and Section 4 (Achievers Section, 25% of marks).
+  - **Proposed Curriculum Ladder:**
+    - **Unit 3: The Magic of Roots (Classes 3–6):**
+      - *Topic 1:* Good & Bad (`bene` & `mal` → benefit, benevolent, benefactor vs malice, malevolent, malignant).
+      - *Topic 2:* Love & Fear (`phil` & `phob` → bibliophile, philanthropist vs arachnophobia, claustrophobia).
+      - *Topic 3:* See & Hear (`spect`, `phon`, `aud` → spectator, inspect, spectacle vs symphony, telephone, audible).
+      - *Topic 4:* Time & Order (`chron` & `temp` → chronological, synchronize vs temporary, contemporary).
+      - *Reading & Boss:* Gremlin/story boss + reading passage with contextual vocabulary.
+    - **Unit 4: Word Architects (Prefixes & Suffixes, Classes 4–8):**
+      - *Topic 1:* Direction & Motion (`pre-`, `post-`, `re-`, `trans-`, `sub-`).
+      - *Topic 2:* Opposite Flippers (`un-`, `dis-`, `in-`, `im-`, `il-`, `ir-`) + spelling traps (e.g., `dis + satisfy`).
+      - *Topic 3:* Part of Speech Shifting (Noun → Adjective → Adverb: e.g. courage → courageous → courageously).
+      - *Reading & Boss.*
+    - **Unit 5: Specialist Words & One-Word Substitutions (Classes 5–8):**
+      - *Topic 1:* Personalities & Minds (`ego`, `alter`, `vert` → introvert, extrovert, ambivert, altruist).
+      - *Topic 2:* Specialist Doctors & Scientists (`ped`, `derm`, `cardio`, `ortho`, `astro`).
+      - *Topic 3:* Lovers, Doers & Collectors (polyglot, philatelist, numismatist, orator).
+      - *Reading & Boss.*
+  - **Node Pattern (Standard per CONTENT_GUIDE):**
+    - Main topic (Learn cards with 3 inline checks + practice quiz with 8 single-blank, read-aloud questions).
+    - Practice leaves (`withSubtopic`), Gate assessment pool (15 Qs, 3 sub-topics × 5), and Endless node (`endless(topic)`).
+    - Mistake tags on all distractors (e.g. `wp-root-confusion`, `wp-root-polarity-flip`, `wp-part-of-speech-error`).
+  - **Exam Calibration:** Definition-clued spelling, exact collocational distractors (no obvious nonsense), one-word substitutions, two-blank Achievers questions.
+  - **Location & Seeding:** Module in `data/wordPowerQuestData.js` (or `data/wordPower/units/`), registered in `data/quests/index.js`, verified via `npm test tests/content.test.mjs`, and seeded via Admin tools (`SeedTileQuestButton`).
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
