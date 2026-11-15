@@ -191,7 +191,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
   `npm test` passing 100% across all 60+ suites (`tests/content.test.mjs` OK word-power: 60 nodes, 43 new quizzes, 462 new questions, 26% longest tell).
   Walk report in `docs/agents/reports/G123-walk.md` (phone walk PASS on physical OnePlus 9 Pro `2ae01cda`: seeding completed, Opposites 1 quiz played, whyNot feedback sheet with option meaning verified, 70/80 stars awarded, node progress 1/2, mistake recorded in My mistakes and fixed). Commit `7625a6b` on `origin/gemini/g123-ieo-words`.
 
-### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking` (code done e1717b2; NO walk here, see G124)
+### G118 · [done: merged by Claude 16 Nov; Claude walks after the functions deploy] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking` (code done e1717b2; NO walk here, see G124)
 **Code is done: just commit `gemini(G118): done — review please` (no walk; G124 walks it).**
 1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
    learn") get a `grade` (Easy=5/Medium=8/Hard=10), and many parents picked a class in the old first run. Today they'd be
@@ -208,7 +208,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
    test account → stars +100 once (screenshot before/after), Leaderboard opens; link again with a second parent → no
    second bonus; a grown-up learner account → no card, no lock. Report `G118-walk.md`.
 
-### G119 · [review 15 Nov] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
+### G119 · [done: merged by Claude 16 Nov; Claude walks after the functions deploy] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
 **Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
 happen once, together, in G124.**
 1. **Stale results:** `onQuestProgressForClass` skips the write when the last one was < 5 min ago and the levels are the
@@ -228,7 +228,7 @@ happen once, together, in G124.**
    classSummary trigger deployed: write "DEPLOY NEEDED: functions remindAssignment, onQuestProgressForClass" in the report
    and stop at that step; Claude asks the owner.
 
-### G120 · [review 15 Nov] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
+### G120 · [done: merged by Claude 16 Nov; Claude walks after the functions deploy] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
 **Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
 happen once, together, in G124.**
 1. **Remove the classmate banner from this branch** (ClassmateBanner + `pickClassmateCheer`). Kids' phones can't read
@@ -243,7 +243,7 @@ happen once, together, in G124.**
    CONTINUE opens the right topic), parent Home with 2+ children (focus child + "+1 more"), owner Home (Owner row folds).
    Claude merges this with G87 (both touch HomeScreen) and publishes after the IEO (17 Nov).
 
-### G124 · [review 15 Nov] · gemini · ONE combined phone walk for G118 + G119 + G120 (saves quota)
+### G124 · [done: merged by Claude 16 Nov; Claude walks after the functions deploy] · gemini · ONE combined phone walk for G118 + G119 + G120 (saves quota)
 Build ONE test bundle that has all three branches merged locally (`git checkout -b walk/g124 origin/feat/quiz-redesign`,
 then `git merge gemini/g113-linking gemini/g87-results gemini/g112-home`; resolve HomeScreen.js by keeping BOTH
 changes; never push this branch). Then one install, one sign-in, and walk the steps written in G118 (3), G119 (5) and
