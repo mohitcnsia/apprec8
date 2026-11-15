@@ -100,10 +100,10 @@ the owner; G14/G11 parked).
   2. Point Unit 1 at the copies; `npm test` (content test lists every reused id) must pass with no reused IEO ids left.
   3. Then remove the `ieo` tile and its topics/quizzes, and delete the V1 converter in `listenToV2QuizQuestions`.
   4. Maths (`imo`) and Science (`nso`) follow the same path once they have their own quests (nothing in English Quest depends on them).
-- **Cost assessment for 1,000 active kids + what can be removed (owner, 2026-10-30).**:** full plan in `docs/agents/TODO_DETAILS.md`.
+- **Cost assessment for 1,000 active kids (owner, 2026-10-30):** full plan in `docs/agents/TODO_DETAILS.md`.
 - **Admin HTTP endpoints (`functions/api/*.js`):** protected by Cloud IAM (owner calls them with a short-lived token; a tokenless call gets 403). DR-6 adds `invoker: "private"` in code so a deploy can't make one public. Later (with RB-3): move to admin-checked callables and remove unused endpoints.
 - **After DR-6 deploy (owner, not urgent):** on your next admin call, check that your token call still works. The app doesn't use these endpoints, so kids aren't affected. A 403 means your account lacks "Cloud Functions Invoker": grant it in the Cloud Console; no app build needed.
-- **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.:** full plan in `docs/agents/TODO_DETAILS.md`.
+- **Refactor: dynamic content instead of hardcoded seeding:** full plan in `docs/agents/TODO_DETAILS.md`.
 - **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
 - **Reading activity: device test.** Built (see 2026-10-28 step 8). Test on device; tune font size, scrolling and read-aloud voice/speed with Pratha.
 - **Deploy Firestore rules (owner, manual):** `firebase deploy --only firestore:rules --project apprec8-ca229`. Local `firestore.rules` now locks all content writes to the admin (`isAdmin()`) and adds the quest rules. Before this change it matched the live rules exactly. `firestore.rules` is gitignored; consider tracking it in git.
