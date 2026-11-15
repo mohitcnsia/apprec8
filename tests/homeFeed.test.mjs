@@ -97,3 +97,13 @@ assert.equal(pickContinue(Q, {}).questId, "english-quest"); // nobody played: fi
 assert.equal(pickContinue(Q, { "science-quest": { doc: { stats: { lastActiveAt: 9 } } }, "english-quest": { doc: { stats: { lastActiveAt: 5 } } } }).questId, "science-quest");
 assert.equal(pickContinue([], {}), null);
 console.log("homeFeed multi-quest: ok");
+
+// paidStars (16 Nov star rules): today + Mon–today from the server's per-day paid stars (India time).
+{
+  const { paidStars } = await import("../utils/homeFeed.js");
+  const now = Date.parse("2026-11-18T10:00:00+05:30"); // a Wednesday
+  const r = paidStars({ "2026-11-18": 12, "2026-11-17": 5, "2026-11-16": 3, "2026-11-15": 40 }, now);
+  if (r.today !== 12 || r.week !== 20) throw new Error(`paidStars wrong: ${JSON.stringify(r)} (Sunday's 40 belongs to last week)`);
+  if (paidStars(undefined, now).today !== 0) throw new Error("paidStars must handle no data");
+  console.log("paidStars ok");
+}

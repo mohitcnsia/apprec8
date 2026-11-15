@@ -2,6 +2,7 @@
 const authTriggers = require("./triggers/auth");
 const reportTriggers = require("./triggers/reports");
 const { onQuestProgressForClass } = require("./triggers/classSummary");
+const { onQuestAttemptForStars, onQuestProgressForStars } = require("./triggers/starTriggers");
 const quizActionsCallable = require("./callable/quizActions");
 const userActionsCallable = require("./callable/userActions");
 const schoolActionsCallable = require("./callable/schoolActions");
@@ -22,6 +23,8 @@ module.exports = {
   ...authTriggers,
   ...reportTriggers,
   onQuestProgressForClass,
+  onQuestAttemptForStars,
+  onQuestProgressForStars,
   ...quizActionsCallable,
   ...userActionsCallable,
   ...schoolActionsCallable,

@@ -123,6 +123,11 @@ async function eraseUser(admin, uid, opts = {}) {
     await db.collection("parentMobiles").doc(user.parentMobile).set({ uids: FieldValue.arrayRemove(uid) }, { merge: true }).catch(() => {});
   }
   await deleteWhere(db, db.collection("followUps").where("kidUid", "==", uid));
+  // Star records (triggers/starTriggers.js, 16 Nov 2026): ledgers are keyed "<uid>__<questId>".
+  const FieldPath = admin.firestore.FieldPath || require("firebase-admin/firestore").FieldPath;
+  const ledgers = await db.collection("starLedgers").where(FieldPath.documentId(), ">=", `${uid}__`).where(FieldPath.documentId(), "<", `${uid}__\uf8ff`).get();
+  await Promise.all(ledgers.docs.map((d) => d.ref.delete().catch(() => {})));
+  await db.collection("starDays").doc(uid).delete().catch(() => {});
   await db.collection("parentPins").doc(uid).delete().catch(() => {});
   await db.collection("roles").doc(uid).delete().catch(() => {});
 

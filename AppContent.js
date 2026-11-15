@@ -26,6 +26,7 @@ import useJoinLink from "./hooks/useJoinLink";
 import UpdateReadyBanner from "./components/common/UpdateReadyBanner";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import TimeUpOverlay from "./components/common/TimeUpOverlay";
+import StarAwardOverlay from "./components/common/StarAwardOverlay";
 import { AppDialogHost } from "./components/common/AppDialog";
 import GuideStrip from "./components/guides/GuideStrip";
 import { listenForSummaryTaps } from "./services/push";
@@ -239,6 +240,8 @@ const AppContent = () => {
       </View>
       {/* A child's play time is over (Play as → How long?, mockup N1): pause until the parent's PIN */}
       {user ? <TimeUpOverlay uid={user.uid} /> : null}
+      {/* Stars arriving from the server (star rules, 16 Nov): fly up with the reason, then burst */}
+      {user ? <StarAwardOverlay uid={user.uid} /> : null}
       {/* The app's own popups (showAlert in services/dialog.js), mockup T5 */}
       <GuideStrip />
       {updateReady ? <UpdateReadyBanner onPress={reloadNow} /> : null}

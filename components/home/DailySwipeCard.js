@@ -1,6 +1,6 @@
 // components/home/DailySwipeCard.js: Thought/Word/Fact as ONE swipe card on top (G112 Home tidy-up).
-// Shows "✓ Today: N right · this week: M" in the header (correct answers; the header ⭐ counts awarded stars,
-// so this line must not use a star until stars = 1 per correct answer, Claude review 16 Nov), with a horizontal pager for:
+// Shows "⭐ Today: N · this week: M": stars actually paid (users.stats.starsDaily, star rules 16 Nov), so it
+// always agrees with the header's star total, with a horizontal pager for:
 // 1. Thought of the day (inspirational, kid-friendly from data/thoughts.js)
 // 2. Word of the day (Treasure Words from bundled word bank with audio)
 // 3. Fact of the day (Science or Space fact with image and topic link)
@@ -141,13 +141,13 @@ export default function DailySwipeCard({ grade, starsToday = 0, starsWeek = 0 })
 
   return (
     <View style={styles.container}>
-      {/* ✓ Today: N right · this week: M (correct answers) */}
-      <View style={styles.starsBar} accessibilityLabel={`Today: ${starsToday} questions right, this week: ${starsWeek}`}>
+      {/* ⭐ Today: N · this week: M (stars paid) */}
+      <View style={styles.starsBar} accessibilityLabel={`Today: ${starsToday} stars, this week: ${starsWeek} stars`}>
         <View style={styles.starsBadge}>
-          <Text style={styles.starsBadgeText}>✓</Text>
+          <Text style={styles.starsBadgeText}>⭐</Text>
         </View>
         <Text style={styles.starsText}>
-          Today: <Text style={styles.starsBold}>{starsToday}</Text> right · this week:{" "}
+          Today: <Text style={styles.starsBold}>{starsToday}</Text> · this week:{" "}
           <Text style={styles.starsBold}>{starsWeek}</Text>
         </Text>
       </View>

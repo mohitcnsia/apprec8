@@ -253,7 +253,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
         metrics: [
           {
             label: "Final Score",
-            value: `${score} / ${mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore} Stars`,
+            value: `${score} / ${mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore}`, // a score, not stars (16 Nov star rules)
           },
         ],
         actions: [

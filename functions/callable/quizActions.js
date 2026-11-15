@@ -154,6 +154,12 @@ exports.recordQuizResult = functions
           calculatedNewStreak = 1;
         }
 
+        // Star rules (owner spec 16 Nov 2026): quest quizzes and practice papers are paid per answer by
+        // triggers/starTriggers.js. Here they keep only the streak, so nothing is paid twice. Old Space quizzes unchanged.
+        if (mode === "quest" || isPaper) {
+          quizPerfStars = 0;
+          dailyBonusAwarded = 0;
+        }
         starsEarnedThisQuiz = quizPerfStars + dailyBonusAwarded;
         finalTotalStars = currentTotalStars + starsEarnedThisQuiz;
 
@@ -245,6 +251,10 @@ exports.penalizeQuizLeave = functions
         "User must be authenticated."
       );
     }
+    // Owner spec 16 Nov 2026: no star is taken away for leaving a quiz midway (it punished a child who had to stop).
+    // Old app versions still call this; it now changes nothing.
+    return { status: "no_penalty", newStarTotal: null };
+    // eslint-disable-next-line no-unreachable
     const userId = context.auth.uid;
     const serverTimestamp = FieldValue.serverTimestamp();
     const userRef = db.collection("users").doc(userId);

@@ -4,7 +4,8 @@
 // Replaces the old Home (now the Fun tab) and the Study tab. Tiles open screens in the Home stack.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, Image, Share } from "react-native";
+import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, Text, View, Image, Share } from "react-native";
+import PlayAsChildSheet from "../profile/PlayAsChildSheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -18,7 +19,7 @@ import { visibleOldTiles, showOldSpace } from "../../utils/oldContent";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
-import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue, starsSummary } from "../../utils/homeFeed";
+import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue, paidStars } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
@@ -338,6 +339,16 @@ export default function HomeScreen({ navigation }) {
   // Parents: one "tonight" card per child on Home (redesign doc: a parent's Home used to show nothing about the child).
   const childKey = (userData?.childUids || []).join(",");
   const [children, setChildren] = useState([]);
+  // Play as, from the top of Home (owner 16 Nov: "a dot with child written; click it and Play as options show up").
+  const [playKid, setPlayKid] = useState(null);
+  const [pickKidOpen, setPickKidOpen] = useState(false);
+  const playable = children.filter((c) => !c.ownLogin);
+  const playAs = (k) => {
+    setPickKidOpen(false);
+    if (!userData?.hasParentPin) return navigation.navigate("Profile", { screen: "ParentPin", initial: false, params: { mode: "set" } });
+    setPlayKid(k);
+  };
+  const onPlayChip = () => (playable.length === 1 ? playAs(playable[0]) : setPickKidOpen(true));
   const [questsByChild, setQuestsByChild] = useState({});
   const [showAllChildren, setShowAllChildren] = useState(false);
   useEffect(() => {
@@ -567,7 +578,7 @@ export default function HomeScreen({ navigation }) {
 
   const mergedDaily = useMemo(() => mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)), [progressById]);
   const streak = dayStreak(mergedDaily);
-  const { today: starsToday, week: starsWeek } = useMemo(() => starsSummary(mergedDaily), [mergedDaily]);
+  const { today: starsToday, week: starsWeek } = useMemo(() => paidStars(userData?.stats?.starsDaily), [userData?.stats?.starsDaily]);
 
   const [questsFolded, setQuestsFolded] = useState(true);
   const [exploreFolded, setExploreFolded] = useState(true);
@@ -691,6 +702,12 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.hello}>{greeting()},</Text>
             <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
           </View>
+          {playable.length ? (
+            <Pressable onPress={onPlayChip} accessibilityRole="button" accessibilityLabel="Play as a child on this phone" hitSlop={6} style={[styles.chip, { backgroundColor: P.selectedBg }]}>
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: P.selectedText }} />
+              <Text style={[styles.chipText, { color: P.selectedText, fontSize: 14 }]}>Child</Text>
+            </Pressable>
+          ) : null}
           <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
             <FlameIcon />
             <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
@@ -811,7 +828,7 @@ export default function HomeScreen({ navigation }) {
 
         {/* Parent Home: focus child who needs most help, +N more, drops off once done */}
         {focusChild ? (
-          <ParentTonightCard key={focusChild.uid} child={focusChild} P={P} onPlayHere={() => navigation.navigate("Profile")} />
+          <ParentTonightCard key={focusChild.uid} child={focusChild} P={P} onPlayHere={() => playAs(focusChild)} />
         ) : null}
         {allDone && children.length > 0 ? (
           <View style={styles.allDoneCard} accessibilityLabel="All your children have practised today">
@@ -832,7 +849,7 @@ export default function HomeScreen({ navigation }) {
         ) : null}
         {showAllChildren
           ? remainingChildren.map((c) => (
-              <ParentTonightCard key={c.uid} child={c} P={P} onPlayHere={() => navigation.navigate("Profile")} />
+              <ParentTonightCard key={c.uid} child={c} P={P} onPlayHere={() => playAs(c)} />
             ))
           : null}
 
@@ -1093,6 +1110,30 @@ export default function HomeScreen({ navigation }) {
         </>
       ) : null}
     </ScrollView>
+
+    {/* Play as: pick a child (2+ children), then the same sheet as on Me (PIN rules unchanged). */}
+    <Modal visible={pickKidOpen} transparent animationType="fade" onRequestClose={() => setPickKidOpen(false)}>
+      <Pressable style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.45)", justifyContent: "flex-end" }} onPress={() => setPickKidOpen(false)}>
+        <View style={{ backgroundColor: P.card, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 18, paddingBottom: 28, gap: 10 }}>
+          <Text style={[styles.section, { marginTop: 0 }]}>PLAY ON THIS PHONE AS</Text>
+          {playable.map((k) => (
+            <Pressable key={k.uid} onPress={() => playAs(k)} accessibilityRole="button" style={{ minHeight: 56, borderRadius: 16, backgroundColor: P.selectedBg, justifyContent: "center", paddingHorizontal: 16 }}>
+              <Text style={{ fontSize: 18, fontFamily: "nunitoBold", color: P.selectedText }}>{k.firstName || "Child"}{k.grade ? ` · Class ${k.grade}` : ""}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </Pressable>
+    </Modal>
+    <PlayAsChildSheet
+      kid={playKid}
+      P={P}
+      onClose={() => setPlayKid(null)}
+      onLoginCode={() => {
+        const k = playKid;
+        setPlayKid(null);
+        navigation.navigate("Profile", { screen: "AddChild", initial: false, params: { kid: k } });
+      }}
+    />
 
     {/* Thumb-zone CONTINUE button for kids */}
     {kidView && next.main ? (

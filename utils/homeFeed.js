@@ -117,6 +117,19 @@ export function starsSummary(daily = {}, now = Date.now()) {
   return { today, week };
 }
 
+/**
+ * Stars actually PAID today and this week (Mon–today), from users.stats.starsDaily written by the server's star
+ * rules (functions/triggers/starTriggers.js; day keys in India time). Replaces counting right answers (16 Nov).
+ */
+export function paidStars(starsDaily = {}, now = Date.now()) {
+  const IST = 5.5 * 60 * 60 * 1000;
+  const key = (ms) => new Date(ms + IST).toISOString().slice(0, 10);
+  const mondayOffset = (new Date(now + IST).getUTCDay() + 6) % 7;
+  let week = 0;
+  for (let i = 0; i <= mondayOffset; i++) week += Number(starsDaily?.[key(now - i * DAY_MS)]) || 0;
+  return { today: Number(starsDaily?.[key(now)]) || 0, week };
+}
+
 // ---------- Several tile quests (English, Science, ...), 2026-11-04 ----------
 
 /** Adds up per-day stats of several quests: { day: { answered, correct, timeMs } }. */

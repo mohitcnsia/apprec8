@@ -33,6 +33,7 @@ import useReduceMotion from "../../hooks/useReduceMotion";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import functions from "@react-native-firebase/functions";
+import { getFirestore, doc, onSnapshot } from "@react-native-firebase/firestore";
 
 // --- Constants ---
 const screenWidth = Dimensions.get("window").width;
@@ -109,7 +110,23 @@ const ResultsScreen = ({ route, navigation }) => {
 
   // --- State Management ---
   const [username, setUsername] = useState("User");
-  const [starsAwarded, setStarsAwarded] = useState(0); // from recordQuizResult
+  const [starsAwarded, setStarsAwarded] = useState(0); // from recordQuizResult (old Space quizzes only)
+  // Star rules (16 Nov): quest quizzes and papers are paid by the server a moment after the answers are saved;
+  // its award lands on users/{uid}.lastAward. Show it here with its reasons (one doc listener while this screen is open).
+  const mountedAt = useRef(Date.now()).current;
+  const [award, setAward] = useState(null);
+  useEffect(() => {
+    const uid = authInstance.currentUser?.uid;
+    if (!uid) return undefined;
+    return onSnapshot(
+      doc(getFirestore(), "users", uid),
+      (snap) => {
+        const a = snap?.data()?.lastAward;
+        if (a && a.id !== "catch-up" && Number(a.at) >= mountedAt - 60000) setAward(a);
+      },
+      () => {}
+    );
+  }, [mountedAt]);
   const [submitStatus, setSubmitStatus] = useState("idle");
   const [submitError, setSubmitError] = useState(null);
   const [isConfettiVisible, setConfettiVisible] = useState(false);
@@ -316,13 +333,32 @@ const ResultsScreen = ({ route, navigation }) => {
         <View style={styles.statusContainer}>
           {submitStatus === "submitting" ? <ActivityIndicator size="small" color={P.label} /> : null}
           {submitStatus === "error" ? <Text style={styles.errorText}>{submitError}</Text> : null}
-          {submitStatus === "success" ? (
+          {award?.stars > 0 ? (
+            <>
+              <Text style={styles.successText}>+{award.stars} ⭐ earned!</Text>
+              <Text style={styles.infoText}>{(award.reasons || []).map((r) => `${r.why} +${r.n}`).join(" · ")}</Text>
+            </>
+          ) : submitStatus === "success" ? (
             <Text style={styles.successText}>{starsAwarded > 0 ? `+${starsAwarded} ⭐ earned!` : "Progress saved!"}</Text>
           ) : null}
           {submitStatus === "skipped" ? <Text style={styles.infoText}>{savedNote || "Result not submitted."}</Text> : null}
         </View>
 
         <View style={styles.buttonContainer}>{actions.map(buttonFor)}</View>
+        {/* Owner 16 Nov: Tripti never reported her missing stars. One tap to tell us. */}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Profile", {
+              screen: "cntct",
+              initial: false,
+              params: { subject: "My stars look wrong", message: `I just finished a quiz and my stars look wrong. Stars shown: ${award?.stars ?? starsAwarded}.` },
+            })
+          }
+          accessibilityRole="button"
+          style={{ alignSelf: "center", paddingVertical: 10 }}
+        >
+          <Text style={styles.infoText}>Something wrong? Tell us ›</Text>
+        </TouchableOpacity>
       </ScrollView>
 
       {closeAction ? (

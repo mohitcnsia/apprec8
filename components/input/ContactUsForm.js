@@ -22,12 +22,13 @@ import { getApp } from "@react-native-firebase/app";
 import { getFirestore, collection, addDoc, serverTimestamp } from "@react-native-firebase/firestore";
 // Removed unused DateTimePicker/formatDate imports
 
-const ContactUsForm = ({ navigation }) => {
+const ContactUsForm = ({ navigation, route }) => {
   const canWrite = useCanWriteFreeText();
   const { theme, isDark } = useTheme();
 
   // Form data state
-  const [formData, setFormData] = useState({ subject: "", message: "" });
+  // "Something wrong? Tell us" (16 Nov) opens this form with a subject + message ready (route params).
+  const [formData, setFormData] = useState({ subject: route?.params?.subject || "", message: route?.params?.message || "" });
   // User email state
   const [userEmail, setUserEmail] = useState("");
   const [isLoadingEmail, setIsLoadingEmail] = useState(true);
