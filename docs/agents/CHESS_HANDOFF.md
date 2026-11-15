@@ -46,6 +46,59 @@ the Move"; design rules: `docs/DESIGN_RULES.md` (thumb zone, one loud thing, qui
    copied verbatim) — but moves are never written from memory, comments must only name moves
    that are legal where they're attached, and game 1 of each book gets a human read.
 
+## Owner's chess notes, 15 Nov (after a few hours of play) — mockup after the IEO Words review, then a Gemini task
+Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 14 Nov screenshots).
+1. **Loading (owner's design):** load the COLLECTION LIST first (one small index doc: collections → game ids, titles,
+   version), show it at once, then load a game only when opened; cache everything on the phone so it works offline
+   and opens without lag. Today every open still hits Firestore (all games with evals) and lags. A Gemini WIP for
+   caching sits in `git stash` ("wip: chess differential caching and extraction scripts"): look before redoing.
+2. **Remove** the "You found <master>'s move" line: the green arrow already says it (owner: "unnecessary distraction").
+3. **Board flip** button by the board, remembered per game.
+4. **Book note readable while playing:** plain upright font, bigger, stronger contrast (today: small italic serif on purple).
+   AND right next to the board, no empty gap (owner: "too far from the board… requires eye movement… tiring").
+5. **Moves in the note as chips; tap one → the line plays on the board; one tap back to the game** (12 Nov notes:
+   clickable lines + graphical notation; "Variations" never got built).
+7. **Controls:** the big full-width "Next" button → a small row of simple buttons: ◀ (back) · ⏯ (play/pause) · ▶ (next).
+8. **Less text on "your turn":** owner: "this note is not really necessary" (on the move-6 screen: "Your move — what did
+   Morphy play?" and/or "Tap a piece, then its square"). Show the mockup without them and confirm which.
+9. **Game rows say why to play them:** player names add little. Each row: the OPENING (named line) + WHY the game is
+   special (one tag: kingside attack, outpost, positional masterpiece, exchange sacrifice, endgame technique…) + maybe a
+   one-line hook to the key moment; players/year small. Accuracy: opening names from the ECO code / an opening book
+   file, themes and hooks checked against the engine evals and the game itself, never from memory. Open question
+   (auto-reply asked): theme tags as filters on the collection?
+10. **Row badges:** "engine ✓" → a small robot icon (engine-analysed); "You play White/Black" → just the result
+   ("1-0" / "0-1"): the screen already says you play the winning side.
+11. **End card wastes space** (owner, on the 14 Nov end-card screenshot: "unnecessary and wastes space"): which part
+   is asked in the thread (the "You found…" box, the summary lines, or the whole card). Make it compact either way.
+12. **Tappable move list (score sheet):** the game's moves as a tappable list, but ONLY up to the move you've reached;
+   in Guess mode you can never step past it (no spoilers). Tapping an earlier move replays from there, so you can try
+   a position again and guess the best move ("sometimes it is nice to replay the game").
+13. **Filters by THEME and OPENING (owner: "yes, remarkable"):** owner's repertoire pinned on top: King's Gambit,
+   London System, King's Indian Attack (White); Sicilian Accelerated Dragon, Bogo-Indian, Nimzo-Indian, King's Indian
+   Defence (Black).
+14. **"Miniatures" tactics collection per opening (owner's idea):** decisive games under ~25 moves = someone blundered
+   → "so my opponents' mistakes never go unpunished". Plan: puzzle-first cards (position before the blow, find it;
+   game + mistake after), split by the owner's side, "Punish it" and "Don't fall for it", pattern tags (fork, pin,
+   back rank, Greek gift…), missed ones come back later (like My mistakes). Move limit chips 15/20/25.
+   **Source (Claude):** the lichess puzzle database and game database are public domain (CC0): puzzles already carry
+   opening tags + theme tags and are engine-checked. Filter on the Mac for the owner's openings (+ rating floor), check
+   with our Stockfish (analyze.py), seed small packs per opening, cache on the phone (point 1). Verify the CC0 licence
+   on database.lichess.org before using.
+15. **Rarely used controls → small icons in the header** (owner: "a simple icon at the top, it doesn't get used too
+   often", on the collection screen). Do it for BOTH rarely used things: the board-theme picker (big card today) and
+   "Add a game (link or PGN)" (big button today). Frees the screen for the library and filters.
+16. **Long collections** (owner added a 62-game book; scrolling back to the top takes long; wants it collapsible): show
+   5 games, the rest scroll. Claude's suggestion for the mockup: a scroll box inside a scrolling page is fiddly on a
+   phone, so show 5 rows (up next first) + "All 62 games ›" opening the collection's own screen (with the filters),
+   and tapping the collection header always folds it. **Owner picked Claude's version (15 Nov): "much better than mine".**
+**Owner decisions 15 Nov (thread):** browse-the-game is the default for collections; puzzle-first for Miniatures
+(Claude's reading of "browse default" + "puzzle-first agree": asked in the thread, confirm); move limit adjustable
+(15/20/25, default 25); Sunday mockup = screens + written spec (cards, filter bar, Miniatures flow, data shape).
+**"Chess consumes too many tokens": plan it well, build in ONE pass, only once the kids' work is unblocked.**
+6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
+   `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
+   sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
+
 ## How to drive the owner's phone (OnePlus 9 Pro, 1080×2412) — Opus does the walks
 
 - `adb` only works OUTSIDE the sandbox; macOS has no `timeout` (use `perl -e 'sleep N'`).

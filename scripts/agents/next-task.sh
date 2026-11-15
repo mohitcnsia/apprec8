@@ -34,6 +34,10 @@ for b in blocks:
     else:
         finished = any(re.match(rf"gemini\({tid}\): (done|blocked)", s) for s in subjects)
     if not finished:
+        # Always hand over the standing rules and the latest review note with the task.
+        for r in blocks:
+            if r.startswith("### ⚙️") or r.startswith("### 📋"):
+                print(r.strip() + "\n")
         print(b.strip())
         break
 ' "$BOARD")"
