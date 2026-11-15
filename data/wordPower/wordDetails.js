@@ -3,6 +3,8 @@
 // Includes natural kid-safe examples, selective single-word synonyms/antonyms (or null),
 // 2 near-miss confusable spellings, and 17 original 120-180 word stories (>=8 group words each).
 // Task G111 Step 1 (owner YES 14 Nov 2026).
+// Claude review 15 Nov 2026 (G121): confusables are never real words or accepted spellings (dictionary-checked
+// in tests/wordDetails.test.mjs), synonyms/antonyms only where natural, every story word used in its real meaning.
 
 export const WORD_DETAILS = {
   "bear": {
@@ -10,8 +12,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "bare",
-      "beer"
+      "baer",
+      "beir"
     ]
   },
   "camel": {
@@ -20,7 +22,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "camal",
-      "caramel"
+      "camle"
     ]
   },
   "chimpanzee": {
@@ -46,8 +48,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "dear",
-      "dare"
+      "deere",
+      "deir"
     ]
   },
   "dolphin": {
@@ -56,7 +58,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "dolfin",
-      "dauphin"
+      "dolphen"
     ]
   },
   "elephant": {
@@ -82,7 +84,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "flog",
+      "frogg",
       "frok"
     ]
   },
@@ -127,8 +129,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "loin",
-      "lyon"
+      "lionn",
+      "liun"
     ]
   },
   "monkey": {
@@ -154,7 +156,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "howl",
+      "oul",
       "owle"
     ]
   },
@@ -163,7 +165,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "pander",
+      "pandah",
       "pandra"
     ]
   },
@@ -187,7 +189,7 @@ export const WORD_DETAILS = {
   },
   "rabbit": {
     "example": "The fluffy rabbit twitched its pink nose and nibbled on a fresh carrot top.",
-    "synonym": "hare",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "rabit",
@@ -208,7 +210,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "zeal",
+      "seale",
       "ceal"
     ]
   },
@@ -218,7 +220,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "sharke",
-      "sharp"
+      "sharck"
     ]
   },
   "snake": {
@@ -226,7 +228,7 @@ export const WORD_DETAILS = {
     "synonym": "serpent",
     "antonym": null,
     "confusable": [
-      "snack",
+      "snaik",
       "snaek"
     ]
   },
@@ -262,8 +264,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "wool",
-      "wulf"
+      "wulf",
+      "wolff"
     ]
   },
   "zebra": {
@@ -289,8 +291,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "burgher",
-      "burgar"
+      "burgar",
+      "burgur"
     ]
   },
   "burrito": {
@@ -308,7 +310,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "croisant",
-      "crescent"
+      "croissent"
     ]
   },
   "curry": {
@@ -316,22 +318,22 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "scurry",
+      "curri",
       "currey"
     ]
   },
   "donut": {
     "example": "Arun chose a chocolate-glazed donut topped with colourful sugar sprinkles.",
-    "synonym": "pastry",
+    "synonym": null,
     "antonym": null,
     "confusable": [
-      "doughnut",
+      "donutt",
       "doughnutte"
     ]
   },
   "dumpling": {
     "example": "We dipped the steaming vegetable dumpling into savoury ginger and soy sauce.",
-    "synonym": "dim sum",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "dumplin",
@@ -343,13 +345,13 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "fondu",
+      "fondew",
       "fondued"
     ]
   },
   "gelato": {
     "example": "On a scorching summer day, we treated ourselves to creamy pistachio gelato.",
-    "synonym": "sorbet",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "gelatto",
@@ -361,7 +363,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "humus",
+      "hummis",
       "houmous"
     ]
   },
@@ -370,8 +372,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "kabob",
-      "kebap"
+      "kebbab",
+      "kebabe"
     ]
   },
   "lasagna": {
@@ -385,7 +387,7 @@ export const WORD_DETAILS = {
   },
   "macaroni": {
     "example": "Mother baked a piping hot dish of elbow macaroni tossed in rich cheddar cheese.",
-    "synonym": "pasta",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "maccaroni",
@@ -403,11 +405,11 @@ export const WORD_DETAILS = {
   },
   "omelet": {
     "example": "Dad folded a fluffy herb omelet loaded with diced onions, tomatoes, and spinach.",
-    "synonym": "omelette",
+    "synonym": null,
     "antonym": null,
     "confusable": [
-      "omelette",
-      "omlet"
+      "omlet",
+      "omellet"
     ]
   },
   "paella": {
@@ -421,7 +423,7 @@ export const WORD_DETAILS = {
   },
   "pancake": {
     "example": "Maya flipped a fluffy buttermilk pancake onto her plate and drizzled it with honey.",
-    "synonym": "flapjack",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "pancack",
@@ -434,7 +436,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "piza",
-      "piazza"
+      "pitza"
     ]
   },
   "pretzel": {
@@ -451,7 +453,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "roman",
+      "rahmen",
       "raymen"
     ]
   },
@@ -475,7 +477,7 @@ export const WORD_DETAILS = {
   },
   "sausage": {
     "example": "The camping breakfast featured sizzling vegetarian sausage served with baked beans.",
-    "synonym": "banger",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "sausadge",
@@ -484,7 +486,7 @@ export const WORD_DETAILS = {
   },
   "spaghetti": {
     "example": "Rohan twirled long strands of spaghetti onto his fork with savoury tomato marinara.",
-    "synonym": "pasta",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "spagetti",
@@ -506,12 +508,12 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "tacco",
-      "toco"
+      "takko"
     ]
   },
   "tofu": {
     "example": "We stir-fried cubes of firm bean curd tofu with broccoli and ginger sauce.",
-    "synonym": "soya",
+    "synonym": "bean curd",
     "antonym": null,
     "confusable": [
       "tofoo",
@@ -520,7 +522,7 @@ export const WORD_DETAILS = {
   },
   "tortilla": {
     "example": "Grandmother rolled out a warm corn tortilla and toasted it on the hot cast-iron griddle.",
-    "synonym": "flatbread",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "tortila",
@@ -541,7 +543,7 @@ export const WORD_DETAILS = {
     "synonym": "curd",
     "antonym": null,
     "confusable": [
-      "yoghurt",
+      "yogart",
       "yogert"
     ]
   },
@@ -583,7 +585,7 @@ export const WORD_DETAILS = {
   },
   "dodder": {
     "example": "Yellow leafless vines of the parasitic dodder plant wrapped tightly around the hedge.",
-    "synonym": "cuscuta",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "doder",
@@ -595,8 +597,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "duck weed",
-      "dukweed"
+      "dukweed",
+      "duckweede"
     ]
   },
   "fern": {
@@ -609,11 +611,11 @@ export const WORD_DETAILS = {
     ]
   },
   "fir": {
-    "example": "Needle-like green foliage adorned the evergreen Douglas fir tree in the alpine grove.",
+    "example": "Snow settled on the soft, flat needles of the tall fir tree outside our hill cottage in Shimla.",
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "fur",
+      "firr",
       "fyr"
     ]
   },
@@ -622,8 +624,8 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "fly trap",
-      "flytrapp"
+      "flytrapp",
+      "flitrap"
     ]
   },
   "ginger": {
@@ -676,13 +678,13 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "man-grove",
+      "mangrov",
       "mangroov"
     ]
   },
   "mimosa": {
     "example": "Brushing the delicate leaflets of the mimosa plant caused them to fold shut instantly.",
-    "synonym": "shrub",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "mimoza",
@@ -703,31 +705,31 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "mose",
+      "mosse",
       "mosses"
     ]
   },
   "mould": {
     "example": "Leaving damp bread in a dark cupboard allowed fuzzy greenish mould to grow rapidly.",
-    "synonym": "fungus",
+    "synonym": null,
     "antonym": null,
     "confusable": [
-      "mold",
+      "moold",
       "mowld"
     ]
   },
   "mushroom": {
     "example": "After the warm autumn rain, a ring of umbrella-shaped wild mushroom caps appeared on the lawn.",
-    "synonym": "toadstool",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "mushrom",
-      "mush-room"
+      "mushroum"
     ]
   },
   "onion": {
     "example": "Chopping a raw pungent onion released fumes that brought tears to the cook's eyes.",
-    "synonym": "shallot",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "onien",
@@ -740,7 +742,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "pyne",
-      "spine"
+      "pinne"
     ]
   },
   "pitcher": {
@@ -763,7 +765,7 @@ export const WORD_DETAILS = {
   },
   "rubber": {
     "example": "Workers made diagonal cuts in the bark of the rubber tree to harvest sticky white latex.",
-    "synonym": "latex",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "rubbar",
@@ -790,16 +792,16 @@ export const WORD_DETAILS = {
   },
   "tapegrass": {
     "example": "Long ribbon-like green leaves of tapegrass rippled gently in the freshwater stream.",
-    "synonym": "vallisneria",
+    "synonym": null,
     "antonym": null,
     "confusable": [
-      "tape grass",
+      "tapgrass",
       "tapegas"
     ]
   },
   "teak": {
     "example": "The durable dining table was crafted from solid seasoned teak wood that resists moisture.",
-    "synonym": "timber",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "teake",
@@ -821,7 +823,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "backpak",
-      "back-pack"
+      "bakpack"
     ]
   },
   "blackboard": {
@@ -829,8 +831,8 @@ export const WORD_DETAILS = {
     "synonym": "chalkboard",
     "antonym": null,
     "confusable": [
-      "black board",
-      "blackbord"
+      "blackbord",
+      "blakboard"
     ]
   },
   "bus": {
@@ -838,8 +840,8 @@ export const WORD_DETAILS = {
     "synonym": "coach",
     "antonym": null,
     "confusable": [
-      "buss",
-      "buzz"
+      "buse",
+      "bous"
     ]
   },
   "calculator": {
@@ -865,7 +867,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "chawk",
+      "chaulk",
       "chalke"
     ]
   },
@@ -889,7 +891,7 @@ export const WORD_DETAILS = {
   },
   "desk": {
     "example": "Tanya stacked her notebooks neatly in the cubby beneath her wooden school desk.",
-    "synonym": "table",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "deske",
@@ -946,7 +948,7 @@ export const WORD_DETAILS = {
     "synonym": "assignment",
     "antonym": null,
     "confusable": [
-      "home work",
+      "homwork",
       "homewurk"
     ]
   },
@@ -964,7 +966,7 @@ export const WORD_DETAILS = {
     "synonym": "tiffin",
     "antonym": null,
     "confusable": [
-      "lunch box",
+      "lunchbocks",
       "luncbox"
     ]
   },
@@ -974,15 +976,15 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "mapp",
-      "mop"
+      "mappe"
     ]
   },
   "notebook": {
     "example": "Ananya wrote down the science definitions carefully inside her ruled exercise notebook.",
-    "synonym": "journal",
+    "synonym": null,
     "antonym": null,
     "confusable": [
-      "note book",
+      "notbook",
       "notebuk"
     ]
   },
@@ -992,15 +994,15 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "pensil",
-      "pencel"
+      "pencill"
     ]
   },
   "principal": {
     "example": "The school principal delivered an encouraging speech during the morning assembly.",
-    "synonym": "headmaster",
+    "synonym": "head teacher",
     "antonym": null,
     "confusable": [
-      "principle",
+      "principel",
       "principall"
     ]
   },
@@ -1036,7 +1038,7 @@ export const WORD_DETAILS = {
     "synonym": "straightedge",
     "antonym": null,
     "confusable": [
-      "ruller",
+      "rular",
       "rulor"
     ]
   },
@@ -1078,7 +1080,7 @@ export const WORD_DETAILS = {
   },
   "uniform": {
     "example": "Every Monday morning, the students wore their neatly pressed white school uniform.",
-    "synonym": "attire",
+    "synonym": null,
     "antonym": null,
     "confusable": [
       "unifrom",
@@ -1100,16 +1102,16 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "ambushh",
-      "ambushment"
+      "ambosh"
     ]
   },
   "appall": {
     "example": "Cruel behaviour towards stray animals will appall anyone with a kind heart.",
     "synonym": "shock",
-    "antonym": "please",
+    "antonym": "delight",
     "confusable": [
-      "appal",
-      "apall"
+      "apall",
+      "appaul"
     ]
   },
   "audacity": {
@@ -1243,8 +1245,8 @@ export const WORD_DETAILS = {
     "synonym": "wobble",
     "antonym": null,
     "confusable": [
-      "toter",
-      "tatter"
+      "totar",
+      "tottor"
     ]
   },
   "vicinity": {
@@ -1261,7 +1263,7 @@ export const WORD_DETAILS = {
     "synonym": "hesitate",
     "antonym": "persist",
     "confusable": [
-      "waiver",
+      "wavor",
       "wavur"
     ]
   },
@@ -1277,7 +1279,7 @@ export const WORD_DETAILS = {
   "cerebral": {
     "example": "Chess is an intensely cerebral board game that rewards deep tactical calculation.",
     "synonym": "intellectual",
-    "antonym": "emotional",
+    "antonym": null,
     "confusable": [
       "cereberal",
       "cerebril"
@@ -1297,8 +1299,8 @@ export const WORD_DETAILS = {
     "synonym": "venture",
     "antonym": null,
     "confusable": [
-      "daer",
-      "dear"
+      "dair",
+      "daire"
     ]
   },
   "enmity": {
@@ -1423,7 +1425,7 @@ export const WORD_DETAILS = {
     "synonym": null,
     "antonym": null,
     "confusable": [
-      "retractible",
+      "retracteble",
       "retractablee"
     ]
   },
@@ -1486,7 +1488,7 @@ export const WORD_DETAILS = {
     "synonym": "heartless",
     "antonym": "compassionate",
     "confusable": [
-      "callus",
+      "callouse",
       "calous"
     ]
   },
@@ -1559,7 +1561,7 @@ export const WORD_DETAILS = {
     "antonym": "deter",
     "confusable": [
       "insite",
-      "insight"
+      "incight"
     ]
   },
   "naive": {
@@ -1568,7 +1570,7 @@ export const WORD_DETAILS = {
     "antonym": "cunning",
     "confusable": [
       "naieve",
-      "na\u00efve"
+      "naiv"
     ]
   },
   "philanthropist": {
@@ -1646,7 +1648,7 @@ export const WORD_DETAILS = {
   "coerce": {
     "example": "Nobody should ever coerce you into doing something you know is dangerous or wrong.",
     "synonym": "force",
-    "antonym": "persuade",
+    "antonym": null,
     "confusable": [
       "coerse",
       "coherce"
@@ -1682,7 +1684,7 @@ export const WORD_DETAILS = {
   "entreat": {
     "example": "The villagers gathered to entreat the governor for emergency drought relief.",
     "synonym": "plead",
-    "antonym": "demand",
+    "antonym": null,
     "confusable": [
       "entreet",
       "entrete"
@@ -1721,7 +1723,7 @@ export const WORD_DETAILS = {
     "antonym": "surrender",
     "confusable": [
       "fende",
-      "fond"
+      "fennd"
     ]
   },
   "lash": {
@@ -1730,7 +1732,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "lashe",
-      "latch"
+      "lasch"
     ]
   },
   "rebuff": {
@@ -1747,8 +1749,8 @@ export const WORD_DETAILS = {
     "synonym": "scold",
     "antonym": "praise",
     "confusable": [
-      "rebook",
-      "rebuk"
+      "rebuk",
+      "rebuque"
     ]
   },
   "relinquish": {
@@ -1765,7 +1767,7 @@ export const WORD_DETAILS = {
     "synonym": "comfort",
     "antonym": "irritate",
     "confusable": [
-      "sooth",
+      "soth",
       "southe"
     ]
   },
@@ -1781,7 +1783,7 @@ export const WORD_DETAILS = {
   "surpassed": {
     "example": "The student's exceptional test scores surpassed all her teachers' high expectations.",
     "synonym": "exceeded",
-    "antonym": "trailed",
+    "antonym": null,
     "confusable": [
       "surpast",
       "surpased"
@@ -1799,7 +1801,7 @@ export const WORD_DETAILS = {
   "trigger": {
     "example": "A sudden loud noise can trigger a stampede among frightened cattle.",
     "synonym": "spark",
-    "antonym": "halt",
+    "antonym": null,
     "confusable": [
       "triger",
       "triggur"
@@ -1820,7 +1822,7 @@ export const WORD_DETAILS = {
     "antonym": "hurry",
     "confusable": [
       "dawdel",
-      "doddle"
+      "dawddle"
     ]
   },
   "diligently": {
@@ -1900,7 +1902,7 @@ export const WORD_DETAILS = {
     "synonym": "wonderful",
     "antonym": "terrible",
     "confusable": [
-      "marvelous",
+      "marvellious",
       "marvelousz"
     ]
   },
@@ -2026,8 +2028,8 @@ export const WORD_DETAILS = {
     "synonym": "quality",
     "antonym": null,
     "confusable": [
-      "calibre",
-      "calibar"
+      "calibar",
+      "calliber"
     ]
   },
   "capricious": {
@@ -2108,7 +2110,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "minutae",
-      "minutia"
+      "minutea"
     ]
   },
   "obnoxious": {
@@ -2143,8 +2145,8 @@ export const WORD_DETAILS = {
     "synonym": "payment",
     "antonym": null,
     "confusable": [
-      "renumeration",
-      "remunaration"
+      "remunaration",
+      "remuneretion"
     ]
   },
   "versatile": {
@@ -2215,7 +2217,7 @@ export const WORD_DETAILS = {
     "synonym": "rough",
     "antonym": "refined",
     "confusable": [
-      "crood",
+      "krude",
       "crwde"
     ]
   },
@@ -2252,7 +2254,7 @@ export const WORD_DETAILS = {
     "antonym": "perfection",
     "confusable": [
       "flawe",
-      "floe"
+      "flau"
     ]
   },
   "flimsy": {
@@ -2287,7 +2289,7 @@ export const WORD_DETAILS = {
     "synonym": "detest",
     "antonym": "adore",
     "confusable": [
-      "loath",
+      "lothe",
       "lotthe"
     ]
   },
@@ -2303,7 +2305,7 @@ export const WORD_DETAILS = {
   "poignant": {
     "example": "The story ended with a poignant farewell between two devoted childhood companions.",
     "synonym": "touching",
-    "antonym": "unemotional",
+    "antonym": null,
     "confusable": [
       "poinant",
       "poygnant"
@@ -2341,7 +2343,7 @@ export const WORD_DETAILS = {
     "synonym": "sorrow",
     "antonym": "joy",
     "confusable": [
-      "whoa",
+      "woh",
       "woeh"
     ]
   },
@@ -2483,10 +2485,10 @@ export const WORD_DETAILS = {
   "collate": {
     "example": "The student volunteers helped collate the survey sheets into alphabetical order.",
     "synonym": "organise",
-    "antonym": "disarrange",
+    "antonym": null,
     "confusable": [
-      "colate",
-      "collait"
+      "collait",
+      "collayte"
     ]
   },
   "congregation": {
@@ -2584,7 +2586,7 @@ export const WORD_DETAILS = {
     "synonym": "independent",
     "antonym": "dependent",
     "confusable": [
-      "self sufficient",
+      "self-sufficent",
       "self-sufficiant"
     ]
   },
@@ -2602,7 +2604,7 @@ export const WORD_DETAILS = {
     "synonym": "suave",
     "antonym": "uncouth",
     "confusable": [
-      "urban",
+      "urbain",
       "urbaen"
     ]
   },
@@ -2674,8 +2676,8 @@ export const WORD_DETAILS = {
     "synonym": "advantageous",
     "antonym": "unfavourable",
     "confusable": [
-      "favorable",
-      "favourabel"
+      "favourabel",
+      "favorible"
     ]
   },
   "germane": {
@@ -2771,7 +2773,7 @@ export const WORD_DETAILS = {
   "unaccountably": {
     "example": "The front gate was unaccountably left unlocked despite the security guard's vigilance.",
     "synonym": "inexplicably",
-    "antonym": "accountably",
+    "antonym": null,
     "confusable": [
       "unaccountabel",
       "unaccountabli"
@@ -2791,7 +2793,7 @@ export const WORD_DETAILS = {
     "synonym": "greatest",
     "antonym": "least",
     "confusable": [
-      "upmost",
+      "utmoste",
       "utmoast"
     ]
   },
@@ -2819,7 +2821,7 @@ export const WORD_DETAILS = {
     "antonym": null,
     "confusable": [
       "bareing",
-      "baring"
+      "bearring"
     ]
   },
   "convergent": {
@@ -2843,7 +2845,7 @@ export const WORD_DETAILS = {
   "dominate": {
     "example": "Towering oak trees dominate the high canopy of the primeval forest.",
     "synonym": "control",
-    "antonym": "surrender",
+    "antonym": null,
     "confusable": [
       "domenate",
       "dominit"
@@ -2926,7 +2928,7 @@ export const WORD_DETAILS = {
     "synonym": "recreate",
     "antonym": null,
     "confusable": [
-      "re-enact",
+      "reinact",
       "reenackt"
     ]
   },
@@ -2942,7 +2944,7 @@ export const WORD_DETAILS = {
   "revert": {
     "example": "If the computer system crashes, it will revert automatically to its previous backup state.",
     "synonym": "return",
-    "antonym": "progress",
+    "antonym": null,
     "confusable": [
       "reverte",
       "revertte"
@@ -2953,7 +2955,7 @@ export const WORD_DETAILS = {
     "synonym": "audacity",
     "antonym": "caution",
     "confusable": [
-      "timidity",
+      "temerety",
       "temeritie"
     ]
   },
@@ -3007,7 +3009,7 @@ export const WORD_DETAILS = {
     "synonym": "noisy",
     "antonym": "quiet",
     "confusable": [
-      "clamourous",
+      "clamerous",
       "clamarous"
     ]
   },
@@ -3115,7 +3117,7 @@ export const WORD_DETAILS = {
     "synonym": "narrow",
     "antonym": "widen",
     "confusable": [
-      "tapir",
+      "tapur",
       "tapere"
     ]
   },
@@ -3194,7 +3196,7 @@ export const WORD_DETAILS = {
   "baffled": {
     "example": "The challenging crossword puzzle completely baffled even our clever English teacher.",
     "synonym": "perplexed",
-    "antonym": "clear",
+    "antonym": null,
     "confusable": [
       "baffeled",
       "bafled"
@@ -3205,7 +3207,7 @@ export const WORD_DETAILS = {
     "synonym": "unenlightened",
     "antonym": "enlightened",
     "confusable": [
-      "benightedness",
+      "benited",
       "benightedd"
     ]
   },
@@ -3400,7 +3402,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-actions-change": {
     "title": "The Midnight Alarm",
-    "text": "When the village fire alarm sounded, Captain Roy knew there was no time to waver or hesitate. He gathered his volunteer team in the immediate vicinity of the old community hall, refusing to neglect any precautionary safety protocol. A sudden kitchen fire threatened to turn the entire festival into an utter fiasco if sparks reached the dry wooden pavilion. Showing tremendous audacity, the young captain stepped forward to employ a heavy wet woollen blanket to smother the leaping flames completely. His calm leadership prevented an outcome that would surely appall the gathered townsfolk. The firefighters agreed to abide by strict emergency guidelines while inspecting nearby houses for smoke damage. When the danger passed, grateful villagers presented the brave pioneer with a fragrant flower bouquet, admiring how coolly he took command during the crisis.",
+    "text": "When the village fire alarm sounded, Captain Roy knew there was no time to waver or hesitate. He gathered his volunteer team in the immediate vicinity of the old community hall, refusing to neglect any precautionary safety protocol. A sudden kitchen fire threatened to turn the entire festival into an utter fiasco if sparks reached the dry wooden pavilion. Showing tremendous audacity, the young captain stepped forward to employ a heavy wet woollen blanket to smother the leaping flames completely. His calm leadership prevented an outcome that would surely appall the gathered townsfolk. The firefighters agreed to abide by strict emergency guidelines while inspecting nearby houses for smoke damage. When the danger passed, grateful villagers presented the brave captain with a fragrant flower bouquet. A year later he became a pioneer of fire safety in the district, the first to teach it in every village school.",
     "targetWords": [
       "waver",
       "vicinity",
@@ -3453,7 +3455,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-conflict-qualities": {
     "title": "A Test of Resolve",
-    "text": "As storm clouds gathered over the rocky pass, the expedition leader felt a quiet flutter of apprehension in his chest. Fierce gusts began to lash against their canvas tents, testing their steadfast determination to reach the mountain shelter. The guide knew that panic could trigger disastrous mistakes, so he spoke in gentle tones to soothe his shivering teammates. They had to eliminate all unnecessary gear and fend off biting frostbite while navigating the slippery mountain ridge. No one could coerce the tired hikers into giving up hope despite their exhaustive battle against freezing headwinds. Showing admirable patience and mutual tolerance, they helped each other carry heavy backpacks across the treacherous ice bridges. Their teamwork surpassed every expectation, proving that courage and discipline can overcome the most hostile wilderness conditions.",
+    "text": "As storm clouds gathered over the rocky pass, the expedition leader felt a quiet flutter of apprehension in his chest. Fierce gusts began to lash against their canvas tents, testing their steadfast determination to reach the mountain shelter. The guide knew that panic could trigger disastrous mistakes, so he spoke in gentle tones to soothe his shivering teammates. They had to eliminate all unnecessary gear and fend off biting frostbite while navigating the slippery mountain ridge. Before each step, the leader made an exhaustive check of every rope and buckle, and no storm could coerce the tired hikers into giving up hope. Showing admirable patience and mutual tolerance, they helped each other carry heavy backpacks across the treacherous ice bridges. Their teamwork surpassed every expectation, proving that courage and discipline can overcome the most hostile wilderness conditions.",
     "targetWords": [
       "apprehension",
       "lash",
@@ -3470,7 +3472,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-describing-effort": {
     "title": "Restoring the Ancient Mural",
-    "text": "Inside the quiet monastery sanctuary, an expert team worked diligently to restore a magnificent ceiling mural painted centuries ago. The head restorer was meticulous in cleaning every square inch of crumbling plaster, refusing to rush or dawdle over difficult sections. Some portions had suffered grotesque decay that looked almost bizarre to casual visitors, but her sedulous patience slowly revealed original vibrant pigments underneath. Rather than wasting time on frivolous discussions, the restorers used sophisticated microscopes and natural organic solvents to preserve delicate brush strokes. They watched the historic figures thrive once more under gentle museum lighting, emerging from dark shadows into marvellous clarity. When the scaffolding came down, the ancient temple looked lavish and regal, earning widespread acclaim from historians across the continent.",
+    "text": "Inside the quiet monastery sanctuary, an expert team worked diligently to restore a magnificent ceiling mural painted centuries ago. The head restorer was meticulous in cleaning every square inch of crumbling plaster, refusing to rush or dawdle over difficult sections. Some portions had suffered grotesque decay that looked almost bizarre to casual visitors, but her sedulous patience slowly revealed original vibrant pigments underneath. Rather than wasting time on frivolous discussions, the restorers used sophisticated microscopes and natural organic solvents to preserve delicate brush strokes. Because mould can thrive in damp plaster, they kept the hall dry, and the painted figures slowly emerged from dark shadows into marvellous clarity. When the scaffolding came down, the ancient temple looked lavish and regal, earning widespread acclaim from historians across the continent.",
     "targetWords": [
       "diligently",
       "magnificent",
@@ -3487,7 +3489,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-details-consequences": {
     "title": "The Vanishing Cipher",
-    "text": "Professor Thorne received international acclaim for cracking an enigmatic coded parchment recovered from a sunken Mediterranean galleon. The manuscript was written in a convoluted script that had thoroughly baffled amateur puzzle solvers for over a century. Taking a brisk morning excursion through the museum courtyard, he noticed that certain chemical symbols on the paper were remarkably versatile, changing meaning depending on air humidity. However, moisture proved detrimental to the delicate document, making the faded ink dangerously vulnerable to decay. The historian worked with extreme precision, examining the minutiae of every brushstroke without adding any embellished theories to his translation notes. His brilliant research demonstrated that the ancient text held an authentic mathematical formula of high caliber that scholars continue to celebrate today.",
+    "text": "Professor Thorne received international acclaim for cracking an enigmatic coded parchment recovered from a sunken Mediterranean galleon. The manuscript was written in a convoluted script that had thoroughly baffled amateur puzzle solvers for over a century. A versatile scholar who read six languages, he spotted the clue during a brisk excursion to the harbour museum: some symbols changed colour with the damp sea air. However, moisture proved detrimental to the delicate document, making the faded ink dangerously vulnerable to decay. The historian worked with extreme precision, examining the minutiae of every brushstroke without adding any embellished theories to his translation notes. His brilliant research demonstrated that the ancient text held an authentic mathematical formula of high caliber that scholars continue to celebrate today.",
     "targetWords": [
       "acclaim",
       "enigmatic",
@@ -3534,7 +3536,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-groups-behaviors": {
     "title": "The Neighbourhood Committee",
-    "text": "At the annual town hall meeting, an urbane civic leader stepped forward to address the diverse assembly. He urged the neighbourhood association to amalgamate several small volunteer groups into one cohesive consortium to clean the municipal canal. While a bombastic speaker argued for expensive machinery, a diffident young girl stood up with quiet resolve to share her practical recycling plan. She spoke in an assertive yet respectful manner, proving that you do not need to be loud to make a persuasive impact. The committee agreed not to segregate the park into private zones, but rather to keep it open for everyone to enjoy together. Through tenacious volunteer efforts and whimsical community art installations, the residents transformed the neglected riverside into a thriving, self-sufficient public sanctuary.",
+    "text": "At the annual town hall meeting, an urbane civic leader stepped forward to address the diverse assembly. He urged the neighbourhood association to amalgamate several small volunteer groups into one cohesive consortium to clean the municipal canal. While a bombastic speaker argued for expensive machinery, a diffident young girl stood up with quiet resolve to share her practical recycling plan. She spoke in an assertive yet respectful manner, proving that you do not need to be loud to make a persuasive impact. The committee agreed not to segregate the park into private zones, but rather to keep it open for everyone to enjoy together. Through tenacious volunteer efforts and whimsical community art installations, the residents turned the neglected riverside into a thriving garden that grew its own vegetables and was almost self-sufficient.",
     "targetWords": [
       "urbane",
       "amalgamate",
@@ -3550,7 +3552,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-importance-method": {
     "title": "The Village Clocktower",
-    "text": "Restoring the town's historic clocktower was an undertaking of utmost importance to the preservation society. Master Julian inspected the ancient brass gears avidly, searching for latent cracks that could cause sudden mechanical failures. Regular lubrication is crucial to ensure smooth movement, as dust and moisture can produce highly detrimental friction over time. The old clock seldom lost a minute when tended properly, because its innate design possessed intrinsic balance and remarkable durability. Some residents were moderately sceptical that the restoration would finish on time, but favourable weather allowed the craftsmen to work without interruption. By the penultimate week of the project, Julian gave an emphatic thumbs-up from the tower balcony as the golden bells chimed across the valley right on schedule.",
+    "text": "Restoring the town's historic clocktower was an undertaking of utmost importance to the preservation society. Master Julian inspected the ancient brass gears avidly, searching for latent cracks that could cause sudden mechanical failures. Regular lubrication is crucial to ensure smooth movement, as dust and moisture can produce highly detrimental friction over time. The old clock seldom lost a minute when tended properly, because its makers had an innate gift for balance and its brass had intrinsic strength. Some residents were moderately sceptical that the restoration would finish on time, but favourable weather allowed the craftsmen to work without interruption. By the penultimate week of the project, Julian gave an emphatic thumbs-up from the tower balcony as the golden bells chimed across the valley right on schedule.",
     "targetWords": [
       "utmost",
       "avidly",
@@ -3598,7 +3600,7 @@ export const GROUP_STORIES = {
   },
   "wp-bank-thinking-situations": {
     "title": "The Midnight Enigma",
-    "text": "A sudden power outage plunged the research laboratory into complete darkness, creating a frantic and hectic scene among the scientists. The unexpected blackout completely baffled the junior technicians, who feared that weeks of experimental data might be lost forever. However, Dr. Aris demonstrated sharp acumen by calmly activating the emergency generator before the temperature in the freezer vaults could rise. He realized that panic was a dangerous catastrophe that had to be avoided at all costs during this critical juncture. Rather than relying on arbitrary guesses about the electrical fault, he conducted methodical tests to ascertain the root cause of the blown circuit. His erudite understanding of the building's wiring turned an inevitable crisis into a swift triumph of practical problem-solving.",
+    "text": "A sudden power outage plunged the research laboratory into complete darkness, creating a frantic and hectic scene among the scientists. The unexpected blackout completely baffled the junior technicians, who feared that weeks of experimental data might be lost forever. However, Dr. Aris demonstrated sharp acumen by calmly activating the emergency generator before the temperature in the freezer vaults could rise. Losing the samples would have been a catastrophe, and he knew this was a critical juncture where calm mattered most. Rather than relying on arbitrary guesses about the electrical fault, he conducted methodical tests to ascertain the root cause of the blown circuit. His erudite understanding of the building's wiring turned an inevitable crisis into a swift triumph of practical problem-solving.",
     "targetWords": [
       "hectic",
       "baffled",

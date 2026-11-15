@@ -119,3 +119,25 @@ for (const group of WORD_BANK) {
 console.log(`✓ All 17 group stories verified (120-180 words, >= 8 group words each)`);
 console.log("wordDetails tests passed 100%!");
 
+
+// 4. Confusables are believable misspellings, never real words or accepted spellings (Claude review, 15 Nov 2026:
+// 80 of 740 were real words: bear→beer, yogurt→yoghurt, donut→doughnut…). Uses the Mac dictionary when present.
+{
+  const fs = await import("node:fs");
+  const dictPath = "/usr/share/dict/words";
+  const ACCEPTED = new Set(["yoghurt", "doughnut", "omelette", "kabob", "kebap", "kebob", "fondu", "naïve", "mold", "mould",
+    "minuscule", "marvelous", "favorable", "calibre", "appal", "clamourous", "re-enact", "hummous"]);
+  const norm = (x) => x.toLowerCase().replace(/[- ]/g, "");
+  const dict = fs.existsSync(dictPath) ? new Set(fs.readFileSync(dictPath, "utf8").toLowerCase().split("\n")) : null;
+  for (const [word, d] of Object.entries(WORD_DETAILS)) {
+    assert.equal(new Set(d.confusable).size, d.confusable.length, `"${word}": confusables repeat`);
+    for (const c of d.confusable) {
+      const lc = c.toLowerCase();
+      assert.ok(/^[a-z-]+$/.test(lc), `"${word}": confusable "${c}" has spaces or accents`);
+      assert.notEqual(norm(c), norm(word), `"${word}": confusable "${c}" is the word itself`);
+      assert.ok(!ACCEPTED.has(lc), `"${word}": confusable "${c}" is an accepted spelling`);
+      if (dict) assert.ok(!dict.has(lc), `"${word}": confusable "${c}" is a real word`);
+    }
+  }
+  console.log(`confusables: ${dict ? "dictionary-checked" : "no dictionary on this machine, skipped real-word check"}`);
+}
