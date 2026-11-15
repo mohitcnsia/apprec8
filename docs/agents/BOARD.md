@@ -228,7 +228,7 @@ happen once, together, in G124.**
    classSummary trigger deployed: write "DEPLOY NEEDED: functions remindAssignment, onQuestProgressForClass" in the report
    and stop at that step; Claude asks the owner.
 
-### G120 · [todo] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
+### G120 · [review 15 Nov] · gemini · G112 fixes (Home tidy-up) — on `gemini/g112-home`
 **Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
 happen once, together, in G124.**
 1. **Remove the classmate banner from this branch** (ClassmateBanner + `pickClassmateCheer`). Kids' phones can't read

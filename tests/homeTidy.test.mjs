@@ -1,6 +1,6 @@
 // tests/homeTidy.test.mjs: Tests for G112 Home tidy-up pure helpers. Run: npm test
 import assert from "node:assert/strict";
-import { selectParentFocusChild, ownerRowSummary, pickClassmateCheer } from "../utils/homeTidy.js";
+import { selectParentFocusChild, ownerRowSummary } from "../utils/homeTidy.js";
 import { dayKey } from "../utils/kidStats.js";
 
 const now = new Date(2026, 10, 14, 18).getTime();
@@ -59,50 +59,4 @@ const q = (days, mistakes = {}) => ({
   assert.equal(s2.total, 0);
   assert.equal(s2.summary, "All caught up");
   console.log("owner row summary tests passed");
-}
-
-// 3. Classmate banner cheer picker
-{
-  const summaryKids = {
-    kid1: {
-      name: "Tripti Sharma",
-      "english-quest": {
-        week: { correct: 20 },
-        lv: { "eq-tenses": "l" },
-      },
-    },
-    me: {
-      name: "My Name",
-      "english-quest": { week: { correct: 50 } },
-    },
-  };
-  const namers = {
-    "english-quest": (id) => (id === "eq-tenses" ? "Tenses" : id),
-  };
-
-  const cheer = pickClassmateCheer(summaryKids, "me", namers);
-  assert.equal(cheer, "Tripti earned 20 ⭐ in Tenses 🎉", "cheers classmate with first name, stars, topic, never comparisons");
-
-  // Fallback when no learned topic found but stars exist
-  const summaryKids2 = {
-    kid2: {
-      name: "Rohan",
-      "science-quest": { week: { correct: 15 } },
-    },
-  };
-  const cheer2 = pickClassmateCheer(summaryKids2, "me", namers);
-  assert.equal(cheer2, "Rohan earned 15 ⭐ this week 🎉");
-
-  // Classmate with no stars but activity
-  const summaryKids3 = {
-    kid3: { name: "Pooja" },
-  };
-  const cheer3 = pickClassmateCheer(summaryKids3, "me", namers);
-  assert.equal(cheer3, "Pooja practised today 🎉");
-
-  // Empty classmates (only me)
-  const cheerEmpty = pickClassmateCheer({ me: { name: "Me" } }, "me", namers);
-  assert.equal(cheerEmpty, null);
-
-  console.log("classmate banner tests passed");
 }

@@ -40,7 +40,6 @@ import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import DailySwipeCard from "../../components/home/DailySwipeCard";
-import ClassmateBanner from "../../components/home/ClassmateBanner";
 import { selectParentFocusChild, ownerRowSummary } from "../../utils/homeTidy";
 import { loadProgress } from "../../services/progressCache";
 import { keepPhoneSaved } from "../../services/push";
@@ -675,7 +674,6 @@ export default function HomeScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <PersonaBanner />
-        <ClassmateBanner myUid={uid} classIds={userData?.classIds} parentUids={userData?.parentUids} />
         <View style={styles.header}>
           <Mascot size={50} />
           <View style={{ flex: 1 }}>
@@ -708,6 +706,20 @@ export default function HomeScreen({ navigation }) {
         {/* Kids' Home: Thought / Word / Fact as ONE swipe card on top */}
         {userGrade != null ? (
           <DailySwipeCard grade={userGrade} starsToday={starsToday} starsWeek={starsWeek} />
+        ) : null}
+
+        {/* IEO is on 17 Nov: keep Practice paper / Check-up tile visible right under the swipe card for kids whose class has one */}
+        {hasPaper ? (
+          <View style={styles.grid}>
+            {questTile(
+              "paper",
+              CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper",
+              CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test",
+              <PaperArt />,
+              isDark ? "#3A2E12" : "#FFF4D6",
+              () => navigation.navigate("PracticePaper", { grade: userGrade })
+            )}
+          </View>
         ) : null}
 
         {/* Owner: People / reports / decisions folded into one clean row */}
@@ -1000,19 +1012,19 @@ export default function HomeScreen({ navigation }) {
       ) : null}
 
       {/* Explore - folded row */}
-      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper || exploreQuests.length ? (
+      {showOldSpace({ isAdmin: oldAdmin }) || exploreQuests.length ? (
         <>
           <Pressable
             onPress={() => setExploreFolded((v) => !v)}
             style={styles.foldedSectionRow}
             accessibilityRole="button"
             accessibilityState={{ expanded: !exploreFolded }}
-            accessibilityLabel={`Explore, ${exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0) + (hasPaper ? 1 : 0)} activities. Tap to ${exploreFolded ? "open" : "fold"}.`}
+            accessibilityLabel={`Explore, ${exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)} activities. Tap to ${exploreFolded ? "open" : "fold"}.`}
           >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
               <Text style={styles.sectionTitle}>Explore</Text>
               <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText}>{exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0) + (hasPaper ? 1 : 0)}</Text>
+                <Text style={styles.countBadgeText}>{exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)}</Text>
               </View>
             </View>
             <Text style={styles.foldChevron}>{exploreFolded ? "›" : "▼"}</Text>
@@ -1031,11 +1043,6 @@ export default function HomeScreen({ navigation }) {
                 )
               )}
               {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
-              {hasPaper
-                ? questTile("paper", CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper", CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
-                    navigation.navigate("PracticePaper", { grade: userGrade })
-                  )
-                : null}
             </View>
           ) : null}
         </>
@@ -1076,7 +1083,7 @@ export default function HomeScreen({ navigation }) {
 
     {/* Thumb-zone CONTINUE button for kids */}
     {kidView && next.main ? (
-      <View style={[styles.thumbZoneBar, { paddingBottom: Math.max(12, insets.bottom + 8) }]}>
+      <View style={[styles.thumbZoneBar, { paddingBottom: 12 }]}>
         <Pressable
           onPress={() => openNext(next.main)}
           style={styles.thumbContinueButton}
@@ -1378,6 +1385,7 @@ const makeStyles = (P, insets) =>
       bottom: 0,
       paddingHorizontal: 18,
       paddingTop: 10,
+      paddingBottom: 12,
       backgroundColor: P.bg,
       borderTopWidth: 1,
       borderTopColor: P.border,
