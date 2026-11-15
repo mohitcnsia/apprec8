@@ -157,6 +157,30 @@ G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's 
 through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
 Do them in this order (next-task.sh hands them out top to bottom).
 
+### G123 · [todo] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
+Pratha's IEO is Monday 17 Nov; she works best when quest nodes turn green and stars add up. Turn Claude's IEO Word Drill
+(https://claude.ai/artifact/2okXMGS3A6FUqeNNWiqzxs) into a Word Power unit. **Commit by 23:00 tonight**; Claude
+reviews, walks and publishes Sunday morning. Branch `gemini/g123-ieo-words` from `feat/quiz-redesign`, in `../apprec8-gemini`.
+**Source:** `content-private/ieo/wordDrill.json` (gitignored; also copied into your folder): 107 questions from 12 past
+papers, each with options, answer, why and a meaning for EVERY option, plus 8 word families. Claude checked them all.
+**Copyright (repo is public, papers are SOF's):** never copy a question's sentence. Keep the WORDS:
+- Same meaning / Opposite: keep the target word and its answer; distractors may be re-mixed from the other option words
+  of the pool, as long as every option word in the JSON appears somewhere in the unit.
+- Fill the blank: write a NEW sentence (Indian kid-friendly context) for the same answer word; same option words.
+- Spelling: your own misspellings (none may be a real word or an accepted spelling: G121's dictionary check).
+- Idiom items (one-trick pony, nailing jelly to the wall): new sentences.
+**Accuracy:** exactly one defensible answer per question. The 11 `tricky: true` items: rewrite the options so one is
+clearly right (or ask "What does <word> mean?" instead); never ship a two-answer question.
+**Shape** (data/wordPowerQuestData.js, helpers from englishQuest/helpers.js, `forGrades(..., [4,5,6])`, placed
+BEFORE wp-u1 so Pratha sees it first): unit "IEO Words" with small topics so nodes go green often:
+Opposites 1 · Opposites 2 · Same meaning 1 · Same meaning 2 · Fill the gap · Spelling traps · Word families (study
+page from `families` + 6 questions) · a Boss mixing all · `endless`. 8 questions per quiz. Every wrong option's
+`whyNot` = that option's meaning from `optionMeanings` (owner: every option word gets learned). Read-aloud on.
+Mistakes go to My mistakes as usual. The "odd-one-out" tip (Opposites intro) from the page.
+**Done means:** `npm test` (content test passes: ids, why-nots, one answer) · phone walk (Word Power → IEO Words: a
+quiz → node turns green + stars go up; a wrong answer shows the option's meaning; a mistake appears in My mistakes) ·
+`gemini(G123): done — review please`. Then go on with G118.
+
 ### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
 1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
    learn") get a `grade` (Easy=5/Medium=8/Hard=10), and many parents picked a class in the old first run. Today they'd be
