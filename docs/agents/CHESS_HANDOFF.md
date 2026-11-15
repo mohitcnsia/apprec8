@@ -73,6 +73,17 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
 12. **Tappable move list (score sheet):** the game's moves as a tappable list, but ONLY up to the move you've reached;
    in Guess mode you can never step past it (no spoilers). Tapping an earlier move replays from there, so you can try
    a position again and guess the best move ("sometimes it is nice to replay the game").
+13. **Filters by THEME and OPENING (owner: "yes, remarkable"):** owner's repertoire pinned on top: King's Gambit,
+   London System, King's Indian Attack (White); Sicilian Accelerated Dragon, Bogo-Indian, Nimzo-Indian, King's Indian
+   Defence (Black).
+14. **"Miniatures" tactics collection per opening (owner's idea):** decisive games under ~25 moves = someone blundered
+   → "so my opponents' mistakes never go unpunished". Plan: puzzle-first cards (position before the blow, find it;
+   game + mistake after), split by the owner's side, "Punish it" and "Don't fall for it", pattern tags (fork, pin,
+   back rank, Greek gift…), missed ones come back later (like My mistakes). Move limit chips 15/20/25.
+   **Source (Claude):** the lichess puzzle database and game database are public domain (CC0): puzzles already carry
+   opening tags + theme tags and are engine-checked. Filter on the Mac for the owner's openings (+ rating floor), check
+   with our Stockfish (analyze.py), seed small packs per opening, cache on the phone (point 1). Verify the CC0 licence
+   on database.lichess.org before using.
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
    `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
    sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
