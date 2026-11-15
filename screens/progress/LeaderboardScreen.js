@@ -173,6 +173,8 @@ export default function LeaderboardScreen({ route, navigation }) {
         <Text style={styles.h1}>Leaderboard</Text>
       )}
       <Text style={styles.subtitle}>{subtitle}</Text>
+      {/* Owner 16 Nov: say the linking bonus out loud, so jumps make sense and others link too. */}
+      <Text style={styles.subtitle}>🔗 Linked with a parent? Everyone gets +100 ⭐ once.</Text>
       {tab === "class" && current?.nextAt && current.nextAt > Date.now() ? <Text style={styles.subtitle}>{nextUpdateText(current.nextAt)}</Text> : null}
       {tab === "class" && current?.appreciated?.length ? <Text style={styles.subtitle}>🌟 Appreciated this week: {current.appreciated.map((n) => firstNameOf(n)).join(", ")}</Text> : null}
 
