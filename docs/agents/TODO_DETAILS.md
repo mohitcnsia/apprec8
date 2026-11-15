@@ -68,3 +68,14 @@ in Firestore `chessGames` (owner/admin read rule), never in git (public repo), n
   - **Draft → publish:** edits are drafts until published, so kids never see half-edited content. Keep a change history (who changed what, when) and allow rollback.
   - **Bulk import:** CSV / Google Sheets import for question sets, so teachers can contribute.
   - **App side:** almost no change needed: the app already reads quests, nodes and questions live from Firestore. Unknown node types already show "Coming soon".
+
+- **Chess: opening trainer with spaced repetition + must-know endgames (owner 15 Nov 2026; AFTER the pilot, book
+  scanning last):** owner used Chess Position Trainer years ago; we build our own in that spirit (original code/UI).
+  Openings: the owner's repertoire as a move tree (King's Gambit, London, KIA as White; Accelerated Dragon, Bogo-,
+  Nimzo-Indian, King's Indian as Black), from his own PGNs/books (private, like the book text). Drill = the position,
+  you play your move; a miss shows the line and comes back sooner (SM-2/FSRS-style schedule, a few minutes a day).
+  Claude's ideas: (1) one review queue shared with the Miniatures traps and missed "Guess the Move" positions, so all
+  chess practice is one daily habit; (2) the trainer only asks the positions the owner actually reaches in his own
+  lichess games first. Endgames: a short must-know ladder (K+Q v K, K+R v K, opposition and the square rule, key
+  pawn endings, Lucena, Philidor, later B+N), each position checked with Stockfish/tablebase on the Mac; on the phone,
+  stored best-move sets (no engine needed). Owner has endgame books: concepts summarised, positions checked by engine.
