@@ -84,6 +84,10 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
    opening tags + theme tags and are engine-checked. Filter on the Mac for the owner's openings (+ rating floor), check
    with our Stockfish (analyze.py), seed small packs per opening, cache on the phone (point 1). Verify the CC0 licence
    on database.lichess.org before using.
+**Owner decisions 15 Nov (thread):** browse-the-game is the default for collections; puzzle-first for Miniatures
+(Claude's reading of "browse default" + "puzzle-first agree": asked in the thread, confirm); move limit adjustable
+(15/20/25, default 25); Sunday mockup = screens + written spec (cards, filter bar, Miniatures flow, data shape).
+**"Chess consumes too many tokens": plan it well, build in ONE pass, only once the kids' work is unblocked.**
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
    `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
    sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
