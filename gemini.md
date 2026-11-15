@@ -12,6 +12,7 @@
 6. **Confirm before building.** Any major feature or new screen gets a plan + mockup approved by the owner first. Reuse existing patterns (Space quest map, `ResultsScreen`, `recordQuizResult`) and the app theme (`ThemeContext`).
 7. **Stars and money:** stars are awarded by the existing `recordQuizResult` rules. Scoring is client-side today because stakes are low. **If stars ever become real money, prizes or scholarships, move scoring to the server first.**
 8. **Release builds don't include `.env`** (gitignored, so EAS skips it). Anything the app reads from `@env` is `undefined` in a Play build; runtime values go in `config/appConfig.js`. **Before every Play upload, run `scripts/release/check-aab.sh <file.aab> <version>`; it must say PASS.**
+9. **Avoid heavy native builds (owner instruction 2026-11-15):** Native APK/AAB builds take too much time and tokens. Claude handles builds quickly. Gemini focuses strictly on implementation, tests, and verification scripts.
 
 
 ## 📥 START HERE, Gemini (owner decision 2026-11-04)
