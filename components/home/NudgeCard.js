@@ -4,13 +4,11 @@ import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authInstance } from "../../config/firebaseConfig";
+import { nudgeText } from "../../utils/nudge.js";
 
 const key = () => `nudgeClosed.v1.${authInstance.currentUser?.uid || "guest"}`;
 
-export const nudgeText = (n) =>
-  n.kind === "cheer"
-    ? `Keep going on ${n.topic || "your topic"}. You're getting there! 💪`
-    : `Let's practise ${n.topic || "a little"} today. You can do it! 🌱`;
+export { nudgeText };
 
 export default function NudgeCard({ nudge, P, onPractise }) {
   const [closedAt, setClosedAt] = useState(undefined);

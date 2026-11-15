@@ -75,11 +75,12 @@ console.log("topicLevels tests passed");
     {
       ...stats,
       mistakes: { m1: { branchId: "determiners" }, m2: { branchId: "determiners" }, m3: { branchId: "tenses" } },
-      nodes: { "determiners__0": { status: "completed" }, "determiners__1": { status: "completed" } },
+      nodes: { "determiners__0": { status: "completed" }, "determiners__1": { status: "completed" }, "determiners__2": { status: "completed" } },
     },
-    now
+    now,
+    [{ id: "determiners", steps: [{}, {}, {}] }]
   );
   assert.deepEqual(e2.mistakes, { determiners: 2, tenses: 1 });
-  assert.deepEqual(e2.completed, ["determiners__0", "determiners__1"]);
+  assert.deepEqual(e2.completed, ["determiners"], "gives topic id only when all steps completed");
   console.log("topicLevels server copy + class summary passed");
 }

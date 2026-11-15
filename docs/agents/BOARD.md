@@ -208,7 +208,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
    test account → stars +100 once (screenshot before/after), Leaderboard opens; link again with a second parent → no
    second bonus; a grown-up learner account → no card, no lock. Report `G118-walk.md`.
 
-### G119 · [todo] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
+### G119 · [review 15 Nov] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
 **Quota (owner 15 Nov, Gemini at 20% until ~21 Nov): code + tests only here. Skip the walk step below: all walks
 happen once, together, in G124.**
 1. **Stale results:** `onQuestProgressForClass` skips the write when the last one was < 5 min ago and the levels are the

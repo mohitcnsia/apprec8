@@ -1,0 +1,2931 @@
+// functions/utils/bundledQuestNodes.js
+// Server-side lightweight bundled quest node index for class summary triggers.
+// Auto-generated from data/quests/index.js to avoid packaging heavy question/study content.
+
+const NODES_BY_QUEST = {
+  "english-quest": [
+    {
+      "id": "eq-u0",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u0-sentence",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u0-sentence-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u0-sentence-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u0-kinds",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u0-kinds-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u0-kinds-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u0-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u0-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-nouns",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-nouns-p1",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-nouns-p2",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-nouns-p3",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-nouns-p4",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u1-nouns-p5",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-nouns-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-nouns-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-pronouns",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-pronouns-p1",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-pronouns-p2",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-pronouns-p3",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-pronouns-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-pronouns-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-verbs",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-verbs-p1",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-verbs-p2",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-verbs-p3",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-verbs-p4",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u1-verbs-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-verbs-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-adjectives",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-adjectives-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u1-adjectives-p2",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-adjectives-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-adjectives-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-adverbs",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-adverbs-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-adverbs-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-prepositions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-prepositions-p1",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-prepositions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-prepositions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-conjunctions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-conjunctions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-conjunctions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u1-reading",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-a-an",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u2-a-an-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u2-a-an-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-a-an-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-the",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u2-the-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u2-the-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-the-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-determiners",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u2-determiners-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u2-determiners-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-determiners-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u2-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u2-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-basics",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u3-basics-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u3-basics-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-basics-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-tricky",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u3-tricky-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u3-tricky-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u3-tricky-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-tricky-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-there",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u3-there-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u3-there-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-there-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u3-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u3-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u4",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u4-errors",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u4-errors-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u4-errors-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u4-errors-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u4-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-simple",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u5-simple-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-simple-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-simple-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-simple-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-cont",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u5-cont-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-cont-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-cont-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-cont-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-future",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u5-future-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-future-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-future-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-perfect",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u5-perfect-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-perfect-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-perfect-p3",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-perfect-p4",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-perfect-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-perfect-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u5-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u5-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-can",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u6-can-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u6-can-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-can-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-must",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u6-must-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u6-must-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-must-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-tags",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u6-tags-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u6-tags-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-tags-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u6-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u6-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7-passive",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u7-passive-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u7-passive-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7-passive-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7-reported",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u7-reported-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u7-reported-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7-reported-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u7-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u7-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-reason",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u8-reason-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u8-reason-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-reason-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-time",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u8-time-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u8-time-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-time-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-pairs",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u8-pairs-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u8-pairs-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u8-pairs-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-pairs-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u8-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u8-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-commas",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u9-commas-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u9-commas-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-commas-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-apos",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u9-apos-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u9-apos-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u9-apos-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-apos-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-speech",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u9-speech-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u9-speech-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-speech-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u9-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u9-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-prefixes",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u10-prefixes-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u10-prefixes-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-prefixes-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-suffixes",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u10-suffixes-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u10-suffixes-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-suffixes-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-families",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-u10-families-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u10-families-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u10-families-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-families-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-u10-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-u10-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-perfect",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b1-perfect-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b1-perfect-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-perfect-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-cont",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b1-cont-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b1-cont-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-cont-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-if",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b1-if-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b1-if-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-if-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-ability",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b2-ability-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b2-ability-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-ability-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-obligation",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b2-obligation-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b2-obligation-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-obligation-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-deduction",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b2-deduction-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b2-deduction-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-deduction-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b2-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-agreement",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b3-agreement-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b3-agreement-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-agreement-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-determiners",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b3-determiners-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b3-determiners-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-determiners-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-editing",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b3-editing-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b3-editing-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-editing-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b3-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-statements",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b4-statements-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b4-statements-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-statements-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-questions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b4-questions-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b4-questions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-questions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-dialogues",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b4-dialogues-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b4-dialogues-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-dialogues-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b4-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-tenses",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b5-tenses-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b5-tenses-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-tenses-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-modals",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b5-modals-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b5-modals-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-modals-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-agent",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b5-agent-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b5-agent-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-agent-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b5-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-prepositions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b6-prepositions-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b6-prepositions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-prepositions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-clauses",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b6-clauses-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b6-clauses-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-clauses-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-board-editing",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "eq-b6-board-editing-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "eq-b6-board-editing-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-board-editing-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "eq-b6-boss",
+      "kind": "boss",
+      "stepCount": 0
+    }
+  ],
+  "word-power": [
+    {
+      "id": "wp-u0",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-opp1",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-ieo-opp1-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-opp1-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-opp2",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-opp2-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-opp2-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-opp2-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-syn1",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-ieo-syn1-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-syn1-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-syn2",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-syn2-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-syn2-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-syn2-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-fill",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-fill-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-fill-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-spell",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-ieo-spell-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-spell-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-ieo-spell-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-families",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-ieo-families-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-ieo-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-sameopp",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-sameopp-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-sameopp-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-sameopp-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-synant",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-synant-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-synant-p2",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-synant-p3",
+      "kind": "practice",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-synant-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-synant-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-spelling",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-spelling-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-spelling-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-spelling-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-colloc",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-colloc-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-colloc-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-colloc-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-colloc-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-u1-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-u1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-dialogue",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-dialogue-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-dialogue-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-dialogue-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-idioms",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wp-idioms-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-idioms-p2",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-idioms-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-idioms-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-u2-reading",
+      "kind": "main",
+      "stepCount": 1
+    },
+    {
+      "id": "wp-u2-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "wp-u3",
+      "kind": "unit",
+      "stepCount": 0
+    }
+  ],
+  "science-quest": [
+    {
+      "id": "sq-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-living",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-living-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-living-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-living-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-plants",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-plants-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-plants-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-plants-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-animals",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-animals-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-animals-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-animals-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-bones",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-bones-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-bones-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-bones-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-food",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-food-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-food-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-food-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-nervous",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-nervous-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-nervous-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-nervous-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u2-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-matter",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-matter-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-matter-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-matter-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-forces",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-forces-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-forces-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-forces-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-earth",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-earth-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-earth-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-earth-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u3-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u4",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-chains",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-chains-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-chains-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-chains-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-farming",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-farming-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-farming-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-farming-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-pollution",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-pollution-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-pollution-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-pollution-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u4-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u5",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-light",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-light-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-light-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-light-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-sound",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-sound-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-sound-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-sound-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-magnets",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-magnets-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-magnets-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-magnets-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u5-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u6",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-patterns",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-patterns-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-patterns-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-patterns-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-codes",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-codes-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-codes-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-codes-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-order",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-order-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sq-order-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-order-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sq-u6-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sq7-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq7-plant-food",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-digestion",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-breathing",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-transport",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-habitats",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq7-acids",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-changes",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-heat",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-motion",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-electricity",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-light",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-earth",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq7-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq7-reasoning",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq-u7",
+      "kind": "unit",
+      "stepCount": 0
+    }
+  ],
+  "word-bank": [
+    {
+      "id": "wb-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-animals",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-animals-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-food",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-food-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-plants",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-plants-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-school",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-school-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-more-actions-qualities",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-more-actions-qualities-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-importance-method",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-importance-method-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-speaking-size",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-speaking-size-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-describing-effort",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-describing-effort-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-feelings-quality",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-feelings-quality-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-actions-change",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-actions-change-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-actions-states-of-being",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-actions-states-of-being-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-thinking-situations",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-thinking-situations-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-conflict-qualities",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-conflict-qualities-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-final-words",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-final-words-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-character-action",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-character-action-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-groups-behaviors",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-groups-behaviors-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "wb-details-consequences",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "wb-details-consequences-endless",
+      "kind": "endless",
+      "stepCount": 0
+    }
+  ],
+  "apprec8-academy": [
+    {
+      "id": "ac-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "ac-schools",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "ac-notes",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "ac-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "ac-teacher",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "ac-family",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "ac-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "ac-privacy",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "ac-help",
+      "kind": "main",
+      "stepCount": 2
+    }
+  ],
+  "course-seema-c10-english": [
+    {
+      "id": "sc10-b1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-perfect",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b1-perfect-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b1-perfect-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-perfect-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-cont",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b1-cont-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b1-cont-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-cont-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-if",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b1-if-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b1-if-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-if-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-ability",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b2-ability-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b2-ability-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-ability-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-obligation",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b2-obligation-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b2-obligation-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-obligation-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-deduction",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b2-deduction-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b2-deduction-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-deduction-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b2-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-agreement",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b3-agreement-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b3-agreement-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-agreement-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-determiners",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b3-determiners-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b3-determiners-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-determiners-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-editing",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b3-editing-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b3-editing-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-editing-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b3-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-statements",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b4-statements-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b4-statements-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-statements-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-questions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b4-questions-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b4-questions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-questions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-dialogues",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b4-dialogues-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b4-dialogues-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-dialogues-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b4-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-tenses",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b5-tenses-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b5-tenses-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-tenses-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-modals",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b5-modals-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b5-modals-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-modals-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-agent",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b5-agent-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b5-agent-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-agent-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b5-boss",
+      "kind": "boss",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-prepositions",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b6-prepositions-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b6-prepositions-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-prepositions-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-clauses",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b6-clauses-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b6-clauses-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-clauses-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-board-editing",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sc10-b6-board-editing-p1",
+      "kind": "practice",
+      "stepCount": 1
+    },
+    {
+      "id": "sc10-b6-board-editing-gate",
+      "kind": "gate",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-board-editing-endless",
+      "kind": "endless",
+      "stepCount": 0
+    },
+    {
+      "id": "sc10-b6-boss",
+      "kind": "boss",
+      "stepCount": 0
+    }
+  ],
+  "bharat-quest": [
+    {
+      "id": "bq-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-whatsapp",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-otp",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-bill",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-upi",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-ayushman",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-sukanya",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-digilocker",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-vidur",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-urmila",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-ghatotkach",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-panchatantra",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-u4",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-meenakshi",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-konark",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-vav",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-u5",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-namaste",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-spices",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-festivals",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "bq-u6",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "bq-gaidinliu",
+      "kind": "main",
+      "stepCount": 2
+    }
+  ]
+};
+
+function getBundledNodes(questId) {
+  return NODES_BY_QUEST[questId] || null;
+}
+
+module.exports = { NODES_BY_QUEST, getBundledNodes };
