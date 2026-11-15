@@ -10,6 +10,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import { useIsFocused } from "@react-navigation/native";
+import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
 
 import { useTheme } from "../../../context/ThemeContext";
 import { quizPalette } from "../../../components/quiz/quizPalette";
@@ -47,6 +50,8 @@ export default function ChessPlayScreen({ navigation, route }) {
   const master = lastName(game.guessSide === "White" ? game.white : game.black);
   const flipped = game.guessSide === "Black";
   const totalGuesses = useMemo(() => guessPlies(game).length, [game]);
+  useImmersiveStatusBar();
+  const isFocused = useIsFocused();
 
   // Mode: "guess" (interactive guessing) vs "watch" (replay & commentary)
   const [mode, setMode] = useState("guess");
@@ -62,6 +67,7 @@ export default function ChessPlayScreen({ navigation, route }) {
   const [selected, setSelected] = useState(null);
   const [reveal, setReveal] = useState(null); // { verdict, guessUci, cpLoss, cpDelta }
   const [variation, setVariation] = useState(null); // { line, vply, baseFen }
+  const [allProgress, setAllProgress] = useState({});
   const loaded = useRef(false);
 
   // Load board theme if not passed via route
@@ -77,7 +83,9 @@ export default function ChessPlayScreen({ navigation, route }) {
   useEffect(() => {
     AsyncStorage.getItem(PROGRESS_KEY)
       .then((raw) => {
-        const saved = raw ? JSON.parse(raw)[gameId] : null;
+        const all = raw ? JSON.parse(raw) : {};
+        setAllProgress(all);
+        const saved = all[gameId];
         if (saved && !saved.done && saved.ply > 0 && saved.ply < game.moves.length) {
           setPly(saved.ply);
           setCorrect(saved.correct || 0);
@@ -98,6 +106,7 @@ export default function ChessPlayScreen({ navigation, route }) {
       .then((raw) => {
         const all = raw ? JSON.parse(raw) : {};
         all[gameId] = { ply, correct, guessed, guessLog, done: ply >= game.moves.length, updatedAt: Date.now() };
+        setAllProgress(all);
         return AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
       })
       .catch(() => {});
@@ -255,8 +264,18 @@ export default function ChessPlayScreen({ navigation, route }) {
 
   return (
     <View style={styles.screen}>
+      {isFocused ? <StatusBar hidden /> : null}
       <View style={styles.header}>
         <View style={styles.headerTop}>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+          >
+            <Text style={styles.backBtnText}>‹</Text>
+          </Pressable>
           <View style={{ flex: 1 }}>
             <Text style={styles.title} numberOfLines={1}>
               {lastName(game.white)} vs {lastName(game.black)}
@@ -294,10 +313,28 @@ export default function ChessPlayScreen({ navigation, route }) {
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.middle} showsVerticalScrollIndicator={false}>
         {mode === "guess" && done ? (() => {
-          const r = strengthReport(game, guessLog);
+          const r = strengthReport(game, guessLog, allProgress);
           const pawns = (cp) => (cp / 100).toFixed(1);
           return (
-            <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 6 }]}>
+            <View style={[styles.banner, { borderColor: P.correctBorder, backgroundColor: P.correctBg, gap: 8 }]}>
+              {r.gameElo != null ? (
+                <View style={styles.eloCard}>
+                  {r.masterElo != null ? (
+                    <Text style={styles.eloLine}>
+                      {master}'s strength (this game): ≈ {r.masterElo}
+                    </Text>
+                  ) : null}
+                  <Text style={styles.eloLine}>
+                    Your strength (this game): ≈ {r.gameElo}
+                  </Text>
+                  {r.gamesCount >= 2 && r.overallElo != null ? (
+                    <Text style={styles.eloLine}>
+                      Your average ({r.gamesCount} games): ≈ {r.overallElo}
+                    </Text>
+                  ) : null}
+                  <Text style={styles.eloNote}>rough estimate</Text>
+                </View>
+              ) : null}
               <Text style={[styles.bannerText, { color: P.correctText }]}>
                 {game.result === "1-0" ? "1–0" : game.result === "0-1" ? "0–1" : "½–½"} · You found {r.found} of {r.total} of {master}'s moves.
               </Text>
@@ -421,7 +458,20 @@ const makeStyles = (P, insets) =>
   StyleSheet.create({
     screen: { flex: 1, backgroundColor: P.bg, paddingTop: insets.top + 10 },
     header: { paddingHorizontal: 16, paddingBottom: 6 },
-    headerTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+    headerTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+    backBtn: {
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginRight: 2,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backBtnText: {
+      fontSize: 28,
+      lineHeight: 30,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
     title: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
     sub: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft, marginTop: 2 },
     modeTabs: {
@@ -451,6 +501,28 @@ const makeStyles = (P, insets) =>
     middle: { paddingHorizontal: 12, paddingVertical: 6, gap: 8 },
     banner: { borderWidth: 2, borderRadius: 14, padding: 10 },
     bannerText: { fontSize: 15, fontFamily: "nunitoBold", color: P.text },
+    eloCard: {
+      backgroundColor: P.card,
+      borderRadius: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 14,
+      borderWidth: 1.5,
+      borderColor: P.correctBorder,
+      gap: 3,
+      marginBottom: 2,
+    },
+    eloLine: {
+      fontSize: 15,
+      fontFamily: "nunitoBold",
+      color: P.text,
+    },
+    eloNote: {
+      fontSize: 12,
+      fontFamily: "nunitoBold",
+      fontStyle: "italic",
+      color: P.textSoft,
+      marginTop: 2,
+    },
     bookCard: {
       borderWidth: 2,
       borderColor: P.selectedBorder,

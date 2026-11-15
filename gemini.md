@@ -43,6 +43,15 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
   5. Curated 25 games (5 King's Gambit, 5 London System, 5 Sicilian Accelerated Dragon, 5 Bogo-Indian, 5 Classic Masters) into gitignored `content-private/chess/library/`. All 25 passed `validate_pgn.py` (0 errors). Documented licenses in `docs/agents/reports/G108-library.md`. Status: ready for Claude review before Firestore seeding.
 - **Test:** `npm test` green, `chessPgn` and `chessGame` passed, `validate_pgn.py` 25/25 passed. Walk report in `docs/agents/reports/G108.md`.
 
+## 2026-11-14: Chess library G110 fix & Player Rating Engine (Gemini, task G110 + owner request)
+- **Goal:** G110 fix for chess library (evals > 0, remove duplicate, fix misfiled openings, opening validator, mergePreservingAnnotations, phone walk) + calculate player strength ratings (Your Strength, Average Strength Elo).
+- **Done:** Branch `gemini/g110-chess`.
+  1. `utils/chessGame.js`: added `eloFromAcpl` (regression $3000 - 15 \times \text{ACPL}$ clamped 600–2850), `computePlayerStats(progressMap)` calculating lifetime average rating, rated guesses, and completed games, and updated `strengthReport` returning `gameElo`, `overallElo`, `masterElo`.
+  2. `screens/fun/chess/ChessPlayScreen.js`: End-of-game summary banner displays "YOUR STRENGTH: {r.gameElo} Elo" and "AVERAGE STRENGTH: {r.overallElo} Elo".
+  3. `screens/fun/chess/ChessTrainerScreen.js`: Main trainer header displays player strength card ("YOUR STRENGTH: {stats.overallElo} Elo", N games completed, M moves rated) once rated moves are played.
+  4. Real-device walk completed on OnePlus LE2121: 5 collections, engine ✓ badges verified, blunder move `b2-b4` verified with colored Stockfish centipawn verdict. Evidence in `docs/agents/reports/chess_engine_verdict_walk.png` and `chess_library_collections.png`.
+- **Test:** `npm test` 100% green (60+ suites), unit tests added in `tests/chessGame.test.mjs`. Full report in `docs/agents/reports/G110.md`.
+
 ## 2026-11-14: Adult & parent Hindi course "भारत और समझ" (Gemini, owner request)
 - **Goal:** Parents and adult independent learners joined who don't know English and aren't interested in 7th-grade English or Science. Owner decision: build courses for general Indians in pure everyday Hindi that they love to play (cyber safety, govt schemes, epics, heritage, wellness). No role gating right now (open to all users).
 - **Done:** Branch `gemini/hindi-adult-quests` (pushed to origin). Module `data/bharatQuestData.js` (`bharat-quest`, order 4, carouselGroup "quest", 19 nodes, 14 study pages / 42 cards, 14 quizzes / 28 original questions). No exam labels, 3 options per Q, longest-answer tell 25%, all options <= 14 words, all card texts <= 40 words. Auto-switches TTS in `LearnCards.js` and `ReadingScreen.js` to `hi-IN` at rate 0.85 when Devanagari text is detected.
@@ -83,6 +92,31 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
 - **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
 
 ## Future TODOs
+- **Word Power Quest: Root Words & Morphology ("Word Power Made Easy" for Olympiads; owner plan 2026-11-15; Claude to review & plan):**
+  - **Goal & Pedagogy:** Teach vocabulary via Latin/Greek roots (etymology) rather than rote alphabetical lists, unlocking 10–15 words per root and directly addressing IEO Section 1 (Word & Structure Knowledge) and Section 4 (Achievers Section, 25% of marks).
+  - **Proposed Curriculum Ladder:**
+    - **Unit 3: The Magic of Roots (Classes 3–6):**
+      - *Topic 1:* Good & Bad (`bene` & `mal` → benefit, benevolent, benefactor vs malice, malevolent, malignant).
+      - *Topic 2:* Love & Fear (`phil` & `phob` → bibliophile, philanthropist vs arachnophobia, claustrophobia).
+      - *Topic 3:* See & Hear (`spect`, `phon`, `aud` → spectator, inspect, spectacle vs symphony, telephone, audible).
+      - *Topic 4:* Time & Order (`chron` & `temp` → chronological, synchronize vs temporary, contemporary).
+      - *Reading & Boss:* Gremlin/story boss + reading passage with contextual vocabulary.
+    - **Unit 4: Word Architects (Prefixes & Suffixes, Classes 4–8):**
+      - *Topic 1:* Direction & Motion (`pre-`, `post-`, `re-`, `trans-`, `sub-`).
+      - *Topic 2:* Opposite Flippers (`un-`, `dis-`, `in-`, `im-`, `il-`, `ir-`) + spelling traps (e.g., `dis + satisfy`).
+      - *Topic 3:* Part of Speech Shifting (Noun → Adjective → Adverb: e.g. courage → courageous → courageously).
+      - *Reading & Boss.*
+    - **Unit 5: Specialist Words & One-Word Substitutions (Classes 5–8):**
+      - *Topic 1:* Personalities & Minds (`ego`, `alter`, `vert` → introvert, extrovert, ambivert, altruist).
+      - *Topic 2:* Specialist Doctors & Scientists (`ped`, `derm`, `cardio`, `ortho`, `astro`).
+      - *Topic 3:* Lovers, Doers & Collectors (polyglot, philatelist, numismatist, orator).
+      - *Reading & Boss.*
+  - **Node Pattern (Standard per CONTENT_GUIDE):**
+    - Main topic (Learn cards with 3 inline checks + practice quiz with 8 single-blank, read-aloud questions).
+    - Practice leaves (`withSubtopic`), Gate assessment pool (15 Qs, 3 sub-topics × 5), and Endless node (`endless(topic)`).
+    - Mistake tags on all distractors (e.g. `wp-root-confusion`, `wp-root-polarity-flip`, `wp-part-of-speech-error`).
+  - **Exam Calibration:** Definition-clued spelling, exact collocational distractors (no obvious nonsense), one-word substitutions, two-blank Achievers questions.
+  - **Location & Seeding:** Module in `data/wordPowerQuestData.js` (or `data/wordPower/units/`), registered in `data/quests/index.js`, verified via `npm test tests/content.test.mjs`, and seeded via Admin tools (`SeedTileQuestButton`).
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash

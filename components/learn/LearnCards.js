@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { quizPalette } from "../quiz/quizPalette";
 import { checkOptions, cardSpeech, allSeen } from "../../utils/learnCards";
 import ReportStudyButton from "../quiz/ReportStudyButton";
+import { submitCardVote, getCardVote } from "../../services/reportApi";
 
 const TINTS = {
   dark: { idea: ["#3A3322", "#21332A", "#2B2640", "#33262B"], check: "#3A2631", word: "#21332A", done: "#2B2640", ink: "#F4EDF5", soft: "#CFC3D1" },
@@ -39,8 +40,34 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
   const [seen, setSeen] = useState(() => new Set([0]));
   const [flipped, setFlipped] = useState({}); // word cards turned over
   const [picked, setPicked] = useState({}); // check cards: index → chosen option
+  const [votes, setVotes] = useState({}); // card votes: cardId → choice
   const onSummary = index === total;
   const card = onSummary ? null : cards[index];
+
+  const cardId = card?.cardId || `${cardKey}-${index}`;
+  const allowVote = !onSummary && card?.kind === "idea" && (card?.allowVote || cardKey?.startsWith("bq-u5-namaste") || cardKey?.startsWith("bq-u5-spices"));
+
+  useEffect(() => {
+    let alive = true;
+    if (allowVote && cardId) {
+      getCardVote(cardId).then((v) => {
+        if (alive && v) setVotes((prev) => ({ ...prev, [cardId]: v }));
+      });
+    }
+    return () => {
+      alive = false;
+    };
+  }, [allowVote, cardId]);
+
+  const onVote = (choice) => {
+    setVotes((prev) => ({ ...prev, [cardId]: choice }));
+    submitCardVote({
+      cardId,
+      choice,
+      cardTitle: card?.title || null,
+      questId: questContext?.questId || "bharat-quest",
+    });
+  };
 
   useEffect(() => {
     setSeen((prev) => (prev.has(index) ? prev : new Set([...prev, index])));
@@ -89,6 +116,34 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
             {card.examples.map((e) => (
               <Text key={e} style={s.example}>{e}</Text>
             ))}
+          </View>
+        ) : null}
+        {allowVote ? (
+          <View style={s.voteBox}>
+            {votes[cardId] ? (
+              <View style={s.voteThanksRow}>
+                <Text style={s.voteThanksText}>धन्यवाद 🙏</Text>
+              </View>
+            ) : (
+              <View style={s.voteActionsRow}>
+                <Pressable
+                  onPress={() => onVote("सहमत")}
+                  style={s.voteBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel="सहमत"
+                >
+                  <Text style={s.voteBtnText}>सहमत</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => onVote("पता नहीं")}
+                  style={s.voteBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel="पता नहीं"
+                >
+                  <Text style={s.voteBtnText}>पता नहीं</Text>
+                </Pressable>
+              </View>
+            )}
           </View>
         ) : null}
       </>
@@ -249,6 +304,46 @@ const makeStyles = (P, T, insets) =>
     optionWrong: { borderColor: P.wrongBorder, backgroundColor: P.wrongBg },
     optionText: { fontSize: 18, fontWeight: "900", color: T.ink },
     link: { fontSize: 14, fontWeight: "800", color: P.textSoft, textDecorationLine: "underline" },
+    voteBox: {
+      marginTop: 16,
+      paddingTop: 12,
+      borderTopWidth: 1.5,
+      borderTopColor: "rgba(127,127,127,0.25)",
+    },
+    voteActionsRow: {
+      flexDirection: "row",
+      gap: 12,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    voteBtn: {
+      flex: 1,
+      minHeight: 46,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: "rgba(127,127,127,0.35)",
+      backgroundColor: "rgba(127,127,127,0.12)",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    voteBtnText: {
+      fontSize: 17,
+      fontFamily: "nunitoBold",
+      color: T.ink,
+    },
+    voteThanksRow: {
+      paddingVertical: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    voteThanksText: {
+      fontSize: 18,
+      fontFamily: "nunitoBold",
+      color: T.ink,
+      letterSpacing: 0.5,
+    },
     footer: { flexDirection: "row", gap: 10, paddingHorizontal: 18, paddingTop: 8, paddingBottom: Math.max(14, insets.bottom + 8) },
     square: { width: 58, height: 58, borderRadius: 18, borderWidth: 2, borderColor: P.border, alignItems: "center", justifyContent: "center" },
     squareText: { fontSize: 22, fontWeight: "800", color: P.textSoft },

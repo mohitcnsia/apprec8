@@ -14,6 +14,8 @@ import {
   fenBeforePly,
   guessPlies,
   strengthReport,
+  eloFromAcpl,
+  computePlayerStats,
 } from "../utils/chessGame.js";
 
 const game = JSON.parse(readFileSync(new URL("../data/chess/opera-game.json", import.meta.url), "utf8"));
@@ -117,6 +119,43 @@ assert.equal(capped.avgLossCp, 900);
 assert.equal(capped.worstMiss.cpLoss, 900);
 // Blues are counted.
 assert.equal(strengthReport(tiny, [{ ply: 0, verdict: "blue", cpLoss: 0 }]).blues, 1);
+
+// ---- Elo estimation & player stats
+assert.equal(eloFromAcpl(null), null);
+assert.equal(eloFromAcpl(0), 2850); // maximum clamped
+assert.equal(eloFromAcpl(20), 2700); // 3000 - 15*20
+assert.equal(eloFromAcpl(93.33333333333333), 1600); // 3000 - 15 * 93.333 = 1600
+assert.equal(eloFromAcpl(160), 600); // minimum clamped
+assert.equal(eloFromAcpl(250), 600); // minimum clamped
+
+// computePlayerStats with mock progress map
+const mockProgress = {
+  g1: { done: true, guessLog: [{ cpLoss: 20 }, { cpLoss: 40 }] }, // avg 30
+  g2: { done: false, guessLog: [{ cpLoss: 80 }] },
+};
+const pStats = computePlayerStats(mockProgress);
+assert.equal(pStats.gamesCompleted, 1);
+assert.equal(pStats.totalGuesses, 3);
+assert.equal(pStats.avgLossCp, Math.round((20 + 40 + 80) / 3)); // 47 cp
+assert.equal(pStats.overallElo, eloFromAcpl(47));
+
+// strengthReport with progressMap
+const repWithProg = strengthReport(tiny, [
+  { ply: 0, verdict: "green", cpLoss: 0 },
+  { ply: 2, verdict: "red", cpLoss: 250 },
+], mockProgress);
+assert.equal(repWithProg.gameElo, eloFromAcpl(125));
+assert.equal(repWithProg.overallElo, eloFromAcpl(47));
+assert.equal(repWithProg.masterElo, eloFromAcpl(15));
+assert.equal(repWithProg.gamesCount, 1);
+
+// strengthReport with 2 completed games
+const mockProgress2 = {
+  g1: { done: true, guessLog: [{ cpLoss: 20 }] },
+  g2: { done: true, guessLog: [{ cpLoss: 40 }] },
+};
+const repWith2 = strengthReport(tiny, [{ ply: 0, verdict: "green", cpLoss: 0 }], mockProgress2);
+assert.equal(repWith2.gamesCount, 2);
 
 // ---- fenBeforePly
 assert.equal(fenBeforePly(game, 0), START_FEN);
