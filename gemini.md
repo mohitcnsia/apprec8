@@ -33,6 +33,17 @@ old screen, usernames on the leaderboard, join card for teacher-parents, parent 
 **Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
 publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
 
+## 2026-11-15: Test-app route & EAS preview channel isolation (Gemini, task G117)
+- **Goal:** Isolated test-app distribution pipeline (`com.mohitchilkoti.apprec8.test`) listening strictly to EAS channel `preview`, ensuring tests never reach production users.
+- **Done:** Branch `gemini/g117-test-route`.
+  1. `android/app/build.gradle` & `android/app/src/main/AndroidManifest.xml`: Wired `manifestPlaceholders = [expoUpdatesChannel: "..."]` (`production` for `real`, `preview` for `preview` flavor) to `expo.modules.updates.UPDATES_CONFIGURATION_REQUEST_HEADERS_KEY` with `{"expo-channel-name":"${expoUpdatesChannel}"}`.
+  2. `app.config.js`: Set `updates.channel` conditionally to `isTest ? "preview" : "production"`.
+  3. `docs/agents/BOARD.md`: Published mandatory rule that Gemini publishes ONLY with `--channel preview`, while Claude runs `--channel production`.
+  4. `scripts/release/check-test-apk.sh`: Added verification script checking test APK package name, versionName, and preview channel. Updated `scripts/release/check-aab.sh` to require production channel for real AABs.
+  5. `scripts/release/copyContentToTest.mjs`: Synced 4,503 educational curriculum docs to `apprec8-test` sandbox with zero user data copied.
+  6. Built `app-preview-release.apk` (`APP_VARIANT=test ./gradlew :app:assemblePreviewRelease`), verified with `check-test-apk.sh` (PASS), and distributed via Firebase App Distribution to `mohitchilkoti@gmail.com`.
+- **Test:** Unit test `tests/releaseConfig.test.mjs` passed 100%. Check scripts verified. Full report in `docs/agents/reports/G117.md`.
+
 ## 2026-11-15: Teacher results by name & assignment mistakes done rule (Gemini, task G87)
 - **Goal:** For an assigned topic, Seema's class screen groups children: Not started · Halfway · Fixing mistakes (N left) · Done (Accuracy). Done = every step completed AND 0 open mistakes in that topic. Remind throttled to 1/day, Star of the week with WhatsApp share, 1-read class summary cost guard.
 - **Done:** Branch `gemini/g87-results`.

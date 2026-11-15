@@ -1,5 +1,8 @@
 # Agent board
 
+> [!IMPORTANT]
+> **Publishing Channel Rule (G117):** Gemini publishes ONLY with `--channel preview` (or `--branch preview`); only Claude runs `--channel production`, after review + phone walk. Nothing Gemini publishes can ever reach real users directly.
+
 STOP: no
 AWAY: yes
 <!-- AWAY: yes = the owner is away for 1 h+, so heavy work (emulator, builds) may run. Claude sets it when the owner says so. -->
@@ -75,7 +78,8 @@ Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as 
 | Task | Who | State | Branch | Result |
 |---|---|---|---|---|
 | G107 भारत और समझ round 2: Hindi intro, सहमत/पता नहीं votes, 4 topics, picture list | Gemini | todo (after G108) | `gemini/g107-bharat-2` | spec below; walk report required |
-| G115 → G113 → G112 → G111 → G87 → G117 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
+| G117 Test-app route & EAS channel separation | Gemini | **done: review please** | `gemini/g117-test-route` | report: `docs/agents/reports/G117.md` |
+| G115 → G113 → G112 → G111 → G87 | Gemini | **todo, in this order** (next-task.sh gives them one by one) | | specs below; doc C3dWqo9 |
 | G110 Fix seeded chess library | Gemini | **done, reviewed + merged by Claude 14 Nov** (25 games, all with engine evals, openings correct, walk on phone) | `gemini/g110-chess-fix` | spec below |
 | G109 Chess library redo from fetched PGNs | Gemini | **seeded (26 games); Claude review: fix in G110** | `gemini/g109-chess-library` | spec below |
 | G108 Chess: links, Watch mode, themes, folded library | Gemini | **app part merged by Claude; library REJECTED (moves from memory)** | `gemini/g108-chess` | spec below; Fable's handoff |
@@ -229,7 +233,7 @@ classSummary trigger exists; extend it. **Done means:** tests (grouping, done ru
 teacher (assign, child finishes with a mistake → "Fixing", fixes it → "Done", Remind, Share) · read count noted ·
 `gemini(G87): done — review please`. Claude reviews the server + summary doc.
 
-### G117 · [todo] · gemini · Finish the test-app route (owner 14 Nov) — LAST in the current list
+### G117 · [done: review please] · gemini · Finish the test-app route (owner 14 Nov) — LAST in the current list
 So nothing Gemini publishes can ever reach real users. Builds on G85 (apprec8-test project, "Apprec8 (Test)" app) and
 G104 (App Distribution). Branch `gemini/g117-test-route`.
 1. **Own update channel:** the test app listens to EAS channel `preview` (never `production`). One test-app build

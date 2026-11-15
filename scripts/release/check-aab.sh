@@ -21,6 +21,9 @@ else bad "package com.mohitchilkoti.apprec8 not found"; fi
 if grep -a -q -F "$WANT" "$TMP/base/manifest/AndroidManifest.xml" 2>/dev/null; then ok "versionName $WANT"
 else bad "versionName $WANT not found (bump app.config.js AND android/app/build.gradle)"; fi
 
+if grep -a -q -F "production" "$TMP/base/manifest/AndroidManifest.xml" 2>/dev/null; then ok "EAS channel production (never preview)"
+else bad "EAS channel production not found in manifest"; fi
+
 if grep -a -q -F "$ADMIN_UID" "$TMP/base/assets/index.android.bundle" 2>/dev/null; then ok "admin ID in the app (Dashboard will show)"
 else bad "admin ID missing from the JS bundle: the owner won't see the Dashboard or seed buttons"; fi
 

@@ -82,7 +82,7 @@ export default ({ config }) => {
         url: "https://u.expo.dev/ce048455-06a3-4e7e-aebb-ae82b867c72a",
         fallbackToCacheTimeout: 0,
         checkAutomatically: "ON_LOAD",
-        ...(isTest ? { channel: "preview" } : {}),
+        channel: isTest ? "preview" : "production",
       },
       assetBundlePatterns: ["**/*"],
       ios: {

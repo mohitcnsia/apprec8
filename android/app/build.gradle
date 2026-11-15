@@ -99,10 +99,12 @@ android {
     productFlavors {
         real {
             dimension "version"
+            manifestPlaceholders = [expoUpdatesChannel: "production"]
         }
         preview {
             dimension "version"
             applicationIdSuffix ".test"
+            manifestPlaceholders = [expoUpdatesChannel: "preview"]
         }
     }
     signingConfigs {

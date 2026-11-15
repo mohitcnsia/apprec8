@@ -41,5 +41,18 @@ console.log(`releaseConfig: ok (${files.length} files checked)`);
   assert.equal(rt, v, `android strings.xml expo_runtime_version (${rt}) must equal the app version (${v})`);
   const gradle = fs.readFileSync(new URL("../android/app/build.gradle", import.meta.url), "utf8");
   assert.ok(gradle.includes(`versionName "${v}"`), `android/app/build.gradle versionName must be ${v}`);
+  assert.ok(gradle.includes('manifestPlaceholders = [expoUpdatesChannel: "production"]'), "real flavor must target production channel");
+  assert.ok(gradle.includes('manifestPlaceholders = [expoUpdatesChannel: "preview"]'), "preview flavor must target preview channel");
+
+  const manifest = fs.readFileSync(new URL("../android/app/src/main/AndroidManifest.xml", import.meta.url), "utf8");
+  assert.ok(manifest.includes('UPDATES_CONFIGURATION_REQUEST_HEADERS_KEY'), "AndroidManifest must set UPDATES_CONFIGURATION_REQUEST_HEADERS_KEY");
+  assert.ok(manifest.includes('${expoUpdatesChannel}'), "AndroidManifest must use ${expoUpdatesChannel} placeholder");
+
+  const eas = JSON.parse(fs.readFileSync(new URL("../eas.json", import.meta.url), "utf8"));
+  assert.equal(eas.build?.preview?.channel, "preview", "eas.json preview profile must use preview channel");
+  assert.equal(eas.build?.production?.channel, "production", "eas.json production profile must use production channel");
+  assert.equal(eas.build?.preview?.env?.APP_VARIANT, "test", "eas.json preview profile must set APP_VARIANT=test");
+
+  assert.ok(cfg.includes('channel: isTest ? "preview" : "production"'), "app.config.js must set channel dynamically");
   console.log(`releaseConfig: runtime version ${rt} matches the app version`);
 }
