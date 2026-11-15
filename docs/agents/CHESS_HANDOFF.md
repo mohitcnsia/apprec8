@@ -90,7 +90,7 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
 16. **Long collections** (owner added a 62-game book; scrolling back to the top takes long; wants it collapsible): show
    5 games, the rest scroll. Claude's suggestion for the mockup: a scroll box inside a scrolling page is fiddly on a
    phone, so show 5 rows (up next first) + "All 62 games ›" opening the collection's own screen (with the filters),
-   and tapping the collection header always folds it. Mockup shows both; owner picks.
+   and tapping the collection header always folds it. **Owner picked Claude's version (15 Nov): "much better than mine".**
 **Owner decisions 15 Nov (thread):** browse-the-game is the default for collections; puzzle-first for Miniatures
 (Claude's reading of "browse default" + "puzzle-first agree": asked in the thread, confirm); move limit adjustable
 (15/20/25, default 25); Sunday mockup = screens + written spec (cards, filter bar, Miniatures flow, data shape).
