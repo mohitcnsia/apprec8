@@ -92,6 +92,14 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
 - **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
 
 ## Future TODOs
+- **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):**
+  Ensure the "Guess the Move" app delivers 100% of the value of master chess books (Logical Chess, Most Instructive Games, New York 1924, Zurich 1953, Fischer 60 Memorable Games, Alekhine, etc.) so the owner never needs to read the physical books. Annotations must be deeply educational, highly consumable, and exceed static print:
+  1. **Purge/Upgrade Generic Library Games:** Replace bare/generic database PGNs (the 25 opening/master library games) with richly annotated master games that explain every key plan.
+  2. **First-Class Interactive Variations `( ... )`:** Parse all tactical sub-variations and refutations into legal PGN branches so the user can tap and play out the master's "what if" lines directly on the board.
+  3. **Full Narrative & Psychological Context:** Preserve the complete 1-page historical game introductions, player psychology, and concluding lessons in game start/end cards.
+  4. **Strict Move Alignment:** Ensure 100% synchronization between move numbers and author commentary (fixing old descriptive-to-algebraic notation shifts and OCR cutoff).
+  5. **Master Synthesis (AI Prose + Stockfish Rigor):** Blend the master author's deep human intuition and thematic explanations with Stockfish 16+ objective tactical truth. This produces the ultimate learning medium for a 1600 FIDE player aiming for 2000+.
+
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
