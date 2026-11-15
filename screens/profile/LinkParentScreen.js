@@ -37,7 +37,7 @@ export default function LinkParentScreen({ navigation }) {
         {done ? (
           <View style={styles.card}>
             <Text style={styles.title}>Linked ✓</Text>
-            <Text style={styles.soft}>{done.parentName} can now see how you're doing. Your login, stars and progress stay exactly the same.</Text>
+            <Text style={styles.soft}>{done.parentName} can now see how you're doing. Your login and progress stay the same, and your stars too (plus a one-time +100 ⭐ for linking, if you hadn't had it yet).</Text>
           </View>
         ) : (
           <>

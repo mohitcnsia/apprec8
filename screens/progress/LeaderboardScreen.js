@@ -235,19 +235,22 @@ export default function LeaderboardScreen({ route, navigation }) {
             <Text style={styles.lockSubtext}>
               Connect with your parent to see where you stand with classmates, cheer on friends, and earn +100 ⭐ bonus stars!
             </Text>
-            <Pressable
-              onPress={() => {
-                if (navigation?.navigate) {
-                  navigation.navigate("Profile", { screen: "LinkParent", initial: false });
-                }
-              }}
-              accessibilityRole="button"
-              accessibilityLabel="Link with parent: +100 stars"
-              style={styles.lockButton}
-            >
-              <Text style={styles.lockButtonText}>Link with parent · +100 ⭐</Text>
-            </Pressable>
           </View>
+        </View>
+        {/* Main button in the thumb zone (docs/DESIGN_RULES.md), Claude review 16 Nov */}
+        <View style={{ paddingHorizontal: 18, paddingBottom: 16 }}>
+          <Pressable
+            onPress={() => {
+              if (navigation?.navigate) {
+                navigation.navigate("Profile", { screen: "LinkParent", initial: false });
+              }
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Link with parent: +100 stars"
+            style={styles.lockButton}
+          >
+            <Text style={styles.lockButtonText}>Link with parent · +100 ⭐</Text>
+          </Pressable>
         </View>
       </View>
     );
@@ -335,6 +338,6 @@ const makeStyles = (P, insets) =>
     lockIconWrap: { width: 80, height: 80, borderRadius: 40, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, alignItems: "center", justifyContent: "center" },
     lockTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.text, textAlign: "center", lineHeight: 28 },
     lockSubtext: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft, textAlign: "center", lineHeight: 22 },
-    lockButton: { marginTop: 8, paddingHorizontal: 24, height: 50, borderRadius: 16, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
+    lockButton: { paddingHorizontal: 24, height: 56, borderRadius: 16, backgroundColor: P.primary, alignItems: "center", justifyContent: "center" },
     lockButtonText: { color: P.onPrimary, fontSize: 16, fontFamily: "nunitoBold" },
   });
