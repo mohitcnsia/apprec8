@@ -88,3 +88,48 @@ Moved out of `gemini.md` to keep it under 24 KB (Antigravity reads only the firs
   G90 pilot ready, G91 check-up by topic, G92 weekly report (mockup https://claude.ai/artifact/MeWYtUYoSFQedEx5BB6buj; parents see
   only their own child), G93 challenge track (waits for the owner's olympiad books).
 - **How to test:** after each G task, Claude reviews; the owner tests on his phone (OWNER_TESTING.md).
+
+## 2026-11-12 (evening): Class 7 science, join a class in the app, first real device walk (Claude)
+**Goal:** Class 7 exam in 3 days; kids installed but never reached a class; blank screens. **Done:** 13 Class 7 topics
+(open, 114 Qs) + Papers 1–2 · in-app "Join your class" (school → class; learning opens at once, classmates after the
+teacher confirms) · no automatic deletion (90-day request; scripts locked) · View as · safety net for screen errors.
+**Device walk on the owner's phone** (test build + Metro, evidence: artifact FwXSochP7K8Zs7qwhbV2Tt) found + fixed: Progress
+re-subscribe loop (984 → 1; the "dark screen"), Seema's course never seeded + tile lacked `order`, COURSE tile opened the
+old screen, usernames on the leaderboard, join card for teacher-parents, parent list on the child's class.
+**Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
+publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
+
+## 2026-11-13: chess book pipeline, step 1 (Claude)
+- **Goal:** owner's "Guess the Move" chess trainer (spec + mockups agreed; app build NOT approved yet). Gemini's two PGN
+  samples had invented moves, so extraction is now machine-gated before any bulk work.
+- **Done:** `scripts/chess/validate_pgn.py` (replays every move incl. variations; FAIL names the move — it caught 23.Rag1,
+  which a hand review missed) + fixtures + README with the frozen extraction rules; `content-private/` gitignored (book
+  content never enters the public repo). Board: **G105** = book 1, game 1 through the gate.
+- **How to test:** `scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py scripts/chess/fixtures/sample_pass.pgn
+  scripts/chess/fixtures/sample_fail.pgn` → 1/2 passed, fail at 23.Rag1.
+- **Evening — the app itself (owner approved: app first, extraction later; G105 parked):** Fun tab → "Guess the Move"
+  (owner extras only). Bundled Opera Game (free, `data/chess/opera-game.json` from the validator's `--json`), paste-a-PGN
+  (`utils/chessPgn.js`, chess.js replays every move before accepting), play screen with green/book verdicts + tappable
+  variations (`screens/fun/chess/`, `utils/chessGame.js`); progress on-phone (AsyncStorage, zero Firestore). Engine
+  verdicts (red/blue + centipawns) wait for analyze.py. JS-only (chess.js is pure JS) → ships as an OTA update.
+- **Test:** `npm test` (chessGame + chessPgn), bundle export clean; owner's phone walk before any publish.
+
+## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
+- **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
+  phone-tested one piece at a time; every publish goes to both 20.0.31 and 20.0.30 phones.
+- **Done:** word + fact of the day (two cards); alerts (DR-33: phones re-saved on start, banner while open, separate from the weekly
+  summary); mood check ×5 + Calm corner + counsellor list (DR-34); topic levels + one summary per class + teacher topic view (DR-35);
+  parent "tonight" card; kid Progress (cheer, near goal, lists by subject); Me with More; kid Home one next thing; Appreciate /
+  Nudge / Cheer on + stickers + parents' alert (DR-36); "Take a breath?" in practice. Build 20.0.31 (5 pm reminder, Crashlytics).
+- **Found:** a reinstall restored Firebase's encrypted sign-in without its key → signed out every start (fix: no app backup, next build).
+- **How to test:** docs/qa/OWNER_TESTING.md (top), also in the app under Admin tools → My notes.
+
+## 2026-11-10/11: sign-up without codes + students join from their own phones (Claude)
+- **Goal:** parents and teachers found 3 codes "difficult as hell"; owner + Seema approved doc + mockups "Simpler sign-up:
+  one WhatsApp link" (https://claude.ai/artifact/Qp9hkoLhrYYbADza2Pur8b). Claude builds stage by stage, phone test between.
+- **Done + deployed (DR-31, DR-32):** pull-down on Progress fixed; class link (Share class link / New link) + web page
+  `web/public/j.html` (tester steps until the app is public); parent's one join screen; student's join screen (own phone);
+  teacher card Approve · Not sure · Decline + follow-up list; Approve asks "Did the parent say yes?" (WhatsApp YES = test only,
+  launch checklist B11). Owner's 15 family testers join apprec8-testers (12 × 14 days → production).
+- **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
+

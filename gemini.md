@@ -23,16 +23,6 @@ the owner; G14/G11 parked).
 
 **Reference:** frozen specs and session logs before 2026-10-31 are in `docs/history/gemini-log-2026-09-to-10.md`.
 
-## 2026-11-12 (evening): Class 7 science, join a class in the app, first real device walk (Claude)
-**Goal:** Class 7 exam in 3 days; kids installed but never reached a class; blank screens. **Done:** 13 Class 7 topics
-(open, 114 Qs) + Papers 1–2 · in-app "Join your class" (school → class; learning opens at once, classmates after the
-teacher confirms) · no automatic deletion (90-day request; scripts locked) · View as · safety net for screen errors.
-**Device walk on the owner's phone** (test build + Metro, evidence: artifact FwXSochP7K8Zs7qwhbV2Tt) found + fixed: Progress
-re-subscribe loop (984 → 1; the "dark screen"), Seema's course never seeded + tile lacked `order`, COURSE tile opened the
-old screen, usernames on the leaderboard, join card for teacher-parents, parent list on the child's class.
-**Test:** `npm test`, `npm run test:emulator:join`, then walk new student / teacher confirm / parent on a phone before any
-publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeaderboard`; People screen (doc); Class 7 Paper 3.
-
 ## 2026-11-14: Chess "Guess the Move" enhancements (Gemini, task G108)
 - **Goal:** Games from links (Lichess, direct .pgn, Chess.com notice), library by opening with folded sections, Wood/Green/Blue board themes, and Watch mode with isolated progress.
 - **Done:** Branch `gemini/g108-chess`.
@@ -57,86 +47,10 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
 - **Done:** Branch `gemini/hindi-adult-quests` (pushed to origin). Module `data/bharatQuestData.js` (`bharat-quest`, order 4, carouselGroup "quest", 19 nodes, 14 study pages / 42 cards, 14 quizzes / 28 original questions). No exam labels, 3 options per Q, longest-answer tell 25%, all options <= 14 words, all card texts <= 40 words. Auto-switches TTS in `LearnCards.js` and `ReadingScreen.js` to `hi-IN` at rate 0.85 when Devanagari text is detected.
 - **Test:** `npm test` green across all 60+ test suites. Full report in `docs/agents/reports/G_HINDI_QUESTS.md`.
 
-## 2026-11-13: chess book pipeline, step 1 (Claude)
-- **Goal:** owner's "Guess the Move" chess trainer (spec + mockups agreed; app build NOT approved yet). Gemini's two PGN
-  samples had invented moves, so extraction is now machine-gated before any bulk work.
-- **Done:** `scripts/chess/validate_pgn.py` (replays every move incl. variations; FAIL names the move — it caught 23.Rag1,
-  which a hand review missed) + fixtures + README with the frozen extraction rules; `content-private/` gitignored (book
-  content never enters the public repo). Board: **G105** = book 1, game 1 through the gate.
-- **How to test:** `scripts/chess/.venv/bin/python scripts/chess/validate_pgn.py scripts/chess/fixtures/sample_pass.pgn
-  scripts/chess/fixtures/sample_fail.pgn` → 1/2 passed, fail at 23.Rag1.
-- **Evening — the app itself (owner approved: app first, extraction later; G105 parked):** Fun tab → "Guess the Move"
-  (owner extras only). Bundled Opera Game (free, `data/chess/opera-game.json` from the validator's `--json`), paste-a-PGN
-  (`utils/chessPgn.js`, chess.js replays every move before accepting), play screen with green/book verdicts + tappable
-  variations (`screens/fun/chess/`, `utils/chessGame.js`); progress on-phone (AsyncStorage, zero Firestore). Engine
-  verdicts (red/blue + centipawns) wait for analyze.py. JS-only (chess.js is pure JS) → ships as an OTA update.
-- **Test:** `npm test` (chessGame + chessPgn), bundle export clean; owner's phone walk before any publish.
-
-## 2026-11-11/12: redesign built piece by piece + alerts that can't be missed (Claude)
-- **Goal:** the owner + Seema's "Simpler Home, Progress and Me" doc (https://claude.ai/artifact/RWQn8euh8aakH6LJhjzJks), built and
-  phone-tested one piece at a time; every publish goes to both 20.0.31 and 20.0.30 phones.
-- **Done:** word + fact of the day (two cards); alerts (DR-33: phones re-saved on start, banner while open, separate from the weekly
-  summary); mood check ×5 + Calm corner + counsellor list (DR-34); topic levels + one summary per class + teacher topic view (DR-35);
-  parent "tonight" card; kid Progress (cheer, near goal, lists by subject); Me with More; kid Home one next thing; Appreciate /
-  Nudge / Cheer on + stickers + parents' alert (DR-36); "Take a breath?" in practice. Build 20.0.31 (5 pm reminder, Crashlytics).
-- **Found:** a reinstall restored Firebase's encrypted sign-in without its key → signed out every start (fix: no app backup, next build).
-- **How to test:** docs/qa/OWNER_TESTING.md (top), also in the app under Admin tools → My notes.
-
-## 2026-11-10/11: sign-up without codes + students join from their own phones (Claude)
-- **Goal:** parents and teachers found 3 codes "difficult as hell"; owner + Seema approved doc + mockups "Simpler sign-up:
-  one WhatsApp link" (https://claude.ai/artifact/Qp9hkoLhrYYbADza2Pur8b). Claude builds stage by stage, phone test between.
-- **Done + deployed (DR-31, DR-32):** pull-down on Progress fixed; class link (Share class link / New link) + web page
-  `web/public/j.html` (tester steps until the app is public); parent's one join screen; student's join screen (own phone);
-  teacher card Approve · Not sure · Decline + follow-up list; Approve asks "Did the parent say yes?" (WhatsApp YES = test only,
-  launch checklist B11). Owner's 15 family testers join apprec8-testers (12 × 14 days → production).
-- **How to test:** docs/qa/OWNER_TESTING.md, top two sections. Local: `npm test`, `npm run test:emulator:join` (37 checks).
-
 ## Future TODOs
-- **Word Power Quest: Root Words & Morphology ("Word Power Made Easy" for Olympiads; owner plan 2026-11-15; Claude to review & plan):**
-  - **Goal & Pedagogy:** Teach vocabulary via Latin/Greek roots (etymology) rather than rote alphabetical lists, unlocking 10–15 words per root and directly addressing IEO Section 1 (Word & Structure Knowledge) and Section 4 (Achievers Section, 25% of marks).
-  - **Proposed Curriculum Ladder:**
-    - **Unit 3: The Magic of Roots (Classes 3–6):**
-      - *Topic 1:* Good & Bad (`bene` & `mal` → benefit, benevolent, benefactor vs malice, malevolent, malignant).
-      - *Topic 2:* Love & Fear (`phil` & `phob` → bibliophile, philanthropist vs arachnophobia, claustrophobia).
-      - *Topic 3:* See & Hear (`spect`, `phon`, `aud` → spectator, inspect, spectacle vs symphony, telephone, audible).
-      - *Topic 4:* Time & Order (`chron` & `temp` → chronological, synchronize vs temporary, contemporary).
-      - *Reading & Boss:* Gremlin/story boss + reading passage with contextual vocabulary.
-    - **Unit 4: Word Architects (Prefixes & Suffixes, Classes 4–8):**
-      - *Topic 1:* Direction & Motion (`pre-`, `post-`, `re-`, `trans-`, `sub-`).
-      - *Topic 2:* Opposite Flippers (`un-`, `dis-`, `in-`, `im-`, `il-`, `ir-`) + spelling traps (e.g., `dis + satisfy`).
-      - *Topic 3:* Part of Speech Shifting (Noun → Adjective → Adverb: e.g. courage → courageous → courageously).
-      - *Reading & Boss.*
-    - **Unit 5: Specialist Words & One-Word Substitutions (Classes 5–8):**
-      - *Topic 1:* Personalities & Minds (`ego`, `alter`, `vert` → introvert, extrovert, ambivert, altruist).
-      - *Topic 2:* Specialist Doctors & Scientists (`ped`, `derm`, `cardio`, `ortho`, `astro`).
-      - *Topic 3:* Lovers, Doers & Collectors (polyglot, philatelist, numismatist, orator).
-      - *Reading & Boss.*
-  - **Node Pattern (Standard per CONTENT_GUIDE):**
-    - Main topic (Learn cards with 3 inline checks + practice quiz with 8 single-blank, read-aloud questions).
-    - Practice leaves (`withSubtopic`), Gate assessment pool (15 Qs, 3 sub-topics × 5), and Endless node (`endless(topic)`).
-    - Mistake tags on all distractors (e.g. `wp-root-confusion`, `wp-root-polarity-flip`, `wp-part-of-speech-error`).
-  - **Exam Calibration:** Definition-clued spelling, exact collocational distractors (no obvious nonsense), one-word substitutions, two-blank Achievers questions.
-  - **Location & Seeding:** Module in `data/wordPowerQuestData.js` (or `data/wordPower/units/`), registered in `data/quests/index.js`, verified via `npm test tests/content.test.mjs`, and seeded via Admin tools (`SeedTileQuestButton`).
-- **English Quest Content & Variety Overhaul (Owner + Pratha Feedback, 15 Nov 2026):**
-  Pratha reported that English Quest questions feel "super simple and lack variety" compared to Word Power. Maintain foundational simplicity for younger kids (Class 1–3) while injecting rich, Olympiad-level multi-format challenge for Class 4–6 based on the 12 Grade 5 IEO past papers:
-  1. **Preserve Foundations for Younger Kids:** Keep all existing simple and warm-up questions intact for primary learners; kids who find it easy can use the existing Boss quiz to test out and skip ahead.
-  2. **Multi-Format Question Variety (Beyond Single-Blank Sentences):**
-     - *Sentence Transformations:* Shift between parts of speech (e.g., "He showed empathy" → "He was empathetic"), active/passive voice, and direct/indirect speech.
-     - *Two-Blank Synthesised Clozes:* Multi-clause sentences testing tense sequences ("By the time Mum arrived, I ___ the dishes") and correlative agreement ("Neither the coach nor the players ___ ready when the bell ___").
-     - *Spot the Error (A / B / C / No Error):* Real-world grammatical slips where all options are plausible English, training sharp proofreading eyes.
-     - *Spoken Expression & Conversational Dialogue:* Everyday social exchanges, polite requests, and conversational idioms (matching Section 3 of IEO).
-     - *Short Narrative Clozes:* 3–4 sentence mini-stories where 2–3 blanks must be resolved using context clues rather than isolated syntax.
-  3. **Plausible Distractors (Anti-Autopilot):** Replace obvious nonsensical distractors with authentic student misconceptions so Class 5+ students must analyze the rule rather than guess by sound.
-  4. **Structure:** Add a "Champion / Olympiad Challenge" practice node in each core unit (Units 1, 2, 3, 5, 8) carrying these rich formats, leaving the warm-up rung simple for younger learners.
-
-- **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):**
-  Ensure the "Guess the Move" app delivers 100% of the value of master chess books (Logical Chess, Most Instructive Games, New York 1924, Zurich 1953, Fischer 60 Memorable Games, Alekhine, etc.) so the owner never needs to read the physical books. Annotations must be deeply educational, highly consumable, and exceed static print:
-  1. **Purge/Upgrade Generic Library Games:** Replace bare/generic database PGNs (the 25 opening/master library games) with richly annotated master games that explain every key plan.
-  2. **First-Class Interactive Variations `( ... )`:** Parse all tactical sub-variations and refutations into legal PGN branches so the user can tap and play out the master's "what if" lines directly on the board.
-  3. **Full Narrative & Psychological Context:** Preserve the complete 1-page historical game introductions, player psychology, and concluding lessons in game start/end cards.
-  4. **Strict Move Alignment:** Ensure 100% synchronization between move numbers and author commentary (fixing old descriptive-to-algebraic notation shifts and OCR cutoff).
-  5. **Master Synthesis (AI Prose + Stockfish Rigor):** Blend the master author's deep human intuition and thematic explanations with Stockfish 16+ objective tactical truth. This produces the ultimate learning medium for a 1600 FIDE player aiming for 2000+.
-
+- **Word Power Quest: Root Words & Morphology ("Word Power Made Easy" for Olympiads; owner plan 2026-11-15; Claude to review & plan):** full plan in `docs/agents/TODO_DETAILS.md`.
+- **English Quest Content & Variety Overhaul (Owner + Pratha Feedback, 15 Nov 2026):** full plan in `docs/agents/TODO_DETAILS.md`.
+- **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):** full plan in `docs/agents/TODO_DETAILS.md`.
 - **Next app build (20.0.32), native fix (2026-11-11):** app backup switched off (`android:allowBackup="false"` + res/xml/no_backup_rules.xml). A reinstall restored Firebase's encrypted sign-in without its key → signed out on every start (owner's phone). Until then: Settings → Apps → Apprec8 → Clear storage fixes a phone.
 - **Next full app build (owner 2026-11-11):** add `expo-notifications` (`npx expo install`) for the word-and-fact card's
   daily 5 pm reminder, scheduled on the phone (no server), only if the kid hasn't opened the app that day; ship with crash
@@ -186,22 +100,10 @@ publish (owner rule: never skip). **Next:** publish; deploy `functions:getLeader
   2. Point Unit 1 at the copies; `npm test` (content test lists every reused id) must pass with no reused IEO ids left.
   3. Then remove the `ieo` tile and its topics/quizzes, and delete the V1 converter in `listenToV2QuizQuestions`.
   4. Maths (`imo`) and Science (`nso`) follow the same path once they have their own quests (nothing in English Quest depends on them).
-- **Cost assessment for 1,000 active kids + what can be removed (owner, 2026-10-30).**
-  - **Model per feature:** Firestore reads/writes per session (map, quizzes, reading, Space quest, V1 lists, leaderboard, Word Inspector, games), Cloud Function invocations (`recordQuizResult`, feedback, report trigger, leaderboard), Auth, Storage/CDN bandwidth for images, Remote Config. Use the Firebase usage dashboard for real numbers from the pilot (50 students) and scale up.
-  - **Scenarios:** 1,000 daily active kids × 1–3 sessions/day; best case (with Step 3 caching) vs today; monthly cost in ₹ against the Firebase free tier and Blaze pricing.
-  - **Known heavy spots to check:** live listeners on whole collections (e.g. the Space quest's `quest_nodes`, Study screen carousels, leaderboard), V1 fallback reads in `listenToV2QuizQuestions`, re-downloads after 30 min offline.
-  - **Removal candidates (decide with usage data, not guesses):** unused/dead code (e.g. `components/common/reader/Apprec8ReaderTester.js`, `DummyScreen`/`DummyNavigator`, `to-be-deleted` category group, the unused `react-native-tts`), rarely used features and duplicate quiz paths (V1 vs V2 screens). The app has no usage analytics today, so first add simple per-feature open counts (or Firebase Analytics) to know what kids actually use.
-  - **Output:** a short report with cost per feature, total for 1,000 kids, and a keep / simplify / remove list for the owner to decide.
+- **Cost assessment for 1,000 active kids + what can be removed (owner, 2026-10-30).**:** full plan in `docs/agents/TODO_DETAILS.md`.
 - **Admin HTTP endpoints (`functions/api/*.js`):** protected by Cloud IAM (owner calls them with a short-lived token; a tokenless call gets 403). DR-6 adds `invoker: "private"` in code so a deploy can't make one public. Later (with RB-3): move to admin-checked callables and remove unused endpoints.
 - **After DR-6 deploy (owner, not urgent):** on your next admin call, check that your token call still works. The app doesn't use these endpoints, so kids aren't affected. A 403 means your account lacks "Cloud Functions Invoker": grant it in the Cloud Console; no app build needed.
-- **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.
-  - **Branch:** `refactor/dynamic-content` from `feat/tile-quests` (after release).
-  - **Firestore is the single source of truth.** Migrate all hardcoded content once, then delete the JS/JSON content files and the client seed buttons.
-  - **Admin content API:** authenticated Cloud Functions (admin custom claim, not a hardcoded UID) for create/update/delete/reorder of quests, nodes, questions, study pages and readings. Validate on the server with the same checks as `tests/content.test.mjs` (one correct answer, mistake tags, "Show me where" sentence exists, every node's content exists). Reuse/replace the existing `functions/api` endpoints once they're secured.
-  - **Admin editor (web):** build it inside the same web app as the teacher dashboard (shared sign-in and roles). Edit nodes on a tree view, edit questions in a form, preview as a kid would see it.
-  - **Draft → publish:** edits are drafts until published, so kids never see half-edited content. Keep a change history (who changed what, when) and allow rollback.
-  - **Bulk import:** CSV / Google Sheets import for question sets, so teachers can contribute.
-  - **App side:** almost no change needed: the app already reads quests, nodes and questions live from Firestore. Unknown node types already show "Coming soon".
+- **Refactor: dynamic content instead of hardcoded seeding (new branch, after the Nov 10 release).** Today content lives in code (`data/englishQuestData.js`, `data/space_olympiad_data.json`, `data/biographies.js`, `SeedQuestNodesButton.js`) and reaches Firestore only by pressing seed buttons in the app. Goal: edit and publish content without code changes, app releases or re-seeding.:** full plan in `docs/agents/TODO_DETAILS.md`.
 - **🚩 Report button** in `QuizScreenV2` + fix `submitFeedback` (save `issueCategory`, accept short reports when a category is chosen). Next up.
 - **Reading activity: device test.** Built (see 2026-10-28 step 8). Test on device; tune font size, scrolling and read-aloud voice/speed with Pratha.
 - **Deploy Firestore rules (owner, manual):** `firebase deploy --only firestore:rules --project apprec8-ca229`. Local `firestore.rules` now locks all content writes to the admin (`isAdmin()`) and adds the quest rules. Before this change it matched the live rules exactly. `firestore.rules` is gitignored; consider tracking it in git.
