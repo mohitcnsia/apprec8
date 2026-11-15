@@ -19,7 +19,7 @@ export function applyPersona(data, persona) {
   const p = cleanPersona(persona);
   if (!data || p.role === "owner") return data;
   const { grade, ...rest } = data;
-  if (p.role === "kid") return { ...rest, grade: p.grade, isChild: false, childUids: [], teachesClassIds: [] };
+  if (p.role === "kid") return { ...rest, grade: p.grade, isChild: false, isParent: false, childUids: [], teachesClassIds: [] };
   if (p.role === "parent") return { ...rest, isChild: false, teachesClassIds: [] };
   return { ...rest, isChild: false, childUids: [] }; // teacher
 }

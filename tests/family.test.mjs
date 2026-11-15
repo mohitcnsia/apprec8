@@ -1,6 +1,6 @@
 // Tests for utils/family.js (parent-first accounts). Run: npm test
 import assert from "node:assert/strict";
-import { childPayload, codeUsable, CHILD_CONSENT_TEXT, makeChildCode, normalizeChildCode } from "../utils/family.js";
+import { childPayload, codeUsable, CHILD_CONSENT_TEXT, makeChildCode, normalizeChildCode, isStudentAccount } from "../utils/family.js";
 
 const ok = childPayload({ firstName: "  Pratha  Chilkoti ", grade: 5, parentName: "Mohit", relation: "father", language: "hi" });
 assert.equal(ok.firstName, "Pratha"); // first name only is stored
@@ -19,4 +19,14 @@ assert.equal(codeUsable({ used: true, expiresAt: 2000 }, now), false);
 assert.equal(codeUsable({ used: false, expiresAt: 500 }, now), false);
 assert.equal(codeUsable(null, now), false);
 assert.equal(normalizeChildCode(makeChildCode()).length, 6);
+// G118 isStudentAccount checks
+assert.equal(isStudentAccount({ grade: 5, selfLearner: true }), false, "selfLearner with grade 5 is not student");
+assert.equal(isStudentAccount({ grade: 8, isParent: true }), false, "parent with grade is not student");
+assert.equal(isStudentAccount({ grade: 7, teachesClassIds: ["c1"] }), false, "teacher with grade is not student");
+assert.equal(isStudentAccount({ grade: 6, childUids: ["k1"] }), false, "parent with childUids is not student");
+assert.equal(isStudentAccount({ grade: 5 }), true, "kid with grade is student");
+assert.equal(isStudentAccount({ isChild: true }), true, "child account is student");
+assert.equal(isStudentAccount(null), false);
+assert.equal(isStudentAccount({}), false);
+
 console.log("family tests passed");
