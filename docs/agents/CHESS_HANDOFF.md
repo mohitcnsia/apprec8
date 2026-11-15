@@ -70,6 +70,9 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
    ("1-0" / "0-1"): the screen already says you play the winning side.
 11. **End card wastes space** (owner, on the 14 Nov end-card screenshot: "unnecessary and wastes space"): which part
    is asked in the thread (the "You found…" box, the summary lines, or the whole card). Make it compact either way.
+12. **Tappable move list (score sheet):** the game's moves as a tappable list, but ONLY up to the move you've reached;
+   in Guess mode you can never step past it (no spoilers). Tapping an earlier move replays from there, so you can try
+   a position again and guess the best move ("sometimes it is nice to replay the game").
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
    `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
    sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
