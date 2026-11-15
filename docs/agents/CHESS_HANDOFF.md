@@ -84,6 +84,9 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
    opening tags + theme tags and are engine-checked. Filter on the Mac for the owner's openings (+ rating floor), check
    with our Stockfish (analyze.py), seed small packs per opening, cache on the phone (point 1). Verify the CC0 licence
    on database.lichess.org before using.
+15. **Rarely used controls → small icons in the header** (owner: "a simple icon at the top, it doesn't get used too
+   often", on the collection screen). Do it for BOTH rarely used things: the board-theme picker (big card today) and
+   "Add a game (link or PGN)" (big button today). Frees the screen for the library and filters.
 **Owner decisions 15 Nov (thread):** browse-the-game is the default for collections; puzzle-first for Miniatures
 (Claude's reading of "browse default" + "puzzle-first agree": asked in the thread, confirm); move limit adjustable
 (15/20/25, default 25); Sunday mockup = screens + written spec (cards, filter bar, Miniatures flow, data shape).
