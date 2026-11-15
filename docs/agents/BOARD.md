@@ -27,7 +27,7 @@ Claude reviews, merges and moves the task to done. The owner talks only to Claud
 Owner's test list = 7 reminders in the app (Reminders, due from 17:00), same as OWNER_TESTING.md.
 
 ## Waiting for the owner (Claude asks; nobody does these without the owner's OK)
-- **Word Power Made Easy quest plan (owner 2026-11-15: "I will ask Claude to review and plan some work around it"):** Root words, prefixes/suffixes, and one-word substitutions for IEO Olympiad vocabulary (Units 3–5). Spec & curriculum outline logged in `gemini.md` Future TODOs. Waiting for Claude's review, task sizing, and work breakdown.
+- **Word Power Made Easy quest plan (owner 2026-11-15: aligned with Claude's order: Unit 3 starts with the roots in the real IEO papers (am, bene/mal, omni, chron, -fy, pauper), then phil/phob etc.; mockup + discussion after the 17 Nov exam, no building yet):** Root words, prefixes/suffixes, and one-word substitutions for IEO Olympiad vocabulary (Units 3–5). Spec & curriculum outline logged in `gemini.md` Future TODOs. Waiting for Claude's review, task sizing, and work breakdown.
 - **Class 6 sample papers** (owner will share): Level 2 for Class 5 uses Class 6 questions → Level 2 papers + Champion sets (TODO in gemini.md).
 - ~~Review page (550 Qs + Paper 2 + Same & Opposite)~~ owner 2026-11-05: **"Content approved"**; misses get reported in play (🚩 flag). English Paper 2 live for Class 5.
 - **Science quest live for everyone**: published `6bde38b2`; **owner re-seeds Science** (Admin tools) so Pratha sees it.
@@ -145,6 +145,8 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
 - Screenshot first, tap second: never tap from a remembered layout (a blind tap once landed on Delete account).
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
+- **Never switch branches in the main folder `apprec8`** (15 Nov: it was moved to `gemini/g113-linking`, so next-task.sh
+  read an old board). Work only in `../apprec8-gemini`: `git -C ../apprec8-gemini checkout <your branch>`.
 **Content rules:** every fact checkable (name the source in the report), health/tradition = "माना जाता है", never a
 promise; why-not on every wrong option; exactly one defensible answer; no copied text (books are inspiration only).
 
