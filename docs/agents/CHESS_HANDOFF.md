@@ -55,6 +55,7 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
 2. **Remove** the "You found <master>'s move" line: the green arrow already says it (owner: "unnecessary distraction").
 3. **Board flip** button by the board, remembered per game.
 4. **Book note readable while playing:** plain upright font, bigger, stronger contrast (today: small italic serif on purple).
+   AND right next to the board, no empty gap (owner: "too far from the board… requires eye movement… tiring").
 5. **Moves in the note as chips; tap one → the line plays on the board; one tap back to the game** (12 Nov notes:
    clickable lines + graphical notation; "Variations" never got built).
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
