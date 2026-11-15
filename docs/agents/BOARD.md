@@ -191,7 +191,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
   `npm test` passing 100% across all 60+ suites (`tests/content.test.mjs` OK word-power: 60 nodes, 43 new quizzes, 462 new questions, 26% longest tell).
   Walk report in `docs/agents/reports/G123-walk.md` (phone walk PASS on physical OnePlus 9 Pro `2ae01cda`: seeding completed, Opposites 1 quiz played, whyNot feedback sheet with option meaning verified, 70/80 stars awarded, node progress 1/2, mistake recorded in My mistakes and fixed). Commit `7625a6b` on `origin/gemini/g123-ieo-words`.
 
-### G118 · [todo] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
+### G118 · [review 15 Nov] · gemini · G113 fixes (linking rewards) — on `gemini/g113-linking`
 1. **Grown-ups must never be blocked or nagged.** Grown-up learners (`selfLearner: true`, first run "I just want to
    learn") get a `grade` (Easy=5/Medium=8/Hard=10), and many parents picked a class in the old first run. Today they'd be
    told "A student account can't add children", see "Link with your parent: +100 ⭐" on Me, and be locked out of the
@@ -206,6 +206,7 @@ quiz → node turns green + stars go up; a wrong answer shows the option's meani
 3. **Walk** (owner's phone, rules above): unlinked kid test account → Me card + Leaderboard lock; link with a parent
    test account → stars +100 once (screenshot before/after), Leaderboard opens; link again with a second parent → no
    second bonus; a grown-up learner account → no card, no lock. Report `G118-walk.md`.
+- **Done (15 Nov):** `isStudentAccount(doc)` implemented & unit-tested on client & functions; `persona.js` updated to clear `isParent` for kid view; physical phone walk completed on OnePlus 9 Pro (`2ae01cda`) showing unlinked kid Me linking card, locked Leaderboard, link parent code entry screen, and grown-up/adult unblocked Me screen and unlocked Leaderboard. Report `docs/agents/reports/G118-walk.md`, commit `5e98153`.
 
 ### G119 · [todo] · gemini · G87 fixes (teacher results) — on `gemini/g87-results`
 1. **Stale results:** `onQuestProgressForClass` skips the write when the last one was < 5 min ago and the levels are the
