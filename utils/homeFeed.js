@@ -78,16 +78,43 @@ export function upcomingItems(exams = [], tasks = [], now = Date.now(), limit = 
     const date = toDateKey(t.dueDate);
     if (!date) return;
     const days = daysUntil(date, now);
-    if (days >= 0) {
-      items.push({ id: `task-${t.id}`, kind: "reminder", tag: "DUE", title: t.title || "Reminder", date, days, tone: "plum" });
+    if (Number.isFinite(days)) {
+      items.push({
+        id: `task-${t.id}`,
+        kind: "reminder",
+        tag: days < 0 ? "OVERDUE" : "DUE",
+        title: t.title || "Reminder",
+        date,
+        days,
+        tone: days < 0 ? "red" : "plum",
+      });
     }
   });
   items.sort((a, b) => a.days - b.days || (a.kind === "exam" ? -1 : 1));
   return items.slice(0, limit).map((it) => ({
     ...it,
-    unit: it.days === 0 ? "TODAY" : it.days === 1 ? "DAY" : "DAYS",
-    sub: `${it.kind === "reminder" ? "Your reminder · " : ""}${shortDate(it.date)}`,
+    unit: it.days < 0 ? (Math.abs(it.days) === 1 ? "DAY LATE" : "DAYS LATE") : it.days === 0 ? "TODAY" : it.days === 1 ? "DAY" : "DAYS",
+    sub: `${it.kind === "reminder" ? (it.days < 0 ? "Was due · " : "Your reminder · ") : ""}${shortDate(it.date)}`,
   }));
+}
+
+/**
+ * Sums stars (right answers) earned today and this week (Mon-Sun).
+ * @param {object} daily - merged daily map { [dateKey]: { answered, correct, timeMs } }
+ * @param {number} [now]
+ * @returns {{ today: number, week: number }}
+ */
+export function starsSummary(daily = {}, now = Date.now()) {
+  const d = new Date(now);
+  const todayKey = dayKey(now);
+  const today = daily[todayKey]?.correct || 0;
+  const mondayOffset = (d.getDay() + 6) % 7; // Mon = 0
+  let week = 0;
+  for (let i = 0; i <= mondayOffset; i++) {
+    const k = dayKey(now - i * DAY_MS);
+    week += daily[k]?.correct || 0;
+  }
+  return { today, week };
 }
 
 // ---------- Several tile quests (English, Science, ...), 2026-11-04 ----------

@@ -18,7 +18,7 @@ import { visibleOldTiles, showOldSpace } from "../../utils/oldContent";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
-import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue } from "../../utils/homeFeed";
+import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue, starsSummary } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
@@ -39,7 +39,10 @@ import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
-import DailyWordFactCard from "../../components/home/DailyWordFactCard";
+import DailySwipeCard from "../../components/home/DailySwipeCard";
+import ClassmateBanner from "../../components/home/ClassmateBanner";
+import { selectParentFocusChild, ownerRowSummary } from "../../utils/homeTidy";
+import { loadProgress } from "../../services/progressCache";
 import { keepPhoneSaved } from "../../services/push";
 import { scheduleWordReminders } from "../../services/dailyReminder";
 import MoodCheckCard from "../../components/home/MoodCheckCard";
@@ -66,6 +69,7 @@ const TONES = {
   gold: { head: "#dcb51b", border: "#F0D98A", num: "#7A5B00" },
   green: { head: "#3E9B3A", border: "#BFE5C2", num: "#1E5E1B" },
   plum: { head: "#85508a", border: "#E0C6E3", num: "#3b0940" },
+  red: { head: "#C2402F", border: "#F5C2BC", num: "#8A1F13" },
 };
 
 // Quests shown under Explore, not "Your quests": learning for its own sake, no school ladder (owner 14 Nov:
@@ -198,7 +202,7 @@ function ComingUp({ items, P, isDark, styles, onAdd }) {
             <View style={[styles.remBox, { borderColor: tone.head }]}>
               <Text style={[styles.remTag, { backgroundColor: tone.head }]}>{item.tag}</Text>
               <View style={styles.remNumWrap}>
-                <Text style={[styles.remNum, { color: isDark ? P.text : tone.num }]}>{item.days === 0 ? "!" : item.days}</Text>
+                <Text style={[styles.remNum, { color: isDark ? P.text : tone.num }]}>{item.days === 0 ? "!" : Math.abs(item.days)}</Text>
               </View>
               <Text style={[styles.remUnit, { color: isDark ? P.textSoft : tone.num }]}>{item.unit}</Text>
             </View>
@@ -335,10 +339,44 @@ export default function HomeScreen({ navigation }) {
   // Parents: one "tonight" card per child on Home (redesign doc: a parent's Home used to show nothing about the child).
   const childKey = (userData?.childUids || []).join(",");
   const [children, setChildren] = useState([]);
+  const [questsByChild, setQuestsByChild] = useState({});
+  const [showAllChildren, setShowAllChildren] = useState(false);
   useEffect(() => {
     if (!childKey) return setChildren([]);
     myChildren(childKey.split(",")).then(setChildren).catch(() => setChildren([]));
   }, [childKey]);
+
+  useEffect(() => {
+    if (!children.length) {
+      setQuestsByChild({});
+      return;
+    }
+    let alive = true;
+    const questsToCheck = ["english-quest", "science-quest"];
+    Promise.all(
+      children.map(async (child) => {
+        const list = await Promise.all(
+          questsToCheck.map((qid) => loadProgress(child.uid, qid).catch(() => null))
+        );
+        return { uid: child.uid, quests: list.filter(Boolean) };
+      })
+    ).then((results) => {
+      if (!alive) return;
+      const map = {};
+      results.forEach((r) => {
+        map[r.uid] = r.quests;
+      });
+      setQuestsByChild(map);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [children]);
+
+  const { focusChild, remainingChildren, allDone } = useMemo(
+    () => selectParentFocusChild(children, questsByChild),
+    [children, questsByChild]
+  );
 
   // Well-being list (school counsellor / backup): only teachers and the owner ask the server, at most every 30 minutes;
   // a teacher who isn't a counsellor is remembered for a day, so subject teachers cost nothing.
@@ -411,6 +449,12 @@ export default function HomeScreen({ navigation }) {
       reports: reportCount,
     });
   }, [decisions, teacherRequests, studentRequests, wellbeingCount, reportCount]);
+
+  const [ownerFolded, setOwnerFolded] = useState(true);
+  const ownerSummary = useMemo(() => {
+    if (!isAdmin) return null;
+    return ownerRowSummary(peopleCounts, needsYouRows);
+  }, [isAdmin, peopleCounts, needsYouRows]);
 
   const onNeedsYouPress = (row) => {
     if (row.screen === "MoodList") {
@@ -511,7 +555,12 @@ export default function HomeScreen({ navigation }) {
   const teacherTopics = assignedTopics(assignments, (q) => bundledQuest(q)?.nodes || [], (q) => progressById[q]?.nodes || {}, todayIso);
   const openTopic = (t) => navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
 
-  const streak = dayStreak(mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)));
+  const mergedDaily = useMemo(() => mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)), [progressById]);
+  const streak = dayStreak(mergedDaily);
+  const { today: starsToday, week: starsWeek } = useMemo(() => starsSummary(mergedDaily), [mergedDaily]);
+
+  const [questsFolded, setQuestsFolded] = useState(true);
+  const [exploreFolded, setExploreFolded] = useState(true);
   const mistakeCount = visibleQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
   const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
   const started = Object.keys(progress.nodes || {}).length > 0;
@@ -619,75 +668,150 @@ export default function HomeScreen({ navigation }) {
 
   // Home (owner 2026-11-04: back to mockup A, quest tiles carry the continue; no exam labels anywhere).
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      <PersonaBanner />
-      <View style={styles.header}>
-        <Mascot size={50} />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.hello}>{greeting()},</Text>
-          <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
+    <View style={styles.screenWrapper}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={[styles.content, kidView && next.main && { paddingBottom: 90 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <PersonaBanner />
+        <ClassmateBanner myUid={uid} classIds={userData?.classIds} parentUids={userData?.parentUids} />
+        <View style={styles.header}>
+          <Mascot size={50} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.hello}>{greeting()},</Text>
+            <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
+          </View>
+          <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
+            <FlameIcon />
+            <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
+          </View>
+          <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
+            <StarIcon />
+            <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
+          </View>
         </View>
-        <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
-          <FlameIcon />
-          <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
-        </View>
-        <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
-          <StarIcon />
-          <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
-        </View>
-      </View>
 
-      {/* Join your class (owner, 12 Nov): anyone not in a class picks it here, no link to come back to. */}
-      {(() => {
-        const nc = needsClass(userData, children);
-        if (!nc) return null;
-        return (
-          <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass", initial: false, params: nc.who === "parent" ? { grade: nc.grade } : {} })} accessibilityRole="button" style={styles.joinCard}>
-            <Text style={styles.joinTitle}>{nc.who === "kid" ? "Join your class" : `Join ${nc.name}'s class`}</Text>
-            <Text style={styles.joinLine}>{nc.who === "kid" ? "Pick your school and class. You start learning at once." : `Pick ${nc.name}'s school and class. ${nc.name} starts learning at once.`}</Text>
-            <Text style={styles.joinLink}>Find my class ›</Text>
+        {/* Join your class (owner, 12 Nov): anyone not in a class picks it here, no link to come back to. */}
+        {(() => {
+          const nc = needsClass(userData, children);
+          if (!nc) return null;
+          return (
+            <Pressable onPress={() => navigation.navigate("Profile", { screen: "PickClass", initial: false, params: nc.who === "parent" ? { grade: nc.grade } : {} })} accessibilityRole="button" style={styles.joinCard}>
+              <Text style={styles.joinTitle}>{nc.who === "kid" ? "Join your class" : `Join ${nc.name}'s class`}</Text>
+              <Text style={styles.joinLine}>{nc.who === "kid" ? "Pick your school and class. You start learning at once." : `Pick ${nc.name}'s school and class. ${nc.name} starts learning at once.`}</Text>
+              <Text style={styles.joinLink}>Find my class ›</Text>
+            </Pressable>
+          );
+        })()}
+
+        {/* Kids' Home: Thought / Word / Fact as ONE swipe card on top */}
+        {userGrade != null ? (
+          <DailySwipeCard grade={userGrade} starsToday={starsToday} starsWeek={starsWeek} />
+        ) : null}
+
+        {/* Owner: People / reports / decisions folded into one clean row */}
+        {isAdmin && ownerSummary && ownerSummary.total > 0 ? (
+          <View style={styles.ownerFoldCard}>
+            <Pressable
+              onPress={() => setOwnerFolded((v) => !v)}
+              style={styles.ownerFoldHeader}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: !ownerFolded }}
+              accessibilityLabel={`Owner: ${ownerSummary.summary}. Tap to ${ownerFolded ? "open" : "fold"}.`}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flex: 1 }}>
+                <Text style={{ fontSize: 16 }}>👑</Text>
+                <Text style={styles.ownerTitle}>Owner</Text>
+                <Text style={styles.ownerSub} numberOfLines={1}>· {ownerSummary.summary}</Text>
+              </View>
+              <Text style={styles.foldChevron}>{ownerFolded ? "›" : "▼"}</Text>
+            </Pressable>
+
+            {!ownerFolded ? (
+              <View style={{ gap: 10, marginTop: 10 }}>
+                {peopleCounts && (peopleCounts.newToday || peopleCounts.stuck) ? (
+                  <Pressable onPress={() => navigation.navigate("Profile", { screen: "People", initial: false })} accessibilityRole="button" style={styles.innerJoinCard}>
+                    <Text style={styles.joinTitle}>People</Text>
+                    <Text style={styles.joinLine}>{peopleCounts.newToday} joined today · {peopleCounts.stuck} stuck (signed in, picked nothing)</Text>
+                    <Text style={styles.joinLink}>See who ›</Text>
+                  </Pressable>
+                ) : null}
+                {needsYouRows.length > 0 ? (
+                  <View style={styles.innerNeedsYouList}>
+                    {needsYouRows.map((row, idx) => (
+                      <Pressable
+                        key={row.id}
+                        onPress={() => onNeedsYouPress(row)}
+                        style={[styles.needsYouRow, idx > 0 && styles.needsYouDivider]}
+                        accessibilityRole="button"
+                        accessibilityLabel={row.label}
+                      >
+                        <Text style={styles.needsYouLabel} numberOfLines={2}>
+                          {row.label}
+                        </Text>
+                        <Ionicons name="chevron-forward" size={16} color={P.textSoft} />
+                      </Pressable>
+                    ))}
+                  </View>
+                ) : null}
+              </View>
+            ) : null}
+          </View>
+        ) : null}
+
+        {/* 1. Needs you card = for non-admin teachers with pending items */}
+        {!isAdmin && needsYouRows.length > 0 ? (
+          <View style={styles.needsYouCard} accessibilityLabel="Needs you">
+            <View style={styles.needsYouHeader}>
+              <Ionicons name="notifications" size={16} color={P.gold} />
+              <Text style={styles.needsYouTitle}>NEEDS YOU</Text>
+            </View>
+            <View style={styles.needsYouList}>
+              {needsYouRows.map((row, idx) => (
+                <Pressable
+                  key={row.id}
+                  onPress={() => onNeedsYouPress(row)}
+                  style={[styles.needsYouRow, idx > 0 && styles.needsYouDivider]}
+                  accessibilityRole="button"
+                  accessibilityLabel={row.label}
+                >
+                  <Text style={styles.needsYouLabel} numberOfLines={2}>
+                    {row.label}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={16} color={P.textSoft} />
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {/* Parent Home: focus child who needs most help, +N more, drops off once done */}
+        {focusChild ? (
+          <ParentTonightCard key={focusChild.uid} child={focusChild} P={P} onPlayHere={() => navigation.navigate("Profile")} />
+        ) : null}
+        {allDone && children.length > 0 ? (
+          <View style={styles.allDoneCard} accessibilityLabel="All your children have practised today">
+            <Text style={styles.allDoneText}>All your children have practised today! 🎉</Text>
+          </View>
+        ) : null}
+        {remainingChildren.length > 0 ? (
+          <Pressable
+            onPress={() => setShowAllChildren((v) => !v)}
+            style={styles.moreChildrenRow}
+            accessibilityRole="button"
+            accessibilityLabel={`${showAllChildren ? "Hide" : "Show"} ${remainingChildren.length} more children`}
+          >
+            <Text style={styles.moreChildrenText}>
+              {showAllChildren ? "Hide other children ▴" : `+${remainingChildren.length} more ›`}
+            </Text>
           </Pressable>
-        );
-      })()}
-
-      {isAdmin && peopleCounts && (peopleCounts.newToday || peopleCounts.stuck) ? (
-        <Pressable onPress={() => navigation.navigate("Profile", { screen: "People", initial: false })} accessibilityRole="button" style={styles.joinCard}>
-          <Text style={styles.joinTitle}>People</Text>
-          <Text style={styles.joinLine}>{peopleCounts.newToday} joined today · {peopleCounts.stuck} stuck (signed in, picked nothing)</Text>
-          <Text style={styles.joinLink}>See who ›</Text>
-        </Pressable>
-      ) : null}
-
-      {/* 1. Needs you card = the FIRST card on Home for anyone with pending items */}
-      {needsYouRows.length > 0 ? (
-        <View style={styles.needsYouCard} accessibilityLabel="Needs you">
-          <View style={styles.needsYouHeader}>
-            <Ionicons name="notifications" size={16} color={P.gold} />
-            <Text style={styles.needsYouTitle}>NEEDS YOU</Text>
-          </View>
-          <View style={styles.needsYouList}>
-            {needsYouRows.map((row, idx) => (
-              <Pressable
-                key={row.id}
-                onPress={() => onNeedsYouPress(row)}
-                style={[styles.needsYouRow, idx > 0 && styles.needsYouDivider]}
-                accessibilityRole="button"
-                accessibilityLabel={row.label}
-              >
-                <Text style={styles.needsYouLabel} numberOfLines={2}>
-                  {row.label}
-                </Text>
-                <Ionicons name="chevron-forward" size={16} color={P.textSoft} />
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      ) : null}
-
-      {/* Parent Home: tonight with each child (5 questions to ask, then one kind word). */}
-      {children.map((c) => (
-        <ParentTonightCard key={c.uid} child={c} P={P} onPlayHere={() => navigation.navigate("Profile")} />
-      ))}
+        ) : null}
+        {showAllChildren
+          ? remainingChildren.map((c) => (
+              <ParentTonightCard key={c.uid} child={c} P={P} onPlayHere={() => navigation.navigate("Profile")} />
+            ))
+          : null}
 
       {/* 2. Teacher Home: Your classes */}
       {teacherClasses.length > 0 ? (
@@ -805,9 +929,6 @@ export default function HomeScreen({ navigation }) {
         </Pressable>
       ) : null}
 
-      {/* Word and fact of the day (owner + Seema, 2026-11-11): small, closeable, under the kid's main cards. */}
-      {userGrade != null ? <DailyWordFactCard grade={userGrade} /> : null}
-
       {/* Weekly mood check + Calm corner (well-being safety steps, owner 2026-11-11: pilot uses Claude's messages). */}
       {userGrade != null ? <MoodCheckCard createdAt={userData?.createdAt} onCalm={() => navigation.navigate("CalmCorner")} /> : null}
 
@@ -833,55 +954,92 @@ export default function HomeScreen({ navigation }) {
         </Pressable>
       ) : null}
 
-      <Text style={styles.section}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
-      <View style={styles.grid}>
-        {visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).map((q) => {
-          const st = questStats(q);
-          const isDraft = draftQuests.some((d) => d.id === q.id);
-          const sub = isDraft
-            ? "Draft · testers only"
-            : st?.current
-            ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
-            : "Start here";
-          const sci = /science/i.test(q.questId);
-          const words = /word/i.test(q.questId);
-          return questTile(
-            q.id,
-            (q.title || "Quest").replace(/ Quest$/, ""),
-            sub,
-            sci ? <FlaskArt /> : <BookArt />,
-            sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
-            () => openQuest(q),
-            { stats: st }
-          );
-        })}
-        {allQuests.some((q) => /science/i.test(q.questId)) || !questHasTopicsForGrade(bundledQuest("science-quest")?.nodes, userGrade)
-          ? null
-          : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
-        {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
-      </View>
+      {/* Your quests - folded row */}
+      <Pressable
+        onPress={() => setQuestsFolded((v) => !v)}
+        style={styles.foldedSectionRow}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: !questsFolded }}
+        accessibilityLabel={`${teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}, ${visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length} quests. Tap to ${questsFolded ? "open" : "fold"}.`}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <Text style={styles.sectionTitle}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
+          <View style={styles.countBadge}>
+            <Text style={styles.countBadgeText}>{visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length}</Text>
+          </View>
+        </View>
+        <Text style={styles.foldChevron}>{questsFolded ? "›" : "▼"}</Text>
+      </Pressable>
+      {!questsFolded ? (
+        <View style={styles.grid}>
+          {visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).map((q) => {
+            const st = questStats(q);
+            const isDraft = draftQuests.some((d) => d.id === q.id);
+            const sub = isDraft
+              ? "Draft · testers only"
+              : st?.current
+              ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
+              : "Start here";
+            const sci = /science/i.test(q.questId);
+            const words = /word/i.test(q.questId);
+            return questTile(
+              q.id,
+              (q.title || "Quest").replace(/ Quest$/, ""),
+              sub,
+              sci ? <FlaskArt /> : <BookArt />,
+              sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
+              () => openQuest(q),
+              { stats: st }
+            );
+          })}
+          {allQuests.some((q) => /science/i.test(q.questId)) || !questHasTopicsForGrade(bundledQuest("science-quest")?.nodes, userGrade)
+            ? null
+            : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
+          {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
+        </View>
+      ) : null}
 
-      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper || exploreQuests.length ? <Text style={styles.section}>Explore</Text> : null}
-      <View style={styles.grid}>
-        {exploreQuests.map((q) =>
-          questTile(
-            q.id,
-            q.title || "Quest",
-            draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.description || "संस्कृति, सतर्कता और काम की बातें",
-            <BookArt />,
-            isDark ? "#3A2414" : "#FDEBDD",
-            () => openQuest(q),
-            { stats: questStats(q) }
-          )
-        )}
-        {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
-        {/* Practice paper (mockup Q): only when this child's class has one (testers: drafts too). */}
-        {hasPaper
-          ? questTile("paper", CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper", CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
-              navigation.navigate("PracticePaper", { grade: userGrade })
-            )
-          : null}
-      </View>
+      {/* Explore - folded row */}
+      {showOldSpace({ isAdmin: oldAdmin }) || hasPaper || exploreQuests.length ? (
+        <>
+          <Pressable
+            onPress={() => setExploreFolded((v) => !v)}
+            style={styles.foldedSectionRow}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: !exploreFolded }}
+            accessibilityLabel={`Explore, ${exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0) + (hasPaper ? 1 : 0)} activities. Tap to ${exploreFolded ? "open" : "fold"}.`}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              <Text style={styles.sectionTitle}>Explore</Text>
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText}>{exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0) + (hasPaper ? 1 : 0)}</Text>
+              </View>
+            </View>
+            <Text style={styles.foldChevron}>{exploreFolded ? "›" : "▼"}</Text>
+          </Pressable>
+          {!exploreFolded ? (
+            <View style={styles.grid}>
+              {exploreQuests.map((q) =>
+                questTile(
+                  q.id,
+                  q.title || "Quest",
+                  draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.description || "संस्कृति, सतर्कता और काम की बातें",
+                  <BookArt />,
+                  isDark ? "#3A2414" : "#FDEBDD",
+                  () => openQuest(q),
+                  { stats: questStats(q) }
+                )
+              )}
+              {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
+              {hasPaper
+                ? questTile("paper", CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper", CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test", <PaperArt />, isDark ? "#3A2E12" : "#FFF4D6", () =>
+                    navigation.navigate("PracticePaper", { grade: userGrade })
+                  )
+                : null}
+            </View>
+          ) : null}
+        </>
+      ) : null}
 
       {practiceTiles.length > 0 ? (
         <>
@@ -915,6 +1073,21 @@ export default function HomeScreen({ navigation }) {
         </>
       ) : null}
     </ScrollView>
+
+    {/* Thumb-zone CONTINUE button for kids */}
+    {kidView && next.main ? (
+      <View style={[styles.thumbZoneBar, { paddingBottom: Math.max(12, insets.bottom + 8) }]}>
+        <Pressable
+          onPress={() => openNext(next.main)}
+          style={styles.thumbContinueButton}
+          accessibilityRole="button"
+          accessibilityLabel={`Continue: ${next.main.title}`}
+        >
+          <Text style={styles.thumbContinueText}>CONTINUE ›</Text>
+        </Pressable>
+      </View>
+    ) : null}
+    </View>
   );
 }
 
@@ -1170,5 +1343,58 @@ const makeStyles = (P, insets) =>
       fontFamily: "nunitoBold",
       letterSpacing: 0.5,
       color: P.onPrimary,
+    },
+    screenWrapper: { flex: 1, backgroundColor: P.bg },
+    foldedSectionRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+      borderRadius: 20,
+      backgroundColor: P.card,
+      borderWidth: 1,
+      borderColor: P.border,
+      marginTop: 4,
+    },
+    sectionTitle: { fontSize: 18, fontFamily: "nunitoBold", color: P.text },
+    countBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, backgroundColor: P.track },
+    countBadgeText: { fontSize: 13, fontFamily: "nunitoBold", color: P.textSoft },
+    foldChevron: { fontSize: 20, fontFamily: "nunitoBold", color: P.textSoft },
+    ownerFoldCard: { padding: 16, borderRadius: 20, backgroundColor: P.card, borderWidth: 2, borderColor: P.gold, gap: 4, marginBottom: 4 },
+    ownerFoldHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+    ownerTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.text },
+    ownerSub: { fontSize: 14, fontFamily: "nunito", color: P.textSoft, flex: 1 },
+    innerJoinCard: { padding: 14, borderRadius: 16, backgroundColor: P.track, borderWidth: 1, borderColor: P.border, gap: 2 },
+    innerNeedsYouList: { borderRadius: 14, backgroundColor: P.track, overflow: "hidden" },
+    allDoneCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 1, borderColor: P.selectedBorder, alignItems: "center", marginVertical: 4 },
+    allDoneText: { fontSize: 15, fontFamily: "nunitoBold", color: P.selectedText },
+    moreChildrenRow: { paddingVertical: 8, alignItems: "center" },
+    moreChildrenText: { fontSize: 14, fontFamily: "nunitoBold", color: P.label },
+    thumbZoneBar: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      paddingHorizontal: 18,
+      paddingTop: 10,
+      backgroundColor: P.bg,
+      borderTopWidth: 1,
+      borderTopColor: P.border,
+    },
+    thumbContinueButton: {
+      height: 54,
+      borderRadius: 16,
+      backgroundColor: P.primary,
+      borderBottomWidth: 4,
+      borderBottomColor: P.primaryShadow,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    thumbContinueText: {
+      color: P.onPrimary,
+      fontSize: 18,
+      fontFamily: "nunitoBold",
+      letterSpacing: 1,
     },
   });
