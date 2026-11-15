@@ -47,6 +47,11 @@ the Move"; design rules: `docs/DESIGN_RULES.md` (thumb zone, one loud thing, qui
    that are legal where they're attached, and game 1 of each book gets a human read.
 
 ## Owner's chess notes, 15 Nov (after a few hours of play) — mockup after the IEO Words review, then a Gemini task
+**Owner decision 15 Nov 2026:** full book text (introductions, notes, lessons) is OK while chess is the owner's
+private, owner-only tool ("helps you validate Gemini's work"). Before chess is opened to anyone else, every text is
+SUMMARISED in our own words. Guardrails so it stays private: book text lives ONLY in gitignored `content-private/` and
+in Firestore `chessGames` (owner/admin read rule), never in git (public repo), never in the app bundle or an update
+(every phone downloads those).
 Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 14 Nov screenshots).
 1. **Loading (owner's design):** load the COLLECTION LIST first (one small index doc: collections → game ids, titles,
    version), show it at once, then load a game only when opened; cache everything on the phone so it works offline

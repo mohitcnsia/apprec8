@@ -41,6 +41,11 @@ Each has a one-line pointer in gemini.md → Future TODOs. Nothing here is appro
   4. **Structure:** Add a "Champion / Olympiad Challenge" practice node in each core unit (Units 1, 2, 3, 5, 8) carrying these rich formats, leaving the warm-up rung simple for younger learners.
 
 - **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):**
+**Owner decision 15 Nov 2026:** full book text (introductions, notes, lessons) is OK while chess is the owner's
+private, owner-only tool ("helps you validate Gemini's work"). Before chess is opened to anyone else, every text is
+SUMMARISED in our own words. Guardrails so it stays private: book text lives ONLY in gitignored `content-private/` and
+in Firestore `chessGames` (owner/admin read rule), never in git (public repo), never in the app bundle or an update
+(every phone downloads those).
   Ensure the "Guess the Move" app delivers 100% of the value of master chess books (Logical Chess, Most Instructive Games, New York 1924, Zurich 1953, Fischer 60 Memorable Games, Alekhine, etc.) so the owner never needs to read the physical books. Annotations must be deeply educational, highly consumable, and exceed static print:
   1. **Purge/Upgrade Generic Library Games:** Replace bare/generic database PGNs (the 25 opening/master library games) with richly annotated master games that explain every key plan.
   2. **First-Class Interactive Variations `( ... )`:** Parse all tactical sub-variations and refutations into legal PGN branches so the user can tap and play out the master's "what if" lines directly on the board.
