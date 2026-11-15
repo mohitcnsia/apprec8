@@ -46,6 +46,21 @@ the Move"; design rules: `docs/DESIGN_RULES.md` (thumb zone, one loud thing, qui
    copied verbatim) — but moves are never written from memory, comments must only name moves
    that are legal where they're attached, and game 1 of each book gets a human read.
 
+## Owner's chess notes, 15 Nov (after a few hours of play) — mockup after the IEO Words review, then a Gemini task
+Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 14 Nov screenshots).
+1. **Loading (owner's design):** load the COLLECTION LIST first (one small index doc: collections → game ids, titles,
+   version), show it at once, then load a game only when opened; cache everything on the phone so it works offline
+   and opens without lag. Today every open still hits Firestore (all games with evals) and lags. A Gemini WIP for
+   caching sits in `git stash` ("wip: chess differential caching and extraction scripts"): look before redoing.
+2. **Remove** the "You found <master>'s move" line: the green arrow already says it (owner: "unnecessary distraction").
+3. **Board flip** button by the board, remembered per game.
+4. **Book note readable while playing:** plain upright font, bigger, stronger contrast (today: small italic serif on purple).
+5. **Moves in the note as chips; tap one → the line plays on the board; one tap back to the game** (12 Nov notes:
+   clickable lines + graphical notation; "Variations" never got built).
+6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
+   `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
+   sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
+
 ## How to drive the owner's phone (OnePlus 9 Pro, 1080×2412) — Opus does the walks
 
 - `adb` only works OUTSIDE the sandbox; macOS has no `timeout` (use `perl -e 'sleep N'`).
