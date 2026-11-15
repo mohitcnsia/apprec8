@@ -160,7 +160,7 @@ G111's `ieoExamWords.js` (66 words from the IEO Class 5 papers) WAS the owner's 
 through the same checks in G121. G113, G87 and G112 had NO phone walk: each fix task below needs one (owner's phone).
 Do them in this order (next-task.sh hands them out top to bottom).
 
-### G125 · [CLAUDE is building this, 16 Nov (owner): Gemini never touches stars, quizActions or starRules] · claude · Star rules phase 1 + catch-up + Play-as chip + "Something wrong?" link
+### G125 · [phase 1 LIVE 16 Nov: deployed, fair top-up applied (154 ⭐, Tripti 19→103), walked, published] · claude · Star rules phase 1 + catch-up + Play-as chip + "Something wrong?" link
 Spec (owner-approved, every decision ticked): Claude Doc "Stars: earning them fairly" claude.ai/artifact/TL5TiSBdox1ymDR5kFKZRc.
 Why now: Tripti answered 214 questions (161 right, 15 topics) and has 19 ⭐ because quest quizzes pay only at 100%.
 Phase 1: server trigger on questAttempts pays from saved answers (1 per first-try right answer, fix a mistake 1, review
@@ -171,6 +171,11 @@ flying-stars animation; Home line back to ⭐; one-time catch-up (1 ⭐ per diff
 Also: Play-as chip top corner of parent Home (sheet: "Play as <child>"); "Something wrong? Tell us" link on the end
 screen and by the stars. Phase 2: node fill 25/50/75/100 + bigger shuffled pools + readiness meter. Phase 3: warm-up,
 Saturday revision quiz, assigned revision, review push, milestones/mascots/Fun minutes. Then "How Apprec8 works" quest.
+
+**G125 walk findings (16 Nov, for later):** (1) a brand-new Class 5 kid's CONTINUE and "Today's practice" both open a
+60-minute practice paper first; a short topic quiz should come first. (2) With the "• Child" chip, a long parent name
+truncates on Home ("Walkpa…"): fine for now. (3) A same-day replay on the phone wasn't walked (emulator + unit tests
+prove 0 stars).
 
 ### G123 · [done: merged by Claude 15 Nov with review fixes 5bf856d] · gemini · ⭐ URGENT: "IEO Words" unit in Word Power (owner YES 15 Nov) — before the fixes
 Pratha's IEO is Monday 17 Nov; she works best when quest nodes turn green and stars add up. Turn Claude's IEO Word Drill
