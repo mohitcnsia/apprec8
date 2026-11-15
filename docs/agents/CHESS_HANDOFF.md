@@ -61,6 +61,11 @@ Mockup sheet: claude.ai/artifact/FRnUT9xCAwbNLpF7jr4jmb (row "The app today" = 1
 7. **Controls:** the big full-width "Next" button → a small row of simple buttons: ◀ (back) · ⏯ (play/pause) · ▶ (next).
 8. **Less text on "your turn":** owner: "this note is not really necessary" (on the move-6 screen: "Your move — what did
    Morphy play?" and/or "Tap a piece, then its square"). Show the mockup without them and confirm which.
+9. **Game rows say why to play them:** player names add little. Each row: the OPENING (named line) + WHY the game is
+   special (one tag: kingside attack, outpost, positional masterpiece, exchange sacrifice, endgame technique…) + maybe a
+   one-line hook to the key moment; players/year small. Accuracy: opening names from the ECO code / an opening book
+   file, themes and hooks checked against the engine evals and the game itself, never from memory. Open question
+   (auto-reply asked): theme tags as filters on the collection?
 6. **Piece sets:** owner loves the lichess-app set shown 2nd in its picker (shaded grey gradient; screenshot in
    `content-private/chess/owner-piece-set-choice.png`). Identify the set and CHECK ITS LICENCE before shipping (lichess
    sets vary: GPL, CC BY-SA, some non-commercial). If it doesn't allow use in our app, find a permissive look-alike.
