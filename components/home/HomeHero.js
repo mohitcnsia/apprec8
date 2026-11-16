@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   quote: { maxWidth: "86%", fontSize: 23, lineHeight: 31, fontFamily: "serif", fontStyle: "italic" },
   word: { fontSize: 28, fontFamily: "nunitoBold" },
   factTitle: { fontSize: 19, fontFamily: "nunitoBold", lineHeight: 25 },
-  body: { fontSize: 15, lineHeight: 21, fontFamily: "nunito" },
+  body: { maxWidth: "80%", fontSize: 15, lineHeight: 21, fontFamily: "nunito" },
   smallChip: { height: 34, paddingHorizontal: 12, borderRadius: 17, justifyContent: "center" },
   smallChipText: { fontSize: 13, fontFamily: "nunitoBold" },
   dotsRow: { flexDirection: "row", alignItems: "center", gap: 14, marginTop: 12 },

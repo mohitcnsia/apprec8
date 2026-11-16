@@ -6,7 +6,7 @@ import Sheet from "../common/Sheet";
 import Face from "../common/Face";
 import AppButton from "../common/AppButton";
 import { FACES } from "../../utils/faces";
-import { pickPhoto, removePhoto, setCharacter, useLocalPhoto } from "../../services/face";
+import { pickPhoto, removePhoto, setCharacter, useLocalPhoto, canPickPhoto } from "../../services/face";
 import { showAlert } from "../../services/dialog";
 
 export default function FacePickerSheet({ visible, onClose, uid, avatar, name, P }) {
@@ -29,6 +29,7 @@ export default function FacePickerSheet({ visible, onClose, uid, avatar, name, P
           </Pressable>
         ))}
       </View>
+      {canPickPhoto() ? (
       <View style={{ gap: 8, marginTop: 8 }}>
         <Text style={{ fontFamily: "nunitoBold", fontSize: 15, color: P.text }}>Or your own photo</Text>
         <Text style={{ fontFamily: "nunito", fontSize: 13, color: P.textSoft }}>
@@ -54,6 +55,7 @@ export default function FacePickerSheet({ visible, onClose, uid, avatar, name, P
           {photo ? <AppButton variant="danger" icon="trash-outline" accessibilityLabel="Remove my photo" onPress={removePhoto} /> : null}
         </View>
       </View>
+      ) : null}
     </Sheet>
   );
 }

@@ -8,7 +8,11 @@ import * as FileSystem from "expo-file-system";
 import { getFirestore, doc, updateDoc } from "@react-native-firebase/firestore";
 import { getApp } from "@react-native-firebase/app";
 import { authInstance } from "../config/firebaseConfig";
+import { requireOptionalNativeModule } from "expo-modules-core";
 import { FACE_IDS } from "../utils/faces";
+
+/** The photo picker exists only from build 20.0.33 (older builds get the update without it: no photo option there). */
+export const canPickPhoto = () => !!requireOptionalNativeModule("ExponentImagePicker");
 
 const key = (uid) => `face:photo:${uid}`;
 const subs = new Set();
@@ -29,7 +33,7 @@ export async function loadPhoto(uid) {
 /** Opens the phone's photo picker, square crop; keeps the picture only on this phone. → uri or null. */
 export async function pickPhoto() {
   const uid = authInstance.currentUser?.uid;
-  if (!uid) return null;
+  if (!uid || !canPickPhoto()) return null;
   const ImagePicker = require("expo-image-picker");
   const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.6 });
   if (res.canceled || !res.assets?.length) return null;
