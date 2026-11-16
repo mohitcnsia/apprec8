@@ -26,6 +26,7 @@ import QuestionPrompt from "../../components/quiz/QuestionPrompt";
 import FeedbackSheet from "../../components/quiz/FeedbackSheet";
 import Mascot from "../../components/quiz/Mascot";
 import { quizPalette } from "../../components/quiz/quizPalette";
+import AppButton, { MainAction } from "../../components/common/AppButton";
 import { fitsTiles, sheetExplanation } from "../../utils/quizText";
 import { getWhyNotFeedback } from "../../utils/whyNot";
 import { saveQuestAttempt } from "../../services/englishQuestApi";
@@ -541,7 +542,13 @@ const QuizScreenV2 = ({ route, navigation }) => {
             </ScrollView>
 
             {mode === "training" && !checked ? (
-              <View style={styles.footer}>{bigButton("CHECK", handleCheckAnswer, { disabled: !state.selectedAnswer })}</View>
+              <View style={styles.footer}>
+                {/* Button system (owner 16 Nov 2026, quiz mockup): one round ✓ where the thumb rests. */}
+                <MainAction>
+                  <Text style={{ fontFamily: "nunito", fontSize: 14, color: P.textSoft }}>{state.selectedAnswer ? "tap to check" : "pick an answer"}</Text>
+                  <AppButton icon="checkmark" size="lg" accessibilityLabel="Check my answer" onPress={handleCheckAnswer} disabled={!state.selectedAnswer} />
+                </MainAction>
+              </View>
             ) : null}
             {checked ? (
               <FeedbackSheet

@@ -9,6 +9,7 @@ import * as Speech from "expo-speech";
 import { quizPalette } from "./quizPalette";
 import { useTheme } from "../../context/ThemeContext";
 import { buildOthersSpeechText } from "../../utils/whyNot";
+import AppButton, { MainAction } from "../common/AppButton";
 
 export default function FeedbackSheet({
   correct,
@@ -149,15 +150,14 @@ export default function FeedbackSheet({
         ) : null}
       </ScrollView>
 
-      <TouchableOpacity
-        onPress={handlePress}
-        activeOpacity={0.85}
-        accessibilityRole="button"
-        accessibilityLabel={buttonLabel}
-        style={[styles.button, { backgroundColor: accent, borderBottomColor: shadow }]}
-      >
-        <Text style={styles.buttonText}>{buttonLabel}</Text>
-      </TouchableOpacity>
+      {/* Button system (owner 16 Nov 2026): a round → on the thumb's side; "See why" keeps its word. */}
+      <MainAction style={{ marginTop: 4 }}>
+        {/^see why/i.test(buttonLabel || "") ? (
+          <AppButton label="See why" icon="book-outline" size="lg" onPress={handlePress} />
+        ) : (
+          <AppButton icon="arrow-forward" size="lg" accessibilityLabel={/got it/i.test(buttonLabel || "") ? "Got it, next question" : "Next question"} onPress={handlePress} />
+        )}
+      </MainAction>
     </Animated.View>
   );
 }
