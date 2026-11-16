@@ -82,6 +82,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **⭐ BEFORE SHOWING THE SCHOOL ADMINISTRATION (owner 16 Nov): Home top + Progress redesign.** The top of Home looks poor:
   the greeting breaks on small phones, long parent names get cut off next to the "Play as" chip. Owner likes Calm's home.
   Mockup first: greeting, thought-of-the-day carousel (keep its nice look), then Progress ("I abhor the progress UI").
+  **Agreed 16 Nov** (mockup "Apprec8 Home and Progress"): tabs Home · Learn · Fun · Progress (quests/papers → Learn,
+  Home = today only); Me = side panel from the face (Need help first); thought picture fills the top and fades to white,
+  moves every 30 s until touched; "Who's learning?"; due soon = amber; Progress pills swipeable, one per child up to 4.
+  Main buttons come from the button styles (A/B/C). Same build as the button system.
 - **Quiz sounds are silent (walk 16 Nov):** the right/wrong sounds come from Pixabay links that now answer 403, so no
   sound plays in quizzes. Fix: our own short sounds in the app (assets/sounds), no outside link. Needs a phone walk.
 - **Delete-account wording (walk 16 Nov):** the screen says "permanent and cannot be undone", then the sheet says "nothing is
