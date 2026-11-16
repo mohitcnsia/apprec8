@@ -75,8 +75,9 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
   star rules phase 1 (G125). One doc: every push text and WhatsApp template today → rewritten in one voice (short,
   warm, a little playful; parents addressed as adults) + phone mockups before/after, owner approves, then a text change.
 - **Button system (owner 16 Nov, mockup "Apprec8 buttons"):** one shared Button with skins A/B/C (default A, pick in
-  Me → Look), left/right-hand setting, icons over words. Same build: one screen wrapper that keeps the app phone-width
-  (~560 dp) in the middle on tablets (today it stretches; owner: "the app should look consistent"). Push mockup
+  Me → Look), left/right-hand setting, icons over words. Same build: tablet layout (today it stretches). Owner: consistent
+  look but don't waste space. So the same buttons/sizes everywhere, and the width is used: quiz = question + answers left,
+  helper panel right (why, word parts, today); Home cards in 2 columns; other screens a wider column. Push mockup
   ("Apprec8 push notifications"): teacher-card look; round picture + Start/Later need this build, colour + words don't.
 - **Leave a class (owner 16 Nov: couldn't leave his own class):** students "Leave this class", teachers "Stop teaching
   this class". Needs a server function (rules don't let the phone change classIds/teacherIds) + deploy. Small task.
