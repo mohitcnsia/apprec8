@@ -11,7 +11,7 @@ Built and committed, not published yet:
 - [ ] Buttons: quiz round ✓ and →; paper ← ⚑ →; teacher Remind/Cheer/Remove; MainButton screens (Add child etc.).
 - [ ] Left hand: main buttons move to the left.
 - [ ] Progress: pills (one per child), swipe left/right; week; three numbers; Next for you; Almost learned chips.
-Still to build before the build: tablet layout, ∞ notification icon, face picker, version 20.0.33.
+Done: ∞ notification icon, version 20.0.33. Still to build: tablet layout, face picker (character, or a photo kept on the phone).
 Test account walk18kid@example.com (Class 10) is signed in again: delete it at the end of the walk.
 
 ## ⭐ Leave a class + Word Power for everyone (16 Nov, published)
