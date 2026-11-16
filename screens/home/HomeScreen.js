@@ -65,6 +65,7 @@ import { loadTeacherClassesOverview, loadAdminTeacherRequests } from "../../serv
 import { classLabel } from "../../utils/classes";
 import { shareInvite } from "../../services/invite";
 import { columnStyle } from "../../utils/layout";
+import AppButton, { MainAction } from "../../components/common/AppButton";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -703,9 +704,19 @@ export default function HomeScreen({ navigation, learn = false }) {
       {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
       {kidView && next.main ? (
         <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
-          <Text style={styles.label}>{next.main.label}</Text>
-          <Text style={styles.upNextTitle} numberOfLines={2}>{next.main.title}</Text>
-          <Text style={styles.questSub}>{next.main.sub}</Text>
+          {/* Mockup (owner 16 Nov): the task's own round ▶ on the card; due today/tomorrow/late in amber. */}
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={styles.label}>{next.main.label}</Text>
+              <Text style={styles.upNextTitle} numberOfLines={2}>{next.main.title}</Text>
+              {/^(Due today|Due tomorrow|Was due)/.test(next.main.sub || "") ? (
+                <Text style={[styles.duePill, { color: P.streakText, backgroundColor: P.streakBg }]}>{next.main.sub}</Text>
+              ) : (
+                <Text style={styles.questSub}>{next.main.sub}</Text>
+              )}
+            </View>
+            <AppButton icon="play" size="lg" accessibilityLabel={`Start ${next.main.title}`} onPress={() => openNext(next.main)} />
+          </View>
           {[...next.then, ...(showMoreNext ? next.rest : [])].length ? (
             <View style={{ gap: 2, marginTop: 4 }}>
               {[...next.then, ...(showMoreNext ? next.rest : [])].map((it) => (
@@ -721,7 +732,6 @@ export default function HomeScreen({ navigation, learn = false }) {
               ) : null}
             </View>
           ) : null}
-          <GlowButton label="START" onPress={() => openNext(next.main)} styles={styles} />
         </View>
       ) : null}
 
@@ -897,8 +907,8 @@ export default function HomeScreen({ navigation, learn = false }) {
           faces={
             playable.length
               ? [
-                  { key: "me", label: "You", initial: (firstName || "?").charAt(0).toUpperCase(), active: true, a11y: "You are learning now" },
-                  ...playable.map((c) => ({ key: c.uid, label: c.firstName || "Child", initial: (c.firstName || "?").charAt(0).toUpperCase(), onPress: () => playAs(c), a11y: `Play as ${c.firstName || "your child"}` })),
+                  { key: "me", label: "You", initial: (firstName || "?").charAt(0).toUpperCase(), avatar: userData?.avatar || null, uid, active: true, a11y: "You are learning now" },
+                  ...playable.map((c) => ({ key: c.uid, label: c.firstName || "Child", initial: (c.firstName || "?").charAt(0).toUpperCase(), avatar: c.avatar || null, onPress: () => playAs(c), a11y: `Play as ${c.firstName || "your child"}` })),
                   { key: "add", add: true, label: "Add", a11y: "Add a child", onPress: () => navigation.navigate("Profile", { screen: "AddChild", initial: false }) },
                 ]
               : null
@@ -1175,15 +1185,11 @@ export default function HomeScreen({ navigation, learn = false }) {
 
     {/* Thumb-zone CONTINUE button for kids */}
     {kidView && next.main ? (
-      <View style={[styles.thumbZoneBar, { paddingBottom: 12 }]}>
-        <Pressable
-          onPress={() => openNext(next.main)}
-          style={styles.thumbContinueButton}
-          accessibilityRole="button"
-          accessibilityLabel={`Continue: ${next.main.title}`}
-        >
-          <Text style={styles.thumbContinueText}>CONTINUE ›</Text>
-        </Pressable>
+      <View style={[styles.thumbZoneBar, { paddingBottom: 14 }]} pointerEvents="box-none">
+        {/* One floating Continue on the thumb's side (button styles + hand, Me → Look). */}
+        <MainAction>
+          <AppButton label="Continue" icon="arrow-forward" iconSide="right" size="lg" accessibilityLabel={`Continue: ${next.main.title}`} onPress={() => openNext(next.main)} />
+        </MainAction>
       </View>
     ) : null}
     </View>
@@ -1479,10 +1485,8 @@ const makeStyles = (P, insets) =>
       paddingHorizontal: 18,
       paddingTop: 10,
       paddingBottom: 12,
-      backgroundColor: P.bg,
-      borderTopWidth: 1,
-      borderTopColor: P.border,
     },
+    duePill: { alignSelf: "flex-start", fontSize: 12, fontFamily: "nunitoBold", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, overflow: "hidden" },
     thumbContinueButton: {
       height: 54,
       borderRadius: 16,

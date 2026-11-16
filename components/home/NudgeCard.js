@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authInstance } from "../../config/firebaseConfig";
 import { nudgeText } from "../../utils/nudge.js";
+import AppButton from "../common/AppButton";
 
 const key = () => `nudgeClosed.v1.${authInstance.currentUser?.uid || "guest"}`;
 
@@ -32,9 +33,7 @@ export default function NudgeCard({ nudge, P, onPractise }) {
       </View>
       <Text style={[s.body, { color: P.text }]}>{nudgeText(nudge)}</Text>
       {onPractise ? (
-        <Pressable onPress={() => (close(), onPractise())} accessibilityRole="button" style={[s.btn, { borderColor: P.selectedBorder }]}>
-          <Text style={[s.btnText, { color: P.selectedText }]}>Practise now ›</Text>
-        </Pressable>
+        <AppButton variant="soft" icon="arrow-forward" iconSide="right" label="Practise now" onPress={() => (close(), onPractise())} style={{ alignSelf: "flex-start" }} />
       ) : null}
     </View>
   );

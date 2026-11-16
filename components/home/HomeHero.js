@@ -147,7 +147,7 @@ export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe,
             {faces.map((f) => (
               <Pressable key={f.key} onPress={f.onPress} accessibilityRole="button" accessibilityLabel={f.a11y || f.label} style={s.faceItem}>
                 <View style={[s.bigFace, f.add ? { borderWidth: 2, borderStyle: "dashed", borderColor: C.label, backgroundColor: "transparent" } : { backgroundColor: f.active ? P.selectedBg : C.glass, borderWidth: f.active ? 3 : 0, borderColor: P.selectedBorder }]}>
-                  {f.add ? <Ionicons name="add" size={22} color={C.label} /> : <Text style={[s.bigFaceText, { color: C.ink }]}>{f.initial}</Text>}
+                  {f.add ? <Ionicons name="add" size={22} color={C.label} /> : <Face size={f.active ? 50 : 56} name={f.label} avatar={f.avatar || null} uid={f.uid || null} />}
                 </View>
                 <Text style={[s.faceLabel, { color: C.ink }]} numberOfLines={1}>{f.label}</Text>
               </Pressable>

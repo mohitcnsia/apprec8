@@ -15,6 +15,8 @@ import { isTileVisible } from "../../utils/courseVisibility";
 import { topicNamer } from "../../utils/progressView";
 import { talkQuestions } from "../../utils/parentWeek";
 import { dayNumber } from "../../utils/dailyCard";
+import AppButton from "../common/AppButton";
+import Face from "../common/Face";
 import { practisedToday, daysThisWeek, praiseLine, recordAnswer, recordPraise, tonightProgress, prune } from "../../utils/tonight";
 
 const storeKey = () => `tonight.v1.${authInstance.currentUser?.uid || "guest"}`;
@@ -71,19 +73,19 @@ export default function ParentTonightCard({ child, P, onPlayHere = null }) {
 
   return (
     <View style={s.card} accessibilityLabel={`${name} tonight`}>
-      <View style={s.row}>
-        <Text style={s.name}>{name}</Text>
-        <Text style={[s.pill, did ? s.pillOn : null]}>{did ? "Practised today ✓" : "Not yet today"}</Text>
+      {/* Mockup (owner 16 Nov): face, name, the week as 7 small bars; "play on this phone" is now the faces row on top. */}
+      <View style={[s.row, { gap: 10 }]}>
+        <Face size={36} name={name} avatar={child.avatar || null} />
+        <Text style={[s.name, { flex: 1 }]} numberOfLines={1}>{name} this week</Text>
+        <Text style={[s.pill, days >= 4 ? s.pillOn : null]}>{days} of 7 days</Text>
       </View>
-      <Text style={s.soft}>
-        {days} of 7 days this week{did ? "" : ` · a few minutes tonight helps ${name} most`}
-      </Text>
+      <View style={{ flexDirection: "row", gap: 6 }} accessibilityLabel={`Practised ${days} of 7 days this week`}>
+        {Array.from({ length: 7 }, (_, i) => (
+          <View key={i} style={{ flex: 1, height: 8, borderRadius: 4, backgroundColor: i < days ? P.primary : P.track }} />
+        ))}
+      </View>
+      <Text style={s.soft}>{did ? "Practised today ✓" : `Not yet today · a few minutes tonight helps ${name} most`}</Text>
       {child.waitingForTeacher ? <Text style={s.soft}>Class: waiting for the teacher to approve</Text> : null}
-      {!child.ownLogin && onPlayHere ? (
-        <Pressable onPress={onPlayHere} accessibilityRole="button" style={s.link}>
-          <Text style={s.linkText}>Let {name} play on this phone ›</Text>
-        </Pressable>
-      ) : null}
 
       {current ? (
         <>
@@ -99,13 +101,9 @@ export default function ParentTonightCard({ child, P, onPlayHere = null }) {
               <Text style={s.linkText}>See answer ›</Text>
             </Pressable>
           )}
-          <View style={s.buttons}>
-            <Pressable onPress={() => (setShowAnswer(false), persist(recordAnswer(saved, today, child.uid, current.key, "right")))} accessibilityRole="button" style={[s.btn, s.btnMain]}>
-              <Text style={[s.btnText, s.btnTextMain]}>Right ✓</Text>
-            </Pressable>
-            <Pressable onPress={() => (setShowAnswer(false), persist(recordAnswer(saved, today, child.uid, current.key, "help")))} accessibilityRole="button" style={s.btn}>
-              <Text style={s.btnText}>Needs help</Text>
-            </Pressable>
+          <View style={[s.buttons, { flexWrap: "wrap" }]}>
+            <AppButton icon="checkmark" label="Right" onPress={() => (setShowAnswer(false), persist(recordAnswer(saved, today, child.uid, current.key, "right")))} />
+            <AppButton variant="soft" icon="help-buoy-outline" label="Needs help" onPress={() => (setShowAnswer(false), persist(recordAnswer(saved, today, child.uid, current.key, "help")))} />
           </View>
         </>
       ) : null}
@@ -115,9 +113,7 @@ export default function ParentTonightCard({ child, P, onPlayHere = null }) {
           <Text style={s.label}>NOW, ONE KIND WORD</Text>
           <Text style={s.q}>Tell {name} one thing they did well today.</Text>
           <Text style={s.answer}>{praiseLine(name, { right: prog.right, total: questions.length, strongTopic: strongQ?.topic || null, strongRight })}</Text>
-          <Pressable onPress={() => (setJustDone(true), persist(recordPraise(saved, today, child.uid)))} accessibilityRole="button" style={[s.btn, s.btnMain]}>
-            <Text style={[s.btnText, s.btnTextMain]}>I praised {name}</Text>
-          </Pressable>
+          <AppButton icon="heart" label={`I praised ${name}`} onPress={() => (setJustDone(true), persist(recordPraise(saved, today, child.uid)))} style={{ alignSelf: "flex-start" }} />
         </>
       ) : null}
 
