@@ -424,6 +424,17 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     if (item.status === "locked" || item.status === "comingSoon") {
       return explainClosed(item.status, "Pass the challenge before this one to open it.");
     }
+    // Owner 16 Nov: a finished topic only reopened its quiz; the study cards were unreachable. Offer both.
+    const steps = item.steps || [];
+    const study = steps.find((x) => x.type === "study" || x.type === "reading");
+    const quiz = [...steps].reverse().find((x) => x.type === "quiz");
+    if (item.status === "completed" && study && quiz) {
+      return showAlert(item.title, "What would you like to do?", [
+        { text: "Read again", onPress: () => openStep(item, study, DEFAULT_PRACTICE_PASS_PERCENT) },
+        { text: "Quiz again", onPress: () => openStep(item, quiz, DEFAULT_PRACTICE_PASS_PERCENT) },
+        { text: "Cancel", style: "cancel" },
+      ]);
+    }
     if (item.nextStep) openStep(item, item.nextStep, DEFAULT_PRACTICE_PASS_PERCENT);
   };
 
