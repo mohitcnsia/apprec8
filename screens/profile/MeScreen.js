@@ -22,6 +22,8 @@ import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
 import { getClasses, mySchoolAdminSchools, leaveClass } from "../../services/classesApi";
 import { showAlert } from "../../services/dialog";
+import { useLook, setLook } from "../../services/lookSettings";
+import { SKINS, SKIN_NAMES, buttonLook } from "../../utils/buttonSkin";
 import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
@@ -66,6 +68,7 @@ function Row({ icon, label, detail, onPress, styles, P, danger = false }) {
 
 export default function MeScreen({ navigation, signoutHandler }) {
   const { isDark, themeChoice, setThemeChoice } = useTheme();
+  const look = useLook();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
@@ -359,6 +362,34 @@ export default function MeScreen({ navigation, signoutHandler }) {
               </Pressable>
             ))}
           </View>
+          {/* Owner, 16 Nov 2026: three button styles (mockup "Apprec8 buttons") and the hand for the main button. */}
+          <Text style={[styles.soft, { marginTop: 10, marginBottom: 6 }]}>Buttons</Text>
+          <View style={{ flexDirection: "row", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            {SKINS.map((k) => (
+              <Pressable
+                key={k}
+                onPress={() => setLook({ skin: k })}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: look.skin === k }}
+                accessibilityLabel={`Button style ${SKIN_NAMES[k]}`}
+                style={{ alignItems: "center", gap: 6, padding: 8, borderRadius: 16, borderWidth: 2, borderColor: look.skin === k ? P.selectedBorder : "transparent" }}
+              >
+                <View pointerEvents="none" style={{ flexDirection: "row", gap: 6 }}>
+                  <PreviewButton skin={k} icon="arrow-forward" />
+                  <PreviewButton skin={k} icon="refresh" soft />
+                </View>
+                <Text style={[styles.soft, look.skin === k && { color: P.selectedText, fontFamily: "nunitoBold" }]}>{SKIN_NAMES[k]}</Text>
+              </Pressable>
+            ))}
+          </View>
+          <Text style={[styles.soft, { marginTop: 10, marginBottom: 6 }]}>Main button on the</Text>
+          <View style={styles.segment} accessibilityRole="radiogroup">
+            {[["left", "Left"], ["right", "Right"]].map(([id, label]) => (
+              <Pressable key={id} onPress={() => setLook({ hand: id })} style={[styles.segmentItem, look.hand === id && styles.segmentOn]} accessibilityRole="radio" accessibilityState={{ selected: look.hand === id }}>
+                <Text style={[styles.segmentText, look.hand === id && styles.segmentTextOn]}>{label}</Text>
+              </Pressable>
+            ))}
+          </View>
 
           <View style={styles.group}>
             {myClasses.length + pendingClasses.length > 0 && myClasses.length + pendingClasses.length < MAX_CLASSES ? (
@@ -505,3 +536,14 @@ const makeStyles = (P, insets) =>
     linkBonusTitle: { fontSize: 17, fontFamily: "nunitoBold", color: P.selectedText },
     linkBonusSub: { fontSize: 13, fontFamily: "nunitoBold", color: P.label, marginTop: 2, lineHeight: 18 },
   });
+
+/** A small, non-tappable sample of a button style for Me → Look. */
+function PreviewButton({ skin, icon, soft }) {
+  const { isDark } = useTheme();
+  const L = buttonLook({ skin, variant: soft ? "soft" : "primary", size: "sm", isDark, iconOnly: true });
+  return (
+    <View style={[L.box, { width: 36, height: 36, borderRadius: skin === "B" ? 12 : 18 }]}>
+      <Ionicons name={icon} size={18} color={L.iconColor} />
+    </View>
+  );
+}
