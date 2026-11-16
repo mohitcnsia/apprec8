@@ -41,6 +41,10 @@ from fractional square widths.
 
 ---
 
+## 2026-11-16 — Small fix: quest map opens at once (Claude)
+Map draws from the bundled quest, swaps in Firestore when it arrives; waits for progress before openTopic. Walked on the
+owner's phone (new Class 5 account: Word Power map drawn within 1.2 s on the first visit, lesson + quiz open). Published to 20.0.30–32.
+
 ## 2026-11-14 — Review of Gemini's waiting branches (Claude)
 - **G97** (teacher removes a kid): already merged 12 Nov in a tidier form; this branch only recorded as merged. Gemini's test
   re-implemented the logic locally (proves nothing); the real check is the emulator test of approveMember.

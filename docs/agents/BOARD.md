@@ -1350,6 +1350,11 @@ it with a **device-bound return ticket**:
 the owner. Write the revised plan section first (`gemini(G55): plan v2 — review please`).
 
 ### G53 · [todo] · gemini · ∞ redo, attempt 3: THE INFINITY ALONE (Claude's review of attempt 2)
+**Owner, 16 Nov: found the one.** A Nano Banana image: a glowing ∞ (purple + cyan light), the right loop breaking into
+digital pieces. "This icon is perfect": polish it for Apprec8, and the pieces flying off are **books, game pieces, stars,
+pencils, puzzle pieces** (kid stuff), not binary digits. Owner to save the image as `data/media_backup/brand-infinity-ref.jpg`.
+Claude's notes: keep a large version with the glow (store page, splash); app icon = a simpler version (thick ∞, 4-5 chunky
+pieces, it must read at 48 px); notification icon = a one-colour outline (∞ + 3 small squares breaking off).
 Attempt 2 made the wordmark again; the owner asked to see **only the ∞ symbol**, and in the wordmark the ∞ still
 reads like a fish / "∝", not an 8 lying down. Do exactly this: **no letters at all.** One sheet with 4 variants of
 the ∞ alone, each large (400 px) and small (48 px): a perfectly **symmetric figure-8 on its side** (both loops the same
