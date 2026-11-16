@@ -18,6 +18,12 @@ export default function CardReaderScreen({ navigation, route }) {
   }, [card.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const done = () => card.id && card.kind !== "task" && setCardStatus(card.id, "done");
+  // Done and "More like this" both save the answers (stars) and finish the card (walk 16 Nov: More like this skipped it).
+  const save = (picked) => {
+    const answers = cards.map((c, i) => (c.kind === "check" && picked?.[i] != null ? { index: i, isCorrect: picked[i] === c.answer } : null)).filter(Boolean);
+    recordCardAnswers({ ...card, cardId: card.cardId || card.id }, answers);
+    done();
+  };
   return (
     <LearnCards
       cards={cards}
@@ -26,18 +32,15 @@ export default function CardReaderScreen({ navigation, route }) {
       isDark={isDark}
       finishLabel="DONE ✓"
       onFinish={({ picked } = {}) => {
-        // Questions answered → stars from the server (one per new question right).
-        const answers = cards.map((c, i) => (c.kind === "check" && picked?.[i] != null ? { index: i, isCorrect: picked[i] === c.answer } : null)).filter(Boolean);
-        recordCardAnswers({ ...card, cardId: card.cardId || card.id }, answers);
-        done();
+        save(picked);
         navigation.goBack();
       }}
       extraAction={
         card.moreQuestId
           ? {
               label: "More like this ›",
-              onPress: () => {
-                done();
+              onPress: ({ picked } = {}) => {
+                save(picked);
                 navigation.replace("EnglishQuestIntro", { questId: card.moreQuestId });
               },
             }

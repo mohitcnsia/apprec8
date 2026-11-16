@@ -248,7 +248,7 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
         {last ? (
           <View style={{ alignItems: "center", gap: 14, marginTop: 18 }}>
             {/* Cards from Apprec8 (owner 16 Nov): "More like this" opens the whole quest. */}
-            {extraAction ? <Pressable onPress={extraAction.onPress} accessibilityRole="button"><Text style={s.link}>{extraAction.label}</Text></Pressable> : null}
+            {extraAction ? <Pressable onPress={() => extraAction.onPress({ allSeen: allSeen(seen, total), picked })} accessibilityRole="button"><Text style={s.link}>{extraAction.label}</Text></Pressable> : null}
             <Pressable onPress={() => setIndex(0)} accessibilityRole="button"><Text style={s.link}>Read the cards again</Text></Pressable>
             {onShowPage ? <Pressable onPress={onShowPage} accessibilityRole="button"><Text style={s.link}>See everything on one page</Text></Pressable> : null}
           </View>
