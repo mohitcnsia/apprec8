@@ -67,6 +67,7 @@ import { shareInvite } from "../../services/invite";
 import { columnStyle } from "../../utils/layout";
 import AppButton, { MainAction } from "../../components/common/AppButton";
 import ParentTipCard from "../../components/parent/ParentTipCard";
+import HomeCards from "../../components/home/HomeCards";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -917,6 +918,9 @@ export default function HomeScreen({ navigation, learn = false }) {
         />
 
         <PersonaBanner />
+
+        {/* Cards from Apprec8 + team tasks (owner 16 Nov): right under the greeting. */}
+        <HomeCards />
 
         {/* Join your class (owner, 12 Nov): anyone not in a class picks it here, no link to come back to. */}
         {(() => {

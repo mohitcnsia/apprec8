@@ -129,6 +129,11 @@ export default function AdminToolsScreen({ navigation }) {
         <Text style={styles.rowText}>Dashboard (also in Progress → Kids)</Text>
         <Ionicons name="chevron-forward" size={20} color={P.dimText} />
       </Pressable>
+      <Pressable onPress={() => navigation.navigate("SendCard")} style={styles.row} accessibilityRole="button">
+        <Ionicons name="paper-plane-outline" size={20} color={P.selectedText} />
+        <Text style={styles.rowText}>Send a card (safety, story, fact, task) + what you sent</Text>
+        <Ionicons name="chevron-forward" size={20} color={P.dimText} />
+      </Pressable>
       <Pressable onPress={() => navigation.navigate("People")} style={styles.row} accessibilityRole="button">
         <Ionicons name="people-outline" size={20} color={P.selectedText} />
         <Text style={styles.rowText}>People (who joined, when, who is stuck)</Text>

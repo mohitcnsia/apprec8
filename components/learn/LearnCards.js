@@ -29,7 +29,7 @@ const TINTS = {
  * @param {boolean} [props.canSkip] - show "Skip to quiz" (a quest step with a quiz after it)
  * @param {() => void} props.onShowPage - "See all on one page" (the old long page)
  */
-export default function LearnCards({ cards, title, cardKey = "", questContext = null, isDark, finishLabel, onFinish, canSkip = false, onShowPage }) {
+export default function LearnCards({ cards, title, cardKey = "", questContext = null, isDark, finishLabel, onFinish, canSkip = false, onShowPage, extraAction = null }) {
   const P = quizPalette(isDark);
   const T = isDark ? TINTS.dark : TINTS.light;
   const insets = useSafeAreaInsets();
@@ -247,10 +247,12 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
         </View>
         {last ? (
           <View style={{ alignItems: "center", gap: 14, marginTop: 18 }}>
+            {/* Cards from Apprec8 (owner 16 Nov): "More like this" opens the whole quest. */}
+            {extraAction ? <Pressable onPress={extraAction.onPress} accessibilityRole="button"><Text style={s.link}>{extraAction.label}</Text></Pressable> : null}
             <Pressable onPress={() => setIndex(0)} accessibilityRole="button"><Text style={s.link}>Read the cards again</Text></Pressable>
-            <Pressable onPress={onShowPage} accessibilityRole="button"><Text style={s.link}>See everything on one page</Text></Pressable>
+            {onShowPage ? <Pressable onPress={onShowPage} accessibilityRole="button"><Text style={s.link}>See everything on one page</Text></Pressable> : null}
           </View>
-        ) : index === 0 ? (
+        ) : index === 0 && onShowPage ? (
           <Pressable onPress={onShowPage} style={{ alignSelf: "center", marginTop: 18 }} accessibilityRole="button">
             <Text style={s.link}>See everything on one page</Text>
           </Pressable>

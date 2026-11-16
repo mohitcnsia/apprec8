@@ -11,6 +11,7 @@ const demoActionsCallable = require("./callable/demoActions");
 const pushActionsCallable = require("./callable/pushActions");
 const joinActionsCallable = require("./callable/joinActions");
 const moodActionsCallable = require("./callable/moodActions");
+const cardActionsCallable = require("./callable/cardActions");
 const { sendSticker } = require("./callable/stickerActions");
 const { remindAssignment } = require("./callable/remindActions");
 const { ownerWeekly } = require("./callable/ownerActions");
@@ -33,6 +34,7 @@ module.exports = {
   ...pushActionsCallable,
   ...joinActionsCallable,
   ...moodActionsCallable,
+  ...cardActionsCallable,
   sendSticker,
   remindAssignment,
   ownerWeekly,

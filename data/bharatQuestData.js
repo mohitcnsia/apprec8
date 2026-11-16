@@ -8,7 +8,7 @@ import { q, study, quiz, unit, main } from "./englishQuest/helpers.js";
 export const QUEST_ID = "bharat-quest";
 
 export const quest = {
-  title: "भारत और समझ",
+  title: "आओ जानें",
   description: "भारतीय संस्कृति, साइबर सतर्कता, उपयोगी सरकारी योजनाएं और ऐतिहासिक धरोहर।",
   image: null, // picture to come (the link Gemini used does not exist yet)
   version: 1,
@@ -35,7 +35,7 @@ export const quest = {
 };
 
 export const tile = {
-  title: "भारत और समझ",
+  title: "आओ जानें",
   type: "QUEST",
   carouselGroup: quest.draft ? "quest_draft" : "quest",
   order: 4,

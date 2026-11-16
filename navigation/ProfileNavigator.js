@@ -35,6 +35,8 @@ import TaskEditor from "../screens/task/TaskEditor"; // Adjust path
 // TasksContextProvider now wraps all tabs (BottomTabNavigator), so Home shows the same reminders.
 import DummyScreen from "../screens/DummyScreen"; // << ENSURE THIS IMPORT IS CORRECT AND UNCOMMENTED
 import MessageCenterScreen from "../screens/profile/MessageCenterScreen";
+import SendCardScreen from "../screens/admin/SendCardScreen";
+import CardReaderScreen from "../screens/cards/CardReaderScreen";
 import AdminDashboardScreen from "../screens/admin/AdminDashboardScreen";
 import AdminKidDetailScreen from "../screens/admin/AdminKidDetailScreen";
 
@@ -117,6 +119,8 @@ const ThemedStack = ({ isGuest, actionHandler, user }) => {
           <Stack.Screen name="LinkParent" component={LinkParentScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Guide" component={GuideScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AddChild" component={AddChildScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="SendCard" component={SendCardScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="CardReader" component={CardReaderScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ParentPin" component={ParentPinScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
           <Stack.Screen name="People" component={PeopleScreen} options={{ headerShown: false }} />

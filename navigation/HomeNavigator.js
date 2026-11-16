@@ -35,6 +35,7 @@ import DecisionsScreen from "../screens/admin/DecisionsScreen";
 import ClassDetailScreen from "../screens/admin/ClassDetailScreen";
 import CalmCornerScreen from "../screens/wellbeing/CalmCornerScreen";
 import MoodListScreen from "../screens/wellbeing/MoodListScreen";
+import CardReaderScreen from "../screens/cards/CardReaderScreen";
 
 const Stack = createStackNavigator();
 
@@ -78,6 +79,7 @@ const HomeNavigator = ({ learn = false }) => (
     <Stack.Screen name="ClassDetail" component={ClassDetailScreen} />
     <Stack.Screen name="CalmCorner" component={CalmCornerScreen} />
     <Stack.Screen name="MoodList" component={MoodListScreen} />
+    <Stack.Screen name="CardReader" component={CardReaderScreen} />
   </Stack.Navigator>
 );
 
