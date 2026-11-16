@@ -137,7 +137,15 @@ exports.deleteChildProfile = functions
     if (kidDoc.data().ownLogin) throw new functions.https.HttpsError("failed-precondition", "This child has their own account. They can delete it from their own Me tab.");
     // Owner, 12 Nov 2026: no deletion without the owner's own click. Recorded as a request (kept 90 days, nothing erased).
     await require("./userActions")._recordDeletionRequest(kidUid, "child-profile", context.auth.uid);
-    return { ok: true, pending: true };
+    // Owner, 16 Nov 2026: the profile disappears from the parent's app at once (no more pushes about it either); the parent
+    // can get it back within 30 days by writing to us. Both sides of the link go; deletionRequests keeps who to restore.
+    const parentUid = context.auth.uid;
+    const batch = db.batch();
+    batch.set(db.collection("users").doc(parentUid), { childUids: FieldValue.arrayRemove(kidUid) }, { merge: true });
+    batch.set(kidDoc.ref, { parentUids: FieldValue.arrayRemove(parentUid), hiddenFromParentAt: Date.now() }, { merge: true });
+    batch.set(db.collection("deletionRequests").doc(kidUid), { unlinkedParentUid: parentUid, restoreUntil: Date.now() + 30 * 864e5 }, { merge: true });
+    await batch.commit();
+    return { ok: true, pending: true, hidden: true };
   });
 
 // ---------- One phone, several profiles (owner: kids use their parent's phone) ----------

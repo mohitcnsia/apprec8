@@ -37,7 +37,7 @@ export default function PlayAsChildSheet({ kid, onClose, onLoginCode, P }) {
 
   // Play and DPDP: a parent can delete a child profile they made, with all its progress (functions/utils/eraseUser.js).
   const removeProfile = () =>
-    showAlert(`Delete ${name}'s profile?`, `We'll remove ${name}'s profile after a check, within 90 days. Until then nothing is lost.`, [
+    showAlert(`Delete ${name}'s profile?`, `${name} disappears from your app now. Changed your mind? Write to us within 30 days (Me → Tell us what you think) and we'll bring ${name} back.`, [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
