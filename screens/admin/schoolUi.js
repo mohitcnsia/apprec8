@@ -4,6 +4,7 @@
 
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput } from "react-native";
+import AppButton, { MainAction } from "../../components/common/AppButton";
 
 export const makeSchoolStyles = (P, insets) =>
   StyleSheet.create({
@@ -52,11 +53,13 @@ export function Chip({ label, on, onPress, styles, grade }) {
   );
 }
 
-export function MainButton({ label, onPress, busy, styles, P, disabled }) {
+// Button system (owner 16 Nov 2026): the shared main button is now an AppButton, as wide as its words, on the thumb's
+// side (Me → Look). One change here restyles every admin, parent and guide screen that uses it.
+export function MainButton({ label, onPress, busy, disabled, icon }) {
   return (
-    <Pressable onPress={onPress} disabled={busy || disabled} accessibilityRole="button" accessibilityState={{ disabled: !!(busy || disabled) }} style={[styles.main, (busy || disabled) && { opacity: 0.6 }]}>
-      {busy ? <ActivityIndicator color={P.onPrimary} /> : <Text style={styles.mainText}>{label}</Text>}
-    </Pressable>
+    <MainAction>
+      <AppButton label={label} icon={icon} iconSide="right" size="lg" onPress={onPress} busy={busy} disabled={disabled} />
+    </MainAction>
   );
 }
 
