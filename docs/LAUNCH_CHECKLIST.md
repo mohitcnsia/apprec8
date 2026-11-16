@@ -74,6 +74,11 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Push notifications + WhatsApp messages look poor (owner 16 Nov: "should be fun, catchy and professional"):** after
   star rules phase 1 (G125). One doc: every push text and WhatsApp template today → rewritten in one voice (short,
   warm, a little playful; parents addressed as adults) + phone mockups before/after, owner approves, then a text change.
+- **Parent tips (\"For you today\", owner 16 Nov):** 30 draft tips by Claude in data/parentTips.js (everyday habits only).
+  Seema reviews every tip and adds Hindi before the public release.
+- **Team tasks (owner 16 Nov idea):** the admin assigns role tasks to staff (Seema: school admin, teacher, counsellor),
+  e.g. "Review the parent tips + add Hindi". Like assigning to students: shows on her Home + a notification, she marks it
+  done, the owner sees status. First task once built: the parent tips review.
 - **Redesign built for 20.0.33 (16 Nov night):** buttons A/B/C + hand, Home top, Learn tab, Me panel, Progress, faces,
   tablet column, ∞ notification icon. Next: quiz two-part tablet view; notification buttons (Start / Later) and the round
   picture need the app to draw notifications itself (data messages + a display handler): plan it, test it hard ("we

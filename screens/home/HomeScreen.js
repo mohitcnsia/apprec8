@@ -66,6 +66,7 @@ import { classLabel } from "../../utils/classes";
 import { shareInvite } from "../../services/invite";
 import { columnStyle } from "../../utils/layout";
 import AppButton, { MainAction } from "../../components/common/AppButton";
+import ParentTipCard from "../../components/parent/ParentTipCard";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -1011,6 +1012,9 @@ export default function HomeScreen({ navigation, learn = false }) {
             </View>
           </View>
         ) : null}
+
+        {/* "For you today" (mockup, owner 16 Nov): one tip a day for parents (draft tips, Seema reviews). */}
+        {children.length > 0 && !userData?.isChild ? <ParentTipCard /> : null}
 
         {/* Parent Home: focus child who needs most help, +N more, drops off once done */}
         {focusChild ? (
