@@ -74,6 +74,8 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Push notifications + WhatsApp messages look poor (owner 16 Nov: "should be fun, catchy and professional"):** after
   star rules phase 1 (G125). One doc: every push text and WhatsApp template today → rewritten in one voice (short,
   warm, a little playful; parents addressed as adults) + phone mockups before/after, owner approves, then a text change.
+- **Leave a class (owner 16 Nov: couldn't leave his own class):** students "Leave this class", teachers "Stop teaching
+  this class". Needs a server function (rules don't let the phone change classIds/teacherIds) + deploy. Small task.
 - **Fun tab layout (owner 15 Nov):** Pratha prefers the older carousel style with nice images over today's Fun tab.
   Collect more feedback (Pratha + other kids) and discuss before changing anything.
 - **Chess board colours** (owner: ignore for now).
