@@ -145,6 +145,10 @@ Claude reviews the diff + the walk evidence, re-walks anything suspicious or tou
 - `adb logcat -d | grep -E "FATAL|SoftException|E ReactNativeJS"` output pasted (must be empty).
 - Screenshot first, tap second: never tap from a remembered layout (a blind tap once landed on Delete account).
 - Never publish, deploy or seed live content: say "ready" and Claude does it.
+- **Keep the owner's Play app backup somewhere permanent** (16 Nov: the backup in /tmp vanished mid-walk and the owner's
+  phone was left without Apprec8). Before uninstalling: `adb shell pm path com.mohitchilkoti.apprec8` → pull every APK
+  into `content-private/play-backup/` (gitignored), and only uninstall once all files are there. If anything goes wrong,
+  the owner reinstalls from the Play Store.
 - **Never tap "Update …"/"Seed …" in Admin tools during a walk** (15 Nov, G123: it wrote the unit to the LIVE
   database before review). The debug build talks to the real Firebase. Walk with what's already seeded, or say
   "SEED NEEDED" in the report and stop; Claude seeds after review.

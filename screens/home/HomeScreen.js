@@ -698,7 +698,7 @@ export default function HomeScreen({ navigation }) {
       {kidView && next.main ? (
         <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
           <Text style={styles.label}>{next.main.label}</Text>
-          <Text style={styles.nextTitle} numberOfLines={2}>{next.main.title}</Text>
+          <Text style={styles.upNextTitle} numberOfLines={2}>{next.main.title}</Text>
           <Text style={styles.questSub}>{next.main.sub}</Text>
           {[...next.then, ...(showMoreNext ? next.rest : [])].length ? (
             <View style={{ gap: 2, marginTop: 4 }}>
@@ -1176,7 +1176,7 @@ const makeStyles = (P, insets) =>
     joinLine: { fontSize: 14, fontFamily: "nunito", color: P.textSoft, lineHeight: 20 },
     joinLink: { fontSize: 15, fontFamily: "nunitoBold", color: P.label, marginTop: 4 },
     upNextCard: { padding: 18, borderRadius: 22, backgroundColor: P.card, borderWidth: 2, borderColor: P.selectedBorder, gap: 6 }, // not "nextCard": an older style of that name exists
-    nextTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, lineHeight: 30 },
+    upNextTitle: { fontSize: 24, fontFamily: "nunitoBold", color: P.selectedText, lineHeight: 30 }, // own name: an older white "nextTitle" below overrode it (blank title in light theme, 16 Nov walk)
     thenRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 40 },
     thenText: { flex: 1, fontSize: 15, fontFamily: "nunitoBold", color: P.text },
     todayTip: { fontSize: 15, fontFamily: "nunitoBold", color: P.text, marginTop: 6, lineHeight: 21 },
