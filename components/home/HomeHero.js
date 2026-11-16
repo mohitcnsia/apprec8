@@ -21,6 +21,7 @@ import { dailyCardFor, dayNumber, learnCardsFor, toWords, toScienceFacts, toSpac
 import spaceData from "../../data/space_olympiad_data.json";
 import { thoughtOfTheDay } from "./DailySwipeCard";
 import { greeting } from "../../utils/homeFeed";
+import Face from "../common/Face";
 
 const AUTO_MS = 30000;
 const PAD = 18;
@@ -56,7 +57,7 @@ function useDailySlides(grade) {
   }, [thought, card, source]);
 }
 
-export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe, onOpenProgress, faces = null }) {
+export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe, onOpenProgress, faces = null, avatar = null, uid = null }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const C = isDark ? SCENE.dark : SCENE.light;
@@ -119,8 +120,8 @@ export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe,
       <LinearGradient pointerEvents="none" colors={["transparent", P.bg]} style={s.fade} />
 
       <View style={s.topRow}>
-        <Pressable onPress={onOpenMe} accessibilityRole="button" accessibilityLabel="Open Me" hitSlop={6} style={[s.face, { backgroundColor: P.streakBg, borderColor: isDark ? P.border : "#FFFFFF" }]}>
-          <Text style={[s.faceText, { color: P.streakText }]}>{(name || "?").trim().charAt(0).toUpperCase()}</Text>
+        <Pressable onPress={onOpenMe} accessibilityRole="button" accessibilityLabel="Open Me" hitSlop={6}>
+          <Face size={44} name={name} avatar={avatar} uid={uid} ring={isDark ? P.border : "#FFFFFF"} />
         </Pressable>
         <Pressable onPress={onOpenProgress} accessibilityRole="button" accessibilityLabel={`${streak} day streak, ${stars} stars. Open Progress`} hitSlop={6} style={[s.pill, { backgroundColor: C.glass }]}>
           <Ionicons name="flame" size={14} color="#E07B2E" />

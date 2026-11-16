@@ -888,6 +888,8 @@ export default function HomeScreen({ navigation, learn = false }) {
           stars={stars}
           grade={userGrade}
           onOpenMe={openMePanel}
+          avatar={userData?.avatar || null}
+          uid={uid}
           onOpenProgress={() => navigation.navigate("Stats")}
           faces={
             playable.length

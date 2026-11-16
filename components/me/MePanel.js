@@ -16,6 +16,8 @@ import { useMePanel, closeMePanel } from "../../services/mePanel";
 import { useLook, setLook } from "../../services/lookSettings";
 import { SKINS, SKIN_NAMES, buttonLook } from "../../utils/buttonSkin";
 import HelpSheet, { NeedHelpRow } from "../safety/HelpSheet";
+import Face from "../common/Face";
+import FacePickerSheet from "./FacePickerSheet";
 
 const THEMES = [["system", "Phone"], ["light", "Light"], ["dark", "Dark"]];
 
@@ -30,6 +32,7 @@ export default function MePanel() {
   const [shown, setShown] = useState(false);
   const [user, setUser] = useState(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [faceOpen, setFaceOpen] = useState(false);
 
   useEffect(() => {
     if (!authInstance.currentUser) return undefined;
@@ -68,9 +71,12 @@ export default function MePanel() {
       <Animated.View style={[s.panel, { width, backgroundColor: P.card, paddingTop: Math.max(insets.top, StatusBar.currentHeight || 24) + 18, paddingBottom: insets.bottom + 12, transform: [{ translateX: x }] }]}>
         <ScrollView contentContainerStyle={{ gap: 14, paddingHorizontal: 16 }} showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-            <View style={[s.face, { backgroundColor: P.streakBg }]}>
-              <Text style={[s.faceText, { color: P.streakText }]}>{name.charAt(0).toUpperCase()}</Text>
-            </View>
+            <Pressable onPress={() => setFaceOpen(true)} accessibilityRole="button" accessibilityLabel="Change your face" hitSlop={6}>
+              <Face size={52} name={name} avatar={user?.avatar} uid={authInstance.currentUser?.uid} />
+              <View style={[s.editDot, { backgroundColor: P.card, borderColor: P.border }]}>
+                <Ionicons name="pencil" size={11} color={P.label} />
+              </View>
+            </Pressable>
             <View style={{ flex: 1 }}>
               <Text style={[s.name, { color: P.text }]} numberOfLines={1}>{name}</Text>
               {sub ? <Text style={[s.sub, { color: P.textSoft }]}>{sub}</Text> : null}
@@ -120,6 +126,7 @@ export default function MePanel() {
         </ScrollView>
       </Animated.View>
       <HelpSheet visible={helpOpen} onClose={() => setHelpOpen(false)} P={P} />
+      <FacePickerSheet visible={faceOpen} onClose={() => setFaceOpen(false)} uid={authInstance.currentUser?.uid} avatar={user?.avatar} name={name} P={P} />
     </Modal>
   );
 }
@@ -128,6 +135,7 @@ const s = StyleSheet.create({
   panel: { position: "absolute", top: 0, bottom: 0, left: 0, borderTopRightRadius: 24, borderBottomRightRadius: 24, elevation: 16 },
   face: { width: 52, height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center" },
   faceText: { fontSize: 20, fontFamily: "nunitoBold" },
+  editDot: { position: "absolute", right: -2, bottom: -2, width: 20, height: 20, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
   name: { fontSize: 19, fontFamily: "nunitoBold" },
   sub: { fontSize: 13, fontFamily: "nunito" },
   row: { minHeight: 48, flexDirection: "row", alignItems: "center", gap: 14, paddingHorizontal: 4 },
