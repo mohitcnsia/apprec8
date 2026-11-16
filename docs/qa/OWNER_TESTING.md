@@ -1,5 +1,9 @@
 # Testing on your phone
 
+## ⭐ Quest map opens at once (16 Nov, next publish)
+- [ ] As a kid who never opened Word Power: Home → the teacher's assignment ▶ → the map shows right away (no grey "Quest" spinner) and the assigned step opens.
+- [ ] Turn on airplane mode, open a quest you've opened before → the map still shows.
+
 ## ⭐ Chess "Guess the Move" (13 Nov, your game — waiting for the phone check, then publish)
 Owner extras must be ON (Me → ADMIN → Owner extras). Dark and light theme both worth a glance.
 1. Fun → **Guess the Move** (knight tile, last in the grid) → "Morphy vs Duke Karl" → Start.
