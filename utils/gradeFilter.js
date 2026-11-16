@@ -41,8 +41,8 @@ export function nodesForGrade(nodes = [], grade) {
  * When grade is not set (null/undefined), returns true if the quest has any main topics.
  * Quests with 0 main topics for a child's class should not show a Home tile or Progress row.
  */
-export function questHasTopicsForGrade(nodes = [], grade) {
-  const visible = nodesForGrade(nodes, grade);
+export function questHasTopicsForGrade(nodes = [], grade, questId = null) {
+  const visible = nodesForGradeOrAll(nodes, grade, questId).nodes; // older children also see quests made for younger classes (16 Nov)
   return visible.some((n) => n.kind === "main");
 }
 
@@ -54,3 +54,28 @@ export const gradesLabel = (grades) => {
   if (sorted.length === 1) return `Class ${sorted[0]}`;
   return contiguous ? `Class ${sorted[0]}–${sorted[sorted.length - 1]}` : `Class ${sorted.join(", ")}`;
 };
+
+/**
+ * Owner, 16 Nov 2026: "even if a student is in class 10th, still they should see the nodes, with the note". When a quest
+ * has no topic for the child's class, show all its topics and say which classes they were made for.
+ * → { nodes, coveredClasses: null | { lo, hi } } (coveredClasses set only when we fell back to everything).
+ */
+// Quests whose easier topics still help older children (owner, 16 Nov 2026: words help at any age). Science stays
+// hidden from older classes (G79: Class 3–6 science looked silly to Class 10).
+export const OPEN_TO_OLDER = new Set(["word-power"]);
+
+export function nodesForGradeOrAll(nodes = [], grade, questId = null) {
+  if (!Array.isArray(nodes)) return { nodes: [], coveredClasses: null };
+  const kept = nodesForGrade(nodes, grade);
+  const hasTopic = (list) => list.some((n) => n.kind === "main");
+  if (!Number.isInteger(grade) || hasTopic(kept) || !hasTopic(nodes)) return { nodes: kept, coveredClasses: null };
+  const gs = nodes.flatMap((n) => (Array.isArray(n.grades) ? n.grades : [])).filter(Number.isInteger);
+  if (!gs.length) return { nodes: kept, coveredClasses: null };
+  const lo = Math.min(...gs), hi = Math.max(...gs);
+  // Older children only: easier topics are a warm-up; harder ones would only discourage a younger child.
+  if (grade <= hi || !OPEN_TO_OLDER.has(questId)) return { nodes: kept, coveredClasses: null };
+  return { nodes, coveredClasses: { lo, hi } };
+}
+
+/** The topics a child sees in a quest (their class, or all of it when they're older than every topic). */
+export const topicNodesFor = (nodes = [], grade, questId = null) => nodesForGradeOrAll(nodes, grade, questId).nodes;

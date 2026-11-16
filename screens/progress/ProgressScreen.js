@@ -20,7 +20,7 @@ import PersonaBanner from "../../components/admin/PersonaBanner";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS, bundledQuest } from "../../data/quests";
-import { nodesForGrade, questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { topicNodesFor, questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice, topicNodeFor } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
@@ -118,13 +118,13 @@ export default function ProgressScreen({ navigation, route }) {
   const perQuest = useMemo(
     () =>
       quests
-        .filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade)) // owner/testers see every quest
+        .filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade, m.QUEST_ID)) // owner/testers see every quest
         .map((m) => {
         const p = progressById[m.QUEST_ID] || { nodes: {}, doc: {} };
         const namer = topicNamer(m.nodes);
         let summary = null;
         try {
-          summary = questSummary(nodesForGrade(m.nodes, grade), p.nodes);
+          summary = questSummary(topicNodesFor(m.nodes, grade, m.QUEST_ID), p.nodes);
         } catch (e) {
           summary = null;
         }
@@ -146,7 +146,7 @@ export default function ProgressScreen({ navigation, route }) {
   // Redesign: cheer, near goal, topic lists (utils/kidProgress.js).
   const cheer = encouragement({ daily, grade, streak });
   const lists = useMemo(
-    () => topicLists(quests.filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade)).map((m) => ({ questId: m.QUEST_ID, stats: statsOf(m.QUEST_ID), namer: topicNamer(m.nodes) }))),
+    () => topicLists(quests.filter((m) => isAdmin || (isTesterUser(user) && extras) || questHasTopicsForGrade(m.nodes, grade, m.QUEST_ID)).map((m) => ({ questId: m.QUEST_ID, stats: statsOf(m.QUEST_ID), namer: topicNamer(m.nodes) }))),
     [quests, progressById, grade, isAdmin, extras] // eslint-disable-line react-hooks/exhaustive-deps
   );
   const [openSubjects, setOpenSubjects] = useState({}); // "needs-English" → shown in full

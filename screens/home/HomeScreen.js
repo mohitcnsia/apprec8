@@ -24,7 +24,7 @@ import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
 import { bundledQuest } from "../../data/quests";
-import { nodesForGrade, questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { topicNodesFor, questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
@@ -549,7 +549,7 @@ export default function HomeScreen({ navigation }) {
     return allQuests.filter((q) => {
       const data = bundledQuest(q.questId);
       if (!data) return true;
-      return questHasTopicsForGrade(data.nodes, userGrade);
+      return questHasTopicsForGrade(data.nodes, userGrade, q.questId);
     });
   }, [allQuests, userGrade, isTester, isAdmin]);
 
@@ -637,7 +637,7 @@ export default function HomeScreen({ navigation }) {
     if (!data) return null;
     try {
       const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
-      return questSummary(nodesForGrade(data.nodes, grade), progressById[q.questId]?.nodes || {});
+      return questSummary(topicNodesFor(data.nodes, grade, q.questId), progressById[q.questId]?.nodes || {});
     } catch (e) {
       return null;
     }

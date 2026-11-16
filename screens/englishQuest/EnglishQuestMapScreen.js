@@ -31,7 +31,7 @@ import { buildWindow } from "../../utils/questWindow";
 import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
 import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
-import { nodesForGrade } from "../../utils/gradeFilter";
+import { nodesForGradeOrAll } from "../../utils/gradeFilter";
 import { myAssignments, assignedNodeIds } from "../../services/assignmentsApi";
 import { getClasses } from "../../services/classesApi";
 import { isPilotOpen } from "../../utils/pilotOpen";
@@ -217,23 +217,18 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
     cachedClasses(classKey.split(",")).then((list) => setPilotOpen(isPilotOpen(list))).catch(() => {});
   }, [classKey]);
   const openAll = unlockAll || pilotOpen;
-  const visibleNodes = useMemo(
-    () => (nodes ? (unlockAll ? nodes : nodesForGrade(nodes, grade)) : null),
-    [nodes, grade, unlockAll]
+  const graded = useMemo(
+    () => (nodes ? (unlockAll ? { nodes, coveredClasses: null } : nodesForGradeOrAll(nodes, grade, questId)) : null),
+    [nodes, grade, unlockAll, questId]
   );
+  const visibleNodes = graded?.nodes || null;
+  const coveredClasses = graded?.coveredClasses || null; // nothing for this class yet: all topics shown, with a note
 
   const tree = useMemo(
     () => (visibleNodes && progressReady ? buildQuestPath(visibleNodes, progress, { unlockAll: openAll, extraUnlocked: assigned }) : null),
     [visibleNodes, progress, progressReady, openAll, assigned]
   );
   const count = tree?.path.length || 0;
-  // Nothing for this class (owner, 16 Nov 2026: a Class 10 account saw a blank Word Power): say which classes it covers.
-  const emptyText = useMemo(() => {
-    const gs = (nodes || []).flatMap((n) => (Array.isArray(n.grades) ? n.grades : [])).filter(Number.isInteger);
-    if (!gs.length || !Number.isInteger(grade)) return "This quest has no steps yet.";
-    const lo = Math.min(...gs), hi = Math.max(...gs);
-    return `${quest?.title || "This quest"} has topics for Classes ${lo}–${hi} so far. You're in Class ${grade}. More classes are coming.`;
-  }, [nodes, grade, quest?.title]);
 
   // 🎉 Confetti only for NEW achievements (topic cleared, branch mastered, Unit Boss passed),
   // like the Space quest. Not on first load, and not when tester "unlock all" changes the view.
@@ -875,6 +870,12 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         ) : null}
       </View>
 
+      {coveredClasses && Number.isInteger(grade) ? (
+        <Text style={styles.gradeNote}>
+          Made for Classes {coveredClasses.lo}–{coveredClasses.hi}: a good warm-up for Class {grade}. Class {grade} topics are coming.
+        </Text>
+      ) : null}
+
       {isTester && (unlockAll || shortQuizzes) ? (
         <Text style={styles.testerBanner}>
           🧪 Tester mode{unlockAll ? " · everything unlocked (view only)" : ""}{shortQuizzes ? " · short quizzes" : ""}
@@ -886,7 +887,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       ) : !tree ? (
         <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 60 }} />
       ) : count === 0 ? (
-        <Text style={styles.message}>{emptyText}</Text>
+        <Text style={styles.message}>This quest has no steps yet.</Text>
       ) : (
         <ScrollView
           ref={scrollRef}
@@ -1022,6 +1023,13 @@ const makeStyles = (theme) =>
     unitCardSub: { fontSize: 13, fontFamily: "nunito", color: theme.textSecondary, marginTop: 2 },
     moreRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
     moreText: { fontSize: 14, fontFamily: "nunitoBold", color: theme.textSecondaryOnGradient },
+    gradeNote: {
+      marginHorizontal: 16,
+      marginBottom: 6,
+      fontSize: 13,
+      fontFamily: "nunitoBold",
+      color: theme.textSecondaryOnGradient,
+    },
     testerBanner: {
       marginHorizontal: 16,
       marginBottom: 6,

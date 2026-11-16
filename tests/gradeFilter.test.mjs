@@ -80,7 +80,9 @@ assert.equal(questHasTopicsForGrade(English.nodes, 4), true, "English Quest has 
 assert.equal(questHasTopicsForGrade(Science.nodes, 4), true, "Science Quest has topics for Class 4");
 assert.equal(questHasTopicsForGrade(Science.nodes, 10), false, "Science Quest has 0 topics for Class 10 (only teaser unit)");
 assert.equal(questHasTopicsForGrade(WordPower.nodes, 4), true, "Word Power has topics for Class 4");
-assert.equal(questHasTopicsForGrade(WordPower.nodes, 10), false, "Word Power has 0 topics for Class 10 (only teaser unit)");
+assert.equal(questHasTopicsForGrade(WordPower.nodes, 10), false, "Word Power has 0 topics of its own for Class 10");
+assert.equal(questHasTopicsForGrade(WordPower.nodes, 10, "word-power"), true, "…but Class 10 sees it (owner 16 Nov: words help at any age)");
+assert.equal(questHasTopicsForGrade(Science.nodes, 10, "science-quest"), false, "Science stays hidden from Class 10 (G79)");
 
 console.log("gradeFilter tests passed");
 
@@ -99,4 +101,25 @@ console.log("gradeFilter tests passed");
   const p5 = buildQuestPath(nodesForGrade(sci.nodes, 5), {});
   assert.equal(p5.path.filter((x) => x.kind === "main" && x.status === "unlocked").length, 1);
   console.log("Class 7 science: 13 open topics");
+}
+
+// Owner, 16 Nov 2026: a class with no topics of its own still sees the quest's topics, with a note.
+{
+  const { nodesForGradeOrAll } = await import("../utils/gradeFilter.js");
+  const nodes = [
+    { id: "u1", kind: "unit", grades: [4, 5, 6] },
+    { id: "m1", kind: "main", unitId: "u1", grades: [4, 5, 6] },
+    { id: "m2", kind: "main", unitId: "u1", grades: [2, 3] },
+  ];
+  const ten = nodesForGradeOrAll(nodes, 10, "word-power");
+  assert.equal(ten.nodes.length, 3, "Class 10 sees every topic");
+  assert.deepEqual(ten.coveredClasses, { lo: 2, hi: 6 });
+  const five = nodesForGradeOrAll(nodes, 5, "word-power");
+  assert.equal(five.coveredClasses, null, "a class with its own topics keeps the filter");
+  assert.ok(five.nodes.some((n) => n.id === "m1") && !five.nodes.some((n) => n.id === "m2"));
+  assert.equal(nodesForGradeOrAll(nodes, null).coveredClasses, null, "no class: everything, no note");
+  const science = [{ id: "u", kind: "unit", grades: [7] }, { id: "s", kind: "main", unitId: "u", grades: [7] }];
+  assert.equal(nodesForGradeOrAll(science, 3, "word-power").nodes.some((n) => n.kind === "main"), false, "younger children don't get harder topics");
+  assert.equal(nodesForGradeOrAll(nodes, 10, "science-quest").coveredClasses, null, "other quests keep hiding");
+  console.log("nodesForGradeOrAll tests passed");
 }
