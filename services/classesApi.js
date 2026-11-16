@@ -161,14 +161,6 @@ export async function setPilotOpen(classId, on) {
   await setDoc(doc(db, "classes", classId), { pilotUnlockAll: !!on }, { merge: true });
 }
 
-export async function leaveClass(classId) {
-  const uid = me();
-  const batch = writeBatch(db);
-  batch.delete(doc(db, "classes", classId, "members", uid));
-  batch.set(doc(db, "users", uid), { classIds: arrayRemove(classId), pendingClassIds: arrayRemove(classId) }, { merge: true });
-  await batch.commit();
-}
-
 export async function getClasses(ids = []) {
   const out = [];
   for (const id of ids) {
