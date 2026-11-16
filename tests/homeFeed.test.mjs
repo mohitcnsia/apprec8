@@ -107,3 +107,16 @@ console.log("homeFeed multi-quest: ok");
   if (paidStars(undefined, now).today !== 0) throw new Error("paidStars must handle no data");
   console.log("paidStars ok");
 }
+
+// Owner 16 Nov: a card (anything that pays stars) keeps the streak.
+{
+  const { starsAsDaily, mergeDaily, dayStreak } = await import("../utils/homeFeed.js");
+  const { dayKey } = await import("../utils/kidStats.js");
+  const now = Date.now();
+  const today = dayKey(now), yday = dayKey(now - 864e5);
+  const quests = { [yday]: { answered: 10, correct: 8, timeMs: 1 } };
+  assert.equal(dayStreak(mergeDaily([quests]), now), 1, "quests only: yesterday");
+  assert.equal(dayStreak(mergeDaily([quests, starsAsDaily({ [today]: 6 })]), now), 2, "a card today makes it 2 days");
+  assert.deepEqual(starsAsDaily({ [today]: 0 }), {}, "no stars, no day");
+  console.log("card streak tests passed");
+}

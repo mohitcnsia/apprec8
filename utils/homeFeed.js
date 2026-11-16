@@ -133,6 +133,18 @@ export function paidStars(starsDaily = {}, now = Date.now()) {
 // ---------- Several tile quests (English, Science, ...), 2026-11-04 ----------
 
 /** Adds up per-day stats of several quests: { day: { answered, correct, timeMs } }. */
+/**
+ * Days the child earned stars (users.stats.starsDaily, India dates) as practice days, so a card from Apprec8 (or anything
+ * else that pays stars) keeps the streak too (owner 16 Nov: "It should increase streak, of course").
+ */
+export function starsAsDaily(starsDaily = {}) {
+  const out = {};
+  Object.entries(starsDaily || {}).forEach(([k, n]) => {
+    if (Number(n) > 0) out[k] = { answered: 1, correct: 0, timeMs: 0 };
+  });
+  return out;
+}
+
 export function mergeDaily(dailies = []) {
   const out = {};
   dailies.forEach((daily) =>

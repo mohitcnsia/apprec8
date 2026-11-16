@@ -24,7 +24,7 @@ import { questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { topicsWithClimb } from "../../utils/classClimb";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice, topicNodeFor } from "../../utils/subtopicPractice";
-import { dayStreak, mergeDaily } from "../../utils/homeFeed";
+import { dayStreak, mergeDaily, starsAsDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import { encouragement, nearGoal, topicLists, bySubject } from "../../utils/kidProgress";
 import OwnerWeekCard from "../../components/owner/OwnerWeekCard";
@@ -111,7 +111,7 @@ export default function ProgressScreen({ navigation, route }) {
   const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
   const statsOf = (id) => progressById[id]?.doc?.stats || {};
   // All quests together for streak / week / totals.
-  const daily = mergeDaily(quests.map((m) => statsOf(m.QUEST_ID).daily));
+  const daily = mergeDaily([...quests.map((m) => statsOf(m.QUEST_ID).daily), starsAsDaily(userData?.stats?.starsDaily)]); // cards count too
   const stats = quests.reduce(
     (t, m) => ({ answered: t.answered + (statsOf(m.QUEST_ID).answered || 0), correct: t.correct + (statsOf(m.QUEST_ID).correct || 0), daily }),
     { answered: 0, correct: 0, daily }

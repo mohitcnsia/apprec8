@@ -20,7 +20,7 @@ import { visibleOldTiles, showOldSpace } from "../../utils/oldContent";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { TasksContext } from "../../store/tasks-context";
 import { EXAMS } from "../../config/exams";
-import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue, paidStars } from "../../utils/homeFeed";
+import { greeting, dayStreak, upcomingItems, mergeDaily, pickContinue, paidStars, starsAsDaily } from "../../utils/homeFeed";
 import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
@@ -584,7 +584,10 @@ export default function HomeScreen({ navigation, learn = false }) {
     return navigation.navigate("EnglishQuestMap", { questId: t.questId, openTopic: t.nodeId });
   };
 
-  const mergedDaily = useMemo(() => mergeDaily(Object.values(progressById).map((p) => p.doc?.stats?.daily)), [progressById]);
+  const mergedDaily = useMemo(
+    () => mergeDaily([...Object.values(progressById).map((p) => p.doc?.stats?.daily), starsAsDaily(userData?.stats?.starsDaily)]),
+    [progressById, userData?.stats?.starsDaily]
+  );
   const streak = dayStreak(mergedDaily);
   const { today: starsToday, week: starsWeek } = useMemo(() => paidStars(userData?.stats?.starsDaily), [userData?.stats?.starsDaily]);
 
