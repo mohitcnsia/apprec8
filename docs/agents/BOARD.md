@@ -18,11 +18,11 @@ Priority order. New ideas, decisions and parked items live in docs/LAUNCH_CHECKL
 
 | # | Task | Who | State |
 |---|---|---|---|
-| 1 | Owner cards + push to people/groups (scams, Mahabharata facts…): unstick parents (owner 16 Nov) | Claude | next |
-| 2 | Team tasks: admin assigns role tasks to staff (first: Seema reviews parent tips + Hindi) | Claude | next |
+| 1 | ~~Owner cards + push~~ done 16 Nov (Admin tools → Send a card) | Claude | done |
+| 2 | ~~Team tasks~~ done 16 Nov (a card of kind Task, with hat + due + Done) | Claude | done |
 | 3 | G88 one-page class report for school management | Claude | next |
 | 4 | G55 "Locked out?" help + admin PIN reset | Claude | next |
-| 5 | Full Me page shows the chosen face (walk 16 Nov) | Claude | next |
+| 5 | ~~Full Me page shows the chosen face~~ done 16 Nov | Claude | done |
 | 6 | Levels stage 2: one Word Power with levels, Treasure Words folded in | Claude | plan |
 | 7 | "How Apprec8 works" quest (stars explained) | Claude | plan |
 | 8 | Notification buttons (Start / Later) + round picture: app draws notifications (next build) | Claude | plan |

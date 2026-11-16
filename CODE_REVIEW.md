@@ -41,6 +41,12 @@ from fractional square widths.
 
 ---
 
+## 2026-11-16 — Cards and team tasks; Challenge/Boss exam-only (Claude)
+Cards: sendCard/myCards/onCardStatus (emulator 10/10, deployed by owner), Home card, study-card reader (questions → stars via
+questAttempts questId "cards"), Admin tools → Send a card. Bug fix: Challenge/Unit Boss exam-only (utils/quizMode.js).
+Walked on the owner's phone: card on Home → 3 pages + 4 questions → Done → 6 stars paid (4 new right + 2 streak), counts
+opened 1 / done 1; paper footer; button previews distinct. Published to 20.0.30–33.
+
 ## 2026-11-16 — Leave a class, Word Power for older classes, next class opens, reminders (Claude)
 leaveClass server function (emulator 9/9, deployed by owner); Word Power open to older classes with a note (Science stays
 hidden, G79); classClimb: next class opens after clearing your own (tests on real Science data); push wording deployed by
