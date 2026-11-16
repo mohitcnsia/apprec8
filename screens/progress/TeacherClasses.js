@@ -32,6 +32,7 @@ import { createAssignment, listAssignments, deleteAssignment, remindAssignment }
 import { computeAssignmentResults, computeStarOfTheWeek } from "../../utils/assignmentResults";
 import { dayKey } from "../../utils/kidStats";
 import { showAlert } from "../../services/dialog";
+import AppButton from "../../components/common/AppButton";
 
 // Owner, 2026-11-10: switching tabs must be instant and not re-read the class. Rows drawn last time (per teacher and
 // class) show at once; the member list is re-read at most every 2 minutes (join requests stay timely).
@@ -232,14 +233,7 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
                   </View>
                 ) : null}
 
-                <Pressable
-                  disabled={!canRemindAny}
-                  onPress={() => handleRemindAll(a, res.students)}
-                  accessibilityRole="button"
-                  style={[styles.remindAllBtn, !canRemindAny && { opacity: 0.45 }]}
-                >
-                  <Text style={styles.remindAllText}>Remind all not done</Text>
-                </Pressable>
+                <AppButton variant="soft" icon="notifications-outline" label="Remind all not done" disabled={!canRemindAny} onPress={() => handleRemindAll(a, res.students)} style={{ alignSelf: "flex-start" }} />
 
                 {res.students.map((s) => {
                   const alreadyReminded = !s.canRemind || reminding[`${a.id}:${s.uid}`];
@@ -252,17 +246,11 @@ function AssignPanel({ cls, uid, kids, P, styles }) {
                         </Text>
                       </View>
                       {s.status !== "done" ? (
-                        <Pressable
-                          disabled={alreadyReminded}
-                          onPress={() => handleRemindOne(a, s)}
-                          accessibilityRole="button"
-                          accessibilityLabel={`Remind ${s.name}`}
-                          style={[styles.remindBtn, alreadyReminded && { opacity: 0.45, borderColor: P.border }]}
-                        >
-                          <Text style={[styles.remindBtnText, alreadyReminded && { color: P.textSoft }]}>
-                            {alreadyReminded ? "Reminded today" : "Remind"}
-                          </Text>
-                        </Pressable>
+                        alreadyReminded ? (
+                          <Text style={[styles.soft, { fontSize: 13 }]}>Reminded today</Text>
+                        ) : (
+                          <AppButton variant="soft" size="sm" icon="notifications-outline" label="Remind" accessibilityLabel={`Remind ${s.name}`} onPress={() => handleRemindOne(a, s)} />
+                        )
                       ) : (
                         <Text style={{ color: P.correctText, fontFamily: "nunitoBold", fontSize: 14 }}>✓</Text>
                       )}
@@ -495,9 +483,7 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
                 </Text>
               ))}
               {!String(open.id).startsWith("demo_") ? (
-                <Pressable onPress={() => confirmRemove(k)} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Remove ${k.firstName || "child"} from class`} style={{ alignSelf: "flex-end", minHeight: 40, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1.5, borderColor: P.wrongText, justifyContent: "center" }}>
-                  <Text style={[styles.soft, { color: P.wrongText, fontFamily: "nunitoBold" }]}>Remove from class</Text>
-                </Pressable>
+                <AppButton variant="danger" size="sm" icon="person-remove-outline" label="Remove" accessibilityLabel={`Remove ${k.firstName || "child"} from class`} onPress={() => confirmRemove(k)} style={{ alignSelf: "flex-end" }} />
               ) : null}
             </View>
           ))

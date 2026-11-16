@@ -5,6 +5,7 @@
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { sendSticker } from "../../services/moodApi";
+import AppButton from "../common/AppButton";
 
 export default function TeacherWeekCard({ week, className, classId = null, P }) {
   const [sent, setSent] = useState({}); // "nudge" | "appreciate" → "sending" | number | "error"
@@ -77,14 +78,10 @@ export default function TeacherWeekCard({ week, className, classId = null, P }) 
           {classId ? (
             <View style={s.acts}>
               {a.who?.notStarted?.length ? (
-                <Pressable disabled={!!sent.nudge && sent.nudge !== "error"} onPress={() => send("nudge", a.who.notStarted, a.title)} accessibilityRole="button" style={s.act}>
-                  <Text style={s.actText}>{btnText("nudge", `Nudge ${a.who.notStarted.length} not started`)}</Text>
-                </Pressable>
+                <AppButton variant="soft" icon="notifications-outline" label={btnText("nudge", `Nudge ${a.who.notStarted.length}`)} accessibilityLabel={`Nudge ${a.who.notStarted.length} not started`} disabled={!!sent.nudge && sent.nudge !== "error"} onPress={() => send("nudge", a.who.notStarted, a.title)} />
               ) : null}
               {a.who?.done?.length ? (
-                <Pressable disabled={!!sent.appreciate && sent.appreciate !== "error"} onPress={() => send("appreciate", a.who.done, a.title)} accessibilityRole="button" style={s.act}>
-                  <Text style={s.actText}>{btnText("appreciate", `Appreciate ${a.who.done.length} done`)}</Text>
-                </Pressable>
+                <AppButton variant="soft" icon="star-outline" label={btnText("appreciate", `Cheer ${a.who.done.length}`)} accessibilityLabel={`Cheer ${a.who.done.length} done`} disabled={!!sent.appreciate && sent.appreciate !== "error"} onPress={() => send("appreciate", a.who.done, a.title)} />
               ) : null}
             </View>
           ) : null}
