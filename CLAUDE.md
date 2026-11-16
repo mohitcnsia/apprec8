@@ -66,7 +66,7 @@ Expo + React Native frontend, Firebase backend (Firestore, Auth, Cloud Functions
 
 ## Releasing
 - Bump `patchVersion` in `app.config.js` (versionCode = major*1e6 + minor*1e4 + patch*100 + iteration).
-- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.30.
+- **Also** update the hardcoded `versionCode` / `versionName` in `android/app/build.gradle` — they are not derived automatically. Current: 20.0.33.
 - **And** `expo_runtime_version` in `android/app/src/main/res/values/strings.xml` (= app version; `tests/releaseConfig.test.mjs` checks).
 - **Over-the-air updates (from 20.0.28):** JS/asset-only changes ship without a build:
   `npx eas update --channel production --message "<what changed>"` → phones get it on their next app start (`hooks/useStartupUpdate.js`: up to 6 s to check; if one is found the loader says "Getting the latest Apprec8…" and waits up to 15 s; if it lands later, a "New version ready · Tap to refresh" banner; never a second restart, from the update after 2026-11-09).

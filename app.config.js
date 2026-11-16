@@ -44,7 +44,7 @@ export default ({ config }) => {
 
   const majorVersion = 20;
   const minorVersion = 0;
-  const patchVersion = 32; // 20.0.32: no Android app backup (sign-in loop after reinstall); 20.0.31: 5 pm word reminder, crash reporting
+  const patchVersion = 33; // 20.0.33: Home/Learn/Progress redesign, button styles, Me panel, ∞ notification icon; 20.0.32: no Android app backup (sign-in loop after reinstall); 20.0.31: 5 pm word reminder, crash reporting
   const buildIteration = 0; // Or 1 if you prefer to start iterations from 1
 
   const androidVersionCode =

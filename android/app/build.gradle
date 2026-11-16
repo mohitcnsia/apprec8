@@ -92,8 +92,8 @@ android {
         applicationId 'com.mohitchilkoti.apprec8'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 36
-        versionCode 20003200
-        versionName "20.0.32"
+        versionCode 20003300
+        versionName "20.0.33"
     }
     flavorDimensions "version"
     productFlavors {
