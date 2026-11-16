@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
-import remoteConfig from '@react-native-firebase/remote-config';
 
 /**
  * A custom hook to manage and play sound effects for the V2 interactive quiz.
@@ -16,28 +15,19 @@ export const useSoundEffects = () => {
 
     const loadSounds = async () => {
       try {
-        // 1. Set default values
-        await remoteConfig().setDefaults({
-          audio_url_success: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3',
-          audio_url_failure: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_7314d3a042.mp3?filename=error-126627.mp3',
-        });
-
-        // 2. Fetch and activate the remote config
-        await remoteConfig().fetchAndActivate();
-
-        // 3. Get the remote values
-        const successUrl = remoteConfig().getValue('audio_url_success').asString();
-        const failureUrl = remoteConfig().getValue('audio_url_failure').asString();
+        // Our own short sounds, bundled in the app (16 Nov 2026: the old Pixabay links answered 403, so quizzes were silent).
+        const successUrl = require('../assets/sounds/right.wav');
+        const failureUrl = require('../assets/sounds/wrong.wav');
 
         const { sound: success } = await Audio.Sound.createAsync(
-          { uri: successUrl },
+          successUrl,
           { shouldPlay: false }
         );
         sSound = success;
         setSuccessSound(success);
 
         const { sound: failure } = await Audio.Sound.createAsync(
-          { uri: failureUrl },
+          failureUrl,
           { shouldPlay: false }
         );
         fSound = failure;
