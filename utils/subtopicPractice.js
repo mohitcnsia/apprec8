@@ -25,6 +25,19 @@ export function subtopicPractice(quest, subtopic) {
   return { poolQuizIds, poolSubtopics, branchId, nodeId: endless?.id || branchId };
 }
 
+/**
+ * The map topic (main node id) that teaches a sub-topic, for "Make it Learned" when there's no practice pool
+ * (owner 16 Nov: it opened the quest's start instead of the topic). @returns {string | null}
+ */
+export function topicNodeFor(quest, subtopic) {
+  const nodes = quest?.nodes || [];
+  const quizzes = quest?.quizzes || {};
+  const hit = nodes.find(
+    (n) => n.kind === "main" && (n.subtopic === subtopic || (n.steps || []).some((s) => s.type === "quiz" && (quizzes[s.quizId] || []).some((q) => q.subtopic === subtopic)))
+  );
+  return hit ? hit.branchId || hit.id : null;
+}
+
 /** Keep only this topic's questions; if none are tagged, keep them all (never an empty practice). */
 export function onlyTopic(pool = [], subtopic = null) {
   if (!subtopic) return pool;

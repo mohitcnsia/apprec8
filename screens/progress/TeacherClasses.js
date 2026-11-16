@@ -495,8 +495,8 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
                 </Text>
               ))}
               {!String(open.id).startsWith("demo_") ? (
-                <Pressable onPress={() => confirmRemove(k)} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Remove ${k.firstName || "child"} from class`} style={{ alignSelf: "flex-end", minHeight: 36, justifyContent: "center" }}>
-                  <Text style={styles.soft}>Remove from class</Text>
+                <Pressable onPress={() => confirmRemove(k)} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Remove ${k.firstName || "child"} from class`} style={{ alignSelf: "flex-end", minHeight: 40, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1.5, borderColor: P.wrongText, justifyContent: "center" }}>
+                  <Text style={[styles.soft, { color: P.wrongText, fontFamily: "nunitoBold" }]}>Remove from class</Text>
                 </Pressable>
               ) : null}
             </View>

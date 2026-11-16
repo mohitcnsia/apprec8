@@ -32,3 +32,19 @@ assert.equal(onlyTopic(pool, null).length, 3);
   assert.equal(topicPractice(eq, "nope"), null);
 }
 console.log(`subtopicPractice tests passed (${tags.size} topics)`);
+
+// topicNodeFor (16 Nov): "Make it Learned" opens the topic that teaches the sub-topic, never the quest's start.
+{
+  const { topicNodeFor } = await import("../utils/subtopicPractice.js");
+  const quest = {
+    nodes: [
+      { id: "t1", kind: "main", branchId: "t1", steps: [{ type: "quiz", quizId: "q1" }] },
+      { id: "t2", kind: "main", branchId: "t2", subtopic: "tenses", steps: [] },
+    ],
+    quizzes: { q1: [{ subtopic: "plurals" }] },
+  };
+  if (topicNodeFor(quest, "plurals") !== "t1") throw new Error("topicNodeFor: quiz sub-topic");
+  if (topicNodeFor(quest, "tenses") !== "t2") throw new Error("topicNodeFor: node sub-topic");
+  if (topicNodeFor(quest, "nope") !== null) throw new Error("topicNodeFor: unknown → null");
+  console.log("topicNodeFor ok");
+}

@@ -22,7 +22,7 @@ import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS, bundledQuest } from "../../data/quests";
 import { nodesForGrade, questHasTopicsForGrade } from "../../utils/gradeFilter";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
-import { subtopicPractice } from "../../utils/subtopicPractice";
+import { subtopicPractice, topicNodeFor } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import { encouragement, nearGoal, topicLists, bySubject } from "../../utils/kidProgress";
@@ -168,11 +168,11 @@ export default function ProgressScreen({ navigation, route }) {
     return navigation.addListener("focus", load);
   }, [myClassId, uid, navigation]);
 
-  const openQuestMap = (questId) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: { questId } });
+  const openQuestMap = (questId, openTopic = null) => navigation.navigate("Apprec8", { screen: "EnglishQuestMap", params: openTopic ? { questId, openTopic } : { questId } });
   // "Work on these" → Practise: straight into practice on that topic (owner: the map alone didn't say what to do).
   const practiseTopic = (t) => {
     const p = subtopicPractice(bundledQuest(t.questId), t.subtopic);
-    if (!p) return openQuestMap(t.questId);
+    if (!p) return openQuestMap(t.questId, topicNodeFor(bundledQuest(t.questId), t.subtopic)); // the topic, not the quest start
     navigation.navigate("Apprec8", {
       screen: "EndlessPractice",
       params: { questId: t.questId, title: `Practise: ${t.name}`, ...p, onlySubtopic: t.subtopic, generators: [], returnTo: "EnglishQuestMap" },

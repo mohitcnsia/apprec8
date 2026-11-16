@@ -688,6 +688,39 @@ export default function HomeScreen({ navigation }) {
   );
 
   // Home (owner 2026-11-04: back to mockup A, quest tiles carry the continue; no exam labels anywhere).
+  // Owner 16 Nov: Pratha's reminder and assignment were below the fold ("very easy for the kid to miss"). When a teacher
+  // has assigned work or sent a reminder, the kid's main card (CONTINUE target) + the teacher's note go to the TOP.
+  const teacherFirst = kidView && (teacherTopics.length > 0 || userData?.nudge?.kind === "remind");
+  const kidMainBlock = (
+    <>
+      {kidView && next.main ? (
+        <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
+          <Text style={styles.label}>{next.main.label}</Text>
+          <Text style={styles.nextTitle} numberOfLines={2}>{next.main.title}</Text>
+          <Text style={styles.questSub}>{next.main.sub}</Text>
+          {[...next.then, ...(showMoreNext ? next.rest : [])].length ? (
+            <View style={{ gap: 2, marginTop: 4 }}>
+              {[...next.then, ...(showMoreNext ? next.rest : [])].map((it) => (
+                <Pressable key={it.key} onPress={() => openNext(it)} accessibilityRole="button" accessibilityLabel={`Then: ${it.title}`} style={styles.thenRow}>
+                  <Text style={styles.thenText} numberOfLines={1}>Then: {it.title}</Text>
+                  <Text style={styles.questSub}>›</Text>
+                </Pressable>
+              ))}
+              {next.more && !showMoreNext ? (
+                <Pressable onPress={() => setShowMoreNext(true)} accessibilityRole="button" style={styles.thenRow}>
+                  <Text style={styles.questSub}>+{next.more} more ›</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          ) : null}
+          <GlowButton label="START" onPress={() => openNext(next.main)} styles={styles} />
+        </View>
+      ) : null}
+
+      {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
+    </>
+  );
+
   return (
     <View style={styles.screenWrapper}>
       <ScrollView
@@ -730,6 +763,9 @@ export default function HomeScreen({ navigation }) {
             </Pressable>
           );
         })()}
+
+        {/* Teacher's work first (owner 16 Nov) */}
+        {teacherFirst ? kidMainBlock : null}
 
         {/* Kids' Home: Thought / Word / Fact as ONE swipe card on top */}
         {userGrade != null ? (
@@ -908,33 +944,8 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
-      {/* Kid's Home (redesign 2026-11-11): one big next thing with START, two "then" lines, the rest folded. */}
-      {kidView && next.main ? (
-        <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
-          <Text style={styles.label}>{next.main.label}</Text>
-          <Text style={styles.nextTitle} numberOfLines={2}>{next.main.title}</Text>
-          <Text style={styles.questSub}>{next.main.sub}</Text>
-          {[...next.then, ...(showMoreNext ? next.rest : [])].length ? (
-            <View style={{ gap: 2, marginTop: 4 }}>
-              {[...next.then, ...(showMoreNext ? next.rest : [])].map((it) => (
-                <Pressable key={it.key} onPress={() => openNext(it)} accessibilityRole="button" accessibilityLabel={`Then: ${it.title}`} style={styles.thenRow}>
-                  <Text style={styles.thenText} numberOfLines={1}>Then: {it.title}</Text>
-                  <Text style={styles.questSub}>›</Text>
-                </Pressable>
-              ))}
-              {next.more && !showMoreNext ? (
-                <Pressable onPress={() => setShowMoreNext(true)} accessibilityRole="button" style={styles.thenRow}>
-                  <Text style={styles.questSub}>+{next.more} more ›</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          ) : null}
-          <GlowButton label="START" onPress={() => openNext(next.main)} styles={styles} />
-        </View>
-      ) : null}
-
-      {/* A teacher's private note (Nudge / Cheer on), only this kid sees it. */}
-      {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
+      {/* Kid's main card + teacher note: here when no teacher work is waiting (else at the top, see teacherFirst). */}
+      {!teacherFirst ? kidMainBlock : null}
 
       {/* G90 (Seema's decision 5): assigned work is the first thing a kid sees, top priority. */}
       {!kidView && teacherTopics.length ? (
