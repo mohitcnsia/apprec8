@@ -13,6 +13,7 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import HomeNavigator, { LearnNavigator } from "./HomeNavigator";
+import MePanel from "../components/me/MePanel";
 import FunNavigator from "./FunNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
@@ -109,6 +110,7 @@ function BottomTabNavigator({ isGuest, signoutHandler, exitGuestModeHandler, use
           options={{ title: "Quest", tabBarButton: () => null, tabBarItemStyle: { display: "none" } }}
         />
       </Tab.Navigator>
+      <MePanel />
     </TasksContextProvider>
   );
 }

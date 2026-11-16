@@ -42,6 +42,7 @@ import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
 import HomeHero from "../../components/home/HomeHero";
+import { openMePanel } from "../../services/mePanel";
 import { selectParentFocusChild, ownerRowSummary } from "../../utils/homeTidy";
 import { loadProgress } from "../../services/progressCache";
 import { keepPhoneSaved } from "../../services/push";
@@ -886,7 +887,7 @@ export default function HomeScreen({ navigation, learn = false }) {
           streak={streak}
           stars={stars}
           grade={userGrade}
-          onOpenMe={() => navigation.navigate("Profile")}
+          onOpenMe={openMePanel}
           onOpenProgress={() => navigation.navigate("Stats")}
           faces={
             playable.length
