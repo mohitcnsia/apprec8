@@ -11,7 +11,10 @@ Built and committed, not published yet:
 - [ ] Buttons: quiz round ✓ and →; paper ← ⚑ →; teacher Remind/Cheer/Remove; MainButton screens (Add child etc.).
 - [ ] Left hand: main buttons move to the left.
 - [ ] Progress: pills (one per child), swipe left/right; week; three numbers; Next for you; Almost learned chips.
-Done: ∞ notification icon, version 20.0.33. Still to build: tablet layout, face picker (character, or a photo kept on the phone).
+- [ ] Your face: Me panel → tap your face → pick a character (everyone sees it) or a photo (only this phone).
+- [ ] Tablet (if you have one): content is a centred column, nothing stretched.
+- [ ] Notifications show the ∞ (after installing 20.0.33).
+Before the walk, owner deploys the rules: `firebase deploy --only firestore:rules` (lets a child save their face).
 Test account walk18kid@example.com (Class 10) is signed in again: delete it at the end of the walk.
 
 ## ⭐ Leave a class + Word Power for everyone (16 Nov, published)

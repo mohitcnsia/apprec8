@@ -74,6 +74,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 - **Push notifications + WhatsApp messages look poor (owner 16 Nov: "should be fun, catchy and professional"):** after
   star rules phase 1 (G125). One doc: every push text and WhatsApp template today → rewritten in one voice (short,
   warm, a little playful; parents addressed as adults) + phone mockups before/after, owner approves, then a text change.
+- **Redesign built for 20.0.33 (16 Nov night):** buttons A/B/C + hand, Home top, Learn tab, Me panel, Progress, faces,
+  tablet column, ∞ notification icon. Next: quiz two-part tablet view; notification buttons (Start / Later) and the round
+  picture need the app to draw notifications itself (data messages + a display handler): plan it, test it hard ("we
+  can't miss alerts ever"), next build.
 - **Button system (owner 16 Nov, mockup "Apprec8 buttons"):** one shared Button with skins A/B/C (default A, pick in
   Me → Look), left/right-hand setting, icons over words. Same build: tablet layout (today it stretches). Owner: consistent
   look but don't waste space. So the same buttons/sizes everywhere, and the width is used: quiz = question + answers left,
