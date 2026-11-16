@@ -12,7 +12,8 @@
     "test:emulator:join": "firebase emulators:exec --only functions,firestore,auth --project demo-apprec8 \"node tests/emulator/joinActions.emu.js $PWD\"",
     "test:emulator:linking": "firebase emulators:exec --only functions,firestore,auth --project demo-apprec8 \"node tests/emulator/linkingRewards.emu.js $PWD\"",
     "test:emulator:stars": "firebase emulators:exec --only functions,firestore --project demo-apprec8 \"node tests/emulator/starTriggers.emu.js $PWD\"",
-    "test:emulator:deletechild": "firebase emulators:exec --only functions,firestore,auth --project demo-apprec8 \"node tests/emulator/deleteChild.emu.js $PWD\""
+    "test:emulator:deletechild": "firebase emulators:exec --only functions,firestore,auth --project demo-apprec8 \"node tests/emulator/deleteChild.emu.js $PWD\"",
+    "test:emulator:leaveclass": "firebase emulators:exec --only functions,firestore,auth --project demo-apprec8 \"node tests/emulator/leaveClass.emu.js $PWD\""
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",

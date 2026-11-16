@@ -192,6 +192,11 @@ export async function approveMember({ classId, kidUid, approve, parentSaidYes = 
   await functions().httpsCallable("approveMember")({ classId, kidUid, approve: !!approve, ...(parentSaidYes ? { parentSaidYes } : {}) });
 }
 
+/** Leave a class yourself: role "student" (out of the class, progress stays) or "teacher" (stop teaching it). */
+export async function leaveClass({ classId, role = "student" }) {
+  return (await functions().httpsCallable("leaveClass")({ classId, role })).data;
+}
+
 export async function classMembers(classId) {
   const snap = await getDocs(collection(db, "classes", classId, "members"));
   return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));

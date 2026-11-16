@@ -12,7 +12,7 @@ import { makeTtlCache } from "../../utils/ttlCache";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
-import { myTeachingClasses, classMembers, approveMember } from "../../services/classesApi";
+import { myTeachingClasses, classMembers, approveMember, leaveClass } from "../../services/classesApi";
 import { questsForTeacher, classLabel } from "../../utils/classes";
 import { getClassLink, markNotSure } from "../../services/joinApi";
 import { shareInvite } from "../../services/invite";
@@ -502,6 +502,32 @@ export default function TeacherClasses({ refreshTrigger = 0 }) {
             </View>
           ))
         : null}
+      {/* Owner, 16 Nov 2026: a teacher can stop teaching a class (server: leaveClass; the last teacher of a class with
+          children is refused, so the children always have someone). */}
+      {open ? (
+        <Pressable
+          onPress={() =>
+            showAlert(`Stop teaching ${classLabel(open)}?`, "The class and the children's progress stay. You can be added back by the school.", [
+              { text: "Keep teaching", style: "cancel" },
+              {
+                text: "Stop teaching",
+                style: "destructive",
+                onPress: () =>
+                  leaveClass({ classId: open.id, role: "teacher" })
+                    .then(() => {
+                      setClasses((list) => (list || []).filter((c) => c.id !== open.id));
+                      setOpen(null);
+                    })
+                    .catch((e) => showAlert("Couldn't do that", e?.message || String(e))),
+              },
+            ])
+          }
+          accessibilityRole="button"
+          style={{ alignSelf: "center", minHeight: 44, paddingHorizontal: 16, justifyContent: "center", marginTop: 8 }}
+        >
+          <Text style={[styles.soft, { color: P.wrongText, fontFamily: "nunitoBold" }]}>Stop teaching {classLabel(open)}</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 }

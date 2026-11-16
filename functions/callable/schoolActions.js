@@ -227,6 +227,43 @@ exports.approveMember = functions
     return { ok: true };
   });
 
+/**
+ * { classId, role: "student" | "teacher" } → leave a class yourself (owner, 16 Nov 2026: "I could not leave my own class").
+ * Student: out of the class and its board; their own progress stays. Teacher: off the class's teacher list. The last
+ * teacher of a class with children can't leave (the children would have nobody), unless they're an app admin.
+ */
+exports.leaveClass = functions
+  .region(region)
+  .runWith(runtimeOptions)
+  .https.onCall(async (data, context) => {
+    if (!context.auth) throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    const uid = context.auth.uid;
+    const role = data?.role === "teacher" ? "teacher" : "student";
+    const classRef = db.collection("classes").doc(String(data?.classId || ""));
+    const cls = await classRef.get();
+    if (!cls.exists) throw new functions.https.HttpsError("not-found", "That class no longer exists.");
+    const { FieldValue } = require("firebase-admin/firestore");
+    const userRef = db.collection("users").doc(uid);
+    const batch = db.batch();
+    if (role === "teacher") {
+      const teachers = cls.data().teacherIds || [];
+      if (!teachers.includes(uid)) throw new functions.https.HttpsError("failed-precondition", "You don't teach this class.");
+      if (teachers.length === 1 && !(await isAppAdmin(uid))) {
+        const kids = await classRef.collection("members").where("status", "==", "approved").limit(1).get();
+        if (!kids.empty) throw new functions.https.HttpsError("failed-precondition", "You're this class's only teacher. Ask your school to add another teacher first.");
+      }
+      batch.update(classRef, { teacherIds: FieldValue.arrayRemove(uid) });
+      batch.set(userRef, { teachesClassIds: FieldValue.arrayRemove(classRef.id) }, { merge: true });
+    } else {
+      batch.delete(classRef.collection("members").doc(uid));
+      batch.set(userRef, { classIds: FieldValue.arrayRemove(classRef.id), pendingClassIds: FieldValue.arrayRemove(classRef.id) }, { merge: true });
+      batch.delete(classRef.collection("cache").doc("board"));
+      batch.delete(db.collection("followUps").doc(`${classRef.id}__${uid}`));
+    }
+    await batch.commit();
+    return { ok: true, className: cls.data().name || "" };
+  });
+
 // ---------- Teacher invites: no email needed (owner 2026-11-05, mockup L4) ----------
 // An admin makes a one-time code for a class + subjects and shares it (WhatsApp, SMS…). The teacher signs in with the
 // Google account on their phone, enters the code (Me → Join as a teacher), and the admin approves the request.

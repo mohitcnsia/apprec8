@@ -20,7 +20,8 @@ import { authInstance } from "../../config/firebaseConfig";
 import { APPREC8_TEAM_REVIEWER_UID } from "../../config/appConfig";
 import { helpTopics } from "../../data/app-topic-data";
 import { TasksContext } from "../../store/tasks-context";
-import { getClasses, mySchoolAdminSchools } from "../../services/classesApi";
+import { getClasses, mySchoolAdminSchools, leaveClass } from "../../services/classesApi";
+import { showAlert } from "../../services/dialog";
 import { myChildren } from "../../services/familyApi";
 import PlayAsChildSheet from "./PlayAsChildSheet";
 import HelpSheet, { NeedHelpRow } from "../../components/safety/HelpSheet";
@@ -107,6 +108,16 @@ export default function MeScreen({ navigation, signoutHandler }) {
   const isLinked = (userData?.parentUids || []).length > 0;
   const isParent = !userData?.isChild && (!Number.isInteger(userData?.grade) || (userData?.childUids || []).length > 0);
   const isTeacher = (userData?.teachesClassIds || []).length > 0;
+  // Owner, 16 Nov 2026: a student can leave a class themselves (server: leaveClass). Progress stays.
+  const askLeave = (c) =>
+    showAlert(`Leave ${classLabel(c)}?`, "Your stars and progress stay with you. You can join again with the class link.", [
+      { text: "Stay", style: "cancel" },
+      {
+        text: "Leave",
+        style: "destructive",
+        onPress: () => leaveClass({ classId: c.id, role: "student" }).catch((e) => showAlert("Couldn't leave", e?.message || String(e))),
+      },
+    ]);
   const isStudent = Number.isInteger(userData?.grade) && !isTeacher && !(userData?.childUids || []).length;
 
   useEffect(() => {
@@ -287,13 +298,13 @@ export default function MeScreen({ navigation, signoutHandler }) {
           <View style={styles.group}>
             {myClasses.map((c) => (
               <View key={c.id}>
-                <Row icon="people-outline" label={`You're in ${classLabel(c)}`} detail={c.schoolName || null} onPress={() => {}} styles={styles} P={P} />
+                <Row icon="people-outline" label={`You're in ${classLabel(c)}`} detail={c.schoolName || null} onPress={() => askLeave(c)} styles={styles} P={P} />
                 <View style={styles.divider} />
               </View>
             ))}
             {pendingClasses.map((c) => (
               <View key={c.id}>
-                <Row icon="time-outline" label={classLabel(c)} detail="waiting for your teacher" onPress={() => {}} styles={styles} P={P} />
+                <Row icon="time-outline" label={classLabel(c)} detail="waiting for your teacher" onPress={() => askLeave(c)} styles={styles} P={P} />
                 <View style={styles.divider} />
               </View>
             ))}
@@ -353,6 +364,22 @@ export default function MeScreen({ navigation, signoutHandler }) {
             {myClasses.length + pendingClasses.length > 0 && myClasses.length + pendingClasses.length < MAX_CLASSES ? (
               <>
                 <Row icon="add-circle-outline" label="Join another class" onPress={() => navigation.navigate("PickClass")} styles={styles} P={P} />
+                <View style={styles.divider} />
+              </>
+            ) : null}
+            {myClasses.length + pendingClasses.length > 0 ? (
+              <>
+                <Row
+                  icon="exit-outline"
+                  label="Leave a class"
+                  onPress={() => {
+                    const all = [...myClasses, ...pendingClasses];
+                    if (all.length === 1) return askLeave(all[0]);
+                    showAlert("Which class?", null, [...all.map((c) => ({ text: classLabel(c), onPress: () => askLeave(c) })), { text: "Cancel", style: "cancel" }]);
+                  }}
+                  styles={styles}
+                  P={P}
+                />
                 <View style={styles.divider} />
               </>
             ) : null}
