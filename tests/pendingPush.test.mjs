@@ -7,6 +7,7 @@ import {
   canSendPush,
   teacherWaitingMessage,
   studentWaitingMessage,
+  parentRemindMessage,
 } from "../functions/utils/pendingPush.js";
 
 // 1. Rate limiting throttle window (10 minutes)
@@ -32,7 +33,7 @@ assert.deepEqual(canSendPush(baseTime, baseTime + 900000), { allowed: true, rema
 // 2. Teacher waiting message formatting
 {
   const msg1 = teacherWaitingMessage({ teacherName: "Seema", className: "10-A", count: 1 });
-  assert.equal(msg1.title, "Apprec8: Teacher waiting");
+  assert.equal(msg1.title, "A teacher is waiting");
   assert.equal(msg1.body, "Seema waiting to join 10-A · Approve");
 
   const msg2 = teacherWaitingMessage({ teacherName: "Seema", className: "10-A", count: 3 });
@@ -45,7 +46,7 @@ assert.deepEqual(canSendPush(baseTime, baseTime + 900000), { allowed: true, rema
 // 3. Student waiting message formatting
 {
   const msg1 = studentWaitingMessage({ studentName: "Riya", className: "5-B", count: 1 });
-  assert.equal(msg1.title, "Apprec8: New in your class");
+  assert.equal(msg1.title, "New in your class");
   assert.equal(msg1.body, "Riya joined 5-B and started learning · Confirm or remove");
 
   const msg2 = studentWaitingMessage({ studentName: "Riya", className: "5-B", count: 4 });
@@ -56,3 +57,13 @@ assert.deepEqual(canSendPush(baseTime, baseTime + 900000), { allowed: true, rema
 }
 
 console.log("pendingPush tests passed!");
+
+// Owner, 16 Nov 2026: a teacher's reminder as the parent sees it: the task + the child's name, no teacher first name.
+{
+  const m = parentRemindMessage({ kidName: "Hazel", assignmentTitle: "Word Families", mistakesLeft: 0 });
+  assert.equal(m.title, "Word Families for Hazel");
+  assert.equal(m.body, "The teacher asks Hazel to finish it. Sit with Hazel for 5 minutes?");
+  assert.equal(parentRemindMessage({ kidName: "Om", assignmentTitle: "Nouns", mistakesLeft: 1 }).body, "1 mistake left to fix. Sit with Om for 5 minutes?");
+  assert.equal(parentRemindMessage({}).title, "Today's task for your child");
+  console.log("parentRemindMessage tests passed");
+}

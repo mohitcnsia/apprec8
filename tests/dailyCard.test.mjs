@@ -76,3 +76,12 @@ assert.equal(pruneSaved({ closedDay: 500 }, 500).closedDay, 500);
 assert.equal(pruneSaved("junk", 500).closedDay, null);
 
 console.log("dailyCard tests passed");
+
+// Owner, 16 Nov 2026: the 6:30 am word reminder reads "Means fearless. Try using it once at school today."
+{
+  const { wordMeaning } = await import("../utils/dailyCard.js");
+  assert.equal(wordMeaning("Fearless."), "Means fearless.");
+  assert.equal(wordMeaning("Without fear; bold"), "Means without fear; bold.");
+  assert.equal(wordMeaning(""), "");
+  console.log("wordMeaning tests passed");
+}

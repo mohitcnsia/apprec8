@@ -41,6 +41,12 @@ export function learnCardsFor(quest, grade, nodesForGrade) {
 }
 
 /** Word cards → { word, meaning, emoji } (quick-check cards left out). */
+/** "Fearless" → "Means fearless." (keeps a meaning that is already a sentence). */
+export const wordMeaning = (m) => {
+  const t = String(m || "").trim().replace(/[.!]+$/, "");
+  return t ? `Means ${t.charAt(0).toLowerCase()}${t.slice(1)}.` : "";
+};
+
 export const toWords = (cards) =>
   cards
     .filter((c) => c.kind === "word" && c.word && c.meaning)

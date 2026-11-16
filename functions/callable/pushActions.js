@@ -75,7 +75,7 @@ async function send(userRef, tokens, msg, view) {
     tokens,
     notification: { title: msg.title, body: msg.body },
     data: { view },
-    android: { priority: "normal" },
+    android: { priority: "normal", notification: { color: "#85508a" } },
   });
   const dead = [];
   res.responses.forEach((r, i) => {

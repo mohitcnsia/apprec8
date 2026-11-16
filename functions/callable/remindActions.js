@@ -7,6 +7,7 @@ const functions = require("firebase-functions");
 const { admin } = require("../common/admin");
 const { region, runtimeOptions } = require("../common/config");
 const { sendThrottledPushToUser } = require("../utils/throttledPush");
+const { parentRemindMessage } = require("../utils/pendingPush");
 
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
@@ -100,10 +101,8 @@ exports.remindAssignment = functions
         pushTasks.push(
           sendThrottledPushToUser(
             parentUid,
-            {
-              title: `${teacherName}: ${assignmentTitle}`,
-              body: messageBody,
-            },
+            // Owner, 16 Nov 2026: no teacher first names to parents; the child's own name is fine.
+            parentRemindMessage({ kidName: kid.firstName, assignmentTitle, mistakesLeft }),
             "family"
           ).catch(() => {})
         );

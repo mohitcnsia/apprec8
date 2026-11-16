@@ -33,13 +33,14 @@ const time = (m, lang) =>
 function parentMessage({ name, days, minutes, lang = "en" }) {
   const n = String(name || "").trim() || (lang === "hi" ? "आपके बच्चे" : "Your child");
   if (lang === "hi") {
+    // Owner, 16 Nov 2026 (push mockup): the title is the news itself, no emoji. Hindi: owner reviews.
     return days
-      ? { title: `${n} की साप्ताहिक रिपोर्ट तैयार है 🌟`, body: `7 में से ${days} दिन अभ्यास · ${time(minutes, "hi")}। घर के लिए एक सुझाव अंदर।` }
-      : { title: `${n} की साप्ताहिक रिपोर्ट तैयार है`, body: "इस हफ़्ते अभ्यास नहीं हुआ। अंदर देखें आगे क्या करना है।" };
+      ? { title: `${n} का हफ़्ता: 7 में से ${days} दिन`, body: `${time(minutes, "hi")} अभ्यास। घर पर आज़माने के लिए एक सुझाव।` }
+      : { title: `${n} का हफ़्ता`, body: "इस हफ़्ते अभ्यास नहीं हुआ। शुरू करने का एक आसान तरीका अंदर।" };
   }
   return days
-    ? { title: `${n}'s weekly report is ready 🌟`, body: `Practised ${days} of 7 days · ${time(minutes, "en")}. One idea for home inside.` }
-    : { title: `${n}'s weekly report is ready`, body: "No practice this week. See what's next inside." };
+    ? { title: `${n}'s week: ${days} of 7 days`, body: `${time(minutes, "en")} of practice. One idea to try at home.` }
+    : { title: `${n}'s week`, body: "No practice this week. One easy way to start inside." };
 }
 
 /** The teacher's Monday notification for one class. */

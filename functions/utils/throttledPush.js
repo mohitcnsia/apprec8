@@ -47,7 +47,7 @@ async function sendThrottledPushToUser(uid, message, view) {
       tokens,
       notification: { title: message.title, body },
       data: { view: view || "home" },
-      android: { priority: "high" }, // "normal" can sit for hours on an idle phone (owner, 2026-11-10)
+      android: { priority: "high", notification: { color: "#85508a" } }, // "normal" can sit for hours (owner, 2026-11-10); purple = Apprec8 at a glance (16 Nov)
     });
     console.log(`push ${view}: sent ${res.successCount}/${tokens.length} to ${uid.slice(0, 6)}…`);
     // Drop phones Google says are gone (reinstalled app, old phone), so they don't hide a working one.

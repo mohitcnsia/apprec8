@@ -1,4 +1,5 @@
-// services/dailyReminder.js: the word-of-the-day reminder at 5 pm (owner, 2026-11-11: "5 pm reminder is good").
+// services/dailyReminder.js: the word of the day at 6:30 am and a short 7:30 pm nudge (owner, 16 Nov 2026: "kids get
+// up early"; was one reminder at 5 pm from 2026-11-11).
 // Scheduled on the phone itself (expo-notifications, build 20.0.31+), no server and no cost. Each time the kid opens the
 // app, the next 3 days' reminders are set again from tomorrow; so it only rings on a day the app wasn't opened, and
 // after 3 quiet days it stops (no nagging). Each reminder names that day's word.
@@ -6,14 +7,15 @@
 import { Platform } from "react-native";
 import { requireOptionalNativeModule } from "expo-modules-core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dayNumber, dailyCardFor, learnCardsFor, toWords } from "../utils/dailyCard";
+import { dayNumber, dailyCardFor, learnCardsFor, toWords, wordMeaning } from "../utils/dailyCard";
 import { bundledQuest } from "../data/quests";
 import { nodesForGrade } from "../utils/gradeFilter";
 
 const CHANNEL = "word-of-the-day";
 const KIND = "word-reminder";
 const ASKED = "wordReminderAsked.v1";
-const HOUR = 17;
+const MORNING = [6, 30]; // the word, to use at school that day
+const EVENING = [19, 30]; // only rings on a day the app wasn't opened (see below)
 
 function lib() {
   // expo-notifications' native part exists only from build 20.0.31.
@@ -47,16 +49,26 @@ export async function scheduleWordReminders(grade) {
     const words = toWords(learnCardsFor(bundledQuest("word-bank"), grade, nodesForGrade));
     const today = new Date();
     for (let ahead = 1; ahead <= 3; ahead++) {
-      const at = new Date(today.getFullYear(), today.getMonth(), today.getDate() + ahead, HOUR, 0);
+      const at = new Date(today.getFullYear(), today.getMonth(), today.getDate() + ahead, MORNING[0], MORNING[1]);
       const { word } = dailyCardFor({ grade, now: at.getTime(), words });
-      if (!word) continue;
+      if (word) {
+        await N.scheduleNotificationAsync({
+          content: {
+            title: word.word.toUpperCase(),
+            body: `${wordMeaning(word.meaning)} Try using it once at school today.`,
+            data: { kind: KIND, day: dayNumber(at.getTime()), view: "home" },
+          },
+          trigger: { type: N.SchedulableTriggerInputTypes.DATE, date: at, channelId: CHANNEL },
+        });
+      }
+      const eve = new Date(today.getFullYear(), today.getMonth(), today.getDate() + ahead, EVENING[0], EVENING[1]);
       await N.scheduleNotificationAsync({
         content: {
-          title: "Today's word is waiting",
-          body: `Do you know what "${word.word}" means? Open Apprec8 to find out.`,
-          data: { kind: KIND, day: dayNumber(at.getTime()), view: "home" },
+          title: "A quick round tonight?",
+          body: "One short round keeps your streak going.",
+          data: { kind: KIND, day: dayNumber(eve.getTime()), view: "home" },
         },
-        trigger: { type: N.SchedulableTriggerInputTypes.DATE, date: at, channelId: CHANNEL },
+        trigger: { type: N.SchedulableTriggerInputTypes.DATE, date: eve, channelId: CHANNEL },
       });
     }
   } catch (e) {

@@ -106,7 +106,7 @@ exports.sendSticker = functions
             parents.map((p) =>
               sendThrottledPushToUser(
                 p,
-                { title: `🌟 ${kidName} was appreciated`, body: `${from} appreciated ${kidName} for great work${topic ? ` on ${topic}` : ""}. Tell ${kidName} you're proud!` },
+                { title: `${kidName} got a cheer from the teacher`, body: `For great work${topic ? ` on ${topic}` : ""}. A word from you will mean a lot too.` }, // owner 16 Nov: no teacher first names to parents
                 "family"
               ).catch(() => {})
             )
