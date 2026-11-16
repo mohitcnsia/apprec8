@@ -41,6 +41,10 @@ from fractional square widths.
 
 ---
 
+## 2026-11-16 — Small fixes: quiz sounds + delete child (Claude)
+Bundled sounds (Pixabay links were 403). deleteChildProfile hides the child at once (emulator test 8/8), deployed by owner.
+Walked on the owner's phone (new account, right + wrong answer, no sound errors, tabs). Published to 20.0.30–32.
+
 ## 2026-11-16 — Small fix: quest map opens at once (Claude)
 Map draws from the bundled quest, swaps in Firestore when it arrives; waits for progress before openTopic. Walked on the
 owner's phone (new Class 5 account: Word Power map drawn within 1.2 s on the first visit, lesson + quiz open). Published to 20.0.30–32.

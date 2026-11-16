@@ -86,10 +86,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
   Home = today only); Me = side panel from the face (Need help first); thought picture fills the top and fades to white,
   moves every 30 s until touched; "Who's learning?"; due soon = amber; Progress pills swipeable, one per child up to 4.
   Main buttons come from the button styles (A/B/C). Same build as the button system.
-- **Quiz sounds are silent (walk 16 Nov):** the right/wrong sounds come from Pixabay links that now answer 403, so no
-  sound plays in quizzes. Fix: our own short sounds in the app (assets/sounds), no outside link. Needs a phone walk.
 - **Delete-account wording (walk 16 Nov):** the screen says "permanent and cannot be undone", then the sheet says "nothing is
   lost: sign in again to keep using it". Align with A15 (30 days to undo).
+- **Face at the top left (owner 16 Nov):** child picks one of our characters as their face (synced, teachers see it);
+  optional real photo kept only on that phone, never uploaded. Needs an image picker = next build.
 - **Leave a class (owner 16 Nov: couldn't leave his own class):** students "Leave this class", teachers "Stop teaching
   this class". Needs a server function (rules don't let the phone change classIds/teacherIds) + deploy. Small task.
 - **Fun tab layout (owner 15 Nov):** Pratha prefers the older carousel style with nice images over today's Fun tab.
