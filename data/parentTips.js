@@ -1,6 +1,6 @@
 // data/parentTips.js: "For you today", one short tip a day for parents (owner, 16 Nov 2026: "made up is much better than
 // nothing" during testing). DRAFT written by Claude: everyday habits only, no medical, psychological or exam claims.
-// TODO before the public release: Seema reviews every tip and adds the Hindi (docs/LAUNCH_CHECKLIST.md).
+// TODO before the public release: Seema reviews every tip; the owner writes/checks the Hindi (docs/LAUNCH_CHECKLIST.md).
 export const PARENT_TIPS_DRAFT = true;
 
 export const PARENT_TIPS = [

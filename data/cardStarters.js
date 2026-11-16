@@ -66,8 +66,8 @@ export const CARD_STARTERS = [
     label: "Task",
     card: {
       kind: "task",
-      title: "Review the parent tips and add Hindi",
-      text: "30 short tips for parents' Home. Change anything that isn't right.",
+      title: "Review the parent tips",
+      text: "30 short tips for parents' Home. Change anything that isn't right (Mohit does the Hindi).",
       cards: [],
       moreQuestId: null,
       hat: "counsellor",
