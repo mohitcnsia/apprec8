@@ -44,8 +44,10 @@ export function buttonLook({ skin = "A", variant = "primary", size = "md", isDar
   const k = SKINS.includes(skin) ? skin : "A";
   const v = variant === "chip" ? (selected ? "primary" : "soft") : variant;
 
+  // Owner 16 Nov: A and C looked the same. A = round with a soft ring; B = rounded square with a 3D edge; C = flat
+  // rounded square (no ring, no edge).
   const radius = iconOnly
-    ? k === "B" ? Math.round(s.round / 3) : s.round / 2
+    ? k === "A" ? s.round / 2 : Math.round(s.round / 3.2)
     : k === "A" ? s.h / 2 : k === "B" ? (size === "sm" ? 12 : 16) : size === "sm" ? 10 : 12;
   const dims = iconOnly ? { width: s.round, height: s.round } : { height: s.h, paddingHorizontal: s.pad };
 
@@ -73,7 +75,8 @@ export function buttonLook({ skin = "A", variant = "primary", size = "md", isDar
     gap: 8,
     ...(border ? { borderWidth: 1.5, borderColor: border } : {}),
     ...(edge ? { borderBottomWidth: size === "sm" ? 3 : 4, borderBottomColor: edge } : {}),
-    // A: a soft lift under the main action only.
+    // A: a soft ring + lift around the main action.
+    ...(k === "A" && v === "primary" ? { borderWidth: 3, borderColor: isDark ? c.soft : c.soft } : {}),
     ...(k === "A" && v === "primary" && (size === "lg" || iconOnly) ? { shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4 } : {}),
   };
   const pressedBox = k === "B" ? { borderBottomWidth: 1, transform: [{ translateY: 3 }] } : { opacity: 0.85, transform: [{ scale: 0.97 }] };

@@ -108,7 +108,7 @@ export default function MePanel() {
               const L = buttonLook({ skin: k, variant: "primary", size: "sm", isDark, iconOnly: true });
               return (
                 <Pressable key={k} onPress={() => setLook({ skin: k })} accessibilityRole="radio" accessibilityState={{ selected: look.skin === k }} accessibilityLabel={`Button style ${SKIN_NAMES[k]}`} style={[s.skin, { borderColor: look.skin === k ? P.selectedBorder : P.border }]}>
-                  <View style={[L.box, { width: 32, height: 32, borderRadius: k === "B" ? 10 : 16 }]}>
+                  <View style={[L.box, { width: 36, height: 36, borderRadius: k === "A" ? 18 : 11 }]}>
                     <Ionicons name="arrow-forward" size={16} color={L.iconColor} />
                   </View>
                   <Text style={[s.segText, { color: look.skin === k ? P.selectedText : P.textSoft }]}>{SKIN_NAMES[k]}</Text>

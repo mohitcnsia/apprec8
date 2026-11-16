@@ -37,6 +37,9 @@ import { inbox } from "../../utils/decisions";
 import IdeaModal from "../../components/feedback/IdeaModal";
 import { columnStyle } from "../../utils/layout";
 import { useWindowDimensions } from "react-native";
+import Face from "../../components/common/Face";
+import { useLocalPhoto } from "../../services/face";
+import { openMePanel } from "../../services/mePanel";
 
 const THEMES = [
   ["system", "Phone setting"],
@@ -71,6 +74,7 @@ function Row({ icon, label, detail, onPress, styles, P, danger = false }) {
 export default function MeScreen({ navigation, signoutHandler }) {
   const { isDark, themeChoice, setThemeChoice } = useTheme();
   const look = useLook();
+  const localFace = useLocalPhoto(authInstance.currentUser?.uid);
   const { width: winW } = useWindowDimensions(); // tablets: a centred column
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -178,7 +182,12 @@ export default function MeScreen({ navigation, signoutHandler }) {
       <View style={styles.card}>
         {/* Big picture + name (Pratha 2026-11-04: "kids love to see their pictures") */}
         <View style={styles.profileRow}>
-          {photo ? (
+          {/* Your chosen face (16 Nov): photo on this phone or a character first, then the account picture. */}
+          {localFace || userData?.avatar ? (
+            <Pressable onPress={openMePanel} accessibilityRole="button" accessibilityLabel="Change your face">
+              <Face size={StyleSheet.flatten(styles.avatar)?.width || 96} name={name} avatar={userData?.avatar || null} uid={authInstance.currentUser?.uid} />
+            </Pressable>
+          ) : photo ? (
             <Image source={{ uri: photo }} style={styles.avatar} />
           ) : (
             <View style={[styles.avatar, styles.avatarLetter]}>
@@ -545,7 +554,7 @@ function PreviewButton({ skin, icon, soft }) {
   const { isDark } = useTheme();
   const L = buttonLook({ skin, variant: soft ? "soft" : "primary", size: "sm", isDark, iconOnly: true });
   return (
-    <View style={[L.box, { width: 36, height: 36, borderRadius: skin === "B" ? 12 : 18 }]}>
+    <View style={[L.box, { width: 36, height: 36, borderRadius: skin === "A" ? 18 : 11 }]}>
       <Ionicons name={icon} size={18} color={L.iconColor} />
     </View>
   );

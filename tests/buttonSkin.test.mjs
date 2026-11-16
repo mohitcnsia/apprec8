@@ -12,6 +12,9 @@ for (const skin of SKINS) for (const isDark of [false, true]) for (const variant
 }
 // A is soft and round; B has the 3D edge; C is outlined.
 assert.equal(buttonLook({ skin: "A", variant: "primary", size: "md" }).box.borderRadius, 22);
+// Owner 16 Nov: A and C must look different at a glance (main icon button).
+const a = buttonLook({ skin: "A", iconOnly: true }).box, c = buttonLook({ skin: "C", iconOnly: true }).box;
+assert.ok(a.borderRadius !== c.borderRadius && a.borderWidth > 0 && !c.borderWidth, "A round with a ring, C flat rounded square");
 assert.ok(buttonLook({ skin: "B", variant: "primary" }).box.borderBottomWidth > 0, "B: pressable edge");
 assert.ok(buttonLook({ skin: "C", variant: "soft" }).box.borderWidth > 0, "C: outline");
 assert.equal(buttonLook({ skin: "Z" }).box.borderRadius, buttonLook({ skin: "A" }).box.borderRadius, "unknown style falls back to A");
