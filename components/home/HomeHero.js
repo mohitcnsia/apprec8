@@ -22,6 +22,7 @@ import spaceData from "../../data/space_olympiad_data.json";
 import { thoughtOfTheDay } from "./DailySwipeCard";
 import { greeting } from "../../utils/homeFeed";
 import Face from "../common/Face";
+import { contentWidth } from "../../utils/layout";
 
 const AUTO_MS = 30000;
 const PAD = 18;
@@ -63,7 +64,8 @@ export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe,
   const C = isDark ? SCENE.dark : SCENE.light;
   const insets = useSafeAreaInsets();
   const reduceMotion = useReduceMotion();
-  const width = Dimensions.get("window").width;
+  const winW = Dimensions.get("window").width;
+  const width = contentWidth(winW) === winW ? winW : contentWidth(winW) + PAD * 2; // tablets: the hero fits the column
   const pageW = width - PAD * 2;
   const slides = useDailySlides(grade);
   const [index, setIndex] = useState(0);

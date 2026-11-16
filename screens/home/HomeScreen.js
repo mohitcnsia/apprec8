@@ -5,6 +5,7 @@
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, Text, View, Image, Share } from "react-native";
+import { useWindowDimensions } from "react-native";
 import PlayAsChildSheet from "../profile/PlayAsChildSheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
@@ -63,6 +64,7 @@ import { inbox } from "../../utils/decisions";
 import { loadTeacherClassesOverview, loadAdminTeacherRequests } from "../../services/classesApi";
 import { classLabel } from "../../utils/classes";
 import { shareInvite } from "../../services/invite";
+import { columnStyle } from "../../utils/layout";
 
 const ROTATE_MS = 3500;
 const PAUSE_AFTER_TAP_MS = 10000;
@@ -273,6 +275,7 @@ export default function HomeScreen({ navigation, learn = false }) {
   const { tasks = [] } = useContext(TasksContext) || {};
 
   const uid = authInstance.currentUser?.uid || null;
+  const { width: winW } = useWindowDimensions(); // tablets: a centred column (utils/layout.js)
   const [userData, setUserData] = useState(null);
   const [quests, setQuests] = useState([]);
   const [olympiad, setOlympiad] = useState([]);
@@ -864,7 +867,7 @@ export default function HomeScreen({ navigation, learn = false }) {
   if (learn) {
     return (
       <View style={styles.screenWrapper}>
-        <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} showsVerticalScrollIndicator={false}>
           <Text style={styles.learnTitle}>Learn</Text>
           {paperBlock}
           {learnBlocks}
@@ -877,7 +880,7 @@ export default function HomeScreen({ navigation, learn = false }) {
     <View style={styles.screenWrapper}>
       <ScrollView
         style={styles.screen}
-        contentContainerStyle={[styles.content, kidView && next.main && { paddingBottom: 90 }]}
+        contentContainerStyle={[styles.content, columnStyle(winW), kidView && next.main && { paddingBottom: 90 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Home top (owner-approved mockup "Apprec8 Home and Progress", 16 Nov 2026): picture, face → Me, streak + stars

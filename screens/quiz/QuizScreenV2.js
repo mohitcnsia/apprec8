@@ -35,6 +35,8 @@ import { shouldConfirmLeave, leaveMessage } from "../../utils/quizLeave";
 import { showAlert } from "../../services/dialog";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 import { newBreakState, recordBreakAnswer, breakReason, markOffered, BREAK_TEXT } from "../../utils/breakPrompt";
+import { columnStyle } from "../../utils/layout";
+import { useWindowDimensions } from "react-native";
 
 // "Take a breath?" (Calm corner, 2026-11-12): one shared state for the app session, across quizzes.
 let breakState = newBreakState();
@@ -42,6 +44,7 @@ let breakState = newBreakState();
 const QuizScreenV2 = ({ route, navigation }) => {
   useImmersiveStatusBar(); // hide the phone status bar while reading/playing
   const insets = useSafeAreaInsets();
+  const { width: winW } = useWindowDimensions();
   const { theme, isDark } = useTheme();
   const C = theme.appColors || theme;
   const P = quizPalette(isDark);
@@ -611,7 +614,12 @@ const QuizScreenV2 = ({ route, navigation }) => {
     }
   };
 
-  return <View style={[styles.container, { backgroundColor: P.bg }]}>{renderContent()}</View>;
+  // Tablets: the quiz stays phone-width in the middle (the two-part tablet view is a later step).
+  return (
+    <View style={[styles.container, { backgroundColor: P.bg }]}>
+      <View style={[{ flex: 1 }, columnStyle(winW)]}>{renderContent()}</View>
+    </View>
+  );
 };
 
 const makeStyles = (P, insets) =>

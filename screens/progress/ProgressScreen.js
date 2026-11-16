@@ -39,6 +39,8 @@ import ParentWeekCard, { LangSwitch, useParentLang } from "../../components/pare
 import { myChildren } from "../../services/familyApi";
 import WeeklyPushCard from "../../components/push/WeeklyPushCard";
 import { pullRefreshAllowed } from "../../services/progressCache";
+import { columnStyle } from "../../utils/layout";
+import { useWindowDimensions } from "react-native";
 
 const TrophyIcon = ({ color }) => (
   <Svg width={26} height={26} viewBox="0 0 24 24">
@@ -63,6 +65,7 @@ export default function ProgressScreen({ navigation, route }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
+  const { width: winW } = useWindowDimensions(); // tablets: a centred column
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
 
   const user = authInstance.currentUser;
@@ -249,7 +252,7 @@ export default function ProgressScreen({ navigation, route }) {
   // Owner's weekly "Is it working?" (2026-11-12): the app's week on top, questions to check, well-being totals.
   if (isAdmin && view === "owner") {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} {...swipe}>
+      <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} showsVerticalScrollIndicator={false} {...swipe}>
         {segment}
         <OwnerWeekCard P={P} />
       </ScrollView>
@@ -276,7 +279,7 @@ export default function ProgressScreen({ navigation, route }) {
   if ((view === "family" || view.startsWith("child:")) && children.length) {
     const shownKids = view.startsWith("child:") ? children.filter((c) => `child:${c.uid}` === view) : children;
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull} {...swipe}>
+      <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} refreshControl={pull} {...swipe}>
         <PersonaBanner />
         {segment}
         <LangSwitch lang={lang} onChange={setLang} P={P} />
@@ -290,7 +293,7 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "classes" && isTeacher) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull} {...swipe}>
+      <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} refreshControl={pull} {...swipe}>
         <PersonaBanner />
         {segment}
         <TeacherClasses refreshTrigger={refreshTick} />
@@ -312,7 +315,7 @@ export default function ProgressScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} {...swipe}>
+    <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} showsVerticalScrollIndicator={false} {...swipe}>
       <PersonaBanner />
       {title}
       {segment}

@@ -35,6 +35,8 @@ import { usePersona, withPersona } from "../../services/persona";
 import PersonaBanner from "../../components/admin/PersonaBanner";
 import { inbox } from "../../utils/decisions";
 import IdeaModal from "../../components/feedback/IdeaModal";
+import { columnStyle } from "../../utils/layout";
+import { useWindowDimensions } from "react-native";
 
 const THEMES = [
   ["system", "Phone setting"],
@@ -69,6 +71,7 @@ function Row({ icon, label, detail, onPress, styles, P, danger = false }) {
 export default function MeScreen({ navigation, signoutHandler }) {
   const { isDark, themeChoice, setThemeChoice } = useTheme();
   const look = useLook();
+  const { width: winW } = useWindowDimensions(); // tablets: a centred column
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
@@ -168,7 +171,7 @@ export default function MeScreen({ navigation, signoutHandler }) {
     });
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.screen} contentContainerStyle={[styles.content, columnStyle(winW)]} showsVerticalScrollIndicator={false}>
       <PersonaBanner />
 
       {/* Profile card */}
