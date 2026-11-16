@@ -28,6 +28,9 @@ import { dayStreak, mergeDaily } from "../../utils/homeFeed";
 import { weekStrip, greatTopics, topicNamer, questSummary } from "../../utils/progressView";
 import { encouragement, nearGoal, topicLists, bySubject } from "../../utils/kidProgress";
 import OwnerWeekCard from "../../components/owner/OwnerWeekCard";
+import AppButton from "../../components/common/AppButton";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { paidStars } from "../../utils/homeFeed";
 import functions from "@react-native-firebase/functions";
 import { isTileVisible } from "../../utils/courseVisibility";
 import AdminDashboardScreen from "../admin/AdminDashboardScreen";
@@ -115,6 +118,7 @@ export default function ProgressScreen({ navigation, route }) {
   const thisWeek = summarize(stats, "week");
   const right = accuracy({ answered: stats.answered || 0, correct: stats.correct || 0 });
   const stars = userData?.stats?.totalStars || 0;
+  const starsWeek = paidStars(userData?.stats?.starsDaily).week;
   // Per quest: where the kid is (only topics for their class), weak and strong topics with names.
   const perQuest = useMemo(
     () =>
@@ -211,16 +215,33 @@ export default function ProgressScreen({ navigation, route }) {
   useEffect(() => {
     if (route?.params?.view) pickView(route.params.view);
   }, [route?.params?.view]);
-  const tabs = [["me", "Me"], ...(children.length ? [["family", "My children"]] : []), ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["owner", "This week"], ["kids", "Kids · Reported"]] : [])];
+  // Pills (owner-approved redesign, 16 Nov 2026): one per child up to 4 (then one "Children" pill), swipe left/right to
+  // move between them. Pills wrap instead of scrolling sideways, so the swipe never fights a sideways scroll.
+  const childTabs = children.length && children.length <= 4 ? children.map((c) => [`child:${c.uid}`, c.firstName || "Child"]) : children.length ? [["family", "Children"]] : [];
+  const tabs = [["me", "Me"], ...childTabs, ...(isTeacher ? [["classes", "My classes"]] : []), ...(isAdmin ? [["owner", "This week"], ["kids", "Kids · Reported"]] : [])];
   const segment = tabs.length > 1 ? (
-    <View style={styles.segment} accessibilityRole="tablist">
+    <View style={styles.pills} accessibilityRole="tablist">
       {tabs.map(([id, label]) => (
-        <Pressable key={id} onPress={() => pickView(id)} style={[styles.segmentItem, view === id && styles.segmentOn]} accessibilityRole="tab" accessibilityState={{ selected: view === id }}>
-          <Text style={[styles.segmentText, view === id && styles.segmentTextOn]}>{label}</Text>
+        <Pressable key={id} onPress={() => pickView(id)} style={[styles.pill, view === id && styles.pillOn]} accessibilityRole="tab" accessibilityState={{ selected: view === id }} hitSlop={4}>
+          <Text style={[styles.pillText, view === id && styles.pillTextOn]} numberOfLines={1}>{label}</Text>
         </Pressable>
       ))}
     </View>
   ) : null;
+  const touchStart = useRef(null);
+  const swipe = {
+    onTouchStart: (e) => (touchStart.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }),
+    onTouchEnd: (e) => {
+      const t0 = touchStart.current;
+      if (!t0 || tabs.length < 2) return;
+      const dx = e.nativeEvent.pageX - t0.x;
+      const dy = e.nativeEvent.pageY - t0.y;
+      if (Math.abs(dx) < 70 || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      const i = Math.max(0, tabs.findIndex(([id]) => id === view));
+      const j = dx < 0 ? Math.min(tabs.length - 1, i + 1) : Math.max(0, i - 1);
+      if (j !== i) pickView(tabs[j][0]);
+    },
+  };
 
   // No big screen title (owner 2026-11-04: wasted space + clutter); the tab bar says where you are.
   const title = null;
@@ -228,7 +249,7 @@ export default function ProgressScreen({ navigation, route }) {
   // Owner's weekly "Is it working?" (2026-11-12): the app's week on top, questions to check, well-being totals.
   if (isAdmin && view === "owner") {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} {...swipe}>
         {segment}
         <OwnerWeekCard P={P} />
       </ScrollView>
@@ -252,13 +273,14 @@ export default function ProgressScreen({ navigation, route }) {
     );
   }
 
-  if (view === "family" && children.length) {
+  if ((view === "family" || view.startsWith("child:")) && children.length) {
+    const shownKids = view.startsWith("child:") ? children.filter((c) => `child:${c.uid}` === view) : children;
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull} {...swipe}>
         <PersonaBanner />
         {segment}
         <LangSwitch lang={lang} onChange={setLang} P={P} />
-        {children.map((c) => (
+        {shownKids.map((c) => (
           <ParentWeekCard key={c.uid} child={c} lang={lang} P={P} refreshTrigger={refreshTick} />
         ))}
         <WeeklyPushCard role="parent" on={!!userData?.pushOptIn?.parent} lang={lang} P={P} />
@@ -268,7 +290,7 @@ export default function ProgressScreen({ navigation, route }) {
 
   if (view === "classes" && isTeacher) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={pull} {...swipe}>
         <PersonaBanner />
         {segment}
         <TeacherClasses refreshTrigger={refreshTick} />
@@ -290,72 +312,83 @@ export default function ProgressScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} {...swipe}>
       <PersonaBanner />
       {title}
       {segment}
 
-      {/* Redesign (owner OK 2026-11-11): encouragement first, the near goal, then topics by level. No quest list. */}
-      <View style={[styles.card, styles.cheerCard]}>
-        <Text style={styles.cheer}>{cheer.headline}</Text>
+      {/* Progress (owner-approved mockup "Apprec8 Home and Progress", 16 Nov 2026): the week, three numbers, what to do
+          next with a real reason, what's almost learned as chips; the class board one quiet line at the bottom. */}
+      <View style={{ gap: 12 }}>
+        <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", gap: 10 }}>
+          <Text style={styles.weekTitle} numberOfLines={2}>{streak > 1 ? `${streak} days in a row` : cheer.headline}</Text>
+        </View>
         {cheer.line ? <Text style={styles.soft}>{cheer.line}</Text> : null}
-        <Text style={styles.soft}>
-          ⭐ {stars} stars · 🔥 {streak === 1 ? "1-day streak" : `${streak}-day streak`}
-        </Text>
         <View style={styles.weekRow}>
           {week.map((d) => (
-            <View key={d.key} style={{ alignItems: "center", gap: 4 }}>
+            <View key={d.key} style={{ alignItems: "center", gap: 6 }}>
               <View
-                style={[
-                  styles.dayDot,
-                  d.played ? { backgroundColor: P.primary } : { backgroundColor: P.track }, // purple, our theme (owner 2026-11-12)
-                  d.isToday && { borderWidth: 3, borderColor: P.primary },
-                ]}
+                style={[styles.dayDot, d.played ? { backgroundColor: P.primary } : { backgroundColor: "transparent", borderWidth: 1, borderColor: P.border }, d.isToday && { borderWidth: 2, borderColor: P.primary }]}
                 accessibilityLabel={`${d.letter}${d.played ? ", played" : ""}`}
               >
-                <Text style={[styles.dayMark, { color: d.played ? P.onPrimary : P.dimText }]}>{d.played ? "✓" : ""}</Text>
+                {d.played ? <Ionicons name="checkmark" size={16} color={P.onPrimary} /> : null}
               </View>
-              <Text style={styles.dayLetter}>{d.letter}</Text>
+              <Text style={[styles.dayLetter, d.isToday && { color: P.selectedText }]}>{d.letter}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      {/* The near goal on the class board (never the gap); the whole board one tap away. */}
-      <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button">
-        <View style={[styles.card, styles.row]}>
-          <TrophyIcon color={P.label} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>{goal || "Leaderboard"}</Text>
-            <Text style={styles.soft}>{myClassId ? "Your class this week · starts fresh every Monday" : "See how you rank"}</Text>
-          </View>
-          <Text style={styles.link}>See ›</Text>
-        </View>
-      </Pressable>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <View style={[styles.stat, { backgroundColor: P.streakBg }]}><Text style={[styles.statNum, { color: P.streakText }]}>{starsWeek}</Text><Text style={[styles.statLabel, { color: P.streakText }]}>stars this week</Text></View>
+        <View style={[styles.stat, { backgroundColor: P.correctBg }]}><Text style={[styles.statNum, { color: P.correctText }]}>{lists.learned.length}</Text><Text style={[styles.statLabel, { color: P.correctText }]}>topics learned</Text></View>
+        <View style={[styles.stat, { backgroundColor: P.selectedBg }]}><Text style={[styles.statNum, { color: P.selectedText }]}>{stars.toLocaleString("en-IN")}</Text><Text style={[styles.statLabel, { color: P.selectedText }]}>stars in all</Text></View>
+      </View>
 
-      {/* Grouped by subject, 3 each, the rest one tap away (owner, 2026-11-12). */}
-      {lists.needs.length > 0 ? <Text style={styles.section}>Needs practice</Text> : null}
-      {bySubject(lists.needs).map(({ subject, items }) => (
-        <View key={`needs-${subject}`} style={{ gap: 10 }}>
-          <Text style={styles.subject}>{subject}</Text>
-          {(openSubjects[`needs-${subject}`] ? items : items.slice(0, 3)).map((t) => (
-            <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
-              <View style={{ flex: 1, gap: 4 }}>
-                <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
-                <Text style={styles.soft}>{t.level === "slipping" ? "You knew this. A quick practice brings it back." : "Keep going, you're getting there."}</Text>
-              </View>
-              <Pressable onPress={() => practiseTopic(t)} style={styles.smallButton} accessibilityRole="button" accessibilityLabel={`Practise ${t.name}`}>
-                <Text style={styles.smallButtonText}>Practise</Text>
+      {lists.needs.length > 0 ? (
+        <View style={{ gap: 8 }}>
+          <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" }}>
+            <Text style={styles.section}>Next for you</Text>
+            {lists.needs.length > 3 ? (
+              <Pressable onPress={() => toggleSubject("next-all")} accessibilityRole="button" hitSlop={8}>
+                <Text style={styles.link}>{openSubjects["next-all"] ? "Fewer" : `All ${lists.needs.length} ›`}</Text>
               </Pressable>
-            </View>
-          ))}
-          {items.length > 3 ? (
-            <Pressable onPress={() => toggleSubject(`needs-${subject}`)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
-              <Text style={styles.link}>{openSubjects[`needs-${subject}`] ? "Show fewer" : `+${items.length - 3} more in ${subject} ›`}</Text>
-            </Pressable>
-          ) : null}
+            ) : null}
+          </View>
+          <View style={styles.listCard}>
+            {(openSubjects["next-all"] ? lists.needs : lists.needs.slice(0, 3)).map((t, i) => (
+              <View key={`${t.questId}-${t.subtopic}`} style={[styles.listRow, i > 0 && { borderTopWidth: 1, borderTopColor: P.border }]}>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
+                  <Text style={[styles.reason, { color: t.level === "slipping" ? P.streakText : P.textSoft }]}>
+                    {t.level === "slipping" ? "You knew this. A quick round brings it back." : Number.isFinite(t.percent) ? `${t.percent}% right so far` : "Not practised yet"}
+                  </Text>
+                </View>
+                <AppButton variant="soft" icon="play" accessibilityLabel={`Practise ${t.name}`} onPress={() => practiseTopic(t)} />
+              </View>
+            ))}
+          </View>
         </View>
-      ))}
+      ) : null}
+
+      {lists.doingWell.length > 0 ? (
+        <View style={{ gap: 8 }}>
+          <Text style={styles.section}>Almost learned</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+            {(openSubjects["well-all"] ? lists.doingWell : lists.doingWell.slice(0, 6)).map((t) => (
+              <Pressable key={`${t.questId}-${t.subtopic}`} onPress={() => practiseTopic(t)} accessibilityRole="button" accessibilityLabel={`Make ${t.name} Learned`} hitSlop={4} style={[styles.chip, { backgroundColor: P.correctBg }]}>
+                <Text style={[styles.chipText, { color: P.correctText }]} numberOfLines={1}>{t.name} {t.percent}%</Text>
+              </Pressable>
+            ))}
+            {lists.doingWell.length > 6 ? (
+              <Pressable onPress={() => toggleSubject("well-all")} accessibilityRole="button" hitSlop={4} style={[styles.chip, { borderWidth: 1, borderColor: P.border }]}>
+                <Text style={[styles.chipText, { color: P.textSoft }]}>{openSubjects["well-all"] ? "Fewer" : `+${lists.doingWell.length - 6} more`}</Text>
+              </Pressable>
+            ) : null}
+          </View>
+          <Text style={styles.soft}>Get a few new questions right on another day and these turn Learned. Tap one to practise.</Text>
+        </View>
+      ) : null}
 
       {lists.learned.length > 0 ? (
         <View style={[styles.card, styles.greatCard]}>
@@ -366,37 +399,14 @@ export default function ProgressScreen({ navigation, route }) {
               {items.map((t) => (t.level === "remembers" ? `⭐ ${t.name}` : t.name)).join(" · ")}
             </Text>
           ))}
-          {lists.learned.some((t) => t.level === "remembers") ? <Text style={styles.soft}>⭐ = you still remembered it a week later</Text> : null}
         </View>
       ) : null}
 
-      {lists.doingWell.length > 0 ? (
-        <>
-          <Text style={styles.section}>Doing well</Text>
-          <Text style={styles.soft}>Answer a few new questions on another day and these become Learned.</Text>
-          {bySubject(lists.doingWell).map(({ subject, items }) => (
-            <View key={`well-${subject}`} style={{ gap: 10 }}>
-              <Text style={styles.subject}>{subject}</Text>
-              {(openSubjects[`well-${subject}`] ? items : items.slice(0, 3)).map((t) => (
-                <View key={`${t.questId}-${t.subtopic}`} style={[styles.card, styles.row]}>
-                  <View style={{ flex: 1, gap: 4 }}>
-                    <Text style={styles.cardTitle} numberOfLines={2}>{t.name}</Text>
-                    <Text style={styles.soft}>{t.percent}% right so far</Text>
-                  </View>
-                  <Pressable onPress={() => practiseTopic(t)} style={styles.outlineSmall} accessibilityRole="button" accessibilityLabel={`Make ${t.name} Learned`}>
-                    <Text style={styles.outlineSmallText}>Make it Learned</Text>
-                  </Pressable>
-                </View>
-              ))}
-              {items.length > 3 ? (
-                <Pressable onPress={() => toggleSubject(`well-${subject}`)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: "center" }}>
-                  <Text style={styles.link}>{openSubjects[`well-${subject}`] ? "Show fewer" : `+${items.length - 3} more in ${subject} ›`}</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          ))}
-        </>
-      ) : null}
+      <Pressable onPress={() => navigation.navigate("Leaderboard")} accessibilityRole="button" style={styles.boardLine}>
+        <Ionicons name="trophy-outline" size={18} color={P.label} />
+        <Text style={[styles.cardTitle, { flex: 1, fontSize: 14 }]} numberOfLines={2}>{goal || "See how you rank"}</Text>
+        <Text style={styles.link}>›</Text>
+      </Pressable>
 
       {(stats.answered || 0) === 0 ? (
         <View style={styles.card}>
@@ -413,6 +423,21 @@ const makeStyles = (P, insets) =>
     content: { paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 28, gap: 14 },
     h1: { fontSize: 28, fontFamily: "nunitoBold", color: P.text },
     segment: { flexDirection: "row", gap: 4, padding: 4, borderRadius: 16, backgroundColor: P.track },
+    pills: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+    pill: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, borderColor: P.border, backgroundColor: P.card, justifyContent: "center", maxWidth: 160 },
+    pillOn: { backgroundColor: P.primary, borderColor: P.primary },
+    pillText: { fontSize: 14, fontFamily: "nunitoBold", color: P.text },
+    pillTextOn: { color: P.onPrimary },
+    weekTitle: { flex: 1, fontSize: 24, fontFamily: "nunitoBold", color: P.text },
+    stat: { flex: 1, borderRadius: 16, padding: 12, gap: 2 },
+    statNum: { fontSize: 22, fontFamily: "nunitoBold" },
+    statLabel: { fontSize: 12, fontFamily: "nunitoBold" },
+    listCard: { borderWidth: 1, borderColor: P.border, borderRadius: 18, backgroundColor: P.card },
+    listRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10, paddingLeft: 16, paddingRight: 10 },
+    reason: { fontSize: 13, fontFamily: "nunitoBold" },
+    chip: { height: 34, paddingHorizontal: 12, borderRadius: 17, justifyContent: "center", maxWidth: "100%" },
+    chipText: { fontSize: 13, fontFamily: "nunitoBold" },
+    boardLine: { flexDirection: "row", alignItems: "center", gap: 10, padding: 14, borderRadius: 16, backgroundColor: P.track },
     segmentItem: { flex: 1, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
     segmentOn: { backgroundColor: P.card },
     segmentText: { fontSize: 15, fontFamily: "nunitoBold", color: P.textSoft },
