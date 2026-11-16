@@ -118,9 +118,16 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   const unlockAll = isTester && testerSettings.unlockAll;
   const shortQuizzes = isTester && testerSettings.shortQuizzes;
 
-  const [quest, setQuest] = useState(null);
-  const [nodes, setNodes] = useState(null);
+  // The map draws at once from the quest bundled in the app, then swaps in the Firestore copy when it arrives
+  // (16 Nov: a first visit showed a blank "Quest" spinner for ~25 s). contentVersion only comes from Firestore,
+  // so caching/prefetch wait for it.
+  const [quest, setQuest] = useState(() => {
+    const b = bundledQuest(questId);
+    return b ? { ...b.quest, contentVersion: null } : null;
+  });
+  const [nodes, setNodes] = useState(() => bundledQuest(questId)?.nodes || null);
   const [progress, setProgress] = useState({});
+  const [progressReady, setProgressReady] = useState(false); // no map until we know what the kid has done
   const [mistakes, setMistakes] = useState({}); // "My mistakes" list from the progress doc
   const [showConfetti, setShowConfetti] = useState(false);
   const progressLoadedRef = useRef(false);
@@ -144,11 +151,14 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       try {
         const q = await getQuest(questId, { force });
         if (!alive) return;
+        if (!q && bundledQuest(questId)) return; // not seeded yet / offline: keep the bundled map
         setQuest(q);
         const n = q ? await getQuestNodes(questId, q.contentVersion) : [];
-        if (alive) setNodes(n || []);
+        if (alive && (n?.length || !bundledQuest(questId))) setNodes(n || []);
       } catch (e) {
-        if (alive) onError(e);
+        if (!alive) return;
+        if (bundledQuest(questId)) console.warn("EnglishQuestMap: using the bundled map:", e?.message);
+        else onError(e);
       }
     };
     load(false);
@@ -158,6 +168,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       questId,
       (nodesProgress, data) => {
         progressLoadedRef.current = true;
+        setProgressReady(true);
         setProgress(nodesProgress);
         setMistakes(data?.mistakes || {});
       },
@@ -212,8 +223,8 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   );
 
   const tree = useMemo(
-    () => (visibleNodes ? buildQuestPath(visibleNodes, progress, { unlockAll: openAll, extraUnlocked: assigned }) : null),
-    [visibleNodes, progress, openAll, assigned]
+    () => (visibleNodes && progressReady ? buildQuestPath(visibleNodes, progress, { unlockAll: openAll, extraUnlocked: assigned }) : null),
+    [visibleNodes, progress, progressReady, openAll, assigned]
   );
   const count = tree?.path.length || 0;
 
