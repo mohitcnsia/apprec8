@@ -4,7 +4,7 @@
 // by themselves every 30 s until the child touches them, never with "Remove animations". Parents: "Who's learning?".
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Speech from "expo-speech";
@@ -106,14 +106,15 @@ export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe,
   const s = styles;
 
   return (
-    <View style={[s.hero, { paddingTop: insets.top + 14, marginTop: -(insets.top + 14) }]}>
+    <View style={[s.hero, { width, paddingTop: insets.top + 14, marginTop: -(insets.top + 14) }]}>
       {/* The picture: sky, sun (moon at night), two soft hills; fades into the page at the bottom. */}
-      <Svg style={StyleSheet.absoluteFill} viewBox="0 0 375 440" preserveAspectRatio="xMidYMax slice" pointerEvents="none">
-        <Rect width="375" height="440" fill={C.sky} />
-        <Circle cx="300" cy="150" r="58" fill={C.sun} opacity={0.25} />
-        <Circle cx="300" cy="150" r="36" fill={C.sun} />
-        <Path d="M0 300 C70 268 140 284 200 302 S320 324 375 292 V440 H0Z" fill={C.hill1} />
-        <Path d="M0 336 C90 312 170 330 240 342 S330 350 375 336 V440 H0Z" fill={C.hill2} />
+      {/* Sky + hills stretch to the hero's size; the sun/moon is a separate round shape so it stays a circle. */}
+      <View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: C.sky }]} />
+      <View pointerEvents="none" style={[s.sunGlow, { backgroundColor: C.sun }]} />
+      <View pointerEvents="none" style={[s.sun, { backgroundColor: C.sun }]} />
+      <Svg pointerEvents="none" width={width} height={150} viewBox="0 0 375 150" preserveAspectRatio="none" style={s.hills}>
+        <Path d="M0 50 C70 18 140 34 200 52 S320 74 375 42 V150 H0Z" fill={C.hill1} />
+        <Path d="M0 86 C90 62 170 80 240 92 S330 100 375 86 V150 H0Z" fill={C.hill2} />
       </Svg>
       <LinearGradient pointerEvents="none" colors={["transparent", P.bg]} style={s.fade} />
 
@@ -222,6 +223,9 @@ export default function HomeHero({ name, streak = 0, stars = 0, grade, onOpenMe,
 const styles = StyleSheet.create({
   hero: { marginHorizontal: -PAD, paddingHorizontal: PAD, paddingBottom: 34, overflow: "hidden" },
   fade: { position: "absolute", left: 0, right: 0, bottom: 0, height: 90 },
+  hills: { position: "absolute", left: 0, bottom: 0 },
+  sun: { position: "absolute", right: 34, bottom: 120, width: 52, height: 52, borderRadius: 26 },
+  sunGlow: { position: "absolute", right: 16, bottom: 102, width: 88, height: 88, borderRadius: 44, opacity: 0.22 },
   topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   face: { width: 44, height: 44, borderRadius: 22, borderWidth: 2, alignItems: "center", justifyContent: "center" },
   faceText: { fontSize: 18, fontFamily: "nunitoBold" },
@@ -232,7 +236,7 @@ const styles = StyleSheet.create({
   hello: { marginTop: 6, fontSize: 16, fontFamily: "nunitoBold" },
   name: { fontSize: 32, lineHeight: 38, fontFamily: "nunitoBold" },
   label: { fontSize: 11, fontFamily: "nunitoBold", letterSpacing: 1.4 },
-  quote: { fontSize: 23, lineHeight: 31, fontFamily: "serif", fontStyle: "italic" },
+  quote: { maxWidth: "86%", fontSize: 23, lineHeight: 31, fontFamily: "serif", fontStyle: "italic" },
   word: { fontSize: 28, fontFamily: "nunitoBold" },
   factTitle: { fontSize: 19, fontFamily: "nunitoBold", lineHeight: 25 },
   body: { fontSize: 15, lineHeight: 21, fontFamily: "nunito" },

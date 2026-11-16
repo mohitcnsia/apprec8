@@ -3,7 +3,7 @@
 // Look settings (theme, button style, hand), and "All settings" for everything else (today's full Me screen, unchanged,
 // so parents', teachers' and the owner's tools keep working). Opened with openMePanel() (services/mePanel.js).
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, Easing, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Animated, Dimensions, Easing, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -65,7 +65,7 @@ export default function MePanel() {
   return (
     <Modal visible transparent animationType="none" onRequestClose={closeMePanel} statusBarTranslucent>
       <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(20,12,24,0.45)" }]} onPress={closeMePanel} accessibilityLabel="Close Me" />
-      <Animated.View style={[s.panel, { width, backgroundColor: P.card, paddingTop: insets.top + 18, paddingBottom: insets.bottom + 12, transform: [{ translateX: x }] }]}>
+      <Animated.View style={[s.panel, { width, backgroundColor: P.card, paddingTop: Math.max(insets.top, StatusBar.currentHeight || 24) + 18, paddingBottom: insets.bottom + 12, transform: [{ translateX: x }] }]}>
         <ScrollView contentContainerStyle={{ gap: 14, paddingHorizontal: 16 }} showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
             <View style={[s.face, { backgroundColor: P.streakBg }]}>
