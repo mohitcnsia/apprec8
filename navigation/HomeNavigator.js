@@ -38,9 +38,13 @@ import MoodListScreen from "../screens/wellbeing/MoodListScreen";
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = () => (
-  <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="HomeScreen" component={HomeScreen} />
+const LearnScreen = (props) => <HomeScreen {...props} learn />;
+
+// The Learn tab (owner-approved redesign, 16 Nov 2026) is this same stack starting on the Learn list, so a quest opened
+// from Learn goes back to Learn. Screen names are unchanged.
+const HomeNavigator = ({ learn = false }) => (
+  <Stack.Navigator initialRouteName={learn ? "LearnScreen" : "HomeScreen"} screenOptions={{ headerShown: false }}>
+    {learn ? <Stack.Screen name="LearnScreen" component={LearnScreen} /> : <Stack.Screen name="HomeScreen" component={HomeScreen} />}
     {/* Old Study tab screens */}
     <Stack.Screen name="LinkScreen" component={LinksScreen} />
     <Stack.Screen name="Overview" component={TopicOverviewScreen} />
@@ -77,4 +81,5 @@ const HomeNavigator = () => (
   </Stack.Navigator>
 );
 
+export const LearnNavigator = () => <HomeNavigator learn />;
 export default HomeNavigator;

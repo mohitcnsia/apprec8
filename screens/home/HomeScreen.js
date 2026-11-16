@@ -264,7 +264,7 @@ function GlowButton({ label, onPress, styles }) {
   );
 }
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, learn = false }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
@@ -581,7 +581,7 @@ export default function HomeScreen({ navigation }) {
   const streak = dayStreak(mergedDaily);
   const { today: starsToday, week: starsWeek } = useMemo(() => paidStars(userData?.stats?.starsDaily), [userData?.stats?.starsDaily]);
 
-  const [questsFolded, setQuestsFolded] = useState(true);
+  const [questsFolded, setQuestsFolded] = useState(!learn); // Learn tab (owner 16 Nov): quests open by default
   const [exploreFolded, setExploreFolded] = useState(true);
   const mistakeCount = visibleQuests.reduce((sum, q) => sum + mistakesOf(q.questId), 0);
   const doneSteps = Object.values(progress.nodes || {}).filter((n) => n?.status === "completed").length;
@@ -724,6 +724,154 @@ export default function HomeScreen({ navigation }) {
     </>
   );
 
+  // Learn tab (owner-approved redesign, 16 Nov 2026): quests, papers, Explore and practice live here; Home = today only.
+  const paperBlock = (
+    <>
+        {/* IEO is on 17 Nov: keep Practice paper / Check-up tile visible right under the swipe card for kids whose class has one */}
+        {hasPaper ? (
+          <View style={styles.grid}>
+            {questTile(
+              "paper",
+              CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper",
+              CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test",
+              <PaperArt />,
+              isDark ? "#3A2E12" : "#FFF4D6",
+              () => navigation.navigate("PracticePaper", { grade: userGrade })
+            )}
+          </View>
+        ) : null}
+    </>
+  );
+  const learnBlocks = (
+    <>
+      {/* Your quests - folded row */}
+      <Pressable
+        onPress={() => setQuestsFolded((v) => !v)}
+        style={styles.foldedSectionRow}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: !questsFolded }}
+        accessibilityLabel={`${teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}, ${visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length} quests. Tap to ${questsFolded ? "open" : "fold"}.`}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <Text style={styles.sectionTitle}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
+          <View style={styles.countBadge}>
+            <Text style={styles.countBadgeText}>{visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length}</Text>
+          </View>
+        </View>
+        <Text style={styles.foldChevron}>{questsFolded ? "›" : "▼"}</Text>
+      </Pressable>
+      {!questsFolded ? (
+        <View style={styles.grid}>
+          {visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).map((q) => {
+            const st = questStats(q);
+            const isDraft = draftQuests.some((d) => d.id === q.id);
+            const sub = isDraft
+              ? "Draft · testers only"
+              : st?.current
+              ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
+              : "Start here";
+            const sci = /science/i.test(q.questId);
+            const words = /word/i.test(q.questId);
+            return questTile(
+              q.id,
+              (q.title || "Quest").replace(/ Quest$/, ""),
+              sub,
+              sci ? <FlaskArt /> : <BookArt />,
+              sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
+              () => openQuest(q),
+              { stats: st }
+            );
+          })}
+          {allQuests.some((q) => /science/i.test(q.questId)) || !questHasTopicsForGrade(bundledQuest("science-quest")?.nodes, userGrade)
+            ? null
+            : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
+          {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
+        </View>
+      ) : null}
+
+      {/* Explore - folded row */}
+      {showOldSpace({ isAdmin: oldAdmin }) || exploreQuests.length ? (
+        <>
+          <Pressable
+            onPress={() => setExploreFolded((v) => !v)}
+            style={styles.foldedSectionRow}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: !exploreFolded }}
+            accessibilityLabel={`Explore, ${exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)} activities. Tap to ${exploreFolded ? "open" : "fold"}.`}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              <Text style={styles.sectionTitle}>Explore</Text>
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText}>{exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)}</Text>
+              </View>
+            </View>
+            <Text style={styles.foldChevron}>{exploreFolded ? "›" : "▼"}</Text>
+          </Pressable>
+          {!exploreFolded ? (
+            <View style={styles.grid}>
+              {exploreQuests.map((q) =>
+                questTile(
+                  q.id,
+                  q.title || "Quest",
+                  draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.description || "संस्कृति, सतर्कता और काम की बातें",
+                  <BookArt />,
+                  isDark ? "#3A2414" : "#FDEBDD",
+                  () => openQuest(q),
+                  { stats: questStats(q) }
+                )
+              )}
+              {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
+            </View>
+          ) : null}
+        </>
+      ) : null}
+
+      {practiceTiles.length > 0 ? (
+        <>
+          <Text style={styles.section}>More practice</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
+            {practiceTiles.map((c) => (
+              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
+                <View style={styles.practiceTile}>
+                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
+                  <Text style={styles.practiceTitle} numberOfLines={2}>{PRACTICE_NAMES[String(c.title || "").trim()] || c.title}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : null}
+
+      {classroomTiles.length > 0 ? (
+        <>
+          <Text style={styles.section}>My classrooms</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
+            {classroomTiles.map((c) => (
+              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
+                <View style={styles.practiceTile}>
+                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
+                  <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : null}
+    </>
+  );
+
+  if (learn) {
+    return (
+      <View style={styles.screenWrapper}>
+        <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <Text style={styles.learnTitle}>Learn</Text>
+          {paperBlock}
+          {learnBlocks}
+        </ScrollView>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screenWrapper}>
       <ScrollView
@@ -771,19 +919,6 @@ export default function HomeScreen({ navigation }) {
 
         {/* Thought / Word / Fact now live in the Home top (HomeHero). */}
 
-        {/* IEO is on 17 Nov: keep Practice paper / Check-up tile visible right under the swipe card for kids whose class has one */}
-        {hasPaper ? (
-          <View style={styles.grid}>
-            {questTile(
-              "paper",
-              CHECKUP_GRADES.includes(userGrade) ? "Check-up" : "Practice paper",
-              CHECKUP_GRADES.includes(userGrade) ? "Your Accuracy in every topic · 49 min" : "50 questions · 60 min, like a real test",
-              <PaperArt />,
-              isDark ? "#3A2E12" : "#FFF4D6",
-              () => navigation.navigate("PracticePaper", { grade: userGrade })
-            )}
-          </View>
-        ) : null}
 
         {/* Owner: People / reports / decisions folded into one clean row */}
         {isAdmin && ownerSummary && ownerSummary.total > 0 ? (
@@ -1006,119 +1141,6 @@ export default function HomeScreen({ navigation }) {
         </Pressable>
       ) : null}
 
-      {/* Your quests - folded row */}
-      <Pressable
-        onPress={() => setQuestsFolded((v) => !v)}
-        style={styles.foldedSectionRow}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: !questsFolded }}
-        accessibilityLabel={`${teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}, ${visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length} quests. Tap to ${questsFolded ? "open" : "fold"}.`}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <Text style={styles.sectionTitle}>{teacherClasses.length > 0 ? "Practise yourself" : "Your quests"}</Text>
-          <View style={styles.countBadge}>
-            <Text style={styles.countBadgeText}>{visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).length}</Text>
-          </View>
-        </View>
-        <Text style={styles.foldChevron}>{questsFolded ? "›" : "▼"}</Text>
-      </Pressable>
-      {!questsFolded ? (
-        <View style={styles.grid}>
-          {visibleQuests.filter((q) => !EXPLORE_QUESTS.includes(q.questId)).map((q) => {
-            const st = questStats(q);
-            const isDraft = draftQuests.some((d) => d.id === q.id);
-            const sub = isDraft
-              ? "Draft · testers only"
-              : st?.current
-              ? `${st.unitOrder !== null && st.unitOrder !== undefined ? `Unit ${st.unitOrder} · ` : ""}${st.current}`
-              : "Start here";
-            const sci = /science/i.test(q.questId);
-            const words = /word/i.test(q.questId);
-            return questTile(
-              q.id,
-              (q.title || "Quest").replace(/ Quest$/, ""),
-              sub,
-              sci ? <FlaskArt /> : <BookArt />,
-              sci ? (isDark ? "#1F3322" : "#E6F6E4") : words ? (isDark ? "#3A2E12" : "#FFF4D6") : P.selectedBg,
-              () => openQuest(q),
-              { stats: st }
-            );
-          })}
-          {allQuests.some((q) => /science/i.test(q.questId)) || !questHasTopicsForGrade(bundledQuest("science-quest")?.nodes, userGrade)
-            ? null
-            : questTile("science-soon", "Science", "Coming soon", <FlaskArt />, isDark ? "#1F3322" : "#E6F6E4", null, { dim: true })}
-          {questTile("maths-soon", "Maths", "Coming soon", <BlocksArt />, isDark ? "#3A2414" : "#FDEBDD", null, { dim: true })}
-        </View>
-      ) : null}
-
-      {/* Explore - folded row */}
-      {showOldSpace({ isAdmin: oldAdmin }) || exploreQuests.length ? (
-        <>
-          <Pressable
-            onPress={() => setExploreFolded((v) => !v)}
-            style={styles.foldedSectionRow}
-            accessibilityRole="button"
-            accessibilityState={{ expanded: !exploreFolded }}
-            accessibilityLabel={`Explore, ${exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)} activities. Tap to ${exploreFolded ? "open" : "fold"}.`}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <Text style={styles.sectionTitle}>Explore</Text>
-              <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText}>{exploreQuests.length + (showOldSpace({ isAdmin: oldAdmin }) ? 1 : 0)}</Text>
-              </View>
-            </View>
-            <Text style={styles.foldChevron}>{exploreFolded ? "›" : "▼"}</Text>
-          </Pressable>
-          {!exploreFolded ? (
-            <View style={styles.grid}>
-              {exploreQuests.map((q) =>
-                questTile(
-                  q.id,
-                  q.title || "Quest",
-                  draftQuests.some((d) => d.id === q.id) ? "Draft · testers only" : q.description || "संस्कृति, सतर्कता और काम की बातें",
-                  <BookArt />,
-                  isDark ? "#3A2414" : "#FDEBDD",
-                  () => openQuest(q),
-                  { stats: questStats(q) }
-                )
-              )}
-              {showOldSpace({ isAdmin: oldAdmin }) ? questTile("space", "Space", "Rockets, planets and stars", <RocketArt />, isDark ? "#1B2640" : "#E6EEFB", openSpace) : null}
-            </View>
-          ) : null}
-        </>
-      ) : null}
-
-      {practiceTiles.length > 0 ? (
-        <>
-          <Text style={styles.section}>More practice</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-            {practiceTiles.map((c) => (
-              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                <View style={styles.practiceTile}>
-                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                  <Text style={styles.practiceTitle} numberOfLines={2}>{PRACTICE_NAMES[String(c.title || "").trim()] || c.title}</Text>
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </>
-      ) : null}
-
-      {classroomTiles.length > 0 ? (
-        <>
-          <Text style={styles.section}>My classrooms</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 4 }}>
-            {classroomTiles.map((c) => (
-              <Pressable key={c.id} onPress={() => openCategory(navigation, c)} accessibilityRole="button">
-                <View style={styles.practiceTile}>
-                  {c.image ? <Image source={{ uri: c.image }} style={styles.practiceImage} resizeMode="cover" /> : null}
-                  <Text style={styles.practiceTitle} numberOfLines={2}>{c.title}</Text>
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </>
-      ) : null}
     </ScrollView>
 
     {/* Play as: pick a child (2+ children), then the same sheet as on Me (PIN rules unchanged). */}
@@ -1165,6 +1187,7 @@ export default function HomeScreen({ navigation }) {
 const makeStyles = (P, insets) =>
   StyleSheet.create({
     screen: { flex: 1, backgroundColor: P.bg },
+    learnTitle: { fontSize: 28, fontFamily: "nunitoBold", color: P.text, marginBottom: 2 },
     addPill: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: P.border, backgroundColor: P.card },
     teacherCard: { padding: 16, borderRadius: 20, backgroundColor: P.selectedBg, borderWidth: 2, borderColor: P.selectedBorder, gap: 4 },
     teacherTitle: { fontSize: 20, fontFamily: "nunitoBold", color: P.selectedText },

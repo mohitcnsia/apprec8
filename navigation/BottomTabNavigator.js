@@ -12,7 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import HomeNavigator from "./HomeNavigator";
+import HomeNavigator, { LearnNavigator } from "./HomeNavigator";
 import FunNavigator from "./FunNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import QuestNavigator from "./QuestNavigator";
@@ -40,6 +40,7 @@ const IMMERSIVE_SCREENS = [
 
 const ICONS = {
   Apprec8: ["home", "home-outline"],
+  Learn: ["book", "book-outline"],
   Fun: ["game-controller", "game-controller-outline"],
   Stats: ["stats-chart", "stats-chart-outline"],
   Profile: ["person-circle", "person-circle-outline"],
@@ -86,10 +87,13 @@ function BottomTabNavigator({ isGuest, signoutHandler, exitGuestModeHandler, use
           },
         })}
       >
+        {/* Tabs (owner-approved redesign, 16 Nov 2026): Home · Learn · Fun · Progress. Me opens from your face on Home
+            (the Me side panel); the Profile route stays, hidden from the bar, so every old link still works. */}
         <Tab.Screen name="Apprec8" component={HomeNavigator} options={{ title: "Home" }} />
+        <Tab.Screen name="Learn" component={LearnNavigator} options={{ title: "Learn" }} />
         <Tab.Screen name="Fun" component={FunNavigator} options={{ title: "Fun" }} />
         <Tab.Screen name="Stats" component={ProgressNavigator} options={{ title: "Progress" }} />
-        <Tab.Screen name="Profile" options={{ title: "Me" }}>
+        <Tab.Screen name="Profile" options={{ title: "Me", tabBarButton: () => null, tabBarItemStyle: { display: "none" } }}>
           {() => (
             <ProfileNavigator
               isGuest={isGuest}
