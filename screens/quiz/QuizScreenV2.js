@@ -37,6 +37,7 @@ import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 import { newBreakState, recordBreakAnswer, breakReason, markOffered, BREAK_TEXT } from "../../utils/breakPrompt";
 import { columnStyle } from "../../utils/layout";
 import { useWindowDimensions } from "react-native";
+import { modeFor } from "../../utils/quizMode";
 
 // "Take a breath?" (Calm corner, 2026-11-12): one shared state for the app session, across quizzes.
 let breakState = newBreakState();
@@ -50,7 +51,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
   const P = quizPalette(isDark);
   // questContext is only set by tile-based quests (English Quest):
   // { questId, nodeId, passPercent, returnTo }
-  const { quiz, mode, isFirstAttempt, questContext } = route.params;
+  const { quiz, isFirstAttempt, questContext } = route.params;
+  // Challenge and Unit Boss always run exam style (owner 16 Nov bug: Training passes opened the next topic).
+  const mode = modeFor(questContext?.activity, route.params.mode);
 
   const { state, dispatch } = useQuizEngine(quiz, mode, isFirstAttempt);
   const { status, questions, error, currentIndex, score, lives } = state;

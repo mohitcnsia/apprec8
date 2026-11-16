@@ -11,6 +11,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import Mascot from "../../components/quiz/Mascot";
 import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
+import { isExamOnly } from "../../utils/quizMode";
 
 const MODES = [
   { id: "training", icon: "🎯", title: "Training", sub: "Hearts, and the reason after every answer." },
@@ -27,7 +28,9 @@ const QuizDetailsScreen = ({ route, navigation }) => {
 
   const [attempt, setAttempt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [mode, setMode] = useState("training");
+  // Challenge / Unit Boss: exam style only (they open the next topic or unit). Other steps: the child chooses.
+  const examOnly = isExamOnly(questContext?.activity);
+  const [mode, setMode] = useState(examOnly ? "exam" : "training");
 
   // The kid's progress on this quiz
   useEffect(() => {
@@ -48,7 +51,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
   const onStart = () => {
     navigation.navigate("QuizScreenV2", {
       quiz,
-      mode,
+      mode: examOnly ? "exam" : mode,
       isFirstAttempt: !attempt,
       questContext,
       autoStart: true, // skip the quiz's own start page (this screen is the start page)
@@ -86,8 +89,8 @@ const QuizDetailsScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        <Text style={[styles.label, { marginTop: 8 }]}>HOW DO YOU WANT TO PLAY?</Text>
-        {MODES.map((m) => {
+        <Text style={[styles.label, { marginTop: 8 }]}>{examOnly ? "EXAM STYLE: PASS IT TO OPEN WHAT'S NEXT" : "HOW DO YOU WANT TO PLAY?"}</Text>
+        {(examOnly ? MODES.filter((m) => m.id === "exam") : MODES).map((m) => {
           const on = mode === m.id;
           return (
             <Pressable

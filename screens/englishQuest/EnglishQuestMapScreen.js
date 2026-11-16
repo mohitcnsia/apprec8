@@ -368,7 +368,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         title,
         description:
           description ||
-          `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`,
+          (questContext?.activity === "gate"
+            ? `Exam style: answers at the end. Score ${passPercent}% or more to open the next topic.`
+            : `Score ${passPercent}% or more to complete this step. Choose Training to practise with hints, or Exam to test yourself.`),
         config: {
           shuffleQuestions: true,
           shuffleOptions: true,
