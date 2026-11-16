@@ -693,6 +693,8 @@ export default function HomeScreen({ navigation }) {
   const teacherFirst = kidView && (teacherTopics.length > 0 || userData?.nudge?.kind === "remind");
   const kidMainBlock = (
     <>
+      {/* Owner 16 Nov: greeting → teacher's reminder (may carry important news) → assignments */}
+      {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
       {kidView && next.main ? (
         <View style={styles.upNextCard} accessibilityLabel={`Next: ${next.main.title}`}>
           <Text style={styles.label}>{next.main.label}</Text>
@@ -717,7 +719,6 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
-      {kidView && userData?.nudge ? <NudgeCard nudge={userData.nudge} P={P} onPractise={next.main ? () => openNext(next.main) : null} /> : null}
     </>
   );
 
