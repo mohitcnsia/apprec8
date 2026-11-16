@@ -22,6 +22,8 @@ import { SvgXml } from "react-native-svg";
 import { themeFigure } from "../../utils/figures";
 import { loadPaperSession, savePaperSession, loadPaperHistory, savePaperResult } from "../../services/paperApi";
 import { showAlert } from "../../services/dialog";
+import AppButton from "../../components/common/AppButton";
+import { useLook } from "../../services/lookSettings";
 
 const reducer = (state, action) => {
   if (action.type === "select") return initialPaperState(action.paperId);
@@ -35,6 +37,7 @@ const minutesLabel = (ms) => `${Math.max(1, Math.round((ms || 0) / 60000))} minu
 export default function PracticePaperScreen({ navigation, route }) {
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
+  const look = useLook();
   const insets = useSafeAreaInsets();
   const s = useMemo(() => makeStyles(P, insets), [P, insets]);
 
@@ -292,21 +295,23 @@ export default function PracticePaperScreen({ navigation, route }) {
             })}
           </View>
         </ScrollView>
-        <View style={[s.footer, s.footerRow]}>
-          <Pressable style={s.square} onPress={() => dispatch({ type: "back" })} disabled={state.index === 0} accessibilityLabel="Previous question">
-            <Text style={[s.squareText, state.index === 0 && { color: P.dimText }]}>‹</Text>
-          </Pressable>
-          <Pressable
-            style={[s.square, marked && { borderColor: P.gold }]}
-            onPress={() => dispatch({ type: "toggleMark", id: item.id })}
-            accessibilityLabel={marked ? "Marked to check later. Tap to unmark" : "Mark to check later"}
-            accessibilityState={{ selected: marked }}
-          >
-            <Text style={[s.squareText, { color: marked ? P.gold : P.textSoft }]}>⚑</Text>
-          </Pressable>
-          <Pressable style={[s.primary, { flex: 1 }]} onPress={() => dispatch({ type: "next" })} accessibilityRole="button">
-            <Text style={s.primaryText}>{isLast ? "CHECK" : "NEXT"}</Text>
-          </Pressable>
+        {/* Button system (owner 16 Nov 2026): small icon buttons on the far side, the main one on the thumb's side. */}
+        <View style={[s.footer, { flexDirection: look.hand === "left" ? "row-reverse" : "row", alignItems: "center", justifyContent: "space-between" }]}>
+          <View style={{ flexDirection: look.hand === "left" ? "row-reverse" : "row", gap: 10 }}>
+            <AppButton icon="arrow-back" variant="soft" accessibilityLabel="Previous question" onPress={() => dispatch({ type: "back" })} disabled={state.index === 0} />
+            <AppButton
+              icon={marked ? "flag" : "flag-outline"}
+              variant={marked ? "chip" : "soft"}
+              selected={marked}
+              accessibilityLabel={marked ? "Marked to check later. Tap to unmark" : "Mark to check later"}
+              onPress={() => dispatch({ type: "toggleMark", id: item.id })}
+            />
+          </View>
+          {isLast ? (
+            <AppButton label="Review" icon="checkmark-done" iconSide="right" size="lg" onPress={() => dispatch({ type: "next" })} />
+          ) : (
+            <AppButton icon="arrow-forward" size="lg" accessibilityLabel="Next question" onPress={() => dispatch({ type: "next" })} />
+          )}
         </View>
       </View>
     );
