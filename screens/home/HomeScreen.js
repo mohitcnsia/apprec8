@@ -41,7 +41,7 @@ import { loadPaperHistory } from "../../services/paperApi";
 import { todayPractice, mergeSpeed } from "../../utils/todayPractice";
 import { showAlert } from "../../services/dialog";
 import HomeIdeaPromptCard from "../../components/feedback/HomeIdeaPromptCard";
-import DailySwipeCard from "../../components/home/DailySwipeCard";
+import HomeHero from "../../components/home/HomeHero";
 import { selectParentFocusChild, ownerRowSummary } from "../../utils/homeTidy";
 import { loadProgress } from "../../services/progressCache";
 import { keepPhoneSaved } from "../../services/push";
@@ -731,28 +731,27 @@ export default function HomeScreen({ navigation }) {
         contentContainerStyle={[styles.content, kidView && next.main && { paddingBottom: 90 }]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Home top (owner-approved mockup "Apprec8 Home and Progress", 16 Nov 2026): picture, face → Me, streak + stars
+            pill → Progress, greeting, Thought → Word → Fact. Parents: Who's learning? with round faces. */}
+        <HomeHero
+          name={firstName}
+          streak={streak}
+          stars={stars}
+          grade={userGrade}
+          onOpenMe={() => navigation.navigate("Profile")}
+          onOpenProgress={() => navigation.navigate("Stats")}
+          faces={
+            playable.length
+              ? [
+                  { key: "me", label: "You", initial: (firstName || "?").charAt(0).toUpperCase(), active: true, a11y: "You are learning now" },
+                  ...playable.map((c) => ({ key: c.uid, label: c.firstName || "Child", initial: (c.firstName || "?").charAt(0).toUpperCase(), onPress: () => playAs(c), a11y: `Play as ${c.firstName || "your child"}` })),
+                  { key: "add", add: true, label: "Add", a11y: "Add a child", onPress: () => navigation.navigate("Profile", { screen: "AddChild", initial: false }) },
+                ]
+              : null
+          }
+        />
+
         <PersonaBanner />
-        <View style={styles.header}>
-          <Mascot size={50} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.hello}>{greeting()},</Text>
-            <Text style={styles.name} numberOfLines={1}>{firstName || "friend"}</Text>
-          </View>
-          {playable.length ? (
-            <Pressable onPress={onPlayChip} accessibilityRole="button" accessibilityLabel="Play as a child on this phone" hitSlop={6} style={[styles.chip, { backgroundColor: P.selectedBg }]}>
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: P.selectedText }} />
-              <Text style={[styles.chipText, { color: P.selectedText, fontSize: 14 }]}>Child</Text>
-            </Pressable>
-          ) : null}
-          <View style={[styles.chip, { backgroundColor: P.streakBg }]} accessibilityLabel={`${streak} day streak`}>
-            <FlameIcon />
-            <Text style={[styles.chipText, { color: P.streakText }]}>{streak}</Text>
-          </View>
-          <View style={[styles.chip, { backgroundColor: P.selectedBg }]} accessibilityLabel={`${stars} stars`}>
-            <StarIcon />
-            <Text style={[styles.chipText, { color: P.selectedText }]}>{stars}</Text>
-          </View>
-        </View>
 
         {/* Join your class (owner, 12 Nov): anyone not in a class picks it here, no link to come back to. */}
         {(() => {
@@ -770,10 +769,7 @@ export default function HomeScreen({ navigation }) {
         {/* Teacher's work first (owner 16 Nov) */}
         {teacherFirst ? kidMainBlock : null}
 
-        {/* Kids' Home: Thought / Word / Fact as ONE swipe card on top */}
-        {userGrade != null ? (
-          <DailySwipeCard grade={userGrade} starsToday={starsToday} starsWeek={starsWeek} />
-        ) : null}
+        {/* Thought / Word / Fact now live in the Home top (HomeHero). */}
 
         {/* IEO is on 17 Nov: keep Practice paper / Check-up tile visible right under the swipe card for kids whose class has one */}
         {hasPaper ? (
