@@ -41,6 +41,11 @@ from fractional square widths.
 
 ---
 
+## 2026-11-16 — Leave a class, Word Power for older classes, next class opens, reminders (Claude)
+leaveClass server function (emulator 9/9, deployed by owner); Word Power open to older classes with a note (Science stays
+hidden, G79); classClimb: next class opens after clearing your own (tests on real Science data); push wording deployed by
+owner; reminders 6:30 am + 7:30 pm. Walked (new Class 10 account, dark mode, alarms scheduled). Published to 20.0.30–32.
+
 ## 2026-11-16 — Small fixes: quiz sounds + delete child (Claude)
 Bundled sounds (Pixabay links were 403). deleteChildProfile hides the child at once (emulator test 8/8), deployed by owner.
 Walked on the owner's phone (new account, right + wrong answer, no sound errors, tabs). Published to 20.0.30–32.

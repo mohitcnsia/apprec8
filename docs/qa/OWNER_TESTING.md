@@ -1,5 +1,11 @@
 # Testing on your phone
 
+## ⭐ Leave a class + Word Power for everyone (16 Nov, published)
+- [ ] Your account: Me → Leave a class → 10-B → Leave. It disappears from Me.
+- [ ] Teacher: open a class with a co-teacher → Stop teaching … at the bottom.
+- [ ] Word Power on a Class 10 account: all topics, note "Made for Classes 2–6: a good warm-up".
+- [ ] Tomorrow 6:30–7:30 am on a child's phone: the word of the day arrives.
+
 ## ⭐ Quest map opens at once (16 Nov, next publish)
 - [ ] As a kid who never opened Word Power: Home → the teacher's assignment ▶ → the map shows right away (no grey "Quest" spinner) and the assigned step opens.
 - [ ] Turn on airplane mode, open a quest you've opened before → the map still shows.
