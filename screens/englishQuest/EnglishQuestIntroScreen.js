@@ -23,7 +23,7 @@ import {
   listenToQuestProgress,
 } from "../../services/englishQuestApi";
 import { buildQuestPath } from "../../utils/questTree";
-import { topicNodesFor } from "../../utils/gradeFilter";
+import { topicsWithClimb } from "../../utils/classClimb";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { getQuest, getQuestNodes } from "../../services/contentCache";
 import { isTesterView } from "../../services/ownerView";
@@ -96,8 +96,8 @@ export default function EnglishQuestIntroScreen({ route, navigation }) {
 
   const unlockAll = !!(isTester && tester?.unlockAll);
   const visibleNodes = useMemo(
-    () => (nodes ? (unlockAll ? nodes : topicNodesFor(nodes, grade, questId)) : null),
-    [nodes, grade, unlockAll]
+    () => (nodes ? (unlockAll ? nodes : topicsWithClimb(nodes, grade, questId, progress).nodes) : null),
+    [nodes, grade, unlockAll, questId, progress]
   );
 
   const tree = useMemo(

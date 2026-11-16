@@ -31,7 +31,7 @@ import { buildWindow } from "../../utils/questWindow";
 import { achievementSnapshot, shouldCelebrate } from "../../utils/celebrate";
 import { topicSlug } from "../../utils/kidStats";
 import LottieView from "lottie-react-native";
-import { nodesForGradeOrAll } from "../../utils/gradeFilter";
+import { topicsWithClimb } from "../../utils/classClimb";
 import { myAssignments, assignedNodeIds } from "../../services/assignmentsApi";
 import { getClasses } from "../../services/classesApi";
 import { isPilotOpen } from "../../utils/pilotOpen";
@@ -218,11 +218,12 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   }, [classKey]);
   const openAll = unlockAll || pilotOpen;
   const graded = useMemo(
-    () => (nodes ? (unlockAll ? { nodes, coveredClasses: null } : nodesForGradeOrAll(nodes, grade, questId)) : null),
-    [nodes, grade, unlockAll, questId]
+    () => (nodes ? (unlockAll ? { nodes, coveredClasses: null, openedTo: null } : topicsWithClimb(nodes, grade, questId, progress)) : null),
+    [nodes, grade, unlockAll, questId, progress]
   );
   const visibleNodes = graded?.nodes || null;
   const coveredClasses = graded?.coveredClasses || null; // nothing for this class yet: all topics shown, with a note
+  const openedTo = graded?.openedTo || null; // cleared her own class: the next class's topics opened
 
   const tree = useMemo(
     () => (visibleNodes && progressReady ? buildQuestPath(visibleNodes, progress, { unlockAll: openAll, extraUnlocked: assigned }) : null),
@@ -870,6 +871,11 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
         ) : null}
       </View>
 
+      {openedTo && Number.isInteger(grade) ? (
+        <Text style={styles.gradeNote}>
+          You finished Class {grade}! Class {openedTo} topics are open: a challenge for you.
+        </Text>
+      ) : null}
       {coveredClasses && Number.isInteger(grade) ? (
         <Text style={styles.gradeNote}>
           Made for Classes {coveredClasses.lo}–{coveredClasses.hi}: a good warm-up for Class {grade}. Class {grade} topics are coming.

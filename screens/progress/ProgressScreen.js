@@ -20,7 +20,8 @@ import PersonaBanner from "../../components/admin/PersonaBanner";
 import { listenToUserDocument } from "../../services/firestoreContentApi";
 import { listenToQuestProgress } from "../../services/englishQuestApi";
 import { QUESTS, bundledQuest } from "../../data/quests";
-import { topicNodesFor, questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { topicsWithClimb } from "../../utils/classClimb";
 import { summarize, accuracy, weakTopics } from "../../utils/kidStats";
 import { subtopicPractice, topicNodeFor } from "../../utils/subtopicPractice";
 import { dayStreak, mergeDaily } from "../../utils/homeFeed";
@@ -124,7 +125,7 @@ export default function ProgressScreen({ navigation, route }) {
         const namer = topicNamer(m.nodes);
         let summary = null;
         try {
-          summary = questSummary(topicNodesFor(m.nodes, grade, m.QUEST_ID), p.nodes);
+          summary = questSummary(topicsWithClimb(m.nodes, grade, m.QUEST_ID, p.nodes || {}).nodes, p.nodes);
         } catch (e) {
           summary = null;
         }

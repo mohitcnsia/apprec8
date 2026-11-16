@@ -24,7 +24,8 @@ import { openCategory } from "../../utils/openCategory";
 import useReduceMotion from "../../hooks/useReduceMotion";
 import { myAssignments } from "../../services/assignmentsApi";
 import { bundledQuest } from "../../data/quests";
-import { topicNodesFor, questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { questHasTopicsForGrade } from "../../utils/gradeFilter";
+import { topicsWithClimb } from "../../utils/classClimb";
 import { questSummary } from "../../utils/progressView";
 import { daysUntil } from "../../utils/homeFeed";
 import { canAddReminder, LIMIT_MESSAGE } from "../../utils/reminders";
@@ -637,7 +638,8 @@ export default function HomeScreen({ navigation }) {
     if (!data) return null;
     try {
       const grade = Number.isInteger(userData?.grade) ? userData.grade : null;
-      return questSummary(topicNodesFor(data.nodes, grade, q.questId), progressById[q.questId]?.nodes || {});
+      const pn = progressById[q.questId]?.nodes || {};
+      return questSummary(topicsWithClimb(data.nodes, grade, q.questId, pn).nodes, pn);
     } catch (e) {
       return null;
     }
