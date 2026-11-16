@@ -34,3 +34,15 @@ console.log("cards tests passed");
   }
   console.log("card starters tests passed");
 }
+
+// Owner 16 Nov: every non-task starter = 2–3 reading pages + 2–5 questions (about 5 minutes, a few stars).
+{
+  const { CARD_STARTERS } = await import("../data/cardStarters.js");
+  for (const s of CARD_STARTERS.filter((x) => x.card.kind !== "task")) {
+    const ideas = s.card.cards.filter((c) => c.kind === "idea").length;
+    const qs = s.card.cards.filter((c) => c.kind === "check").length;
+    assert.ok(ideas >= 2 && ideas <= 3, `${s.id}: 2–3 reading pages (has ${ideas})`);
+    assert.ok(qs >= 2 && qs <= 5, `${s.id}: 2–5 questions (has ${qs})`);
+  }
+  console.log("starter size tests passed");
+}

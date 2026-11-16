@@ -83,7 +83,7 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
       Speech.speak(text, { language: isHindi ? "hi-IN" : "en-IN", rate: isHindi ? 0.85 : 0.9 });
     }
   };
-  const finish = () => onFinish({ allSeen: allSeen(seen, total) });
+  const finish = () => onFinish({ allSeen: allSeen(seen, total), picked }); // picked: check card index → first answer
 
   const ideaTitles = cards.filter((c) => c.kind === "idea").map((c) => c.title);
   const summary = (ideaTitles.length ? ideaTitles : cards.filter((c) => c.kind === "word").map((c) => c.word)).slice(0, 5);

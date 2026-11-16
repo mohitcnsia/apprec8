@@ -5,7 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import LearnCards from "../../components/learn/LearnCards";
 import { learnCards } from "../../utils/learnCards";
-import { setCardStatus } from "../../services/cardsApi";
+import { setCardStatus, recordCardAnswers } from "../../services/cardsApi";
 
 export default function CardReaderScreen({ navigation, route }) {
   const card = route.params?.card || {};
@@ -25,7 +25,10 @@ export default function CardReaderScreen({ navigation, route }) {
       cardKey={`card-${card.id || "x"}`}
       isDark={isDark}
       finishLabel="DONE ✓"
-      onFinish={() => {
+      onFinish={({ picked } = {}) => {
+        // Questions answered → stars from the server (one per new question right).
+        const answers = cards.map((c, i) => (c.kind === "check" && picked?.[i] != null ? { index: i, isCorrect: picked[i] === c.answer } : null)).filter(Boolean);
+        recordCardAnswers({ ...card, cardId: card.cardId || card.id }, answers);
         done();
         navigation.goBack();
       }}
