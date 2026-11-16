@@ -1,5 +1,19 @@
 # Testing on your phone
 
+## ⭐⭐ Build 20.0.33 walk (16 Nov night): the redesign
+Built and committed, not published yet:
+- [ ] Home top: picture fades into the page; face (top left) opens the Me panel; pill (top right) opens Progress;
+      Thought → Word → Fact swipe and move every 30 s until touched; Listen works; light and dark.
+- [ ] Parents: "Who's learning?" faces under the greeting; tapping a child = Play as.
+- [ ] Tabs: Home · Learn · Fun · Progress. Learn has the paper/check-up, quests, Explore, practice.
+- [ ] Me panel: Need help first; Edit profile, Reminders, Messages, Guides, Tell us, All settings; Look: theme,
+      button style A/B/C, left/right hand.
+- [ ] Buttons: quiz round ✓ and →; paper ← ⚑ →; teacher Remind/Cheer/Remove; MainButton screens (Add child etc.).
+- [ ] Left hand: main buttons move to the left.
+- [ ] Progress: pills (one per child), swipe left/right; week; three numbers; Next for you; Almost learned chips.
+Still to build before the build: tablet layout, ∞ notification icon, face picker, version 20.0.33.
+Test account walk18kid@example.com (Class 10) is signed in again: delete it at the end of the walk.
+
 ## ⭐ Leave a class + Word Power for everyone (16 Nov, published)
 - [ ] Your account: Me → Leave a class → 10-B → Leave. It disappears from Me.
 - [ ] Teacher: open a class with a co-teacher → Stop teaching … at the bottom.
