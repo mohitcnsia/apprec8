@@ -324,9 +324,11 @@ export default function HomeScreen({ navigation, learn = false }) {
   const profileLoaded = userData != null;
   useEffect(() => {
     if (!uid || !profileLoaded) return undefined;
-    // Parents too (2026-11-12): they hear when their child is appreciated.
-    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: realOwner, parent: (userData?.childUids || []).length > 0 && !userData?.isChild });
-  }, [uid, profileLoaded, teachesKey, realOwner, userData?.childUids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Parents too (2026-11-12): they hear when their child is appreciated. Grown-up learners too (17 Nov: Pushpa got no
+    // card alert because her phone was never saved). Children never.
+    const grownUp = !userData?.isChild;
+    return keepPhoneSaved({ uid, teacher: !!teachesKey, owner: realOwner, parent: (userData?.childUids || []).length > 0 && grownUp, learner: !!userData?.selfLearner && grownUp });
+  }, [uid, profileLoaded, teachesKey, realOwner, userData?.childUids?.length, userData?.selfLearner]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!teachesKey || !uid) {
       setTeacherClasses([]);

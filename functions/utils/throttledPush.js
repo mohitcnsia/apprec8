@@ -7,9 +7,12 @@ const { canSendPush, TEN_MINUTES_MS } = require("./pendingPush");
 const db = admin.firestore();
 const OWNER_UID = "ThOziLzf1INR9K9hxZQxOMgjcJD3";
 
-/** Sends throttled push notification (max 1 push per person per 10 minutes) */
+/**
+ * Sends throttled push notification (max 1 push per person per 10 minutes).
+ * → "sent" | "held" (10-minute limit, counted into the next one) | "noPhone" (alerts never turned on) | "failed"
+ */
 async function sendThrottledPushToUser(uid, message, view) {
-  if (!uid) return;
+  if (!uid) return "noPhone";
   const now = Date.now();
   const rateLimitRef = db.collection("pushRateLimits").doc(uid);
   const rateDoc = await rateLimitRef.get();
@@ -18,7 +21,7 @@ async function sendThrottledPushToUser(uid, message, view) {
 
   if (!throttle.allowed) {
     await rateLimitRef.set({ pendingCount: (Number(rateData.pendingCount) || 0) + 1 }, { merge: true });
-    return;
+    return "held";
   }
 
   let tokens = [];
@@ -35,7 +38,7 @@ async function sendThrottledPushToUser(uid, message, view) {
   tokens = Array.from(new Set(tokens.filter(Boolean)));
   if (!tokens.length) {
     console.log(`push ${view}: no phone saved for ${uid.slice(0, 6)}…`);
-    return;
+    return "noPhone";
   }
 
   // Alerts held back by the 10-minute limit are not lost: the next one says how many more are waiting (owner,
@@ -59,8 +62,10 @@ async function sendThrottledPushToUser(uid, message, view) {
       await db.collection("users").doc(uid).set({ pushTokens: userDoc.data().pushTokens.filter((t) => !dead.includes(t)) }, { merge: true });
     }
     await rateLimitRef.set({ lastPushedAt: now, pendingCount: 0 }, { merge: true });
+    return res.successCount > 0 ? "sent" : "failed";
   } catch (err) {
     console.warn("FCM multicast failed:", err);
+    return "failed";
   }
 }
 

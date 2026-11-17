@@ -91,10 +91,11 @@ async function saveToken(uid, token, { owner }) {
   return "saved";
 }
 
-/** Call when Home has the user's profile. `who` = { uid, teacher, owner, parent }. Returns an unsubscribe for token changes. */
+/** Call when Home has the user's profile. `who` = { uid, teacher, owner, parent, learner }. Returns an unsubscribe for token changes. */
 export function keepPhoneSaved(who) {
   const m = messaging();
-  if (!m || !who?.uid || !(who.teacher || who.owner || who.parent)) return () => {};
+  // learner = a grown-up learning for themself (selfLearner, 17 Nov): cards from Apprec8 reach them too. Never children.
+  if (!m || !who?.uid || !(who.teacher || who.owner || who.parent || who.learner)) return () => {};
   const run = async (token) => {
     try {
       if (!(await allowed(who.uid))) return;

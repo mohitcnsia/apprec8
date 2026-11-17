@@ -1,6 +1,6 @@
 // utils/uiLabels.js: Hindi labels on Hindi content (owner, 17 Nov 2026: a grown-up learner could not follow "Next",
 // "Continue", "OTP"). Owner's choice: simple everyday Hindi for actions; words people only know in English keep their
-// spoken form in Hindi script ("OTP (ओटीपी)"). Step 1 = the learning screens a Hindi learner passes through (cards,
+// spoken form in Hindi script, every time ("OTP (ओटीपी)"). Step 1 = the learning screens a Hindi learner passes through (cards,
 // आओ जानें map, quiz start, quiz, why-sheet, results). Step 2 (planned, mockup first): a language choice for the whole app.
 // ONE list, so the owner reviews all the Hindi in one place. English values are the app's existing words (unchanged).
 // Pure: tested in tests/uiLabels.test.mjs.
@@ -29,7 +29,7 @@ export function voiceFor(text, { rate } = {}) {
   return langOf(text) === "hi" ? { language: "hi-IN", rate: rate ?? 0.85 } : { language: "en-IN", rate: rate ?? 0.9 };
 }
 
-// English words inside Hindi text, with how people say them, in Hindi script. Shown once per text: "OTP (ओटीपी)".
+// English words inside Hindi text, with how people say them, in Hindi script. Shown every time: "OTP (ओटीपी)".
 export const HINDI_SPELLINGS = {
   OTP: "ओटीपी",
   PIN: "पिन",
@@ -45,16 +45,15 @@ export const HINDI_SPELLINGS = {
 };
 
 /**
- * Adds the Hindi spelling after the first English term in a Hindi text: "OTP किसी को न बताएँ" → "OTP (ओटीपी) किसी को
- * न बताएँ". English texts and texts that already spell it are left alone. Display only: answers are checked on the
- * original text, and read-aloud uses the original.
+ * Adds the Hindi spelling after EVERY English term in a Hindi text (owner 17 Nov: every time, not only the first):
+ * "OTP किसी को न बताएँ" → "OTP (ओटीपी) किसी को न बताएँ". English texts are left alone, and a term already followed by
+ * brackets is not spelled twice. Display only: answers are checked on the original text, read-aloud uses the original.
  */
 export function glossHindi(text) {
   if (typeof text !== "string" || !DEVANAGARI.test(text)) return text;
   let out = text;
   for (const [term, hindi] of Object.entries(HINDI_SPELLINGS)) {
-    if (out.includes(hindi)) continue;
-    const re = new RegExp(`(^|[^A-Za-z])(${term})(?![A-Za-z])(?!\\s*\\()`);
+    const re = new RegExp(`(^|[^A-Za-z])(${term})(?![A-Za-z])(?!\\s*\\()`, "g");
     out = out.replace(re, `$1$2 (${hindi})`);
   }
   return out;

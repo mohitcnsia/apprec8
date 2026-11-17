@@ -21,9 +21,9 @@ assert.equal(cardsLang(starter("fact").cards, starter("fact").title), "en");
 assert.equal(voiceFor("सवाल सुनें").language, "hi-IN");
 assert.deepEqual(voiceFor("Listen"), { language: "en-IN", rate: 0.9 });
 
-// Hindi spellings: once, first mention, Hindi text only, never twice
+// Hindi spellings: every time (owner 17 Nov), Hindi text only, never twice on one word
 assert.equal(glossHindi("OTP किसी को न बताएँ"), "OTP (ओटीपी) किसी को न बताएँ");
-assert.equal(glossHindi("OTP दें या OTP न दें"), "OTP (ओटीपी) दें या OTP न दें");
+assert.equal(glossHindi("OTP दें या OTP न दें"), "OTP (ओटीपी) दें या OTP (ओटीपी) न दें");
 assert.equal(glossHindi("UPI PIN डालें"), "UPI (यूपीआई) PIN (पिन) डालें");
 assert.equal(glossHindi("Share the OTP"), "Share the OTP"); // English untouched
 assert.equal(glossHindi("OTP (ओटीपी) न बताएँ"), "OTP (ओटीपी) न बताएँ"); // already spelled

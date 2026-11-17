@@ -68,19 +68,23 @@ exports.sendCard = functions
       uids.slice(i, i + 400).forEach((u) => batch.set(db.collection("users").doc(u).collection("cards").doc(ref.id), copy));
       await batch.commit();
     }
+    // Counted honestly (17 Nov: Pushpa was counted as "pushed" but her phone had never been saved for alerts).
     let pushed = 0;
+    let noPhone = 0;
     if (card.push) {
       const day = istDay(now);
       for (const u of uids) {
         const uref = db.collection("users").doc(u);
         const ud = (await uref.get()).data() || {};
         if (ud.isChild || !canPushToday(ud.lastCardPushDay, day)) continue; // children: no pushes; one a day per person
-        await uref.set({ lastCardPushDay: day }, { merge: true });
-        await sendThrottledPushToUser(u, { title: card.title, body: card.text || "Open Apprec8 to read it." }, "home").catch(() => {});
-        pushed++;
+        const r = await sendThrottledPushToUser(u, { title: card.title, body: card.text || "Open Apprec8 to read it." }, "home").catch(() => "failed");
+        if (r === "sent" || r === "held") {
+          pushed++;
+          await uref.set({ lastCardPushDay: day }, { merge: true }); // the day counts only when an alert went out
+        } else if (r === "noPhone") noPhone++;
       }
     }
-    return { ok: true, cardId: ref.id, sent: uids.length, pushed };
+    return { ok: true, cardId: ref.id, sent: uids.length, pushed, noPhone };
   });
 
 exports.myCards = functions

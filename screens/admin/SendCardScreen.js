@@ -79,7 +79,7 @@ export default function SendCardScreen({ navigation }) {
               { ...card, push, dueAt: card.kind === "task" && dueDays ? Date.now() + dueDays * 864e5 : null },
               { type: who, classId: who === "class" ? classId : null, uids: who === "people" ? chosen.map((c) => c.uid) : [] }
             );
-            showAlert("Sent", `On ${r.sent} ${r.sent === 1 ? "person's" : "people's"} Home${r.pushed ? `, ${r.pushed} notification${r.pushed === 1 ? "" : "s"}` : ""}.`);
+            showAlert("Sent", `On ${r.sent} ${r.sent === 1 ? "person's" : "people's"} Home${r.pushed ? `, ${r.pushed} notification${r.pushed === 1 ? "" : "s"}` : ""}.${r.noPhone ? ` ${r.noPhone} ${r.noPhone === 1 ? "has" : "have"} alerts off on their phone: they see it when they open the app.` : ""}`);
             setCard(blank());
             setChosen([]);
             setMode("list");
