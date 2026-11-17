@@ -51,7 +51,7 @@ Priority order. New ideas, decisions and parked items live in docs/LAUNCH_CHECKL
 
 ## Task details (Gemini reads these; a task is handed out only when its heading says [todo])
 
-### G126 · [todo] · gemini · Class 5 science: gap list for the ISO exam (3 Dec) — a REPORT, no app content
+### G126 · [done 17 Nov, merged, reviewed] · gemini · Class 5 science: gap list for the ISO exam (3 Dec) — a REPORT, no app content
 **Why (owner 17 Nov):** Class 5 comes first (Pratha: topper, hundreds of questions a day). Before writing anything we
 need an exact list of what the Class 5 science syllabus asks and what Science Quest already covers. Plan:
 https://claude.ai/artifact/5GrheovRHncDQhzQe1bski. You have little quota: keep it to this report.
