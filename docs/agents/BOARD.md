@@ -58,7 +58,7 @@ https://claude.ai/artifact/5GrheovRHncDQhzQe1bski. You have little quota: keep i
 **Inputs:** `docs/exam/syllabus/syllabusclass5.pdf` (SOF Class 5 syllabus), `docs/exam/nso-pattern.md` (§2 weightage,
 §5 gap list), the owner's SOF Class 5 book scans in `docs/exam/papers/class5/` if present (git-ignored), and our content:
 Class 5 topics in `data/scienceQuestData.js` + `data/scienceQuest/units/u4.js`–`u6.js` (nodes with `grades` incl. 5;
-`node -e` with `nodesForGrade` from `utils/gradeFilter.js` lists them) and papers `data/papers/sciencePaper1–5.js`.
+`node -e` with `nodesForGrade` from `utils/gradeFilter.js` lists them) and papers `data/papers/sciencePaper1–5.js`. **Also (owner 17 Nov): `docs/exam/papers/nso/` holds REAL past SOF papers for Class 5 (and Class 4, incl. Level 2): use them to judge topics and difficulty.**
 **Output:** `docs/agents/reports/G126.md` only. One table: syllabus sub-topic → our topic id(s) that cover it (or NONE) →
 number of our questions on it → gap (none / thin: under 5 questions / missing) → 1 line on what is missing. Then a short
 list: the 10 biggest gaps, by exam weight (§2). Do NOT write questions or change data files.
