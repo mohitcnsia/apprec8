@@ -175,7 +175,7 @@
           ],
           "explanation": {
             "text": "Mars appears red because its surface is covered in iron oxide, which is the exact same material that makes rust on Earth!",
-            "trivia": "Mars is home to Olympus Mons, the largest volcano in the entire solar system. It is nearly three times taller than Mount Everest!",
+            "trivia": "Mars is home to Olympus Mons, the largest volcano in the entire solar system. Olympus Mons on Mars is about 22 km high, roughly two and a half times as tall as Mount Everest.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/OSIRIS_Mars_true_color.jpg"
           }
@@ -431,7 +431,7 @@
           ],
           "explanation": {
             "text": "Olympus Mons is a massive shield volcano on Mars.",
-            "trivia": "It is nearly three times taller than Mount Everest!",
+            "trivia": "Olympus Mons on Mars is about 22 km high, roughly two and a half times as tall as Mount Everest.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Olympus_Mons_alt.jpg"
           },
@@ -641,7 +641,7 @@
           ],
           "explanation": {
             "text": "Valles Marineris is a vast canyon system that runs along the Martian equator.",
-            "trivia": "It is over 4,000 km long and up to 7 km deep, making the Grand Canyon look tiny in comparison!",
+            "trivia": "Valles Marineris, a canyon on Mars, is over 4,000 km long and up to 7 km deep. It makes the Grand Canyon look tiny!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/TerraformedMarsGlobeRealistic.jpg"
           },
@@ -701,7 +701,7 @@
           ],
           "explanation": {
             "text": "The Oort Cloud is believed to be a giant spherical shell surrounding the solar system, filled with icy pieces of space debris.",
-            "trivia": "It is considered the origin of most long-period comets that occasionally visit the inner solar system.",
+            "trivia": "The Oort Cloud, far beyond Pluto, is thought to be where most long-period comets come from.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Rubin_Oort_Cloud_and_Kuiper_Belt_Illustration_(rubin-Oort-Cloud-and-Kuiper-Belt).jpg"
           },
@@ -1118,7 +1118,7 @@
           ],
           "explanation": {
             "text": "Half of the Moon is always lit by the Sun. As the Moon orbits Earth, our viewing angle changes, so we see different fractions of its lit half.",
-            "trivia": "It takes about 29.5 days for the Moon to go through a complete cycle of phases.",
+            "trivia": "The Moon takes about 29.5 days to go through all its phases, from one new moon to the next.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Moon_phases_en.jpg"
           },
@@ -1208,7 +1208,7 @@
           ],
           "explanation": {
             "text": "Enceladus has a global ocean of liquid water beneath its icy crust. Deep cracks at its south pole spray plumes of water and ice into space.",
-            "trivia": "These icy plumes actually create one of Saturn's outer rings (the E ring)!",
+            "trivia": "Icy plumes from Saturn's moon Enceladus feed one of Saturn's outer rings, the E ring!",
             "mediaType": "image",
             "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/8/87/Enceladus_geysers_PIA07799.jpg"
           },
@@ -1688,7 +1688,7 @@
           ],
           "explanation": {
             "text": "Alpha Centauri is the closest star system to Earth, located about 4.37 light-years away.",
-            "trivia": "It is actually a triple star system, consisting of Alpha Centauri A, Alpha Centauri B, and Proxima Centauri.",
+            "trivia": "Alpha Centauri, the star system closest to us, is really three stars: Alpha Centauri A, Alpha Centauri B and Proxima Centauri.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/The_Very_Large_Telescope_and_the_star_system_Alpha_Centauri.jpg"
           },
@@ -1903,7 +1903,7 @@
           ],
           "explanation": {
             "text": "Soviet cosmonaut Valentina Tereshkova became the first woman in space on June 16, 1963.",
-            "trivia": "She orbited the Earth 48 times over almost three days during her solo mission.",
+            "trivia": "Valentina Tereshkova, the first woman in space (1963), flew alone and circled the Earth 48 times in almost three days.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/RIAN_archive_612748_Valentina_Tereshkova.jpg"
           },
@@ -2106,7 +2106,7 @@
           ],
           "explanation": {
             "text": "The James Webb Space Telescope (JWST) is the largest and most powerful space telescope ever built, specializing in infrared astronomy.",
-            "trivia": "Its massive golden mirror is made up of 18 hexagonal segments that had to unfold in space!",
+            "trivia": "The James Webb Space Telescope's golden mirror is made of 18 six-sided pieces that had to unfold in space!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter_Showcases_Auroras,_Hazes_(NIRCam_Closeup).jpg"
           },
@@ -2135,7 +2135,7 @@
           ],
           "explanation": {
             "text": "On July 20, 1969, American astronaut Neil Armstrong became the first person to step onto the lunar surface during the Apollo 11 mission.",
-            "trivia": "His famous first words were: 'That's one small step for man, one giant leap for mankind.'",
+            "trivia": "Neil Armstrong's first words on the Moon (1969) were: 'That's one small step for man, one giant leap for mankind.'",
             "mediaType": "video",
             "mediaUrl": "https://www.youtube.com/watch?v=RMINSD7MmT4"
           },
@@ -2263,7 +2263,7 @@
           ],
           "explanation": {
             "text": "Because Uranus is tilted almost completely on its side, its north pole points almost directly at the Sun for a quarter of its orbit (21 Earth years).",
-            "trivia": "This means a single season on Uranus lasts for 21 Earth years of continuous sunlight or continuous darkness!",
+            "trivia": "Uranus is tipped on its side, so each of its poles gets about 21 years of non-stop sunlight, then about 21 years of darkness!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Uranus2.jpg"
           },
@@ -2350,7 +2350,7 @@
           ],
           "explanation": {
             "text": "Venus is shrouded in a highly reflective, thick cloud layer made mostly of sulfuric acid droplets.",
-            "trivia": "These clouds reflect so much sunlight that they are the reason Venus is the brightest natural object in Earth's night sky after the Moon.",
+            "trivia": "Venus's thick clouds reflect so much sunlight that Venus is the brightest natural object in our night sky after the Moon.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/PIA23791-Venus-NewlyProcessedView-20200608.jpg"
           },
@@ -3028,7 +3028,7 @@
           ],
           "explanation": {
             "text": "The Double Asteroid Redirection Test (DART) successfully crashed a spacecraft into the asteroid Dimorphos to see if kinetic impact could change its path.",
-            "trivia": "The mission was a huge success, proving that humanity could potentially deflect a dangerous asteroid headed for Earth!",
+            "trivia": "In 2022 NASA's DART spacecraft crashed into the small asteroid Dimorphos on purpose and changed its orbit, a first test of how to push a dangerous asteroid away.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/LICIACube_CubeSat_integrated_on_Dart_Spacecraft.jpg"
           },
@@ -3184,7 +3184,7 @@
           ],
           "explanation": {
             "text": "Copernicus formulated a model of the universe that placed the Sun rather than Earth at the center of the universe.",
-            "trivia": "He waited until the very end of his life to publish his book because he knew it would be extremely controversial!",
+            "trivia": "Nicolaus Copernicus, who said the Earth goes around the Sun, published his famous book only in 1543, the year he died.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Copernicus.jpg"
           },
@@ -3358,7 +3358,7 @@
           ],
           "explanation": {
             "text": "Around 240 BC, Eratosthenes measured the angle of the sun's shadow in two different Egyptian cities to calculate the size of the Earth with remarkable accuracy.",
-            "trivia": "This proves that educated people knew the Earth was round over 2,000 years before Columbus!",
+            "trivia": "Around 240 BCE, Eratosthenes measured the size of the round Earth using shadows, over 1,700 years before Columbus sailed.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Eratosthenes_measure_of_Earth_circumference.svg"
           },
@@ -3387,7 +3387,7 @@
           ],
           "explanation": {
             "text": "An astrolabe is an ancient astronomical instrument that was a handheld model of the universe.",
-            "trivia": "It was essentially the ancient equivalent of a smartphone\u2014used to tell time, navigate, and predict planetary positions!",
+            "trivia": "The astrolabe was like an ancient pocket computer: people used it to tell the time, find their latitude and work out where stars would be.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Astrolabe-Persian-18C.jpg"
           },
@@ -3416,7 +3416,7 @@
           ],
           "explanation": {
             "text": "William Herschel discovered Uranus using a telescope he built himself.",
-            "trivia": "He originally wanted to name the planet 'Georgium Sidus' (George's Star) after King George III of England!",
+            "trivia": "William Herschel, who discovered Uranus in 1781, wanted to name it 'Georgium Sidus' (George's Star) after King George III of England!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/William_Herschel01.jpg"
           },
@@ -3445,7 +3445,7 @@
           ],
           "explanation": {
             "text": "Astronomers noticed that Uranus's orbit was behaving strangely, pulled by unseen gravity. Urbain Le Verrier used math to predict exactly where a new planet must be, and astronomers found Neptune right where he calculated!",
-            "trivia": "It is the only planet in our solar system discovered through mathematical prediction rather than empirical observation.",
+            "trivia": "Neptune is the only planet found by maths first: in 1846 Urbain Le Verrier calculated where it must be, and astronomers spotted it there through a telescope.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neptune_Full.jpg"
           },
@@ -3532,7 +3532,7 @@
           ],
           "explanation": {
             "text": "The Arecibo Observatory was built into a natural sinkhole in Puerto Rico and sent the famous 'Arecibo Message' to space to try and contact aliens.",
-            "trivia": "It was featured in popular movies like James Bond's 'GoldenEye' and 'Contact'.",
+            "trivia": "The giant Arecibo radio telescope in Puerto Rico appeared in the films 'GoldenEye' and 'Contact' before it collapsed in 2020.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Arecibo_Observatory_Aerial_View.jpg"
           },
@@ -3561,7 +3561,7 @@
           ],
           "explanation": {
             "text": "Edmond Halley used Newton's laws to calculate that comets seen in 1531, 1607, and 1682 were actually the exact same object returning every 76 years.",
-            "trivia": "He correctly predicted its return in 1758, though he died 16 years before he could see it!",
+            "trivia": "Edmond Halley predicted that his comet would come back in 1758. He died 16 years before it returned, and it was named after him.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Lspn_comet_halley.jpg"
           },
@@ -3746,7 +3746,7 @@
           ],
           "explanation": {
             "text": "Launched in 1977, Voyager 1 has officially left the solar system and entered interstellar space.",
-            "trivia": "It carries a 'Golden Record' containing sounds and images of Earth in case aliens ever find it!",
+            "trivia": "Voyager 1 carries a 'Golden Record' with sounds and pictures of Earth, in case aliens ever find it!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Voyager_spacecraft_model.png"
           },
@@ -4638,7 +4638,7 @@
           ],
           "explanation": {
             "text": "The Cassini spacecraft flew right through the plumes erupting from Enceladus and detected salt water and organic molecules, key ingredients for life.",
-            "trivia": "These geysers actually create Saturn's 'E ring' by constantly spewing ice into orbit!",
+            "trivia": "Geysers on Saturn's moon Enceladus spray ice into space all the time, and that ice forms Saturn's E ring!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Dramatic_plumes,_both_large_and_small,_spray_water_ice_out_from_many_locations_along_the_famed_tiger_stripes_near_the_south_pole_of_Saturn\u2019s_moon_Enceladus_in_this_image_released_on_Feb_23_(newly-found-organics-in-enceladus-plumes).jpg"
           },
@@ -4870,7 +4870,7 @@
           ],
           "explanation": {
             "text": "The Arecibo message was a simple visual message beamed into space, containing information about human DNA, the solar system, and humanity, written in binary code.",
-            "trivia": "It was aimed at the globular star cluster M13, which is 25,000 light-years away. It will take 25,000 years to get there!",
+            "trivia": "In 1974 the Arecibo message was beamed toward the star cluster M13, about 25,000 light-years away. It will take about 25,000 years to get there!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Arecibo_message.svg"
           },

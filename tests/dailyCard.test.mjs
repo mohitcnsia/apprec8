@@ -36,6 +36,10 @@ assert.equal(pickForDay([], 1, "k"), null);
 const words = (g) => toWords(learnCardsFor(WordBank, g, nodesForGrade));
 const sci = (g) => toScienceFacts(learnCardsFor(Science, g, nodesForGrade));
 const space = toSpaceFacts(spaceData);
+// Owner 17 Nov: "It is the only planet ..." made no sense on Home. A daily fact stands alone: it names its subject.
+for (const f of space) {
+  assert.ok(!/^(It|Its|This|These|That|Those|They|Their|He|His|She|Her|The (planet|moon|mission|probe|telescope|comet|star|spacecraft))\b/.test(f.text), `space fact must name its subject: "${f.text}"`);
+}
 for (let g = 1; g <= 10; g++) assert.ok(words(g).length >= 100, `Class ${g} has words`);
 for (const g of [3, 4, 5]) assert.ok(sci(g).length >= 20, `Class ${g} has science facts`);
 assert.ok(space.length >= 100, "Space quest gives 100+ facts");
