@@ -20,7 +20,7 @@ Priority order. New ideas, decisions and parked items live in docs/LAUNCH_CHECKL
 |---|---|---|---|
 | 1 | ~~Owner cards + push~~ done 16 Nov (Admin tools → Send a card) | Claude | done |
 | 2 | ~~Team tasks~~ done 16 Nov (a card of kind Task, with hat + due + Done) | Claude | done |
-| 2b | ⭐ ISO science (3 Dec): Class 6 chapters 1–8 Claude, 9–12 Gemini (G126), plan https://claude.ai/artifact/5GrheovRHncDQhzQe1bski | Claude + Gemini | now |
+| 2b | ⭐ ISO science (3 Dec), owner's order: Class 5 complete (G126 gap list → Claude fills) → Class 7 + 8 → Class 6 (1–8 done). Plan https://claude.ai/artifact/5GrheovRHncDQhzQe1bski | Claude + Gemini | now |
 | 2a | ⭐ Computer Science quest, Unit 1 AI (Class 8+, kids practise from 23 Nov) + "Computer" subject for teachers (LAUNCH_CHECKLIST A16–A17) | Claude | now |
 | 3 | G88 one-page class report for school management | Claude | next |
 | 4 | G55 "Locked out?" help + admin PIN reset | Claude | next |
@@ -51,33 +51,19 @@ Priority order. New ideas, decisions and parked items live in docs/LAUNCH_CHECKL
 
 ## Task details (Gemini reads these; a task is handed out only when its heading says [todo])
 
-### G126 · [todo] · gemini · Class 6 science: chapters 9–12 for the ISO exam (3 Dec), draft for Claude's check
-**Why:** Class 6 kids sit the ISO science exam (was NSO) on 3 Dec and Science Quest has nothing for Class 6. Plan:
-https://claude.ai/artifact/5GrheovRHncDQhzQe1bski. Claude writes chapters 1–8 in `data/scienceQuest/units/c6.js`; you
-draft chapters 9–12. You have little quota left: do them in this order and commit after EACH chapter, so nothing is lost.
-**Base:** `feat/quiz-redesign` (pull first: c6.js is there). Branch `gemini/g126-class6`. One new file:
-`data/scienceQuest/units/c6b.js`, registered in `data/scienceQuestData.js` right after `sqC6` (import + the three spreads).
-**Shape** (copy it from c6.js; import `{ C6_UNITS, topic6, page6 }` from `./c6.js` and `q` from `../../englishQuest/helpers.js`):
-| Order | Chapter (NCERT Class 6 "Curiosity") | Topic id | Unit, branchOrder |
-|---|---|---|---|
-| 1 | Methods of Separation in Everyday Life | `sq6-separation` | `C6_UNITS.materials`, 3 |
-| 2 | Living Creatures: Exploring their Characteristics | `sq6-creatures` | `C6_UNITS.living`, 4 |
-| 3 | Nature's Treasures | `sq6-treasures` | `C6_UNITS.materials`, 4 |
-| 4 | Beyond Earth | `sq6-beyond-earth` | `C6_UNITS.measure`, 4 |
-Per chapter: `topic6(id, unit, order, title)` node; a Learn page `<id>-study` made with `page6(name, cards, check)`: 4 idea
-cards `[emoji, title, text, examples[]]` (text ≤ 40 words, 3–4 short examples) + 1 check card with `answer` + 3 `wrong`;
-and `<id>-quiz`: exactly 8 questions with `q(question, right, [[wrong, mistakeTag, whyNot] ×3], explanation)`.
-Export `default { studyPages, quizzes, nodes }` (nodes = the topic nodes only, no units).
-**Rules (Claude rejects anything that breaks one):**
-1. Facts must be right for a Class 6 science book. If you are not sure of a fact, leave it out. No exam names.
-2. 4 options, exactly one defensible answer; a why-not on EVERY wrong option; at least one near-miss wrong option per question.
-3. Mix question styles (see `docs/exam/nso-pattern.md` §3: analogy, odd one out, "find the INCORRECT statement",
-   two-column match, experiment/fair test). At least 2 of the 8 are "think" questions, not recall.
-4. Right answer must NOT usually be the longest option (test: 10–40%). Options ≤ 14 words.
-5. Original questions only. The SOF books and papers (`docs/exam/papers/`, git-ignored) show level and topics; never copy.
-6. `npm test` green before every commit. Commit `gemini(G126): chapter N <name>`; last one `gemini(G126): done`.
-Report: `docs/agents/reports/G126.md`: per chapter, the facts you were least sure of (Claude checks those first).
-
+### G126 · [todo] · gemini · Class 5 science: gap list for the ISO exam (3 Dec) — a REPORT, no app content
+**Why (owner 17 Nov):** Class 5 comes first (Pratha: topper, hundreds of questions a day). Before writing anything we
+need an exact list of what the Class 5 science syllabus asks and what Science Quest already covers. Plan:
+https://claude.ai/artifact/5GrheovRHncDQhzQe1bski. You have little quota: keep it to this report.
+**Inputs:** `docs/exam/syllabus/syllabusclass5.pdf` (SOF Class 5 syllabus), `docs/exam/nso-pattern.md` (§2 weightage,
+§5 gap list), the owner's SOF Class 5 book scans in `docs/exam/papers/class5/` if present (git-ignored), and our content:
+Class 5 topics in `data/scienceQuestData.js` + `data/scienceQuest/units/u4.js`–`u6.js` (nodes with `grades` incl. 5;
+`node -e` with `nodesForGrade` from `utils/gradeFilter.js` lists them) and papers `data/papers/sciencePaper1–5.js`.
+**Output:** `docs/agents/reports/G126.md` only. One table: syllabus sub-topic → our topic id(s) that cover it (or NONE) →
+number of our questions on it → gap (none / thin: under 5 questions / missing) → 1 line on what is missing. Then a short
+list: the 10 biggest gaps, by exam weight (§2). Do NOT write questions or change data files.
+**Commit:** `gemini(G126): done` on branch `gemini/g126-class5-gaps` (based on `feat/quiz-redesign`). Claude checks the
+report, then writes the content.
 ### ⚙️ HOW WE WORK FROM 14 NOV (owner): Gemini builds + walks, Claude specs + reviews
 **Accuracy and app engagement are non-negotiable.** Claude writes the spec; Gemini drafts/builds AND does the phone walk;
 Claude reviews the diff + the walk evidence, re-walks anything suspicious or touching core flows, and publishes.

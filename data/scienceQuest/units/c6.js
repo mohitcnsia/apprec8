@@ -2,7 +2,7 @@
 // chapter of the Class 6 book (NCERT "Curiosity", 2024), each a Learn page (idea cards + a check) and 8 practice questions.
 // Every topic is open from the start (openTopics), so a kid can go straight to the chapter they need. Plan doc:
 // https://claude.ai/artifact/5GrheovRHncDQhzQe1bski
-// Split (plan doc): Claude writes chapters 1–8 here; Gemini drafts chapters 9–12 in c6b.js (G126), Claude checks them.
+// Chapters 1–8 written 17 Nov. Owner's order (17 Nov): Class 5, then 7 and 8, then Class 6 chapters 9–12 (c6b.js, later).
 // Papers and the SOF books are a guide to coverage and level only: every question is original.
 // Quality rules: 4 options, a why-not on every wrong option, at least one near miss, exactly one defensible answer.
 import { q, study, quiz, unit, main, forGrades } from "../../englishQuest/helpers.js";
