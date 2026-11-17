@@ -123,3 +123,19 @@ in Firestore `chessGames` (owner/admin read rule), never in git (public repo), n
        - *Dinosaurs & Prehistoric Earth:* Geological eras (Triassic, Jurassic, Cretaceous), fossilization, apex predators (T-Rex, Spinosaurus), sauropods, pterosaurs, extinction theories.
        - *Human Body, Animal Kingdom & Plant Kingdom:* Deep, rich reading articles packed with awe-inspiring biology, extreme animal adaptations, and carnivorous plants.
      - *D. AI Image Generation Pipeline (Kids 8–16):* Establish an offline pipeline (via Claude / Imagen / Gemini) to generate captivating, high-resolution, kid-safe visuals matching the Science Olympiad standard. Optimize via Squoosh / WebP and host on `data/media_backup` CDN (`cdn.jsdelivr.net`).
+  10. **Space Quest UI/UX Upgrade & Content Review / Overhaul:**
+     - *Problem:* Space Quest is currently on legacy architecture (`screens/quest/QuestScreen.js` with hardcoded colors `const useTheme = () => ({ theme: ... })`, old Duolingo-style SVG path connectors, and legacy study cards). Its quizzes and study content in `data/space_olympiad_data.json` lack why-nots on wrong options and rich visual assets compared to modern tile quests (English Quest, Science Quest).
+     - *Goal:* Modernize Space Quest end-to-end to match the tile-quest UX standard:
+       - *UI/UX Upgrade:* Migrate to the tile-quest map architecture (`ThemeContext` dynamic styling, unit sections, milestone stars, responsive leaf layout, Gate assessments, and Boss challenges).
+       - *Content Overhaul & Review:* Audit all existing space questions, write clear why-nots for every wrong distractor, and eliminate ambiguous or dated astronomy trivia.
+       - *Visual & Reading Upgrade:* Embed high-resolution CDN images (`data/media_backup`) for spacecraft, planets, rovers, and telescopes (Apollo, Chandrayaan-3, Aditya-L1, James Webb, Mars Orbiter). Add engaging 1000-word biographies of key space pioneers (Kalpana Chawla, Vikram Sarabhai, APJ Abdul Kalam, Rakesh Sharma, Neil Armstrong).
+  11. **"Why Having Your Own Account Is Useful" Home Card for Unlinked Kids:**
+     - *Context & Problem:* Many children use their parent's phone without creating or switching to a linked child profile. Consequently, their stars and streaks mix with the parent's account, teachers cannot see individual student names or homework submissions in class reports, and their progress is vulnerable if the parent switches devices.
+     - *Goal:* Push an educational, motivating card to these unlinked users (via `cardStarters.js` / `sendCard` / Admin tools, similar to the cyber-fraud card pushed today):
+       - *Title:* "अपना प्रोफ़ाइल क्यों बनाएं? / Why get your own profile?"
+       - *Core Points:*
+         1. 🌟 **Your Own Stars & Streaks:** Never lose your stars or streak when Mum or Dad use the phone.
+         2. 🧑‍🚀 **Personal Avatar & Nickname:** Pick your own cool face and nickname to make Apprec8 truly yours.
+         3. 🏫 **Your Teacher Knows It's You:** Your teacher sees your name on homework, assignments, and leaderboards, not Mum's or Dad's email.
+         4. 🔒 **Safe & Easy Switch:** One-tap switch ("Play as <Name>") keeps adult settings locked behind a parent PIN.
+       - *Action Pill:* `[ Set up my profile now › ]` (navigates to child profile setup / family linking flow).

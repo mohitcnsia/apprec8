@@ -155,6 +155,8 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 | A33 | **Chess game list performance & app audit (owner 17 Nov)**: lazy parse PGN moves/evals only on tap (headers only on list mount); audit synchronous JSON bottlenecks app-wide | Gemini / Claude | todo |
 | A34 | **Learn content audit & Psychology course (owner 17 Nov)**: prune low-quality legacy learn quizzes to save DB space; add Psychology course for Seema's board exam students (stress, memory, focus) | Claude / Seema | plan |
 | A35 | **High-engagement reading quests & AI images (owner 17 Nov)**: deep reading quests on Dogs (Pratha's fav), Dragons, Dinosaurs, Human Body, Animals, Plants + AI image generation pipeline for kids 8–16 | Claude / Gemini | plan |
+| A36 | **Space Quest UI/UX upgrade & content overhaul (owner 17 Nov)**: migrate legacy QuestScreen to tile-quest map architecture (ThemeContext, unit groups, Gate/Boss); audit questions for why-nots, add high-res CDN images & astronaut biographies | Claude / Gemini | plan |
+| A37 | **'Why have your own profile' card for unlinked kids (owner 17 Nov)**: push an educational card (like cyber fraud) explaining why kids need their own linked profile (own streak/stars, teacher sees name, avatar) + 'Set up profile' action | Claude / Gemini | todo |
 
 ## B. Public release (after the pilot)
 | # | Item | Who |
