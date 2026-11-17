@@ -145,6 +145,7 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
 | A23 | **Star celebration vanishes too fast (report 16 Nov)**: keep it longer, but never block the buttons | Claude | todo |
 | A24 | **"Did you know?" (owner 17 Nov, idea)**: one label for the daily fact instead of science/space facts; science + general knowledge (India, history, nature). Current affairs NOT in the daily fact (goes stale, needs dates checked): send those as cards. Hindi version for grown-ups with the language choice (A19 step 2; owner checks Hindi) | Claude | parked: after ISO prep |
 | A25 | **Words from the facts (owner 17 Nov, idea)**: ~50 words from the space facts (aurora, nebula, orbit, eclipse, comet…) with kid meanings, added to the daily word for Class 6+ | Claude | parked: after ISO prep |
+| A26 | ⭐ **Exam-style diagrams drawn by code (owner 17 Nov: "might be the best feature")**: Venn groupings, yes/no keys, experiment set-ups. No AI images: SVG built from the question's own data (like utils/figures.js), themed, tested so picture and answer agree. Mockup (3 phone screens): https://claude.ai/artifact/9m5uvAP5nchCHhqp11vZ4s. Build: quest questions get `figure` (QuestionPrompt renders it with SvgXml; react-native-svg is in the build, so OTA), `utils/diagrams.js` (venn, key, lab kit: tube, beaker, bottle, flask, thermometer, bulb, cell, wire, nail, leaf) | Claude | mockup → owner OK → build |
 
 ## B. Public release (after the pilot)
 | # | Item | Who |
