@@ -28,7 +28,8 @@ import { useTheme } from "../../../context/ThemeContext";
 import FeedbackFAB from "../FeedbackFAB";
 import useImmersiveStatusBar from "../../../hooks/useImmersiveStatusBar";
 import LearnCards from "../../learn/LearnCards";
-import { learnCards, nextStepId, tryLabel } from "../../../utils/learnCards";
+import { learnCards, nextStepId } from "../../../utils/learnCards";
+import { cardsLang, labelsFor } from "../../../utils/uiLabels";
 import ReportStudyButton from "../../quiz/ReportStudyButton";
 
 const screenWidth = Dimensions.get("window").width;
@@ -443,6 +444,7 @@ const Apprec8Reader = ({ route, navigation }) => {
   const cards = showPage ? null : learnCards(studyData);
   if (cards) {
     const next = questContext ? nextStepId(questContext.nodeId) : null;
+    const cardL = labelsFor(cardsLang(cards, studyData.name)); // Hindi cards: Hindi buttons (owner 17 Nov)
     const finish = ({ allSeen }) => {
       if (!questContext) return navigation.goBack();
       // The Learn step counts only when every card was seen; a skip opens the quiz without it (owner 2026-11-05).
@@ -459,7 +461,7 @@ const Apprec8Reader = ({ route, navigation }) => {
         cardKey={contentId}
         questContext={questContext}
         isDark={isDark}
-        finishLabel={!questContext ? "DONE" : questContext.nextStep ? tryLabel(questContext.nextStep.count) : "BACK TO QUEST"}
+        finishLabel={!questContext ? cardL.done : questContext.nextStep ? cardL.tryQuiz(questContext.nextStep.count) : cardL.backToQuestCaps}
         canSkip={!!questContext?.nextStep}
         onFinish={finish}
         onShowPage={() => setShowPage(true)}

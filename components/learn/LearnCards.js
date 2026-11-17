@@ -12,6 +12,7 @@ import { quizPalette } from "../quiz/quizPalette";
 import { checkOptions, cardSpeech, allSeen } from "../../utils/learnCards";
 import ReportStudyButton from "../quiz/ReportStudyButton";
 import { submitCardVote, getCardVote } from "../../services/reportApi";
+import { cardsLang, labelsFor, glossHindi as G, voiceFor } from "../../utils/uiLabels";
 
 const TINTS = {
   dark: { idea: ["#3A3322", "#21332A", "#2B2640", "#33262B"], check: "#3A2631", word: "#21332A", done: "#2B2640", ink: "#F4EDF5", soft: "#CFC3D1" },
@@ -34,6 +35,8 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
   const T = isDark ? TINTS.dark : TINTS.light;
   const insets = useSafeAreaInsets();
   const s = useMemo(() => makeStyles(P, T, insets), [P, T, insets]);
+  // Hindi cards get Hindi buttons (owner 17 Nov 2026); English cards are unchanged.
+  const L = labelsFor(cardsLang(cards, title));
 
   const total = cards.length; // the summary card comes after these
   const [index, setIndex] = useState(0);
@@ -77,11 +80,8 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
 
   const speak = () => {
     Speech.stop();
-    const text = onSummary ? `You learned: ${summary.join(". ")}` : cardSpeech(card);
-    if (text) {
-      const isHindi = /[\u0900-\u097F]/.test(text);
-      Speech.speak(text, { language: isHindi ? "hi-IN" : "en-IN", rate: isHindi ? 0.85 : 0.9 });
-    }
+    const text = onSummary ? `${L.learnedSpeech}${summary.join(". ")}` : cardSpeech(card);
+    if (text) Speech.speak(text, voiceFor(text));
   };
   const finish = () => onFinish({ allSeen: allSeen(seen, total), picked }); // picked: check card index → first answer
 
@@ -96,10 +96,10 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
     body = (
       <>
         <Text style={s.emoji}>🌟</Text>
-        <Text style={s.cardTitle}>You learned {summary.length} {summary.length === 1 ? "thing" : "things"}</Text>
+        <Text style={s.cardTitle}>{L.learnedTitle(summary.length)}</Text>
         <View style={{ gap: 10, marginTop: 12 }}>
           {summary.map((t) => (
-            <Text key={t} style={s.text}>✓ {t}</Text>
+            <Text key={t} style={s.text}>✓ {G(t)}</Text>
           ))}
         </View>
       </>
@@ -108,13 +108,13 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
     body = (
       <>
         {card.emoji ? <Text style={s.emoji}>{card.emoji}</Text> : null}
-        <Text style={s.cardTitle}>{card.title}</Text>
+        <Text style={s.cardTitle}>{G(card.title)}</Text>
         {card.image ? <Image source={{ uri: card.image }} style={s.image} contentFit="contain" accessibilityIgnoresInvertColors /> : null}
-        <Text style={[s.text, { marginTop: 8 }]}>{card.text}</Text>
+        <Text style={[s.text, { marginTop: 8 }]}>{G(card.text)}</Text>
         {card.examples.length ? (
           <View style={{ gap: 8, marginTop: 14 }}>
             {card.examples.map((e) => (
-              <Text key={e} style={s.example}>{e}</Text>
+              <Text key={e} style={s.example}>{G(e)}</Text>
             ))}
           </View>
         ) : null}
@@ -173,11 +173,11 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
   } else {
     const options = checkOptions(card, cardKey);
     const chosen = picked[index];
-    const grid = options.every((o) => o.length <= 14) && options.length === 4;
+    const grid = options.every((o) => G(o).length <= 14) && options.length === 4;
     body = (
       <>
-        <Text style={s.kicker}>QUICK CHECK ✋</Text>
-        <Text style={[s.cardTitle, { fontSize: 22, lineHeight: 29 }]}>{card.question}</Text>
+        <Text style={s.kicker}>{L.quickCheck}</Text>
+        <Text style={[s.cardTitle, { fontSize: 22, lineHeight: 29 }]}>{G(card.question)}</Text>
         <View style={[grid ? s.grid : { gap: 10 }, { marginTop: 14 }]}>
           {options.map((o) => {
             const isAnswer = o === card.answer;
@@ -190,18 +190,18 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
                 style={[s.option, grid && s.optionGrid, show && (isAnswer ? s.optionRight : s.optionWrong)]}
                 accessibilityRole="button"
               >
-                <Text style={[s.optionText, grid && { textAlign: "center" }]}>{o}{show ? (isAnswer ? " ✓" : " ✗") : ""}</Text>
+                <Text style={[s.optionText, grid && { textAlign: "center" }]}>{G(o)}{show ? (isAnswer ? " ✓" : " ✗") : ""}</Text>
               </Pressable>
             );
           })}
         </View>
         {chosen != null ? (
           <Text style={[s.text, { marginTop: 12, fontSize: 16 }]}>
-            {chosen === card.answer ? "Yes! 🎉 " : `It's "${card.answer}". `}
-            {card.explain || ""}
+            {chosen === card.answer ? L.checkRight : L.checkWrong(G(card.answer))}
+            {G(card.explain || "")}
           </Text>
         ) : (
-          <Text style={[s.hint, { marginTop: 12 }]}>Just a check: no stars lost here.</Text>
+          <Text style={[s.hint, { marginTop: 12 }]}>{L.checkHint}</Text>
         )}
       </>
     );
@@ -211,7 +211,7 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
   return (
     <View style={s.screen}>
       <View style={s.top}>
-        <Text style={s.topTitle} numberOfLines={1}>{title}</Text>
+        <Text style={s.topTitle} numberOfLines={1}>{G(title)}</Text>
         <ReportStudyButton
           contentId={cardKey}
           cardIndex={onSummary ? "summary" : index}
@@ -222,7 +222,7 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
         />
         {canSkip && !last ? (
           <Pressable onPress={finish} hitSlop={10} accessibilityRole="button">
-            <Text style={s.skip}>Skip to quiz ›</Text>
+            <Text style={s.skip}>{L.skipToQuiz}</Text>
           </Pressable>
         ) : (
           <Text style={s.count}>{Math.min(index + 1, total)} / {total}</Text>
@@ -240,7 +240,7 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
       <ScrollView contentContainerStyle={s.middle}>
         <View style={[s.note, { backgroundColor: tint, transform: [{ rotate: tilt }] }]}>
           <View style={s.tape} />
-          <Pressable style={s.speaker} onPress={speak} accessibilityLabel="Read aloud" hitSlop={6}>
+          <Pressable style={s.speaker} onPress={speak} accessibilityLabel={L.readAloud} hitSlop={6}>
             <Text style={{ fontSize: 20 }}>🔊</Text>
           </Pressable>
           {body}
@@ -249,23 +249,23 @@ export default function LearnCards({ cards, title, cardKey = "", questContext = 
           <View style={{ alignItems: "center", gap: 14, marginTop: 18 }}>
             {/* Cards from Apprec8 (owner 16 Nov): "More like this" opens the whole quest. */}
             {extraAction ? <Pressable onPress={() => extraAction.onPress({ allSeen: allSeen(seen, total), picked })} accessibilityRole="button"><Text style={s.link}>{extraAction.label}</Text></Pressable> : null}
-            <Pressable onPress={() => setIndex(0)} accessibilityRole="button"><Text style={s.link}>Read the cards again</Text></Pressable>
-            {onShowPage ? <Pressable onPress={onShowPage} accessibilityRole="button"><Text style={s.link}>See everything on one page</Text></Pressable> : null}
+            <Pressable onPress={() => setIndex(0)} accessibilityRole="button"><Text style={s.link}>{L.readCardsAgain}</Text></Pressable>
+            {onShowPage ? <Pressable onPress={onShowPage} accessibilityRole="button"><Text style={s.link}>{L.seeOnePage}</Text></Pressable> : null}
           </View>
         ) : index === 0 && onShowPage ? (
           <Pressable onPress={onShowPage} style={{ alignSelf: "center", marginTop: 18 }} accessibilityRole="button">
-            <Text style={s.link}>See everything on one page</Text>
+            <Text style={s.link}>{L.seeOnePage}</Text>
           </Pressable>
         ) : null}
       </ScrollView>
       <View style={s.footer}>
         {!last || index > 0 ? (
-          <Pressable style={s.square} disabled={index === 0} onPress={() => setIndex((i) => Math.max(0, i - 1))} accessibilityLabel="Previous card">
+          <Pressable style={s.square} disabled={index === 0} onPress={() => setIndex((i) => Math.max(0, i - 1))} accessibilityLabel={L.previousCard}>
             <Text style={[s.squareText, index === 0 && { color: P.dimText }]}>‹</Text>
           </Pressable>
         ) : null}
         <Pressable style={s.primary} onPress={last ? finish : () => setIndex((i) => i + 1)} accessibilityRole="button">
-          <Text style={s.primaryText}>{last ? finishLabel : "NEXT"}</Text>
+          <Text style={s.primaryText}>{last ? finishLabel : L.next}</Text>
         </Pressable>
       </View>
     </View>

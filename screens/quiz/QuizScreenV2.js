@@ -38,6 +38,21 @@ import { newBreakState, recordBreakAnswer, breakReason, markOffered, BREAK_TEXT 
 import { columnStyle } from "../../utils/layout";
 import { useWindowDimensions } from "react-native";
 import { modeFor } from "../../utils/quizMode";
+import { quizLang } from "../../utils/quizLang";
+import { labelsFor, glossHindi as G } from "../../utils/uiLabels";
+
+// Hindi why-sheet (owner 17 Nov): headings in Hindi, English terms spelled in Hindi script. English is unchanged.
+const hindiWhyNot = (wn, lang) => {
+  if (!wn || lang !== "hi") return wn;
+  const L = labelsFor("hi");
+  return {
+    ...wn,
+    wrongWhy: wn.wrongWhy ? { ...wn.wrongWhy, heading: L.whyNot(G(wn.wrongWhy.option)), why: G(wn.wrongWhy.why) } : wn.wrongWhy,
+    otherWhys: (wn.otherWhys || []).map((o) => ({ ...o, option: G(o.option), why: G(o.why) })),
+  };
+};
+// Questions answered so far, as utils/quizLeave.js counts them.
+const leaveDone = ({ currentIndex = 0, status }) => (status === "reviewing" ? currentIndex + 1 : currentIndex);
 
 // "Take a breath?" (Calm corner, 2026-11-12): one shared state for the app session, across quizzes.
 let breakState = newBreakState();
@@ -57,6 +72,9 @@ const QuizScreenV2 = ({ route, navigation }) => {
 
   const { state, dispatch } = useQuizEngine(quiz, mode, isFirstAttempt);
   const { status, questions, error, currentIndex, score, lives } = state;
+  // Hindi quests (आओ जानें) get Hindi labels (owner 17 Nov 2026); English quizzes are unchanged.
+  const lang = quizLang({ questId: questContext?.questId, texts: [quiz?.title, questions?.[0]?.question?.content] });
+  const L = labelsFor(lang);
   const { playSuccess, playFailure } = useSoundEffects();
 
   // Opened from the start screen (QuizDetails, mockup F): start straight away, no second "Start" page.
@@ -72,12 +90,13 @@ const QuizScreenV2 = ({ route, navigation }) => {
     if (!shouldConfirmLeave({ status, currentIndex })) return undefined;
     return navigation.addListener("beforeRemove", (e) => {
       e.preventDefault();
-      showAlert("Leave this quiz?", leaveMessage({ currentIndex, total: questions.length, status }), [
-        { text: "Keep playing", style: "cancel" },
-        { text: "Leave", style: "destructive", onPress: () => navigation.dispatch(e.data.action) },
+      const leaveText = lang === "hi" ? L.leaveMessage(leaveDone({ currentIndex, status }), questions.length) : leaveMessage({ currentIndex, total: questions.length, status });
+      showAlert(L.leaveTitle, leaveText, [
+        { text: L.keepPlaying, style: "cancel" },
+        { text: L.leave, style: "destructive", onPress: () => navigation.dispatch(e.data.action) },
       ]);
     });
-  }, [navigation, status, currentIndex, questions.length]);
+  }, [navigation, status, currentIndex, questions.length, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Answer recording for quests (who answered what, and how fast) ---
   const answerLogRef = useRef({}); // questionId -> answer entry
@@ -155,7 +174,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
     navigation.navigate(questContext?.returnTo || "EnglishQuestMap", { questId: questContext?.questId });
   // Leave the quest entirely (back to the Study tab root) without the 3-step back chain.
   const exitToStudy = () => navigation.popToTop();
-  const exitAction = { label: "Exit to Study", onPress: exitToStudy, mode: "text" };
+  const exitAction = { label: L.exitToStudy, onPress: exitToStudy, mode: "text" };
 
   const buildGateResultParams = (submissionContext) => {
     const r = gateResultRef.current || getGateResult();
@@ -252,25 +271,26 @@ const QuizScreenV2 = ({ route, navigation }) => {
       const isPerfectScore = score >= maxPossibleScore; // In exam, it can be 15 which is >= 10
 
       const resultParams = {
-        title: "Quiz Complete!",
-        message: "Great effort, {username}!",
+        title: L.quizComplete,
+        message: L.greatEffort,
+        lang,
         finalScore: score,
         maxPossibleScore: mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore,
         missedQuestions: state.missedQuestions || [],
         metrics: [
           {
-            label: "Final Score",
+            label: L.finalScore,
             value: `${score} / ${mode === "exam" && isFirstAttempt ? 15 : maxPossibleScore}`, // a score, not stars (16 Nov star rules)
           },
         ],
         actions: [
           {
-            label: "Play Again",
+            label: L.playAgain,
             onPress: () => navigation.replace("QuizScreenV2", { quiz, mode, questContext }),
             mode: "contained",
           },
           {
-            label: questContext ? "Back to Quest" : "Exit",
+            label: questContext ? L.backToQuest : L.exit,
             onPress: () =>
               questContext
                 ? navigation.navigate(questContext.returnTo || "EnglishQuestMap", {
@@ -283,7 +303,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
           },
           ...(questContext ? [exitAction] : []),
         ],
-        ...(questContext ? { closeAction: exitToStudy, savedNote: "Progress saved ✓" } : {}),
+        ...(questContext ? { closeAction: exitToStudy, savedNote: L.progressSavedTick } : {}),
         effects: { confetti: isPerfectScore },
         // Spec v2: every English Quest quiz reports (also Training) as mode "quest"; the server's
         // existing rules decide stars (100% only, anti-farming). Space/V1 Training stays unreported.
@@ -426,7 +446,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
               </>
             ) : null}
             {status !== "loading"
-              ? bigButton(status === "ready" ? `Start ${mode}` : "Go back", () =>
+              ? bigButton(status === "ready" ? `Start ${mode}` : L.goBack, () =>
                   status === "ready" ? dispatch({ type: "START_QUIZ" }) : navigation.goBack()
                 , { style: { alignSelf: "stretch", marginTop: 12 } })
               : null}
@@ -439,15 +459,15 @@ const QuizScreenV2 = ({ route, navigation }) => {
             <Mascot mood="thinking" size={96} />
             <View style={styles.heartsRow}>
               <Ionicons name="heart-dislike" size={30} color={P.heart} />
-              <Text style={[styles.bigTitle, { color: P.wrongBorder, marginBottom: 0 }]}>Out of hearts!</Text>
+              <Text style={[styles.bigTitle, { color: P.wrongBorder, marginBottom: 0 }]}>{L.outOfHearts}</Text>
             </View>
-            <Text style={styles.softText}>Don't worry, mistakes help you learn.</Text>
+            <Text style={styles.softText}>{L.mistakesHelp}</Text>
             {!isGate || canRetryAfter(failsAfterThisAttempt(false))
-              ? bigButton("Try again", () => (isGate ? retryGate(false) : dispatch({ type: "RESTART_QUIZ" })), {
+              ? bigButton(L.tryAgain, () => (isGate ? retryGate(false) : dispatch({ type: "RESTART_QUIZ" })), {
                   style: { alignSelf: "stretch", marginTop: 18 },
                 })
               : <Text style={styles.softText}>Practise a glowing topic on the map, then try this challenge again.</Text>}
-            {bigButton("Quit", () => navigation.goBack(), { tone: "ghost", style: { alignSelf: "stretch", marginTop: 6 } })}
+            {bigButton(L.quit, () => navigation.goBack(), { tone: "ghost", style: { alignSelf: "stretch", marginTop: 6 } })}
           </View>
         );
       }
@@ -551,23 +571,27 @@ const QuizScreenV2 = ({ route, navigation }) => {
               <View style={styles.footer}>
                 {/* Button system (owner 16 Nov 2026, quiz mockup): one round ✓ where the thumb rests. */}
                 <MainAction>
-                  <Text style={{ fontFamily: "nunito", fontSize: 14, color: P.textSoft }}>{state.selectedAnswer ? "tap to check" : "pick an answer"}</Text>
-                  <AppButton icon="checkmark" size="lg" accessibilityLabel="Check my answer" onPress={handleCheckAnswer} disabled={!state.selectedAnswer} />
+                  <Text style={{ fontFamily: "nunito", fontSize: 14, color: P.textSoft }}>{state.selectedAnswer ? L.tapToCheck : L.pickAnswer}</Text>
+                  <AppButton icon="checkmark" size="lg" accessibilityLabel={L.checkMyAnswer} onPress={handleCheckAnswer} disabled={!state.selectedAnswer} />
                 </MainAction>
               </View>
             ) : null}
             {checked ? (
               <FeedbackSheet
                 correct={wasCorrect}
-                title={wasCorrect ? "Brilliant!" : "Not quite"}
-                text={explanation.text || answerFallback}
-                whyNot={getWhyNotFeedback({
-                  question: currentQuestion,
-                  chosen: chosenText,
-                  isCorrect: wasCorrect,
-                  explanationText: explanation.text || answerFallback,
-                })}
-                buttonLabel={explanation.rich ? "SEE WHY" : wasCorrect ? "CONTINUE" : "GOT IT"}
+                title={wasCorrect ? L.brilliant : L.notQuite}
+                text={G(explanation.text || answerFallback)}
+                whyNot={hindiWhyNot(
+                  getWhyNotFeedback({
+                    question: currentQuestion,
+                    chosen: chosenText,
+                    isCorrect: wasCorrect,
+                    explanationText: explanation.text || answerFallback,
+                  }),
+                  lang
+                )}
+                buttonLabel={explanation.rich ? L.seeWhyCaps : wasCorrect ? L.continueCaps : L.gotItCaps}
+                lang={lang}
                 onPress={handleContinue}
                 bottomInset={insets.bottom}
               />
@@ -578,7 +602,7 @@ const QuizScreenV2 = ({ route, navigation }) => {
       case "reviewing": {
         return (
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.bigTitle}>Review your answers</Text>
+            <Text style={styles.bigTitle}>{L.reviewAnswers}</Text>
             {questions.map((q, index) => {
               const isMarked = state.markedForReview.includes(q.id);
               const userAnswer = state.userAnswers[q.id];
@@ -591,20 +615,20 @@ const QuizScreenV2 = ({ route, navigation }) => {
                 >
                   <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
                     {isMarked ? <Ionicons name="bookmark" size={18} color={P.gold} /> : null}
-                    <Text style={styles.reviewQuestionText}>{`Question ${index + 1}: ${q.question.content}`}</Text>
+                    <Text style={styles.reviewQuestionText}>{`${L.questionN(index + 1)}${G(q.question.content)}`}</Text>
                   </View>
                   {q.options.map((opt, optIndex) => {
                     const picked = opt.content === userAnswer;
                     return (
                       <View key={optIndex} style={[styles.reviewOption, picked && styles.reviewOptionPicked]}>
-                        <Text style={picked ? styles.reviewOptionTextPicked : styles.reviewOptionText}>{opt.content}</Text>
+                        <Text style={picked ? styles.reviewOptionTextPicked : styles.reviewOptionText}>{G(opt.content)}</Text>
                       </View>
                     );
                   })}
                 </TouchableOpacity>
               );
             })}
-            {bigButton("SUBMIT EXAM", () => dispatch({ type: "SUBMIT_EXAM", payload: { isFirstAttempt } }), { style: { marginTop: 16 } })}
+            {bigButton(L.submitExam, () => dispatch({ type: "SUBMIT_EXAM", payload: { isFirstAttempt } }), { style: { marginTop: 16 } })}
           </ScrollView>
         );
       }

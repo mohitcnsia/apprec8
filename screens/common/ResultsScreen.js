@@ -34,6 +34,7 @@ import { quizPalette } from "../../components/quiz/quizPalette";
 import { authInstance } from "../../config/firebaseConfig";
 import functions from "@react-native-firebase/functions";
 import { getFirestore, doc, onSnapshot } from "@react-native-firebase/firestore";
+import { labelsFor, glossHindi } from "../../utils/uiLabels";
 
 // --- Constants ---
 const screenWidth = Dimensions.get("window").width;
@@ -188,12 +189,13 @@ const ResultsScreen = ({ route, navigation }) => {
   // < 50%: kind + encouraging; 50–79%: "good effort"; 80%+: celebrate. Callers can still pass their own title.
   const tier = percent === null ? "great" : percent >= 0.8 ? "great" : percent >= 0.5 ? "good" : "low";
   const mood = tier === "low" ? "thinking" : tier === "good" ? "happy" : "cheer";
-  const shownTitle = tier === "low" && !route.params?.keepTitle ? "Let's try that again" : tier === "good" && !route.params?.keepTitle ? "Good effort!" : title;
+  const L = labelsFor(route.params?.lang); // Hindi quests pass lang "hi" (owner 17 Nov 2026)
+  const shownTitle = tier === "low" && !route.params?.keepTitle ? L.tryThatAgain : tier === "good" && !route.params?.keepTitle ? L.goodEffort : title;
   const shownMessage =
     tier === "low" && !route.params?.keepTitle
-      ? "Every mistake shows us what to practise, {username}. Read the reasons, then have another go. You can do it!"
+      ? L.lowMessage
       : tier === "good" && !route.params?.keepTitle
-      ? "Nice work, {username}! A little more practice and you'll have it."
+      ? L.goodMessage
       : message;
   const starAnims = useRef([0, 1, 2].map(() => new Animated.Value(0))).current;
   useEffect(() => {
@@ -319,12 +321,12 @@ const ResultsScreen = ({ route, navigation }) => {
             <View style={styles.metricRow}>
               <Ionicons name="construct-outline" size={22} color={P.label} />
               <Text style={styles.cardTitle}>
-                {missedQuestions.length === 1 ? "1 question to practise" : `${missedQuestions.length} questions to practise`}
+                {L.toPractise(missedQuestions.length)}
               </Text>
             </View>
             {missedQuestions.map((qText, idx) => (
               <Text key={idx} style={styles.practiceItem}>
-                • {qText}
+                • {glossHindi(qText)}
               </Text>
             ))}
           </View>
@@ -335,11 +337,11 @@ const ResultsScreen = ({ route, navigation }) => {
           {submitStatus === "error" ? <Text style={styles.errorText}>{submitError}</Text> : null}
           {award?.stars > 0 ? (
             <>
-              <Text style={styles.successText}>+{award.stars} ⭐ earned!</Text>
+              <Text style={styles.successText}>{L.starsEarned(award.stars)}</Text>
               <Text style={styles.infoText}>{(award.reasons || []).map((r) => `${r.why} +${r.n}`).join(" · ")}</Text>
             </>
           ) : submitStatus === "success" ? (
-            <Text style={styles.successText}>{starsAwarded > 0 ? `+${starsAwarded} ⭐ earned!` : "Progress saved!"}</Text>
+            <Text style={styles.successText}>{starsAwarded > 0 ? L.starsEarned(starsAwarded) : L.progressSaved}</Text>
           ) : null}
           {submitStatus === "skipped" ? <Text style={styles.infoText}>{savedNote || "Result not submitted."}</Text> : null}
         </View>
@@ -357,7 +359,7 @@ const ResultsScreen = ({ route, navigation }) => {
           accessibilityRole="button"
           style={{ alignSelf: "center", paddingVertical: 10 }}
         >
-          <Text style={styles.infoText}>Something wrong? Tell us ›</Text>
+          <Text style={styles.infoText}>{L.somethingWrong}</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -365,7 +367,7 @@ const ResultsScreen = ({ route, navigation }) => {
         <TouchableOpacity
           onPress={closeAction}
           hitSlop={12}
-          accessibilityLabel="Close"
+          accessibilityLabel={L.close}
           style={[styles.closeButton, { top: insets.top + 10 }]}
         >
           <Ionicons name="close" size={28} color={P.textSoft} />

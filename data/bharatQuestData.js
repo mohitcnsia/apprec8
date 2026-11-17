@@ -13,6 +13,7 @@ export const quest = {
   image: null, // picture to come (the link Gemini used does not exist yet)
   version: 1,
   draft: false, // owner reviewed the Hindi 16–17 Nov: open to everyone
+  lang: "hi", // Hindi buttons and labels on its screens (owner 17 Nov, utils/uiLabels.js)
   intro: {
     hideTester: true,
     title: "यह कैसे काम करता है",

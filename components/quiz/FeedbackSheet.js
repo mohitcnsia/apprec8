@@ -10,6 +10,7 @@ import { quizPalette } from "./quizPalette";
 import { useTheme } from "../../context/ThemeContext";
 import { buildOthersSpeechText } from "../../utils/whyNot";
 import AppButton, { MainAction } from "../common/AppButton";
+import { labelsFor, voiceFor } from "../../utils/uiLabels";
 
 export default function FeedbackSheet({
   correct,
@@ -20,7 +21,9 @@ export default function FeedbackSheet({
   bottomInset = 0,
   extra = null,
   whyNot = null,
+  lang = "en", // "hi" on Hindi quests (owner 17 Nov 2026): Hindi words on the sheet and a Hindi voice
 }) {
+  const L = labelsFor(lang);
   const { isDark } = useTheme();
   const P = quizPalette(isDark);
   const slide = useRef(new Animated.Value(1)).current;
@@ -51,14 +54,15 @@ export default function FeedbackSheet({
   const getSpeechToRead = () => {
     if (!correct) {
       if (wrongWhy) {
-        return `Why not ${wrongWhy.option}? ${wrongWhy.why}.${text ? " " + text : ""}`;
+        return `${lang === "hi" ? wrongWhy.heading : `Why not ${wrongWhy.option}?`} ${wrongWhy.why}.${text ? " " + text : ""}`;
       }
       return text || "";
     }
     // Correct
     const base = text || "";
     if (othersOpen && otherWhys.length > 0) {
-      return (base ? base + ". " : "") + buildOthersSpeechText(otherWhys);
+      const others = lang === "hi" ? `${L.whyNotOthers} ${otherWhys.map((w) => `${w.option}: ${w.why}`).join(". ")}` : buildOthersSpeechText(otherWhys);
+      return (base ? base + ". " : "") + others;
     }
     return base;
   };
@@ -73,8 +77,7 @@ export default function FeedbackSheet({
     if (!speech) return;
     setSpeaking(true);
     Speech.speak(speech, {
-      language: "en-IN",
-      rate: 0.9,
+      ...voiceFor(speech),
       onDone: () => setSpeaking(false),
       onError: () => setSpeaking(false),
     });
@@ -102,7 +105,7 @@ export default function FeedbackSheet({
             hitSlop={8}
             style={styles.speakerButton}
             accessibilityRole="button"
-            accessibilityLabel={speaking ? "Stop reading" : "Read explanation aloud"}
+            accessibilityLabel={speaking ? L.stopReading : L.readExplanation}
           >
             <Ionicons name={speaking ? "stop-circle" : "volume-high"} size={24} color={fg} />
           </TouchableOpacity>
@@ -130,10 +133,10 @@ export default function FeedbackSheet({
               activeOpacity={0.7}
               style={styles.foldButton}
               accessibilityRole="button"
-              accessibilityLabel={othersOpen ? "Hide why not the others" : "Why not the others"}
+              accessibilityLabel={L.whyNotOthers}
             >
               <Ionicons name={othersOpen ? "chevron-up" : "chevron-down"} size={18} color={fg} />
-              <Text style={[styles.foldTitle, { color: fg }]}>Why not the others?</Text>
+              <Text style={[styles.foldTitle, { color: fg }]}>{L.whyNotOthers}</Text>
             </TouchableOpacity>
             {othersOpen ? (
               <View style={styles.othersList}>
@@ -152,10 +155,10 @@ export default function FeedbackSheet({
 
       {/* Button system (owner 16 Nov 2026): a round → on the thumb's side; "See why" keeps its word. */}
       <MainAction style={{ marginTop: 4 }}>
-        {/^see why/i.test(buttonLabel || "") ? (
-          <AppButton label="See why" icon="book-outline" size="lg" onPress={handlePress} />
+        {/^see why/i.test(buttonLabel || "") || buttonLabel === L.seeWhyCaps ? (
+          <AppButton label={L.seeWhy} icon="book-outline" size="lg" onPress={handlePress} />
         ) : (
-          <AppButton icon="arrow-forward" size="lg" accessibilityLabel={/got it/i.test(buttonLabel || "") ? "Got it, next question" : "Next question"} onPress={handlePress} />
+          <AppButton icon="arrow-forward" size="lg" accessibilityLabel={/got it/i.test(buttonLabel || "") || buttonLabel === L.gotItCaps ? L.gotItNext : L.nextQuestion} onPress={handlePress} />
         )}
       </MainAction>
     </Animated.View>

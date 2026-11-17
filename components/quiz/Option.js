@@ -10,6 +10,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Text, TouchableOpacity, StyleSheet, Image, View, Animated } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { quizPalette } from "./quizPalette";
+import { glossHindi } from "../../utils/uiLabels";
 
 const LETTERS = "ABCDEFGH";
 
@@ -52,7 +53,7 @@ const Option = ({ option, onPress, isSelected, showFeedback, isCorrect, index = 
     dim: { box: styles.idle, text: styles.textDim, badge: styles.badgeIdle, badgeText: styles.badgeTextDim },
   }[state];
 
-  const content = option?.content || "";
+  const content = glossHindi(option?.content || ""); // display only: answers are checked on option.content
   const isImage = option?.type === "image" && option?.mediaUrl;
   const isTile = variant === "tile" && !isImage;
 

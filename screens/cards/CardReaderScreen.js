@@ -5,6 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import LearnCards from "../../components/learn/LearnCards";
 import { learnCards } from "../../utils/learnCards";
+import { cardsLang, labelsFor } from "../../utils/uiLabels";
 import { setCardStatus, recordCardAnswers } from "../../services/cardsApi";
 
 export default function CardReaderScreen({ navigation, route }) {
@@ -12,6 +13,8 @@ export default function CardReaderScreen({ navigation, route }) {
   const { isDark } = useTheme();
   // A card without pages shows its own title + text as one idea card.
   const cards = useMemo(() => learnCards({ cards: card.cards }) || [{ kind: "idea", title: card.title, text: card.text || card.title }], [card]);
+
+  const L = labelsFor(cardsLang(cards, card.title)); // Hindi card: Hindi buttons (owner 17 Nov)
 
   useEffect(() => {
     if (card.id && card.status === "new") setCardStatus(card.id, "opened");
@@ -30,7 +33,7 @@ export default function CardReaderScreen({ navigation, route }) {
       title={card.title}
       cardKey={`card-${card.id || "x"}`}
       isDark={isDark}
-      finishLabel="DONE ✓"
+      finishLabel={L.doneTick}
       onFinish={({ picked } = {}) => {
         save(picked);
         navigation.goBack();
@@ -38,7 +41,7 @@ export default function CardReaderScreen({ navigation, route }) {
       extraAction={
         card.moreQuestId
           ? {
-              label: "More like this ›",
+              label: L.moreLikeThis,
               onPress: ({ picked } = {}) => {
                 save(picked);
                 navigation.replace("EnglishQuestIntro", { questId: card.moreQuestId });

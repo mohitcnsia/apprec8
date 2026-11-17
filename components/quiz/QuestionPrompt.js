@@ -11,6 +11,7 @@ import { quizPalette } from "./quizPalette";
 import Mascot from "./Mascot";
 import QuestionCard from "./QuestionCard";
 import { splitInstruction } from "../../utils/quizText";
+import { glossHindi } from "../../utils/uiLabels";
 
 export default function QuestionPrompt({ question, mood = "happy", chosenText = null }) {
   const { isDark } = useTheme();
@@ -29,7 +30,8 @@ export default function QuestionPrompt({ question, mood = "happy", chosenText = 
 
   const split = splitInstruction(q.content || "");
   const label = split.body ? split.label : null;
-  const body = split.body || q.content || "";
+  // Hindi text: English terms also spelled in Hindi script, "OTP (ओटीपी)" (owner 17 Nov). English text is unchanged.
+  const body = glossHindi(split.body || q.content || "");
   const parts = body.split(/_{2,}/);
   const oneBlank = parts.length === 2;
 
@@ -40,7 +42,7 @@ export default function QuestionPrompt({ question, mood = "happy", chosenText = 
     <View style={styles.wrap}>
       <View style={styles.headRow}>
         <Mascot mood={mood} size={label ? 44 : 56} />
-        {label ? <Text style={[styles.label, { color: P.label }]}>{label}</Text> : null}
+        {label ? <Text style={[styles.label, { color: P.label }]}>{glossHindi(label)}</Text> : null}
       </View>
       <View style={[styles.card, label ? { backgroundColor: P.selectedBg, borderColor: P.selectedBorder } : { backgroundColor: P.card, borderColor: P.border }]}>
         {label ? <Text style={[styles.quoteMark, { color: P.label }]}>“</Text> : null}

@@ -12,10 +12,12 @@ import Mascot from "../../components/quiz/Mascot";
 import { listenToUserQuizAttempt } from "../../services/firestoreContentApi";
 import useImmersiveStatusBar from "../../hooks/useImmersiveStatusBar";
 import { isExamOnly } from "../../utils/quizMode";
+import { quizLang } from "../../utils/quizLang";
+import { labelsFor } from "../../utils/uiLabels";
 
-const MODES = [
-  { id: "training", icon: "🎯", title: "Training", sub: "Hearts, and the reason after every answer." },
-  { id: "exam", icon: "📝", title: "Exam", sub: "Like a real exam: answers at the end." },
+const modesFor = (L) => [
+  { id: "training", icon: "🎯", title: L.training, sub: L.trainingSub },
+  { id: "exam", icon: "📝", title: L.exam, sub: L.examSub },
 ];
 
 const QuizDetailsScreen = ({ route, navigation }) => {
@@ -25,6 +27,8 @@ const QuizDetailsScreen = ({ route, navigation }) => {
   const P = quizPalette(isDark);
   const insets = useSafeAreaInsets();
   const styles = useMemo(() => makeStyles(P, insets), [P, insets]);
+  const L = labelsFor(quizLang({ questId: questContext?.questId, texts: [quiz?.title, quiz?.description] })); // Hindi quests: Hindi labels
+  const MODES = modesFor(L);
 
   const [attempt, setAttempt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +69,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
-        {questContext ? <Text style={styles.label}>QUEST</Text> : null}
+        {questContext ? <Text style={styles.label}>{L.questLabel}</Text> : null}
         <Text style={styles.title}>{quiz.title}</Text>
         {quiz.description ? <Text style={styles.soft}>{quiz.description}</Text> : null}
 
@@ -81,15 +85,15 @@ const QuizDetailsScreen = ({ route, navigation }) => {
                   {"☆".repeat(3 - masteryLevel)}
                 </Text>
                 <Text style={styles.soft}>
-                  {attempt ? `Best ${highScore} stars` : "First try!"}
-                  {count ? ` · ${count} questions` : ""}
+                  {attempt ? L.bestStars(highScore) : L.firstTry}
+                  {count ? L.questionCount(count) : ""}
                 </Text>
               </>
             )}
           </View>
         </View>
 
-        <Text style={[styles.label, { marginTop: 8 }]}>{examOnly ? "EXAM STYLE: PASS IT TO OPEN WHAT'S NEXT" : "HOW DO YOU WANT TO PLAY?"}</Text>
+        <Text style={[styles.label, { marginTop: 8 }]}>{examOnly ? L.examOnlyNote : L.howToPlay}</Text>
         {(examOnly ? MODES.filter((m) => m.id === "exam") : MODES).map((m) => {
           const on = mode === m.id;
           return (
@@ -113,7 +117,7 @@ const QuizDetailsScreen = ({ route, navigation }) => {
       {/* Thumb zone: the one main button (design rule 2) */}
       <View style={styles.footer}>
         <Pressable onPress={onStart} accessibilityRole="button" style={styles.startButton}>
-          <Text style={styles.startText}>{mode === "exam" ? "START EXAM" : "START TRAINING"}</Text>
+          <Text style={styles.startText}>{mode === "exam" ? L.startExam : L.startTraining}</Text>
         </Pressable>
       </View>
     </View>

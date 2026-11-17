@@ -8,13 +8,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Speech from "expo-speech";
 import { useTheme } from "../../context/ThemeContext";
 import { canTryAnswers, tryEachAnswerLines, speakableQuestion } from "../../utils/listen";
-
-const VOICE = { language: "en-IN", rate: 0.9 };
+import { voiceFor, langOf } from "../../utils/uiLabels";
 
 export default function ListenButtons({ questionId, questionText, options = [], color }) {
   const { theme } = useTheme();
   const styles = useMemo(() => makeStyles(theme, color), [theme, color]);
   const [speaking, setSpeaking] = useState(null); // "question" | "answers" | null
+  const hindi = langOf(questionText) === "hi"; // Hindi question: Hindi voice and words (owner 17 Nov)
   const runId = useRef(0);
 
   // Stop when the question changes or the screen closes.
@@ -38,7 +38,7 @@ export default function ListenButtons({ questionId, questionText, options = [], 
     const next = (i) => {
       if (id !== runId.current) return;
       if (i >= lines.length) return setSpeaking(null);
-      Speech.speak(lines[i], { ...VOICE, onDone: () => setTimeout(() => next(i + 1), 450), onError: () => setSpeaking(null) });
+      Speech.speak(lines[i], { ...voiceFor(lines[i]), onDone: () => setTimeout(() => next(i + 1), 450), onError: () => setSpeaking(null) });
     };
     next(0);
   };
@@ -50,7 +50,7 @@ export default function ListenButtons({ questionId, questionText, options = [], 
       <TouchableOpacity
         hitSlop={8}
         style={styles.button}
-        accessibilityLabel={speaking === "question" ? "Stop reading" : "Listen to the question"}
+        accessibilityLabel={speaking === "question" ? (hindi ? "सुनना बंद करें" : "Stop reading") : hindi ? "सवाल सुनें" : "Listen to the question"}
         onPress={() => (speaking === "question" ? stop() : speakLines([speakableQuestion(questionText)], "question"))}
       >
         <Ionicons name={speaking === "question" ? "stop-circle" : "volume-high"} size={20} color={color || theme.textPrimaryOnGradient} />
