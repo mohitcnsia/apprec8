@@ -79,3 +79,47 @@ in Firestore `chessGames` (owner/admin read rule), never in git (public repo), n
   lichess games first. Endgames: a short must-know ladder (K+Q v K, K+R v K, opposition and the square rule, key
   pawn endings, Lucena, Philidor, later B+N), each position checked with Stockfish/tablebase on the Mac; on the phone,
   stored best-move sets (no engine needed). Owner has endgame books: concepts summarised, positions checked by engine.
+
+- **Owner Feedback & Big TODO Plans (17 Nov 2026):**
+  Detailed specifications and implementation pathways for the 9 items requested by the owner:
+  1. **Full-Screen App Mode (Immersive / Hide Status Bar):**
+     - *Problem:* When opening Home, the system status bar (time, mobile signal bars, battery icon) remains visible. It distracts children and breaks the immersive, focused learning and gamified experience.
+     - *Goal:* The app should always open and stay in full-screen mode without the distracting system status bar.
+     - *Implementation Details:* In root navigator (`App.js` or `MainNavigator.js`), configure React Native / Expo `StatusBar` with `<StatusBar hidden={true} />` (or `StatusBar.setHidden(true, 'fade')`). On Android, enable sticky immersive mode (`expo-navigation-bar` or `androidStatusBar: { hidden: true }` in `app.config.js`). Ensure notch/camera safe areas are respected via `SafeAreaProvider` / `useSafeAreaInsets` so controls are never clipped.
+  2. **Home Screen Greeting Section Layout (Responsive for 6"+ Screens):**
+     - *Problem:* In `HomeScreen.js`, the greeting, user name, date, time, and avatar are stacked vertically ("piled up") under the profile icon. While functional as a fallback on tiny screens, on 6-inch and larger modern devices (and foldables/tablets) it wastes horizontal screen real estate.
+     - *Proposed Responsive Design:*
+       - *Screen width $\ge 380$–$400$ dp:* Left side features a larger profile avatar (~52–56 dp) with greeting ("Good morning / Namaste") and child's name cleanly aligned; right side features the Streak badge and Stars count pill, with the current Date and Time neatly formatted underneath.
+       - *Small screen fallback (< 380 dp):* Retain current compact stacked layout.
+       - *Next step:* Mockup to be reviewed with the owner before building.
+  3. **Separate Reports from Kids in Progress & Entire Settings Redesign:**
+     - *Problem:* Currently, `ProgressScreen` conflates individual student progress with aggregate/admin reporting (`Me`, `Kids`, `Reports`, `This week`).
+     - *Goal & Structure:*
+       - *Separate Reports:* Move "Reports" (and class analytics) completely out of the Progress tab into the Side Bar / Drawer navigation. Progress tab remains dedicated to personal/child learning progress (`Me` / `Children` / `My classes`).
+       - *Settings Redesign:* Full redesign of "All Settings" in the side panel. Simplify nested menus into clean, grouped settings (Account & Profile, Notifications & Reminders, Display & Sound, Privacy & Consent, Help & Support). Mockup first.
+  4. **Progress -> Kids UX: Immediate Activity Feed / "Recently Worked On":**
+     - *Problem:* In Progress -> Kids, selecting a child currently displays an empty screen with collapsed categories. A parent or teacher has to hunt through multiple possibilities/submenus to see if the child has actually done any work.
+     - *Goal:* Selecting a kid must immediately surface an **Activity Feed** of their actual completed work.
+     - *Implementation:* Top section displays a "Recent Activity" card listing the last 3–5 completed items with timestamps and scores (e.g., *"Space: The Moon · 10/10 ⭐ · Today 4:15 pm"*, *"English: Nouns Step 2 · 8/8 ⭐ · Yesterday"*, *"Class 5 ISO Paper 1 · 42/50 · 15 Nov"*). Below it, display active quests & topics with % completion and badges, followed by drill-downs.
+  5. **Home Reminder Card: Mark Done / Details Action & Fix Overdue Bug:**
+     - *Problem:* The Home reminder card lacks direct interactive actions to mark the reminder as done or view details. Additionally, the card incorrectly keeps showing items the user already completed in the past as "Overdue".
+     - *Implementation:* Add two clear action buttons/pills on the card: `[ See Details › ]` (navigates to the relevant topic/quest/assignment) and `[ Mark Done ✓ ]` (dismisses/acknowledges the reminder). Audit `utils/assignedTopics.js` and `components/home/NudgeCard.js` / `DailySwipeCard.js` to cross-reference tasks against `completedQuests`, completed node IDs, and quiz attempts so completed assignments are cleared and never flagged as overdue.
+  6. **Speech Button Toggle (Stop on Second Click):**
+     - *Problem:* Currently, clicking the speech/read-aloud button a second time restarts the audio from the beginning rather than stopping it.
+     - *Goal:* Clean toggle state machine: 1st click starts reading from beginning (icon toggles to stop/wave); 2nd click immediately stops/halts playback (`Speech.stop()`); 3rd click restarts reading from beginning.
+     - *Implementation:* Update `components/common/Apprec8Speech.js`, `components/quiz/QuestionPrompt.js`, `components/learn/LearnCards.js`, and `screens/fun/ReadingScreen.js` with an `isSpeaking` toggle state handler using `Speech.isSpeakingAsync()` and `Speech.stop()`.
+  7. **Remove Redundant Screen Names Across the App:**
+     - *Problem:* Several screens display redundant header names even when context is already visually self-evident (e.g., "Learn" appears at the top of the Learn tab; "Aao Jaanein" / "आओ जानें" banner appears redundantly on the Quest Screen).
+     - *Goal:* Strip repetitive, cluttering screen headers in line with the project's minimalist UI guidelines (`headerShown: false` or removing top redundant title bars).
+  8. **Chess Game List Performance & App-Wide Efficiency Audit:**
+     - *Problem:* In `screens/fun/chess/ChessTrainerScreen.js`, the chess game library list loads noticeably slowly, freezing/stuttering the screen on open due to synchronous PGN parsing.
+     - *Fix:* Lazy parse PGN moves and Stockfish evaluations only when a user taps to play a game; parse only lightweight headers (Event, Site, White, Black, Result, ECO) during list render. Virtualize list with `FlatList` + `getItemLayout`. Audit app-wide for similar synchronous JSON parsing or unvirtualized lists.
+  9. **Learn Content Review & Massive Expansion (Psychology, Animals, Dinosaurs, Dragons, Dogs + AI Images):**
+     - *A. Audit & Prune Older Learn Content:* Review legacy V1/V2 quizzes in the Learn tab. Retain high-quality syllabus-aligned content; archive/purge obsolete or low-quality quizzes to reclaim database storage.
+     - *B. Psychology Course for Seema's Students (Class 10 & 12 Board Prep):* Practical modules on managing exam anxiety, memory & recall techniques (spaced repetition, chunking), focus/sleep science, and overcoming fear of failure.
+     - *C. High-Engagement Reading Quests for Passionate Readers (Pratha & 8–16 Age Group):*
+       - *Dogs (Pratha's #1 Favorite):* Revive and expand the "Dog Squad" exploration quest. Breeds, wolf ancestry, working dogs (rescue, guide, sniffer), canine senses, body language, training, and emotional bond.
+       - *Dragons & Mythical Beasts:* Dragon legends across world cultures (European, Chinese, Indian Nagas), real-world "dragons" (Komodo dragons, flying lizards).
+       - *Dinosaurs & Prehistoric Earth:* Geological eras (Triassic, Jurassic, Cretaceous), fossilization, apex predators (T-Rex, Spinosaurus), sauropods, pterosaurs, extinction theories.
+       - *Human Body, Animal Kingdom & Plant Kingdom:* Deep, rich reading articles packed with awe-inspiring biology, extreme animal adaptations, and carnivorous plants.
+     - *D. AI Image Generation Pipeline (Kids 8–16):* Establish an offline pipeline (via Claude / Imagen / Gemini) to generate captivating, high-resolution, kid-safe visuals matching the Science Olympiad standard. Optimize via Squoosh / WebP and host on `data/media_backup` CDN (`cdn.jsdelivr.net`).

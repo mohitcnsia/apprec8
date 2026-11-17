@@ -59,6 +59,7 @@ the owner; G14/G11 parked).
 - **Test:** `npm test` green across all 60+ test suites. Full report in `docs/agents/reports/G_HINDI_QUESTS.md`.
 
 ## Future TODOs
+- **Owner TODOs & UX/Content Overhaul (17 Nov 2026):** Fullscreen mode (no status bar), Home greeting responsiveness, Progress Kids activity feed, separate Reports to side bar & Settings redesign, Reminder card mark-done/overdue fix, TTS speech toggle (stop on 2nd tap), strip redundant screen names, Chess/app-wide performance, Learn content review + Psychology/Dogs/Dragons/Dinos reading quests + AI images. Full plan in `docs/agents/TODO_DETAILS.md`.
 - **Word Power Quest: Root Words & Morphology ("Word Power Made Easy" for Olympiads; owner plan 2026-11-15; Claude to review & plan):** full plan in `docs/agents/TODO_DETAILS.md`.
 - **English Quest Content & Variety Overhaul (Owner + Pratha Feedback, 15 Nov 2026):** full plan in `docs/agents/TODO_DETAILS.md`.
 - **Chess Trainer: 100% Book Replacement & Master-Level Content Pipeline (Owner, 15 Nov 2026):** full plan in `docs/agents/TODO_DETAILS.md`.
