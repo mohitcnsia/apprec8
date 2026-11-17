@@ -73,8 +73,12 @@ export function nodesForGradeOrAll(nodes = [], grade, questId = null) {
   if (!gs.length) return { nodes: kept, coveredClasses: null };
   const lo = Math.min(...gs), hi = Math.max(...gs);
   // Older children only: easier topics are a warm-up; harder ones would only discourage a younger child.
-  if (grade <= hi || !OPEN_TO_OLDER.has(questId)) return { nodes: kept, coveredClasses: null };
-  return { nodes, coveredClasses: { lo, hi } };
+  if (grade <= hi) return { nodes: kept, coveredClasses: null };
+  if (OPEN_TO_OLDER.has(questId)) return { nodes, coveredClasses: { lo, hi } };
+  // Other quests (owner 17 Nov: Class 8 kids saw an empty Science Quest): one class above the top class gets the top
+  // class's topics as a warm-up. Further up stays hidden (G79: Seema's Class 10 pilot doesn't see Science).
+  if (grade === hi + 1) return { nodes: nodesForGrade(nodes, hi), coveredClasses: { lo: hi, hi } };
+  return { nodes: kept, coveredClasses: null };
 }
 
 /** The topics a child sees in a quest (their class, or all of it when they're older than every topic). */

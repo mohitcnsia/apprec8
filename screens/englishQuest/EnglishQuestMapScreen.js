@@ -24,6 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "../../context/ThemeContext";
 import { authInstance } from "../../config/firebaseConfig";
+import { withPersona, isOwnerAccount, currentPersona } from "../../services/persona";
 import { isTesterView } from "../../services/ownerView";
 import { useTesterMode } from "../../services/testerMode";
 import { getQuest, getQuestNodes, prefetchUnit } from "../../services/contentCache";
@@ -198,7 +199,9 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
   useEffect(
     () =>
       listenToUserDocument((d) => {
-        setGrade(Number.isInteger(d?.grade) ? d.grade : null);
+        // The owner sees every class (17 Nov: his Class 10 account saw an empty Science Quest); "View as" a kid uses its class.
+        const v = withPersona(d);
+        setGrade(isOwnerAccount() && currentPersona().role === "owner" ? null : Number.isInteger(v?.grade) ? v.grade : null);
         setClassIds([...(d?.classIds || []), ...(d?.pendingClassIds || [])]); // waiting kids get the teacher's topics too (12 Nov)
       }, () => {}),
     []
@@ -891,7 +894,7 @@ export default function EnglishQuestMapScreen({ route, navigation }) {
       ) : null}
       {coveredClasses && Number.isInteger(grade) ? (
         <Text style={styles.gradeNote}>
-          Made for Classes {coveredClasses.lo}–{coveredClasses.hi}: a good warm-up for Class {grade}. Class {grade} topics are coming.
+          Made for {coveredClasses.lo === coveredClasses.hi ? `Class ${coveredClasses.hi}` : `Classes ${coveredClasses.lo}–${coveredClasses.hi}`}: a good warm-up for Class {grade}. Class {grade} topics are coming.
         </Text>
       ) : null}
 

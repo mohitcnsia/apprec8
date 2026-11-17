@@ -9,7 +9,7 @@ import { OWNER, cleanPersona, applyPersona } from "../utils/persona";
 const KEY = "ownerPersona:v1";
 let current = OWNER;
 const subs = new Set();
-const isOwnerAccount = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
+export const isOwnerAccount = () => !!APPREC8_TEAM_REVIEWER_UID && authInstance.currentUser?.uid === APPREC8_TEAM_REVIEWER_UID;
 
 AsyncStorage.getItem(KEY)
   .then((v) => {

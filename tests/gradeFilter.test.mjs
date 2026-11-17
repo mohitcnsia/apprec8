@@ -83,6 +83,7 @@ assert.equal(questHasTopicsForGrade(WordPower.nodes, 4), true, "Word Power has t
 assert.equal(questHasTopicsForGrade(WordPower.nodes, 10), false, "Word Power has 0 topics of its own for Class 10");
 assert.equal(questHasTopicsForGrade(WordPower.nodes, 10, "word-power"), true, "…but Class 10 sees it (owner 16 Nov: words help at any age)");
 assert.equal(questHasTopicsForGrade(Science.nodes, 10, "science-quest"), false, "Science stays hidden from Class 10 (G79)");
+assert.equal(questHasTopicsForGrade(Science.nodes, 8, "science-quest"), true, "Class 8 gets Class 7 science as a warm-up (owner 17 Nov)");
 
 console.log("gradeFilter tests passed");
 
@@ -120,6 +121,11 @@ console.log("gradeFilter tests passed");
   assert.equal(nodesForGradeOrAll(nodes, null).coveredClasses, null, "no class: everything, no note");
   const science = [{ id: "u", kind: "unit", grades: [7] }, { id: "s", kind: "main", unitId: "u", grades: [7] }];
   assert.equal(nodesForGradeOrAll(science, 3, "word-power").nodes.some((n) => n.kind === "main"), false, "younger children don't get harder topics");
-  assert.equal(nodesForGradeOrAll(nodes, 10, "science-quest").coveredClasses, null, "other quests keep hiding");
+  // Owner 17 Nov: other quests show only the top class's topics to an older child (Class 8 saw an empty Science Quest).
+  const sci7 = nodesForGradeOrAll(nodes, 7, "science-quest"); // one class above the top (6)
+  assert.deepEqual(sci7.coveredClasses, { lo: 6, hi: 6 });
+  assert.ok(sci7.nodes.some((n) => n.id === "m1") && !sci7.nodes.some((n) => n.id === "m2"), "only the top class (4–6 topic), not Class 2–3");
+  assert.equal(nodesForGradeOrAll(nodes, 10, "science-quest").coveredClasses, null, "further up stays hidden (G79)");
+  assert.equal(nodesForGradeOrAll(nodes, 6, "science-quest").coveredClasses, null, "a class inside the range keeps its own filter");
   console.log("nodesForGradeOrAll tests passed");
 }
