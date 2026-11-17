@@ -121,7 +121,7 @@
           ],
           "explanation": {
             "text": "As the Earth rotates on its axis, one side faces the Sun (Day) while the other side faces away (Night).",
-            "trivia": "The Earth spins incredibly fast! If you are standing on the equator, you are moving at about 1,000 miles per hour!",
+            "trivia": "The Earth spins fast! If you stand on the equator, you are moving at about 1,670 km per hour!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/The_Earth_seen_from_Apollo_17.jpg"
           }
@@ -431,7 +431,7 @@
           ],
           "explanation": {
             "text": "Olympus Mons is a massive shield volcano on Mars.",
-            "trivia": "Olympus Mons on Mars is about 22 km high, roughly two and a half times as tall as Mount Everest.",
+            "trivia": "Olympus Mons on Mars is about 600 km wide, with slopes so gentle you could walk up most of it.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Olympus_Mons_alt.jpg"
           },
@@ -731,7 +731,7 @@
           ],
           "explanation": {
             "text": "Comets are often described as 'dirty snowballs' because they are composed of frozen gases, rock, and dust.",
-            "trivia": "As a comet gets closer to the Sun, the ice turns to gas, creating a glowing tail that can stretch for millions of miles.",
+            "trivia": "As a comet gets closer to the Sun, its ice turns to gas, making a glowing tail that can stretch for millions of kilometres.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Neowise_Comet_-_geograph.org.uk_-_6539528.jpg"
           },
@@ -2292,7 +2292,7 @@
           ],
           "explanation": {
             "text": "Jupiter's Great Red Spot is a massive high-pressure storm in its atmosphere.",
-            "trivia": "Jupiter's Great Red Spot is a giant storm that is wider than the whole Earth!",
+            "trivia": "Jupiter's Great Red Spot has been slowly shrinking for over a century, but it is still wider than the whole Earth!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter_and_its_shrunken_Great_Red_Spot.jpg"
           },
@@ -2582,7 +2582,7 @@
           ],
           "explanation": {
             "text": "Jupiter has an incredibly powerful magnetic field, roughly 20,000 times stronger than Earth's, which traps high-energy particles in intense radiation belts.",
-            "trivia": "The Juno spacecraft currently orbiting Jupiter is built like an armored tank to survive this radiation!",
+            "trivia": "NASA's Juno spacecraft at Jupiter keeps its electronics inside a thick titanium vault to survive Jupiter's fierce radiation!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Jupiter.jpg"
           },
@@ -2999,7 +2999,7 @@
           ],
           "explanation": {
             "text": "Near-Earth Objects are comets and asteroids that have been nudged by the gravitational attraction of nearby planets into orbits that allow them to enter the Earth's neighborhood.",
-            "trivia": "NASA has an entire Planetary Defense Coordination Office dedicated to finding and tracking these objects to protect Earth!",
+            "trivia": "NASA has a whole Planetary Defense Coordination Office that finds and tracks asteroids and comets that could come close to Earth!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Main_Asteroid_Belt_Asteroids.jpg"
           },
@@ -3242,7 +3242,7 @@
           ],
           "explanation": {
             "text": "Kepler realized that planets don't move in perfect circles around the sun, but in elongated ellipses.",
-            "trivia": "Kepler used the incredibly precise naked-eye observations made by his mentor, Tycho Brahe, to figure out these mathematical laws.",
+            "trivia": "Johannes Kepler worked out his laws of how planets move using the very careful naked-eye observations of his mentor, Tycho Brahe.",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Keplers_supernova.jpg"
           },
@@ -3833,7 +3833,7 @@
           ],
           "explanation": {
             "text": "Rovers are robotic vehicles equipped with cameras and scientific instruments designed to explore the terrain of other planets.",
-            "trivia": "Perseverance even brought a tiny helicopter named Ingenuity, which became the first aircraft to fly on another planet!",
+            "trivia": "NASA's Perseverance rover carried a small helicopter, Ingenuity, which in 2021 became the first aircraft to fly on another planet!",
             "mediaType": "image",
             "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Martian_rover_Curiosity_using_ChemCam_M-100_focus_stacked_-_tight_crop.jpg"
           },
@@ -4007,7 +4007,7 @@
           ],
           "explanation": {
             "text": "Space junk or space debris is defunct human-made objects in space.",
-            "trivia": "Even a tiny fleck of paint orbiting at 17,500 mph can crack the window of the International Space Station!",
+            "trivia": "Even a tiny fleck of paint, moving at about 28,000 km per hour in orbit, can crack a window of the International Space Station!",
             "mediaType": "image",
             "mediaUrl": "https://cdn.jsdelivr.net/gh/mohitcnsia/images@main/Debris-LEO1280.jpg"
           },
