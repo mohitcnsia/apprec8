@@ -2179,6 +2179,26 @@ const NODES_BY_QUEST = {
       "stepCount": 2
     },
     {
+      "id": "sq6-motion",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-materials",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-temperature",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-water",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
       "id": "sq-u7",
       "kind": "unit",
       "stepCount": 0
