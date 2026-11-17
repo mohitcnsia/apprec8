@@ -80,6 +80,10 @@ Closed without a change: May–June reports on old quizzes (hidden for everyone 
   e.g. "Review the parent tips + add Hindi". Like assigning to students: shows on her Home + a notification, she marks it
   done, the owner sees status. First task once built: the parent tips review.
 - **Delete-account screen in dark mode (walk 16 Nov):** the title is hard to read (light on light). Fix with the wording item above.
+- **आओ जानें content (owner 17 Nov):** (1) a 4th option + "why not" for the 52 questions that have 3 (one review page for
+  the owner; then a content test so no question goes live with fewer than 4); (2) picture plan: one picture per topic,
+  one illustrated style (Nano Banana), Claude writes a brief per topic (what to show / avoid), 3 samples first, hosted in
+  mohitcnsia/images; (3) Panchatantra card 2 (Claude's line) waits for the owner's Hindi check.
 - **Redesign built for 20.0.33 (16 Nov night):** buttons A/B/C + hand, Home top, Learn tab, Me panel, Progress, faces,
   tablet column, ∞ notification icon. Next: quiz two-part tablet view; notification buttons (Start / Later) and the round
   picture need the app to draw notifications itself (data messages + a display handler): plan it, test it hard ("we
