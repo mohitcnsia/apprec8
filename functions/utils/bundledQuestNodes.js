@@ -2159,6 +2159,26 @@ const NODES_BY_QUEST = {
       "stepCount": 0
     },
     {
+      "id": "sq6-science",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-diversity",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-eating",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "sq6-magnets",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
       "id": "sq-u7",
       "kind": "unit",
       "stepCount": 0
