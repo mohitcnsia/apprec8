@@ -1,5 +1,10 @@
 # Testing on your phone
 
+## ⭐ Computer Science quest, Unit 1 AI (17 Nov, draft: only you see it)
+1. Home or Learn → **Computer Science** tile (draft, your account only) → Unit 1 "AI: Your Smart Helper": 7 topics + Unit Boss.
+2. Open "What is AI?": 4 Learn cards + a check, then 8 questions; a wrong answer shows its "why not".
+3. Your account has no class set, so you see everything; Class 8–12 kids will see it once it's opened, younger classes won't.
+
 ## ⭐⭐ Build 20.0.33 walk (16 Nov night): the redesign
 Built and committed, not published yet:
 - [ ] Home top: picture fades into the page; face (top left) opens the Me panel; pill (top right) opens Progress;

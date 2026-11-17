@@ -10,7 +10,8 @@ import * as wordBank from "../wordBankQuestData.js";
 import * as academy from "../academyQuestData.js";
 import * as seemaClass10 from "../teacherCourses/seemaClass10.js";
 import * as bharat from "../bharatQuestData.js";
+import * as cs from "../csQuestData.js";
 
-export const QUESTS = [english, wordPower, science, wordBank, academy, seemaClass10, bharat];
+export const QUESTS = [english, wordPower, science, wordBank, academy, seemaClass10, bharat, cs];
 
 export const bundledQuest = (questId) => QUESTS.find((m) => m.QUEST_ID === questId) || null;

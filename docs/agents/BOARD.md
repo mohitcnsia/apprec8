@@ -20,6 +20,7 @@ Priority order. New ideas, decisions and parked items live in docs/LAUNCH_CHECKL
 |---|---|---|---|
 | 1 | ~~Owner cards + push~~ done 16 Nov (Admin tools → Send a card) | Claude | done |
 | 2 | ~~Team tasks~~ done 16 Nov (a card of kind Task, with hat + due + Done) | Claude | done |
+| 2a | ⭐ Computer Science quest, Unit 1 AI (Class 8+, kids practise from 23 Nov) + "Computer" subject for teachers (LAUNCH_CHECKLIST A16–A17) | Claude | now |
 | 3 | G88 one-page class report for school management | Claude | next |
 | 4 | G55 "Locked out?" help + admin PIN reset | Claude | next |
 | 5 | ~~Full Me page shows the chosen face~~ done 16 Nov | Claude | done |

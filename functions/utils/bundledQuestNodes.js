@@ -2921,6 +2921,53 @@ const NODES_BY_QUEST = {
       "kind": "main",
       "stepCount": 2
     }
+  ],
+  "cs-quest": [
+    {
+      "id": "cs-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "cs-ai-what",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-how",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-helpers",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-safe",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-scams",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-prompts",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-ai-honest",
+      "kind": "main",
+      "stepCount": 2
+    },
+    {
+      "id": "cs-u1-boss",
+      "kind": "boss",
+      "stepCount": 0
+    }
   ]
 };
 
