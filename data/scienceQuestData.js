@@ -26,6 +26,7 @@ import sqU4 from "./scienceQuest/units/u4.js"; // Unit 4 Our Environment (2026-1
 import sqU5 from "./scienceQuest/units/u5.js"; // Unit 5 Light, Sound & Magnets (2026-11-05)
 import sqU6 from "./scienceQuest/units/u6.js"; // Unit 6 Patterns & Puzzles (2026-11-05)
 import sqU7 from "./scienceQuest/units/u7.js"; // Class 7: Life Processes, Matter & Energy, Thinking Skills (2026-11-12)
+import sqC6 from "./scienceQuest/units/c6.js"; // Class 6, one topic per chapter (ISO prep, 2026-11-17)
 
 export const QUEST_ID = "science-quest";
 
@@ -1086,6 +1087,7 @@ The Moon is Earth's only natural satellite, orbiting Earth every 27.3 days.
   ...sqU5.studyPages,
   ...sqU6.studyPages,
   ...sqU7.studyPages,
+  ...sqC6.studyPages,
 };
 
 // ---------- Quizzes (V2 format; 4 options each, tagged with mistakeTag) ----------
@@ -4999,6 +5001,7 @@ export const quizzes = {
   ...sqU5.quizzes,
   ...sqU6.quizzes,
   ...sqU7.quizzes,
+  ...sqC6.quizzes,
 };
 
 export const readings = {};
@@ -5475,5 +5478,6 @@ export const nodes = [
   ...sqU5.nodes,
   ...sqU6.nodes,
   ...sqU7.nodes,
+  ...sqC6.nodes,
   u7,
 ];

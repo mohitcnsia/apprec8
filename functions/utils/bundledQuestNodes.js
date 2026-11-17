@@ -2144,6 +2144,21 @@ const NODES_BY_QUEST = {
       "stepCount": 2
     },
     {
+      "id": "sq6-u1",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq6-u2",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
+      "id": "sq6-u3",
+      "kind": "unit",
+      "stepCount": 0
+    },
+    {
       "id": "sq-u7",
       "kind": "unit",
       "stepCount": 0
